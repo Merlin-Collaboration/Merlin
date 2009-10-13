@@ -246,6 +246,12 @@ public:
     // frame hierachy.
     virtual void Traverse(FrameTraverser& ft);
 
+private:
+
+    //	The s-position of this frame's origin on the super-frame
+    //	s-frame.
+    double s_0;
+
 protected:
 
     //	Protected function called by concrete LatticeFrame
@@ -256,14 +262,8 @@ protected:
 
 private:
 
-    //	The s-position of this frame's origin on the super-frame
-    //	s-frame.
-    double s_0;
-
     //	The geometry associated with this frame.
     const AcceleratorGeometry *itsGeometry;
-
-private:
 
     //	Returns true if aSubFrame is the first (entrance)
     //	sub-frame of this frame.

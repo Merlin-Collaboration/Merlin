@@ -47,12 +47,12 @@ class DimensionError {};
 class RangeError {};
 
 // class Subscript
-// Single integer subscript to an array object.
+// Single integer subscript to an array object - size_t is unsigned.
 typedef size_t Subscript;
 typedef size_t Dimension;
 
 // class Range
-// A contiguous inclusive range of Subscript values.
+// A contiguous inclusive range of Subscript values - also unsigned.
 typedef std::pair<Subscript,Subscript> Range;
 
 // Dimensions of a matrix.
@@ -97,19 +97,23 @@ inline void equal_length(Dimension l1, Dimension l2)
 }
 inline void in_range(Subscript i, Dimension l)
 {
-    if(i<0 || i>=l)
+    if(i>=l)
         throw RangeError();
 }
 inline void in_range(Range r, Dimension n)
 {
-    if((r.first<0)||(r.first>=n)||(r.second<0)||(r.second>=n))
+    if((r.first>=n)||(r.second>=n))
         throw RangeError();
 }
-inline void valid_dimension(Dimension d1)
-{
-    if(d1<0)
-        throw DimensionError();
-}
+
+//Pointless function
+//inline void valid_dimension(Dimension d1)
+//{
+//    if(d1<0)
+//        throw DimensionError();
+//}
+	#define valid_dimension(dummy) ((void)0)
+
 #else
 	#define equal_dimension(dummy1,dummy2) ((void)0)
 	#define equal_length(dummy1,dummy2) ((void)0)

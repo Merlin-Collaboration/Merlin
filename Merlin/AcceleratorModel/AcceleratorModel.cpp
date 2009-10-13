@@ -59,9 +59,10 @@ public:
 	explicit ExtractAcceleratorSupports(AcceleratorSupportList& asList) 
 		: asl(asList), nFound(0) {}
 	void ActOn(LatticeFrame* frame);
-	size_t nFound;
 private:
 	AcceleratorSupportList& asl;
+public:
+	size_t nFound;
 };
 
 void ExtractAcceleratorSupports::ActOn(LatticeFrame* aFrame)
@@ -100,7 +101,7 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline ()
 
 AcceleratorModel::Beamline AcceleratorModel::GetBeamline (AcceleratorModel::Index n1, AcceleratorModel::Index n2) throw (BadRange)
 {
-    if(n1<0 || n2>=lattice.size())
+    if(n2>=lattice.size())
         throw BadRange();
 
     BeamlineIterator i1 = lattice.begin();
