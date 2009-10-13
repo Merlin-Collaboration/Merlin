@@ -17,7 +17,7 @@
 #----- Edit these lines -----------
 
 # the compiler to use
-CPP= g++
+CPP= g++4
 
 # the root directory for the Merlin source code
 MERLIN_ROOT_DIR=${PWD}/../Merlin
@@ -35,7 +35,7 @@ INCPATH= -I${MERLIN_ROOT_DIR}
 #CCFLAGS= -Wall -malign-double -ffast-math -march=pentiumpro
 #CCFLAGS= -w -malign-double -ffast-math -march=pentiumpro
 #CCFLAGS= -w -fpermissive
-CCFLAGS= -w 
+CCFLAGS= -Wall -Wextra
 
 CATS= AcceleratorModel \
       AcceleratorModel/ActiveMonitors \
