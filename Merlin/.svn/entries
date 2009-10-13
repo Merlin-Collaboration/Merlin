@@ -1,0 +1,147 @@
+10
+
+dir
+384
+https://svnsrv.desy.de/public/merlin/tags/rel-4-0/Merlin
+https://svnsrv.desy.de/public/merlin
+
+
+
+2009-04-12T16:40:49.354540Z
+382
+kruecker@IFH.DE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5a2a75f4-3e5b-4b7d-bb5a-54c266e05728
+
+Random
+dir
+
+MADInterface
+dir
+
+BeamModel
+dir
+
+copyright.txt
+file
+
+
+
+
+2009-10-02T13:29:25.000000Z
+733dd1e40515571551a135afe0ad6875
+2008-12-09T20:20:45.472542Z
+359
+/C=DE/O=GermanGrid/OU=DESY/CN=Dirk Kruecker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+742
+
+RingDynamics
+dir
+
+GroundMotionModels
+dir
+
+Corrections
+dir
+
+Channels
+dir
+
+BeamDynamics
+dir
+
+BasicTransport
+dir
+
+Exception
+dir
+
+NumericalUtils
+dir
+
+merlin_config.h
+file
+
+
+
+
+2009-10-02T13:29:25.000000Z
+d70acb87b3297854bfd2923c402150dc
+2009-01-15T18:25:22.061445Z
+364
+/C=DE/O=GermanGrid/OU=DESY/CN=Dirk Kruecker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+758
+
+utility
+dir
+
+TLAS
+dir
+
+AcceleratorModel
+dir
+
+EuclideanGeometry
+dir
+
+IO
+dir
+
+stdext
+dir
+

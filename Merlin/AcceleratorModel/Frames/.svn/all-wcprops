@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames
+END
+FrameModifier.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/FrameModifier.h
+END
+PatchFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/PatchFrame.h
+END
+LatticeFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/LatticeFrame.cpp
+END
+ComponentFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/ComponentFrame.h
+END
+SequenceFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/SequenceFrame.cpp
+END
+LatticeFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/LatticeFrame.h
+END
+TComponentFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/TComponentFrame.h
+END
+SequenceFrame.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/SequenceFrame.h
+END
+FrameModifier.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/FrameModifier.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/Makefile
+END
+ComponentFrame.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Frames/ComponentFrame.cpp
+END

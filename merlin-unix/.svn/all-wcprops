@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/public/merlin/!svn/ver/383/tags/rel-4-0/merlin-unix
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/public/merlin/!svn/ver/383/tags/rel-4-0/merlin-unix/README.txt
+END
+build_makefile
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/public/merlin/!svn/ver/383/tags/rel-4-0/merlin-unix/build_makefile
+END
+make_depend
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/public/merlin/!svn/ver/383/tags/rel-4-0/merlin-unix/make_depend
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/public/merlin/!svn/ver/383/tags/rel-4-0/merlin-unix/Makefile
+END

@@ -1,0 +1,37 @@
+! Spin Rotator
+
+  ASSIGN, PRINT="SpinRotator.print.txt"
+  SETPLOT, LWIDTH=3, ASCALE=1.0, LSCALE=1.0, RSCALE=1.0, &
+           XSIZE=21, YSIZE=15
+
+! =========================================================================
+! Load XSIF file
+! -------------------------------------------------------------------------
+
+  CALL, "SpinRotator.xsif"
+
+! =========================================================================
+! COMMANDs
+! -------------------------------------------------------------------------
+
+  BEAM, PARTICLE=electron, ENERGY=5.0, NPART=2.0E10
+
+  USE, SPINROT
+
+  PRINT, #E
+  TWISS, BETX=BETX, BETY=BETY, SAVE
+
+  PLOT, TABLE=TWISS, HAXIS=S, VAXIS1=BETX, BETY,  &
+                              VAXIS2=DX,          &
+        SPLINE, COLOUR=100, STYLE=1, RANGE=#S/#E, &
+        TITLE="Spin Rotator"
+
+! Output the Lattice File -------------------------------------------------
+
+  USE, SPINROT
+
+  SELECT, OPTICS, CLEAR
+  SELECT, OPTICS, #S/#E
+  OPTICS, COLUMNS= NAME, KEYWORD, S, L, KS, K0L, E1, E2, &
+          K1L, KS1L, K2L, K3L, TILT, TYPE, &
+          FILENAME= "SpinRotator.lattice.txt"

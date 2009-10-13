@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/GroundMotionModels
+END
+SimpleATL.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/GroundMotionModels/SimpleATL.h
+END
+ATL2D.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/GroundMotionModels/ATL2D.cpp
+END
+SimpleATL.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/GroundMotionModels/SimpleATL.cpp
+END
+ATL2D.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/GroundMotionModels/ATL2D.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/GroundMotionModels/Makefile
+END

@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# constructs a depend file for each *.cpp file in the current
+# directory. Note that the generated ``target'', ie. file.o is replaced
+# by ${OBJDIR}/file.o using a sed script
+#
+# syntax: make_depend root_dir
+# where root_dir is the root directory for include file path.
+
+# remove the current depend file if it exists
+if [ -f depend ] 
+then
+	rm depend
+fi
+
+
+g++ -I$1 -MM *.cpp \
+     | sed 's:^.*\.o:\${OBJDIR}/&:' > depend
+

@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField
+END
+MultipoleField.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/MultipoleField.cpp
+END
+BzField.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/BzField.cpp
+END
+RFAcceleratingField.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/RFAcceleratingField.h
+END
+MultipoleField.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/MultipoleField.h
+END
+TransRFfield.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/TransRFfield.cpp
+END
+BzField.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/BzField.h
+END
+SWRFfield.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/SWRFfield.cpp
+END
+TWRFfield.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/TWRFfield.cpp
+END
+TransRFfield.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/TransRFfield.h
+END
+SWRFfield.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/SWRFfield.h
+END
+TWRFfield.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/TWRFfield.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/StdField/Makefile
+END

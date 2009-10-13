@@ -1,0 +1,53 @@
+#! /bin/sh
+# This script runs in given source directory and generates a make file for each
+# *.cpp file found in this, and any subdirectories.
+
+# First, if Makefile already exits, then remove
+
+if [ -f Makefile ];
+then
+    echo "removing previous makefile"
+    rm Makefile
+    touch Makefile
+fi
+
+echo "# MERLIN class library makefile" >> Makefile
+echo "# Automatically generated on `date`" >> Makefile
+echo "# -----------------------------------------------------------" >> Makefile
+echo "" >> Makefile
+
+cppfiles="*.cpp"
+
+# create OFILE  macro
+
+echo "OFILES= \\" >> Makefile
+for fn in $cppfiles
+do
+	prefix=`basename $fn .cpp`
+	echo "     \${OBJDIR}/$prefix.o \\" >> Makefile
+done
+
+echo "" >> Makefile
+echo "# include dependencies file" >> Makefile
+echo "include depend" >> Makefile
+
+echo "" >> Makefile
+echo "catagory: \${OFILES}" >> Makefile
+echo "	touch \$@" >> Makefile
+echo "" >> Makefile
+
+echo "" >> Makefile
+echo "# Explicit make rules for each *.cpp file identified." >> Makefile
+echo "# The object files (targets) are located in the directory" >> Makefile
+echo "# designated by the macro OBJDIR" >> Makefile
+echo "# -------------------------------------------------------" >> Makefile
+echo "" >> Makefile
+for fn in $cppfiles
+do
+	prefix=`basename $fn .cpp` >> Makefile
+	echo "\${OBJDIR}/$prefix.o:" >> Makefile
+	echo "	\${CPP} -c \${INCPATH} \${CCFLAGS} -o \$@ $fn" >> Makefile
+done
+
+# makefile complete
+

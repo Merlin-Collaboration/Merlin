@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/Channels
+END
+Channels.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/Channels/Channels.h
+END
+RWChannelState.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/Channels/RWChannelState.cpp
+END
+RWChannelState.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/Channels/RWChannelState.h
+END
+Channels.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/Channels/Channels.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/Channels/Makefile
+END

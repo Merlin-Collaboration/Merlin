@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel
+END
+WakePotentials.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/WakePotentials.h
+END
+AcceleratorGeometry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorGeometry.cpp
+END
+SpoilerPotentialModels.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/SpoilerPotentialModels.cpp
+END
+AcceleratorGeometry.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorGeometry.h
+END
+AcceleratorModel.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorModel.cpp
+END
+EMField.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/EMField.cpp
+END
+SpoilerPotentialModels.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/SpoilerPotentialModels.h
+END
+AcceleratorComponent.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorComponent.cpp
+END
+EMField.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/EMField.h
+END
+AcceleratorModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorModel.h
+END
+AcceleratorComponent.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorComponent.h
+END
+ModelElement.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/ModelElement.h
+END
+AcceleratorErrors.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorErrors.cpp
+END
+CombinedWakeRF.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/CombinedWakeRF.h
+END
+AcceleratorErrors.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/AcceleratorErrors.h
+END
+Components.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Components.h
+END
+Aperture.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Aperture.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Makefile
+END
+SpoilerWakePotentials.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/SpoilerWakePotentials.h
+END

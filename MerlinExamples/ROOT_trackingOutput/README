@@ -1,0 +1,15 @@
+Merlin simulations can be analysed with any data analysis tool. In this example the ROOT 
+framework is combined with the SimulationOutput class. The example defines a wide variety of 
+physical quantities, as Twiss parameters, first and second order beam moments and many more.
+
+* For Linux the environment variable ROOTSYS must be defined to use the makefile.
+
+* Please, copy and unzip the lattice file ILCDFS/ilc_linac_15_250.zip into this dirctory.
+
+The example simulates an ILC like main linac. A wide variety of parameters and variables 
+along the linac are written into root trees. In addition, the bunch can be dumped into 
+another type of tree at arbitrary positions. See the main.cpp and TrackingOutputROOT.h for 
+more details.
+
+After running the executable there will be a merlin.root file.  The file contains several
+trees of type TrackingTree and ParticleBunchTree.

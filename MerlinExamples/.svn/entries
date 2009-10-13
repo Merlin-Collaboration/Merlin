@@ -1,0 +1,104 @@
+10
+
+dir
+384
+https://svnsrv.desy.de/public/merlin/tags/rel-4-0/MerlinExamples
+https://svnsrv.desy.de/public/merlin
+
+
+
+2009-04-10T14:49:21.716410Z
+378
+kruecker@IFH.DE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5a2a75f4-3e5b-4b7d-bb5a-54c266e05728
+
+AcceleratorErrors
+dir
+
+Trajectory
+dir
+
+ROOT_trackingOutput
+dir
+
+SpinTracking
+dir
+
+StrayFieldClosedOrbit
+dir
+
+ILCML
+dir
+
+Tracking
+dir
+
+ILCDFS
+dir
+
+lattices
+dir
+
+ClosedOrbit
+dir
+
+ModelConstruction
+dir
+
+makefile
+file
+
+
+
+
+2009-10-02T13:29:10.000000Z
+404d90ded719a60df353365d162b31f9
+2009-01-15T10:03:37.589165Z
+361
+/C=DE/O=GermanGrid/OU=DESY/CN=Dirk Kruecker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+945
+
+Wakefields
+dir
+
+LatticeFunctions
+dir
+
+HaloCollimation
+dir
+

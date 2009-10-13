@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation
+END
+ElementRepository.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/ElementRepository.h
+END
+ChannelServer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/ChannelServer.cpp
+END
+IndirectChannels.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/IndirectChannels.h
+END
+ChannelServer.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/ChannelServer.h
+END
+StdChannelDefs.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/StdChannelDefs.cpp
+END
+ElementRepository.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/ElementRepository.cpp
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/public/merlin/!svn/ver/383/tags/rel-4-0/Merlin/AcceleratorModel/Implementation/Makefile
+END
