@@ -56,8 +56,8 @@ public:
     void          SetExpectedProcess(BunchProcess* p){expectedProcess=p;};
         
 protected:
-    bool csr;
     BunchProcess* expectedProcess;
+    bool csr;
 };
 
 #endif

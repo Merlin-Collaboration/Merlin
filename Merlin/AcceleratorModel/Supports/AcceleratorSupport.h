@@ -73,10 +73,9 @@ public:
 private:
 
     Vector3D offset;
+    bool modified;
     Point2D pos;
     double s_pos;
-    bool modified;
-
     friend class SupportStructure;
 };
 
