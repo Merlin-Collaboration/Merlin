@@ -123,14 +123,14 @@ inline Rotation3D::Rotation3D ()
     rep->refc++;
 }
 
-inline Rotation3D::Rotation3D (const Rotation3D& R)
+inline Rotation3D::Rotation3D (const Rotation3D& R) : rep(R.rep)
 {
-    (rep=R.rep)->refc++;
+    rep->refc++;
 }
 
-inline Rotation3D::Rotation3D (Rot3Drep* nrep)
+inline Rotation3D::Rotation3D (Rot3Drep* nrep) : rep(nrep)
 {
-    (rep=nrep)->refc++;
+    rep->refc++;
 }
 
 inline Rotation3D::~Rotation3D ()

@@ -24,7 +24,7 @@ using namespace PhysicalConstants;
 //   The geometric wake potential
 //----------------------------------------------------------------------------------------------------------
 TaperedCollimatorPotentials::TaperedCollimatorPotentials(int m, double aa, double bb)
-: a(aa), b(bb), SpoilerWakePotentials(m) {
+: SpoilerWakePotentials(m), a(aa), b(bb) {
 
 	coeff=new double[m+1];
    	for(int i=0;i<(m+1);i++) {
