@@ -45,7 +45,7 @@ double TaperedCollimatorPotentials::Wtrans(double z, int m) const {
 //      the resistive wake potentials  (in MKS ssytem)
 //------------------------------------------------------------------------------------------------------------
 ResistiveWakePotentials::ResistiveWakePotentials(int m, double r, double s, double l)
-: rad(r), sigma(s), length(l), SpoilerWakePotentials(m) {
+: SpoilerWakePotentials(m), rad(r), sigma(s), length(l) {
 
 	coeff = new double[m+1];
 

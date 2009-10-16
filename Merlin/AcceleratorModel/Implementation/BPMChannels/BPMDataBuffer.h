@@ -55,7 +55,7 @@ private:
 };
 
 inline BPMDataBuffer::BPMDataBuffer ()
-        :x(0),y(0),id(),x_off(0),y_off(0)
+        :x(0),x_off(0),y(0),y_off(0),id()
 {}
 
 inline void BPMDataBuffer::SetID (const string& anID)

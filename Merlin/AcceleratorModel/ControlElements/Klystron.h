@@ -73,8 +73,8 @@ public:
 
 protected:
 
-	Mode kmode;
 	std::vector<RFStructure*> rf_cavs;
+	Mode kmode;
 	double V_k;
 	double phi_k;
 

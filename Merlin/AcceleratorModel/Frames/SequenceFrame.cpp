@@ -65,11 +65,16 @@ public:
     void CalculateCentreCT ();
 
     double len_t;
-    SequenceFrame::Origin omode;
 
 private:
 
     SequenceFrame::FrameList* theFrameList;
+
+public:
+
+    SequenceFrame::Origin omode;
+
+private:
 
     struct TCache
     {
@@ -81,7 +86,7 @@ private:
 };
 
 inline SequenceGeometry::SequenceGeometry (SequenceFrame::FrameList* frames, SequenceFrame::Origin origin)
-        : len_t(0),omode(origin),t_cache(0),theFrameList(frames)
+        : len_t(0),theFrameList(frames),omode(origin),t_cache(0)
 {}
 
 SequenceFrame::SequenceFrame (const string& id, Origin originLoc)
