@@ -46,7 +46,7 @@ void taxpy(T alpha, const V1& x, V2& y)
             y(i)+=alpha*x(i);
     }
 }
-};
+}
 
 
 namespace tblas2 {

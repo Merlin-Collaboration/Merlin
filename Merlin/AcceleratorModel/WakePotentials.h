@@ -41,12 +41,12 @@ public:
 //    virtual double Wlong (double z)  const = 0;
 //    virtual double Wtrans (double z) const = 0;
     virtual double Wlong (double z) const { 
-    	cout<<"WakePotentials::Wlong: Virtual function called!"<<endl; 
+    	cout<<"WakePotentials::Wlong: Virtual function called! With z = " << z <<endl; 
     	abort();
     	return 0;
     };
     virtual double Wtrans (double z) const { 
-    	cout<<"WakePotentials::Wtrans: Virtual function called!"<<endl; 
+    	cout<<"WakePotentials::Wtrans: Virtual function called! With z = " << z <<endl; 
     	return 0;
     };
     bool Is_CSR () const {
