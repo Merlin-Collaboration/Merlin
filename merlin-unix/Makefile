@@ -35,7 +35,7 @@ INCPATH= -I${MERLIN_ROOT_DIR}
 #CCFLAGS= -Wall -malign-double -ffast-math -march=pentiumpro
 #CCFLAGS= -w -malign-double -ffast-math -march=pentiumpro
 #CCFLAGS= -w -fpermissive
-CCFLAGS= -Wall -Wextra
+CCFLAGS= -Wall -Wextra -pipe
 
 CATS= AcceleratorModel \
       AcceleratorModel/ActiveMonitors \
