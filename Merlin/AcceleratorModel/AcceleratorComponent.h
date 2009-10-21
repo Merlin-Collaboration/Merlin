@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/03/20 13:42:54 $
 // $Revision: 1.6 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef AcceleratorComponent_h
@@ -65,7 +65,7 @@ public:
     //	pointer is returned if the component has no field.
     const EMField* GetEMField () const;
 
-    const Aperture* GetAperture () const;
+          Aperture* GetAperture () const;
 
     void SetAperture (Aperture* ap);
 
@@ -102,7 +102,7 @@ protected:
     explicit AcceleratorComponent (const string& aName = string());
 
     AcceleratorComponent (const string& aName, AcceleratorGeometry* aGeom, EMField* aField);
-	
+
 
     //	Used by derived classes to generate a unique index. All
     //	derived classes should have a static member ID of type
@@ -117,7 +117,7 @@ protected:
     WakePotentials* itsWakes;
 
 	// beamline index associated with this component
-	size_t blI; 
+	size_t blI;
 };
 
 
@@ -139,7 +139,7 @@ inline const EMField* AcceleratorComponent::GetEMField () const
     return itsField;
 }
 
-inline const Aperture* AcceleratorComponent::GetAperture () const
+inline  Aperture* AcceleratorComponent::GetAperture () const
 {
     return itsAperture;
 }
@@ -157,6 +157,7 @@ inline WakePotentials* AcceleratorComponent::GetWakePotentials () const
 inline void AcceleratorComponent::SetWakePotentials (WakePotentials* wp)
 {
     itsWakes=wp;
+
 }
 
 inline int AcceleratorComponent::TotalComponentNumber ()
