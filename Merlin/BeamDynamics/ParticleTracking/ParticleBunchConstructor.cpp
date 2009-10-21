@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/04/14 16:01:43 $
 // $Revision: 1.9 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "BasicTransport/NormalTransform.h"
@@ -132,6 +132,28 @@ Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
                 i++;
             }
         }
+        break;
+        case pencilDistribution:
+	           double u;
+	           rx = sqrt(beamdat.emit_x);
+	           ry = sqrt(beamdat.emit_y);
+	           for(i=1; i<np;) {
+				 u = RandomNG::uniform(-3.14,3.14);
+	               p.x()	= rx * cos(u);
+	               p.xp()	= rx * sin(u);
+	               u = RandomNG::uniform(-3.14,3.14);
+	               p.y()	= rx * cos(u);
+	               p.yp()	= rx * sin(u);
+	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+	               M.Apply(p);
+	               p+=pbunch.front(); // add centroid
+
+	               if(itsFilter==0 || itsFilter->Apply(p)) {
+	                   pbunch.push_back(p);
+	                   i++;
+	               }
+	           }
         break;
     };
 

@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
-// $Date: 2006/09/26 20:12:15 $
-// $Revision: 1.11 $
-// 
+// $Date: 2006/03/07 09:14:12 $
+// $Revision: 1.10 $
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "BeamDynamics/ParticleTracking/Integrators/StdIntegrators.h"
@@ -38,7 +38,6 @@ ADD_INTG(SolenoidCI)
 ADD_INTG(THIN_LENS::SWRFStructureCI)
 ADD_INTG(MarkerCI)
 ADD_INTG(MonitorCI)
-ADD_INTG(ParticleMapCI);
 END_INTG_SET;
 
 }; // end namespace TRANSPORT
@@ -63,7 +62,8 @@ struct MultipoleKick {
     MultipoleKick(const MultipoleField& f, double len, double P0, double q, double phi =0)
             : field(f)
     {
-        scale = q*len*eV*SpeedOfLight/P0*Complex(cos(phi),sin(phi));
+      // cout <<"aply multipolekick"<<endl;
+       scale = q*len*eV*SpeedOfLight/P0*Complex(cos(phi),sin(phi));
     }
 
     void operator()(PSvector& v) {
@@ -73,6 +73,10 @@ struct MultipoleKick {
         Complex F = scale*field.GetField2D(x,y)/(1+dp);
         v.xp() += -F.real();
         v.yp() +=  F.imag();
+        v.x()=x;
+        v.y()=y;
+        //cout<<"x vector v component=" <<x<<endl;
+        //cout<<"y vector v component =" <<y<<endl;
     };
 };
 
@@ -296,6 +300,7 @@ void RectMultipoleCI::TrackStep (double ds)
     double q = (*currentBunch).GetChargeSign();
     double brho = P0/eV/SpeedOfLight;
     MultipoleField& field = (*currentComponent).GetField();
+    //cout <<"aply multipolekick 2"<<endl;
 
     // we now support thin-lens kicks (this has been added to support
     // thin-lens corrector dipoles)
@@ -395,39 +400,39 @@ void RectMultipoleCI::TrackStep (double ds)
 /*****
 void SWRFStructureCI::TrackStep(double ds)
 {
-	
+
 	// Here we have a problem since the Chamber's matrix that we use
-	// for the transport is only valid for n*(lambda/2), where n is 
+	// for the transport is only valid for n*(lambda/2), where n is
 	// an integer. For now, we simple force ds to be a fixed number
 	// of wavelengths
-	
+
 	CHK_ZERO(ds);
-	
+
 	const SWRFfield& field = (*currentComponent).GetField();
 	double g = field.GetAmplitude();
 	double f = field.GetFrequency();
 	double phi = field.GetPhase();
 	double E0 = (*currentBunch).GetReferenceMomentum();
-	
+
 	double lambdaOver2 = SpeedOfLight/f/2;
 	int ncells = static_cast<int>(ds/lambdaOver2);
 	assert(ncells*lambdaOver2 == ds);
-	
+
 	RealMatrix R(2,2);
 	TransportMatrix::SWRFCavity(ncells,g,f,phi,E0,R);
 	RTMap* M = new RTMap();
-	
+
 	(*M)(3,3)=(*M)(1,1)=R(0,0);
 	(*M)(3,4)=(*M)(1,2)=R(0,1);
 	(*M)(4,3)=(*M)(2,1)=R(1,0);
 	(*M)(4,4)=(*M)(2,2)=R(1,1);
 	(*M)(5,5)=(*M)(6,6)=1.0;
-	
+
 	for_each((*currentBunch).begin(),(*currentBunch).end(),ApplyRFMap(g*ds/E0,f,phi,M,true));
-	
+
 	if(true)
 		(*currentBunch).IncrReferenceMomentum(g*ds*cos(phi));
-	
+
 	return;
 }
 **/

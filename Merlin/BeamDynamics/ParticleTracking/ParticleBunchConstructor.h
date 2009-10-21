@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:53 $
 // $Revision: 1.5 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef ParticleBunchConstructor_h
@@ -38,7 +38,7 @@ public:
     virtual bool Apply (const PSvector& v) const = 0;
 };
 
-typedef enum {normalDistribution,flatDistribution} DistributionType;
+typedef enum {normalDistribution,flatDistribution,pencilDistribution} DistributionType;
 
 //	Constructs a particle bunch with random particles taken
 //	from a 6D distribution. The phase space moments are

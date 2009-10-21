@@ -39,9 +39,6 @@ public:
     virtual void CalculateWakeT (double, int);
     virtual void CalculateWakeL (double, int);
 
-    virtual void CalculateWakeT (){};
-    virtual void CalculateWakeL (){};
-
  private:
 
     double CalculateSm (int, int);
@@ -49,17 +46,19 @@ public:
     
     int nmodes;
     
-    double Cm[6][1000];  
-    double Sm[6][1000];  
+//    double Cm[5][1000];  
+    double** Cm;
+//    double Sm[5][1000];  
+    double** Sm;
     double wake_s;
     double wake_c;
     
-    double wake_sl[6][1000];
-    double wake_cl[6][1000];
-    double wake_ct[6][1000];
-    double wake_st[6][1000];
+    double** wake_sl;
+    double** wake_cl;
+    double** wake_ct;
+    double** wake_st;
 
-
+//    ParticleBunch* currentBunch;
     SpoilerWakePotentials* spoiler_wake;  
 };
 
