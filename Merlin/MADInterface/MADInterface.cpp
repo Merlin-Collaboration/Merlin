@@ -14,8 +14,7 @@
 
 #include <cstdlib>
 #include "AcceleratorModel/Components.h"
-//#include "AcceleratorModel/StdComponent/Spoiler.h"
-#include "Spoiler.h"
+#include "AcceleratorModel/StdComponent/Spoiler.h"
 
 #include "IO/MerlinIO.h"
 #include "NumericalUtils/utils.h"

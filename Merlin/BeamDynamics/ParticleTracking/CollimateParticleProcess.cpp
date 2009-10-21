@@ -23,7 +23,7 @@
 #include "AcceleratorModel/Aperture.h"
 // Spoiler
 //#include "AcceleratorModel/StdComponent/Spoiler.h"
-#include "Spoiler.h"
+#include "AcceleratorModel/StdComponent/Spoiler.h"
 
 using namespace std;
 
