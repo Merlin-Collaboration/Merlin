@@ -20,8 +20,6 @@
 // deleters
 #include "stdext/deleters.h"
 
-class SequenceGeometry;
-
 //	Implementation of an AcceleratorGeometry class used by
 //	SequenceFrame to construct the required geometry object
 //	to pass to its LatticeFrame base class during
@@ -86,7 +84,7 @@ private:
 };
 
 inline SequenceGeometry::SequenceGeometry (SequenceFrame::FrameList* frames, SequenceFrame::Origin origin)
-        : len_t(0),theFrameList(frames),omode(origin),t_cache(0)
+        : AcceleratorGeometry(),len_t(0),theFrameList(frames),omode(origin),t_cache(0)
 {}
 
 SequenceFrame::SequenceFrame (const string& id, Origin originLoc)
@@ -205,7 +203,7 @@ bool SequenceFrame::IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFr
         return false;
 }
 
-SequenceGeometry::SequenceGeometry (const SequenceGeometry& rhs)
+SequenceGeometry::SequenceGeometry (const SequenceGeometry& rhs) : AcceleratorGeometry()
 {}
 
 SequenceGeometry::~SequenceGeometry ()

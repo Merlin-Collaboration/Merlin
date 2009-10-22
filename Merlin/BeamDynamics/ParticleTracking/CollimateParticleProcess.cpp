@@ -53,7 +53,7 @@ namespace ParticleTracking {
 
 CollimateParticleProcess::CollimateParticleProcess (int priority, int mode, std::ostream* osp)
         : ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
-        createLossFiles(false),file_prefix(""),nstart(0),pindex(0),lossThreshold(1),scatter(false)
+        createLossFiles(false),file_prefix(""),lossThreshold(1),nstart(0),pindex(0),scatter(false)
 {}
 
 CollimateParticleProcess::~CollimateParticleProcess ()

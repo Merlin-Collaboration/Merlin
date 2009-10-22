@@ -119,7 +119,7 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, co
     BeamlineIterator i1=lattice.end();
     BeamlineIterator i2=lattice.end();
     int nn1(0),nn2(0);
-    int ni=0, ni1, ni2;
+    int ni=0, ni1=0, ni2=0; //set ni1,ni2 = 0 by default? - JM
 
     for(BeamlineIterator i = lattice.begin(); i!=lattice.end() && (nn1!=n1 || nn2!=n2); i++,ni++) {
         string id = (*i)->IsComponent() ? ((*i)->GetComponent()).GetQualifiedName() : (*i)->GetQualifiedName();
@@ -127,10 +127,11 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, co
             i1=i;
             ni1=ni;
         }
-        if(nn2<n2 && p2(id) && ++nn2 == n2) {
+        else if(nn2<n2 && p2(id) && ++nn2 == n2) {
             i2=i;
             ni2=ni;
         }
+	else {cout << "ni1 or ni2 is not initialized - FIXME in AcceleratorModel.cpp" << endl;}
     }
 
     if(i1==lattice.end() || i2==lattice.end())

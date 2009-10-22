@@ -114,8 +114,8 @@ protected:
 
     int cmode;
     std::ostream* os;
-    string file_prefix;
     bool createLossFiles;
+    string file_prefix;
     double lossThreshold;
 
     IDTBL idtbl;

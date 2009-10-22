@@ -27,6 +27,7 @@ class Random {
 protected:
     RNG *pGenerator;
 public:
+    virtual ~Random();
     Random(RNG *generator);
     virtual double operator()() = 0;
 

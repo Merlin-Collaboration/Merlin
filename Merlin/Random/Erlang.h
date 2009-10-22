@@ -31,7 +31,7 @@ protected:
     void setState();
 public:
     Erlang(double mean, double variance, RNG *gen);
-
+    virtual ~Erlang();
     double mean();
     double mean(double x);
     double variance();
