@@ -1,5 +1,5 @@
 # MERLIN class library makefile
-# Automatically generated on Sun Dec  7 12:31:12 CET 2008
+# Automatically generated on Tue Oct 27 11:45:00 GMT 2009
 # -----------------------------------------------------------
 
 OFILES= \
@@ -8,11 +8,7 @@ OFILES= \
      ${OBJDIR}/LatticeFrame.o \
      ${OBJDIR}/SequenceFrame.o \
 
-# include dependencies file
-include depend
-
 catagory: ${OFILES}
-	touch $@
 
 
 # Explicit make rules for each *.cpp file identified.

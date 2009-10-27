@@ -22,7 +22,7 @@
 #include "EuclideanGeometry/GeneralRotation.h"
 
 GeneralRotation::GeneralRotation (const GeneralRotation& gr)
-        :m(gr.m)
+        :Rot3Drep(), m(gr.m)
 {}
 
 GeneralRotation::GeneralRotation (const RotationX& rx, const RotationY& ry)

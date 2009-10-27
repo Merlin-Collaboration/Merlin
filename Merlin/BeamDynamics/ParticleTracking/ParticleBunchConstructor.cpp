@@ -27,7 +27,6 @@ inline double RandomGauss(double variance, double cutoff)
 }
 
 ParticleBunchConstructor::ParticleBunchConstructor (const BeamData& beam, size_t npart, DistributionType dist)
-
         : np(npart),dtype(dist),cutoffs(0),beamdat(beam),itsFilter(0),M(NormalTransform(beam)),force_c(false)
 {}
 

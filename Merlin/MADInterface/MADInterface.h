@@ -94,15 +94,14 @@ public:
 protected:
 
     double energy;
+    ifstream *ifs;
+    ostream* log;
 
     bool logFlag;
     bool flatLattice;
     bool honMadStructs;
     bool incApertures;
     bool inc_sr;
-
-    ifstream *ifs;
-    ostream* log;
 
     std::set<std::string> zeroLengths;
     std::set<std::string> driftTypes;

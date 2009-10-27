@@ -185,9 +185,9 @@ public:
 struct CalculateLatticeFunction
 {
 private:
-    RealMatrix* N;
-    const Particle* p;
     double s;
+    const Particle* p;
+    RealMatrix* N;
 
 public:
     CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N)
@@ -450,8 +450,9 @@ double LatticeFunctionTable::DoCalculateOrbitOnly(double cscale, PSvector* pInit
 struct PrintLatticeFunction
 {
 private:
-    ostream* os;
     int row;
+    ostream* os;
+
 
 public:
     PrintLatticeFunction(int r, ostream& _os)

@@ -63,7 +63,6 @@ public:
     double clen;
     size_t nbins;
     double nsig;
-    bool inc_tw;
 
     void Init();
     size_t CalculateQdist();
@@ -77,12 +76,14 @@ public:
     std::vector<double> Qd;
     std::vector<double> Qdp;
     std::vector<double>* filter;
-    std::vector<double> wake_z;
     std::vector<double> wake_x;
     std::vector<double> wake_y;
+    std::vector<double> wake_z;
+    bool recalc;
+    bool inc_tw;
 
     double zmin,zmax,dz;
-    bool recalc;
+
 	size_t oldBunchLen;
 };
 

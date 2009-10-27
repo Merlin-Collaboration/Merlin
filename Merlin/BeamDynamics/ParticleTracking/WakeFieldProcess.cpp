@@ -30,7 +30,7 @@ using namespace PhysicalUnits;
 using namespace ParticleTracking;
 
 // needed to resolve gcc 3.2 ambiguity problem
-inline double pow(int x, int y) { return pow(double(x),double(y)); }
+//inline double pow(int x, int y) { return pow(double(x),double(y)); }
 
 Point2D GetSliceCentroid(ParticleBunch::const_iterator first,
                          ParticleBunch::const_iterator last)
@@ -69,9 +69,8 @@ PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first,
 namespace ParticleTracking {
 
 WakeFieldProcess::WakeFieldProcess (int prio, size_t nb, double ns, string aID)
-        : ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(0),
-        wake_x(0),wake_y(0),wake_z(0),Qd(),Qdp(),filter(0),recalc(true),inc_tw(true),
-		oldBunchLen(0)
+        : ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(0),Qd(),Qdp(),filter(0),
+        wake_x(0),wake_y(0),wake_z(0),recalc(true),inc_tw(true),oldBunchLen(0)
 {
     SetFilter(14,2,1);
 }
@@ -311,7 +310,7 @@ void WakeFieldProcess::CalculateWakeL()
 
 #ifndef NDEBUG
     ofstream os("bunchWake.dat");
-    os<<zmin<<' '<<zmax<<' '<<dz<<endl;
+    os<<zmin<<'\t'<<zmax<<'\t'<<dz<<endl;
     copy(wake_z.begin(),wake_z.end(),ostream_iterator<double>(os,"\n"));
 #endif
 

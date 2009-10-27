@@ -53,9 +53,8 @@ private:
     double current_s;
     double impulse_s;
     double clen;
-    const double dz; // slice width for binning
 
-    bool inc_tw;
+
     void Init();
     void PrepLWake();
     void PrepSlices();
@@ -65,9 +64,9 @@ private:
     std::vector<double> slice_z;
     std::vector<double> slice_q;
     double bload;
-
     bool recalc;
-
+    bool inc_tw;
+    const double dz; // slice width for binning
     WakePotentials* currentWake;
 
 };

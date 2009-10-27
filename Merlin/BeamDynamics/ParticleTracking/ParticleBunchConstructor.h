@@ -103,13 +103,12 @@ private:
     size_t np;
     DistributionType dtype;
     PSvector cutoffs;
-    bool force_c;
     BeamData beamdat;
-
+    ParticleBunchFilter* itsFilter;
     //	The map used to transform a spherically symmetric
     //	distribution into the desired bunch distribution.
     RMtrx M;
-    ParticleBunchFilter* itsFilter;
+    bool force_c;
 };
 
 inline void ParticleBunchConstructor::SetFilter (ParticleBunchFilter* filter)

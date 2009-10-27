@@ -12,9 +12,9 @@
 // 
 /////////////////////////////////////////////////////////////////////////
 
-#ifndef  _MSC_VER
-#define _MAX(a,b) std::max((a),(b))
-#endif
+//#ifndef  _MSC_VER
+//#define _MAX(a,b) std::max((a),(b))
+//#endif
 
 template<class T,class V>
 Vector<T>& svbksb(const Matrix<T>& u, const Vector<T>& w, const Matrix<T>& v, const V& b, Vector<T>& x)

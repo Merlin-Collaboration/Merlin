@@ -127,8 +127,8 @@ struct ApplyTWRF {
     double k;
     double f;
     double g;
-    double phi0;
     double ds;
+    double phi0;
     double E0;
     double E1;
     bool inc_entr_f;
@@ -164,8 +164,8 @@ struct ApplyTWRF {
 
 struct ApplyTWRFEdgeField {
 
-    double k;
     double Ez;
+    double k;
     double phi0;
 
     ApplyTWRFEdgeField(double p0, double g, double f, double phi)

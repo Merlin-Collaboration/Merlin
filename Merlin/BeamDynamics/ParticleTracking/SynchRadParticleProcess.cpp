@@ -62,7 +62,7 @@ struct ApplySR {
     const MultipoleField& Bf;
     double dL;
     double P0;
-	bool symp;
+    bool symp;
     spec_gen photgen;
 
     double meanU;
@@ -149,12 +149,18 @@ void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& compone
     SectorBend* bend =0;
     RectMultipole* rmult =0;
 
-    if(bend = dynamic_cast<SectorBend*>(&component))
-        currentField =  &(bend->GetField());
+    if(bend == dynamic_cast<SectorBend*>(&component))
+	{
+	currentField =  &(bend->GetField());
+	}
     else if(incQ && (rmult = dynamic_cast<RectMultipole*>(&component)))
+	{
         currentField = &(rmult->GetField());
+	}
     else
+	{
         currentField = 0;
+	}
 
     int ns1 = (ns==0) ? 1 + component.GetLength()/dsMax : ns;
     dL = component.GetLength()/ns1;

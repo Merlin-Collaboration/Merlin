@@ -54,7 +54,6 @@ public:
 
 private:
     AcceleratorModel* theModel;
-    ParticleTracker* theTracker;
     double p0;
     bool transverseOnly;
     bool radiation;
@@ -66,6 +65,7 @@ private:
     double radstepsize;
     int radnumsteps;
     double bendscale;
+    ParticleTracker* theTracker;
 };
 
 #endif

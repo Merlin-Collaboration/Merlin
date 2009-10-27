@@ -76,10 +76,9 @@ private:
 
     mutable RealVector* cached_actuators;
 
+    SVDMatrix< double >* Mi;
     // to allow for possible actuator pulse delays, we use a queue
     mutable std::queue<RealVector>* actuatorQueue;
-
-    SVDMatrix< double >* Mi;
 };
 
 #endif

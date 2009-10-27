@@ -7,9 +7,9 @@
 #include <string>
 #include <cstring>
 
-#if _MSC_VER >= 1400
-#define __TYPENAME__ typename
-#endif
+//#if _MSC_VER >= 1400
+//#define __TYPENAME__ typename
+//#endif
 
 #ifdef _MSC_VER
 #pragma warning(disable: 4786)
@@ -24,13 +24,14 @@
 #else
 #define __TYPENAME__
 #endif
+
 #else
 #define __TYPENAME__ typename
-#define _MAX std::max
-#define _MIN std::min
+#define _MAX(a,b) std::max(a,b)
+#define _MIN(a,b) std::min(a,b)
 #endif /* _MSC_VER */
 //dk must be defined somewhere
-#define _MAX std::max
-#define _MIN std::min
+#define _MAX(a,b) std::max(a,b)
+#define _MIN(a,b) std::min(a,b)
 
 #endif /* _h_merlin_config */

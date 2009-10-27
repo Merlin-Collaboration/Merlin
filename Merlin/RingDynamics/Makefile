@@ -1,5 +1,5 @@
 # MERLIN class library makefile
-# Automatically generated on Sun Dec  7 12:31:13 CET 2008
+# Automatically generated on Tue Oct 27 11:45:01 GMT 2009
 # -----------------------------------------------------------
 
 OFILES= \
@@ -11,11 +11,7 @@ OFILES= \
      ${OBJDIR}/StableOrbits.o \
      ${OBJDIR}/TransferMatrix.o \
 
-# include dependencies file
-include depend
-
 catagory: ${OFILES}
-	touch $@
 
 
 # Explicit make rules for each *.cpp file identified.

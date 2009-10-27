@@ -206,6 +206,7 @@ class Integrator : public B_Integrator {
     // Integrator set definition.
     class ISetBase {
     public:
+	virtual ~ISetBase(){};
         virtual void Init(TBunchCMPTracker&) const =0;
     };
 

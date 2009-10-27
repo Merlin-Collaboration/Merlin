@@ -77,7 +77,7 @@ namespace SMPTracking {
 
 
 WakeFieldProcess::WakeFieldProcess (int prio, double sw, string aID)
-        : SMPBunchProcess(aID,prio),imploc(atExit),currentWake(0),recalc(true),inc_tw(true),dz(sw)
+        : SMPBunchProcess(aID,prio),imploc(atExit),recalc(true),inc_tw(true),dz(sw),currentWake(0)
 {}
 
 WakeFieldProcess::~WakeFieldProcess()

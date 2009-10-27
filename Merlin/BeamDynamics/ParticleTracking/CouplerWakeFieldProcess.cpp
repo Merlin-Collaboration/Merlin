@@ -28,7 +28,7 @@ using namespace PhysicalUnits;
 using namespace ParticleTracking;
 
 // needed to resolve gcc 3.2 ambiguity problem
-inline double pow(int x, int y) { return pow(double(x),double(y)); }
+//inline double pow(int x, int y) { return pow(double(x),double(y)); }
 
 Point2D GetSliceCentroid(ParticleBunch::const_iterator first,
                          ParticleBunch::const_iterator last) {

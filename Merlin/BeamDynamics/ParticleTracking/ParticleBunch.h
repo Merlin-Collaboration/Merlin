@@ -115,14 +115,15 @@ public:
     //	Sets the centroid of the particle bunch to be exactly x0.
     void SetCentroid (const Particle& x0);
 
-protected:
-
-    PSvectorArray pArray;
-
 private:
 
     //	Charge per macro-particle
     double qPerMP;
+
+protected:
+
+    PSvectorArray pArray;
+
 };
 
 inline size_t ParticleBunch::AddParticle (const Particle& p)

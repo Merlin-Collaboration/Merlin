@@ -25,8 +25,8 @@ namespace ParticleTracking {
 
 struct EntranceFieldMap {
 
-    double k;
     double Ez;
+    double k;
     double phi0;
 
     EntranceFieldMap(double g, double k1, double phi, double p)
@@ -53,8 +53,8 @@ struct LCAVMap {
 
     double k;
     double Ez;
-    double phi0;
     double L;
+    double phi0;
     double E0;
     double E1;
     mutable double Esum;
