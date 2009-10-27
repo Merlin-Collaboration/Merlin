@@ -13,7 +13,7 @@
 #ifndef SpoilerWakePotentials_h
 #define SpoilerWakePotentials_h 1
 
-#include "AcceleratorModel/WakePotentials.h"
+#include "WakePotentials.h"
 #include "merlin_config.h"
 
 //	Abstract class for calculating the longitudinal and
@@ -26,8 +26,8 @@ class SpoilerWakePotentials : public WakePotentials
 
 public:
 
-SpoilerWakePotentials(int m) 
-   : WakePotentials() { nmodes = m; }
+ SpoilerWakePotentials(int m, double r, double s) 
+   : WakePotentials(r,s) { nmodes = m; }   //take the redius and the conductivity out of WakePotentials
 
     virtual ~SpoilerWakePotentials () {};
    
