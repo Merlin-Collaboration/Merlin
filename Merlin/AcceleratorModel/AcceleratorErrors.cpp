@@ -19,9 +19,9 @@ namespace {
 
                 if(c) frame->ClearLocalFrameTransform();
 
-                double ex= vx==0 ? mx : RandomNG::normal(mx,vx);
-                double ey= vy==0 ? my : RandomNG::normal(my,vy);
-                double ez= vz==0 ? mz : RandomNG::normal(mz,vz);
+                double ex= fequal(vx,0.0) ? mx : RandomNG::normal(mx,vx);
+                double ey= fequal(vy,0.0) ? my : RandomNG::normal(my,vy);
+                double ez= fequal(vz,0.0) ? mz : RandomNG::normal(mz,vz);
                 if(t) {
                    frame->Translate(ex,ey,ez);
                    if(log) (*log)<<(*frame).GetQualifiedName()<<" translate: "

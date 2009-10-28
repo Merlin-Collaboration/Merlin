@@ -28,7 +28,7 @@
 
 #include <algorithm>
 #include <functional>
-
+#include "NumericalUtils/utils.h"
 
 class RangeBase
 {
@@ -86,7 +86,7 @@ inline NumericalRange<T,C>::NumericalRange (const T& lo, const T& hi)
 template <class T, class C>
 inline bool NumericalRange<T,C>::IsUnbounded () const
 {
-    return lower==1 && upper==-1;
+    return fequal(lower,1.0) && fequal(upper,-1.0);
 }
 
 template <class T, class C>

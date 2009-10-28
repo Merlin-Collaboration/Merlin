@@ -9,6 +9,7 @@
 
 // VectorTags
 #include "EuclideanGeometry/VectorTags.h"
+#include "NumericalUtils/utils.h"
 
 
 
@@ -112,7 +113,7 @@ inline TVec3D<T,tag>::TVec3D (const T& x1, const T& y1, const T& z1)
 template <class T, class tag>
 inline bool TVec3D<T,tag>::operator==(const TVec3D<T,tag> &right) const
 {
-    return x==right.x && y==right.y && z==right.z;
+    return fequal(x,right.x) && fequal(y,right.y) && fequal(z,right.z);
 }
 
 template <class T, class tag>
@@ -191,7 +192,8 @@ inline T TVec3D<T,tag>::dot (const TVec3D<T,tag>& v) const
 template <class T, class tag>
 inline bool TVec3D<T,tag>::isZero () const
 {
-    return x==0 && y==0 && z==0;
+    //return x==0 && y==0 && z==0;
+	return fequal(x,0.0) && fequal(y,0.0) && fequal(z,0.0);
 }
 
 template <class T, class tag>

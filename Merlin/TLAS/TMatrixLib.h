@@ -29,6 +29,7 @@
 using namespace std;
 
 #include "TLAS/tblas.h" // low level blas-like routines
+#include "NumericalUtils/utils.h"
 
 namespace TLAS {
 
@@ -250,6 +251,7 @@ public:
         equal_length(array.size(),v.array.size());
         for(size_t i=0;i<array.size();i++)
             if(array[i]!=v.array[i])
+		//if(!fequal(array[i],v.array[i]))
                 return false;
         return true;
     }

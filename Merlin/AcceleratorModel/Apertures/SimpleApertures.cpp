@@ -14,10 +14,11 @@
 
 #include "AcceleratorModel/Apertures/SimpleApertures.h"
 #include "NumericalUtils/NumericalConstants.h"
+#include "NumericalUtils/utils.h"
 
 double RectangularAperture::GetRadiusAt (double phi, double z) const
 {
-    if(hh==0 || hw==0)
+    if(fequal(hh,0.0) || fequal(hw,0.0))
         return 0;
 
     const double phi0=atan(hh/hw);

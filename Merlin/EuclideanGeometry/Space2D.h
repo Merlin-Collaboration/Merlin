@@ -9,7 +9,7 @@
 
 // VectorTags
 #include "EuclideanGeometry/VectorTags.h"
-
+#include "NumericalUtils/utils.h"
 
 
 //	Template class for generating two-dimensional vectors
@@ -87,7 +87,8 @@ public:
     //	Return true if all components are zero.
     bool isZero () const
     {
-        return x==0&&y==0;
+        //return x==0&&y==0;
+	return fequal(x,0.0)&&fequal(y,0,0);
     }
 
     TVec2D operator + (const TVec2D& v) const

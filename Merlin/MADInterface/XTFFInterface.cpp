@@ -28,6 +28,7 @@
 #include "AcceleratorModel/Supports/SupportStructure.h"
 #include "AcceleratorModel/Supports/MagnetMover.h"
 #include "NumericalUtils/PhysicalConstants.h"
+#include "NumericalUtils/utils.h"
 #include "MADInterface/ConstructSrot.h"
 #include "Exception/MerlinException.h"
 
@@ -156,15 +157,15 @@ namespace {
 
 		SectorBend* bend = new SectorBend(data.label,len,h,brho*h);
 
-		if(k1!=0)  // mixed function dipole
+		if(!fequal(k1,0.0))  // mixed function dipole
 			bend->SetB1(brho*k1);
 
-		if(tilt!=0)
+		if(!fequal(tilt,0.0))
 			(*bend).GetGeometry().SetTilt(tilt);
 
 		// add pole-face rotation information
-		SectorBend::PoleFace* entrPF = (e1!=0)? new SectorBend::PoleFace(e1,0,hg) : 0;
-		SectorBend::PoleFace* exitPF = (e2!=0)? new SectorBend::PoleFace(e2,0,hg) : 0;
+		SectorBend::PoleFace* entrPF = (!fequal(e1,0.0))? new SectorBend::PoleFace(e1,0,hg) : 0;
+		SectorBend::PoleFace* exitPF = (!fequal(e2,0.0))? new SectorBend::PoleFace(e2,0,hg) : 0;
 		bend->SetPoleFaceInfo(entrPF,exitPF);
 
 		return bend;
@@ -183,7 +184,7 @@ namespace {
 		double hg    = data[HGAP];
 
 		double h=0;
-		if(angle!=0) {
+		if(!fequal(angle,0.0)) {
 			h = 2*sin(angle/2)/len;
 			len = angle/h;
 		}
@@ -191,15 +192,15 @@ namespace {
 
 		SectorBend* bend = new SectorBend(data.label,len,h,brho*h);
 
-		if(k1!=0)  // mixed function dipole
+		if(!fequal(k1,0.0))  // mixed function dipole
 			bend->SetB1(brho*k1);
 
-		if(tilt!=0)
+		if(!fequal(tilt,0.0))
 			(*bend).GetGeometry().SetTilt(tilt);
 
 		// add pole-face rotation information
-		SectorBend::PoleFace* entrPF = (e1!=0)? new SectorBend::PoleFace(e1,0,hg) : 0;
-		SectorBend::PoleFace* exitPF = (e2!=0)? new SectorBend::PoleFace(e2,0,hg) : 0;
+		SectorBend::PoleFace* entrPF = (!fequal(e1,0.0))? new SectorBend::PoleFace(e1,0,hg) : 0;
+		SectorBend::PoleFace* exitPF = (!fequal(e2,0.0))? new SectorBend::PoleFace(e2,0,hg) : 0;
 		bend->SetPoleFaceInfo(entrPF,exitPF);
 
 		return bend;
@@ -210,7 +211,7 @@ namespace {
 		double len   = data[L];
 		double k1    = data[K1];
 		double tilt  = data[TILT];
-		assert(tilt==0);
+		assert(fequal(tilt,0.0));
 		double brho  = energy/eV/SpeedOfLight;
 		return new Quadrupole(data.label,len,brho*k1);
 	}
@@ -229,7 +230,7 @@ namespace {
 		double len   = data[L];
 		double k2    = data[K2];
 		double tilt  = data[TILT];
-		assert(tilt==0);
+		assert(fequal(tilt,0.0));
 		double brho  = energy/eV/SpeedOfLight;
 		return new Sextupole(data.label,len,brho*k2);
 	}
@@ -248,7 +249,7 @@ namespace {
 		double len   = data[L];
 		double k3    = data[K3];
 		double tilt  = data[TILT];
-		assert(tilt==0);
+		assert(fequal(tilt,0.0));
 		double brho  = energy/eV/SpeedOfLight;
 		return new Octupole(data.label,len,brho*k3);
 	}
@@ -258,7 +259,7 @@ namespace {
 		double len   = data[L];
 		double k4    = data[K4];
 		double tilt  = data[TILT];
-		assert(tilt==0);
+		assert(fequal(tilt,0.0));
 		double brho  = energy/eV/SpeedOfLight;
 		return new Decapole(data.label,len,brho*k4);
 	}
@@ -401,7 +402,7 @@ void XTFFInterface::ConstructComponent(XTFF_Data& dat)
 	else if(dat.keywrd=="MARK") {
 		if(girders && dat.label[1]=='_') {
 			string girderName = dat.label;
-			if(!frameStack.empty() && girderName == frameStack.top()) {
+			if(!frameStack.empty() && girderName == frameStack.top() ) {
 				if(logos)
 					(*logos)<<"<--- "<<girderName<<" END "<<mc->GetCurrentFrameDepth()<<endl;
 				mc->EndFrame();
@@ -438,7 +439,7 @@ void XTFFInterface::ConstructComponent(XTFF_Data& dat)
 		c = mc->AppendComponent(ConstructDrift(dat));
 	}
 
-	if(c && incApertures && dat[APER]!=0) {
+	if(c && incApertures && !fequal(dat[APER],0.0)) {
 		c->SetAperture(new CircularAperture(dat[APER]));
 	}
 
@@ -583,7 +584,7 @@ pair<AcceleratorModel*,BeamData*> XTFFInterface::GetModel()
 		(*logos)<<endl;
 		mc->ReportStatistics(*logos);
 		(*logos)<<"\nFinal ";
-		if(Qt!=0)
+		if(!fequal(Qt,0.0))
 			(*logos)<<"(loaded) ";
 		(*logos)<<"beam energy: "<<energy<<" GeV"<<endl;
 	}

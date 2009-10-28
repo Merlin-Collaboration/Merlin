@@ -11,6 +11,7 @@
 
 // Space2D
 #include "EuclideanGeometry/Space2D.h"
+#include "NumericalUtils/utils.h"
 
 using std::ostream;
 using std::istream;
@@ -57,7 +58,7 @@ public:
     //	Returns true if the rotation angle is zero.
     bool isIdentity () const
     {
-        return sina == 0;
+        return fequal(sina,0.0);
     }
 
     //	Premultipliy *this by R.

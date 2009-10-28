@@ -19,6 +19,7 @@
 #include "NumericalUtils/utils.h"
 #include "NumericalUtils/Range.h"
 #include "AcceleratorModel/AcceleratorComponent.h"
+#include "NumericalUtils/utils.h"
 
 //  Class ComponentIntegrator
 //
@@ -140,7 +141,7 @@ inline double ComponentIntegrator::Track(double ds)
 
 inline bool ComponentIntegrator::AtEntrance() const
 {
-    return cur_S==0;
+    return fequal(cur_S,0.0);
 }
 
 inline bool ComponentIntegrator::AtExit(double s) const

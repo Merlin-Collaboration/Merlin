@@ -21,6 +21,7 @@
 #include "AcceleratorModel/Frames/TComponentFrame.h"
 // AcceleratorModel
 #include "AcceleratorModel/AcceleratorModel.h"
+#include "NumericalUtils/utils.h"
 
 class SequenceFrame;
 
@@ -60,7 +61,7 @@ public:
     //	downstream of the last component.
     template<class T> T* AppendComponent (T& acc, double d = 0)
     {
-        if(d!=0)
+        if(!fequal(d,0.0))
             AppendDrift(d);
         AppendComponentFrame(new TComponentFrame<T>(acc));
         return &acc;
