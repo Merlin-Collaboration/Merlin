@@ -1,5 +1,6 @@
 #include <cmath>
 #include "BeamModel/PSTypes.h"
+#include "BeamDynamics/ParticleTracking/ScatterProton.h"
 #include "Random/RandomNG.h"
 #include <fstream>
 #include "NumericalUtils/utils.h"

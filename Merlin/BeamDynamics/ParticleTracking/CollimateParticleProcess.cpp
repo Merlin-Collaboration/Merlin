@@ -17,6 +17,7 @@
 #include <fstream>
 #include <sstream>
 #include "NumericalUtils/utils.h"
+#include "BeamDynamics/ParticleTracking/ScatterProton.h"
 // CollimateParticleProcess
 #include "BeamDynamics/ParticleTracking/CollimateParticleProcess.h"
 // Aperture

@@ -59,5 +59,4 @@ protected:
     BunchProcess* expectedProcess;
     bool csr;
 };
-
 #endif

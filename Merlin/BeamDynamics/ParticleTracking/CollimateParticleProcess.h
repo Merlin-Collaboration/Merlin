@@ -22,6 +22,7 @@
 
 // ParticleBunchProcess
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
+#include "MADInterface/MADInterface.h"
 // PSTypes
 #include "BeamModel/PSTypes.h"
 // MerlinException
