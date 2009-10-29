@@ -818,7 +818,7 @@ public:
     typedef const T* const_iterator;
 
     // construction (arb. dimension)
-    Matrix() :nr(0),nc(0) {}
+    Matrix() :nr(0),nc(0),array(0) {}
 
     Matrix(Dimension rows, Dimension cols)
             : nr(rows),nc(cols),array(rows*cols)

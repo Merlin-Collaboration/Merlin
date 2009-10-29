@@ -21,7 +21,10 @@
 // ComponentTracker
 #include "AcceleratorModel/TrackingInterface/ComponentTracker.h"
 
-#define _ADDNOISE(var) if((var).error!=0) (var).value+=RandomNG::normal(0.0,(var).error*(var).error)
+#include "NumericalUtils/utils.h"
+
+//#define _ADDNOISE(var) if((var).error!=0) (var).value+=RandomNG::normal(0.0,(var).error*(var).error)
+#define _ADDNOISE(var) if(!fequal((var).error,0.0)) (var).value+=RandomNG::normal(0.0,(var).error*(var).error)
 
 const int RMSProfileMonitor::ID = UniqueIndex();
 
@@ -53,11 +56,11 @@ void RMSProfileMonitor::MakeMeasurement (const Bunch& aBunch)
         mdat.yrms.error = res_y;
 
         // angled measurement
-        if(uangle==0) {
+        if(fequal(uangle,0.0)) {
             mdat.u0.value = mdat.x0.value;
             mdat.urms.value = mdat.xrms.value;
         }
-        else if(uangle==pi/2) {
+        else if(fequal(uangle,pi/2)) {
             mdat.u0.value = mdat.y0.value;
             mdat.urms.value = mdat.yrms.value;
         }

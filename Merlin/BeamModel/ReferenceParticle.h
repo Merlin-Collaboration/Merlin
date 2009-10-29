@@ -28,6 +28,7 @@
 class ReferenceParticle
 {
 public:
+    virtual ~ReferenceParticle();
 
     //	Returns the reference momentum in GeV/c.
     double GetReferenceMomentum () const;
@@ -72,7 +73,7 @@ protected:
 };
 
 inline ReferenceParticle::ReferenceParticle (double p, double q)
-        : p0(p),ct0(0)
+        : p0(p),ct0(0),qs(0.0)
 {
     assert(p>0);
     SetChargeSign(q);

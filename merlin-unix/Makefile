@@ -12,7 +12,7 @@ export MERLIN_BUILD_DIR=${PWD}
 export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
-export CCFLAGS= -pipe -fPIC -Wfloat-equal
+export CCFLAGS= -pipe -fPIC -Weffc++
 
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/release
 SUBDIRS= AcceleratorModel \

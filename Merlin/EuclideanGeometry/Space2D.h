@@ -1,6 +1,3 @@
-
-
-
 #ifndef Space2D_h
 #define Space2D_h 1
 
@@ -25,6 +22,7 @@ class TVec2D
 public:
     //	Default constructor. Data is not initialised.
     TVec2D ()
+            : x(0.0),y(0.0) //set default to 0.0 - JM
     {
     }
 
@@ -120,7 +118,6 @@ public:
     // Data Members for Class Attributes
 
     T x;
-
     T y;
 
 protected:
@@ -128,17 +125,10 @@ private:
 private:
 };
 
-
-
 typedef TVec2D< double,PointTag > Point2D;
-
-
-
 typedef TVec2D< double,VectorTag > Vector2D;
 
 // Parameterized Class TVec2D
-
-
 
 template class TVec2D< double,PointTag >;
 template class TVec2D< double,VectorTag >;

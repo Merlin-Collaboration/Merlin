@@ -22,6 +22,8 @@
 // LinearAlgebra
 #include "TLAS/LinearAlgebra.h"
 
+#include "NumericalUtils/utils.h"
+
 //	Base class for linear matrix maps. LinMtrxMap is
 //	intended only as a common base for class RMtrx and class
 //	RdpMtrx. It cannot be instantiated.
@@ -190,7 +192,7 @@ inline double LinMtrxBase::GetRefMomentum () const
 
 inline bool LinMtrxBase::EnergyIndependent () const
 {
-    return Pref==0;
+    return fequal(Pref,0.0);
 }
 
 inline double LinMtrxBase::scaledp (double P, double dp) const

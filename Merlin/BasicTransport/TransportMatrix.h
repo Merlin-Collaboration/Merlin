@@ -17,6 +17,7 @@
 
 #include "merlin_config.h"
 #include "TLAS/LinearAlgebra.h"
+#include "NumericalUtils/utils.h"
 
 //	Utility routines for constructing transport matrices (R
 //	matrix).
@@ -72,12 +73,12 @@ inline RealMatrix& TransportMatrix::Quadrupole (double length, double Kx, RealMa
 
 inline RealMatrix& TransportMatrix::Srot (double phi, RealMatrix& R)
 {
-    return phi==0 ? R : Srot(cos(phi),sin(phi),R);
+    return fequal(phi,0.0) ? R : Srot(cos(phi),sin(phi),R);
 }
 
 inline RealMatrix& TransportMatrix::SrotR4 (double phi, RealMatrix& R)
 {
-    return phi==0 ? R : SrotR4(cos(phi),sin(phi),R);
+    return fequal(phi,0.0) ? R : SrotR4(cos(phi),sin(phi),R);
 }
 
 #endif

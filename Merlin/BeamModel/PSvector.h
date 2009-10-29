@@ -36,6 +36,8 @@ public:
     PSvector ()
     {}
 
+    virtual ~PSvector();
+
     explicit PSvector (double x) {
         std::fill(v,v+6,x);
     }

@@ -3,6 +3,8 @@
 //  DK 1.12.08
 
 #include "AcceleratorErrors.h"
+#include "NumericalUtils/utils.h"
+
 using namespace std;
 namespace {
    class Errors {
@@ -27,9 +29,9 @@ namespace {
                    if(log) (*log)<<(*frame).GetQualifiedName()<<" translate: "
                                  <<ex<<" "<<ey<<" "<<ez<<endl;
                 } else {
-                   if(ex) frame->RotateX(ex);
-                   if(ey) frame->RotateY(ey);
-                   if(ez) frame->RotateZ(ez);
+                   if(!fequal(ex,0.0)) frame->RotateX(ex);
+                   if(!fequal(ey,0.0)) frame->RotateY(ey);
+                   if(!fequal(ez,0.0)) frame->RotateZ(ez);
                    if(log) (*log)<<(*frame).GetQualifiedName()<<" rotate: "
                                  <<ex<<" "<<ey<<" "<<ez<<endl;
                 }
