@@ -12,9 +12,14 @@
 // 
 /////////////////////////////////////////////////////////////////////////
 
+#ifndef svdcmp_h
+#define svdcmp_h 1
+
 //#ifndef  _MSC_VER
 //#define _MAX(a,b) std::max((a),(b))
 //#endif
+
+#include "NumericalUtils/utils.h"
 
 template<class T,class V>
 Vector<T>& svbksb(const Matrix<T>& u, const Vector<T>& w, const Matrix<T>& v, const V& b, Vector<T>& x)
@@ -26,7 +31,7 @@ Vector<T>& svbksb(const Matrix<T>& u, const Vector<T>& w, const Matrix<T>& v, co
 
     for(j=0;j<n;j++) {
         T s=0.0;
-        if (w[j]) {
+        if (!fequal(w[j],0.0)) {
             for (i=0;i<m;i++)
                 s += u[i][j]*b[i];
             s /= w[j];
@@ -51,7 +56,7 @@ inline T PYTHAG(T a, T b)
         T c=b/a;
         return a*sqrt(1+c*c);
     }
-    else if(b!=0) {
+    else if(!fequal(b,0.0)) {
         T c=a/b;
         return b*sqrt(1+c*c);
     }
@@ -80,7 +85,7 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
         g=s=scale=0.0;
         if (i < m) {
             for (k=i;k<m;k++) scale += fabs(a[k][i]);
-            if (scale) {
+            if (!fequal(scale,0.0)) {
                 for (k=i;k<m;k++) {
                     a[k][i] /= scale;
                     s += a[k][i]*a[k][i];
@@ -103,7 +108,7 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
         g=s=scale=0.0;
         if (i < m && i != n-1) {
             for (k=l;k<n;k++) scale += fabs(a[i][k]);
-            if (scale) {
+            if (!fequal(scale,0.0)) {
                 for (k=l;k<n;k++) {
                     a[i][k] /= scale;
                     s += a[i][k]*a[i][k];
@@ -126,7 +131,7 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
     }
     for (i=n-1;i>=0;i--) {
         if (i < n-1) {
-            if (g) {
+            if (!fequal(g,0.0)) {
                 for (j=l;j<n;j++)
                     v[j][i]=(a[i][j]/a[i][l])/g;
                 for (j=l;j<n;j++) {
@@ -145,7 +150,7 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
         g=w[i];
         if (i < n)
             for (j=l;j<n;j++) a[i][j]=0.0;
-        if (g) {
+        if (!fequal(g,0.0)) {
             g=1.0/g;
             if (i != n-1) {
                 for (j=l;j<n;j++) {
@@ -165,18 +170,18 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
             flag=1;
             for (l=k;l>=0;l--) {
                 nm=l-1;
-                if (fabs(rv1[l])+anorm == anorm) {
+                if (fequal(fabs(rv1[l])+anorm,anorm)) {
                     flag=0;
                     break;
                 }
-                if (fabs(w[nm])+anorm == anorm) break;
+                if (fequal(fabs(w[nm])+anorm,anorm)) break;
             }
-            if (flag) {
+            if (!fequal(flag,0.0)) {
                 c=0.0;
                 s=1.0;
                 for (i=l;i<=k;i++) {
                     f=s*rv1[i];
-                    if (fabs(f)+anorm != anorm) {
+                    if (!fequal(fabs(f)+anorm,anorm)) {
                         g=w[i];
                         h=PYTHAG(f,g);
                         w[i]=h;
@@ -234,7 +239,7 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
                 }
                 z=PYTHAG(f,h);
                 w[j]=z;
-                if (z) {
+                if (!fequal(z,0.0)) {
                     z=1.0/z;
                     c=f*z;
                     s=h*z;
@@ -254,3 +259,5 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
         }
     }
 }
+
+#endif

@@ -22,7 +22,7 @@
 #include "NumericalUtils/Complex.h"
 #include "EuclideanGeometry/Space3D.h"
 #include "AcceleratorModel/EMField.h"
-
+#include "NumericalUtils/utils.h"
 
 //	A representation of a multipole expansion of a magnetic
 //	field having only a non-zero component of the magnetic
@@ -156,7 +156,7 @@ inline MultipoleField::MultipoleField (double scale, size_t nt)
 
 inline bool MultipoleField::IsNullField () const
 {
-    return B0==0;
+    return fequal(B0,0.0);
 }
 
 inline int MultipoleField::HighestMultipole () const

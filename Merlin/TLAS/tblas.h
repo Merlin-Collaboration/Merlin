@@ -19,6 +19,7 @@
 #ifndef _h_tblas
 #define _h_tblas
 
+#include "NumericalUtils/utils.h"
 #include <cassert>
 
 namespace tblas1 {
@@ -58,11 +59,11 @@ template<class Ta, class M, class Vx, class Tb, class Vy>
 void tgemv(bool t, const Ta& alpha, const M& A, const Vx& x, const Tb& beta, Vy& y)
 {
     assert(&x!=&y); // that's a no-no!
-    if(beta!=1)
+    if(!fequal(beta,1.0))
         for(register size_t i=0; i<A.nrows(); i++)
             y[i]*=beta;
 
-    if(alpha!=0)
+    if(!fequal(alpha,0.0))
         if(t) { // use transpose of A
             for(register size_t i=0; i<A.ncols(); ++i)
                 for(register size_t j=0; j<A.nrows(); ++j)
@@ -101,12 +102,12 @@ void tgemm(bool tpa, bool tpb, const Ta& alpha, const Ma& A, const Mb& B,
 {
     assert(&C!=&A && &C!=&B); // that's a no-no
 
-    if(beta==0)
+    if(fequal(beta,0.0))
         C=0; // assignment faster than multiplication?
-    else if(beta!=1)
+    else if(!fequal(beta,1.0))
         C*=beta;
 
-    if(alpha==0)
+    if(fequal(alpha,0.0))
         return;
 
     // calculate the range of the k subscript

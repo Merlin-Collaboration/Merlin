@@ -16,6 +16,7 @@
 #define ReferenceParticle_h 1
 
 #include "merlin_config.h"
+#include "NumericalUtils/utils.h"
 #include <cassert>
 
 //	A ReferenceParticle represents that particle which sits
@@ -120,7 +121,7 @@ inline void ReferenceParticle::SetChargeSign (double q)
 {
     if(q<0)
         qs=-1;
-    else if(q==0)
+    else if(fequal(q,0.0))
         qs=0;
     else
         qs=1;

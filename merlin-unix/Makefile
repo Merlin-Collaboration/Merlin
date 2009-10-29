@@ -12,8 +12,8 @@ export MERLIN_BUILD_DIR=${PWD}
 export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
-export CCFLAGS= -Wall -Wextra -W -pipe -fPIC -pg -Wfloat-equal
-# -Wno-unused -Wno-conversion -Wno-sign-compare
+export CCFLAGS= -pipe -fPIC -Wfloat-equal
+
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/release
 SUBDIRS= AcceleratorModel \
       AcceleratorModel/ActiveMonitors \
@@ -48,12 +48,14 @@ SUBDIRS= AcceleratorModel \
       utility \
       RingDynamics 
 
+default: release
+
 .PHONY: subdirs $(SUBDIRS)
 subdirs: $(SUBDIRS)
 $(SUBDIRS): obj
 	$(MAKE) -C ${MERLIN_ROOT_DIR}/$@
 
-obj:
+obj: config
 	if [ ! -d ${MERLIN_BUILD_DIR}/obj ] ; \
 	then \
 		mkdir ${MERLIN_BUILD_DIR}/obj ; \
@@ -70,8 +72,13 @@ release: subdirs
 clean:
 	if [ -d ${MERLIN_BUILD_DIR}/obj ]; then rm -r ${MERLIN_BUILD_DIR}/obj; fi
 
+	for dirn in ${SUBDIRS}; do \
+		cd ${MERLIN_ROOT_DIR}/$${dirn}; \
+		rm -f *~ catagory Makefile; \
+	done
+
 config:
-	for dirn in ${CATS}; do \
+	for dirn in ${SUBDIRS}; do \
 		cd ${MERLIN_ROOT_DIR}/$${dirn}; \
 		echo "building makefile for " $${dirn}; \
 		${MERLIN_BUILD_DIR}/build_makefile; \
