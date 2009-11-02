@@ -36,12 +36,19 @@
 // MADInterface
 #include "MADInterface/MADInterface.h"
 #include "MADInterface/ConstructSrot.h"
+#include "Collimators/ResistiveWakePotentials.h"
 
 using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
+
+
+const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
+
+
 namespace {
+
 
 // stack used to match MAD LINE pairs
 // Note: we need this because we no longer preserve the complete MAD beamline

@@ -37,6 +37,7 @@ SUBDIRS= AcceleratorModel \
       BeamDynamics/CommonUtilities \
       BeamModel \
       Channels \
+      Collimators \
       TLAS \
       Corrections \
       EuclideanGeometry \

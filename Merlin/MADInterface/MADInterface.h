@@ -172,7 +172,7 @@ const double coll_mat_data_A[] = {9.012182, 12.011, 1.204, 26.981539, 183.84, 20
 //                                     Be        C     Al       Cu       W        Pb       
 const double coll_mat_data_sigma[] = {3.08e7, 7.14e4, 35.64e6, 5.98e7, 0.177e4, 4.8077e6 };
 
-const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
+extern const char* material_names[]; 
 
 
 class TiltedAperture: public RectangularAperture
