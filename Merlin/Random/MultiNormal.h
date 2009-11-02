@@ -29,6 +29,10 @@ private:
     RealMatrix           L;    // matrix(NxN): covariance in upper tri. filled by constructor
                                // cholesky decomp of covariance matrix in lower tri. filled by CholeskyMatrix
     double*              x;    // pointer to scratch pad for random numbers
+
+    //Copy protection
+    MultiNormal(const MultiNormal& rhs);
+    MultiNormal& operator=(const MultiNormal& rhs);
 };
 
 template<int N>    

@@ -154,7 +154,7 @@ public:
 
 	static bool sympVars;	// Flag to indicate whether tracking uses symplectic variables
 
-public:
+
 protected:
 private:
     // Data Members for Class Attributes
@@ -188,6 +188,10 @@ private:
     MultipoleField* currentField;
 
     double dsMax;
+
+    // Copy prevention
+    SynchRadParticleProcess(const SynchRadParticleProcess& rhs);
+    SynchRadParticleProcess& operator=(const SynchRadParticleProcess& rhs);
 };
 
 

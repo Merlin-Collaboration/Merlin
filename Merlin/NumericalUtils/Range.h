@@ -34,6 +34,7 @@ class RangeBase
 {
 public:
     typedef enum {ok,belowlower,aboveupper} Result;
+    virtual ~RangeBase();
 };
 
 //	Represents an allowed contiguous range of a floating

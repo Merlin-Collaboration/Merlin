@@ -87,6 +87,7 @@ public:
         {}
 
         Beamline ()
+                : first(0),last(0),first_i(0),last_i(0)
         {}
 
         //	Returns true if the beamline is reversed.
@@ -161,7 +162,8 @@ public:
 
         Index first_i;
         Index last_i;
-    };
+
+	};
 
     // Exception class fro GetBeamline functions
     class BadRange : public MerlinException
@@ -179,6 +181,7 @@ public:
     AcceleratorModel ();
 
     ~AcceleratorModel ();
+//    virtual ~AcceleratorModel ();
 
     //	Returns the entire beamline of the model.
     Beamline GetBeamline ();
@@ -307,6 +310,11 @@ private:
     ChannelServer* chServer;
 
     friend class AcceleratorModelConstructor;
+
+    //Disable copying
+    AcceleratorModel(const AcceleratorModel& am);
+    AcceleratorModel& operator=(const AcceleratorModel& am);
+
 };
 
 #endif

@@ -1,5 +1,5 @@
 # the compiler to use
-export CPP= g++4
+export CPP= g++43
 #export CPP=distcc
 # the root directory for the Merlin source code
 export MERLIN_ROOT_DIR=${PWD}/../Merlin
@@ -8,11 +8,11 @@ export MERLIN_ROOT_DIR=${PWD}/../Merlin
 # [see README for more details]
 export MERLIN_BUILD_DIR=${PWD}
 
-# the install directory where the libs will be places
+# the install directory where the libs will be placed
 export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
-export CCFLAGS= -pipe -fPIC -Weffc++
+export CCFLAGS= -pipe -fPIC -march=k8 -mfpmath=sse -Wall -Wextra -W -Weffc++ -pg -DTLAS_NO_RANGE_CHECKING 
 
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/release
 SUBDIRS= AcceleratorModel \

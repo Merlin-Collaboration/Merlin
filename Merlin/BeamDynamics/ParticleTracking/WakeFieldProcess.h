@@ -54,7 +54,6 @@ public:
     void DumpSliceCentroids(ostream&) const;
     void SetFilter(int n, int m, int d);
 
-    //private: 
     protected:
 
     ImpulseLocation imploc;
@@ -85,6 +84,11 @@ public:
     double zmin,zmax,dz;
 
 	size_t oldBunchLen;
+
+private:
+    //Copy protection
+    WakeFieldProcess(const WakeFieldProcess& rhs);
+    WakeFieldProcess& operator=(const WakeFieldProcess& rhs);
 };
 
 void savgol(vector<double>& c, int nl, int nr, int ld, int m);

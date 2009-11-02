@@ -64,6 +64,7 @@ void tgemv(bool t, const Ta& alpha, const M& A, const Vx& x, const Tb& beta, Vy&
             y[i]*=beta;
 
     if(!fequal(alpha,0.0))
+    {//start if/else - should be correct
         if(t) { // use transpose of A
             for(register size_t i=0; i<A.ncols(); ++i)
                 for(register size_t j=0; j<A.nrows(); ++j)
@@ -74,6 +75,7 @@ void tgemv(bool t, const Ta& alpha, const M& A, const Vx& x, const Tb& beta, Vy&
                 for(register size_t j=0; j<A.ncols(); ++j)
                     y[i]+=alpha*A(i,j)*x[j];
         }
+    }//end
 }
 
 // add Symm, Upper and Lower diagonal forms later

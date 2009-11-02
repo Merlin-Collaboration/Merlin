@@ -23,6 +23,7 @@ class MerlinException
 {
   public:
 
+      virtual ~MerlinException();
       explicit MerlinException (const std::string& s);
       MerlinException ();
       const char* Msg () const;
@@ -41,6 +42,7 @@ inline MerlinException::MerlinException (const std::string& s)
 {}
 
 inline MerlinException::MerlinException ()
+  : msg(NULL)
 {}
 
 inline const char* MerlinException::Msg () const

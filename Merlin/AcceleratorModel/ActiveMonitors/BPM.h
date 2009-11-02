@@ -26,7 +26,6 @@
 #include "NumericalUtils/Measurement.h"
 
 class Bunch;
-class BPM;
 class ComponentTracker;
 
 // Class representing a Beam Position Monitor BPM
@@ -43,13 +42,18 @@ class BPM : public Monitor
 {
 public:
 
+    BPM() : res_x(),res_y(),scale_x(),scale_y(),itsResponse(),buffers() {}
+
     // data structure for BPM data
     struct Data
     {
         double ct;
         Measurement x;
         Measurement y;
+    Data() : ct(),x(),y() {}
     };
+
+
 
     //	Buffer used by  BPM objects to record the results of a
     //	measurement. A single buffer can be associated with many
@@ -137,6 +141,10 @@ private:
     BufferManager buffers;
 
     bool TakeData () const;
+
+    //Copy protection
+    BPM(const BPM& rhs);
+    BPM& operator=(const BPM& rhs);
 };
 
 inline BPM::Buffer::~Buffer ()

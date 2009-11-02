@@ -48,6 +48,7 @@ public:
         Measurement xrms;
         Measurement yrms;
         Measurement urms;
+	Data() : x0(),y0(),u0(),xrms(),yrms(),urms() {}
     };
 
     class Buffer

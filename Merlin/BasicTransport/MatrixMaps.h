@@ -32,6 +32,8 @@ class LinMtrxBase
 {
 public:
 
+    virtual ~LinMtrxBase();
+
     //	Return the number of degrees of freedom for this matrix
     //	(dimension/2).
     int GetNDF () const;

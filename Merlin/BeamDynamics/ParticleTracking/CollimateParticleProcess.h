@@ -142,6 +142,10 @@ private:
     double Xr; // radiation length 
     double len; // physical length     
     bool DoScatter(Particle&);
+
+    //Copy protection
+    CollimateParticleProcess(const CollimateParticleProcess& rhs);
+    CollimateParticleProcess& operator=(const CollimateParticleProcess& rhs);
 };
 
 inline void CollimateParticleProcess::CreateParticleLossFiles (bool flg, string fprefix)

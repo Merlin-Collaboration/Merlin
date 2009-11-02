@@ -64,6 +64,11 @@ public:
     //
     virtual unsigned int asLong();
     virtual void reset();
+
+private:
+    //Copy protection
+    ACG(const ACG& rhs);
+    ACG& operator=(const ACG& rhs);
 };
 
 #endif

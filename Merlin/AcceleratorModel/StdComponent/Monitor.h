@@ -34,6 +34,8 @@ class Monitor : public SimpleDrift
 {
 public:
 
+    Monitor();
+
     //	Constructor taking the identifier for the diagnostic,
     //	together with its length (default=0) and measurement
     //	point (default = 0, mid-point).

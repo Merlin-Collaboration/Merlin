@@ -73,6 +73,10 @@ private:
     Poisson* poissonGen;
 
     void ResetGenerators ();
+
+RandGenerator(const RandGenerator& rand);
+RandGenerator& operator=(const RandGenerator& rand);
+
 };
 
 //	Singleton class for generating continuous floating point

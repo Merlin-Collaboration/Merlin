@@ -23,15 +23,19 @@ using namespace std;
 
 class AcceleratorErrors {
 public:
-	AcceleratorErrors(){};
+	AcceleratorErrors()
+	: vx(0),vy(0),vz(0),mx(0),my(0),mz(0),clear(0),log(NULL)
+	{};
 	void SetErrors(double  xrms=0, double  yrms=0, double  zrms=0,
-	          double meanx=0, double meany=0, double meanz=0 ){
+		          double meanx=0, double meany=0, double meanz=0 )
+	{
 		vx=xrms*xrms; vy=yrms*yrms; vz=zrms*zrms;
 		mx=meanx; my=meany; mz=meanz;
 		clear=true;
 	}
 	void AddErrors(double  xrms=0, double  yrms=0, double  zrms=0,
-	          double meanx=0, double meany=0, double meanz=0 ){
+		          double meanx=0, double meany=0, double meanz=0 )
+	{
 		vx=xrms*xrms; vy=yrms*yrms; vz=zrms*zrms;
 		mx=meanx; my=meany; mz=meanz;
 		clear=false;
@@ -40,9 +44,13 @@ public:
 	void ApplyRotations(AcceleratorModel::Beamline& b, const string& p);
 	void Report(ostream* l){log=l;};
 private:
-        bool      clear;
         double vx,vy,vz;
         double mx,my,mz;
+        bool      clear;
 	ostream* log;
+
+    //Copy protection
+    AcceleratorErrors(const AcceleratorErrors& rhs);
+    AcceleratorErrors& operator=(const AcceleratorErrors& rhs);
 };
 #endif

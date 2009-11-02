@@ -77,7 +77,13 @@ protected:
     Transform3D* local_T;
 
     // Copy
-    void operator=(const Transformable& rhs);
+    Transformable& operator=(const Transformable& rhs)
+    {
+    if(local_T)
+        delete local_T;
+    local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : 0;
+    return *this;
+    }
 };
 
 // Class Transformable
@@ -87,14 +93,8 @@ inline Transformable::Transformable ()
 {}
 
 inline Transformable::Transformable(const Transformable& rhs)
+	:local_T(NULL)
 {
-    local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : 0;
-}
-
-inline void Transformable::operator=(const Transformable& rhs)
-{
-    if(local_T)
-        delete local_T;
     local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : 0;
 }
 

@@ -88,10 +88,14 @@ private:
 
     //  The current component
     AcceleratorComponent* component;
+
+    // Copy protection
+    ComponentIntegrator(const ComponentIntegrator& rhs);
+    ComponentIntegrator& operator=(const ComponentIntegrator& rhs);
 };
 
 inline ComponentIntegrator::ComponentIntegrator ()
-        : cur_S(0),component(0)
+        : cur_S(0),tot_S(0),component(0)
 {}
 
 inline ComponentIntegrator::~ComponentIntegrator ()

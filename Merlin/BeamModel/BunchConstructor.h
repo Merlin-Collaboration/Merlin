@@ -59,6 +59,10 @@ private:
 
     //	Set true if the ctor owns the source bunch.
     bool owns;
+
+    //Copy protection for bunches
+    StaticBunchCtor(const StaticBunchCtor& rhs);
+    StaticBunchCtor& operator=(const StaticBunchCtor& rhs);
 };
 
 inline BunchConstructor::~BunchConstructor ()

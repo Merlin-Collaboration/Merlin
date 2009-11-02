@@ -77,10 +77,12 @@ protected:
 
 private:
 
+    //The following two lines disable the copying of BunchProcess objects via the copy constructor or via assignment.	
     BunchProcess(const BunchProcess& bp);
+    BunchProcess& operator=(const BunchProcess& bp);
 
-    int priority;
     string ID;
+    int priority;
 };
 
 // Template class for defining bunch specific BunchProcess classes
@@ -103,7 +105,7 @@ protected:
 };
 
 inline BunchProcess::BunchProcess (const string& anID, int aPriority)
-        : active(false),ID(anID),priority(aPriority),currentComponent(NULL)
+        : active(false),currentComponent(NULL),ID(anID),priority(aPriority)
 {}
 
 inline BunchProcess::~BunchProcess ()

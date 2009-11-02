@@ -34,6 +34,7 @@ const string& Marker::GetType () const
     _TYPESTR(Marker)
 }
 
+//FIXME
 ModelElement* Marker::Copy () const
 {
     return new Marker(*this);

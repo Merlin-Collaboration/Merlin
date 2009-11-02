@@ -44,7 +44,7 @@ public:
     //	Returns the type string for this component.
     virtual const string& GetType () const;
 
-    //	Virtual constructor.
+    //	Virtual constructor. - FIXME
     virtual ModelElement* Copy () const;
 
     //	Rotates the component 180 degrees about its local Y axis.

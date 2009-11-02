@@ -269,16 +269,19 @@ private:
     //	sub-frame of this frame.
     virtual bool IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFrame) const = 0;
     Transform3D LocalBoundaryPlaneTransform (BoundaryPlane p) const;
+
+LatticeFrame& operator=(const LatticeFrame& rhs);
+
 };
 
 // Class LatticeFrame
 
 inline LatticeFrame::LatticeFrame (const string& id)
-        : ModelElement(id),Transformable(), s_0(0),superFrame(0),itsGeometry(0)
+        : ModelElement(id),Transformable(), s_0(0),superFrame(NULL),itsGeometry(NULL)
 {}
 
 inline LatticeFrame::LatticeFrame (const LatticeFrame& rhs)
-        : ModelElement(rhs),Transformable(rhs),s_0(0),superFrame(0),itsGeometry(0)
+        : ModelElement(rhs),Transformable(rhs),s_0(0),superFrame(NULL),itsGeometry(NULL)
 {}
 
 inline LatticeFrame::~LatticeFrame ()

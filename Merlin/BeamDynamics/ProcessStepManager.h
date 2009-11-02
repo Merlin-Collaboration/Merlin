@@ -70,6 +70,10 @@ private:
     //	list of processes in order of priority.
     //	ordered
     std::list<BunchProcess*> processTable;
+
+    //Copy protection
+    ProcessStepManager(const ProcessStepManager& rhs);
+    ProcessStepManager& operator=(const ProcessStepManager& rhs);
 };
 
 #endif

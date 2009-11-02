@@ -28,7 +28,7 @@
 class ReferenceParticle
 {
 public:
-    virtual ~ReferenceParticle();
+    virtual ~ReferenceParticle() {};
 
     //	Returns the reference momentum in GeV/c.
     double GetReferenceMomentum () const;

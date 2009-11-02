@@ -34,6 +34,7 @@ inline Measurement::Measurement (double v, double err)
 {}
 
 inline Measurement::Measurement ()
+	: value(0),error(0)
 {}
 
 #endif

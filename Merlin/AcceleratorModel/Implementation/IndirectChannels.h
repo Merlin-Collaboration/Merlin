@@ -90,6 +90,10 @@ private:
 
     E* theElement;
     ch_ctor* fp;
+
+    TIRWChannel(const TIRWChannel& rhs);
+    TIRWChannel& operator=(const TIRWChannel& rhs);
+
 };
 
 template <class E>

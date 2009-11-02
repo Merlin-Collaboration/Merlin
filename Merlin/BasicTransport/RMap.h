@@ -140,8 +140,13 @@ protected:
 
 // class R2Map
 // simple POD R matrix representation for one degree of freedom
-struct R2Map {
-    R2Map() {}
+//struct R2Map {
+//FIXME
+class R2Map{
+public:
+    R2Map()
+    :r11(0),r12(0),r21(0),r22(0)
+    {}
     R2Map(double a11, double a12, double a21, double a22)
             :r11(a11),r12(a12),r21(a21),r22(a22) {}
 

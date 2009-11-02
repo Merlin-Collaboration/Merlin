@@ -152,6 +152,11 @@ public:
 
 private:
     transport_process* transportProc;
+
+    //Copy protection
+    TTrackSim(const TTrackSim& rhs);
+    TTrackSim& operator=(const TTrackSim& rhs);
+
 };
 
 // template implementation

@@ -26,6 +26,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 class Random {
 protected:
     RNG *pGenerator;
+
 public:
     virtual ~Random(){};
     Random(RNG *generator);
@@ -33,6 +34,11 @@ public:
 
     RNG *generator();
     void generator(RNG *p);
+
+private:
+    //Copy protection
+    Random(const Random& rhs);
+    Random& operator=(const Random& rhs);
 };
 
 

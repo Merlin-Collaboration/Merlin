@@ -88,20 +88,24 @@ protected:
 
 private:
 	size_t blI; // beamline index
+
+	//Just need to disable the assignment operator - copy constructor is defined
+	ComponentFrame& operator=(const ComponentFrame& frame);
+
 };
 
 inline ComponentFrame::ComponentFrame (AcceleratorComponent& ac, const string& id)
-        : LatticeFrame(id.empty()?ac.GetQualifiedName():id),theComponent(&ac)
+        : LatticeFrame(id.empty()?ac.GetQualifiedName():id),theComponent(&ac),blI(0)
 {
     SetGeometry(theComponent->GetGeometry());
 }
 
 inline ComponentFrame::ComponentFrame (const ComponentFrame& rhs)
-: LatticeFrame(rhs),theComponent(rhs.theComponent)
+: LatticeFrame(rhs),theComponent(rhs.theComponent),blI(0)
 {}
 
 inline ComponentFrame::ComponentFrame(AcceleratorComponent* ac, const string& id)
-: LatticeFrame(id),theComponent(ac)
+: LatticeFrame(id),theComponent(ac),blI(0)
 {}
 
 inline AcceleratorComponent& ComponentFrame::GetComponent ()

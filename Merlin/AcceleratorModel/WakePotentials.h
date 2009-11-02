@@ -42,7 +42,6 @@ public:
 //    virtual double Wtrans (double z) const = 0;
     virtual double Wlong (double z) const { 
     	cout<<"WakePotentials::Wlong: Virtual function called! With z = " << z <<endl; 
-    	abort();
     	return 0;
     };
     virtual double Wtrans (double z) const { 
@@ -58,6 +57,10 @@ public:
 protected:
     BunchProcess* expectedProcess;
     bool csr;
+
+private:
+    WakePotentials(const WakePotentials& wake);
+    WakePotentials& operator=(const WakePotentials& wake);
 };
 
 #endif

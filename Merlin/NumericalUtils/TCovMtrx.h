@@ -26,7 +26,7 @@ public:
     //	Default constructor initialises all values to zero.
     TCovMtrx () { Zero(); }
 
-    virtual ~TCovMtrx();
+    virtual ~TCovMtrx() {};
 
     //	Return the standard diviation (RMS) of the n-th variable.
     T std(int n) const {

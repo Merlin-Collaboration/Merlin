@@ -86,6 +86,11 @@ private:
     AcceleratorSupportList theSupports;
 
     RandGenerator* rg;
+
+    //Copy protection
+    SimpleATL(const SimpleATL& rhs);
+    SimpleATL& operator=(const SimpleATL& rhs);
+
 };
 
 #endif

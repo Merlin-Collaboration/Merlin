@@ -23,6 +23,10 @@ public:
 private:
     CombinedWakeRF* currentWake;    
     double phi,V,k;
+
+    //Copy protection
+    CouplerWakeFieldProcess(const CouplerWakeFieldProcess& rhs);
+    CouplerWakeFieldProcess& operator=(const CouplerWakeFieldProcess& rhs);
 };
 
 }; // end namespace ParticleTracking
