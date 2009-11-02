@@ -68,7 +68,7 @@ obj: config
 .PHONY: release
 release: subdirs
 	gcc -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${MERLIN_BUILD_DIR}/obj/release/*.o
-
+	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${MERLIN_BUILD_DIR}/obj/release/*.o
 clean:
 	if [ -d ${MERLIN_BUILD_DIR}/obj ]; then rm -r ${MERLIN_BUILD_DIR}/obj; fi
 
