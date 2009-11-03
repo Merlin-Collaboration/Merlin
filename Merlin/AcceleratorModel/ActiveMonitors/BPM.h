@@ -40,6 +40,10 @@ class ComponentTracker;
 
 class BPM : public Monitor
 {
+private:
+    //Copy protection
+    //BPM(const BPM& rhs);
+    BPM& operator=(const BPM& rhs);
 public:
 
     BPM() : res_x(),res_y(),scale_x(),scale_y(),itsResponse(),buffers() {}
@@ -141,10 +145,6 @@ private:
     BufferManager buffers;
 
     bool TakeData () const;
-
-    //Copy protection
-    BPM(const BPM& rhs);
-    BPM& operator=(const BPM& rhs);
 };
 
 inline BPM::Buffer::~Buffer ()
