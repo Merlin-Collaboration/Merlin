@@ -7,7 +7,6 @@
 #include "NumericalUtils/utils.h"
 
 using namespace PhysicalUnits;
-
 	// calculate random small-angle Coulomb scattering
 	pair<double,double> CoulombScatterp(double x, double theta0)
 	{
