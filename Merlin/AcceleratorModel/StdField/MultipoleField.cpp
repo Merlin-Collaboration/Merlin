@@ -41,18 +41,21 @@ MultipoleField::MultipoleField (int np, double bn, double an, double r0)
     B0=abs(z);
     expansion[np]=z/B0;
     B0/=pow(r0,np);
+    cout<<" CONSTRUCT 1"<<endl;
 }
 
 MultipoleField::MultipoleField (int np, double bn, double r0, bool skew)
         : B0(),expansion(np+1,Complex(0,0))
 {
     expansion[np] = skew ? Complex(0,1) : Complex(1,0);
+    cout<<" CONSTRUCT 2"<<endl;
     B0=bn/pow(r0,np);
 }
 
 MultipoleField::MultipoleField (int np, double bn, bool skew)
         :B0(bn/factorial(np)),expansion(np+1,Complex(0,0))
 {
+    cout<<" CONSTRUCT 3 "<<np<<" "<<bn<<" "<<skew<<endl;
     expansion[np] = skew ? Complex(0,1) : Complex(1,0);
 }
 
@@ -81,10 +84,12 @@ Complex MultipoleField::GetField2D (double x, double y, int exclude) const
 
     Complex B(0,0);
     Complex z(1);
+    cout<<" INVOKED 1 "<<x<<" "<<y<<" "<<exclude<<endl;
 
     for(int n=0; n<exclude; n++) z*=z0;
 
     for(const_iterator ti=expansion.begin()+exclude;ti!=expansion.end();ti++) {
+        cout<<z<<" "<<z0<<" "<<B<<endl;
         B+=(*ti)*z;
         z*=z0;
     }

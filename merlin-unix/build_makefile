@@ -27,10 +27,6 @@ do
 	echo "     \${OBJDIR}/$prefix.o \\" >> Makefile
 done
 
-#echo "" >> Makefile
-#echo "# include dependencies file" >> Makefile
-#echo "include depend" >> Makefile
-
 echo "" >> Makefile
 echo "catagory: \${OFILES}" >> Makefile
 #echo "	touch \$@" >> Makefile

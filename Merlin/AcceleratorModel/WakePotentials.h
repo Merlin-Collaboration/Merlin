@@ -7,25 +7,16 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
-// $Date: 2008/05/22 21:28:17 $
-// $Revision: 1.3.4.3 $
+// $Date: 2004/12/13 08:38:51 $
+// $Revision: 1.3 $
 // 
 /////////////////////////////////////////////////////////////////////////
-//
-// Modified by D.Kruecker 18.2.2008
-// to be used as base class for other wake potentials
-// see SpoilerWakeProcess 
 
 #ifndef WakePotentials_h
 #define WakePotentials_h 1
 
 #include "merlin_config.h"
-#include <string>
-#include <iostream>
-
 #include "BeamDynamics/BunchProcess.h"
-
-using namespace std;
 
 //	Abstract class for calculating the longitudinal and
 //	transverse single-bunch wakefield potentials (Greens
@@ -33,34 +24,33 @@ using namespace std;
 
 class WakePotentials
 {
+  
 public:
 
-    WakePotentials() : expectedProcess(0), csr(false){}
-    virtual ~WakePotentials () {};
+   WakePotentials(double r, double s) : csr(false), radius(r), conductivity(s) {} 
+     WakePotentials() : expectedProcess(0),csr(false) {}   // back to the original constructor
+     //WakePotentials() : csr(false) {}   // back to the original constructor
+     virtual ~WakePotentials () {};
 
-//    virtual double Wlong (double z)  const = 0;
-//    virtual double Wtrans (double z) const = 0;
-    virtual double Wlong (double z) const { 
-    	cout<<"WakePotentials::Wlong: Virtual function called! With z = " << z <<endl; 
-    	return 0;
-    };
-    virtual double Wtrans (double z) const { 
-    	cout<<"WakePotentials::Wtrans: Virtual function called! With z = " << z <<endl; 
-    	return 0;
-    };
-    bool Is_CSR () const {
+     virtual double Wlong (double z) const = 0;
+     virtual double Wtrans (double z) const = 0;
+     bool Is_CSR () const {
         return csr;
-    }
+     }
     BunchProcess* GetExpectedProcess(){return expectedProcess;};
-    void          SetExpectedProcess(BunchProcess* p){expectedProcess=p;};
-        
+    void SetExpectedProcess(BunchProcess* p){expectedProcess=p;};
+    
+     
+
 protected:
-    BunchProcess* expectedProcess;
     bool csr;
 
 private:
     WakePotentials(const WakePotentials& wake);
     WakePotentials& operator=(const WakePotentials& wake);
+    BunchProcess* expectedProcess;
+    double radius;         
+    double conductivity;   
 };
 
 #endif

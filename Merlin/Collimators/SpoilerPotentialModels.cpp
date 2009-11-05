@@ -13,7 +13,7 @@
 
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/SpoilerPotentialModels.h"
+#include "Collimators/SpoilerPotentialModels.h"
 #include <math.h>
 
 using namespace std;

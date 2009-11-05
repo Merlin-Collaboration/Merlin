@@ -1,20 +1,20 @@
 
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (2000)
-* 
+*
 * file Merlin\AcceleratorModel\StdComponent\Spoiler.cpp
 * last modified 04/04/01 15:25:43
 *
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 *
-* Copyright (c) 2000 by The Merlin Collaboration.  
-* ALL RIGHTS RESERVED. 
+* Copyright (c) 2000 by The Merlin Collaboration.
+* ALL RIGHTS RESERVED.
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -28,7 +28,9 @@
 
 
 // Spoiler
-#include "AcceleratorModel/StdComponent/Spoiler.h"
+//#include "AcceleratorModel/StdComponent/Spoiler.h"
+#include "Spoiler.h"
+
 // ComponentTracker
 #include "AcceleratorModel/TrackingInterface/ComponentTracker.h"
 
@@ -37,7 +39,7 @@ const int Spoiler::ID = UniqueIndex();
 
 Spoiler::Spoiler (const string& id, double len, double radLength)
         : Drift(id,len),Xr(radLength)
-{}
+{scatter_at_this_spoiler = true;}
 
 const string& Spoiler::GetType () const
 {

@@ -26,8 +26,8 @@ class SpoilerWakePotentials : public WakePotentials
 
 public:
 
-SpoilerWakePotentials(int m) 
-   : WakePotentials() { nmodes = m; }
+SpoilerWakePotentials(int m, double r=0, double s=0) 
+   : WakePotentials(r,s) { nmodes = m; }   //take the radius and the conductivity out of WakePotentials
 
     virtual ~SpoilerWakePotentials () {};
    

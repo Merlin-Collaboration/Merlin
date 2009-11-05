@@ -6,7 +6,8 @@
 
 CPP= g++
 MERLIN_ROOT_DIR=${PWD}/../../Merlin
-MERLIN_LIB_PATH=${PWD}/../../merlin-unix/lib
+#MERLIN_LIB_PATH=${PWD}/../../merlin-unix/lib
+MERLIN_LIB_PATH=${HOME}/lib
 INCPATH= -I${MERLIN_ROOT_DIR}
 CCFLAGS= -w -O3 ${INCPATH}
 LDFLAGS= -L${MERLIN_LIB_PATH} -static 
@@ -19,5 +20,7 @@ ex2 : ex2.o TeslaWakePotential.o
 ex3 : ex3.o 
 	${CPP} ${LDFLAGS} -o $@ $^ -lmerlin -lm
 
+example411 : example411.o 
+	${CPP} ${LDFLAGS} -o $@ $^ -lmerlin -lm
 %.o : %.cpp
 	${CPP} ${CCFLAGS} -c  -o $@ $<

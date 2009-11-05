@@ -17,7 +17,7 @@
 
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/CollimateParticleProcess.h"
+#include "Collimators/CollimateParticleProcess.h"
 #include "NumericalUtils/NumericalConstants.h"
 
 #include "BetatronTunes.h"

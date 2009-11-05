@@ -1,20 +1,21 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/01/31 16:20:21 $
 // $Revision: 1.15 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
 #include "AcceleratorModel/Components.h"
 #include "AcceleratorModel/StdComponent/Spoiler.h"
+
 #include "IO/MerlinIO.h"
 #include "NumericalUtils/utils.h"
 
@@ -35,12 +36,19 @@
 // MADInterface
 #include "MADInterface/MADInterface.h"
 #include "MADInterface/ConstructSrot.h"
+#include "Collimators/ResistiveWakePotentials.h"
 
 using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
+
+
+const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
+
+
 namespace {
+
 
 // stack used to match MAD LINE pairs
 // Note: we need this because we no longer preserve the complete MAD beamline
@@ -84,11 +92,16 @@ inline string StripQuotes(const string& text)
     return text.substr(1,text.length()-2);
 }
 
+
+
+
 Aperture* ConstructAperture(const string& apstr)
 {
     Aperture* ap;
-    double w,h,d;
-    string::size_type n;
+    double w,h,d,t;
+    string::size_type n,n2;
+
+   // cout << "ConstructAperture("<< apstr<<")"<<endl;
 
     switch(apstr[0]) {
     case 'D':
@@ -102,6 +115,17 @@ Aperture* ConstructAperture(const string& apstr)
         h = atof(apstr.substr(n+1).c_str())*millimeter;
         ap = new RectangularAperture(w,h);
         break;
+            case 'T':
+	           n = apstr.find_first_of('X',1);
+	           n2 = apstr.find_first_of('Y',1);
+	           assert(n!=string::npos);
+	           t = atof(apstr.substr(1,n-1).c_str());
+
+	           w = atof(apstr.substr(n+1,n2-1).c_str())*millimeter;
+	           h = atof(apstr.substr(n2+1).c_str())*millimeter;
+	          // cout << "found a titled aperture w="<<w<<" h="<<h<<" t="<<t<<endl;
+	          ap = new TiltedAperture(w,h,t);
+        break;
     case '~':
         ap = 0;
         break;
@@ -112,6 +136,8 @@ Aperture* ConstructAperture(const string& apstr)
 
     return ap;
 }
+
+
 
 void check_column_heading(istream& is, const string& hd)
 {
@@ -142,8 +168,9 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
     // By default, we currently treat the following MAD
     // types as drifts
     TreatTypeAsDrift("MARKER"); // merlin bug!
-    TreatTypeAsDrift("RCOLLIMATOR");
-    TreatTypeAsDrift("ECOLLIMATOR");
+    TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
+    //TreatTypeAsDrift("RCOLLIMATOR");  //merlin bug! changed by A. Bungau, October 2006
+    //TreatTypeAsDrift("ECOLLIMATOR");  //merlin bug! changed by A. Bungau, October 2006
 }
 
 void MADInterface::Initialise()
@@ -341,6 +368,7 @@ double MADInterface::ReadComponent ()
 
         // get the 'standard' parameters
         len = prmMap->GetParameter("L");
+	//cout << "len =" << len << endl;
         tilt = prmMap->GetParameter("TILT",false);
 
         if(len==0 && zeroLengths.find(type)!=zeroLengths.end()) {
@@ -348,23 +376,115 @@ double MADInterface::ReadComponent ()
             return 0;
         }
 
+
+
         if(type=="VKICKER")
             type="YCOR";
         else if(type=="HKICKER")
             type="XCOR";
+        else if(type =="KICKER")
+            type="DRIFT";
+        else if(type =="RFCAVITY")
+	  type="DRIFT";
         else if(type=="LCAV")
             type="RFCAVITY";
+        else if(type=="RCOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
+            type="SPOILER";
+        else if(type=="ECOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
+            type="SPOILER";
+
+        if(type=="RBEND"){
+		  if((prmMap->GetParameter("K0L"))!=0.0) type="SBEND";
+      // cout<<" got a RBEND "<<type<<"\n";
+       }
+
+       if(type=="MULTIPOLE"){
+		  //if((prmMap->GetParameter("L"))=0.0) type="DRIFT";
+		  if((prmMap->GetParameter("K0L"))!=0.0) type="SBEND";
+		  else if((prmMap->GetParameter("K1L"))!=0.0) type="QUADRUPOLE";
+		  else if((prmMap->GetParameter("K2L"))!=0.0) type="SEXTUPOLE";
+            else if((prmMap->GetParameter("K3L"))!=0.0) type="OCTUPOLE";
+            else if((prmMap->GetParameter("K4L"))!=0.0) type="DECAPOLE";
+            else type="DRIFT";
+      // cout<<" got a multipole "<<type<<"\n";
+       }
+
+
 
         if(type=="DRIFT") {
             Drift* aDrift = new Drift(name,len);
             ctor->AppendComponent(*aDrift);
             component=aDrift;
         }
-        else if(type=="SPOILER") {
-            double X0 =prmMap->GetParameter("K0L"); // cheat! use K0L column for radiation length
+        else if(type=="SPOILER") {      // modified by R.Barlow, 30 October 2006
+            double X0 =prmMap->GetParameter("KS"); // cheat! use KS column for radiation length
+
+
+
+
+
             Spoiler* aSpoiler = new Spoiler(name,len,X0);
+           
+
+         //|| name[2]=='I' || name[2]=='L'|| name[2]=='P' || name[2]=='S' || name[2]=='D'
+
+           if(name[2]=='T'|| name[2]=='I' || name[2]=='L'|| name[2]=='P' || name[2]=='S' || name[2]=='D')
+            	aSpoiler->scatter_at_this_spoiler =true;
+
+           //if(apname=="~") apname="TCTH.4L2.B1"
+
+           if(aptype=="~") aptype="T99X99Y99M99";
+            double w,h,t;
+	    int m =0;
+           int it=aptype.find("T");
+           int ix=aptype.find("X");
+           int iy=aptype.find("Y");
+	   int im=aptype.find("M");
+
+           int ilen=aptype.length();
+
+	   //cout << "spoiler: " << aptype << endl;
+
+         // cout<<aptype.substr(it+1,ilen)<<" "<<aptype.substr(ix+1,iy-1)<<" "<<aptype.substr(iy+1,ilen)<<endl;
+          istringstream istr(aptype.substr(ix+1,iy-1));
+             istr>>w;
+
+	/*
+	material type:
+	00 Be
+	01 C
+	02 Al
+	03 Cu
+	04 W
+	05 Pb
+	*/
+	if (im > 0){
+          istringstream mstr(aptype.substr(im+1,ilen));
+             mstr>>m;
+	}else{
+	im = ilen+1; // stop bad things happening if no material
+	}
+	
+
+          double ww = w*0.001; // width in meters (AB - Sept 2007)
+           istringstream jstr(aptype.substr(iy+1,im-1));
+             jstr>>h;
+           double hh = h*0.001;//width in meters (AB - Sept 2007)
+           istringstream kstr(aptype.substr(it+1,ix-1));
+		    kstr>>t;
+		 double tt = t;// tilt in rad
+          // cout << "I'm here "<<w<<" " <<h<<" "<<t <<endl;
+
+            TiltedAperture* app=new TiltedAperture(ww,hh,tt, m);
+            aSpoiler->SetAperture(app);
             ctor->AppendComponent(*aSpoiler);
             component=aSpoiler;
+	    double conductivity = app->sigma;
+	    double aperture_size = ww; 
+	    if (hh < ww){aperture_size = hh;} //set to smallest out of hh or ww
+            ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"table");
+            aSpoiler->SetWakePotentials(resWake);
+
         }
         else if(type=="QUADRUPOLE") {
             k1=prmMap->GetParameter("K1L");

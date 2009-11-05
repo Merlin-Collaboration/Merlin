@@ -14,7 +14,7 @@
 #define SpoilerPotentialModels_h 1
 
 #include "merlin_config.h"
-#include "AcceleratorModel/SpoilerWakePotentials.h"
+#include "Collimators/SpoilerWakePotentials.h"
 
 //----------------------------------------------------------------------------------------------------------
 //   The geometric wake potential:

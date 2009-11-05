@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/01/12 12:08:51 $
 // $Revision: 1.8 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef CollimateParticleProcess_h
@@ -22,6 +22,7 @@
 
 // ParticleBunchProcess
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
+#include "MADInterface/MADInterface.h"
 // PSTypes
 #include "BeamModel/PSTypes.h"
 // MerlinException
@@ -36,6 +37,7 @@ namespace ParticleTracking {
 class ExcessiveParticleLoss : public MerlinException
 {
 public:
+
     ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart);
 };
 
@@ -124,7 +126,7 @@ private:
 
     void DoCollimation ();
     void SetNextS ();
-    void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
+    void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i,int count_in, int count_el, int count_R, int count_C);
 
     double s_total;
     double s;
@@ -139,9 +141,10 @@ private:
 
     bool scatter;
     bool is_spoiler;
+
     double Xr; // radiation length 
     double len; // physical length     
-    bool DoScatter(Particle&);
+    int DoScatter(Particle&, const TiltedAperture*);
 
     //Copy protection
     CollimateParticleProcess(const CollimateParticleProcess& rhs);

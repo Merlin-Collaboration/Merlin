@@ -1,5 +1,5 @@
 # the compiler to use
-export CPP= g++43
+export CPP= g++4
 #export CPP=distcc
 # the root directory for the Merlin source code
 export MERLIN_ROOT_DIR=${PWD}/../Merlin
@@ -8,11 +8,11 @@ export MERLIN_ROOT_DIR=${PWD}/../Merlin
 # [see README for more details]
 export MERLIN_BUILD_DIR=${PWD}
 
-# the install directory where the libs will be placed
+# the install directory where the libs will be places
 export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
-export CCFLAGS= -pipe -fPIC -march=k8 -mfpmath=sse -Wall -Wextra -W -Weffc++ -pg -DTLAS_NO_RANGE_CHECKING 
+export CCFLAGS= -pipe -fPIC -ggdb
 
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/release
 SUBDIRS= AcceleratorModel \
@@ -37,6 +37,7 @@ SUBDIRS= AcceleratorModel \
       BeamDynamics/CommonUtilities \
       BeamModel \
       Channels \
+      Collimators \
       TLAS \
       Corrections \
       EuclideanGeometry \
@@ -69,6 +70,7 @@ obj: config
 release: subdirs
 	gcc -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${MERLIN_BUILD_DIR}/obj/release/*.o
 	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${MERLIN_BUILD_DIR}/obj/release/*.o
+
 clean:
 	if [ -d ${MERLIN_BUILD_DIR}/obj ]; then rm -r ${MERLIN_BUILD_DIR}/obj; fi
 
