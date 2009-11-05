@@ -33,6 +33,7 @@ float lo1,hi1,lo3,hi3;
 ifstream f;
 f.open(file);
 if(!f) {cout<<" cannot open file"<<file<<endl; exit(1);}
+else {cout << "opened "<< file << endl;}
 int n1,n2,n3;
 f>>n3>>lo3>>hi3;
 float step3=(hi3-lo3)/(n3-1);

@@ -13,8 +13,10 @@
 #include "AcceleratorModel/StdComponent/Drift.h"
 //#include "TaperedSpoilerWakePotentials.h"
 #include "AcceleratorModel/StdComponent/Spoiler.h"
+#include "collimatortable.h"
 #include <typeinfo>
 #include <iostream>
+#include <strstream>
 using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
@@ -26,57 +28,50 @@ using namespace ParticleTracking;
 
 class ResistivePotential:public SpoilerWakePotentials  {
 public:
-
     double sigma,b,leng,scale,step;
     int ncoeff;
     double lo,hi,* coeff;
-    ResistivePotential(int m, double ss, double bb, double l,char*filename):SpoilerWakePotentials(m, 0., 0.){
+    collimatortable** Transverse;
+    collimatortable** Longitudinal;
+    ResistivePotential(int m, double ss, double bb, double l,char*filename,double tau=0):SpoilerWakePotentials(m, 0., 0.){
        sigma=ss;    b=bb;
-   double Z0=377;
-   // double fourpieps=4*3.1416*8.854E-12;
-   double fourpieps=1; // pu in later
-   scale=pow(2*b*b/(Z0*sigma),1./3.);
-   leng=l;
-   cout<<" resistive collimator radius "<<b<<" length "<<leng<<" conductivity "<<sigma<<endl;
-   cout<<" Scale length "<<scale<<endl;
-   ifstream file;
-   file.open(filename);
-   file>>ncoeff;
-   file>>lo;
-   file>>hi;
-   step=(hi-lo)/(ncoeff-1);
-   cout<<" Resistive wall table has "<<ncoeff<<" values from "<<lo<<" to "<<hi<<endl;
-   coeff=new double[ncoeff];
-   for(int i=0;i<ncoeff;i++) file>>coeff[i];
-      }       
+       double Z0=377;
+       scale=pow(2*b*b/(Z0*sigma),1./3.);
+       leng=l;
+       cout<<" resistive collimator radius "<<b<<" length "<<leng<<" conductivity "<<sigma<<" Scale length "<<scale;
+       double xi=pow(scale/b,2);
+       double Gamma=SpeedOfLight*tau/scale;
+       cout<<" xi "<<xi<<" Gamma "<<Gamma<<endl; 
+       Transverse=new collimatortable*[m+1];
+       Longitudinal=new collimatortable*[m+1];
+          for(int mode=0;mode<=m;mode++){
+	   char line[100]={100*0};
+           ostrstream ss(line,100);
+           ss<<filename<<"L"<<mode<<".txt";
+           Longitudinal[mode]=new collimatortable(line,Gamma,xi);
+           if(mode>0) {
+	      char line[100]={100*0};
+              ostrstream ss(line,100);
+              ss<<filename<<"T2m"<<mode<<".txt";
+              Transverse[mode]=new collimatortable(line,Gamma,xi);
+              }
+	      }
+       }// end of constructor
     double Wlong (double z) const {return 1;};
     double Wtrans (double z) const { return 1;};
-    double Wtrans (double z,int m) const {if(z<0) return 0;
-   double c=3.E8;
-   double Pi=3.14159;
-   double Z0=377;
-   double s=z/scale;
-   double E;
-   //double fourpieps=4*3.1416*8.854E-12;
-   double fourpieps=1; // pu in later
-      //double Chao=scale*(1/(Pi*b))*sqrt(2*Pi*scale/(b*b))*leng/sqrt(z);
-      double Chao=2*leng*scale*(1/(fourpieps*sqrt(2*pi)))*sqrt(scale/z)/(b*b);
-     int index=int(0.5+(s-lo)/step);
-     if(index<0) index=0;
-     int i1;
-     if(index==0){i1=1;} else if(index==ncoeff-1) {i1=ncoeff-2;} else {i1=index;}
-     if(index>=ncoeff) {E=Chao;} else 
-         {
-          double d=(s-(lo+i1*step))/step;
-          E=coeff[i1]+d*(coeff[i1+1]-coeff[i1-1])/2+
-                 d*d*(coeff[i1+1]+coeff[i1-1]-2*coeff[i1])/2;
-           E=-scale*leng*E; // minus sign should have been in Mathematica
-           E=E/fourpieps; // minus sign should have been in Mathematica
-           E=E/(b*b);
-             }
-     cout<<" kick "<<z<<" "<<E<<" "<<Chao<<endl;
-     E=2*E/(b*b); // naive way to get from mode 0 to mode 1
+    double Wtrans (double z,int m) const {
+     if(z<0) return 0;
+     double s=z/scale;
+     double fourpieps=1; // pu in later
+     double Chao=-2*(1/(sqrt(2*pi)))*sqrt(scale/z);
+     double E=Transverse[m]->inrange(s) ? Transverse[m]->interpolate(s) : Chao; 
+    // cout<<m<<" "<<s<<" "<<E1<<" "<<Chao<<endl;
+     E= scale*leng*E; // minus sign should have been in Mathematica
+     E=E/fourpieps; // minus sign should have been in Mathematica
+     E=E/pow(b,2*m+2); 
+    // cout<<m<<" "<<s<<" "<<E<<endl;
      return E;};
+    
     double Wlong (double z,int m) const { return z>0? 1:0;};
 };
 
