@@ -36,12 +36,19 @@
 // MADInterface
 #include "MADInterface/MADInterface.h"
 #include "MADInterface/ConstructSrot.h"
+#include "Collimators/ResistiveWakePotentials.h"
 
 using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
+
+
+const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
+
+
 namespace {
+
 
 // stack used to match MAD LINE pairs
 // Note: we need this because we no longer preserve the complete MAD beamline
@@ -475,7 +482,7 @@ double MADInterface::ReadComponent ()
 	    double conductivity = app->sigma;
 	    double aperture_size = ww; 
 	    if (hh < ww){aperture_size = hh;} //set to smallest out of hh or ww
-            ResistivePotential* resWake =  new ResistivePotential(1,conductivity,aperture_size*millimeter,len*meter,"file6.dat");
+            ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"table");
             aSpoiler->SetWakePotentials(resWake);
 
         }

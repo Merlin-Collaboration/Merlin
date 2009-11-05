@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/CollimateParticleProcess.h"
+#include "Collimators/CollimateParticleProcess.h"
 #include "RingDynamics/StableOrbits.h"
 
 StableOrbits::StableOrbits(AcceleratorModel* aModel)
