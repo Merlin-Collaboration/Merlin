@@ -13,7 +13,7 @@
 #ifndef SpoilerWakePotentials_h
 #define SpoilerWakePotentials_h 1
 
-#include "WakePotentials.h"
+#include "AcceleratorModel/WakePotentials.h"
 #include "merlin_config.h"
 
 //	Abstract class for calculating the longitudinal and
