@@ -27,8 +27,8 @@ class WakePotentials
   
 public:
 
-   WakePotentials(double r, double s) : csr(false), radius(r), conductivity(s) {} 
-     WakePotentials() : expectedProcess(0),csr(false) {}   // back to the original constructor
+   WakePotentials(double r, double s) : csr(false), expectedProcess(0), radius(r), conductivity(s) {} 
+     WakePotentials() : csr(false), expectedProcess(0) {}   // back to the original constructor
      //WakePotentials() : csr(false) {}   // back to the original constructor
      virtual ~WakePotentials () {};
 
