@@ -88,14 +88,12 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
         is_spoiler = scatter && aSpoiler && aSpoiler->scatter_at_this_spoiler;
 
         if(!is_spoiler) { // not a spoiler so set up for normal hard-edge collimation
-	  //	cout <<"sam not scatter" << endl;
             at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
             at_cent = (COLL_AT_CENTER & cmode)!=0;
             at_exit = (COLL_AT_EXIT & cmode)!=0;
             SetNextS();
         }
         else {
-	  // cout <<"sam is scatter" << endl;
             at_entr=at_cent=false; // currently scatter only at exit
             at_exit = true;
             SetNextS();
@@ -188,13 +186,13 @@ void CollimateParticleProcess::DoCollimation ()
 	}
 
 		if(!inside) {
-                    cout<<"lost"<<(*p).x()<< " "<<(*p).y()<<endl;
+			lost_type = DoScatter(*p, tap);                    
+			//cout<<"lost - p.x: "<<(*p).x()<< "\tp.y: "<<(*p).y()<< "\tlost_type: " << lost_type << endl;
 
 			// If the 'aperture' is a spoiler, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
 			//if(!is_spoiler || (lost_type = DoScatter(*p, tap))) {
-		  lost_type = DoScatter(*p, tap);
-		  cout << "lost_type="<<lost_type << endl;
+
 		  if(lost_type != 0){
 			  if (lost_type==1){++count_el;}
 			  if (lost_type==2){++count_in;}
@@ -288,7 +286,7 @@ void CollimateParticleProcess::SetNextS ()
   // ScatterParticle(p,Xr,len,E0);        # only for electrons
   //  return p.dp()<=-0.99; // return true if E below 1% cut-off
   
-  return ScatterProton(p,Xr,len,E0,tap);         // only for protons
+  return ScatterProton(p,len,E0,tap);         // only for protons
 }
 
 ExcessiveParticleLoss::ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart)

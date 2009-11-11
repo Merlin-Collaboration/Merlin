@@ -170,7 +170,11 @@ const double coll_mat_data_A[] = {9.012182, 12.011, 1.204, 26.981539, 183.84, 20
 // electrical conductivity (sigma) =1/electrical resisitivity (Ohm*m)e-1
 //                                     Be        C     Al       Cu       W        Pb       
 const double coll_mat_data_sigma[] = {3.08e7, 7.14e4, 35.64e6, 5.98e7, 0.177e4, 4.8077e6 };
+// real-space radiation length (m)
+//                                     Be        C     Al       Cu       W        Pb 
+const double coll_mat_data_X0[] = {35.28e-2, 18.8e-2, 8.90e-2, 1.44e-2, 0.351e-2, 0.562e-2 };
 
+ 
 extern const char* material_names[]; 
 
 
@@ -187,6 +191,7 @@ double dEdx;
 double rho;
 double sigma;
 double A;
+double X0;
   //double tot_mean_free_path;
          TiltedAperture(double w,double h, double t, int m=0):RectangularAperture(w,h), alpha(t), material(m){
 
@@ -197,7 +202,8 @@ double A;
                 dEdx = coll_mat_data_dEdx[material];
                 rho = coll_mat_data_rho[material];
                 A = coll_mat_data_A[material];
-	        
+	        X0=coll_mat_data_X0[material];
+
                 sigma = coll_mat_data_sigma[material];
                 
 		//tot_mean_free_path = 1 / sig_pN_tot;

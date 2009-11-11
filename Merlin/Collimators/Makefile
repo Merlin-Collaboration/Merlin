@@ -1,5 +1,5 @@
 # MERLIN class library makefile
-# Automatically generated on Thu Nov  5 17:17:46 GMT 2009
+# Automatically generated on Wed Nov 11 17:28:57 GMT 2009
 # -----------------------------------------------------------
 
 OFILES= \
@@ -10,7 +10,6 @@ OFILES= \
      ${OBJDIR}/SpoilerWakeProcess.o \
 
 catagory: ${OFILES}
-	touch $@
 
 
 # Explicit make rules for each *.cpp file identified.
@@ -18,13 +17,13 @@ catagory: ${OFILES}
 # designated by the macro OBJDIR
 # -------------------------------------------------------
 
-${OBJDIR}/CollimateParticleProcess.o:
+${OBJDIR}/CollimateParticleProcess.o: CollimateParticleProcess.cpp
 	${CPP} -c ${INCPATH} ${CCFLAGS} -o $@ CollimateParticleProcess.cpp
-${OBJDIR}/ScatterParticle.o:
+${OBJDIR}/ScatterParticle.o: ScatterParticle.cpp
 	${CPP} -c ${INCPATH} ${CCFLAGS} -o $@ ScatterParticle.cpp
-${OBJDIR}/ScatterProton.o:
+${OBJDIR}/ScatterProton.o: ScatterProton.cpp
 	${CPP} -c ${INCPATH} ${CCFLAGS} -o $@ ScatterProton.cpp
-${OBJDIR}/SpoilerPotentialModels.o:
+${OBJDIR}/SpoilerPotentialModels.o: SpoilerPotentialModels.cpp
 	${CPP} -c ${INCPATH} ${CCFLAGS} -o $@ SpoilerPotentialModels.cpp
-${OBJDIR}/SpoilerWakeProcess.o:
+${OBJDIR}/SpoilerWakeProcess.o: SpoilerWakeProcess.cpp
 	${CPP} -c ${INCPATH} ${CCFLAGS} -o $@ SpoilerWakeProcess.cpp

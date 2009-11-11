@@ -24,7 +24,7 @@ using namespace PhysicalUnits;
 		return make_pair(y_plane,theta_plane);
 	}
 
-int ScatterProton(PSvector& p, double X0, double x, double E0,const  TiltedAperture* tap)
+int ScatterProton(PSvector& p, double x, double E0,const  TiltedAperture* tap)
 {
 
   double sig_pN_tot = tap->sig_pN_tot;
@@ -33,7 +33,10 @@ int ScatterProton(PSvector& p, double X0, double x, double E0,const  TiltedApert
   double dEdx = tap->dEdx;
   double rho = tap->rho;
   double A = tap->A;
-  
+  double X0 = tap->X0;
+
+if (X0 == 0) {cout <<"X0 is zero, this is very bad"<< endl;}
+
   /*
   double sig_pN_tot = 0;
 
@@ -57,7 +60,6 @@ double lambda_tot = A*1.e-6/((sig_pN_tot+sig_R)*1.e-28*rho*6.023e23); // total m
     double E1=E0*(1+p.dp()); // particle energy
    /// cout <<"E1= "<<E1<<endl;
 	double t  = x/X0; // material length in radiation lengths
-	
 	/*    
 	double t1 = t/log(2.0);
 	double t2 = 0.5*((t1-1.0)/(t1+1.0));

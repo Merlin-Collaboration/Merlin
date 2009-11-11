@@ -417,13 +417,13 @@ double MADInterface::ReadComponent ()
             component=aDrift;
         }
         else if(type=="SPOILER") {      // modified by R.Barlow, 30 October 2006
-            double X0 =prmMap->GetParameter("KS"); // cheat! use KS column for radiation length
+           // double X0 =prmMap->GetParameter("KS"); // cheat! use KS column for radiation length
 
 
 
 
 
-            Spoiler* aSpoiler = new Spoiler(name,len,X0);
+            Spoiler* aSpoiler = new Spoiler(name,len);
            
 
          //|| name[2]=='I' || name[2]=='L'|| name[2]=='P' || name[2]=='S' || name[2]=='D'
@@ -479,6 +479,7 @@ double MADInterface::ReadComponent ()
             aSpoiler->SetAperture(app);
             ctor->AppendComponent(*aSpoiler);
             component=aSpoiler;
+            double X0 = app->X0;
 	    double conductivity = app->sigma;
 	    double aperture_size = ww; 
 	    if (hh < ww){aperture_size = hh;} //set to smallest out of hh or ww

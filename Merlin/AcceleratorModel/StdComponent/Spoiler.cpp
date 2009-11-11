@@ -41,6 +41,10 @@ Spoiler::Spoiler (const string& id, double len, double radLength)
         : Drift(id,len),Xr(radLength)
 {scatter_at_this_spoiler = true;}
 
+Spoiler::Spoiler (const string& id, double len)
+        : Drift(id,len),Xr(0)
+{scatter_at_this_spoiler = true;}
+
 const string& Spoiler::GetType () const
 {
     _TYPESTR(Spoiler);
