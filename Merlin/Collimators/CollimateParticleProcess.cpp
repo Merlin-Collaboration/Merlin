@@ -154,38 +154,39 @@ void CollimateParticleProcess::SetLossThreshold (double losspc)
 
 void CollimateParticleProcess::DoCollimation ()
 {
-     const Aperture *ap = currentComponent->GetAperture();
+	const Aperture *ap = currentComponent->GetAperture();
+	const TiltedAperture *tap = dynamic_cast<const TiltedAperture*>(ap);
+	PSvectorArray lost;
+	list<size_t>  lost_i;
 
-	 const TiltedAperture *tap = dynamic_cast<const TiltedAperture*>(ap);
+	int count_in = 0;
+	int count_el = 0;
+	int count_R = 0;
+	int count_C =0;
+	int lost_type = 0;
 
-
-
-    PSvectorArray lost;
-    list<size_t>  lost_i;
-
-    int count_in = 0;
-    int count_el = 0;
-    int count_R = 0;
-    int count_C =0;
-    int lost_type = 0;
-
-    list<size_t>::iterator ip;
-    if(pindex!=0)
-        ip=pindex->begin();
-	bool inside;
-    for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();) {
-	    //cout << "points "<< (*p).x()<<" "<<(*p).y()<<endl;
-
-      if(tap){ // if it is a tilted aperture
-	    	   inside = tap->PointInside_offset((*p).x(),(*p).y(),s,
-	    	    			currentBunch->begin()->x(),
-	    	               currentBunch->begin()->y());
-	    	       // cout << "offseting tilted appp " <<endl;
-     }else{
-		inside = ap->PointInside((*p).x(),(*p).y(),s);
+	list<size_t>::iterator ip;
+	if(pindex!=0)
+	{
+		ip=pindex->begin();
 	}
+	bool inside;
 
-		if(!inside) {
+	for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
+	{
+		if(tap)
+		{ // if it is a tilted aperture
+			inside = tap->PointInside_offset((*p).x(),(*p).y(),s,currentBunch->begin()->x(),currentBunch->begin()->y());
+		// cout << "offseting tilted appp " <<endl;
+		}
+
+		else
+		{
+			inside = ap->PointInside((*p).x(),(*p).y(),s);
+		}
+
+		if(!inside)
+		{
 			lost_type = DoScatter(*p, tap);                    
 			//cout<<"lost - p.x: "<<(*p).x()<< "\tp.y: "<<(*p).y()<< "\tlost_type: " << lost_type << endl;
 
@@ -193,40 +194,49 @@ void CollimateParticleProcess::DoCollimation ()
 			// if the DoScatter(*p) returns true (energy cut)
 			//if(!is_spoiler || (lost_type = DoScatter(*p, tap))) {
 
-		  if(lost_type != 0){
-			  if (lost_type==1){++count_el;}
-			  if (lost_type==2){++count_in;}
-			  if (lost_type==3){++count_R;}
-			  if (lost_type==4){++count_C;}
+			if(lost_type != 0)
+			{
+				if (lost_type==1){++count_el;}
+				if (lost_type==2){++count_in;}
+				if (lost_type==3){++count_R;}
+				if (lost_type==4){++count_C;}
 				lost.push_back(*p);
 				p=currentBunch->erase(p);
-				if(pindex!=0) {
+				if(pindex!=0)
+				{
 					lost_i.push_back(*ip);
 					ip = pindex->erase(ip);
 				}
 			}
-			else { // need to increment iterators
 
-	p++;
-				if(pindex!=0) {
+			else
+			{ // need to increment iterators
+				p++;
+				if(pindex!=0)
+				{
 					ip++;
 				}
 			}
 		}
-		else {
-	//cout<<" kept"<<endl;
+
+		else
+		{
+			//cout<<" kept"<<endl;
 			p++;
-			if(pindex!=0) {
+			if(pindex!=0)
+			{
 				ip++;
 			}
 		}
 	}
 
-    nlost+=lost.size();
-    DoOutput(lost,lost_i, count_el, count_in, count_R, count_C);
+	nlost+=lost.size();
+	DoOutput(lost,lost_i, count_el, count_in, count_R, count_C);
 
-    if(double(nlost)/double(nstart)>=lossThreshold)
-        throw ExcessiveParticleLoss(currentComponent->GetQualifiedName(),lossThreshold,nlost,nstart);
+	if(double(nlost)/double(nstart)>=lossThreshold)
+	{
+		throw ExcessiveParticleLoss(currentComponent->GetQualifiedName(),lossThreshold,nlost,nstart);
+	}
 }
 
 void CollimateParticleProcess::SetNextS ()
