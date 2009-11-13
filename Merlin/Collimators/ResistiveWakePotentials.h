@@ -46,12 +46,12 @@ ResistivePotential(int m, double ss, double bb, double l, string filename, doubl
 	for(int mode=0; mode<=m; mode++)
 	{
 		stringstream ss;
-		ss << &filename << "L" << mode << ".txt";
+		ss << filename << "L" << mode << ".txt";
 		Longitudinal[mode]=new collimatortable(ss.str().c_str(),Gamma,xi);
 		if(mode>0)
 		{
 			stringstream ss;
-			ss << &filename << "T2m" << mode << ".txt";
+			ss << filename << "T2m" << mode << ".txt";
 			Transverse[mode]=new collimatortable(ss.str().c_str(),Gamma,xi);
 		}
 	}
