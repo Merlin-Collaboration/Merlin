@@ -26,6 +26,9 @@
 //#include "AcceleratorModel/StdComponent/Spoiler.h"
 #include "AcceleratorModel/StdComponent/Spoiler.h"
 
+//Threading
+#include <boost/thread.hpp>
+
 using namespace std;
 
 //extern void ScatterParticle(PSvector& p, double X0, double x, double E0);
@@ -39,12 +42,13 @@ void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i
     PSvectorArray::const_iterator p = lost_p.begin();
     list<size_t>::const_iterator ip = lost_i.begin();
 
-    while(p!=lost_p.end()) {
-        os<<std::setw(12)<<right<<*ip;
-        os<<*p;
-        ++p;
-        ++ip;
-    }
+	while(p!=lost_p.end())
+	{
+		os<<std::setw(12)<<right<<*ip;
+		os<<*p;
+		++p;
+		++ip;
+	}
 }
 
 }; // end anonymous namespace
@@ -64,63 +68,71 @@ CollimateParticleProcess::~CollimateParticleProcess ()
 
 void CollimateParticleProcess::InitialiseProcess (Bunch& bunch)
 {
-    ParticleBunchProcess::InitialiseProcess(bunch);
-    idtbl.clear();
-    if(currentBunch) {
-        nstart = currentBunch->size();
-        nlost = 0;
-        if(pindex!=0) {
-            pindex->clear();
-            for(size_t n=0; n<nstart; n++)
-                pindex->push_back(n);
-        }
-    }
+	ParticleBunchProcess::InitialiseProcess(bunch);
+	idtbl.clear();
+	if(currentBunch)
+	{
+		nstart = currentBunch->size();
+		nlost = 0;
+		if(pindex!=0)
+		{
+			pindex->clear();
+			for(size_t n=0; n<nstart; n++)
+			pindex->push_back(n);
+        	}
+	}
 }
 
 void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
-    active = (currentBunch!=0) && (component.GetAperture()!=0);
+	active = (currentBunch!=0) && (component.GetAperture()!=0);
 
-    if(active) {
-        currentComponent = &component;
-        s=0;
-        Spoiler* aSpoiler = dynamic_cast<Spoiler*>(&component);
-        is_spoiler = scatter && aSpoiler && aSpoiler->scatter_at_this_spoiler;
+	if(active)
+	{
+		currentComponent = &component;
+		s=0;
+		Spoiler* aSpoiler = dynamic_cast<Spoiler*>(&component);
+		is_spoiler = scatter && aSpoiler && aSpoiler->scatter_at_this_spoiler;
 
-        if(!is_spoiler) { // not a spoiler so set up for normal hard-edge collimation
-            at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
-            at_cent = (COLL_AT_CENTER & cmode)!=0;
-            at_exit = (COLL_AT_EXIT & cmode)!=0;
-            SetNextS();
-        }
-        else {
-            at_entr=at_cent=false; // currently scatter only at exit
-            at_exit = true;
-            SetNextS();
-            Xr = aSpoiler->GetMaterialRadiationLength();
+		if(!is_spoiler)
+		{ // not a spoiler so set up for normal hard-edge collimation
+			at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
+			at_cent = (COLL_AT_CENTER & cmode)!=0;
+			at_exit = (COLL_AT_EXIT & cmode)!=0;
+			SetNextS();
+		}
+	        else
+		{
+			at_entr=at_cent=false; // currently scatter only at exit
+			at_exit = true;
+			SetNextS();
+			Xr = aSpoiler->GetMaterialRadiationLength();
 			len = aSpoiler->GetLength();
 			// cout << "SetCurrentComponent(): len=" << len << endl;
-        }
-    }
-    else {
-        s_total += component.GetLength();
-        currentComponent = 0;
-    }
+		}
+	}
+
+	else
+	{
+        	s_total += component.GetLength();
+	        currentComponent = 0;
+	}
 }
 
 void CollimateParticleProcess::DoProcess (double ds)
 {
-    s+=ds;
+	s+=ds;
 
-    if(fequal(s,next_s)) {
-        DoCollimation();
-        SetNextS();
-    }
+	if(fequal(s,next_s))
+	{
+		DoCollimation();
+		SetNextS();
+	}
 
-    // If we are finished, GetNextS() will have set the process inactive.
-    // In that case we can update s_total with the component length.
-    if(!active)
-        s_total += currentComponent->GetLength();
+	// If we are finished, GetNextS() will have set the process inactive.
+	// In that case we can update s_total with the component length.
+	if(!active)
+	s_total += currentComponent->GetLength();
 }
 
 double CollimateParticleProcess::GetMaxAllowedStepSize () const
@@ -130,12 +142,13 @@ double CollimateParticleProcess::GetMaxAllowedStepSize () const
 
 void CollimateParticleProcess::IndexParticles (bool index)
 {
-    if(index && pindex==0)
-        pindex = new list<size_t>;
-    else if(!index && pindex!=0) {
-        delete pindex;
-        pindex=0;
-    }
+	if(index && pindex==0)
+	pindex = new list<size_t>;
+	else if(!index && pindex!=0)
+	{
+		delete pindex;
+		pindex=0;
+	}
 }
 
 void CollimateParticleProcess::IndexParticles (list<size_t>& anIndex)
@@ -154,6 +167,7 @@ void CollimateParticleProcess::SetLossThreshold (double losspc)
 
 void CollimateParticleProcess::DoCollimation ()
 {
+	boost::mutex test;
 	const Aperture *ap = currentComponent->GetAperture();
 	const TiltedAperture *tap = dynamic_cast<const TiltedAperture*>(ap);
 	PSvectorArray lost;
