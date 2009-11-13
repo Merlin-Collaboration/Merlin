@@ -1,22 +1,20 @@
-
 #include "BeamModel/BeamData.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
 #include "Collimators/SpoilerWakeProcess.h"
+#include "Collimators/SpoilerWakePotentials.h"
 #include "Random/RandomNG.h"
 #include "AcceleratorModel/AcceleratorModel.h"
 #include "AcceleratorModel/WakePotentials.h"
-#include "Collimators/SpoilerWakePotentials.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "AcceleratorModel/StdComponent/Spoiler.h"
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
 #include "AcceleratorModel/StdComponent/Drift.h"
-//#include "TaperedSpoilerWakePotentials.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/PhysicalConstants.h"
 #include "collimatortable.h"
 #include <typeinfo>
 #include <iostream>
-#include <strstream>
+#include <sstream>
 using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
@@ -29,37 +27,32 @@ using namespace ParticleTracking;
 class ResistivePotential: public SpoilerWakePotentials
 {
 public:
-double sigma,b,leng,scale,step;
-int ncoeff;
-double lo,hi,* coeff;
-collimatortable** Transverse;
-collimatortable** Longitudinal;
+	double sigma,b,leng,scale,step;
+	int ncoeff;
+	double lo,hi,* coeff;
+	collimatortable** Transverse;
+	collimatortable** Longitudinal;
 
-ResistivePotential(int m, double ss, double bb, double l,char*filename,double tau=0):SpoilerWakePotentials(m, 0., 0.), sigma(ss), b(bb), leng(l)
+ResistivePotential(int m, double ss, double bb, double l, string filename, double tau=0) : SpoilerWakePotentials(m, 0., 0.), sigma(ss), b(bb), leng(l)
 {
-//	sigma=ss;
-//	b=bb;
 	double Z0=377;
 	scale=pow(2*b*b/(Z0*sigma),1./3.);
-//	leng=l;
-	cout << "Resistive collimator radius: " << b << "\tLength: " << leng << "\tConductivity: " << sigma << "\tScale length: " << scale << endl;;
+	cout << "Resistive collimator radius: " << b << "\tLength: " << leng << "\tConductivity: " << sigma << "\tScale length: " << scale << endl;
 	double xi = pow(scale/b,2);
 	double Gamma = SpeedOfLight*tau/scale;
 	cout<<"xi: " << xi << "Gamma: " << Gamma << endl; 
 	Transverse = new collimatortable*[m+1];
 	Longitudinal = new collimatortable*[m+1];
-	for(int mode=0;mode<=m;mode++)
+	for(int mode=0; mode<=m; mode++)
 	{
-		char line[100]={100*0};
-		ostrstream ss(line,100);
-		ss<<filename<<"L"<<mode<<".txt";
-		Longitudinal[mode]=new collimatortable(line,Gamma,xi);
+		stringstream ss;
+		ss << &filename << "L" << mode << ".txt";
+		Longitudinal[mode]=new collimatortable(ss.str().c_str(),Gamma,xi);
 		if(mode>0)
 		{
-			char line[100]={100*0};
-			ostrstream ss(line,100);
-			ss<<filename<<"T2m"<<mode<<".txt";
-			Transverse[mode]=new collimatortable(line,Gamma,xi);
+			stringstream ss;
+			ss << &filename << "T2m" << mode << ".txt";
+			Transverse[mode]=new collimatortable(ss.str().c_str(),Gamma,xi);
 		}
 	}
 }// end of constructor
@@ -77,12 +70,11 @@ ResistivePotential(int m, double ss, double bb, double l,char*filename,double ta
 		E = scale*leng*E; // minus sign should have been in Mathematica
 		E = E/fourpieps; // minus sign should have been in Mathematica
 		E = E/pow(b,2*m+2); 
-		// cout<<m<<" "<<s<<" "<<E<<endl;
 		return E;
 	};
 
 	double Wlong (double z,int m) const { return z>0? 1:0;};
-};
+}; //End of ResistivePotential Class
 
 
 
@@ -94,9 +86,6 @@ public:
   
 	ResistiveWakePotentials(int m, double r, double s, double l) : SpoilerWakePotentials(m, r, s), rad(r),sigma(s),length(l)
 	{
-//		rad = r;
-//		sigma = s;
-//		length = l;
 		cout << "Making new ResistiveWakePotentials with length: " << length << endl;
 		coeff = new double[m+1];
  
