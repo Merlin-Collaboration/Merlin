@@ -1,5 +1,5 @@
 # the compiler to use
-export CPP= g++4
+export CPP= g++43
 #export CPP=distcc
 # the root directory for the Merlin source code
 export MERLIN_ROOT_DIR=${PWD}/../Merlin
@@ -68,8 +68,8 @@ obj: config
 
 .PHONY: release
 release: subdirs
-	gcc -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${MERLIN_BUILD_DIR}/obj/release/*.o
-	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${MERLIN_BUILD_DIR}/obj/release/*.o
+	gcc43 -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${MERLIN_BUILD_DIR}/obj/release/*.o
+#	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${MERLIN_BUILD_DIR}/obj/release/*.o
 
 clean:
 	if [ -d ${MERLIN_BUILD_DIR}/obj ]; then rm -r ${MERLIN_BUILD_DIR}/obj; fi

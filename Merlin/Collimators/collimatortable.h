@@ -52,12 +52,12 @@ public:
 		int n1,n2,n3;
 		f >> n3 >> lo3 >> hi3;
 		float step3=(hi3-lo3)/(n3-1);
-		f>>n2>>lo>>hi;
+		f >> n2 >> lo >> hi;
 		step=(hi-lo)/(n2-1);
-		f>>n1>>lo1>>hi1;
+		f >> n1 >> lo1 >> hi1;
 		float step1=(hi1-lo1)/(n1-1);
-		ncoeff=n2;
-		coeff=new float[n2];
+		ncoeff = n2;
+		coeff = new float[n2];
 		float array[n1][n2][n3];
 
 		while(f.get()!='{');
@@ -82,8 +82,7 @@ public:
 		}
 
 		while(f.get()!='}');
-		// cout<<" Table read OK "<<endl;
-
+		{
 		if((Gamma==0) && (xi==0))
 		{ // In principle the inerpolation should handle this but it seems cleaner this way
 			for(int i=0;i<ncoeff;i++) {coeff[i]=array[0][i][0];}
@@ -167,7 +166,7 @@ public:
 				coeff[i]=f0+dg*fg+dc*fc+dg*dg*fgg+dc*dc*fcc+dg*dc*fgc+dg*dg*dc*fggc+dg*dc*dc*fgcc+dg*dg*dc*dc*fggcc;
 			}
 		}
-
+		}
 	cout << "File "<< file << " read and table calculated for Gamma of " << Gamma << " and xi of " << xi << endl;
 	}
 };
