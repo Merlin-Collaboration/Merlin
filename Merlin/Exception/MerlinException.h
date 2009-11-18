@@ -42,7 +42,7 @@ inline MerlinException::MerlinException (const std::string& s)
 {}
 
 inline MerlinException::MerlinException ()
-  : msg(NULL)
+  : msg()
 {}
 
 inline const char* MerlinException::Msg () const

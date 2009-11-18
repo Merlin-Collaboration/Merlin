@@ -44,6 +44,7 @@ class Spoiler : public Drift
 public:
 
     Spoiler (const string& id, double len, double radLength);
+    Spoiler (const string& id, double len);
 
     // Returns the length of the spoiler in units of its
     // radiation length
