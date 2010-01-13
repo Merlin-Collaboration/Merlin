@@ -27,6 +27,8 @@
 #include "BeamModel/PSTypes.h"
 // MerlinException
 #include "Exception/MerlinException.h"
+//Tilted Apertures
+#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
 
 #define COLL_AT_ENTRANCE 1
 #define COLL_AT_CENTER 2

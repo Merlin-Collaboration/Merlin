@@ -1,10 +1,13 @@
-#include "NumericalUtils/PhysicalUnits.h"
 #include <cmath>
+#include <fstream>
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/utils.h"
+
 #include "BeamModel/PSTypes.h"
 #include "Collimators/ScatterProton.h"
 #include "Random/RandomNG.h"
-#include <fstream>
-#include "NumericalUtils/utils.h"
+
+#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
 
 using namespace PhysicalUnits;
 

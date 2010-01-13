@@ -22,12 +22,11 @@
 #include "Collimators/CollimateParticleProcess.h"
 // Aperture
 #include "AcceleratorModel/Aperture.h"
+#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
 // Spoiler
 //#include "AcceleratorModel/StdComponent/Spoiler.h"
 #include "AcceleratorModel/StdComponent/Spoiler.h"
 
-//Threading
-#include <boost/thread.hpp>
 
 using namespace std;
 
@@ -167,7 +166,6 @@ void CollimateParticleProcess::SetLossThreshold (double losspc)
 
 void CollimateParticleProcess::DoCollimation ()
 {
-	boost::mutex test;
 	const Aperture *ap = currentComponent->GetAperture();
 	const TiltedAperture *tap = dynamic_cast<const TiltedAperture*>(ap);
 	PSvectorArray lost;

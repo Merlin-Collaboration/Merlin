@@ -27,6 +27,8 @@
 #include "AcceleratorModel/Frames/SequenceFrame.h"
 // SimpleApertures
 #include "AcceleratorModel/Apertures/SimpleApertures.h"
+#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
+
 // AcceleratorModelConstructor
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
 // PhysicalConstants
