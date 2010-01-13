@@ -1,6 +1,8 @@
 #ifndef _Material_Data_hpp_
 #define _Material_Data_hpp_
 
+// Need to get references for all data.
+
 // proton nucleus total cross section =sigma_el_pn+sigma_el_pN+sigma_SD_pn +sigma_inel_pN 
 //                                           Be     C      Al     Cu     W      Pb
 const double coll_mat_data_sig_pN_tot[] = {0.268, 0.331, 0.634, 1.232, 2.767, 2.960};
