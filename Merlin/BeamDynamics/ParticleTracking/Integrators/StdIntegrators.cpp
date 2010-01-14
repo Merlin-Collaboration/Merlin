@@ -66,24 +66,30 @@ struct MultipoleKick {
 // Functor ApplyRFdp (used for full acceleration)
 struct ApplyRFdp {
 
-    double Vn,k,phi0,cosPhi0,d0;
-    const RMtrx& R;
-    bool fullacc;
+	double Vn,k,phi0,cosPhi0,d0;
+	const RMtrx& R;
+	bool fullacc;
 
-    ApplyRFdp(double Vnorm, double f, double phase, const RMtrx& R1, bool full_acc)
-            : Vn(Vnorm),k(twoPi*f/SpeedOfLight),phi0(phase),R(R1),fullacc(full_acc)
-    {
-        cosPhi0=cos(phi0);
-        d0=1+Vn*cosPhi0;
-    };
+	ApplyRFdp(double Vnorm, double f, double phase, const RMtrx& R1, bool full_acc)
+	: Vn(Vnorm),k(twoPi*f/SpeedOfLight),phi0(phase),R(R1),fullacc(full_acc)
+	{
+		//cout << "RF V:" << Vn << "\tFreq: " << f << endl;
+		cosPhi0=cos(phi0);
+		d0=1+Vn*cosPhi0;
+	};
 
-    void operator()(PSvector& p) const {
-        R.Apply(p);
-        if(fullacc)
-            p.dp() = (p.dp()+Vn*(cos(phi0-k*p.ct())-cosPhi0))/d0;
-        else
-            p.dp() += Vn*cos(phi0-k*p.ct());
-    }
+	void operator()(PSvector& p) const
+	{
+		R.Apply(p);
+		if(fullacc)
+		{
+			p.dp() = (p.dp()+Vn*(cos(phi0-k*p.ct())-cosPhi0))/d0;
+		}
+		else
+		{
+			p.dp() += Vn*cos(phi0-k*p.ct());
+		}
+	}
 };
 };
 
@@ -119,37 +125,41 @@ void DriftCI::TrackStep (double ds)
 
 void TWRFStructureCI::TrackStep (double ds)
 {
-    CHK_ZERO(ds);
+cout << "In TWRFStructureCI" << endl;
+	CHK_ZERO(ds);
 
-    // Note that for particle tracking we use a higher order
-    // approximation for the momentum error, and a linear matrix
-    // for the transverse planes.
+	// Note that for particle tracking we use a higher order
+	// approximation for the momentum error, and a linear matrix
+	// for the transverse planes.
 
-    const RFAcceleratingField& field = currentComponent->GetField();
+	const RFAcceleratingField& field = currentComponent->GetField();
 
-    double g   = field.GetAmplitude();
-    double f   = field.GetFrequency();
-    double phi = field.GetPhase();
+	double g   = field.GetAmplitude();
+	double f   = field.GetFrequency();
+	double phi = field.GetPhase();
 
-    if(g==0) {
-        // cavity is off!
-        ApplyDrift(currentBunch->GetParticles(),ds);
-        return;
-    }
+	if(g==0)
+	{
+		// cavity is off!
+		ApplyDrift(currentBunch->GetParticles(),ds);
+		return;
+	}
 
-    assert(f!=0);
+	assert(f!=0);
 
-    RMtrx Rm(2);
-    double E0  = currentBunch->GetReferenceMomentum();
+	RMtrx Rm(2);
+	double E0  = currentBunch->GetReferenceMomentum();
 
-    TransportMatrix::TWRFCavity(ds,g,f,phi,E0,true,Rm.R);
+	TransportMatrix::TWRFCavity(ds,g,f,phi,E0,true,Rm.R);
 
-    for_each(currentBunch->begin(),currentBunch->end(),ApplyRFdp(g*ds/E0,f,phi,Rm,true));
+	for_each(currentBunch->begin(),currentBunch->end(),ApplyRFdp(g*ds/E0,f,phi,Rm,true));
 
-    if(true)
-        currentBunch->IncrReferenceMomentum(g*ds*cos(phi));
+	if(true)
+	{
+		currentBunch->IncrReferenceMomentum(g*ds*cos(phi));
+	}
 
-    return;
+	return;
 }
 
 // Class SectorBendCI
@@ -310,32 +320,34 @@ void RectMultipoleCI::TrackStep (double ds)
 
 void SWRFStructureCI::TrackStep (double ds)
 {
-    // Here we have a problem since the Chamber's matrix that we use
-    // for the transport is only valid for n*(lambda/2), where n is
-    // an integer. For now, we simple force ds to be a fixed number
-    // of wavelengths
+	// Here we have a problem since the Chamber's matrix that we use
+	// for the transport is only valid for n*(lambda/2), where n is
+	// an integer. For now, we simple force ds to be a fixed number
+	// of wavelengths
 
-    CHK_ZERO(ds);
+	CHK_ZERO(ds);
 
-    const RFAcceleratingField& field = currentComponent->GetField();
-    double g = field.GetAmplitude();
-    double f = field.GetFrequency();
-    double phi = field.GetPhase();
-    double E0 = currentBunch->GetReferenceMomentum();
+	const RFAcceleratingField& field = currentComponent->GetField();
+	double g = field.GetAmplitude();
+	double f = field.GetFrequency();
+	double phi = field.GetPhase();
+	double E0 = currentBunch->GetReferenceMomentum();
 
-    double lambdaOver2 = SpeedOfLight/f/2;
-    int ncells = static_cast<int>(ds/lambdaOver2);
-    assert(ncells*lambdaOver2 == ds);
+	double lambdaOver2 = SpeedOfLight/f/2;
+	int ncells = static_cast<int>(ds/lambdaOver2);
+	assert(ncells*lambdaOver2 == ds);
 
-    RMtrx Rm(2);
-    TransportMatrix::SWRFCavity(ncells,g,f,phi,E0,Rm.R);
+	RMtrx Rm(2);
+	TransportMatrix::SWRFCavity(ncells,g,f,phi,E0,Rm.R);
 
-    for_each(currentBunch->begin(),currentBunch->end(),ApplyRFdp(g*ds/E0,f,phi,Rm,true));
+	for_each(currentBunch->begin(),currentBunch->end(),ApplyRFdp(g*ds/E0,f,phi,Rm,true));
 
-    if(true)
-        currentBunch->IncrReferenceMomentum(g*ds*cos(phi));
+	if(true)
+	{
+		currentBunch->IncrReferenceMomentum(g*ds*cos(phi));
+	}
 
-    return;
+	return;
 }
 
 // Class ExactRectMultipoleCI

@@ -453,7 +453,8 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type =="RFCAVITY")
 	{
-		type="DRIFT";
+		//type="DRIFT";
+		type="RFCAVITY";
 	}
 	else if(type=="LCAV")
 	{
@@ -662,6 +663,7 @@ double MADInterface::ReadComponent ()
 
         else if(type=="RFCAVITY")
         {
+		cout << "Found RF cavity\t";
 		// Here we assume an SW cavity
 		double freq=prmMap->GetParameter("FREQ");
 		double phase=prmMap->GetParameter("LAG");
@@ -672,6 +674,8 @@ double MADInterface::ReadComponent ()
 		double lambdaOver2 = SpeedOfLight/freq/2;
 		int ncells = Round(len/lambdaOver2);
 		double len1 = ncells*lambdaOver2;
+
+		cout << "f: " << freq << "\tV: " << volts << "\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << "\tLength: " << len1 << endl;
 
 		// adjust phase for cosine-like field
 		phase = twoPi*(phase-0.25);
