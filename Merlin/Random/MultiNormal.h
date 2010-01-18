@@ -93,7 +93,7 @@ template<int N>
 	             sum -= L(i,k) * L(j,k);
                  if ( i==j ) {
                      if (sum <= 0.0) {
-		        printf("MultiNormal::CholeskyDecomp Failed!\n");
+		        cout << "MultiNormal::CholeskyDecomp Failed!" << endl;
 		        // we set L=0 so that we just return the mean values
 		        for( int i=0; i<N; i++ )
 		          for( int j=0; j<N; j++ ) L(i,j)=0;  
