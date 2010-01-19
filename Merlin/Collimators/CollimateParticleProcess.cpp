@@ -188,7 +188,7 @@ void CollimateParticleProcess::DoCollimation ()
 	{
 		if(tap)
 		{ // if it is a tilted aperture
-			inside = tap->PointInside_offset((*p).x(),(*p).y(),s,currentBunch->begin()->x(),currentBunch->begin()->y());
+			inside = tap->PointInside_offset((*p).x(),(*p).y(),s);
 		// cout << "offseting tilted appp " <<endl;
 		}
 
@@ -196,6 +196,7 @@ void CollimateParticleProcess::DoCollimation ()
 		{
 			inside = ap->PointInside((*p).x(),(*p).y(),s);
 		}
+
 
 		if(!inside)
 		{

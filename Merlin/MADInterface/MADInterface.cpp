@@ -566,7 +566,7 @@ double MADInterface::ReadComponent ()
 		Quadrupole* quad = new Quadrupole(name,len,brho*k1/len);
 		ctor->AppendComponent(*quad);
 		component=quad;
-        }
+	}
         else if(type=="SKEWQUAD")
         {
 		k1=prmMap->GetParameter("K1L");

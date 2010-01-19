@@ -169,6 +169,12 @@ void SpoilerWakeProcess::CalculateWakeL(double dz, int currmode)
 
     void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
         { 
+	  	  CalculateQdist();
+
+	  pair<double,double> v=currentBunch ->GetMoments(ps_CT);
+          double z0=v.first;
+          double sigz=v.second;
+
            spoiler_wake=(SpoilerWakePotentials*) currentWake;
            for(int m=1;m<=nmodes;m++)
                for (size_t  n=0;n<nbins;n++)
@@ -191,6 +197,7 @@ for(int currmode=1; currmode<=nmodes; currmode++)
 	CalculateWakeT(dz, currmode);	
  	CalculateWakeL(dz, currmode);	
             double z=zmin;
+           int iparticle=0;
 	      
 for(size_t nslice = 0; nslice<nbins; nslice++) 
           {
@@ -199,6 +206,7 @@ for(size_t nslice = 0; nslice<nbins; nslice++)
             double g_st = WAKE_GRADIENT(wake_st);
             double g_cl = WAKE_GRADIENT(wake_cl);
             double g_sl = WAKE_GRADIENT(wake_sl);
+            g_ct=g_st=g_cl=g_sl=0;
 for(ParticleBunch::iterator p=bunchSlices[nslice]; p!=bunchSlices[nslice+1]; p++)
    {
      double r = sqrt (powd(p->x(),2) + powd(p->y(),2)); 
@@ -225,6 +233,8 @@ for(ParticleBunch::iterator p=bunchSlices[nslice]; p!=bunchSlices[nslice+1]; p++
      p->xp() = (p->xp()+dxp)/(1+ddp);
      double oldpy=p->yp();
      p->yp() = (p->yp()+dyp)/(1+ddp);
+
+     // cout <<" new... slice "<<nslice<<" particle "<<(++iparticle)<< "\tangles "<< p->xp()<<"\t"<< p->yp()<<" "<<dxp<<" "<<dyp<<endl;
     }
     z+=dz;  
    }   
