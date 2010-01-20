@@ -469,6 +469,25 @@ double MADInterface::ReadComponent ()
 		type="SPOILER";
 	}
 
+	/******************************************************************
+	**
+	**	Addition of missing elements in V6.503 LHC "as built" optics
+	**
+	******************************************************************/
+
+	else if(type=="PLACEHOLDER")
+	{
+		type="DRIFT";
+	}
+
+	else if(type=="TKICKER")//Seems to be standard kickers?
+	{
+		//type="KICKER"
+		type="DRIFT";
+	}
+
+	//End of additions - JM
+
         if(type=="RBEND")
         {
 		  if((prmMap->GetParameter("K0L"))!=0.0) type="SBEND";
