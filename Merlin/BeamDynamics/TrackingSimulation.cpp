@@ -40,8 +40,9 @@ void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX,
         }
 
         if(frame->IsComponent())
-            aStepper.Track(frame->GetComponent());
-
+        {
+		aStepper.Track(frame->GetComponent());
+	}
         if(const Transform3D* t=frame->GetExitGeometryPatch()) {
            aBunch.ApplyTransformation(*t);
         }
@@ -130,7 +131,9 @@ Bunch& TrackingSimulation::DoRun (bool new_bunch, bool do_init)
             stepper.Initialise(*bunch);
 
         if(type==beamline)
+        {
             PerformTracking(stepper,*bunch,incX,injOnAxis,simOp,theBeamline.begin(),theBeamline.end());
+        }
         else
             PerformTracking(stepper,*bunch,incX,injOnAxis,simOp,theRing,theRing);
     } catch(MerlinException& me) {
