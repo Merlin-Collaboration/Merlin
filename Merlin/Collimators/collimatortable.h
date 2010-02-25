@@ -5,45 +5,79 @@
 #include <fstream>
 using namespace std;
 
-class collimatortable{
+class collimatortable
+{
 float* coeff;
 float step; // step size in s
 int ncoeff; // number 
 float lo,hi;
 public:
 
-~collimatortable(){ delete [] coeff;};
+~collimatortable()
+{
+	delete [] coeff;
+};
 
-bool inrange(double x){return (x>=lo) && (x<= hi);}
+bool inrange(double x)
+{
+	return (x>=lo) && (x<= hi);
+}
 
-double parabolic(double v1, double v2, double v3,double d){
-     return v2+d*(v3-v1)/2+d*d*(v3+v1-2*v2)/2;
-   }
+double parabolic(double v1, double v2, double v3,double d)
+{
+	return v2+d*(v3-v1)/2+d*d*(v3+v1-2*v2)/2;
+}
 
-double interpolate(double s){
- int index=int(0.5+s/step);
- if(index<0) index=0;
- int i1;
- if(index==0){i1=1;} else if(index==ncoeff-1) {i1=ncoeff-2;} else {i1=index;}
- return(index>=ncoeff)?0:parabolic(coeff[i1-1],coeff[i1],coeff[i1+1],s/step-i1);
- }
+double interpolate(double s)
+{
+	int index=int(0.5+s/step);
+	if(index<0)
+	{
+		index=0;
+	}
+	int i1;
+	if(index==0)
+	{
+		i1=1;
+	}
+	else if(index==ncoeff-1)
+	{
+		i1=ncoeff-2;
+	}
+	else
+	{
+		i1=index;
+	}
 
-collimatortable(const char* file, double Gamma=0, double xi=0){
-float lo1,hi1,lo3,hi3;
-ifstream f;
-f.open(file);
-if(!f) {cout<<" cannot open file"<<file<<endl; exit(1);}
-else {cout << "opened "<< file << endl;}
-int n1,n2,n3;
-f>>n3>>lo3>>hi3;
-float step3=(hi3-lo3)/(n3-1);
-f>>n2>>lo>>hi;
-step=(hi-lo)/(n2-1);
-f>>n1>>lo1>>hi1;
-float step1=(hi1-lo1)/(n1-1);
-ncoeff=n2;
-coeff=new float[n2];
-float array[n1][n2][n3];
+	return(index>=ncoeff)?0:parabolic(coeff[i1-1],coeff[i1],coeff[i1+1],s/step-i1);
+}
+
+collimatortable(const char* file, double Gamma=0, double xi=0)
+{
+	float lo1,hi1,lo3,hi3;
+	ifstream f;
+	f.open(file);
+	if(!f)
+	{
+		cout << "Cannot open file" << file <<endl;
+		exit(1);
+	}
+	/*else
+	{
+		cout << "opened "<< file << endl;
+	}
+	*/
+
+	int n1,n2,n3;
+	f>>n3>>lo3>>hi3;
+	float step3=(hi3-lo3)/(n3-1);
+	f>>n2>>lo>>hi;
+	step=(hi-lo)/(n2-1);
+	f>>n1>>lo1>>hi1;
+	float step1=(hi1-lo1)/(n1-1);
+	ncoeff=n2;
+	coeff=new float[n2];
+	float array[n1][n2][n3];
 
 while(f.get()!='{') ;
 for(int i1=0;i1<n1;i1++){
@@ -132,8 +166,9 @@ else{// 2D interpolation
      +dg*dc*dc*fgcc+dg*dg*dc*dc*fggcc;
      }
 }
-
-cout<<" File "<<file<<" read and table calculated for Gamma of "<<Gamma<<" and xi of "<<xi<<endl;
+#ifndef NDEBUG
+	cout << "File " << file << " read and table calculated for Gamma of " << Gamma << " and xi of " << xi << endl;
+#endif
 }
 };
 
