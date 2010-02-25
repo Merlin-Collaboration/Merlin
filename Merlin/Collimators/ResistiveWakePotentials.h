@@ -40,7 +40,7 @@ ResistivePotential(int m, double ss, double bb, double l, string filename, doubl
 	cout << "Resistive collimator radius: " << b << "\tLength: " << leng << "\tConductivity: " << sigma << "\tScale length: " << scale << endl;
 	double xi = pow(scale/b,2);
 	double Gamma = SpeedOfLight*tau/scale;
-	cout<<"xi: " << xi << "Gamma: " << Gamma << endl; 
+	//cout<<"xi: " << xi << "\tGamma: " << Gamma << endl; 
 	Transverse = new collimatortable*[m+1];
 	Longitudinal = new collimatortable*[m+1];
 	for(int mode=0; mode<=m; mode++)
