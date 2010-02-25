@@ -167,7 +167,16 @@ void CollimateParticleProcess::SetLossThreshold (double losspc)
 void CollimateParticleProcess::DoCollimation ()
 {
 	const Aperture *ap = currentComponent->GetAperture();
-	const TiltedAperture *tap = dynamic_cast<const TiltedAperture*>(ap);
+
+	if(ap == NULL)
+	{
+		std::cerr << "ap is NULL in CollimateParticleProcess.cpp - DoCollimation" << std:: endl;
+		exit(EXIT_FAILURE);
+	}
+	//cout << currentComponent->GetQualifiedName() << "\t" << ap->Material << endl;
+
+	//const TiltedAperture *tap = dynamic_cast<const TiltedAperture*>(ap);
+
 	PSvectorArray lost;
 	list<size_t>  lost_i;
 
@@ -186,21 +195,32 @@ void CollimateParticleProcess::DoCollimation ()
 
 	for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
 	{
-		if(tap)
-		{ // if it is a tilted aperture
-			inside = tap->PointInside((*p).x(),(*p).y(),s);
+	//	if(tap)
+	//	{ // if it is a tilted aperture
+	//		inside = tap->PointInside((*p).x(),(*p).y(),s);
 		// cout << "offseting tilted appp " <<endl;
-		}
+	//	}
 
-		else
-		{
-			inside = ap->PointInside((*p).x(),(*p).y(),s);
-		}
+	//	else
+	//	{
+		inside = ap->PointInside((*p).x(),(*p).y(),s);
+	//	}
 
 
 		if(!inside)
 		{
-			lost_type = DoScatter(*p, tap);                    
+			//lost_type 0 means keep particle
+			// other values are differnt types of loss
+
+			if (ap->Material == NULL)
+			{
+			// No material set, assume element made of event horizon (ie gets lost)
+				lost_type = 5;
+			}
+			else
+			{
+				lost_type = DoScatter(*p, ap);
+			}
 			//cout<<"lost - p.x: "<<(*p).x()<< "\tp.y: "<<(*p).y()<< "\tlost_type: " << lost_type << endl;
 
 			// If the 'aperture' is a spoiler, then the particle is lost
@@ -303,13 +323,19 @@ void CollimateParticleProcess::SetNextS ()
     }
 }
 
-  int CollimateParticleProcess::DoScatter (Particle& p, const TiltedAperture* tap)
+int CollimateParticleProcess::DoScatter (Particle& p, const Aperture* tap)
 {
-  double E0=currentBunch->GetReferenceMomentum();
-  // ScatterParticle(p,Xr,len,E0);        # only for electrons
-  //  return p.dp()<=-0.99; // return true if E below 1% cut-off
-  
-  return ScatterProton(p,len,E0,tap);         // only for protons
+double E0=currentBunch->GetReferenceMomentum();
+// ScatterParticle(p,Xr,len,E0);        # only for electrons
+//  return p.dp()<=-0.99; // return true if E below 1% cut-off
+
+if(tap == NULL)
+{
+	std::cerr << "tap is NULL in CollimateParticleProcess.cpp - DoScatter" << std:: endl;
+	exit(EXIT_FAILURE);
+}
+
+	return ScatterProton(p,len,E0,tap);         // only for protons
 }
 
 ExcessiveParticleLoss::ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart)

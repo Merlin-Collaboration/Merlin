@@ -146,7 +146,7 @@ private:
 
     double Xr; // radiation length 
     double len; // physical length     
-    int DoScatter(Particle&, const TiltedAperture*);
+    int DoScatter(Particle&, const Aperture*);
 
     //Copy protection
     CollimateParticleProcess(const CollimateParticleProcess& rhs);
