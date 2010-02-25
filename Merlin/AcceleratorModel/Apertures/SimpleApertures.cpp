@@ -16,6 +16,9 @@
 #include "NumericalUtils/NumericalConstants.h"
 #include "NumericalUtils/utils.h"
 
+#include <iostream>
+#include <cstdlib>
+
 double RectangularAperture::GetRadiusAt (double phi, double z) const
 {
     if(fequal(hh,0.0) || fequal(hw,0.0))
@@ -34,3 +37,29 @@ double CircularAperture::GetRadiusAt (double phi, double z) const
     return GetRadius();
 }
 
+//	Returns true if the point (x,y,z) is within the aperture.
+inline bool RectEllipseAperture::PointInside (double x, double y, double z) const
+{
+	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
+	{
+		//Particle is NOT inside the eliptical aperture component
+		return 0;
+	}
+	else if(fabs(x) > rect_half_width || fabs(y) > rect_half_height)
+	{
+		//Particle is NOT inside the rectangular aperture component
+		return 0;
+	}
+	else
+	{
+		//Particle is inside both components, and is inside the aperture
+		return 1;
+	}
+}
+
+double RectEllipseAperture::GetRadiusAt (double phi, double z) const
+{
+
+	std:cerr << "Not yet implemented" << std::endl;
+	exit(EXIT_FAILURE);
+}

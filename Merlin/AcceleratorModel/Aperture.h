@@ -17,6 +17,7 @@
 
 #include "merlin_config.h"
 #include "EuclideanGeometry/Space3D.h"
+#include "Collimators/Material.hpp"
 
 //	Represents the cross section of the vacuum pipe or other
 //	collimating aperture.
@@ -24,6 +25,7 @@
 class Aperture
 {
 public:
+    material* Material;
     virtual ~Aperture ();
 
     //	Returns true if the point (x,y,z) is within the aperture.
@@ -35,6 +37,10 @@ public:
     //	Returns the radius to the aperture at location z and
     //	angle phi.
     virtual double GetRadiusAt (double phi, double z) const = 0;
+
+   material* get_material() const {return Material;}
+   void set_material(material *m){Material = m ;}
+
 };
 
 inline Aperture::~Aperture ()
