@@ -43,12 +43,15 @@ public:
     virtual void ReadRow (std::istream& is);
 
     bool has_type;
+    bool has_apertype;
+
 
  private:
 
     std::vector<double> vals;
     std::string type_str;
     key_map kmap;
+    size_t apertype_column;
 };
 
 #endif

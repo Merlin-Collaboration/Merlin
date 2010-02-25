@@ -14,12 +14,13 @@
 
 #include <sstream>
 #include "IO/MerlinIO.h"
+#include <cstdlib>
 
 // MADKeyMap
 #include "MADInterface/MADKeyMap.h"
 using namespace std;
 
-MADKeyMap::MADKeyMap (const std::string& hstr): has_type(false)
+MADKeyMap::MADKeyMap (const std::string& hstr): has_type(false), has_apertype(false)
 {
 	istringstream is(hstr);
 	size_t n = 0;
@@ -30,6 +31,20 @@ MADKeyMap::MADKeyMap (const std::string& hstr): has_type(false)
 		if(s=="TYPE")
 		{
 			has_type=true;
+		}
+		else if(s=="APERTYPE")
+		{
+			//We want to record the column number that contains the aperture type text,
+			//for latter conversion from a string to a double.
+
+			//First set that the apertype column exists
+			has_apertype=true;
+
+			//Store this value for later usage.
+			apertype_column = n;
+
+			//Enter the column number as normal
+			kmap[s]=n++;
 		}
 		else
 		{
@@ -56,16 +71,83 @@ double MADKeyMap::GetParameter (const std::string& key, bool warn)
 	{
 		if(warn)
 		{
-			MerlinIO::warning() << key <<" not in optics listing. Defaulted to zero" << endl;
+			MerlinIO::warning() << key << " not in optics listing. Defaulted to zero" << endl;
 		}
 		return 0;
 	}
 }
 
+
+/*
+Aperture types - from MADX: http://mad.web.cern.ch/mad/Introduction/aperture.html
+CIRCLE		1
+ELLIPSE		2
+RECTANGLE	3
+LHCSCREEN	4
+MARGUERITE	5
+RECTELLIPSE	6
+RACETRACK	7
+NONE		0
+*/
+
 void MADKeyMap::ReadRow (std::istream& is)
 {
+	//Since vals is an array of doubles, we want to convert the aperture text into a
+	//number defining the aperture type to be entered into this array
+	string buf;
 	for(size_t i=0; i<vals.size(); i++)
 	{
-		is>>vals[i];
+	
+		//Are we dealing with the aperture column in the input file?
+		if(i == apertype_column && has_apertype==true)
+		{
+			is >> buf;
+			if(buf == "\"CIRCLE\"")
+			{
+				//cout << "Have CIRCLE aperture"  << endl;
+				vals[i] = 1.0;
+			}
+			else if(buf == "\"ELLIPSE\"")
+			{
+				//cout << "Have ELLIPSE aperture"  << endl;
+				vals[i] = 2.0;
+			}
+			else if(buf == "\"RECTANGLE\"")
+			{
+				//cout << "Have RECTANGLE aperture"  << endl;
+				vals[i] = 3.0;
+			}
+			else if(buf == "\"LHCSCREEN\"")
+			{
+				//cout << "Have LHCSCREEN aperture"  << endl;
+				vals[i] = 4.0;
+			}
+			else if(buf == "\"MARGUERITE\"")
+			{
+				//cout << "Have MARGUERITE aperture"  << endl;
+				vals[i] = 5.0;
+			}
+			else if(buf == "\"RECTELLIPSE\"")
+			{
+				//cout << "Have RECTELLIPSE aperture"  << endl;
+				vals[i] = 6.0;
+			}
+			else if(buf == "\"RACETRACK\"")
+			{
+				//cout << "Have RACETRACK aperture"  << endl;
+				vals[i] = 7.0;
+			}
+			else if(buf == "\"NONE\"")
+			{
+				//cout << "Have no aperture!"  << endl;
+				vals[i] = 0.0;
+			}
+
+		}
+		//else read as normal
+		else
+		{
+			is >> vals[i];
+		}
 	}
 }

@@ -44,7 +44,7 @@ using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
-const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
+//const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
 
 namespace {
 // stack used to match MAD LINE pairs
@@ -68,14 +68,14 @@ void Log(const string& tag, int depth, ostream& os)
 
 void StripHeader(istream& is)
 {
-	char buffer[512];
+	char buffer[1024];
 	char c;
 	while(true && is)
 	{
 		is.get(c);
 		if(c=='*'||c=='$'||c=='@')
 		{
-			is.getline(buffer,512);
+			is.getline(buffer,1024);
 		}
 		else
 		{
@@ -90,49 +90,101 @@ inline string StripQuotes(const string& text)
 	return text.substr(1,text.length()-2);
 }
 
-
-
-
-Aperture* ConstructAperture(const string& apstr)
+//Aperture* ConstructAperture(const string& apstr)
+Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 {
 	Aperture* ap;
-	double w,h,d,t;
+	double w,h,d,t,r,a,b;
 	string::size_type n,n2;
 
-	switch(apstr[0])
+	/*
+	Aperture types - from MADX: http://mad.web.cern.ch/mad/Introduction/aperture.html
+	CIRCLE		1
+	ELLIPSE		2
+	RECTANGLE	3
+	LHCSCREEN	4
+	MARGUERITE	5
+	RECTELLIPSE	6
+	RACETRACK	7
+	NONE		0
+
+	aper_# means for all apertypes but racetrack:
+	aper_1 = half width rectangle
+	aper_2 = half height rectangle
+	aper_3 = half horizontal axis ellipse (or radius if circle)
+	aper_4 = half vertical axis ellipse
+
+	For racetrack, the aperture parameters will have the same meaning as the tolerances:
+	aper_1 and xtol = horizontal displacement of radial part
+	aper_2 and ytol = vertical displacement of radial part
+	aper_3 and rtol = radius
+	aper_4 = not used 
+	*/
+
+
+	//Circle
+	if(ap_type == 1)
 	{
-	case 'D':
-		d = atof(apstr.substr(1).c_str())*millimeter;
-		ap = new CircularAperture(d/2);
-		break;
+		r = prmMap->GetParameter("APER_3");
+		if(r == 0.0)
+		{
+			//Zero radius, disable the aperture
+			ap = 0;
+		}
+		else
+		{
+			//We have a non-zero radius, create the aperture
+			ap = new CircularAperture(r);
+		}
+	}
 
-	case 'X':
-		n = apstr.find_first_of('Y',1);
-		assert(n!=string::npos);
-		w = atof(apstr.substr(1,n-1).c_str())*millimeter;
-		h = atof(apstr.substr(n+1).c_str())*millimeter;
-		ap = new RectangularAperture(w,h);
-		break;
+	//RECTANGLE
+	else if(ap_type == 3)
+	{
+		w = prmMap->GetParameter("APER_1");	//half width rectangle
+		h = prmMap->GetParameter("APER_2");	//half height rectangle
 
-	case 'T':
-		n = apstr.find_first_of('X',1);
-		n2 = apstr.find_first_of('Y',1);
-		assert(n!=string::npos);
-		t = atof(apstr.substr(1,n-1).c_str());
-		w = atof(apstr.substr(n+1,n2-1).c_str())*millimeter;
-		h = atof(apstr.substr(n2+1).c_str())*millimeter;
-		// cout << "found a tilted aperture w="<<w<<" h="<<h<<" t="<<t<<endl;
-		ap = new TiltedAperture(w,h,t);
-		break;
+		if (w == 0.0 || h == 0.0)
+		{
+			ap = 0;
+		}
+		else
+		{
+			ap = new RectangularAperture(w,h);
+		}
+	}
 
-		case '~':
-		        ap = 0;
-		        break;
+	//RECTELLIPSE
+	else if(ap_type == 6)
+	{
+		//FIXME
+		w = prmMap->GetParameter("APER_1");	//half width rectangle
+		h = prmMap->GetParameter("APER_2");	//half height rectangle
+		a = prmMap->GetParameter("APER_3");	//half horizontal axis ellipse
+		b = prmMap->GetParameter("APER_4");	//half vertical axis ellipse
 
-		default:
-			MERLIN_ERR<<"WARNING: unknown aperture definition ("<<apstr<<") ignored"<<endl;
-			ap=0;
-	};
+		if (w == 0.0 || h == 0.0 || a == 0.0 || b == 0.0)
+		{
+			ap = 0;
+		}
+		else
+		{
+			ap = new RectEllipseAperture (w, h, a, b);
+		}
+	}
+
+	//NONE
+	else if(ap_type == 0.0)
+	{
+		//No aperture defined, disable aperture for this component
+		ap = 0;
+	}
+
+	else
+	{
+		MERLIN_ERR << "WARNING: unknown aperture definition ("<<ap_type<<") ignored"<<endl;
+		ap=0;
+	}
 
 	return ap;
 }
@@ -156,7 +208,7 @@ void check_column_heading(istream& is, const string& hd)
 MADInterface::MADInterface (const std::string& madFileName, double P0)
         : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(false),inc_sr(false),ctor(0),prmMap(0)
+        incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL)
 {
 	if(ifs)
 	{
@@ -169,21 +221,16 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	}
 
 	// By default, we currently treat the following MAD types as drifts
-	TreatTypeAsDrift("MARKER"); // merlin bug!
+	TreatTypeAsDrift("MARKER");	// merlin bug!
 	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
+
+	//Addition of missing elements in V6.503 LHC "as built" optics
+	TreatTypeAsDrift("TKICKER");	// merlin bug!
+	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
 }
 
 void MADInterface::Initialise()
 {
-	//The following checks were for a file that is not valid TFS format, changing to check for what MADX actually produces - JM
-	//check_column_heading((*ifs),"*");
-	//check_column_heading((*ifs),"NAME");
-	//check_column_heading((*ifs),"KEYWORD");
-	//Is MAD8 different?
-
-	//check_column_heading((*ifs),"@");
-	//check_column_heading((*ifs),"NAME");
-
 	if(prmMap!=0)
 	{
 		delete prmMap;
@@ -193,7 +240,15 @@ void MADInterface::Initialise()
 	char c;
 	bool tfs = 0;
 	//This just grabs the top line, we really want the line that starts with *, aka the one with the headers.
+	//The following checks were for a file that is not valid TFS format, changing to check for what MADX actually produces - JM
 	//getline((*ifs),s);
+	//check_column_heading((*ifs),"*");
+	//check_column_heading((*ifs),"NAME");
+	//check_column_heading((*ifs),"KEYWORD");
+	//Is MAD8 different?
+
+	//check_column_heading((*ifs),"@");
+	//check_column_heading((*ifs),"NAME");	
 	//Fixed - JM:
 
 	while((*ifs).good())
@@ -208,6 +263,7 @@ void MADInterface::Initialise()
 			break;
 		}
 	}
+
 	if(tfs == 0)
 	{
 		cout << "No Suitable TFS file headers found" << endl;
@@ -219,27 +275,36 @@ void MADInterface::Initialise()
 
 void MADInterface::AppendModel (const string& fname, double Pref)
 {
-    if(ifs)
-        delete ifs;
+	if(ifs)
+	{
+		delete ifs;
+	}
 
-    ifs =  new ifstream(fname.c_str());
-    if(!(*ifs)) {
-        MERLIN_ERR<<"ERROR opening file "<<fname<<endl;
-        delete ifs;
-        abort();
-    }
-    Initialise();
+	ifs =  new ifstream(fname.c_str());
 
-    if(ctor==0) {// first file
-        ctor = new AcceleratorModelConstructor();
-        ctor->NewModel();
-    }
+	if(!(*ifs))
+	{
+		MERLIN_ERR << "ERROR opening file " << fname << endl;
+		delete ifs;
+		abort();
+	}
 
-    StripHeader((*ifs));
+	Initialise();
 
-    energy = Pref;
-    while((*ifs))
-        ReadComponent();
+	if(ctor==0)
+	{
+		// first file
+		ctor = new AcceleratorModelConstructor();
+		ctor->NewModel();
+	}
+
+	StripHeader((*ifs));
+
+	energy = Pref;
+	while((*ifs))
+	{
+		ReadComponent();
+	}
 }
 
 AcceleratorModel* MADInterface::GetModel()
@@ -252,7 +317,7 @@ AcceleratorModel* MADInterface::GetModel()
 		ctor->ReportStatistics(*log);
 		if(inc_sr)
 		{
-			*log<<"\n\n final energy = "<<energy<<" GeV"<<endl;
+			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
 		}
 	}
 
@@ -262,8 +327,9 @@ AcceleratorModel* MADInterface::GetModel()
 	return theModel;
 }
 
-AcceleratorModel* MADInterface::ConstructModel ()
+AcceleratorModel* MADInterface::ConstructModel()
 {
+
 	if(!ifs)
 	{
 		MerlinIO::error()<<"MADInterface :: No model file defined!"<<endl;
@@ -283,19 +349,25 @@ AcceleratorModel* MADInterface::ConstructModel ()
 	// ifs.seekg(0);
 	StripHeader((*ifs));
 
-	while(*ifs)
+
+	cout << "Name\tType\tS" << endl;
+
+	//Main component read in loop
+	while((*ifs).good())
 	{
+		//cout << "READING: MADInterface.cpp 294" << endl;
 		z+=ReadComponent();
 	}
+	//cout << "end reading MADInterface.cpp 298" << endl;
 
 	if(logFlag && log)
 	{
-		*log<<endl;
+		*log << endl;
 		ctor->ReportStatistics(*log);
-		*log<<"\nARC distance from MAD file: "<<z<<endl;
+		*log << endl << "ARC distance from MAD file: " << z << endl;
 		if(inc_sr)
 		{
-			*log<<"\n\n final energy = "<<energy<<" GeV"<<endl;
+			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
 		}
 	}
 
@@ -332,32 +404,33 @@ void MADInterface::ConstructNewFrame (const string& name)
 
 	else
 	{
-	switch( name[0] )
-	{
-		case 'F':
-		newFrame = new SequenceFrame(name.substr(2));
-		break;
+		switch( name[0] )
+		{
+			case 'F':
+				newFrame = new SequenceFrame(name.substr(2));
+				break;
 
-		case 'S':
-		newFrame = new SimpleMount(name.substr(2));
-		break;
+			case 'S':
+				newFrame = new SimpleMount(name.substr(2));
+				break;
 
-		case 'G':
-		//newFrame = new SimpleMount(name.substr(2));
-		newFrame = new GirderMount(name.substr(2));
-		break;
+			case 'G':
+				//newFrame = new SimpleMount(name.substr(2));
+				newFrame = new GirderMount(name.substr(2));
+				break;
 
-		case 'M':
-		newFrame = new MagnetMover(name.substr(2));
-		break;
+			case 'M':
+				newFrame = new MagnetMover(name.substr(2));
+				break;
 
-	        default:
-			MERLIN_ERR<<"Unknown frame character: "<<name<<endl;
-			abort();
-			break;
-	}
+		        default:
+				MERLIN_ERR << "Unknown frame character: " << name << endl;
+				abort();
+				break;
+		}
 	}
 	ctor->NewFrame(newFrame);
+
 	if(log)
 	{
 		Log(newFrame->GetName()+" BEGIN",ctor->GetCurrentFrameDepth(),*log);
@@ -396,7 +469,7 @@ double MADInterface::ReadComponent ()
 {
 #define  _READ(value) if(!((*ifs)>>value)) return 0;
 
-	string name,type,aptype;
+	string name,type,aptype,parent,aperture;
 	double len,ks,angle,e1,e2,k1,k2,k3,h,tilt;
 	_READ(name);
 	_READ(type);
@@ -406,28 +479,36 @@ double MADInterface::ReadComponent ()
 	name=StripQuotes(name);
 	type=StripQuotes(type);
 
+//	cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
+
 	AcceleratorComponent *component;
 	double brho = energy/eV/SpeedOfLight;
 
-	if(prmMap->has_type)
+	
+/*	if(prmMap->has_type)
 	{
+		//has_apertype
 		_READ(aptype);
 		aptype=StripQuotes(aptype);
 	}
-	else if(incApertures)
+*/
+//	else if(incApertures)
+
+	if(incApertures && !prmMap->has_apertype)
 	{
-		MerlinIO::warning()<<"No aperture information. Apertures will not be constructed"<<endl;
+		//Could not find aperture information and building of apertures was requested, will disable building of apertures.
+		MerlinIO::warning() << "No aperture information. Apertures will not be constructed" << endl;
 		incApertures=false;
 	}
 
 	try
 	{
 
-        if(driftTypes.find(type)!=driftTypes.end())
+	if(driftTypes.find(type)!=driftTypes.end())
 	{
-		MerlinIO::warning()<<"Treating "<<type<<" as Drift"<<endl;
+		MerlinIO::warning() << "Treating " << type << " as Drift" << endl;
 		type="DRIFT";
-        }
+	}
 
         // get the 'standard' parameters
         len = prmMap->GetParameter("L");
@@ -435,7 +516,7 @@ double MADInterface::ReadComponent ()
 
         if(len==0 && zeroLengths.find(type)!=zeroLengths.end())
         {
-		MerlinIO::warning()<<"Ignoring zero length "<<type<<endl;
+		MerlinIO::warning() << "Ignoring zero length " << type << endl;
 		return 0;
         }
 
@@ -453,8 +534,8 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type =="RFCAVITY")
 	{
-		//type="DRIFT";
-		type="RFCAVITY";
+		type="DRIFT";
+		//type="RFCAVITY";
 	}
 	else if(type=="LCAV")
 	{
@@ -462,31 +543,14 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type=="RCOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
 	{
-		type="SPOILER";
+		//type="SPOILER";
+		type="COLLIMATOR";
 	}
 	else if(type=="ECOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
 	{
-		type="SPOILER";
+		//type="SPOILER";
+		type="COLLIMATOR";
 	}
-
-	/******************************************************************
-	**
-	**	Addition of missing elements in V6.503 LHC "as built" optics
-	**
-	******************************************************************/
-
-	else if(type=="PLACEHOLDER")
-	{
-		type="DRIFT";
-	}
-
-	else if(type=="TKICKER")//Seems to be standard kickers?
-	{
-		//type="KICKER"
-		type="DRIFT";
-	}
-
-	//End of additions - JM
 
         if(type=="RBEND")
         {
@@ -503,82 +567,102 @@ double MADInterface::ReadComponent ()
 		else type="DRIFT";
 	}
 
-	if(type=="DRIFT") {
-            Drift* aDrift = new Drift(name,len);
-            ctor->AppendComponent(*aDrift);
-            component=aDrift;
+	if(type=="DRIFT")
+	{
+		Drift* aDrift = new Drift(name,len);
+		ctor->AppendComponent(*aDrift);
+		component=aDrift;
         }
-        else if(type=="SPOILER")      // modified by R.Barlow, 30 October 2006
-        {
-        // double X0 =prmMap->GetParameter("KS"); // cheat! use KS column for radiation length
-	Spoiler* aSpoiler = new Spoiler(name,len);
-         //|| name[2]=='I' || name[2]=='L'|| name[2]=='P' || name[2]=='S' || name[2]=='D'
 
-	if(name[2]=='T'|| name[2]=='I' || name[2]=='L'|| name[2]=='P' || name[2]=='S' || name[2]=='D')
+	else if(type=="COLLIMATOR")
 	{
-		aSpoiler->scatter_at_this_spoiler =true;
+		//Check we have collimator info
+		if(collimator_db == NULL)
+		{
+			std::cerr << "Collimator settings not found. Exiting." << std::endl;
+			exit(EXIT_FAILURE);
+		}
+
+		//Also check that we are not using a zero length collimator
+		if(len == 0.0)
+		{
+			return 0;
+		}
+
+		//Lets set up some variables for collimator settings
+		double collimator_aperture_width;
+		double collimator_aperture_height;
+		double collimator_aperture_tilt;
+		material* collimator_material;
+
+		//Create a new spoiler
+		Spoiler* aSpoiler = new Spoiler(name,len);
+
+		//Enable scattering
+		aSpoiler->scatter_at_this_spoiler = true;
+
+		//We now need to find the collimator configuration
+		bool have_collimator = false;
+		for(unsigned int i=1; i < collimator_db->number_collimators; i++)
+		{
+			//Time to search for the collimator we are currently using
+
+			if(collimator_db->Collimator[i].name == name)
+			{
+				cout << "Found the collimator" << endl;
+				have_collimator = true;
+				//This is the collimator we are using.
+				collimator_aperture_width = collimator_db->Collimator[i].x_gap;
+				collimator_aperture_height = collimator_db->Collimator[i].y_gap;
+				collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
+				collimator_material = collimator_db->Collimator[i].Material;
+			}
+
+			//We did not find the settings for the collimator in question
+		}
+
+		if(have_collimator == false)
+		{
+			//Exit or just default to wide open?
+			std::cerr << "Collimator " << name << " settings not found in collimator database." << std::endl;
+			collimator_aperture_width = 9999;
+			collimator_aperture_height = 9999;
+			collimator_aperture_tilt = 0.0;
+			collimator_material = collimator_db->Collimator[1].Material;
+
+			/*
+			std::cerr << "Collimator " << name << " settings not found in collimator database. Exiting." << std::endl;
+			exit(EXIT_FAILURE);
+			*/
+		}
+
+		//Create an aperture for the collimator jaws
+		TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
+		
+		//Set the aperture for collimation
+		aSpoiler->SetAperture(app);
+		
+		//Add the component to the accelerator
+		ctor->AppendComponent(*aSpoiler);
+		component=aSpoiler;
+
+		//double conductivity = app->sigma;
+		double conductivity = collimator_material->sigma;
+		double aperture_size = collimator_aperture_width;
+
+		//Collimation only will take place on one axis
+		if (collimator_aperture_height < collimator_aperture_width)
+		{
+			aperture_size = collimator_aperture_height;
+		} //set to smallest out of height or width
+
+		ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
+
+		//Set the Wake potentials for this collimator
+		aSpoiler->SetWakePotentials(resWake);
 	}
-           //if(apname=="~") apname="TCTH.4L2.B1"
-
-	if(aptype=="~") aptype="T99X99Y99M99";
-	double w,h,t;
-	int m =0;
-	int it=aptype.find("T");
-	int ix=aptype.find("X");
-	int iy=aptype.find("Y");
-	int im=aptype.find("M");
-	int ilen=aptype.length();
-
-	//cout << "spoiler: " << aptype << endl;
-
-         // cout<<aptype.substr(it+1,ilen)<<" "<<aptype.substr(ix+1,iy-1)<<" "<<aptype.substr(iy+1,ilen)<<endl;
-	istringstream istr(aptype.substr(ix+1,iy-1));
-	istr >> w;
-
-	/*
-	material type:
-	00 Be
-	01 C
-	02 Al
-	03 Cu
-	04 W
-	05 Pb
-	*/
-	if (im > 0)
-	{
-		istringstream mstr(aptype.substr(im+1,ilen));
-		mstr>>m;
-	}
-	else
-	{
-		im = ilen+1; // stop bad things happening if no material
-	}
-	
-
-	double ww = w*0.001; // width in meters (AB - Sept 2007)
-	istringstream jstr(aptype.substr(iy+1,im-1));
-	jstr>>h;
-	double hh = h*0.001;//width in meters (AB - Sept 2007)
-	istringstream kstr(aptype.substr(it+1,ix-1));
-	kstr>>t;
-	double tt = t;// tilt in rad
-
-	TiltedAperture* app=new TiltedAperture(ww,hh,tt,m);
-	aSpoiler->SetAperture(app);
-	ctor->AppendComponent(*aSpoiler);
-	component=aSpoiler;
-	double X0 = app->X0;
-	double conductivity = app->sigma;
-	double aperture_size = ww;
-
-	//Collimation only will take place on one axis
-	if (hh < ww){aperture_size = hh;} //set to smallest out of hh or ww
-	ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
-	aSpoiler->SetWakePotentials(resWake);
-        } //End Spoiler
 
 	//Magnets
-
         else if(type=="QUADRUPOLE")
         {
 		k1=prmMap->GetParameter("K1L");
@@ -733,7 +817,7 @@ double MADInterface::ReadComponent ()
 		}
 		else
 		{
-			MERLIN_WARN<<"unknown monitor type: "<<name<<" defaulting to BPM"<<endl;
+			MERLIN_WARN << "Unknown monitor type: "<<name<<" defaulting to BPM" << endl;
 			BPM* bpm = new BPM(name);
 			ctor->AppendComponent(*bpm);
 			component=bpm;
@@ -781,7 +865,7 @@ double MADInterface::ReadComponent ()
 
 	if(component && incApertures)
 	{
-		component->SetAperture(ConstructAperture(aptype));
+		component->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
 	}
 
 	}//End of try block
@@ -793,4 +877,10 @@ double MADInterface::ReadComponent ()
 	}
 
 	return component ? component->GetLength() : 0.0;
+}
+
+
+void MADInterface::Set_Collimator_Database(Collimator_Database *db)
+{
+	collimator_db = db;
 }
