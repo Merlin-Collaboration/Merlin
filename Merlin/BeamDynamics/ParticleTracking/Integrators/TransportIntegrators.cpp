@@ -141,7 +141,13 @@ struct ApplyRFMap {
 
 inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap)
 {
-    for_each(bunch.begin(),bunch.end(),ApplyMap(amap));
+
+		#pragma omp parallel for
+		for(size_t i = 0; i<bunch.size(); i++)
+		{
+			amap->Apply(bunch.GetParticles()[i]);
+		}
+	//for_each(bunch.begin(),bunch.end(),ApplyMap(amap));
 }
 
 inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap, double Er)
