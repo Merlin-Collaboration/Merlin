@@ -1,6 +1,10 @@
 # the compiler to use
 export CPP= g++43
+#export CPP=g++45svn
 #export CPP=distcc
+LINK=gcc43
+#export LINK=gcc45svn
+
 # the root directory for the Merlin source code
 export MERLIN_ROOT_DIR=${PWD}/../Merlin
 
@@ -13,7 +17,7 @@ export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
 
-export CCFLAGS= -pipe -fPIC  -O2 -march=native -Wall
+export CCFLAGS= -pipe -fPIC  -DNDEBUG -fopenmp -O3 -march=native -mfpmath=sse # -pg -ggdb -Wall
 
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/release
 SUBDIRS= AcceleratorModel \
@@ -69,7 +73,7 @@ obj: config
 
 .PHONY: release
 release: subdirs
-	gcc43 -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${MERLIN_BUILD_DIR}/obj/release/*.o
+	$(LINK) -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${MERLIN_BUILD_DIR}/obj/release/*.o
 #	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${MERLIN_BUILD_DIR}/obj/release/*.o
 
 clean:
