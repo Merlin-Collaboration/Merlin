@@ -73,7 +73,7 @@ default: build
 
 .PHONY: subdirs $(SUBDIRS)
 subdirs: $(SUBDIRS)
-$(SUBDIRS):
+$(SUBDIRS): obj
 	$(MAKE) -C ${MERLIN_ROOT_DIR}/$@
 
 obj:
@@ -90,16 +90,16 @@ obj:
 	then mkdir ${MERLIN_BUILD_DIR}/obj/mpi; \
 	fi
 
-build: subdirs obj
+build: subdirs
 	$(LINK) -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
 #	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${OBJDIR}/*.o
-release: obj
+release:
 	$(MAKE) $(MAKEFILE) build=release
 
-debug: obj
+debug:
 	$(MAKE) $(MAKEFILE) build=debug
 
-mpi: obj
+mpi:
 	$(MAKE) $(MAKEFILE) build=mpi
 
 .PHONY: clean
