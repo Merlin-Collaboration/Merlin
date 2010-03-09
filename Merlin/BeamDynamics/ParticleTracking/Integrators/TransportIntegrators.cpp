@@ -141,13 +141,35 @@ struct ApplyRFMap {
 
 inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap)
 {
+		//for_each(bunch.begin(),bunch.end(),ApplyMap(amap));
 
 		#pragma omp parallel for
 		for(size_t i = 0; i<bunch.size(); i++)
 		{
 			amap->Apply(bunch.GetParticles()[i]);
 		}
-	//for_each(bunch.begin(),bunch.end(),ApplyMap(amap));
+
+
+		//MPI code
+		#ifdef MPI
+		if (rank == 0 )
+		{
+			//Want to send particles in blocks, say 100 to start with?
+			//Need structure, with map to apply, and 100xPSVector.
+			//http://www.open-mpi.org/doc/v1.2/man3/MPI_Isend.3.php	Non-blocking buffered
+			//http://www.open-mpi.org/doc/v1.2/man3/MPI_Send.3.php	Blocking
+			//(buffer, count, datatype, destination rank, tag,communicator)
+			for (size_t n = 1; n <number_nodes; n++)
+			{
+				MPI_Send(&num, 1, MPI_INT, n, tag, MPI_COMM_WORLD); 
+			}
+
+			for (size_t n = 1; n <number_nodes; n++)
+			{
+				MPI_Recv(&num, 1, MPI_INT, n, tag, MPI_COMM_WORLD); 
+			}
+		}
+		#endif
 }
 
 inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap, double Er)
