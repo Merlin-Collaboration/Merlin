@@ -29,6 +29,7 @@ pair < double, double > CoulombScatterp (double x, double theta0)
 
 int ScatterProton (PSvector & p, double x, double E0, const Aperture * tap)
 {
+	//cout << "Scatter proton\t" << E0 << endl;
 	//Check for possible badness
 	if(tap == NULL)
 	{
@@ -66,12 +67,12 @@ int ScatterProton (PSvector & p, double x, double E0, const Aperture * tap)
 		double A = 0;
 		double lambda_tot = 1E100;
 	*/
-
+	cout << "X0:\t" << X0 << endl;
 	double lambda_tot = A * 1.e-6 / ((sig_pN_tot + sig_R) * 1.e-28 * rho * 6.023e23);	// total mean free path
 	// double lambda_tot = A*1.e-6/((sig_pN_in)*1.e-28*rho*6.023e23); // total mean free path
 	double delta_s = -lambda_tot * log (RandomNG::uniform (0, 1));
 	//cout << "length=" << x << " lambda_tot="<<lambda_tot << " delta_s="<<delta_s<<endl;   
-
+	cout << "lambda_tot:\t"<< lambda_tot << "\tdelta_s:\t" << delta_s << "\tx:\t" << x << endl;
 	if (delta_s > x)
 	{				//"coulomb" scatter
 		static const double MAXDP = 1.0 - 1.0e-7;	// maximum allowed energy loss
@@ -105,7 +106,9 @@ int ScatterProton (PSvector & p, double x, double E0, const Aperture * tap)
 		// Compute the random angle scatter assuming that the particle has
 		// an average energy of (E+E0)/2 in the collimator
 		double Eav = (E1 + E2) / 2.0;
+		cout << "Eav:\t" << Eav << endl;
 		double theta0 = 0.0136 * sqrt (t) * (1.0 + 0.038 * log (t)) / Eav;	// small-angle Coulomb scattering
+		//double theta0 = 13.6e6 * sqrt (t) * (1.0 + 0.038 * log (t)) / Eav;	// small-angle Coulomb scattering
 		// cout <<" E2 and theta0 "<<E2<<" "<<theta0<<endl;     
 		pair < double, double >s = CoulombScatterp (x, theta0);
 		p.x () += s.first;
@@ -134,14 +137,17 @@ int ScatterProton (PSvector & p, double x, double E0, const Aperture * tap)
 		// subtract sigma from r, and check if it has gone negative
 		if ((r -= sig_pN_el) < 0)
 		{
+			cout << "1" << endl;
 			return 1;		//loose particle
 		}
 		else if ((r -= sig_pN_in) < 0)
 		{
+			cout << "2" << endl;
 			return 2;		//loose particle
 		}
 		else if ((r -= sig_R) < 0)
 		{
+			cout << "3" << endl;
 			return 3;		//loose particle
 		}
 	}
