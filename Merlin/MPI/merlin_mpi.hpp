@@ -1,6 +1,6 @@
 #ifndef _MERLIN_MPI_HPP_
 #define _MERLIN_MPI_HPP_
-
+#ifdef ENABLE_MPI
 #include <mpi.h>
 
 extern int size;
@@ -18,4 +18,5 @@ void merlin_worker_node();
 //See BeamModel/PSvector.h
 
 
+#endif
 #endif

@@ -7,6 +7,7 @@ simulation files.
 We work in SPMD land.
 
 */
+#ifdef ENABLE_MPI
 
 #include "merlin_mpi.hpp"
 #include "BeamModel/PSvector.h"
@@ -149,3 +150,4 @@ void merlin_mpi_finalize()
 	//Always remember to clean up
 	MPI::Finalize();
 }
+#endif

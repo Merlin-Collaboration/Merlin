@@ -68,7 +68,7 @@ else ifeq ($(build),mpi)
 	OBJDIR:= $(OBJDIR)mpi
 else
 	##Default to release if no type specified
-	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp
+	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)release
 endif
 default: build
