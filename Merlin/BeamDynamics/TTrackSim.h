@@ -160,7 +160,7 @@ private:
 };
 
 // template implementation
-
+//Standard tracker constructor
 template<class T>
 TTrackSim<T>::TTrackSim (const AcceleratorModel::Beamline& bline,
                          bunch_type* bunch0, bool del)
@@ -212,7 +212,7 @@ void TTrackSim<T>::SetInitialParticle (const particle_type& p, double Pref)
     b->AddParticle(p);
     SetInitialBunch(b,true);
 }
-
+//Standard Track "Tracker"
 template<class T>
 __TYPENAME__ TTrackSim<T>::bunch_type* TTrackSim<T>::Track(bunch_type* aBunch)
 {

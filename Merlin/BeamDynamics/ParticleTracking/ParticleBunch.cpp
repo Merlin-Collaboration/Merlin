@@ -241,6 +241,21 @@ void ParticleBunch::Output (std::ostream& os) const
     os.flags(oflg);
 }
 
+void ParticleBunch::Input (double Q, std::istream& is)
+{
+    double reftime, refmom;
+    PSvector p;
+    while(is>>reftime>>refmom>>p){
+        push_back(p);
+
+ 	   SetReferenceTime(reftime);
+    	SetReferenceMomentum(refmom);
+}
+    qPerMP = Q/size();
+}
+
+
+
 void ParticleBunch::SetCentroid (const Particle& x0)
 {
     PSvector x;

@@ -58,24 +58,40 @@ using namespace tblas1;
 template<class Ta, class M, class Vx, class Tb, class Vy>
 void tgemv(bool t, const Ta& alpha, const M& A, const Vx& x, const Tb& beta, Vy& y)
 {
-    assert(&x!=&y); // that's a no-no!
-    if(!fequal(beta,1.0))
-        for(register size_t i=0; i<A.nrows(); i++)
-            y[i]*=beta;
+// This seems to be where all the work gets done - JM
 
-    if(!fequal(alpha,0.0))
-    {//start if/else - should be correct
-        if(t) { // use transpose of A
-            for(register size_t i=0; i<A.ncols(); ++i)
-                for(register size_t j=0; j<A.nrows(); ++j)
-                    y[i]+=alpha*A(j,i)*x[j];
-        }
-        else { // use normal A
-            for(register size_t i=0; i<A.nrows(); ++i)
-                for(register size_t j=0; j<A.ncols(); ++j)
-                    y[i]+=alpha*A(i,j)*x[j];
-        }
-    }//end
+	assert(&x!=&y); // that's a no-no!
+	if(!fequal(beta,1.0))
+	{
+		for(register size_t i=0; i<A.nrows(); i++)
+		{
+			y[i]*=beta;
+		}
+	}
+
+	if(!fequal(alpha,0.0))
+	{//start if/else - should be correct
+		if(t)
+		{ // use transpose of A
+			for(register size_t i=0; i<A.ncols(); ++i)
+			{
+				for(register size_t j=0; j<A.nrows(); ++j)
+				{
+					y[i]+=alpha*A(j,i)*x[j];
+				}
+			}
+		}
+		else
+		{ // use normal A
+			for(register size_t i=0; i<A.nrows(); ++i)
+			{
+				for(register size_t j=0; j<A.ncols(); ++j)
+				{
+					y[i]+=alpha*A(i,j)*x[j];
+				}
+			}
+		}
+	}//end
 }
 
 // add Symm, Upper and Lower diagonal forms later

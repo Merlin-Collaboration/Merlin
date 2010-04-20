@@ -41,6 +41,7 @@ public:
     //	z coordinate is ignored.
     virtual double GetRadiusAt (double phi, double z) const;
 
+    //material* Material;
 private:
 
     double hw;
@@ -75,7 +76,7 @@ private:
 
 inline RectangularAperture::RectangularAperture (double width, double height)
         :hw(fabs(width)/2),hh(fabs(height)/2)
-{}
+{Material = NULL;}
 
 inline double RectangularAperture::GetFullWidth () const
 {
@@ -130,5 +131,35 @@ inline bool CircularAperture::PointInside (double x, double y, double z) const
 {
     return x*x+y*y<r2;
 }
+
+
+
+//Rectelipse Aperture
+class RectEllipseAperture : public Aperture
+{
+public:
+	//Constructor
+	RectEllipseAperture (double rect_half_width, double rect_half_height, double ellipse_half_horizontal, double ellipse_half_vertical)
+	{
+		Material = NULL;
+	}
+
+	//	Returns true if the point (x,y,z) is within the
+	//	aperture. The z coordinate is ignored.
+	virtual bool PointInside (double x, double y, double z) const;
+    
+	//TODO
+	//Returns true if the point p is within the aperture.
+	//bool PointInside (const Point3D& p) const;
+
+	//Returns the radius to the aperture at location z and angle phi.
+	virtual double GetRadiusAt (double phi, double z) const;
+
+	private:
+	double rect_half_width;
+	double rect_half_height;
+	double ellipse_half_horizontal;
+	double ellipse_half_vertical;
+};
 
 #endif
