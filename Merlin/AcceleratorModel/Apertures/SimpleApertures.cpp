@@ -43,11 +43,13 @@ inline bool RectEllipseAperture::PointInside (double x, double y, double z) cons
 	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
 	{
 		//Particle is NOT inside the eliptical aperture component
+		//cout << "Not in ellipse" << endl;
 		return 0;
 	}
 	else if(fabs(x) > rect_half_width || fabs(y) > rect_half_height)
 	{
 		//Particle is NOT inside the rectangular aperture component
+		//cout << "Not in rectangle:\tx: " << x << "\t" << rect_half_width << "\ty: " << y << "\t" << rect_half_height << endl;
 		return 0;
 	}
 	else
