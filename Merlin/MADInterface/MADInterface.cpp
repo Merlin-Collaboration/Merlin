@@ -170,6 +170,7 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 		else
 		{
 			ap = new RectEllipseAperture (w, h, a, b);
+			//cout << endl << endl << w <<"\t" << h << endl;
 		}
 	}
 
@@ -208,7 +209,7 @@ void check_column_heading(istream& is, const string& hd)
 MADInterface::MADInterface (const std::string& madFileName, double P0)
         : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL)
+        incApertures(false),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL)
 {
 	if(ifs)
 	{
