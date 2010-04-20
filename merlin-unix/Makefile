@@ -53,16 +53,18 @@ SUBDIRS= AcceleratorModel \
       NumericalUtils \
       Random \
       utility \
-      RingDynamics 
+      RingDynamics \
+      MPI
 
 ifeq ($(build),debug)
-	CCFLAGS = -ggdb3 -pg -Wall -W -Wextra -pipe -fPIC -fopenmp
+	CCFLAGS = -ggdb3 -pg -Wall -W -Wextra -pipe -fPIC -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)debug
 else ifeq ($(build),release)
-	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp
+	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
-	CCFLAGS=-DMPI -O3 -pipe -fPIC -DNDEBUG -fopenmp
+	CPP=mpic++
+	CCFLAGS=-DENABLE_MPI -O3 -pipe -fPIC -DNDEBUG
 	OBJDIR:= $(OBJDIR)mpi
 else
 	##Default to release if no type specified
