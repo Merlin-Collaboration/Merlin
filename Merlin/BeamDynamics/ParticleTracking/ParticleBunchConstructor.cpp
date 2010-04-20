@@ -18,6 +18,8 @@
 #include "Random/RandomNG.h"
 // ParticleBunchConstructor
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
+// Include for pi constant.
+#include "NumericalUtils/NumericalConstants.h"
 
 namespace ParticleTracking {
 
@@ -137,12 +139,12 @@ Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
 	           rx = sqrt(beamdat.emit_x);
 	           ry = sqrt(beamdat.emit_y);
 	           for(i=1; i<np;) {
-				 u = RandomNG::uniform(-3.14,3.14);
+	               u = RandomNG::uniform(-pi,pi);
 	               p.x()	= rx * cos(u);
 	               p.xp()	= rx * sin(u);
-	               u = RandomNG::uniform(-3.14,3.14);
-	               p.y()	= rx * cos(u);
-	               p.yp()	= rx * sin(u);
+	               u = RandomNG::uniform(-pi,pi);
+	               p.y()	= ry * cos(u);
+	               p.yp()	= ry * sin(u);
 	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
 	               M.Apply(p);
