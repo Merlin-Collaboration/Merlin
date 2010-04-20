@@ -193,8 +193,15 @@ void CollimateParticleProcess::DoCollimation ()
 	}
 	bool inside;
 
+	//Loop for collimation, this can be threaded
+	//#pragma omp parallel for
+	//for(size_t i = 0; i<currentBunch->size(); i++)
+	//{
+	//	PSvector* p=currentBunch->GetParticles()[i];
+
 	for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
 	{
+
 	//	if(tap)
 	//	{ // if it is a tilted aperture
 	//		inside = tap->PointInside((*p).x(),(*p).y(),s);
