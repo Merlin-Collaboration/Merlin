@@ -37,7 +37,9 @@ ResistivePotential(int m, double ss, double bb, double l, string filename, doubl
 {
 	double Z0=377;
 	scale=pow(2*b*b/(Z0*sigma),1./3.);
-	cout << "Resistive collimator radius: " << b << "\tLength: " << leng << "\tConductivity: " << sigma << "\tScale length: " << scale << endl;
+	#ifndef DNDEBUG
+	//cout << "Resistive collimator radius: " << b << "\tLength: " << leng << "\tConductivity: " << sigma << "\tScale length: " << scale << endl;
+	#endif
 	double xi = pow(scale/b,2);
 	double Gamma = SpeedOfLight*tau/scale;
 	//cout<<"xi: " << xi << "\tGamma: " << Gamma << endl; 
@@ -78,7 +80,8 @@ ResistivePotential(int m, double ss, double bb, double l, string filename, doubl
 
 
 
-class ResistiveWakePotentials:public SpoilerWakePotentials {
+class ResistiveWakePotentials:public SpoilerWakePotentials
+{
 public: 
   
 	double* coeff;
