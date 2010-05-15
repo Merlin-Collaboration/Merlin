@@ -21,6 +21,11 @@
 #include <vector>
 #include <typeinfo>
 
+#ifdef ENABLE_MPI
+//#include <ctime>
+#include <time.h>
+#endif
+
 class WakePotentials;
 
 namespace ParticleTracking {
@@ -83,12 +88,16 @@ public:
 
     double zmin,zmax,dz;
 
-	size_t oldBunchLen;
+    size_t oldBunchLen;
 
 private:
     //Copy protection
     WakeFieldProcess(const WakeFieldProcess& rhs);
     WakeFieldProcess& operator=(const WakeFieldProcess& rhs);
+    //Time for distributed load leveling.
+    timespec t_initial,t_final;
+    //clock_t t_initial,t_final;
+    double t_delta;
 };
 
 void savgol(vector<double>& c, int nl, int nr, int ld, int m);
