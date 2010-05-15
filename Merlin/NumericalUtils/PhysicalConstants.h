@@ -16,47 +16,27 @@
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/NumericalConstants.h"
 
-
-
-
 namespace PhysicalConstants
 {
 // Data Members for Class Attributes
 
+extern const double Avogadro;
 
+extern const double AtomicMassUnit;
 
 extern const double SpeedOfLight;
 
-
-
-
 extern const double ElectronMass;
-
-
-
 
 extern const double ProtonMass;
 
-
-
-
 extern const double PlanckConstant;
-
-
-
 
 extern const double ElectronCharge;
 
-
-
-
 extern const double ElectronMassMeV;
 
-
-
-
 extern const double ProtonMassMeV;
-
 
 extern const double FreeSpacePermeability;
 
@@ -69,9 +49,4 @@ extern const double ElectronGe;
 };
 
 // Class Utility PhysicalConstants
-
-
-
-
-
 #endif

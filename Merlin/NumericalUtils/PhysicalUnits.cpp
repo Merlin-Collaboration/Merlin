@@ -4,6 +4,10 @@
 
 namespace PhysicalUnits {
 
+
+//Area
+const double barn = 1.0e-28;	// m^2
+
 // length
 const double meter=1.0;
 const double centimeter =1.0e-02*meter;
@@ -51,7 +55,7 @@ const double degree=0.0174532925199*radian;
 
 // magnetic field
 double Tesla=1.0;
-double kGauss=10*kGauss;
+double kGauss=1.0e-1*Tesla;
 double Gauss=1.0e-3*kGauss;
 
 };

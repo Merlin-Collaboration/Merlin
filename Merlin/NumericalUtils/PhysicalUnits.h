@@ -5,6 +5,9 @@
 
 namespace PhysicalUnits {
 
+//Area
+extern const double barn;
+
 // length
 extern const double meter;
 extern const double centimeter;
