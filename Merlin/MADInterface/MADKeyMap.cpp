@@ -74,7 +74,9 @@ double MADKeyMap::GetParameter (const std::string& key, bool warn)
 	{
 		if(warn)
 		{
+			#ifndef NDEBUG
 			MerlinIO::warning() << key << " not in optics listing. Defaulted to zero" << endl;
+			#endif
 		}
 		return 0;
 	}
