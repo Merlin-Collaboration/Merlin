@@ -116,6 +116,9 @@ public:
     //	Sets the centroid of the particle bunch to be exactly x0.
     void SetCentroid (const Particle& x0);
 
+    //Removes all particles from the bunch
+    void clear ();
+
 private:
 
     //	Charge per macro-particle
@@ -193,6 +196,12 @@ inline Particle& ParticleBunch::FirstParticle ()
 {
     return pArray.front();
 }
+
+inline void ParticleBunch::clear ()
+{
+    pArray.clear();
+}
+
 
 }; // end namespace ParticleTracking
 
