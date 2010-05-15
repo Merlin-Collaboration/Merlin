@@ -17,10 +17,11 @@ public:
 	double sig_pN_in;		//proton nucleus inelastic cross section (sigma_inel_pN)
 	double sig_R;			//Rutherford scattering cross section (sigma_R)
 	double dEdx;			//
-	double rho;			//
+	double rho;			//Material Density, g/cm^3
 	double A;			//Atomic mass
 	double sigma;			//electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1
 	double X0;			//Radiation Length??
+	double density;			//Material density, kg/m^3
 
 //Sub-structure for scattering?
 //foo.electron_scatter.sigma
