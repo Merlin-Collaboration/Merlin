@@ -351,7 +351,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 	StripHeader((*ifs));
 
 
-	cout << "Name\tType\tS" << endl;
+	//cout << "Name\tType\tS" << endl;
 
 	//Main component read in loop
 	while((*ifs).good())
@@ -507,7 +507,10 @@ double MADInterface::ReadComponent ()
 
 	if(driftTypes.find(type)!=driftTypes.end())
 	{
+		#ifndef NDEBUG
 		MerlinIO::warning() << "Treating " << type << " as Drift" << endl;
+		#endif
+
 		type="DRIFT";
 	}
 
@@ -596,72 +599,86 @@ double MADInterface::ReadComponent ()
 		double collimator_aperture_tilt;
 		material* collimator_material;
 
-		//Create a new spoiler
-		Spoiler* aSpoiler = new Spoiler(name,len);
-
-		//Enable scattering
-		aSpoiler->scatter_at_this_spoiler = true;
-
 		//We now need to find the collimator configuration
 		bool have_collimator = false;
 		for(unsigned int i=1; i < collimator_db->number_collimators; i++)
 		{
 			//Time to search for the collimator we are currently using
-
 			if(collimator_db->Collimator[i].name == name)
 			{
+				#ifndef NDEBUG
 				cout << "Found the collimator" << endl;
+				#endif
 				have_collimator = true;
-				//This is the collimator we are using.
-				collimator_aperture_width = collimator_db->Collimator[i].x_gap;
-				collimator_aperture_height = collimator_db->Collimator[i].y_gap;
+				//This is the collimator we are using. Input file should have half gaps.
+				collimator_aperture_width = collimator_db->Collimator[i].x_gap*2;
+				collimator_aperture_height = collimator_db->Collimator[i].y_gap*2;
 				collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
 				collimator_material = collimator_db->Collimator[i].Material;
+				
+				//Create a new spoiler
+				Spoiler* aSpoiler = new Spoiler(name,len);
+
+				//Enable scattering
+				aSpoiler->scatter_at_this_spoiler = true;
+				
+				//Create an aperture for the collimator jaws
+				TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
+		
+				//Set the aperture for collimation
+				aSpoiler->SetAperture(app);
+		
+				//Add the component to the accelerator
+				ctor->AppendComponent(*aSpoiler);
+				component=aSpoiler;
+
+				//double conductivity = app->sigma;
+				double conductivity = collimator_material->sigma;
+				double aperture_size = collimator_aperture_width;
+
+				//Collimation only will take place on one axis
+				if (collimator_aperture_height < collimator_aperture_width)
+				{
+					aperture_size = collimator_aperture_height;
+				} //set to smallest out of height or width
+				
+				//Define the resistive wake for the collimator jaws.
+				ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
+
+				//Set the Wake potentials for this collimator
+				aSpoiler->SetWakePotentials(resWake);
 			}
 
 			//We did not find the settings for the collimator in question
 		}
 
+		//If we don't have the collimator settings, and hence have left the collimator wide open, then don't enable the wakefields.
 		if(have_collimator == false)
 		{
+			
 			//Exit or just default to wide open?
+			#ifndef NDEBUG
 			std::cerr << "Collimator " << name << " settings not found in collimator database." << std::endl;
+			#endif
+			/*
 			collimator_aperture_width = 9999;
 			collimator_aperture_height = 9999;
 			collimator_aperture_tilt = 0.0;
 			collimator_material = collimator_db->Collimator[1].Material;
+			*/
 
 			/*
 			std::cerr << "Collimator " << name << " settings not found in collimator database. Exiting." << std::endl;
 			exit(EXIT_FAILURE);
 			*/
+
+			//There is no point in wasting cpu time on aperture checks/wakefields with a wide open collimator
+			//Lets just treat the element as a drift instead.
+			Drift* aDrift = new Drift(name,len);
+			ctor->AppendComponent(*aDrift);
+			component=aDrift;
 		}
-
-		//Create an aperture for the collimator jaws
-		TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
-		
-		//Set the aperture for collimation
-		aSpoiler->SetAperture(app);
-		
-		//Add the component to the accelerator
-		ctor->AppendComponent(*aSpoiler);
-		component=aSpoiler;
-
-		//double conductivity = app->sigma;
-		double conductivity = collimator_material->sigma;
-		double aperture_size = collimator_aperture_width;
-
-		//Collimation only will take place on one axis
-		if (collimator_aperture_height < collimator_aperture_width)
-		{
-			aperture_size = collimator_aperture_height;
-		} //set to smallest out of height or width
-
-		ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
-
-		//Set the Wake potentials for this collimator
-		aSpoiler->SetWakePotentials(resWake);
-	}
+	}//End of Collimators
 
 	//Magnets
         else if(type=="QUADRUPOLE")
@@ -818,7 +835,9 @@ double MADInterface::ReadComponent ()
 		}
 		else
 		{
+			#ifndef NDEBUG
 			MERLIN_WARN << "Unknown monitor type: "<<name<<" defaulting to BPM" << endl;
+			#endif
 			BPM* bpm = new BPM(name);
 			ctor->AppendComponent(*bpm);
 			component=bpm;
