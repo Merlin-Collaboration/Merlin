@@ -147,11 +147,9 @@ struct ApplyRFMap {
 
 inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap)
 {
-	//Old method
+	//Old method (and now MPI)
 	#ifndef ENABLE_OPENMP
-	#ifndef ENABLE_MPI
 	for_each(bunch.begin(),bunch.end(),ApplyMap(amap));
-	#endif
 	#endif
 	
 	//OpenMP option
@@ -160,71 +158,6 @@ inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap)
 	for(size_t i = 0; i<bunch.size(); i++)
 	{
 		amap->Apply(bunch.GetParticles()[i]);
-	}
-	#endif
-
-
-	//MPI option
-	#ifdef ENABLE_MPI
-	if (rank == 0 )
-	{
-	cout << "TRANSPORT OK" << endl;
-	size_t bunch_size_in = bunch.size();
-	//First, we must tell the worker nodes that we are in transport mode
-	//Will send a bit with the appropriate tag
-	for (size_t n = 1; n <size; n++)
-	{
-		MPI::COMM_WORLD.Send(NULL,0,MPI_BIT,1);
-	}
-
-	//Each node should now be in transport mode
-	//Next we must send every node the map to be applied.
-	//MPI_Transport_Map = amap;
-	for (size_t n = 1; n <size; n++)
-	{
-		MPI::COMM_WORLD.Send(&map,1,MPI_Transport_Map,1);
-	}
-
-	//Next we split up the particle bunch, and send it out to each node, taking care of left-overs.
-	PSvector *particle_buffer = new PSvector[bunch.size()];
-	particle_buffer = bunch.GetParticles();
-
-	int particles_per_node = bunch.size()/size;
-
-	//Number of extra particles to push out
-	int remainder_particles = bunch.size() % size;
-	int node_1_particles = particles_per_node + remainder_particles;
-	//Should save a call to Probe on each recv, send the left over particles out to the first node, recv back last.
-	//This can be done in a much nicer way, but for now this should work.
-	
-	MPI::COMM_WORLD.Send(&num, node_1_particles, MPI_Particle, 1, 1);
-
-	for (size_t n = 2; n <size; n+=particles_per_node)
-	{
-		cout << "Sending to " << n << endl;
-		MPI::COMM_WORLD.Send(&particle_buffer, particles_per_node, MPI_Particles, n, 1);
-	}
-
-	//We now wait to receive the particles back from the worker nodes
-	for (size_t n = 2; n <size; n++)
-	{
-		//Comm::Recv(&num, 1, MPI_INT, n, tag, MPI_COMM_WORLD); 
-		MPI::COMM_WORLD.Recv(&particle_buffer, particles_per_node, MPI_Particles, n, 1)
-	}
-	MPI::COMM_WORLD.Recv(&particle_buffer, node_1_particles, MPI_Particles, 1, 1)
-	//And finally we deal with putting the bunch back. Need to glue each recv buffer together
-	//With no collimation here, the return count should be the same.
-	int bunch_size_out = bunch_out.size();
-	if(bunch_size_in != bunch_size_out)
-	{
-		//something has gone wrong
-		cout << "Bunch size mismatch, particles have been lost in transit!" << endl;
-		abort();
-	}
-	//ParticleBunch& bunch
-	//bunch& = bunch_out;
-	//delete bunch_out;
-
 	}
 	#endif
 }
