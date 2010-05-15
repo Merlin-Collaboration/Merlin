@@ -33,6 +33,12 @@
 #include <vector>
 #include <cmath>
 
+#ifdef ENABLE_MPI
+#include <mpi.h>
+#include <fstream>
+#include <iostream>
+#endif
+
 namespace {
 
 using namespace std;
@@ -40,18 +46,22 @@ using namespace ParticleTracking;
 
 size_t TruncateZ(ParticleBunch& particles, double zmin, double zmax)
 {
-    size_t lost=0;
+	size_t lost=0;
 	ParticleBunch::iterator p = particles.begin();
-    while(p!=particles.end()) {
-        double z = p->ct();
-        if(z<zmin || z>=zmax) {
-            p = particles.erase(p);
-            lost++;
-        }
+	while(p!=particles.end())
+	{
+		double z = p->ct();
+		if(z<zmin || z>=zmax)
+		{
+			p = particles.erase(p);
+			lost++;
+		}
 		else
+		{
 			p++;
-    }
-    return lost;
+		}
+	}
+	return lost;
 }
 
 };
@@ -72,6 +82,8 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, int nbins
                        vector<ParticleBunch::iterator>& pbins,
                        vector<double>& hd, vector<double>& hdp, vector<double>* c)
 {
+//cout << "In ParticleBinList" << endl;
+//cout << zmin << "\t" << zmax << "\t" << nbins << endl;
     double dz = (zmax-zmin)/double(nbins);
     vector<ParticleBunch::iterator> bins;
     vector<double> hbins(nbins,0);
@@ -88,20 +100,44 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, int nbins
     double total=0;
     size_t n;
 
-    for(n=0; n<nbins; n++) {
-        z+=dz;
-        while(p!=bunch.end() && p->ct()<z) {
-            total++;
-            hbins[n]++;
-            p++;
-        }
-        bins.push_back(p);
-    }
+	for(n=0; n<nbins; n++)
+	{
+		z+=dz;
+		while(p!=bunch.end() && p->ct()<z)
+		{
+			total++;
+			hbins[n]++;
+			p++;
+		}
+        	bins.push_back(p);
+	}
 
-    if(p!=bunch.end()) {
-        cerr<<"bad slicing"<<endl;
-        cerr<<"z = "<<z<<" ct = "<<p->ct()<<" zmax = "<<zmax<<endl;
-        abort();
+
+    if(p!=bunch.end())
+    {
+    	#ifdef ENABLE_MPI
+    	cerr << "bad slicing in rank: " << MPI::COMM_WORLD.Get_rank() << endl;
+	#endif
+
+	#ifndef ENABLE_MPI
+    	cerr << "bad slicing" << endl;
+	#endif
+
+	cerr << "z = " << z << " ct = " << p->ct() << " zmax = " << zmax << endl;
+	//Dump out the bad bunch
+	ofstream* badbunch = new ofstream("badbunch.bunch");
+	bunch.Output(*badbunch);
+	badbunch->close();
+	delete badbunch;
+	cerr << "Output of the current bunch is to badbunch.bunch" << endl;
+
+	#ifndef ENABLE_MPI
+	abort();
+	#endif
+	
+	#ifdef ENABLE_MPI
+	MPI::COMM_WORLD.Abort(1);
+	#endif
     }
 
     //	bins.push_back(p); // should be end()
