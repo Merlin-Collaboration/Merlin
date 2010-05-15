@@ -63,8 +63,9 @@ else ifeq ($(build),release)
 	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
-	CPP=mpic++
-	CCFLAGS=-DENABLE_MPI -O3 -pipe -fPIC -DNDEBUG
+	CPP=mpiCC
+	LINK=mpiCC
+	CCFLAGS=-DENABLE_MPI -O3 -pipe -fPIC -DNDEBUG -march=k8 -mfpmath=sse
 	OBJDIR:= $(OBJDIR)mpi
 else
 	##Default to release if no type specified
@@ -93,7 +94,7 @@ obj:
 	fi
 
 build: subdirs
-	$(LINK) -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
+	$(LINK) -lrt -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
 #	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${OBJDIR}/*.o
 release:
 	$(MAKE) $(MAKEFILE) build=release
