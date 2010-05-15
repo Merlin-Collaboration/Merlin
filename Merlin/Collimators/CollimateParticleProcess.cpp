@@ -102,8 +102,8 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 		}
 	        else
 		{
-			at_entr=at_cent=false; // currently scatter only at exit
-			at_exit = true;
+			at_cent=at_exit=false; // currently scatter only at exit
+			at_entr = true;
 			SetNextS();
 			Xr = aSpoiler->GetMaterialRadiationLength();
 			len = aSpoiler->GetLength();
