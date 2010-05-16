@@ -206,13 +206,13 @@ int ScatterProton (PSvector& p, double x, double E0, const Aperture * tap)
 		{
 			// Quasielastic "single difractive" scatter pn (proton - nucleon)
 			double b =6.5  ; //for Mx2 >2 GeV2
-			double tmax= 0.01;
+			double tmax= 0.1;
 			double u=RandomNG::uniform(0,1);
 			double Mx2;
-			Mx2=pow((2.0*20.0)/(20.0-(u*18.0)),2);
-			while (Mx2 < 2.0 || Mx2 > 20.0)
+			Mx2=pow((2.0*30.0)/(30.0-(u*28.0)),2);
+			while (Mx2 < 2.0 || Mx2 > 30.0)
 			{   u=RandomNG::uniform(0,1); 
-			    Mx2=pow((2.0*20.0)/(20.0-(u*18.0)),2); 
+			    Mx2=pow((2.0*30.0)/(30.0-(u*28.0)),2); 
 			}
                         double t;
                         t=- log(RandomNG::uniform(0,1))/b;
