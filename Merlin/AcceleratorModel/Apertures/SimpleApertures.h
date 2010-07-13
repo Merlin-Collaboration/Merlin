@@ -140,12 +140,13 @@ class RectEllipseAperture : public Aperture
 public:
 	//Constructor
 	RectEllipseAperture (double rect_half_width, double rect_half_height, double ellipse_half_horizontal, double ellipse_half_vertical)
+	:rect_half_width(rect_half_width),rect_half_height(rect_half_height),ellipse_half_horizontal(ellipse_half_horizontal),ellipse_half_vertical(ellipse_half_vertical)
 	{
 		Material = NULL;
 	}
 
-	//	Returns true if the point (x,y,z) is within the
-	//	aperture. The z coordinate is ignored.
+	//Returns true if the point (x,y,z) is within the
+	//aperture. The z coordinate is ignored.
 	virtual bool PointInside (double x, double y, double z) const;
     
 	//TODO
@@ -154,6 +155,7 @@ public:
 
 	//Returns the radius to the aperture at location z and angle phi.
 	virtual double GetRadiusAt (double phi, double z) const;
+	double GetFullHeight () const;
 
 	private:
 	double rect_half_width;
@@ -161,5 +163,10 @@ public:
 	double ellipse_half_horizontal;
 	double ellipse_half_vertical;
 };
+
+inline double RectEllipseAperture::GetFullHeight () const
+{
+    return 2*rect_half_height;
+}
 
 #endif

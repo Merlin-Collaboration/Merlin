@@ -40,6 +40,7 @@ double CircularAperture::GetRadiusAt (double phi, double z) const
 //	Returns true if the point (x,y,z) is within the aperture.
 inline bool RectEllipseAperture::PointInside (double x, double y, double z) const
 {
+
 	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
 	{
 		//Particle is NOT inside the eliptical aperture component
@@ -55,6 +56,7 @@ inline bool RectEllipseAperture::PointInside (double x, double y, double z) cons
 	else
 	{
 		//Particle is inside both components, and is inside the aperture
+		//cout << "RECTELLIPSE APERTURE CHECK ok" << endl;
 		return 1;
 	}
 }
