@@ -11,7 +11,7 @@ OFILES = model_construction.o  \
          ILCML_main.o
 
 ILCML : ${OFILES}
-	${CPP} ${LDFLAGS} -o $@ $^ -lmerlin -lm
+	${CPP} ${LDFLAGS} -o $@ $^ -lmerlin -lm -fopenmp
 
 %.o : %.cpp
 	${CPP} ${CCFLAGS} -c -o $@ $<

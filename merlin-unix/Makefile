@@ -1,8 +1,7 @@
 # the compiler to use
-export CPP= g++43
-#export CPP=g++45svn
+export CPP= g++
 #export CPP=distcc
-export LINK=gcc43
+export LINK=gcc
 #export LINK=gcc45svn
 
 # the root directory for the Merlin source code
@@ -17,8 +16,7 @@ export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
 
-#export CCFLAGS=-pipe -fPIC  -DNDEBUG -fopenmp -O3 -march=native -mfpmath=sse
-export CCFLAGS=-pipe -fPIC  -DNDEBUG -fopenmp
+export CCFLAGS=-pipe -fPIC -DNDEBUG -fopenmp
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/
 
 SUBDIRS= AcceleratorModel \
@@ -60,12 +58,15 @@ ifeq ($(build),debug)
 	CCFLAGS = -ggdb3 -pg -Wall -W -Wextra -pipe -fPIC -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)debug
 else ifeq ($(build),release)
-	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP
+	CCFLAGS = -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP -O2 -march=native -mfpmath=sse -pipe  # -ffloat-store -fno-signed-zeros
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
+	##set to the compiler one wishes openMPI to use
+	export OMPI_CXX=g++
+	export OMPI_CC=gcc
 	CPP=mpiCC
 	LINK=mpiCC
-	CCFLAGS=-DENABLE_MPI -O3 -pipe -fPIC -DNDEBUG -march=k8 -mfpmath=sse
+	CCFLAGS=-DENABLE_MPI -pipe -fPIC -DNDEBUG -march=native -mfpmath=sse -O2  #-ffloat-store -fno-signed-zeros
 	OBJDIR:= $(OBJDIR)mpi
 else
 	##Default to release if no type specified
@@ -95,6 +96,8 @@ obj:
 
 build: subdirs
 	$(LINK) -lrt -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
+
+#	uncomment the following line for static linking
 #	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${OBJDIR}/*.o
 release:
 	$(MAKE) $(MAKEFILE) build=release

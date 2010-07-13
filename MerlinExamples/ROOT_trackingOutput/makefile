@@ -20,7 +20,7 @@ CCFLAGS2= -w -O3 ${INCPATH}
 LDFLAGS2= `root-config --cflags --libs` -L${MERLIN_LIB_PATH}
 
 MerlinROOT : MerlinROOT_main.o TeslaWakePotential.o TrackingOutputROOT.o 
-	${CPP} ${LDFLAGS2} -o $@ $^ -lmerlin -lm
+       ${CPP} ${LDFLAGS2} -o $@ $^ -lmerlin -lm
 
 %.o : %.cpp
-	${CPP} ${CCFLAGS2} -c  -o $@ $<
+       ${CPP} ${CCFLAGS2} -c  -o $@ $<
