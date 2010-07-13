@@ -34,9 +34,9 @@ using namespace ParticleTracking;
 
 namespace
 {
-	inline long double powd (double x, int y)
+	inline double powd (double x, int y)
 	{
-		long double product (1);
+		double product (1);
 		for (int i=1; i<=y; i++)
 		{
 			product *= x;
@@ -128,12 +128,12 @@ double SpoilerWakeProcess::CalculateSm(int mode, int slice)
 // Calculate the transverse wake with modes 
 void SpoilerWakeProcess::CalculateWakeT(double dz, int currmode)
 {
-
 	vector <double> w(nbins);
 	for (size_t slice=0; slice<nbins; slice++)
 	{
 		w[slice] = spoiler_wake-> Wtrans(slice*dz, currmode);
 		//cout<<" Wake "<<currmode<<" "<<slice<<" "<<w[slice]<<endl;
+		//cout << w[slice] << "\t" << slice << "\t" << dz << endl;
 	}
 
 	for (size_t slice=0; slice<nbins; slice++)
@@ -173,13 +173,17 @@ void SpoilerWakeProcess::CalculateWakeL(double dz, int currmode)
 
 void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 {
-	//cout << "SPOILERWAKE: ApplyWakefield - CALCULATEQDIST" << endl;
 	//CalculateQdist();
 
 	//pair<double,double> v=currentBunch ->GetMoments(ps_CT);
 	//double z0=v.first;
 	//double sigz=v.second;
-
+	//ofstream *logfile = new ofstream("Output/logfile.dat");
+	//logfile->precision(12);
+	//ofstream *bunchafterfile = new ofstream("Output/wakefield.dat");
+	//currentBunch->Output(*bunchafterfile);
+	//delete bunchafterfile;
+	
 	spoiler_wake=(SpoilerWakePotentials*) currentWake;
 	for(int m=1;m<=nmodes;m++)
 	{
@@ -195,11 +199,12 @@ void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 	double a0 = macrocharge*ElectronCharge*Volt;
 	a0 /= 4*pi*FreeSpacePermittivity;
 	double p0 = currentBunch->GetReferenceMomentum();
+
 	if(recalc) Init();
 	double bload=0;
 
 	#define WAKE_GRADIENT(wake) ((wake[currmode][nslice+1]-wake[currmode][nslice])/dz);
-//	cout << "SEGFAULT" << endl;
+
 	for(int currmode=1; currmode<=nmodes; currmode++)
 	{
 		CalculateWakeT(dz, currmode);
@@ -215,8 +220,10 @@ void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 			double g_cl = WAKE_GRADIENT(wake_cl);
 			double g_sl = WAKE_GRADIENT(wake_sl);
 			g_ct=g_st=g_cl=g_sl=0;
+			int number_particles=0;
 			for(ParticleBunch::iterator p=bunchSlices[nslice]; p!=bunchSlices[nslice+1]; p++)
 			{
+				number_particles++;
 				double r = sqrt (powd(p->x(),2) + powd(p->y(),2));
 				double theta = atan2(p->y(),p->x());
 				double zz = p->ct()-z;
@@ -228,7 +235,7 @@ void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 				wake_y = currmode*powd(r,currmode-1)*(wys-wyc);
 				wake_x*=a0;
 				wake_y*=a0;
-				// cout<<currmode<<" "<<r<<" "<<wake_x<<" "<<wake_y<<" "<<p->x()<<" "<<p->y()<<endl;
+		//	*logfile<<currmode<<"\t"<<r<< "\t" << theta << "\t" << wake_ct[currmode][nslice] <<"\t"<<wake_st[currmode][nslice]<<"\t" << wxc << "\t" << wxs << "\t" << wyc << "\t" << wys << endl;    //<<p->x()<<"\t"<<p->y()<<endl;
 				double wzc = cos(currmode*theta)*(wake_cl[currmode][nslice]+g_cl*zz);
 				double wzs = sin(currmode*theta)*(wake_sl[currmode][nslice]+g_sl*zz);
 				wake_z = powd(r,currmode)*(wzc-wzs);
@@ -241,10 +248,22 @@ void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 				p->xp() = (p->xp()+dxp)/(1+ddp);
 				double oldpy=p->yp();
 				p->yp() = (p->yp()+dyp)/(1+ddp);
-			// cout <<" new... slice "<<nslice<<" particle "<<(++iparticle)<< "\tangles "<< p->xp()<<"\t"<< p->yp()<<" "<<dxp<<" "<<dyp<<endl;
+			// *logfile <<" new... slice "<<nslice<<" particle "<<(++iparticle)<< "\tangles "<< p->xp()<<"\t"<< p->yp()<<"\t"<<dxp<<"\t"<<dyp<<endl;
 			}
-			z+=dz;  
+			//*logfile << "slice number: " << nslice << "\tslice size: " << number_particles << endl;			
+			z+=dz;
+
+		//	ostringstream bunchsave;
+		//	bunchsave << "Output/bunch_" << nslice << ".bunch";
+		//        ofstream *bunchsavefile = new ofstream(bunchsave.str().c_str());
+		 //       currentBunch->Output(*bunchsavefile);
+		//	bunchsavefile->close();
+		//        delete bunchsavefile;
 		}
 	}
+//	ofstream *bunchafterfile1 = new ofstream("Output/wakefield1.dat");
+//	currentBunch->Output(*bunchafterfile1);
+//	delete bunchafterfile1;
+//	delete logfile;
 }
 }; //end namespace ParticleTracking
