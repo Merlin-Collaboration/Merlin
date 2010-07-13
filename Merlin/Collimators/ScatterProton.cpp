@@ -31,12 +31,13 @@ pair < double, double > CoulombScatterp (double x, double theta0)
 
 int ScatterProton (PSvector& p, double x, double E0, const Aperture * tap)
 {
+/*
 	ofstream prescat("Output/prescat.dat", ios::app);
 	prescat << p.x() << " " << p.xp() << " " << p.y() << " " << p.yp() << " " << p.dp()<<endl;
 	prescat.close();
-
+*/
 	const double L=x; // L is length, x is length remaining
-	std::cout << "Scatter proton\t" << E0 <<std:: endl;
+	//std::cout << "Scatter proton\t" << E0 <<std:: endl;
 	//Check for possible badness
 	if(tap == NULL)
 	{
@@ -217,7 +218,8 @@ int ScatterProton (PSvector& p, double x, double E0, const Aperture * tap)
                         double t;
                         t=- log(RandomNG::uniform(0,1))/b;
 			while(t < tmax)
-			{   t=- log(RandomNG::uniform(0,1))/b;
+			{   
+				t=- log(RandomNG::uniform(0,1))/b;
 			}
 			
 			double phi=RandomNG::uniform(-pi,pi);
@@ -241,7 +243,7 @@ int ScatterProton (PSvector& p, double x, double E0, const Aperture * tap)
 			double tcut=0.000998;
 			double t=tcut/(1-RandomNG::uniform(0,1)); // generates 1/t squared distribution, 
 			double phi=RandomNG::uniform(-pi,pi);
-			double mass=A*AtomicMassUnit; // Nucleuss mass
+			double mass=A*AtomicMassUnit; // Nucleus mass
 			
 			double dp = t/(2*mass); //units of GeV
 			double E2 = E1 - dp;
@@ -265,12 +267,12 @@ int ScatterProton (PSvector& p, double x, double E0, const Aperture * tap)
 	}
 	}
 	//cout << "Bad scatter - did not return correctly" << endl;
-	cout << "reached end of colimator" << endl;
-	
+	//cout << "reached end of colimator" << endl;
+	/*
 	ofstream postscat("Output/postscat.dat", ios::app);
 	postscat << p.x() << " " << p.xp() << " " << p.y() << " " << p.yp() << " " << p.dp()<<endl;
 	postscat.close();
-	
+	*/
 	//merlin will presumably now track the particle through a drift, but we have already done this tracking, so subtract the value that merlin will now add
 	p.x()-=L*p.xp();
 	p.y()-=L*p.yp();
