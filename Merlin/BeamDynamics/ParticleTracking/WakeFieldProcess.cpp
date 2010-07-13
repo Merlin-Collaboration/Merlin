@@ -210,12 +210,21 @@ void WakeFieldProcess::DoProcess(double ds)
 {
 	//Normal Code
 	#ifndef ENABLE_MPI
-//	cout << "WAKEFIELD PROCESS: " << currentBunch->size() << endl;
 	current_s+=ds;
 	if(fequal(current_s,impulse_s))
 	{
+	//currentBunch->SortByCT();
+	//ofstream *bunchbeforewake = new ofstream("Output/pre-wakefield.dat");
+	//currentBunch->Output(*bunchbeforewake);
+	//delete bunchbeforewake;
+
 		ApplyWakefield(clen);
 		active = false;
+
+	//currentBunch->SortByCT();
+	//ofstream *bunchafterwake = new ofstream("Output/post-wakefield.dat");
+	//currentBunch->Output(*bunchafterwake);
+	//delete bunchafterwake;
 	}
 	#endif
 
@@ -326,14 +335,25 @@ void WakeFieldProcess::DoProcess(double ds)
 		//Now we have all the particles, Init() can be called.
 		if(recalc)
 		{
+		//	currentBunch->SortByCT();
 			Init();
 		}
 
 		//The "currentBunch" should now have all particles.
 		//Now we can calculate the wakefield.
 
+	//currentBunch->SortByCT();
+	//ofstream *bunchbeforewake = new ofstream("Output/pre-wakefield.dat");
+	//currentBunch->Output(*bunchbeforewake);
+	//delete bunchbeforewake;
+
 		ApplyWakefield(clen);
 		active = false;
+
+	//currentBunch->SortByCT();
+	//ofstream *bunchafterwake = new ofstream("Output/post-wakefield.dat");
+	//currentBunch->Output(*bunchafterwake);
+	//delete bunchafterwake;
 
 		//Now save the bunch size
 		int particle_count = currentBunch->size();
@@ -463,8 +483,6 @@ void WakeFieldProcess::DoProcess(double ds)
 			MPI::COMM_WORLD.Send(&macrocharge, 1, MPI::DOUBLE, n, 1);
 		}
 
-		//Sync
-		MPI::COMM_WORLD.Barrier();
 	}//End of rank 0 work.
 
 	else
@@ -555,7 +573,6 @@ void WakeFieldProcess::DoProcess(double ds)
 		delete [] particle_recv_buffer;
 
 		//Sync before carrying on with tracking
-		MPI::COMM_WORLD.Barrier();
 	}
 
 	//And finally all processes must clear the MPI_Particle type.
@@ -642,7 +659,7 @@ void WakeFieldProcess::Init()
 
 	//keep track of bunch length to be aware of modifications
 	oldBunchLen=currentBunch->size();
-    //cout << "INIT: CALCULATE QDIST: Total Charge: " << Qt << endl;
+
     size_t nloss = CalculateQdist();
     if(nloss!=0)
     {
