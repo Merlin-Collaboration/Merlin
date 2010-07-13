@@ -209,7 +209,7 @@ void check_column_heading(istream& is, const string& hd)
 MADInterface::MADInterface (const std::string& madFileName, double P0)
         : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(false),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL)
+        incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL)
 {
 	if(ifs)
 	{
@@ -607,7 +607,7 @@ double MADInterface::ReadComponent ()
 			if(collimator_db->Collimator[i].name == name)
 			{
 				#ifndef NDEBUG
-				cout << "Found the collimator" << endl;
+				cout << "Found the collimator: " << collimator_db->Collimator[i].name << endl;
 				#endif
 				have_collimator = true;
 				//This is the collimator we are using. Input file should have half gaps.
@@ -883,7 +883,7 @@ double MADInterface::ReadComponent ()
 		Log(component->GetQualifiedName(),ctor->GetCurrentFrameDepth(),*log);
 	}
 
-	if(component && incApertures)
+	if(component && incApertures && type!="COLLIMATOR")
 	{
 		component->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
 	}
