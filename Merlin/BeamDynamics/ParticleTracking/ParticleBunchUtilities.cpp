@@ -125,12 +125,13 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, int nbins
 
 	cerr << "z = " << z << " ct = " << p->ct() << " zmax = " << zmax << endl;
 	//Dump out the bad bunch
+/*
 	ofstream* badbunch = new ofstream("badbunch.bunch");
 	bunch.Output(*badbunch);
 	badbunch->close();
 	delete badbunch;
 	cerr << "Output of the current bunch is to badbunch.bunch" << endl;
-
+*/
 	#ifndef ENABLE_MPI
 	abort();
 	#endif
