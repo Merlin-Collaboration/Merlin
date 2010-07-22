@@ -94,10 +94,6 @@ private:
     //Copy protection
     WakeFieldProcess(const WakeFieldProcess& rhs);
     WakeFieldProcess& operator=(const WakeFieldProcess& rhs);
-    //Time for distributed load leveling.
-    timespec t_initial,t_final;
-    //clock_t t_initial,t_final;
-    double t_delta;
 };
 
 void savgol(vector<double>& c, int nl, int nr, int ld, int m);

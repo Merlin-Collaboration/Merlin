@@ -21,12 +21,6 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include "BeamDynamics/ParticleTracking/Integrators/TransRFIntegrator.h"
 
-//MPI define
-#ifdef ENABLE_MPI
-#include <mpi.h>
-#include "MPI/merlin_mpi.hpp"
-#endif
-
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 

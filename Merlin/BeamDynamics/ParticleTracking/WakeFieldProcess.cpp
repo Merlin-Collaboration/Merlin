@@ -21,7 +21,7 @@
 #include <fstream>
 
 #ifdef ENABLE_MPI
-#include "MPI/merlin_mpi.hpp"
+#include <mpi.h>
 
 //Time for load leveling
 //#include <ctime>
@@ -85,7 +85,7 @@ WakeFieldProcess::WakeFieldProcess (int prio, size_t nb, double ns, string aID)
     #ifdef ENABLE_MPI
     //Start the load leveling clock
 //    t_initial = clock();
-    clock_gettime(CLOCK_REALTIME, &t_initial);
+//    clock_gettime(CLOCK_REALTIME, &t_initial); <-------------------------------
     //int rank = MPI::COMM_WORLD.Get_rank();
     //cout << rank << "\t" << t_initial << endl << endl;
     #endif
@@ -189,8 +189,6 @@ void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
 			Init();
 			#endif
         	}
-
-
 	}
 
 	else
@@ -213,377 +211,29 @@ void WakeFieldProcess::DoProcess(double ds)
 	current_s+=ds;
 	if(fequal(current_s,impulse_s))
 	{
-	//currentBunch->SortByCT();
-	//ofstream *bunchbeforewake = new ofstream("Output/pre-wakefield.dat");
-	//currentBunch->Output(*bunchbeforewake);
-	//delete bunchbeforewake;
-
 		ApplyWakefield(clen);
 		active = false;
-
-	//currentBunch->SortByCT();
-	//ofstream *bunchafterwake = new ofstream("Output/post-wakefield.dat");
-	//currentBunch->Output(*bunchafterwake);
-	//delete bunchafterwake;
 	}
 	#endif
-
-	//MPI Code
-	#ifdef ENABLE_MPI
-	int rank = MPI::COMM_WORLD.Get_rank();
-	int size = MPI::COMM_WORLD.Get_size();
 	
-	//Step through the component
+	#ifdef ENABLE_MPI
 	current_s+=ds;
-
-	//We only apply the wakefield if we are at the desired position: ImpulseLocation {atCentre,atExit};
 	if(fequal(current_s,impulse_s))
 	{
-//	cout << "RANK: " << rank << "\tWAKEFIELD PROCESS::DO_PROCESS" << endl;
-
-	//Define the MPI_Particle type as a structure
-	//Should be easy to add extra fields to this, for macrocharge etc.
-	const int coords = 6;
-	int count = 1;
-	int blockcounts[1];
-	MPI::Aint offsets[1];
-	MPI::Datatype oldtypes[1];
-	offsets[0] = 0;
-	oldtypes[0] = MPI_DOUBLE;
-	blockcounts[0] = coords;
-
-	//We now create the new datatype
-	MPI::Datatype MPI_Particle = MPI::DOUBLE.Create_struct(count,blockcounts,offsets,oldtypes);
-	//And commit it.
-	MPI_Particle.Commit();
-
-	MPI::Status merlin_mpi_status;
-
-	//Before we hit the barrier, get how long it has taken to hit this point
-
-	clock_gettime(CLOCK_REALTIME, &t_final);
-	//timespec.tv_sec;
-	//timespec.tv_nsec;
-	//First find the number of seconds, convert to nanoseconds, then add the nanosecond difference.
-	t_delta = ((t_final.tv_sec - t_initial.tv_sec)*1.0e9) + (t_final.tv_nsec - t_initial.tv_nsec);
-
-	double time_per_particle = t_delta/currentBunch->size();	//In nanoseconds
-	//cout << "time per particle: " << time_per_particle << endl;
-
-	//We must collect the partial bunches from other nodes, then tell them to wait till the master has calculated the wakefield
-	//Sync required first
-	MPI::COMM_WORLD.Barrier();
-
-	if(rank == 0)
-	{
-//		cout << "RANK 0 in WAKE" << endl;
-		//First we must collect particles from all other "worker" nodes, and merge them in with the bunch on the "master" node.
-		PSvector Particle_buffer;
-		for(int n = 1; n<size; n++)
+//		cout << currentBunch->MPI_rank << "\t" << currentBunch->size() << endl;
+		currentBunch->gather();
+		if(currentBunch->MPI_rank == 0)
 		{
-                	//We probe the incomming send to see how many particles we are recieving.
-	                MPI::COMM_WORLD.Probe(n, MPI_ANY_TAG, merlin_mpi_status);
-	                //We find out from the probe the number of particles we have been sent
-	                int recv_count = merlin_mpi_status.Get_count(MPI_Particle);
-//	                cout << "Rank:" << rank << "\t Recv Count: " << recv_count << "\t From node: " << n << endl;
-
-	                //We make a suitable buffer
-	                double* particle_recv_buffer = new double[recv_count*coords];
-
-        	        //We now do the Recv for real, 
-	                MPI::COMM_WORLD.Recv(particle_recv_buffer, recv_count, MPI_Particle, n, 1, merlin_mpi_status);
-
-        	        //Put the recv buffer into the particle array
-                	for (int i = 0; i< recv_count; i++)
-	                {
-        	                Particle_buffer[0] = particle_recv_buffer[(i*coords)+0];
-	                        Particle_buffer[1] = particle_recv_buffer[(i*coords)+1];
-	                        Particle_buffer[2] = particle_recv_buffer[(i*coords)+2];
-	                        Particle_buffer[3] = particle_recv_buffer[(i*coords)+3];
-	                        Particle_buffer[4] = particle_recv_buffer[(i*coords)+4];
-	                        Particle_buffer[5] = particle_recv_buffer[(i*coords)+5];
-	                        //Push back each particle onto the current master node bunch.
-	                        currentBunch->push_back(Particle_buffer);
-
-/*
-				//Debugging check
-				
-	                        for (int z = 0; z<6; z++)
-				{
-		                        if(isnan(Particle_buffer[z]))
-		                        {
-			                        //This is very bad so lets exit
-			                        cout << "NAN recv from rank " << n << " in coord " << z+1 << " - particle number " << i << endl;
-			                        MPI::COMM_WORLD.Abort(1);
-	        	                }
-	        	                else if(abs(Particle_buffer[z]) >= 1e5)
-	        	                {
-	        	                cout << "BIG" << endl;
-	        	                cout << "NAN recv from rank " << n << " in coord " << z+1 << " - particle number " << i << endl;
-	        	                MPI::COMM_WORLD.Abort(1);
-	        	                }
-				}//End check
-*/				
-        	        }
-
-		delete [] particle_recv_buffer;
-
-		}//Merge bunches now finished.
-		
-//		cout << endl <<"Master Bunch size: " << particle_count << endl << endl;
-//		cout << "Pre-wake Charge: " << currentBunch->GetTotalCharge() << endl;
-		//Now we have all the particles, Init() can be called.
-		if(recalc)
-		{
-		//	currentBunch->SortByCT();
-			Init();
+			if(recalc)
+			{
+				Init();
+			}
+//			cout << currentBunch->MPI_rank << "\t" << currentBunch->size() << endl;
+			ApplyWakefield(clen);
 		}
-
-		//The "currentBunch" should now have all particles.
-		//Now we can calculate the wakefield.
-
-	//currentBunch->SortByCT();
-	//ofstream *bunchbeforewake = new ofstream("Output/pre-wakefield.dat");
-	//currentBunch->Output(*bunchbeforewake);
-	//delete bunchbeforewake;
-
-		ApplyWakefield(clen);
 		active = false;
-
-	//currentBunch->SortByCT();
-	//ofstream *bunchafterwake = new ofstream("Output/post-wakefield.dat");
-	//currentBunch->Output(*bunchafterwake);
-	//delete bunchafterwake;
-
-		//Now save the bunch size
-		int particle_count = currentBunch->size();
-
-		//Now we distribute the new bunch relative to the "load" on each worker node.
-		double* load_balance = new double[size];
-
-		//Fill the master node time
-		load_balance[0] = time_per_particle;
-		//cout << load_balance[0] << endl;
-		//Recv the time values from other nodes
-		for(int n = 1; n<size; n++)
-		{
-	                MPI::COMM_WORLD.Recv(&load_balance[n], 1, MPI::DOUBLE, n, 1, merlin_mpi_status);
-//               		cout << load_balance[n] << endl;
-		}
-
-		//loop over the loads, then normalize.
-		double total_load=0.0;
-		for(int n = 0; n<size; n++)
-		{
-			total_load+=load_balance[n];
-		}
-
-		//Normalize
-		double total_load_1=0.0;
-		for(int n = 0; n<size; n++)
-		{
-			load_balance[n] = (total_load/load_balance[n]);
-			total_load_1+=load_balance[n];
-		}
-
-		int total_particles_loaded = 0;
-		//Fraction of total particles
-		for(int n = 0; n<size; n++)
-		{
-			load_balance[n] = (int)(load_balance[n]*particle_count/total_load_1);
-//			cout << "n: " << n << "\t npart: " << load_balance[n] << endl;
-			total_particles_loaded+=(int)load_balance[n];
-		}
-//		cout << "Total particles:\t" << total_particles_loaded << endl;
-//		cout << endl <<"Post wake size: " << particle_count << endl << endl;
-//		cout << "Post-wake Charge: " << currentBunch->GetTotalCharge() << endl;
-
-		//The bunch must now be convered into a format suitable for sending again.
-		//The leftover extra particles can be added to the "local" machine bunch.
-		//int particles_per_node = particle_count/size;
-		//int remaining_particles = particle_count % size;
-		int remaining_particles = particle_count - total_particles_loaded;
-
-                double* particle_send_buffer = new double[particle_count*coords];
-                for (int n=0; n<particle_count; n++)
-                {
-                        particle_send_buffer[(n*coords)+0] = currentBunch->GetParticles()[n].x();
-                        particle_send_buffer[(n*coords)+1] = currentBunch->GetParticles()[n].xp();
-                        particle_send_buffer[(n*coords)+2] = currentBunch->GetParticles()[n].y();
-                        particle_send_buffer[(n*coords)+3] = currentBunch->GetParticles()[n].yp();
-                        particle_send_buffer[(n*coords)+4] = currentBunch->GetParticles()[n].ct();
-                        particle_send_buffer[(n*coords)+5] = currentBunch->GetParticles()[n].dp();
-                }
-		//We now have the full bunch in a particle buffer.
-		//This must be sliced, and particles sent to each node
-
-		//Since the macrocharge could have changed, we must also update the nodes with this new value.
-		double macrocharge = currentBunch->GetTotalCharge()/particle_count;
-		//cout << "MASTER MACROCHARGE: " << macrocharge << endl;
-
-		//Resend
-		//The old way:
-		/*
-		for(int n = 0; n<(size-1); n++)
-                {
-			//MPI::COMM_WORLD.Send(&particle_send_buffer[(particles_per_node*n*coord)+(particles_per_node+remaining_particles)], particles_per_node, MPI_Particle, (n+1), 1);
-			MPI::COMM_WORLD.Send(&particle_send_buffer[(particles_per_node*n*coords)], particles_per_node, MPI_Particle, (n+1), 1);
-		}
-		*/
-
-		//New adaptive resend
-		int offset=0;
-		for(int n = 1; n<size; n++)
-                {
-			MPI::COMM_WORLD.Send(&particle_send_buffer[offset], (int)load_balance[n], MPI_Particle, n, 1);
-			offset+=(int)load_balance[n]*coords;
-		}
-
-
-
-		//Finally the local bunch must be reconstructed from the remaining particles.
-		//First it must be cleared
-		currentBunch->clear();
-
-		//And then refilled.
-                //for (int i = (particle_count-particles_per_node-remaining_particles); i<particle_count; i++)
-                for (int i = (particle_count-(int)load_balance[0]-remaining_particles); i<particle_count; i++)
-		//for (int i = 0; i<particles_per_node+remaining_particles; i++)
-                {
-                        Particle_buffer[0] = particle_send_buffer[(i*coords)+0];
-                        Particle_buffer[1] = particle_send_buffer[(i*coords)+1];
-                        Particle_buffer[2] = particle_send_buffer[(i*coords)+2];
-                        Particle_buffer[3] = particle_send_buffer[(i*coords)+3];
-                        Particle_buffer[4] = particle_send_buffer[(i*coords)+4];
-                        Particle_buffer[5] = particle_send_buffer[(i*coords)+5];
-                        //Push back each particle onto the cleared currentBunch
-                        currentBunch->push_back(Particle_buffer);
-                        
-                        /*
-                        //Debugging check
-			for (int z = 0; z<6; z++)
-			{
-				if(isnan(Particle_buffer[z]))
-				{
-					//This is very bad so lets exit
-					ofstream* badness = new ofstream("badness");
-					currentBunch->Output(*badness);
-					cout << "NAN particle at master " << z+1 << " - particle number " << i << endl;
-					MPI::COMM_WORLD.Abort(1);
-				}
-			}//End check
-			*/
-                }
-		delete [] particle_send_buffer;
-		delete [] load_balance;
-
-		//Now lets update the macrocharge on remote nodes.
-		for(int n = 1; n<size; n++)
-                {
-			MPI::COMM_WORLD.Send(&macrocharge, 1, MPI::DOUBLE, n, 1);
-		}
-
-	}//End of rank 0 work.
-
-	else
-	{
-		//Here we are a "worker" node, and will send particles to the master for the collective wakefield calculation
-		//send bunches
-		int particle_count = currentBunch->size();
-	
-		//We make an array to put the particle bunch data into.
-		//It needs to be continuous in memory to work nicely with MPI
-		//This is crude, but works.
-		double* particle_send_buffer = new double[particle_count*coords];
-		for (int n=0; n<particle_count; n++)
-		{
-			particle_send_buffer[(n*coords)+0] = currentBunch->GetParticles()[n].x();
-			particle_send_buffer[(n*coords)+1] = currentBunch->GetParticles()[n].xp();
-			particle_send_buffer[(n*coords)+2] = currentBunch->GetParticles()[n].y();
-			particle_send_buffer[(n*coords)+3] = currentBunch->GetParticles()[n].yp();
-			particle_send_buffer[(n*coords)+4] = currentBunch->GetParticles()[n].ct();
-			particle_send_buffer[(n*coords)+5] = currentBunch->GetParticles()[n].dp();
-		}
-		
-		//Send everything to the master node
-//		cout << "RANK " << rank << ": SENDING" << endl;
-		MPI::COMM_WORLD.Send(&particle_send_buffer[0], particle_count, MPI_Particle, 0, 1);
-
-		//We now wait for wakefield to be calculated, and then recv some particles back.
-		//Whilst the master node is busy calculating the Wakefield, we may as well use this time to clear the currentBunch.
-		//This will be refilled with new particles.
-		currentBunch->clear();
-
-		//We then send the time per particle that it took to process the last batch to load level over the cluster.
-		MPI::COMM_WORLD.Send(&time_per_particle, 1, MPI::DOUBLE, 0, 1);
-
-		//We probe the incomming send to see how many particles we are recieving.
-                MPI::COMM_WORLD.Probe(0, MPI_ANY_TAG, merlin_mpi_status);
-
-		//We find out from the probe the number of particles we have been sent
-                int recv_count = merlin_mpi_status.Get_count(MPI_Particle);
-//		cout << "Rank:" << rank << "\t Recv Count: " << recv_count << endl;
-
-		//We make a suitable buffer
-		double* particle_recv_buffer = new double[recv_count*coords];
-
-		//We now do the Recv for real, 
-		MPI::COMM_WORLD.Recv(particle_recv_buffer, recv_count, MPI_Particle, 0, 1, merlin_mpi_status);
-
-		//We now have our particle data stored in an array
-		//Must now convert them into particles, then a bunch.
-		PSvector Particle_buffer;
-
-		//Put the recv buffer into the particle array
-		for (int i = 0; i< recv_count; i++)
-		{
-			Particle_buffer[0] = particle_recv_buffer[(i*coords)+0];
-			Particle_buffer[1] = particle_recv_buffer[(i*coords)+1];
-			Particle_buffer[2] = particle_recv_buffer[(i*coords)+2];
-			Particle_buffer[3] = particle_recv_buffer[(i*coords)+3];
-			Particle_buffer[4] = particle_recv_buffer[(i*coords)+4];
-			Particle_buffer[5] = particle_recv_buffer[(i*coords)+5];
-			//Particles[i][5] = particle_recv_buffer[(i*coords)+5];
-
-			//Push back each particle onto the cleared currentBunch
-			currentBunch->push_back(Particle_buffer);
-			
-			/*
-			//Debugging check
-			for (int z = 0; z<6; z++)
-			{
-				if(isnan(Particle_buffer[z]))
-				{
-					//This is very bad so lets exit
-					cout << "NAN recv from master in coord " << z+1 << " - particle number " << i << endl;
-					MPI::COMM_WORLD.Abort(1);
-				}
-			}//End check
-			*/
-		}
-		
-		//Finally we update the macrocharge per particle.
-		double macrocharge;
-		MPI::COMM_WORLD.Recv(&macrocharge, 1, MPI::DOUBLE, 0, 1, merlin_mpi_status);
-		currentBunch->SetMacroParticleCharge(macrocharge);
-		//cout << "Macrocharge: " << macrocharge << endl;
-
-		current_s+=ds;
-		delete [] particle_send_buffer;
-		delete [] particle_recv_buffer;
-
-		//Sync before carrying on with tracking
+		currentBunch->distribute();
 	}
-
-	//And finally all processes must clear the MPI_Particle type.
-	MPI_Particle.Free();
-
-	//And now reset the intial clock
-	//t_initial = clock();
-	clock_gettime(CLOCK_REALTIME, &t_initial);
-
-	}
-//	cout << "RANK: " << rank << "\tWAKEFIELD PROCESS::END_PROCESS" << endl;
 	#endif
 }
 

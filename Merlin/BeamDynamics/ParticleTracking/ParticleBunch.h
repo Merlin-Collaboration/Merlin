@@ -21,6 +21,11 @@
 // Bunch
 #include "BeamModel/Bunch.h"
 
+#ifdef ENABLE_MPI
+#include <mpi.h>
+#include <time.h>
+#endif
+
 class Transform3D;
 
 namespace ParticleTracking {
@@ -119,6 +124,54 @@ public:
     //Removes all particles from the bunch
     void clear ();
 
+    //Init flag
+    bool init;
+
+    //Number of coordinates involved in our Particle type
+    int coords;
+		
+#ifdef ENABLE_MPI
+	//Destructor - cleans up MPI code
+	~ParticleBunch ();
+
+	//For send/recv buffers
+	double* particle_send_buffer;
+	double* particle_recv_buffer;
+
+	//For nanosecond timers
+	//timespec t_initial,t_final;
+	//double time_per_particle,t_delta;
+
+	//State information
+	int MPI_size,MPI_rank;
+	//A particle
+	MPI::Datatype MPI_Particle;
+
+	//MPI status
+	MPI::Status MPI_status;
+
+	//Create particle type
+	void Create_MPI_particle();
+
+	//Init
+	void MPI_Initialize();
+	
+	//Gather to master
+	void gather();
+	//push to nodes
+    	void distribute();
+    	
+	//node2master
+	void master_recv_particles_from_nodes();
+	//master2node
+	void node_recv_particles_from_master();
+	
+	void master_send_particles_to_nodes();
+	void node_send_particles_to_master();
+	
+	//Finalize
+	void MPI_Finalize();
+#endif
 private:
 
     //	Charge per macro-particle

@@ -1,7 +1,7 @@
 # the compiler to use
-export CPP= g++
+export CPP= g++43
 #export CPP=distcc
-export LINK=gcc
+export LINK=gcc43
 #export LINK=gcc45svn
 
 # the root directory for the Merlin source code
@@ -51,19 +51,18 @@ SUBDIRS= AcceleratorModel \
       NumericalUtils \
       Random \
       utility \
-      RingDynamics \
-      MPI
+      RingDynamics 
 
 ifeq ($(build),debug)
 	CCFLAGS = -ggdb3 -pg -Wall -W -Wextra -pipe -fPIC -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)debug
 else ifeq ($(build),release)
-	CCFLAGS = -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP -O2 -march=native -mfpmath=sse -pipe  # -ffloat-store -fno-signed-zeros
+	CCFLAGS = -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP -O2 -mtune=generic -msse -msse2 -mfpmath=sse -pipe  # -ffloat-store -fno-signed-zeros
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
 	##set to the compiler one wishes openMPI to use
-	export OMPI_CXX=g++
-	export OMPI_CC=gcc
+	export OMPI_CXX=g++43
+	export OMPI_CC=gcc43
 	CPP=mpiCC
 	LINK=mpiCC
 	CCFLAGS=-DENABLE_MPI -pipe -fPIC -DNDEBUG -march=native -mfpmath=sse -O2  #-ffloat-store -fno-signed-zeros
@@ -95,8 +94,8 @@ obj:
 	fi
 
 build: subdirs
-	$(LINK) -lrt -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
-
+	$(LINK)  -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
+# -lrt
 #	uncomment the following line for static linking
 #	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${OBJDIR}/*.o
 release:
