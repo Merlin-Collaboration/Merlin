@@ -134,7 +134,7 @@ Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
             }
         }
         break;
-        case pencilDistribution:
+        case haloDistribution:
 	           double u;
 	           rx = sqrt(beamdat.emit_x);
 	           ry = sqrt(beamdat.emit_y);
