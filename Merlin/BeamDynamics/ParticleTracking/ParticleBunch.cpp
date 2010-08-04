@@ -596,6 +596,40 @@ if (init == false)
 	}
 }
 
+void ParticleBunch::SendReferenceMomentum()
+{
+if (init == false)
+{
+	MPI_Initialize();
+	init = true;
+}
+
+	MPI::COMM_WORLD.Barrier();
+	if (MPI_rank == 0)
+	{
+		//Get reference momentum
+		AdjustRefMomentumToMean();
+		double refP = GetReferenceMomentum();
+
+		//Send to nodes
+		for(int n = 1; n < MPI_size; n++)
+		{
+			MPI::COMM_WORLD.Send(&refP, 1, MPI::DOUBLE, n, 1);
+		}
+	}
+	else
+	{
+	//Make a buffer
+	double refP;
+
+	//Recv new momentum
+	MPI::COMM_WORLD.Recv(&refP, 1, MPI::DOUBLE, 0, 1, MPI_status);
+
+	//Set new ref momentum
+	SetReferenceMomentum(refP);
+	}
+
+}
 //Destructor: Only enabled with MPI - Will clean up and finalize.
 ParticleBunch::~ParticleBunch ()
 {

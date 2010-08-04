@@ -168,7 +168,10 @@ public:
 	
 	void master_send_particles_to_nodes();
 	void node_send_particles_to_master();
-	
+
+	//Update reference momentum on master/nodes
+	void SendReferenceMomentum();
+
 	//Finalize
 	void MPI_Finalize();
 #endif
