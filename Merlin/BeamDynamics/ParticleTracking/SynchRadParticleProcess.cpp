@@ -47,8 +47,11 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include "NumericalUtils/NumericalConstants.h"
 
-#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ElectronMass
-#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ElectronMass/PlanckConstant
+//#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ElectronMass
+//#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ElectronMass/PlanckConstant
+
+#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ProtonMass
+#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ProtonMass/PlanckConstant
 
 namespace {
 
@@ -76,7 +79,7 @@ struct ApplySR {
     void operator()(PSvector& v)
     {
         double B  = abs(Bf.GetField2D(v.x(),v.y()));
-        double g  = P0 * (1 + v.dp())/(ElectronMassMeV*MeV);
+        double g  = P0 * (1 + v.dp())/(ProtonMassMeV*MeV);
         double uc = PHOTCONST1 * B * g * g;
         double u  = 0;
 
@@ -146,20 +149,21 @@ SynchRadParticleProcess::SynchRadParticleProcess (int prio, bool q)
 void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 
-    SectorBend* bend =0;
-    RectMultipole* rmult =0;
+	SectorBend* bend = NULL;
+	RectMultipole* rmult = NULL;
 
-    if(bend == dynamic_cast<SectorBend*>(&component))
+	if((bend = dynamic_cast<SectorBend*>(&component)))
 	{
-	currentField =  &(bend->GetField());
+		currentField =  &(bend->GetField());
 	}
-    else if(incQ && (rmult = dynamic_cast<RectMultipole*>(&component)))
+
+	else if(incQ && (rmult = dynamic_cast<RectMultipole*>(&component)))
 	{
-        currentField = &(rmult->GetField());
+	        currentField = &(rmult->GetField());
 	}
-    else
+	else
 	{
-        currentField = 0;
+	        currentField = 0;
 	}
 
     int ns1 = (ns==0) ? 1 + component.GetLength()/dsMax : ns;
