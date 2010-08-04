@@ -44,8 +44,6 @@ using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
-//const char* material_names[] = {"Be", "C", "Al", "Cu", "W", "Pb"};
-
 namespace {
 // stack used to match MAD LINE pairs
 // Note: we need this because we no longer preserve the complete MAD beamline structure.
@@ -226,7 +224,7 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
-	TreatTypeAsDrift("TKICKER");	// merlin bug!
+	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers + friends.
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
 }
 
@@ -356,10 +354,8 @@ AcceleratorModel* MADInterface::ConstructModel()
 	//Main component read in loop
 	while((*ifs).good())
 	{
-		//cout << "READING: MADInterface.cpp 294" << endl;
 		z+=ReadComponent();
 	}
-	//cout << "end reading MADInterface.cpp 298" << endl;
 
 	if(logFlag && log)
 	{
@@ -471,7 +467,7 @@ double MADInterface::ReadComponent ()
 #define  _READ(value) if(!((*ifs)>>value)) return 0;
 
 	string name,type,aptype,parent,aperture;
-	double len,ks,angle,e1,e2,k1,k2,k3,h,tilt;
+	double len,ks,angle,e1,e2,k1,k2,k3,k4,k5,h,tilt;
 	_READ(name);
 	_READ(type);
 
@@ -485,16 +481,7 @@ double MADInterface::ReadComponent ()
 	AcceleratorComponent *component;
 	double brho = energy/eV/SpeedOfLight;
 
-	
-/*	if(prmMap->has_type)
-	{
-		//has_apertype
-		_READ(aptype);
-		aptype=StripQuotes(aptype);
-	}
-*/
-//	else if(incApertures)
-
+	//Do we want to build apertures, and do we have the required information required?
 	if(incApertures && !prmMap->has_apertype)
 	{
 		//Could not find aperture information and building of apertures was requested, will disable building of apertures.
@@ -523,7 +510,6 @@ double MADInterface::ReadComponent ()
 		MerlinIO::warning() << "Ignoring zero length " << type << endl;
 		return 0;
         }
-
 	if(type=="VKICKER")
 	{
 		type="YCOR";
@@ -538,8 +524,8 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type =="RFCAVITY")
 	{
-		type="DRIFT";
-		//type="RFCAVITY";
+		//type="DRIFT";
+		type="RFCAVITY";
 	}
 	else if(type=="LCAV")
 	{
