@@ -184,10 +184,6 @@ void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
 		if(recalc || wake!=currentWake)
 		{
 			currentWake = wake;
-			#ifndef ENABLE_MPI
-			//If we are using an MPI build, we want to call Init after the master has been sent all the particles.
-			Init();
-			#endif
         	}
 	}
 
@@ -211,6 +207,8 @@ void WakeFieldProcess::DoProcess(double ds)
 	current_s+=ds;
 	if(fequal(current_s,impulse_s))
 	{
+		currentBunch->SortByCT();
+		Init();
 		ApplyWakefield(clen);
 		active = false;
 	}
@@ -220,15 +218,11 @@ void WakeFieldProcess::DoProcess(double ds)
 	current_s+=ds;
 	if(fequal(current_s,impulse_s))
 	{
-//		cout << currentBunch->MPI_rank << "\t" << currentBunch->size() << endl;
 		currentBunch->gather();
 		if(currentBunch->MPI_rank == 0)
 		{
-			if(recalc)
-			{
-				Init();
-			}
-//			cout << currentBunch->MPI_rank << "\t" << currentBunch->size() << endl;
+			currentBunch->SortByCT();
+			Init();
 			ApplyWakefield(clen);
 		}
 		active = false;
