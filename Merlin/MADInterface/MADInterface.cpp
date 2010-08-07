@@ -524,8 +524,8 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type =="RFCAVITY")
 	{
-		//type="DRIFT";
-		type="RFCAVITY";
+		type="DRIFT";
+		//type="RFCAVITY";
 	}
 	else if(type=="LCAV")
 	{
@@ -597,8 +597,9 @@ double MADInterface::ReadComponent ()
 				#endif
 				have_collimator = true;
 				//This is the collimator we are using. Input file should have half gaps.
-				collimator_aperture_width = collimator_db->Collimator[i].x_gap*2;
-				collimator_aperture_height = collimator_db->Collimator[i].y_gap*2;
+				//Factor of 2 turns it into full-gaps which the rest of the code expects for now.
+				collimator_aperture_width = collimator_db->Collimator[i].x_gap;
+				collimator_aperture_height = collimator_db->Collimator[i].y_gap;
 				collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
 				collimator_material = collimator_db->Collimator[i].Material;
 				
