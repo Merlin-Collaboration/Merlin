@@ -19,14 +19,14 @@ Collimator_Database(char*, Material_Database*);
 struct collimator
 {
 	string name;		//Collimator name
-	float x_gap;		//Collimator x-gap
-	float y_gap;		//Collimator y-gap
-	float tilt;		//Collimator tilt
-	float x_offset;		//Collimator x offset
-	float y_offset;		//Collimator y offset
-	float j1_tilt;		//Collimator jaw 1 tilt
-	float j2_tilt;		//Collimator jaw 2 tilt
-	float length;		//Collimator length (m)
+	double x_gap;		//Collimator x-gap
+	double y_gap;		//Collimator y-gap
+	double tilt;		//Collimator tilt
+	double x_offset;		//Collimator x offset
+	double y_offset;		//Collimator y offset
+	double j1_tilt;		//Collimator jaw 1 tilt
+	double j2_tilt;		//Collimator jaw 2 tilt
+	double length;		//Collimator length (m)
 	material* Material;	//Collimator material
 };
 
