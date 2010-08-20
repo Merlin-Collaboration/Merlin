@@ -129,7 +129,16 @@ public:
 
     //Number of coordinates involved in our Particle type
     int coords;
-		
+
+    //Checks if the particle type is stable or not, returns true if the particle is considered stable.
+    virtual bool IsStable() const;
+
+    //Particle mass
+    double ParticleMass;
+    double ParticleMassMeV;
+    //Particle Lifetime
+    double ParticleLifetime;
+
 #ifdef ENABLE_MPI
 	//Destructor - cleans up MPI code
 	~ParticleBunch ();

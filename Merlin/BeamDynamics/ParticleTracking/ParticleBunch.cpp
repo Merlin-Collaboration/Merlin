@@ -268,6 +268,12 @@ void ParticleBunch::SetCentroid (const Particle& x0)
         *p-=x;
 }
 
+
+bool ParticleBunch::IsStable() const
+{
+	return (ParticleLifetime < 0) ? true : false;
+}
+
 }; // end namespace ParticleTracking
 
 //MPI code
