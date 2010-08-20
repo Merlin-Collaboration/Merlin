@@ -46,6 +46,12 @@ extern const double ElectronRadius;
 
 extern const double ElectronGe;
 
+extern const double MuonMass;
+
+extern const double MuonMassMeV;
+
+extern const double MuonLifetime;
+
 };
 
 // Class Utility PhysicalConstants
