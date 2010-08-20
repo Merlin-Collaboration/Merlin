@@ -50,8 +50,8 @@
 //#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ElectronMass
 //#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ElectronMass/PlanckConstant
 
-#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ProtonMass
-#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ProtonMass/PlanckConstant
+//#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ProtonMass
+//#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ProtonMass/PlanckConstant
 
 namespace {
 
@@ -71,19 +71,22 @@ struct ApplySR {
     double meanU;
     size_t n;
 
-    ApplySR(const MultipoleField& field, double dl, double p0, bool sV, spec_gen sg =0)
-            : Bf(field),dL(dl),P0(p0),symp(sV),photgen(sg),meanU(0),n(0) {};
+    double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
+
+    ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2, const double MassMeV, spec_gen sg =0)
+            : Bf(field),dL(dl),P0(p0),symp(sV),photgen(sg),meanU(0),n(0),PHOTCONST1(PCONST1),PHOTCONST2(PCONST2),ParticleMassMeV(MassMeV) {};
 
     double MeanEnergyLoss() const { return meanU/n; }
 
     void operator()(PSvector& v)
     {
         double B  = abs(Bf.GetField2D(v.x(),v.y()));
-        double g  = P0 * (1 + v.dp())/(ProtonMassMeV*MeV);
+        double g  = P0 * (1 + v.dp())/ParticleMassMeV;
         double uc = PHOTCONST1 * B * g * g;
         double u  = 0;
 
-        if(photgen) {
+        if(photgen)
+        {
             int nphot = static_cast<int>(RandomNG::poisson( (PHOTCONST2*15.*sqrt(3.)/8.) * B * dL));
             for(int n=0; n<nphot; n++)
                 u += photgen(uc);
@@ -97,7 +100,8 @@ struct ApplySR {
 		double& py = v.yp();
 		double& dp = v.dp();
 
-		if(symp) {
+		if(symp)
+		{
 
 			double ks  = sqrt((1.0+dp)*(1.0+dp) - px*px - py*py);
 			double kx  = px/ks;
@@ -109,15 +113,14 @@ struct ApplySR {
 
 			px = kx*kz;
 			py = ky*kz;
+		}
 
-		} else {
-
+		else
+		{
 			dp -= u / P0;
 			px /= (1.0 + u/P0);
 			py /= (1.0 + u/P0);
-
 		};
-
         n++;
     }
 
@@ -148,6 +151,10 @@ SynchRadParticleProcess::SynchRadParticleProcess (int prio, bool q)
 
 void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
+
+	PHOTCONST1 = 3*PlanckConstant*eV/2/twoPi/currentBunch->ParticleMass;
+	PHOTCONST2 = 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/currentBunch->ParticleMass/PlanckConstant;
+	ParticleMassMeV	= currentBunch->ParticleMassMeV*MeV;
 
 	SectorBend* bend = NULL;
 	RectMultipole* rmult = NULL;
@@ -185,7 +192,7 @@ void SynchRadParticleProcess::DoProcess (double ds)
         double meanU = for_each(
                            currentBunch->begin(),
                            currentBunch->end(),
-                           ApplySR(*currentField,dL,E0,sympVars,quantum)).MeanEnergyLoss();
+                           ApplySR(*currentField,dL,E0,sympVars,PHOTCONST1,PHOTCONST2,ParticleMassMeV,quantum)).MeanEnergyLoss();
 
         // Finally we adjust the reference of the
         // bunch to reflect the mean energy loss
