@@ -5,9 +5,8 @@
 
 using namespace std;
 
-class material //(particle.type)?
+class material
 {
-
 public:
 
 	size_t atomic_number;		//Atomic number
@@ -22,32 +21,6 @@ public:
 	double sigma;			//electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1
 	double X0;			//Radiation Length??
 	double density;			//Material density, kg/m^3
-
-//Sub-structure for scattering?
-//foo.electron_scatter.sigma
-//foo.proton_scatter.sigma
-//psedocode:
-/*
-if(particle == "proton")
-{
-	scatter = &proton_scatter;
-}
-else if(particle == "electron")
-{
-	scatter = &electron_scatter;
-}
-else
-{
-	std::cout << "No appropriate scattering data found" << std::endl;
-	exit(EXIT_FAILURE);
-}
-*/
-
-//But if we have electron/hadron collisions, both will be required
-//But each collimator will only see one type of beam
-
-private:
-
 };
 
 #endif
