@@ -17,6 +17,20 @@ using namespace PhysicalUnits;
 //extern TH1D* histt1;
 //extern TH1D* histt2;
 
+double ProtonBunch::GetParticleMass() const
+{
+	return ProtonMass;
+}
+double ProtonBunch::GetParticleMassMeV() const
+{
+	return ProtonMassMeV;
+}
+
+double ProtonBunch::GetParticleLifetime() const
+{
+	return 0;
+}
+
 bool ProtonBunch::IsStable() const
 {
 	//We assume protons do not decay :]
@@ -25,13 +39,13 @@ bool ProtonBunch::IsStable() const
 
 int ProtonBunch::Scatter(PSvector& p,double x,double E0,const Aperture* ap)
 {
-	// p is the scattering Proton
-	// x is the length of collimator
+	// p is the scattering Proton - a single particle.
+	// x is the length of the collimator
 	// E0 is the reference momentum
 	// ap is the aperture
 
 	//We simulate many physical processes that occur in bulk materials.
-	// Ionization, m
+	// Ionization, multiple coulomb scattering,
 
 	//distance travelled
 	double z=0;
