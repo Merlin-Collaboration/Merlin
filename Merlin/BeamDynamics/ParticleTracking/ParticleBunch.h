@@ -20,6 +20,8 @@
 #include "BeamModel/PSTypes.h"
 // Bunch
 #include "BeamModel/Bunch.h"
+#include "NumericalUtils/PhysicalConstants.h"
+#include "AcceleratorModel/Aperture.h"
 
 #ifdef ENABLE_MPI
 #include <mpi.h>
@@ -27,6 +29,7 @@
 #endif
 
 class Transform3D;
+using namespace PhysicalConstants;
 
 namespace ParticleTracking {
 
@@ -46,15 +49,15 @@ public:
     //	Constructs a ParticleBunch using the specified momentum,
     //	total charge and the particle array. Note that on exit,
     //	particles is empty.
-    ParticleBunch (double P0, double Q, PSvectorArray& particles);
+    ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
 
     //	Read phase space vectors from specified input stream.
-    ParticleBunch (double P0, double Q, std::istream& is);
+    ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
 
     //	Constructs an empty ParticleBunch with the specified
     //	momentum P0 and charge per macro particle Qm (default =
     //	+1).
-    ParticleBunch (double P0, double Qm = 1);
+    ParticleBunch (double P0, double Qm = 1, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
 
     //	Returns the total charge (in units of e).
     virtual double GetTotalCharge () const;
@@ -130,14 +133,24 @@ public:
     //Number of coordinates involved in our Particle type
     int coords;
 
+    //Per-particle type scattering.
+    virtual int Scatter(Particle& p, double x, double E0, const  Aperture* tap){return 0;}
+    virtual void Scatter(PSvector & p){ return;}
+
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;
 
     //Particle mass
-    double ParticleMass;
-    double ParticleMassMeV;
+//    double ParticleMass;
+//    double ParticleMassMeV;
+
     //Particle Lifetime
-    double ParticleLifetime;
+    //double ParticleLifetime;
+
+    //Access methods
+    virtual double GetParticleMass() const;
+    virtual double GetParticleMassMeV() const;
+    virtual double GetParticleLifetime() const;
 
 #ifdef ENABLE_MPI
 	//Destructor - cleans up MPI code
@@ -160,7 +173,7 @@ public:
 	MPI::Status MPI_status;
 
 	//Create particle type
-	void Create_MPI_particle();
+	virtual void Create_MPI_particle();
 
 	//Init
 	void MPI_Initialize();

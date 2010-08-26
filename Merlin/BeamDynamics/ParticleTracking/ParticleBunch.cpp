@@ -38,11 +38,12 @@ using namespace ParticleTracking;
 template<class V>
 struct APSV1 {
     V& p;
-    const double w;
+    double w;
 
-    APSV1(V& p0, double n) : p(p0),w(1/n) {}
+    APSV1(V& p0, double n) : p(p0),w(0) {}
     void operator()(const PSvector& p1) {
-        for(int i=0; i<6; i++) p[i]+=w*p1[i];
+	w++;
+        for(int i=0; i<6; i++) p[i]+=(p1[i]-p[i])/w;
     }
 };
 
@@ -60,12 +61,13 @@ struct APSV2 {
 
 struct PSVVAR1 {
     PSmoments& S;
-    const double w;
-    PSVVAR1(PSmoments& sig,double n):S(sig),w(1/n) {}
+    double w;
+    PSVVAR1(PSmoments& sig,double n):S(sig),w(0) {}
     void operator()(const PSvector& p) {
-        for(int i=0; i<6; i++)
-            for(int j=0; j<=i; j++)
-                S(i,j)+=w*(p[i]-S[i])*(p[j]-S[j]);
+    w++;
+	    for(int i=0; i<6; i++)
+		    for(int j=0; j<=i; j++)
+                S(i,j)+=((p[i]-S[i])*(p[j]-S[j])-S(i,j))/w;
     }
 };
 
@@ -91,8 +93,8 @@ double Mean(IT F, IT L,int i)
 {
     double s=0;
     double n=0;
-    while(F!=L) {s+=(*F++)[i];n++;}
-    return s/n;
+    while(F!=L) {s+=((*F++)[i]-s)/(++n);}
+    return s;
 }
 
 template<class T>
@@ -111,14 +113,16 @@ inline void SortArray(std::list<T>& array)
 
 namespace ParticleTracking {
 
-ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles)
-        : Bunch(P0,Q),qPerMP(Q/particles.size()),pArray(),init(false),coords(6)
+ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+        : Bunch(P0,Q),qPerMP(Q/particles.size()),pArray(),init(false),coords((int) sizeof(PSvector)/sizeof(double))
+        //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
     pArray.swap(particles);
 }
 
-ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is)
-        : Bunch(P0,Q),init(false),coords(6)
+ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+        : Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double))
+        //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
     PSvector p;
     while(is>>p)
@@ -127,8 +131,9 @@ ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is)
     qPerMP = Q/size();
 }
 
-ParticleBunch::ParticleBunch (double P0, double Qm)
-        : Bunch(P0,Qm),qPerMP(Qm),init(false),coords(6)
+ParticleBunch::ParticleBunch (double P0, double Qm, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+        : Bunch(P0,Qm),qPerMP(Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double))
+        //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {}
 
 double ParticleBunch::GetTotalCharge () const
@@ -164,12 +169,13 @@ std::pair<double,double> ParticleBunch::GetMoments(PScoord i) const
 {
     double u = Mean(begin(),end(),i);
     double v=0;
+    double w=0;
     for(const_iterator p = begin(); p!=end(); p++) {
         double x = (*p)[i]-u;
-        v+=x*x;
+        v+=(x*x-v)/(++w);
     }
 
-    return make_pair(u,sqrt(v/size()));
+    return make_pair(u,sqrt(v));
 }
 
 Point2D ParticleBunch::GetProjectedCentroid (PScoord u, PScoord v) const
@@ -271,8 +277,26 @@ void ParticleBunch::SetCentroid (const Particle& x0)
 
 bool ParticleBunch::IsStable() const
 {
-	return (ParticleLifetime < 0) ? true : false;
+	return true;
 }
+
+double ParticleBunch::GetParticleMass() const
+{
+//	return ElectronMass;
+	return 0;
+}
+
+double ParticleBunch::GetParticleMassMeV() const
+{
+//	return ElectronMassMeV;
+	return 0;
+}
+
+double ParticleBunch::GetParticleLifetime() const
+{
+	return 0;
+}
+
 
 }; // end namespace ParticleTracking
 
@@ -301,7 +325,6 @@ void ParticleBunch::MPI_Initialize()
 			cout << fail.Get_error_code() << endl;
 			MPI::COMM_WORLD.Abort();
 		}
-
 	*/
 	MPI::COMM_WORLD.Set_errhandler(MPI::ERRORS_THROW_EXCEPTIONS);
 	
@@ -396,13 +419,10 @@ void ParticleBunch::master_recv_particles_from_nodes()
        	        //Put the recv buffer into the particle array
                	for (int i = 0; i< recv_count; i++)
                 {
-       	                Particle_buffer[0] = particle_recv_buffer[(i*coords)+0];
-                        Particle_buffer[1] = particle_recv_buffer[(i*coords)+1];
-                        Particle_buffer[2] = particle_recv_buffer[(i*coords)+2];
-                        Particle_buffer[3] = particle_recv_buffer[(i*coords)+3];
-                        Particle_buffer[4] = particle_recv_buffer[(i*coords)+4];
-                        Particle_buffer[5] = particle_recv_buffer[(i*coords)+5];
-
+                	for (int j = 0; j < coords; j++)
+                	{
+                		Particle_buffer[j] = particle_recv_buffer[(i*coords)+j];
+                	}
                         //Push back each particle onto the current master node bunch.
                         push_back(Particle_buffer);
        	        }
@@ -442,12 +462,10 @@ void ParticleBunch::node_recv_particles_from_master()
 	//Put the recv buffer into the particle array
 	for (int i = 0; i< recv_count; i++)
 	{
-		Particle_buffer[0] = particle_recv_buffer[(i*coords)+0];
-		Particle_buffer[1] = particle_recv_buffer[(i*coords)+1];
-		Particle_buffer[2] = particle_recv_buffer[(i*coords)+2];
-		Particle_buffer[3] = particle_recv_buffer[(i*coords)+3];
-		Particle_buffer[4] = particle_recv_buffer[(i*coords)+4];
-		Particle_buffer[5] = particle_recv_buffer[(i*coords)+5];
+		for (int j = 0; j < coords; j++)
+                {
+                	Particle_buffer[j] = particle_recv_buffer[(i*coords)+j];
+                }
 
 		//Push back each particle onto the cleared currentBunch
 		push_back(Particle_buffer);
@@ -478,12 +496,10 @@ void ParticleBunch::node_send_particles_to_master()
 
 	for (int n=0; n<particle_count; n++)
 	{
-		particle_send_buffer[(n*coords)+0] = GetParticles()[n].x();
-		particle_send_buffer[(n*coords)+1] = GetParticles()[n].xp();
-		particle_send_buffer[(n*coords)+2] = GetParticles()[n].y();
-		particle_send_buffer[(n*coords)+3] = GetParticles()[n].yp();
-		particle_send_buffer[(n*coords)+4] = GetParticles()[n].ct();
-		particle_send_buffer[(n*coords)+5] = GetParticles()[n].dp();
+		for (int j=0; j<coords; j++)
+		{
+			particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
+		}
 	}
 		
 	//Send everything to the master node
@@ -519,13 +535,12 @@ void ParticleBunch::master_send_particles_to_nodes()
 
 	for (int n=0; n<particle_count; n++)
 	{
-		particle_send_buffer[(n*coords)+0] = GetParticles()[n].x();
-		particle_send_buffer[(n*coords)+1] = GetParticles()[n].xp();
-		particle_send_buffer[(n*coords)+2] = GetParticles()[n].y();
-		particle_send_buffer[(n*coords)+3] = GetParticles()[n].yp();
-		particle_send_buffer[(n*coords)+4] = GetParticles()[n].ct();
-		particle_send_buffer[(n*coords)+5] = GetParticles()[n].dp();
+		for (int j=0; j<coords; j++)
+		{
+			particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
+		}
 	}
+
 	//We now have the full bunch in a particle buffer.
 	//This must be sliced, and particles sent to each node
 
@@ -544,12 +559,10 @@ void ParticleBunch::master_send_particles_to_nodes()
 	//And then refilled.
 	for (int i = (particles_per_node*(MPI_size-1)); i<particle_count; i++)
 	{
-		Particle_buffer[0] = particle_send_buffer[(i*coords)+0];
-		Particle_buffer[1] = particle_send_buffer[(i*coords)+1];
-		Particle_buffer[2] = particle_send_buffer[(i*coords)+2];
-		Particle_buffer[3] = particle_send_buffer[(i*coords)+3];
-		Particle_buffer[4] = particle_send_buffer[(i*coords)+4];
-		Particle_buffer[5] = particle_send_buffer[(i*coords)+5];
+		for (int j = 0; j < coords; j++)
+                {
+                	Particle_buffer[j] = particle_send_buffer[(i*coords)+j];
+                }
 
 		//Push back each particle onto the cleared currentBunch
 		push_back(Particle_buffer);
@@ -577,6 +590,13 @@ if (init == false)
 
 	else
 	{
+	/*
+		if(size() == 0)
+		{
+			cout << "0 bunch size: badness" << endl;
+			MPI::COMM_WORLD.Abort(1);
+		}
+	*/
 		node_send_particles_to_master();
 	}
 }
