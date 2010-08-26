@@ -12,6 +12,20 @@ using namespace ParticleTracking;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
+double ElectronBunch::GetParticleMass() const
+{
+	return ElectronMass;
+}
+double ElectronBunch::GetParticleMassMeV() const
+{
+	return ElectronMassMeV;
+}
+
+double ElectronBunch::GetParticleLifetime() const
+{
+	return 0;
+}
+
 bool ElectronBunch::IsStable() const
 {
 	return true;
