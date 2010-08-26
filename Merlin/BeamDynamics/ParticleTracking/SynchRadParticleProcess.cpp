@@ -152,9 +152,9 @@ SynchRadParticleProcess::SynchRadParticleProcess (int prio, bool q)
 void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 
-	PHOTCONST1 = 3*PlanckConstant*eV/2/twoPi/currentBunch->ParticleMass;
-	PHOTCONST2 = 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/currentBunch->ParticleMass/PlanckConstant;
-	ParticleMassMeV	= currentBunch->ParticleMassMeV*MeV;
+	PHOTCONST1 = 3*PlanckConstant*eV/2/twoPi/currentBunch->GetParticleMass();
+	PHOTCONST2 = 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/currentBunch->GetParticleMass()/PlanckConstant;
+	ParticleMassMeV	= currentBunch->GetParticleMassMeV()*MeV;
 
 	SectorBend* bend = NULL;
 	RectMultipole* rmult = NULL;
