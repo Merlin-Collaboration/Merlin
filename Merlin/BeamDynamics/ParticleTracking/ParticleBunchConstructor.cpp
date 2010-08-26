@@ -60,11 +60,12 @@ void ParticleBunchConstructor::SetDistributionCutoff (const PSvector& cut)
     cutoffs=cut;
 }
 
-Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
+//Bunch* ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
+void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 {
-    PSvectorArray pbunch;
     PSvector p;
 
+//    PSvectorArray pbunch = pbunch1;
     // First we generate npart particles in "normalised" phase
     // space, after which we transform them to "real" phase
     // space using M.
@@ -134,7 +135,7 @@ Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
             }
         }
         break;
-        case haloDistribution:
+        case ringDistribution:
 	           double u;
 	           rx = sqrt(beamdat.emit_x);
 	           ry = sqrt(beamdat.emit_y);
@@ -158,7 +159,13 @@ Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
         break;
     };
 
-    return new ParticleBunch(beamdat.p0,beamdat.charge,pbunch);
+    //return new ParticleBunch(beamdat.p0,beamdat.charge,pbunch);
+}
+
+Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
+{
+	ParticleBunchConstructor::ConstructBunchDistribution();
+	return new ParticleBunch(beamdat.p0,beamdat.charge,pbunch);
 }
 
 void ParticleBunchConstructor::ForceCentroid (bool fc)

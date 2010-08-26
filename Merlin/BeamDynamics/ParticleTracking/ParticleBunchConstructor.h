@@ -24,6 +24,8 @@
 #include "BasicTransport/MatrixMaps.h"
 // ParticleBunch
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
+#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
+#include <typeinfo>
 
 namespace ParticleTracking {
 
@@ -38,7 +40,7 @@ public:
     virtual bool Apply (const PSvector& v) const = 0;
 };
 
-typedef enum {normalDistribution,flatDistribution,haloDistribution} DistributionType;
+typedef enum {normalDistribution,flatDistribution,ringDistribution} DistributionType;
 
 //	Constructs a particle bunch with random particles taken
 //	from a 6D distribution. The phase space moments are
@@ -82,7 +84,12 @@ public:
     //	bunch parameter settings. Each call to ConstructBunch
     //	generates a new random distribution (seed). The bunch
     //	Index is ignored in this case.
+    //Required due to pure virtual in Bunch.h
     virtual Bunch* ConstructBunch (int bunchIndex = 0) const;
+
+    template <class T_bunch> T_bunch* ConstructBunch (int bunchIndex = 0) const;
+
+    virtual void ConstructBunchDistribution (int bunchIndex = 0) const;
 
     //	Sets the filter to be used during bunch construction. A
     //	NULL pointer indicates no filter.
@@ -90,6 +97,12 @@ public:
 
     //	Returns typed particle bunch.
     ParticleBunch* ConstructParticleBunch () const;
+    template <class T_bunch> T_bunch* ConstructParticleBunch () const
+    {
+		ConstructBunchDistribution();
+		return new T_bunch(beamdat.p0,beamdat.charge,pbunch);
+    }
+
 
     //	If fc==true, causes the centroids (means) of the
     //	particle distribution to be set to the specified
@@ -109,6 +122,9 @@ private:
     //	distribution into the desired bunch distribution.
     RMtrx M;
     bool force_c;
+    
+    //Moved the pbunch to be a class member so that the bunch creation can be split up between distribution generation and "bunch" generation.
+    mutable PSvectorArray pbunch;
 };
 
 inline void ParticleBunchConstructor::SetFilter (ParticleBunchFilter* filter)
@@ -122,9 +138,8 @@ inline void ParticleBunchConstructor::SetFilter (ParticleBunchFilter* filter)
 
 inline ParticleBunch* ParticleBunchConstructor::ConstructParticleBunch () const
 {
-
-    return static_cast<ParticleBunch*>(ParticleBunchConstructor::ConstructBunch());
-
+    return (ParticleBunchConstructor::ConstructBunch<ParticleBunch>());
+//    return static_cast<ParticleBunch*>(ParticleBunchConstructor::ConstructBunch<ParticleBunch>());
 }
 
 }; //end namespace ParticleTracking
