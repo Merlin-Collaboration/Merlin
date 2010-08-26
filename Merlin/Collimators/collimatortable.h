@@ -132,7 +132,7 @@ else{// 2D interpolation
      }
 }
 
-cout<<" File "<<file<<" read and table calculated for Gamma of "<<Gamma<<" and xi of "<<xi<<endl;
+//cout<<" File "<<file<<" read and table calculated for Gamma of "<<Gamma<<" and xi of "<<xi<<endl;
 }
 };
 
