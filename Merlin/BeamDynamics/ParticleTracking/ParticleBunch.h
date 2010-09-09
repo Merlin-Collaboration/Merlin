@@ -196,6 +196,14 @@ public:
 
 	//Finalize
 	void MPI_Finalize();
+
+	//Check if MPI is active on this machine
+	void Check_MPI_init();
+
+	//For processor names
+//	char proc_name[MPI_MAX_PROCESSOR_NAME];
+//	int char_array_len;
+
 #endif
 private:
 

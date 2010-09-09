@@ -341,6 +341,9 @@ void ParticleBunch::MPI_Initialize()
 	//find this processes rank
 	MPI_rank = MPI::COMM_WORLD.Get_rank();
 
+	//Find the processor/hostname
+//	MPI::Get_processor_name(proc_name,char_array_len);
+
 	//Create the particle type
 	Create_MPI_particle();
 }
@@ -435,6 +438,10 @@ void ParticleBunch::master_recv_particles_from_nodes()
 
 void ParticleBunch::node_recv_particles_from_master()
 {
+	//We clear the currentBunch.
+	//This will be refilled with new particles.
+	clear();
+
 	//We probe the incomming send to see how many particles we are recieving.
 	MPI::COMM_WORLD.Probe(0, MPI_ANY_TAG, MPI_status);
 	
@@ -505,10 +512,6 @@ void ParticleBunch::node_send_particles_to_master()
 	//Send everything to the master node
 	MPI::COMM_WORLD.Send(&particle_send_buffer[0], particle_count, MPI_Particle, 0, 1);
 
-	//Whilst the master node is busy calculating the Wakefield, we may as well use this time to clear the currentBunch.
-	//This will be refilled with new particles.
-	clear();
-	
 	delete [] particle_send_buffer;
 	particle_send_buffer = NULL;
 }
@@ -575,6 +578,10 @@ void ParticleBunch::master_send_particles_to_nodes()
 //Gather particle function: All particles on the nodes are moved to the bunch on the master node.
 void ParticleBunch::gather()
 {
+//Really must switch this to MPI::COMM_WORLD.Gatherv()
+//http://www.open-mpi.org/doc/v1.3/man3/MPI_Gatherv.3.php
+//Will involve a call to size() and sending this to the master first from each node
+//MPI::COMM_WORLD.Gather() on 1 int each.
 
 if (init == false)
 {
@@ -582,7 +589,6 @@ if (init == false)
 	init = true;
 }
 	MPI::COMM_WORLD.Barrier();
-
 	if (MPI_rank == 0)
 	{
 		master_recv_particles_from_nodes();
@@ -590,13 +596,6 @@ if (init == false)
 
 	else
 	{
-	/*
-		if(size() == 0)
-		{
-			cout << "0 bunch size: badness" << endl;
-			MPI::COMM_WORLD.Abort(1);
-		}
-	*/
 		node_send_particles_to_master();
 	}
 }
@@ -604,31 +603,35 @@ if (init == false)
 //Particle distribution function: Here all particles on the master are distributed between the nodes/
 void ParticleBunch::distribute()
 {
-
-if (init == false)
-{
-	MPI_Initialize();
-	init = true;
-}
+//Should use MPI::COMM_WORLD.Scatterv() as per the gather
+	Check_MPI_init();
 	MPI::COMM_WORLD.Barrier();
+	
+	//Set up
 	if (MPI_rank == 0)
 	{
 		master_send_particles_to_nodes();
 	}
-
 	else
 	{
 		node_recv_particles_from_master();
 	}
+	/*
+	MPI::COMM_WORLD.Scatterv()
+	if (MPI_rank == 0)
+	{
+		master_send_particles_to_nodes();
+	}
+	else
+	{
+		node_recv_particles_from_master();
+	}
+	*/
 }
 
 void ParticleBunch::SendReferenceMomentum()
 {
-if (init == false)
-{
-	MPI_Initialize();
-	init = true;
-}
+	Check_MPI_init();
 
 	MPI::COMM_WORLD.Barrier();
 	if (MPI_rank == 0)
@@ -660,5 +663,14 @@ if (init == false)
 ParticleBunch::~ParticleBunch ()
 {
 	MPI_Finalize();
+}
+
+void ParticleBunch::Check_MPI_init()
+{
+	if (init == false)
+	{
+		MPI_Initialize();
+		init = true;
+	}
 }
 #endif	//end MPI code
