@@ -14,7 +14,7 @@ class Collimator_Database
 public:
 
 //Constructor
-Collimator_Database(char*, Material_Database*);
+Collimator_Database(char*, Material_Database*, bool use_sigma);
 
 struct collimator
 {
@@ -28,11 +28,13 @@ struct collimator
 	double j2_tilt;		//Collimator jaw 2 tilt
 	double length;		//Collimator length (m)
 	material* Material;	//Collimator material
+	double sigma_x;
+	double sigma_y;
 };
 
 collimator* Collimator;
 size_t number_collimators;
-
+bool use_sigma;
 protected:
 
 private:
