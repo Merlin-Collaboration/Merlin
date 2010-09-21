@@ -584,9 +584,10 @@ double MADInterface::ReadComponent ()
 		double collimator_aperture_height;
 		double collimator_aperture_tilt;
 		material* collimator_material;
-
+		
 		//We now need to find the collimator configuration
 		bool have_collimator = false;
+
 		for(unsigned int i=1; i < collimator_db->number_collimators; i++)
 		{
 			//Time to search for the collimator we are currently using
@@ -598,10 +599,22 @@ double MADInterface::ReadComponent ()
 				have_collimator = true;
 				//This is the collimator we are using. Input file should have half gaps.
 				//Factor of 2 turns it into full-gaps which the rest of the code expects for now.
-				collimator_aperture_width = collimator_db->Collimator[i].x_gap;
-				collimator_aperture_height = collimator_db->Collimator[i].y_gap;
 				collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
 				collimator_material = collimator_db->Collimator[i].Material;
+				if(!collimator_db->use_sigma)
+				{
+					collimator_aperture_width = collimator_db->Collimator[i].x_gap*2;
+					collimator_aperture_height = collimator_db->Collimator[i].y_gap*2;
+				}
+				else if(collimator_db->use_sigma)
+				{
+					double beta_x = prmMap->GetParameter("BETX");
+					double beta_y = prmMap->GetParameter("BETY");
+					double sigma = sqrt( ( beta_x * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
+					(beta_y * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
+					collimator_aperture_width = collimator_db->Collimator[i].sigma_x*sigma*2;
+					collimator_aperture_height = collimator_db->Collimator[i].sigma_y*sigma*2;
+				}
 				
 				//Create a new spoiler
 				Spoiler* aSpoiler = new Spoiler(name,len);
@@ -619,7 +632,6 @@ double MADInterface::ReadComponent ()
 				ctor->AppendComponent(*aSpoiler);
 				component=aSpoiler;
 
-				//double conductivity = app->sigma;
 				double conductivity = collimator_material->sigma;
 				double aperture_size = collimator_aperture_width;
 
@@ -644,21 +656,11 @@ double MADInterface::ReadComponent ()
 		{
 			
 			//Exit or just default to wide open?
+			//Default to wide open.
 			#ifndef NDEBUG
 			std::cerr << "Collimator " << name << " settings not found in collimator database." << std::endl;
 			#endif
-			/*
-			collimator_aperture_width = 9999;
-			collimator_aperture_height = 9999;
-			collimator_aperture_tilt = 0.0;
-			collimator_material = collimator_db->Collimator[1].Material;
-			*/
-
-			/*
-			std::cerr << "Collimator " << name << " settings not found in collimator database. Exiting." << std::endl;
-			exit(EXIT_FAILURE);
-			*/
-
+			
 			//There is no point in wasting cpu time on aperture checks/wakefields with a wide open collimator
 			//Lets just treat the element as a drift instead.
 			Drift* aDrift = new Drift(name,len);
@@ -890,4 +892,14 @@ double MADInterface::ReadComponent ()
 void MADInterface::Set_Collimator_Database(Collimator_Database *db)
 {
 	collimator_db = db;
+}
+
+void MADInterface::Set_x_emittance(double emitt)
+{
+	emittance_x = emitt;
+}
+
+void MADInterface::Set_y_emittance(double emitt)
+{
+	emittance_y = emitt;
 }
