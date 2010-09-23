@@ -45,7 +45,8 @@ echo "" >> Makefile
 for fn in $cppfiles
 do
 	prefix=`basename $fn .cpp` >> Makefile
-	echo "\${OBJDIR}/$prefix.o: $fn" >> Makefile
+#	echo "\${OBJDIR}/$prefix.o: $fn" >> Makefile
+	g++ -I${MERLIN_ROOT_DIR} -MM $fn | sed 's:^.*\.o:\${OBJDIR}/&:' >> Makefile
 	echo "	\${CPP} -c \${INCPATH} \${CCFLAGS} -o \$@ $fn" >> Makefile
 done
 

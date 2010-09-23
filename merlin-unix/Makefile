@@ -120,8 +120,6 @@ clean:
 config:
 	for dirn in ${SUBDIRS}; do \
 		cd ${MERLIN_ROOT_DIR}/$${dirn}; \
-		echo "updating dependencies for " $${dirn}; \
-		${MERLIN_BUILD_DIR}/make_depend ${MERLIN_ROOT_DIR}; \
 		echo "building makefile for " $${dirn}; \
 		${MERLIN_BUILD_DIR}/build_makefile; \
 	done
