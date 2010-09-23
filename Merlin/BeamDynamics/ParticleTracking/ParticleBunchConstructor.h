@@ -40,7 +40,8 @@ public:
     virtual bool Apply (const PSvector& v) const = 0;
 };
 
-typedef enum {normalDistribution,flatDistribution,ringDistribution} DistributionType;
+typedef enum {normalDistribution,flatDistribution,ringDistribution,skewHaloDistribution,\
+		horizontalHaloDistribution1,verticalHaloDistribution1,horizontalHaloDistribution2,verticalHaloDistribution2} DistributionType;
 
 //	Constructs a particle bunch with random particles taken
 //	from a 6D distribution. The phase space moments are
@@ -87,7 +88,7 @@ public:
     //Required due to pure virtual in Bunch.h
     virtual Bunch* ConstructBunch (int bunchIndex = 0) const;
 
-    template <class T_bunch> T_bunch* ConstructBunch (int bunchIndex = 0) const;
+    //template <class T_bunch> T_bunch* ConstructParticleBunch () const;
 
     virtual void ConstructBunchDistribution (int bunchIndex = 0) const;
 
@@ -138,7 +139,7 @@ inline void ParticleBunchConstructor::SetFilter (ParticleBunchFilter* filter)
 
 inline ParticleBunch* ParticleBunchConstructor::ConstructParticleBunch () const
 {
-    return (ParticleBunchConstructor::ConstructBunch<ParticleBunch>());
+    return ParticleBunchConstructor::ConstructParticleBunch<ParticleBunch>();
 //    return static_cast<ParticleBunch*>(ParticleBunchConstructor::ConstructBunch<ParticleBunch>());
 }
 

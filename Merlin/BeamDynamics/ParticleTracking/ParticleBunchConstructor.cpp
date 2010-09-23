@@ -74,6 +74,7 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
     double dp2 = pow(beamdat.sig_dp,2);
     double dz2 = pow(beamdat.sig_z,2);
     double rx,ry;
+    double u;
 
     p.x()=beamdat.x0;
     p.xp()=beamdat.xp0;
@@ -135,8 +136,8 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
             }
         }
         break;
+        case skewHaloDistribution:
         case ringDistribution:
-	           double u;
 	           rx = sqrt(beamdat.emit_x);
 	           ry = sqrt(beamdat.emit_y);
 	           for(i=1; i<np;) {
@@ -157,6 +158,90 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               }
 	           }
         break;
+        case horizontalHaloDistribution1:
+	           rx = sqrt(beamdat.emit_x);
+	           ry = sqrt(beamdat.emit_y);
+	           for(i=1; i<np;) {
+	               u = RandomNG::uniform(-pi,pi);
+	               p.x()	= rx * cos(u);
+	               p.xp()	= rx * sin(u);
+	               u = RandomNG::uniform(-pi,pi);
+	               p.y()	= 0.0;
+	               p.yp()	= 0.0;
+	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+	               M.Apply(p);
+	               p+=pbunch.front(); // add centroid
+
+	               if(itsFilter==0 || itsFilter->Apply(p)) {
+	                   pbunch.push_back(p);
+	                   i++;
+	               }
+	           }
+	break;
+        case verticalHaloDistribution1:
+	           rx = sqrt(beamdat.emit_x);
+	           ry = sqrt(beamdat.emit_y);
+	           for(i=1; i<np;) {
+	               u = RandomNG::uniform(-pi,pi);
+	               p.x()	= 0.0;
+	               p.xp()	= 0.0;
+	               u = RandomNG::uniform(-pi,pi);
+	               p.y()	= ry * cos(u);
+	               p.yp()	= ry * sin(u);
+	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+	               M.Apply(p);
+	               p+=pbunch.front(); // add centroid
+
+	               if(itsFilter==0 || itsFilter->Apply(p)) {
+	                   pbunch.push_back(p);
+	                   i++;
+	               }
+	           }
+	break;
+        case horizontalHaloDistribution2:
+	           rx = sqrt(beamdat.emit_x);
+	           ry = sqrt(beamdat.emit_y);
+	           for(i=1; i<np;) {
+	               u = RandomNG::uniform(-pi,pi);
+	               p.x()	= rx * cos(u);
+	               p.xp()	= rx * sin(u);
+	               u = RandomNG::uniform(-pi,pi);
+	               p.y()	= RandomGauss(beamdat.emit_y,cutoffs.y());
+	               p.yp()	= RandomGauss(beamdat.emit_y,cutoffs.yp());
+	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+	               M.Apply(p);
+	               p+=pbunch.front(); // add centroid
+
+	               if(itsFilter==0 || itsFilter->Apply(p)) {
+	                   pbunch.push_back(p);
+	                   i++;
+	               }
+	           }
+	break;
+        case verticalHaloDistribution2:
+	           rx = sqrt(beamdat.emit_x);
+	           ry = sqrt(beamdat.emit_y);
+	           for(i=1; i<np;) {
+	               u = RandomNG::uniform(-pi,pi);
+	               p.x()	= RandomGauss(beamdat.emit_x,cutoffs.x());
+	               p.xp()	= RandomGauss(beamdat.emit_x,cutoffs.xp());
+	               u = RandomNG::uniform(-pi,pi);
+	               p.y()	= ry * cos(u);
+	               p.yp()	= ry * sin(u);
+	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+	               M.Apply(p);
+	               p+=pbunch.front(); // add centroid
+
+	               if(itsFilter==0 || itsFilter->Apply(p)) {
+	                   pbunch.push_back(p);
+	                   i++;
+	               }
+	           }
+	break;
     };
 
     //return new ParticleBunch(beamdat.p0,beamdat.charge,pbunch);
