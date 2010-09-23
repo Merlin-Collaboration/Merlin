@@ -11,8 +11,8 @@ TiltedAperture::TiltedAperture(double w,double h, double t, material* m):Rectang
 //Checks if particle is in or outside a defined aperture
 bool TiltedAperture::PointInside(double x,double y,double z) const
 {
-	double x1 = x * cos(alpha);
-	double y1 = y * sin(alpha);
+	double x1 = (x * cos(alpha)) - (y * sin(alpha));
+	double y1 = (x * sin(alpha)) + (y * cos(alpha));
 	return fabs(x1) < GetFullWidth()/2 && fabs(y1) < GetFullHeight()/2;
 };
 
