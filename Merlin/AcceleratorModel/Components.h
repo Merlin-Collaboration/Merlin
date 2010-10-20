@@ -44,5 +44,8 @@
 #include "AcceleratorModel/StdComponent/Marker.h"
 // Solenoid
 #include "AcceleratorModel/StdComponent/Solenoid.h"
-
+// Kicker
+#include "AcceleratorModel/StdComponent/Kicker.h"
+//Spoiler
+#include "AcceleratorModel/StdComponent/Spoiler.h"
 #endif
