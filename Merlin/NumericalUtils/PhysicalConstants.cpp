@@ -48,7 +48,7 @@ const double ElectronRadius = ElectronCharge*ElectronCharge/16.0/atan(1.0)/FreeS
 
 const double ElectronGe = 0.001159652181; //Magnetic moment anomaly e cm (old = 0.00115965219)
 
-const double MuonMass = AtomicMassUnit * 0.11342892;
+const double MuonMass = ProtonMass * MuonMassMeV/ProtonMassMeV; //AtomicMassUnit * 0.11342892;
 
 const double MuonMassMeV = 105.65836;
 
