@@ -82,7 +82,6 @@ Collimator_Database::Collimator_Database(char* input_file, Material_Database* db
 
 double Collimator_Database::Configure_collimators(AcceleratorModel* model, double energy, double emittance_x, double emittance_y, double scale)
 {
-	int black_magic = 5;
 	//We wish to calculate the lattice functions - alpha/beta
 	LatticeFunctionTable* twiss = new LatticeFunctionTable(model,energy);
 
@@ -96,13 +95,13 @@ double Collimator_Database::Configure_collimators(AcceleratorModel* model, doubl
 
 	cout << "Configuring Collimators" << endl;
 	vector<Spoiler*> collimators;
-	int number_collimators = model->ExtractTypedElements(collimators,"*");
-	cout << "Got " << number_collimators << " Collimators" << endl;
+	int n_collimators = model->ExtractTypedElements(collimators,"*");
+	cout << "Got " << n_collimators << " Collimators" << endl;
 
 	for(vector<Spoiler*>::iterator c = collimators.begin(); c!=collimators.end(); c++)
 	{
 		//cout <<(*c)->GetName() << "\t" << (*c)->GetLength() << endl;
-		for(size_t i=1; i < number_collimators+black_magic; i++)
+		for(size_t i=1; i < number_collimators; i++)
 		{
 			//Time to search for the collimator we are currently using
 			if(Collimator[i].name == (*c)->GetName())
@@ -165,6 +164,7 @@ double Collimator_Database::Configure_collimators(AcceleratorModel* model, doubl
 	}
 	return impact_sigma;
 }
+
 void Collimator_Database::Select_impact_factor(string collimator, double impact)
 {
 	primary_collimator = collimator;
