@@ -14,7 +14,6 @@
 
 #include <cstdlib>
 #include "AcceleratorModel/Components.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
 
 #include "IO/MerlinIO.h"
 #include "NumericalUtils/utils.h"
@@ -207,7 +206,7 @@ void check_column_heading(istream& is, const string& hd)
 MADInterface::MADInterface (const std::string& madFileName, double P0)
         : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL)
+        incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL),z(0)
 {
 	if(ifs)
 	{
@@ -224,8 +223,12 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
-	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers + friends.
+	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
+	TreatTypeAsDrift("MONITOR");	
+	TreatTypeAsDrift("VKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
+	TreatTypeAsDrift("HKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
+
 }
 
 void MADInterface::Initialise()
@@ -341,7 +344,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 	}
 
 	ctor = new AcceleratorModelConstructor();
-	double z=0.0;
+	//double z=0.0;
 	ctor->NewModel();
 
 	// reset the stream pointer
@@ -510,17 +513,28 @@ double MADInterface::ReadComponent ()
 		MerlinIO::warning() << "Ignoring zero length " << type << endl;
 		return 0;
         }
-	if(type=="VKICKER")
-	{
-		type="YCOR";
-	}
-	else if(type=="HKICKER")
-	{
-		type="XCOR";
-	}
 	else if(type =="KICKER")
 	{
 		type="DRIFT";
+	}
+	else if(type =="TKICKER")
+	{
+		type="DRIFT";
+	}
+	else if(type=="VKICKER")
+	{
+		if (prmMap->GetParameter("VKICK") == 0)
+		{
+			type="DRIFT";
+		}
+	}
+	else if(type=="HKICKER")
+	{
+		if (prmMap->GetParameter("HKICK") == 0)
+		{
+			type="DRIFT";
+		}
+
 	}
 	else if(type =="RFCAVITY")
 	{
@@ -559,11 +573,45 @@ double MADInterface::ReadComponent ()
 
 	if(type=="DRIFT")
 	{
+		if(len !=0)
+		{
 		Drift* aDrift = new Drift(name,len);
 		ctor->AppendComponent(*aDrift);
 		component=aDrift;
+		}
+		else
+		{
+			component = 0;
+		}
         }
+	else if(type=="VKICKER")
+	{
+		//X,Y,tilt
+		cout << "VKICKER " << name << "\t" << len << "\t" << prmMap->GetParameter("VKICK") << endl;
+		Kicker* aKicker = new Kicker(name,len,0.0,prmMap->GetParameter("VKICK"),tilt);
+		ctor->AppendComponent(*aKicker);
+		component=aKicker;
 
+/*
+		Drift* aDrift = new Drift(name,len);
+		ctor->AppendComponent(*aDrift);
+		component=aDrift;
+*/
+	}
+	else if(type=="HKICKER")
+	{
+		//X,Y,tilt
+		cout << "HKICKER " << name << "\t" << len << "\t" << prmMap->GetParameter("HKICK") << endl;
+		Kicker* aKicker = new Kicker(name,len,prmMap->GetParameter("HKICK"),0.0,tilt);
+		ctor->AppendComponent(*aKicker);
+		component=aKicker;
+
+/*
+		Drift* aDrift = new Drift(name,len);
+		ctor->AppendComponent(*aDrift);
+		component=aDrift;
+*/
+	}
 	else if(type=="COLLIMATOR")
 	{
 		//Check we have collimator info
@@ -576,6 +624,7 @@ double MADInterface::ReadComponent ()
 		//Also check that we are not using a zero length collimator
 		if(len == 0.0)
 		{
+			cout << "Rejecting " << name << " due to zero length" << endl;
 			return 0;
 		}
 
@@ -597,23 +646,22 @@ double MADInterface::ReadComponent ()
 				cout << "Found the collimator: " << collimator_db->Collimator[i].name << endl;
 				#endif
 				have_collimator = true;
+
 				//This is the collimator we are using. Input file should have half gaps.
 				//Factor of 2 turns it into full-gaps which the rest of the code expects for now.
-				collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
-				collimator_material = collimator_db->Collimator[i].Material;
+
 				if(!collimator_db->use_sigma)
 				{
 					collimator_aperture_width = collimator_db->Collimator[i].x_gap*2;
 					collimator_aperture_height = collimator_db->Collimator[i].y_gap*2;
+					collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
+					collimator_material = collimator_db->Collimator[i].Material;
 				}
 				else if(collimator_db->use_sigma)
 				{
-					double beta_x = prmMap->GetParameter("BETX");
-					double beta_y = prmMap->GetParameter("BETY");
-					double sigma = sqrt( ( beta_x * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
-					(beta_y * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
-					collimator_aperture_width = collimator_db->Collimator[i].sigma_x*sigma*2;
-					collimator_aperture_height = collimator_db->Collimator[i].sigma_y*sigma*2;
+					//Just want to set the distance for lookup after the lattice is completed and then calculate the twiss params
+					//The aperture gap will then be calculated.
+					collimator_db->Collimator[i].position = z;
 				}
 				
 				//Create a new spoiler
@@ -621,31 +669,40 @@ double MADInterface::ReadComponent ()
 
 				//Enable scattering
 				aSpoiler->scatter_at_this_spoiler = true;
-				
-				//Create an aperture for the collimator jaws
-				TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
+
+				//Will calculate the collimator jaw aperture later; same with any collimator related wakes
+				//Use Collimator_Database::Configure_collimators() to do so.
+				if(!collimator_db->use_sigma)
+				{
+					//Create an aperture for the collimator jaws
+					TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
 		
-				//Set the aperture for collimation
-				aSpoiler->SetAperture(app);
-		
+					//Set the aperture for collimation
+					aSpoiler->SetAperture(app);
+				}
+
 				//Add the component to the accelerator
 				ctor->AppendComponent(*aSpoiler);
 				component=aSpoiler;
 
-				double conductivity = collimator_material->sigma;
-				double aperture_size = collimator_aperture_width;
-
-				//Collimation only will take place on one axis
-				if (collimator_aperture_height < collimator_aperture_width)
+				//Again, only if we have already specified the aperture
+				if(!collimator_db->use_sigma)
 				{
-					aperture_size = collimator_aperture_height;
-				} //set to smallest out of height or width
-				
-				//Define the resistive wake for the collimator jaws.
-				ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
+					double conductivity = collimator_material->sigma;
+					double aperture_size = collimator_aperture_width;
 
-				//Set the Wake potentials for this collimator
-				aSpoiler->SetWakePotentials(resWake);
+					//Collimation only will take place on one axis
+					if (collimator_aperture_height < collimator_aperture_width)
+					{
+						aperture_size = collimator_aperture_height;
+					} //set to smallest out of height or width
+				
+					//Define the resistive wake for the collimator jaws.
+					ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
+
+					//Set the Wake potentials for this collimator
+					aSpoiler->SetWakePotentials(resWake);
+				}
 			}
 
 			//We did not find the settings for the collimator in question
@@ -739,10 +796,17 @@ double MADInterface::ReadComponent ()
 
 	else if(type=="SEXTUPOLE")
 	{
+
 		k2=prmMap->GetParameter("K2L");
 		Sextupole* sx = new Sextupole(name,len,brho*k2/len);
 		ctor->AppendComponent(*sx);
 		component=sx;
+
+/*
+		Drift* aDrift = new Drift(name,len);
+		ctor->AppendComponent(*aDrift);
+		component=aDrift;
+*/
         }
         else if(type=="OCTUPOLE")
         {
@@ -893,7 +957,7 @@ void MADInterface::Set_Collimator_Database(Collimator_Database *db)
 {
 	collimator_db = db;
 }
-
+/*
 void MADInterface::Set_x_emittance(double emitt)
 {
 	emittance_x = emitt;
@@ -903,3 +967,13 @@ void MADInterface::Set_y_emittance(double emitt)
 {
 	emittance_y = emitt;
 }
+*/
+
+			/*
+					double beta_x = prmMap->GetParameter("BETX");
+					double beta_y = prmMap->GetParameter("BETY");
+					double sigma = sqrt( ( beta_x * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
+					(beta_y * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
+					collimator_aperture_width = collimator_db->Collimator[i].sigma_x*sigma*2;
+					collimator_aperture_height = collimator_db->Collimator[i].sigma_y*sigma*2;
+					*/
