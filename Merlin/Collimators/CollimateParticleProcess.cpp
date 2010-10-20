@@ -21,7 +21,7 @@
 #include "AcceleratorModel/Apertures/TiltedAperture.hpp"
 #include "NumericalUtils/utils.h"
 // CollimateParticleProcess
-#include "CollimateParticleProcess.h"
+#include "Collimators/CollimateParticleProcess.h"
 // Aperture
 #include "AcceleratorModel/Aperture.h"
 // Spoiler
@@ -164,18 +164,22 @@ void CollimateParticleProcess::DoCollimation ()
 	list<size_t>::iterator ip;
 	if(pindex!=0)
 	ip=pindex->begin();
+	ParticleBunch* newbunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
 
 	for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
 	{
 		if(!ap->PointInside((*p).x(),(*p).y(),s))
 		{
+			//cout << "Impact " << currentComponent->GetName() << "\t" << (*p).dp() << endl;
 			// If the 'aperture' is a spoiler, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
 			// If not a spoiler, then do not scatter and directly remove the particle.
 			if(!is_spoiler || DoScatter(*p)) 
 			{
 				lost.push_back(*p);
-				p=currentBunch->erase(p);
+				/* This is slow for a STL Vector */
+				//p=currentBunch->erase(p);
+				p++;
 				if(pindex!=0)
 				{
 					lost_i.push_back(*ip);
@@ -183,9 +187,11 @@ void CollimateParticleProcess::DoCollimation ()
 				}
 			}
 
+			//Particle survives
 			else
 			{
 				// need to increment iterators
+				newbunch->AddParticle(*p);
 				p++;
 				if(pindex!=0)
 				{
@@ -194,8 +200,10 @@ void CollimateParticleProcess::DoCollimation ()
 			}
 		}
 
+		//Not interacting with the collimator: "Inside" the aperture; particle lives
 		else
 		{
+			newbunch->AddParticle(*p);
 			p++;
 			if(pindex!=0)
 			{
@@ -204,7 +212,14 @@ void CollimateParticleProcess::DoCollimation ()
 		}
 	}
 
+	//delete currentBunch;
+	currentBunch->clear();
+	//cout << newbunch->size() << "\t" << lost.size() << endl;
+	currentBunch->swap(*newbunch);
+	delete newbunch;
+
 	nlost+=lost.size();
+	//cout << currentComponent->GetQualifiedName() << "\t" << nlost << "\t" << nstart << "\t" << currentBunch->size() << endl;
 	//cout << "The number of particles lost is: " << nlost << endl;
 	DoOutput(lost,lost_i);
 
@@ -212,6 +227,12 @@ void CollimateParticleProcess::DoCollimation ()
 	{
 		throw ExcessiveParticleLoss(currentComponent->GetQualifiedName(),lossThreshold,nlost,nstart);
 	}
+	/* Clean up lost particles */
+/*	for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
+	{
+			if()
+	}
+*/
 }
 
 
