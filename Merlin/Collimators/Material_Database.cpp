@@ -150,6 +150,11 @@ material* Material_Database::find_material(string symbol)
 	//did not find the material, this is bad.
 	if(position == db.end())
 	{
+		if((*position)->symbol == symbol)
+		{
+			//This should return a pointer to the material we are interested in.
+			return *position;
+		}
 		std::cerr << "Requested aperture material not found. Exiting." << std::endl;
 		exit(EXIT_FAILURE);
 	}
