@@ -391,6 +391,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		if(isMore){
 			s += tracker.GetCurrentComponent().GetLength();
 			isMore = tracker.StepComponent();
+
 		}else
 			loop = false;
 
@@ -464,7 +465,7 @@ public:
 
 };
 
-inline int LatticeFunctionTable::NumberOfRows()
+int LatticeFunctionTable::NumberOfRows()
 {
     return (*(lfnlist.begin()))->size();
 };
