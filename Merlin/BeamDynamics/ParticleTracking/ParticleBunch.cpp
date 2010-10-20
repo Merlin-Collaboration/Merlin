@@ -501,13 +501,34 @@ void ParticleBunch::node_send_particles_to_master()
 		MPI::COMM_WORLD.Abort(1);
 	}
 
-	for (int n=0; n<particle_count; n++)
-	{
+	//Alternate method - will only work with a vector
+	//memcpy(particle_send_buffer,&input[0],sizeof(double)*coords*size());
+
+	//for (int n=0; n<particle_count; n++)
+	//{
+
+		int n=0;
+		for (PSvectorArray::iterator ip=begin(); ip!=end(); ip++)
+		{
+			//for (int j=0; j<coords; j++)
+			for (int j=0; j<6; j++)
+			{
+				particle_send_buffer[(n*coords)+0] = ip->x();
+				particle_send_buffer[(n*coords)+1] = ip->xp();
+				particle_send_buffer[(n*coords)+2] = ip->y();
+				particle_send_buffer[(n*coords)+3] = ip->yp();
+				particle_send_buffer[(n*coords)+4] = ip->ct();
+				particle_send_buffer[(n*coords)+5] = ip->dp();
+			}
+			n++;
+		}
+		/*
 		for (int j=0; j<coords; j++)
 		{
 			particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
 		}
-	}
+		*/
+	//}
 		
 	//Send everything to the master node
 	MPI::COMM_WORLD.Send(&particle_send_buffer[0], particle_count, MPI_Particle, 0, 1);
@@ -536,13 +557,30 @@ void ParticleBunch::master_send_particles_to_nodes()
 		MPI::COMM_WORLD.Abort(1);
 	}
 
-	for (int n=0; n<particle_count; n++)
+	//Test new code
+	int n=0;
+	for (PSvectorArray::iterator ip=begin(); ip!=end(); ip++)
+	{
+		//for (int j=0; j<coords; j++)
+		for (int j=0; j<6; j++)
+		{
+			particle_send_buffer[(n*coords)+0] = ip->x();
+			particle_send_buffer[(n*coords)+1] = ip->xp();
+			particle_send_buffer[(n*coords)+2] = ip->y();
+			particle_send_buffer[(n*coords)+3] = ip->yp();
+			particle_send_buffer[(n*coords)+4] = ip->ct();
+			particle_send_buffer[(n*coords)+5] = ip->dp();
+		}
+		n++;
+	}
+/*	for (int n=0; n<particle_count; n++)
 	{
 		for (int j=0; j<coords; j++)
 		{
 			particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
 		}
 	}
+*/
 
 	//We now have the full bunch in a particle buffer.
 	//This must be sliced, and particles sent to each node
@@ -648,21 +686,22 @@ void ParticleBunch::SendReferenceMomentum()
 	}
 	else
 	{
-	//Make a buffer
-	double refP;
+		//Make a buffer
+		double refP;
 
-	//Recv new momentum
-	MPI::COMM_WORLD.Recv(&refP, 1, MPI::DOUBLE, 0, 1, MPI_status);
+		//Recv new momentum
+		MPI::COMM_WORLD.Recv(&refP, 1, MPI::DOUBLE, 0, 1, MPI_status);
 
-	//Set new ref momentum
-	SetReferenceMomentum(refP);
+		//Set new ref momentum
+		SetReferenceMomentum(refP);
 	}
 
 }
+
 //Destructor: Only enabled with MPI - Will clean up and finalize.
 ParticleBunch::~ParticleBunch ()
 {
-	MPI_Finalize();
+	//MPI_Finalize();
 }
 
 void ParticleBunch::Check_MPI_init()
