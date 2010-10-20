@@ -127,6 +127,9 @@ public:
     //Removes all particles from the bunch
     void clear ();
 
+    //Swaps particles with another ParticleBunch
+    void swap(ParticleBunch newbunch);
+
     //Init flag
     bool init;
 
@@ -139,13 +142,6 @@ public:
 
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;
-
-    //Particle mass
-//    double ParticleMass;
-//    double ParticleMassMeV;
-
-    //Particle Lifetime
-    //double ParticleLifetime;
 
     //Access methods
     virtual double GetParticleMass() const;
@@ -215,6 +211,12 @@ protected:
     PSvectorArray pArray;
 
 };
+inline void ParticleBunch::swap(ParticleBunch newbunch)
+{
+	//cout << "Before " << size() << "\t" << newbunch.size() << endl;
+	pArray.swap(newbunch.pArray);
+	//cout << "After " << size() << "\t" << newbunch.size() << endl;
+}
 
 inline size_t ParticleBunch::AddParticle (const Particle& p)
 {
