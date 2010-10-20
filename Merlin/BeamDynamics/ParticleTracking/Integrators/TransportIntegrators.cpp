@@ -30,6 +30,7 @@ namespace TRANSPORT {
 // Integrator set definition
 DEF_INTG_SET(ParticleComponentTracker,StdISet)
 ADD_INTG(DriftCI)
+ADD_INTG(THIN_LENS::KickerCI)
 ADD_INTG(SectorBendCI)
 ADD_INTG(RectMultipoleCI)
 ADD_INTG(LCAVIntegrator)
@@ -194,7 +195,6 @@ void DriftCI::TrackStep (double ds)
     delete m;
     return;
 }
-
 
 void SectorBendCI::TrackStep(double ds)
 {
