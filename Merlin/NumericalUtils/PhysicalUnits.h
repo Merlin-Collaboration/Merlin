@@ -57,7 +57,7 @@ extern const double degree;
 extern double Tesla;
 extern double kGauss;
 extern double Gauss;
-};
+}
 
 #endif
 

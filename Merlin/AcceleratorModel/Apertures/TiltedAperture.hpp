@@ -17,7 +17,7 @@ TiltedAperture(double w,double h, double t, material* m);
 
 virtual bool PointInside(double x,double y,double z) const;
 
-virtual bool PointInside_offset(double x,double y,double z,const double xoff,const double yoff) const;
+virtual bool PointInside_offset(double x, double y, double z, const double xoff, const double yoff) const;
 };
 
 #endif

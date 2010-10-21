@@ -291,6 +291,6 @@ inline void ParticleBunch::clear ()
 }
 
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif
