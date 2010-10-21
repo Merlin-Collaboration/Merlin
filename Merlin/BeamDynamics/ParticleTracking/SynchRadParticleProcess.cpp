@@ -125,7 +125,7 @@ struct ApplySR {
     }
 
 };
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 
 // Class SynchRadParticleProcess
@@ -245,5 +245,4 @@ void SynchRadParticleProcess::GeneratePhotons (bool gp)
     quantum = gp ? pgen : 0;
 
 }
-}; // end namespace ParticleTracking
-
+} // end namespace ParticleTracking

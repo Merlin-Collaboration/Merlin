@@ -196,5 +196,5 @@ private:
 };
 
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif

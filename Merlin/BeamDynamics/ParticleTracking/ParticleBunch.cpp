@@ -109,12 +109,12 @@ inline void SortArray(std::list<T>& array)
     array.sort();
 }
 
-};
+} //end namespace
 
 namespace ParticleTracking {
 
 ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
-        : Bunch(P0,Q),qPerMP(Q/particles.size()),pArray(),init(false),coords((int) sizeof(PSvector)/sizeof(double))
+        : Bunch(P0,Q),init(false),pArray(),coords((int) sizeof(PSvector)/sizeof(double)),qPerMP(Q/particles.size())
         //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
     pArray.swap(particles);
@@ -296,9 +296,6 @@ double ParticleBunch::GetParticleLifetime() const
 {
 	return 0;
 }
-
-
-}; // end namespace ParticleTracking
 
 //MPI code
 #ifdef ENABLE_MPI
@@ -713,3 +710,5 @@ void ParticleBunch::Check_MPI_init()
 	}
 }
 #endif	//end MPI code
+
+} // end namespace ParticleTracking

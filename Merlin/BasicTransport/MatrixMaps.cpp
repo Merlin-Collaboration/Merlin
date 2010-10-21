@@ -60,7 +60,7 @@ void RescaleMoments(double P0, double P1, PSmoments& S)
     S(5,5)*=(ratio*ratio);
 }
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 
 PSvector& RMtrx::Apply (PSvector& x) const

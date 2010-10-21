@@ -70,7 +70,7 @@ PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first,
     return c;
 }
 
-};
+} //end namespace
 
 
 
@@ -423,7 +423,7 @@ int powi(int i, int j)
 	for(int m=0; m<j; m++)
 		p *= i;
 	return p;
-};
+}
 
 void savgol(vector<double>& c, int nl, int nr, int ld, int m)
 {
@@ -466,5 +466,4 @@ void savgol(vector<double>& c, int nl, int nr, int ld, int m)
     }
 }
 
-}; // end namespace ParticleTracking
-
+} // end namespace ParticleTracking

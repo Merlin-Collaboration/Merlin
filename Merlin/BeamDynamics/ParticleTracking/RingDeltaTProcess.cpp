@@ -9,7 +9,7 @@
 
 namespace {
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 // Class RingDeltaTProcess
 
@@ -55,4 +55,4 @@ void RingDeltaTProcess::SetBendScale (double bendscale)
     scale = bendscale;
 }
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking

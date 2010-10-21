@@ -6,7 +6,7 @@
 const int Kicker::ID = UniqueIndex();
 
 Kicker::Kicker (const string& id, double len, double x_kick, double y_kick, double tilt)
-        : x_kick(x_kick),y_kick(y_kick),tilt(tilt),TAccCompG<RectangularGeometry>(id,new RectangularGeometry(len))
+        : TAccCompG<RectangularGeometry>(id,new RectangularGeometry(len)),x_kick(x_kick),y_kick(y_kick),tilt(tilt)
 {}
 
 const string& Kicker::GetType () const

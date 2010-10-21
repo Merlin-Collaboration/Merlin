@@ -178,7 +178,7 @@ void SolR(double l, double ks, RealMatrix& rs)
     rs(3,0)= ks*s2/2;
 }
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 
 RealMatrix TransportMatrix::Drift (double length, RealMatrix& R)

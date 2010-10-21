@@ -64,6 +64,6 @@ inline bool RectEllipseAperture::PointInside (double x, double y, double z) cons
 double RectEllipseAperture::GetRadiusAt (double phi, double z) const
 {
 
-	std:cerr << "Not yet implemented" << std::endl;
+	std::cerr << "Not yet implemented" << std::endl;
 	exit(EXIT_FAILURE);
 }

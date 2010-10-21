@@ -64,7 +64,7 @@ size_t TruncateZ(ParticleBunch& particles, double zmin, double zmax)
 	return lost;
 }
 
-};
+}
 
 namespace ParticleTracking {
 
@@ -214,4 +214,4 @@ size_t ParticleBunchDistribution(ParticleBunch& bunch, PScoord u,
     return lost;
 }
 
-};
+}

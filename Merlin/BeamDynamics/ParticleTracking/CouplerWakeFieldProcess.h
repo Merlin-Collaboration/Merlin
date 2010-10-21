@@ -29,6 +29,6 @@ private:
     CouplerWakeFieldProcess& operator=(const CouplerWakeFieldProcess& rhs);
 };
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif

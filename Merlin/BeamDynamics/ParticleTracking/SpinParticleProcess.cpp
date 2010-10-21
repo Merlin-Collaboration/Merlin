@@ -256,7 +256,7 @@ public:
 void SpinParticleProcess::SetSpinMomentum(double p_spin)
 {
     pspin = p_spin;
-};
+}
 
 void SpinParticleProcess::DoProcess(double ds)
 {

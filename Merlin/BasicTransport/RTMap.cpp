@@ -50,5 +50,4 @@ PSvector& RTMap::Apply(PSvector& X) const
         t->Apply(X,Y);
 
     return X=Y;
-};
-
+}

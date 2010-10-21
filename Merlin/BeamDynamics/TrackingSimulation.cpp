@@ -56,7 +56,7 @@ void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX,
     } while(++first != last);
 }
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 template <class I>
 TrackingSimulation::TStepper<I>::TStepper (I f, I l)

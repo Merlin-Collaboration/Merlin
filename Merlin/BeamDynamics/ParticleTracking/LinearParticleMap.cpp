@@ -32,5 +32,5 @@ void LinearParticleMap::Invert ()
     assert(false);
 }
 
-}; //end namespace ParticleTracking
+} //end namespace ParticleTracking
 

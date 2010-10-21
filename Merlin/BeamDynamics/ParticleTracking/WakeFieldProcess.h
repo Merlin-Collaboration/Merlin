@@ -98,6 +98,6 @@ private:
 
 void savgol(vector<double>& c, int nl, int nr, int ld, int m);
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif

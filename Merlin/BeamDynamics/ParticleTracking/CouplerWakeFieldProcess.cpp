@@ -56,12 +56,12 @@ PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first,
     return c;
 }
 
-};
+} //end namespace
 
 namespace ParticleTracking {
 
 CouplerWakeFieldProcess::CouplerWakeFieldProcess (int prio, size_t nb, double ns)
-: WakeFieldProcess(prio,nb,ns,"COUPLERWAKEFIELD") {};
+: WakeFieldProcess(prio,nb,ns,"COUPLERWAKEFIELD") {}
         
 void CouplerWakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component) {
 
@@ -163,5 +163,4 @@ void CouplerWakeFieldProcess::CalculateWakeT() {
 }
 
 
-}; // end namespace ParticleTracking
-
+} // end namespace ParticleTracking

@@ -31,7 +31,7 @@ double factorial(int n)
     return (f==0) ? 1 : f;  //Conditional added by A.Wolski 1/10/01
 }
 
-}; // end anonymous namespace
+} // end anonymous namespace
 
 
 MultipoleField::MultipoleField (int np, double bn, double an, double r0)

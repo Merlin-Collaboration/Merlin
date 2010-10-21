@@ -26,5 +26,5 @@ private:
     double intS;
 };
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif

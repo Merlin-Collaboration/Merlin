@@ -43,6 +43,6 @@ void TWRFCavity (double length, double g, double f, double phi,
                  double E0, bool entr_field, bool exit_field, R2Map& R);
 void SWRFCavity (int ncells, double g, double f, double phi, double E0, R2Map& R);
 
-}; // namespace TransportRMap
+} // namespace TransportRMap
 
 #endif

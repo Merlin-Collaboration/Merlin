@@ -233,8 +233,10 @@ Transform3D SequenceGeometry::GetGeometryTransform (double s0, double s) const t
 		return GetTotalGeometryTransform();
 
     bool inv_t;
-    if(inv_t=s0>s)
+    if( (inv_t = (s0>s)) )
+    {
         std::swap(s,s0);
+    }
 
     SequenceFrame::FrameList::const_iterator fi = theFrameList->begin();
     double l=0;
@@ -400,5 +402,3 @@ void SequenceFrame::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
 			(*fi)->AppendBeamlineIndecies(ivec);
 	}
 }
-
-

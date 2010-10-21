@@ -60,6 +60,6 @@ size_t ParticleBunchDistribution(ParticleBunch& bunch, PScoord u,
                                  double umin, double umax, double du, std::vector<double>& bins,
                                  bool normalise, bool truncate);
 
-};
+}
 
 #endif

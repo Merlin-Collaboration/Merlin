@@ -38,7 +38,7 @@ private:
     StringPattern pattern;
 };
 
-}; // end anonymous namespace
+} // end anonymous namespace
 
 
 template class std::set< ModelElement* >;
@@ -65,4 +65,3 @@ size_t ElementRepository::Find (const std::string& id, std::vector<ModelElement*
                    back_inserter(elements),MatchID(id,true));
     return elements.size();
 }
-

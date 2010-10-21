@@ -87,7 +87,7 @@ void DoProc::Trace(BunchProcess* proc)
     (*vos)<<"from: "<<right<<s0<<" to: "<<s0+ds<<" (step = "<<ds<<")"<<endl;
 }
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 
 ProcessStepManager::ProcessStepManager ()
