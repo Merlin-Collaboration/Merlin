@@ -21,7 +21,7 @@ inline double Wavelength(double f) {
     using PhysicalConstants::SpeedOfLight;
     return SpeedOfLight/f;
 }
-};
+}
 
 // Class SWRFStructure
 

@@ -21,7 +21,7 @@ inline Transform3D MakeTransform(double phi, double h)
     return Transform3D(Point3D((cos(phi)-1)/h,0,sin(phi)/h),Rotation3D::rotationY(-phi));
 }
 
-}; // end annonymous namespace
+} // end annonymous namespace
 
 
 Transform3D ArcGeometry::GetGeometryTransform (double s0, double s) const throw (BeyondExtent)

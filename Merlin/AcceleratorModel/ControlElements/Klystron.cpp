@@ -50,7 +50,7 @@ namespace {
 		const Complex zs;
 	};
 
-}; // end anonumous namespace
+} // end anonumous namespace
 
 
 

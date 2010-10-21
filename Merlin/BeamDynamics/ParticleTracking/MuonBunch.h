@@ -55,5 +55,5 @@ public:
 		cout<<endl;
 	}
 }; // end MuonBunch class
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif

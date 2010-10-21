@@ -76,7 +76,6 @@ Collimator_Database::Collimator_Database(char* input_file, Material_Database* db
 	input->clear();
 	input->close();
 	delete input;
-	input == NULL;
 	requested_impact_factor = 1;
 }
 
@@ -106,7 +105,7 @@ double Collimator_Database::Configure_collimators(AcceleratorModel* model, doubl
 			//Time to search for the collimator we are currently using
 			if(Collimator[i].name == (*c)->GetName())
 			{
-				for(size_t j = 0; j <= twiss->NumberOfRows(); j++)
+				for(int j = 0; j <= twiss->NumberOfRows(); j++)
 				{
 					if(Collimator[i].position == twiss->Value(0,0,0,j))
 					{

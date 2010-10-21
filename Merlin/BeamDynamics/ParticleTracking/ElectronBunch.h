@@ -54,5 +54,5 @@ public:
 		cout<<endl;
 	}
 }; // end ElectronBunch class
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif

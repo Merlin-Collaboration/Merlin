@@ -75,7 +75,7 @@ private:
 };
 
 
-}; // end anonymous namespace
+} // end anonymous namespace
 
 
 AcceleratorModelConstructor::AcceleratorModelConstructor ()

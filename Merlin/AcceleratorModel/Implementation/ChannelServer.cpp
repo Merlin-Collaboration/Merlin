@@ -72,7 +72,7 @@ namespace {
         }
     };
     
-}; // end anonymous namespace
+} // end anonymous namespace
 
 std::string ChannelServer::ChannelCtor::GetID ()
 {

@@ -44,10 +44,10 @@ namespace {
         StringPattern pat;
         ostream* log;
    };
-};
+}
 void AcceleratorErrors::ApplyShifts(AcceleratorModel::Beamline& b, const string& p){
              for_each(b.begin(),b.end(),Errors(vx,vy,vz,mx,my,mz,p,clear,true,log));
-};
+}
 void AcceleratorErrors::ApplyRotations(AcceleratorModel::Beamline& b, const string& p){
              for_each(b.begin(),b.end(),Errors(vx,vy,vz,mx,my,mz,p,clear,false,log));
-};
+}
