@@ -125,7 +125,7 @@ private:
     void DoCollimation ();
     void SetNextS ();
     void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
-
+    void bin_lost_output(const PSvectorArray& lostb);
     double s_total;
     double s;
     double next_s;
@@ -165,6 +165,6 @@ inline void CollimateParticleProcess::ScatterAtSpoiler(bool tf)
     scatter=tf;
 }
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif

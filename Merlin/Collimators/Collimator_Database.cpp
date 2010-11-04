@@ -4,17 +4,18 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 //Read in file into some sensible structure
 
 
-Collimator_Database::Collimator_Database(char* input_file, Material_Database* db, bool sigma) : number_collimators(0),use_sigma(sigma)
+Collimator_Database::Collimator_Database(string input_file, Material_Database* db, bool sigma) : number_collimators(0),use_sigma(sigma)
 {
 
 	//Open file
-	ifstream* input = new ifstream(input_file, ifstream::in);
+	ifstream* input = new ifstream(input_file.c_str(), ifstream::in);
 
 	//Do standard checks
 	if(input == NULL || !input->good())
@@ -77,6 +78,7 @@ Collimator_Database::Collimator_Database(char* input_file, Material_Database* db
 	input->close();
 	delete input;
 	requested_impact_factor = 1;
+	impact_sigma = 1;
 }
 
 double Collimator_Database::Configure_collimators(AcceleratorModel* model, double energy, double emittance_x, double emittance_y, double scale)

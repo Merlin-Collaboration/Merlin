@@ -5,10 +5,6 @@
 // Class library version 3 (2004)
 // 
 // Copyright: see Merlin/copyright.txt
-//
-// Last CVS revision:
-// $Date: 2006/03/18 17:52:43 $
-// $Revision: 1.11 $
 // 
 /////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +26,7 @@
 using namespace std;
 
 extern void ScatterParticle(PSvector& p, double X0, double x, double E0);
-extern void ScatterProton(PSvector& p,  double x, double E0i,const TiltedAperture* tap);
+extern void ScatterProton(PSvector& p, double x, double E0, const TiltedAperture* tap);
 
 namespace {
 
@@ -41,7 +37,8 @@ void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i
     PSvectorArray::const_iterator p = lost_p.begin();
     list<size_t>::const_iterator ip = lost_i.begin();
 
-    while(p!=lost_p.end()) {
+    while(p!=lost_p.end())
+    {
         os<<std::setw(12)<<right<<*ip;
         os<<*p;
         ++p;
@@ -49,7 +46,7 @@ void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i
     }
 }
 
-}; // end anonymous namespace
+} // end anonymous namespace
 
 namespace ParticleTracking {
 
@@ -81,31 +78,35 @@ void CollimateParticleProcess::InitialiseProcess (Bunch& bunch)
 
 void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
-    active = (currentBunch!=0) && (component.GetAperture()!=0);
-    if(active) {
-        currentComponent = &component;
-       s=0;
-        Spoiler* aSpoiler = dynamic_cast<Spoiler*>(&component);
-        is_spoiler = scatter && aSpoiler;
+	active = (currentBunch!=0) && (component.GetAperture()!=0);
+	if(active)
+	{
+		currentComponent = &component;
+		s=0;
+		Spoiler* aSpoiler = dynamic_cast<Spoiler*>(&component);
+		is_spoiler = scatter && aSpoiler;
 
-        if(!is_spoiler) { // not a spoiler so set up for normal hard-edge collimation
-            at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
-            at_cent = (COLL_AT_CENTER & cmode)!=0;
-            at_exit = (COLL_AT_EXIT & cmode)!=0;
-            SetNextS();
-        }
-        else {
-            at_entr=at_cent=false; // currently scatter only at exit
-            at_exit = true;
-            SetNextS();
-            Xr = aSpoiler->GetMaterialRadiationLength();
-	    len = aSpoiler->GetLength();
-        }
-    }
-    else {
-        s_total += component.GetLength();
-        currentComponent = 0;
-    }
+		if(!is_spoiler)
+		{ // not a spoiler so set up for normal hard-edge collimation
+			at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
+			at_cent = (COLL_AT_CENTER & cmode)!=0;
+			at_exit = (COLL_AT_EXIT & cmode)!=0;
+			SetNextS();
+		}
+		else
+		{
+			at_entr = at_cent = false; // currently scatter only at exit
+			at_exit = true;
+			SetNextS();
+			Xr = aSpoiler->GetMaterialRadiationLength();
+			len = aSpoiler->GetLength();
+		}
+	}
+	else
+	{
+		s_total += component.GetLength();
+		currentComponent = 0;
+	}
 }
 
 void CollimateParticleProcess::DoProcess (double ds)
@@ -124,21 +125,25 @@ void CollimateParticleProcess::DoProcess (double ds)
         s_total += currentComponent->GetLength();
 	//cout<<"the component name is:"<<currentComponent->GetName()<<endl;
 	//cout<<"component name:"<<currentComponent->GetQualifiedName()<<endl;
+	//cout << s << "\t" << s_total << "\t" << currentComponent->GetLength() << endl;
 }
 
 double CollimateParticleProcess::GetMaxAllowedStepSize () const
 {
-    return next_s-s;
+	return next_s-s;
 }
 
 void CollimateParticleProcess::IndexParticles (bool index)
 {
-    if(index && pindex==0)
-        pindex = new list<size_t>;
-    else if(!index && pindex!=0) {
-        delete pindex;
-        pindex=0;
-    }
+	if(index && pindex==0)
+	{
+		pindex = new list<size_t>;
+	}
+	else if(!index && pindex!=0)
+	{
+		delete pindex;
+		pindex=0;
+	}
 }
 
 void CollimateParticleProcess::IndexParticles (list<size_t>& anIndex)
@@ -152,7 +157,7 @@ void CollimateParticleProcess::IndexParticles (list<size_t>& anIndex)
 
 void CollimateParticleProcess::SetLossThreshold (double losspc)
 {
-    lossThreshold = losspc/100.0;
+	lossThreshold = losspc/100.0;
 }
 
 void CollimateParticleProcess::DoCollimation ()
@@ -170,7 +175,6 @@ void CollimateParticleProcess::DoCollimation ()
 	{
 		if(!ap->PointInside((*p).x(),(*p).y(),s))
 		{
-			//cout << "Impact " << currentComponent->GetName() << "\t" << (*p).dp() << endl;
 			// If the 'aperture' is a spoiler, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
 			// If not a spoiler, then do not scatter and directly remove the particle.
@@ -186,12 +190,11 @@ void CollimateParticleProcess::DoCollimation ()
 					ip = pindex->erase(ip);
 				}
 			}
-
-			//Particle survives
 			else
 			{
-				// need to increment iterators
+				//Particle survives
 				newbunch->AddParticle(*p);
+				// need to increment iterators
 				p++;
 				if(pindex!=0)
 				{
@@ -199,10 +202,9 @@ void CollimateParticleProcess::DoCollimation ()
 				}
 			}
 		}
-
-		//Not interacting with the collimator: "Inside" the aperture; particle lives
 		else
 		{
+			//Not interacting with the collimator: "Inside" the aperture; particle lives
 			newbunch->AddParticle(*p);
 			p++;
 			if(pindex!=0)
@@ -212,9 +214,7 @@ void CollimateParticleProcess::DoCollimation ()
 		}
 	}
 
-	//delete currentBunch;
 	currentBunch->clear();
-	//cout << newbunch->size() << "\t" << lost.size() << endl;
 	currentBunch->swap(*newbunch);
 	delete newbunch;
 
@@ -227,77 +227,207 @@ void CollimateParticleProcess::DoCollimation ()
 	{
 		throw ExcessiveParticleLoss(currentComponent->GetQualifiedName(),lossThreshold,nlost,nstart);
 	}
-	/* Clean up lost particles */
-/*	for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
-	{
-			if()
-	}
-*/
 }
 
 
 void CollimateParticleProcess::SetNextS ()
 {
-    if(at_entr) {
-        next_s=0;
-        at_entr=false;
-    }
-    else if(at_cent) {
-        next_s=currentComponent->GetLength()/2;
-        at_cent=false;
-    }
-    else if(at_exit) {
-        next_s=currentComponent->GetLength();
-        at_exit = false;
-    }
-    else
-        active=false;
+	if(at_entr)
+	{
+		next_s = 0;
+		at_entr = false;
+	}
+	else if(at_cent)
+	{
+		next_s=currentComponent->GetLength()/2;
+		at_cent=false;
+	}
+	else if(at_exit)
+	{
+		next_s=currentComponent->GetLength();
+		at_exit = false;
+	}
+	else
+	{
+		active=false;
+	}
 }
 
 void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<size_t>& lost_i)
 {
-    // Create a file and dump the lost particles
-    // (if there are any)
-    if(!lostb.empty()) {
-        if(os!=0) {
-            (*os)<<std::setw(24)<<left<<(*currentComponent).GetQualifiedName().c_str();
-            (*os)<<std::setw(12)<<right<<currentComponent->GetLength();
-            (*os)<<std::setw(12)<<right<<currentBunch->GetReferenceTime();
-            (*os)<<std::setw(8)<<right<<lostb.size()<<endl;
-        }
-        if(createLossFiles) {
-            string id = (*currentComponent).GetQualifiedName();   
-          pair<IDTBL::iterator,bool> result = idtbl.insert(IDTBL::value_type(id,0));
-            int n = ++(*(result.first)).second;
-            ostringstream fname;
-            if(!file_prefix.empty())
-                fname<<file_prefix;
-            fname<<id<<'.'<<n<<".loss";
-            ofstream file(fname.str().c_str());
-            if(pindex==0)
-                copy(lostb.begin(),lostb.end(),ostream_iterator<PSvector>(file));
-            else
-                OutputIndexParticles(lostb,lost_i,file);
-        }
-    }
+	// Create a file and dump the lost particles
+	// (if there are any)
+	if(!lostb.empty())
+	{
+//	PSvectorArray lostp = bin_lost_output(lostb);
+        	if(os!=0)
+		{
+
+			double length = currentComponent->GetLength();
+			int n = length / 0.1;
+
+			bool overflow = false;
+			if ((length/(double)n) != 0.0)
+			{
+				n++;
+				overflow = true;
+			}
+
+			//Create the array
+			double** lostp = new double*[n];
+			for(int i = 0; i<n; ++i)
+			{
+				lostp[i] = new double[3];
+			}
+			//fill the aray
+			for(int j = 0; j<n; j++)
+			{
+				lostp[j][0] = 0.1*j;	//Start position
+				lostp[j][1] = 0.1;	//Length
+				lostp[j][2] = 0.0;	//Entries
+			}
+			//deal with the last bin
+			if(overflow)
+			{
+				lostp[n-1][0] = 0.1*(n-1);
+				lostp[n-1][1] = length - (0.1*(n-1));
+				lostp[n-1][2] = 0.0;
+			}
+
+
+			for(size_t l = 0; l < lostb.size(); l++)
+			{
+				int x = lostb[l].ct()/0.1;
+				lostp[x][2]++;
+			}
+
+			for(int j = 0; j<n; j++)
+			{
+				if(lostp[j][2] != 0.0)
+				{
+				//cout << lostp[j][0] << "\t" << lostp[j][1] << "\t" << lostp[j][2] << endl;
+				(*os).precision(16);
+				(*os) << std::setw(24)<<left<<(*currentComponent).GetQualifiedName().c_str();
+				//(*os) << std::setw(24)<<left<<lostp[j][0] + currentBunch->GetReferenceTime()-length;	//Bin start position
+				(*os) << std::setw(24)<<left<<lostp[j][0] + currentComponent->GetComponentLatticePosition();	//Bin start position
+				(*os) << std::setw(24)<<left<<lostp[j][1]; //Bin length
+				(*os) << "\t" << lostp[j][2]; //Loss count
+				(*os) << endl;
+				}
+			}
+
+		/*
+			(*os)<<std::setw(24)<<left<<(*currentComponent).GetQualifiedName().c_str();
+			(*os)<<std::setw(12)<<right<<currentComponent->GetLength();
+			(*os)<<std::setw(12)<<right<<currentBunch->GetReferenceTime();
+			(*os)<<std::setw(8)<<right<<lostb.size()<<endl;
+		*/
+		
+		
+		}
+
+		if(createLossFiles)
+		{
+			string id = (*currentComponent).GetQualifiedName();   
+			pair<IDTBL::iterator,bool> result = idtbl.insert(IDTBL::value_type(id,0));
+			int n = ++(*(result.first)).second;
+			ostringstream fname;
+
+			if(!file_prefix.empty())
+			{
+				fname << file_prefix;
+			}
+
+			fname << id << '.' << n << ".loss";
+			ofstream file(fname.str().c_str());
+
+			if(pindex==0)
+			{
+				copy(lostb.begin(),lostb.end(),ostream_iterator<PSvector>(file));
+			}
+			else
+			{
+				OutputIndexParticles(lostb,lost_i,file);
+			}
+		}
+	}
 }
 
 bool CollimateParticleProcess::DoScatter (Particle& p)
 {
 	double E0=currentBunch->GetReferenceMomentum();
 	const TiltedAperture *tap = (TiltedAperture*) currentComponent->GetAperture();
-	currentBunch->Scatter(p,len,E0,tap);
-	return p.dp()<=-0.99; // return true if E below 1% cut-off
+
+	int scatter_type = currentBunch->Scatter(p,len,E0,tap);
+
+//	return p.dp()<=-0.99; // return true if E below 1% cut-off
+	if(scatter_type == 1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 ExcessiveParticleLoss::ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart)
         : MerlinException()
 {
-    ostringstream buffer;
-    buffer<<"CollimateParticleProcess Exception\n";
-    buffer<<"particle loss threshold of "<<100*threshold<<"% exceeded ";
-    buffer<<'('<<nlost<<'/'<<nstart<<") at "<<c_id;
-    SetMsg(buffer.str());
+	ostringstream buffer;
+	buffer << "CollimateParticleProcess Exception\n";
+	buffer << "particle loss threshold of " << 100*threshold << "% exceeded ";
+	buffer << '(' << nlost << '/' << nstart << ") at " << c_id;
+	SetMsg(buffer.str());
 }
 
-}; // end namespace ParticleTracking
+void CollimateParticleProcess::bin_lost_output(const PSvectorArray& lostb)
+{
+
+	double leng = currentComponent->GetLength();
+	int n = leng / 0.1;
+
+
+	bool overflow = false;
+	if ((leng/(double)n) != 0.0)
+	{
+		n++;
+		overflow = true;
+	}
+
+
+	//Create the array
+	double** lostp = new double*[n];
+	for(int i = 0; i<n; ++i)
+	{
+		lostp[i] = new double[3];
+	}
+	//fill the aray
+	for(int j = 0; j<n; j++)
+	{
+		lostp[j][0] = 0.1*j;	//Start position
+		lostp[j][1] = 0.1;	//Length
+		lostp[j][2] = 0.0;	//Entries
+	}
+	//deal with the last bin
+	if(overflow)
+	{
+		lostp[n-1][0] = 0.1*(n-1);
+		lostp[n-1][1] = leng - (0.1*(n-1));
+		lostp[n-1][2] = 0.0;
+	}
+
+
+	for(size_t l = 0; l < lostb.size(); l++)
+	{
+		int x = lostb[l].ct()/0.1;
+		lostp[x][2]++;
+	}
+
+	for(int j = 0; j<n; j++)
+	{
+		cout << lostp[j][0] << "\t" << lostp[j][1] << "\t" << lostp[j][2] << endl;
+	}
+}
+
+} // end namespace ParticleTracking

@@ -18,7 +18,7 @@ class Collimator_Database
 public:
 
 //Constructor
-Collimator_Database(char*, Material_Database*, bool use_sigma);
+Collimator_Database(string, Material_Database*, bool use_sigma);
 
 struct collimator
 {

@@ -71,5 +71,5 @@ public:
 		cout<<endl;
 	}
 }; // end ProtonBunch class
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif
