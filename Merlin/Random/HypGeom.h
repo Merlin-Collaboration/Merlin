@@ -52,7 +52,7 @@ inline HyperGeometric::HyperGeometric(double mean, double variance, RNG *gen)
     setState();
 }
 
-inline double HyperGeometric::mean() { return pMean; };
+inline double HyperGeometric::mean() { return pMean; }
 
 inline double HyperGeometric::mean(double x) {
     double t = pMean; pMean = x;

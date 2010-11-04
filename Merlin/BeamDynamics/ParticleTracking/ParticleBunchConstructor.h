@@ -143,6 +143,6 @@ inline ParticleBunch* ParticleBunchConstructor::ConstructParticleBunch () const
 //    return static_cast<ParticleBunch*>(ParticleBunchConstructor::ConstructBunch<ParticleBunch>());
 }
 
-}; //end namespace ParticleTracking
+} //end namespace ParticleTracking
 
 #endif

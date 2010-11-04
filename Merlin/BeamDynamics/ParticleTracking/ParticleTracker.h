@@ -42,6 +42,6 @@
 namespace ParticleTracking
 {
 typedef TTrackSim<ParticleComponentTracker> ParticleTracker;
-};
+}
 
 #endif

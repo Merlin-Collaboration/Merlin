@@ -63,11 +63,11 @@ inline double Weibull::alpha(double x) {
     return tmp;
 }
 
-inline double Weibull::beta() { return pBeta; };
+inline double Weibull::beta() { return pBeta; }
 inline double Weibull::beta(double x) {
     double tmp = pBeta;
     pBeta = x;
     return tmp;
-};
+}
 
 #endif

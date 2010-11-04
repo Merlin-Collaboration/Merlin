@@ -105,6 +105,6 @@ class MarkerCI : public SMPComponentTracker::Integrator<Marker> {
 protected:
     void TrackStep (double ds) { return; }
 };
-};
+}
 
 #endif

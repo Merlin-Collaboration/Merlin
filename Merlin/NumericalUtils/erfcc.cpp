@@ -20,7 +20,7 @@ using namespace std;
 // Error function and complimentry error function
 // Taken for NRiC (and modified)
 
-double erfc(double x)
+double erfc(double x) throw ()
 {
     double t,z,ans;
     z=fabs(x);

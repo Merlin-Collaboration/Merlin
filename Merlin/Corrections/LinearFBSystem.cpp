@@ -28,7 +28,7 @@ double ChannelRMS(const ROChannelArray& channels)
     return sqrt(v*v/v.size());
 }
 
-};
+}
 
 LinearFBSystem::LinearFBSystem (std::vector<ROChannel*>& sigs, std::vector<RWChannel*>& acts, const RealMatrix& M)
         : gain(1.0),signals(sigs),actuators(acts),setpoints(0.0,sigs.size()),cached_actuators(0),Mi(0),

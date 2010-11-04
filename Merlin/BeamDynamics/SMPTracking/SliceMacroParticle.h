@@ -72,6 +72,6 @@ inline std::istream& operator>>(std::istream& is, SliceMacroParticle& p)
     p.Read(is); return is;
 }
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking
 
 #endif

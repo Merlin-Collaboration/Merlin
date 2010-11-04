@@ -245,7 +245,7 @@ protected:
 #define DECL_INTG_SET(T,S) struct S : public T::ISetBase { void Init(T& ct) const; }; 
 #define DEF_INTG_SET(T,S) void S::Init(T& ct) const {
 #define ADD_INTG(iname) ct.Register(new iname ());
-#define END_INTG_SET };
+#define END_INTG_SET }
 #define MAKE_DEF_INTG_SET(T,S) T::ISetBase* T::defIS = new S ();
 
 // implementations

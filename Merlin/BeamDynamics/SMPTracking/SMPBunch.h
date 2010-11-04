@@ -120,6 +120,6 @@ private:
     SliceMPArray slices;
 };
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking
 
 #endif

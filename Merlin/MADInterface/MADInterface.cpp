@@ -200,7 +200,7 @@ void check_column_heading(istream& is, const string& hd)
 	}
 }
 
-}; // Namespace end
+} // Namespace end
 
 // Class MADInterface
 MADInterface::MADInterface (const std::string& madFileName, double P0)
@@ -479,7 +479,7 @@ double MADInterface::ReadComponent ()
 	name=StripQuotes(name);
 	type=StripQuotes(type);
 
-//	cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
+	//cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
 
 	AcceleratorComponent *component;
 	double brho = energy/eV/SpeedOfLight;
@@ -947,6 +947,10 @@ double MADInterface::ReadComponent ()
 	{
 		MerlinIO::error()<<"L not present in table"<<endl;
 		abort();
+	}
+	if(component)
+	{
+		component->SetComponentLatticePosition(z);
 	}
 
 	return component ? component->GetLength() : 0.0;

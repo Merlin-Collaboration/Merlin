@@ -155,6 +155,6 @@ void LCAVIntegrator::TrackStep (double ds)
     return;
 }
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 

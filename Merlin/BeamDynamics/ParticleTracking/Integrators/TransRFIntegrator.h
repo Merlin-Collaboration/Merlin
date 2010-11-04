@@ -32,7 +32,6 @@ private:
     void ApplyEndField(double gsgn);
 };
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif
-

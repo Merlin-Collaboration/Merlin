@@ -73,7 +73,7 @@ void IntegrateEigenvector::polint(double xa[], double ya[], int n, double x, dou
         }
         y += (dy=(2*ns < (n-m) ? c[ns+1] : d[ns--]));
     }
-};
+}
 
 double IntegrateEigenvector::trapzd(double a, double b, int n)
 {
@@ -94,7 +94,7 @@ double IntegrateEigenvector::trapzd(double a, double b, int n)
         s = 0.5*( s + (b-a)*sum/tnm );
         return s;
     }
-};
+}
 
 double IntegrateEigenvector::qromb(double a, double b)
 {
@@ -114,7 +114,7 @@ double IntegrateEigenvector::qromb(double a, double b)
         h[j+1] = 0.25*h[j];
     }
     return 0;
-};
+}
 
 double IntegrateEigenvector::Integral(ComplexVector& Ek, SectorBend* sb, double p0)
 {
@@ -126,9 +126,9 @@ double IntegrateEigenvector::Integral(ComplexVector& Ek, SectorBend* sb, double 
     tanE1 = pf ? tan( pf->rot ) : 0.0;
 
     return qromb(0, sb->GetLength());
-};
+}
 
-IntegrateWithGradient::IntegrateWithGradient() {};
+IntegrateWithGradient::IntegrateWithGradient() {}
 
 double IntegrateWithGradient::func(double s)
 {
@@ -138,9 +138,9 @@ double IntegrateWithGradient::func(double s)
 
     Complex Ek5l = sbendTM51 * ek(0) + sbendTM52 * ek(1) + ek(4) + sbendTM56 * ek(5);
     return abs(Ek5l) * abs(Ek5l);
-};
+}
 
-IntegrateZeroGradient::IntegrateZeroGradient() {};
+IntegrateZeroGradient::IntegrateZeroGradient() {}
 
 double IntegrateZeroGradient::func(double s)
 {
@@ -150,7 +150,7 @@ double IntegrateZeroGradient::func(double s)
 
     Complex Ek5l = sbendTM51 * ek(0) + sbendTM52 * ek(1) + ek(4) + sbendTM56 * ek(5);
     return abs(Ek5l) * abs(Ek5l);
-};
+}
 
 EquilibriumDistribution::EquilibriumDistribution(AcceleratorModel* aModel, double refMomentum)
         : theModel(aModel), p0(refMomentum)
@@ -167,28 +167,28 @@ EquilibriumDistribution::EquilibriumDistribution(AcceleratorModel* aModel, doubl
 double EquilibriumDistribution::DampingConstant(int n)
 {
     return dampingConstant[n];
-};
+}
 
 double EquilibriumDistribution::DampingTime(int n)
 {
     double trev = (*theModel).GetGlobalFrame().GetGeometryLength() / SpeedOfLight;
     return trev/dampingConstant[n];
-};
+}
 
 double EquilibriumDistribution::Tune(int n)
 {
     return tune[n];
-};
+}
 
 double EquilibriumDistribution::Emittance(int n)
 {
     return emittance[n];
-};
+}
 
 double EquilibriumDistribution::SynchronousTime()
 {
     return synchronousTime;
-};
+}
 
 void EquilibriumDistribution::CalculateDampingConstants()
 {

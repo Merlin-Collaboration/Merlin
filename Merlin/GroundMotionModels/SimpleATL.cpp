@@ -83,7 +83,7 @@ struct DumpOffset {
     ostream& os;
 };
 
-}; // end of annonymous namespace
+} // end of annonymous namespace
 
 SimpleATL::SimpleATL (double anA, const AcceleratorSupportList& supports, double vrms)
         : t(0),A(anA),seed(0),vv(vrms*vrms),atlgm(supports.size(),0.0),theSupports(supports),

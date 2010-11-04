@@ -93,7 +93,7 @@ template<class T> double Inverse(Matrix<T>& a)
     }
     return minpiv;
 }
-}; // end anonymous namespace
+} // end anonymous namespace
 
 namespace TLAS {
 
@@ -405,5 +405,4 @@ void EigenSystemSymmetricMatrix(RealMatrix& m, RealVector& eigenvalues)
     tqli(eigenvalues, e, m);
 }
 
-}; // end namespace TLAS
-
+} // end namespace TLAS

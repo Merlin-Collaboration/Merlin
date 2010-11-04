@@ -27,9 +27,6 @@ ADD_INTG(SolenoidCI)
 ADD_INTG(MarkerCI)
 END_INTG_SET
 
-}; //end namespace SMPTracking
+} //end namespace SMPTracking
 
-template<> MAKE_DEF_INTG_SET(SMPTracking::SMPComponentTracker,SMPTracking::StdISet);
-
-
-
+template<> MAKE_DEF_INTG_SET(SMPTracking::SMPComponentTracker,SMPTracking::StdISet)

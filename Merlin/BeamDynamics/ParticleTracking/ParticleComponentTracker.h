@@ -34,7 +34,7 @@
 
 namespace ParticleTracking {
 typedef TBunchCMPTracker<ParticleBunch> ParticleComponentTracker;
-};
+}
 
 
 #endif

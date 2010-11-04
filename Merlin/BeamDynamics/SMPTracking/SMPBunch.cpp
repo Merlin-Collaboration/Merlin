@@ -62,7 +62,7 @@ SMPBunch::SMPBunch (const std::string& fname)
 
     sort(begin(),end());
     SetChargeSign(Qt);
-};
+}
 
 SMPBunch::~SMPBunch ()
 {
@@ -207,4 +207,4 @@ void SMPBunch::AdjustCentroid(const PSvector & s)
     }
 }
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking

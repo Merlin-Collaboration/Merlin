@@ -71,7 +71,7 @@ void RotateMoments(const R2Map& R, PSmoments4D& S)
     S(3,2)=s32;
     S(3,3)=s33;
 }
-};
+}
 
 namespace SMPTracking {
 
@@ -113,5 +113,4 @@ SliceMacroParticle& SMPTransform3D::Apply(SliceMacroParticle& p) const
     return p;
 }
 
-}; // end namespace SMPTracking
-
+} // end namespace SMPTracking

@@ -21,7 +21,7 @@ const double millisecond = 1.0e-03*second;
 const double microsecond = 1.0e-06*second;
 const double nanosecond = 1.0e-09*second;
 const double picosecond = 1.0e-12*second;
-const double minute =60*second;
+const double minute = 60*second;
 const double hour = 60*minute;
 const double day = 24*hour;
 const double year = 365*day;
@@ -58,4 +58,4 @@ double Tesla=1.0;
 double kGauss=1.0e-1*Tesla;
 double Gauss=1.0e-3*kGauss;
 
-};
+}

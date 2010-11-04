@@ -28,9 +28,9 @@ namespace SMPTracking {
 typedef TBunchCMPTracker<SMPBunch> SMPComponentTracker;
 
 // Standard integrator set
-DECL_INTG_SET(SMPComponentTracker,StdISet);
+DECL_INTG_SET(SMPComponentTracker,StdISet)
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking
 
 
 #endif

@@ -345,7 +345,7 @@ default:
 
 #define TYPEIS(kw) (dat.keywrd == #kw)
 
-}; // end namespace
+} // end namespace
 
 void XTFFInterface::ConstructComponent(XTFF_Data& dat)
 {

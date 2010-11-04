@@ -31,16 +31,16 @@ TaperedCollimatorPotentials::TaperedCollimatorPotentials(int m, double aa, doubl
 		coeff[i]=2*(1./pow(a,2*i)-1./pow(b,2*i)); 
 	}      
 
-};
+}
 TaperedCollimatorPotentials::~TaperedCollimatorPotentials(){
     	if(coeff!=0) delete[] coeff;
-};
+}
 double TaperedCollimatorPotentials::Wlong (double z, int m) const {
     	return z>0? -((m)/a*coeff[m]/exp((m)*z/a)):0 ;
-};
+}
 double TaperedCollimatorPotentials::Wtrans(double z, int m) const {
     	return z>0? coeff[m]/exp((m)*z/a):0;
-};
+}
 //------------------------------------------------------------------------------------------------------------
 //      the resistive wake potentials  (in MKS ssytem)
 //------------------------------------------------------------------------------------------------------------
@@ -55,13 +55,13 @@ ResistiveWakePotentials::ResistiveWakePotentials(int m, double r, double s, doub
 		coeff[i]= 1/pi*pow(rad,2*i+1)*(1+delta);
 	}
 
-};
+}
 ResistiveWakePotentials::~ResistiveWakePotentials(){
     	if(coeff!=0) delete[] coeff;
-};
+}
 double ResistiveWakePotentials::Wlong (double z, int m) const {
    	return z>0? coeff[m]*sqrt(1/sigma*376.6)*sqrt(z)*length:0;
-};
+}
 double ResistiveWakePotentials::Wtrans(double z, int m) const {
    	return z>0? -2*coeff[m]*sqrt(SpeedOfLight/sigma)*length/sqrt(z):0;
-};
+}

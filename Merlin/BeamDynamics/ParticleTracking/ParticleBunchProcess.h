@@ -23,6 +23,6 @@ namespace ParticleTracking {
 
 typedef TBunchProc<ParticleBunch> ParticleBunchProcess;
 
-};
+}
 
 #endif

@@ -83,7 +83,7 @@ struct DumpOffset {
     double time;
 };
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 
 ATL2D::ATL2D (double anA, const AcceleratorSupportList& supports, const Point2D refPoint, ifstream* evecTFile, ifstream* evalFile)

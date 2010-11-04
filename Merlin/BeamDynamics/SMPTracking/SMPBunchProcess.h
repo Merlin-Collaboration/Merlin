@@ -23,6 +23,6 @@ namespace SMPTracking {
 
 typedef TBunchProc<SMPBunch> SMPBunchProcess;
 
-};
+}
 
 #endif

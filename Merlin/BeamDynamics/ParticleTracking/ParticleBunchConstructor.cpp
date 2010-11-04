@@ -140,6 +140,7 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
         case ringDistribution:
 	           rx = sqrt(beamdat.emit_x);
 	           ry = sqrt(beamdat.emit_y);
+//	           pbunch.pop_back();
 	           for(i=1; i<np;) {
 	               u = RandomNG::uniform(-pi,pi);
 	               p.x()	= rx * cos(u);
@@ -263,6 +264,4 @@ ParticleBunchFilter::~ParticleBunchFilter ()
     // Nothing to do
 }
 
-}; //end namespace ParticleTracking
-
-
+} //end namespace ParticleTracking

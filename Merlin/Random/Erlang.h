@@ -57,7 +57,7 @@ inline Erlang::Erlang(double mean, double variance, RNG *gen) : Random(gen)
 inline double Erlang::mean() { return pMean; }
 inline double Erlang::mean(double x) {
     double tmp = pMean; pMean = x; setState(); return tmp;
-};
+}
 
 inline double Erlang::variance() { return pVariance; }
 inline double Erlang::variance(double x) {

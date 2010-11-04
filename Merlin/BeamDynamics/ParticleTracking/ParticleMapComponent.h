@@ -102,5 +102,5 @@ inline double ParticleMapComponent::GetIntB2ds () const
     return ib2;
 }
 
-}; //end namespace ParticleTracking
+} //end namespace ParticleTracking
 #endif

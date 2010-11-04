@@ -266,4 +266,4 @@ void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 //	delete bunchafterfile1;
 //	delete logfile;
 }
-}; //end namespace ParticleTracking
+} //end namespace ParticleTracking

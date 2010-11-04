@@ -62,8 +62,6 @@ public:
     SpoilerWakePotentials* spoiler_wake;  
 };
 
-};
+}
 
 #endif
-
-

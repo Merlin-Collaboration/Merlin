@@ -308,6 +308,6 @@ template<class T> inline T Det(const Matrix<T>& m)
 // SVD routines
 	#include "TLAS/svdcmp.h"
 
-}; // end namespace TLAS
+} // end namespace TLAS
 
 #endif // _h_TLASimp

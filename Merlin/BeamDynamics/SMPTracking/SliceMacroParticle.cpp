@@ -96,4 +96,4 @@ void SliceMacroParticle::Read(istream& is)
     }
 }
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking

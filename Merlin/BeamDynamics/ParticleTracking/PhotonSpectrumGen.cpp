@@ -21,7 +21,7 @@ double SynGenC(double x);
 
 // Random number generator [0-1]
 double Ran1();
-};
+}
 
 double HBSpectrumGen(double uc)
 {
@@ -197,5 +197,4 @@ double SynRadC(double x)
     return synrad;
 }
 
-};
-
+}

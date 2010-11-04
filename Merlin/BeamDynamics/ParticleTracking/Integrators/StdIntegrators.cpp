@@ -116,7 +116,7 @@ struct ApplyRFdp {
 		}
 	}
 };
-};
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // Integrator classes
@@ -137,8 +137,8 @@ ADD_INTG(TransRFIntegrator)
 ADD_INTG(MonitorCI)
 ADD_INTG(SolenoidCI)
 ADD_INTG(MarkerCI)
-ADD_INTG(ParticleMapCI);
-END_INTG_SET;
+ADD_INTG(ParticleMapCI)
+END_INTG_SET
 
 void DriftCI::TrackStep (double ds)
 {
@@ -484,7 +484,7 @@ void ExactRectMultipoleCI::TrackStep (double ds)
 }
 *****************************************************************/
 
-}; // end namespace THIN_LENS
+} // end namespace THIN_LENS
 
 // Class MonitorCI
 
@@ -548,6 +548,4 @@ void MarkerCI::TrackStep(double)
     return;
 }
 
-}; // end namespace ParticleTracking
-
-
+} // end namespace ParticleTracking

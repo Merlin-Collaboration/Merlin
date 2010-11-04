@@ -118,7 +118,7 @@ double EqualSpacedData::ValueAt(double x) const throw(Interpolation::BadRange)
     return yvals[n]+m*(x-x0);
 }
 
-};
+}
 
 // exception
 Interpolation::BadRange::BadRange(double x, const FloatRange& r)

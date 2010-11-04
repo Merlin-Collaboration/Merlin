@@ -74,4 +74,4 @@ void ParticleMapComponent::PrepareTracker (ComponentTracker& aTracker)
 {
     _PREPTRACK(aTracker,AcceleratorComponent)
 }
-}; //end namespace ParticleTracking
+} //end namespace ParticleTracking

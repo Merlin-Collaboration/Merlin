@@ -29,34 +29,34 @@ using namespace ParticleTracking;
 using namespace TLAS;
 
 LatticeFunction::LatticeFunction(int _i, int _j, int _k) : i(_i), j(_j), k(_k)
-{ };
+{ }
 
 LatticeFunction::~LatticeFunction()
 {
     value.clear();
-};
+}
 
 void LatticeFunction::GetIndices(int& _i, int& _j, int& _k)
 {
     _i = i;
     _j = j;
     _k = k;
-};
+}
 
 void LatticeFunction::AppendValue(double v)
 {
     value.push_back(v);
-};
+}
 
 void LatticeFunction::ClearValues()
 {
     value.clear();
-};
+}
 
 double LatticeFunction::GetValue(int n)
 {
     return value[n];
-};
+}
 
 vector<double>::iterator LatticeFunction::begin()
 {
@@ -93,13 +93,13 @@ void LatticeFunction::Derivative(LatticeFunction* lfnM, LatticeFunction* lfnP, d
         value.push_back( dv );
         lfnMit++;
     };
-};
+}
 
 LatticeFunctionTable::LatticeFunctionTable(AcceleratorModel* aModel, double refMomentum)
         : theModel(aModel), p0(refMomentum), delta(1.0e-8), bendscale(1.0e-16), symplectify(false), orbitonly(true)
 {
     UseDefaultFunctions();
-};
+}
 
 struct DeleteLatticeFunction
 {
@@ -112,22 +112,22 @@ LatticeFunctionTable::~LatticeFunctionTable()
 {
     for_each(lfnlist.begin(),lfnlist.end(),DeleteLatticeFunction());
     lfnlist.clear();
-};
+}
 
 void LatticeFunctionTable::SetDelta(double new_delta)
 {
     delta = new_delta;
-};
+}
 
 void LatticeFunctionTable::ScaleBendPathLength(double scale)
 {
     bendscale = scale;
-};
+}
 
 void LatticeFunctionTable::MakeTMSymplectic(bool flag)
 {
     symplectify = flag;
-};
+}
 
 void LatticeFunctionTable::AddFunction(int i, int j, int k)
 {
@@ -135,7 +135,7 @@ void LatticeFunctionTable::AddFunction(int i, int j, int k)
     lfnlist.push_back(lfn);
     if(k!=0)
         orbitonly = false;
-};
+}
 
 void LatticeFunctionTable::UseDefaultFunctions()
 {
@@ -150,7 +150,7 @@ void LatticeFunctionTable::UseDefaultFunctions()
     AddFunction(1,2,1); // -alfa_x
     AddFunction(3,3,2); // beta_y
     AddFunction(3,4,2); // -alfa_y
-};
+}
 
 void LatticeFunctionTable::UseOrbitFunctions()
 {
@@ -159,13 +159,13 @@ void LatticeFunctionTable::UseOrbitFunctions()
     AddFunction(2,0,0); // closed orbit: px
     AddFunction(3,0,0); // closed orbit: y
     AddFunction(4,0,0); // closed orbit: py
-};
+}
 
 void LatticeFunctionTable::Size(int& rows, int& cols)
 {
     rows = NumberOfRows();
     cols = lfnlist.size();
-};
+}
 
 void LatticeFunctionTable::RemoveAllFunctions()
 {
@@ -173,7 +173,7 @@ void LatticeFunctionTable::RemoveAllFunctions()
     lfnlist.clear();
     AddFunction(0,0,0);
     orbitonly = true;
-};
+}
 
 struct ClearLatticeFunction
 {
@@ -401,7 +401,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 //	MatrixForm(M2,mfile,OPFormat().precision(6).fixed());
 
     return p.dp();
-};
+}
 
 double LatticeFunctionTable::DoCalculateOrbitOnly(double cscale, PSvector* pInit)
 {
@@ -446,7 +446,7 @@ double LatticeFunctionTable::DoCalculateOrbitOnly(double cscale, PSvector* pInit
     } while(loop);
 
     return p.dp();
-};
+}
 
 struct PrintLatticeFunction
 {
@@ -468,7 +468,7 @@ public:
 int LatticeFunctionTable::NumberOfRows()
 {
     return (*(lfnlist.begin()))->size();
-};
+}
 
 void LatticeFunctionTable::PrintTable(ostream& os, int n1, int n2)
 {
@@ -483,7 +483,7 @@ void LatticeFunctionTable::PrintTable(ostream& os, int n1, int n2)
         for_each(lfnlist.begin(), lfnlist.end(), PrintLatticeFunction(row,os));
         os<<endl;
     };
-};
+}
 
 int LatticeFunctionTable::GetSPosIndex(double s)
 {
@@ -494,13 +494,13 @@ int LatticeFunctionTable::GetSPosIndex(double s)
             return n;
 
     return -1;
-};
+}
 
 double LatticeFunctionTable::Value(int i, int j, int k, int ncpt)
 {
     vectorlfn::iterator lfnit = GetColumn(i, j, k);
     return (*lfnit)->GetValue(ncpt);
-};
+}
 
 vectorlfn::iterator LatticeFunctionTable::GetColumn(int i, int j, int k)
 {
@@ -514,7 +514,7 @@ vectorlfn::iterator LatticeFunctionTable::GetColumn(int i, int j, int k)
     };
 
     return lfnit;
-};
+}
 
 double LatticeFunctionTable::Mean(int i, int j, int k, int n1, int n2)
 {
@@ -537,7 +537,7 @@ double LatticeFunctionTable::Mean(int i, int j, int k, int n1, int n2)
     };
 
     return sumv/sums;
-};
+}
 
 double LatticeFunctionTable::RMS(int i, int j, int k, int n1, int n2)
 {
@@ -561,4 +561,4 @@ double LatticeFunctionTable::RMS(int i, int j, int k, int n1, int n2)
     };
 
     return sqrt(sumv/sums);
-};
+}

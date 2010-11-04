@@ -71,5 +71,4 @@ SMPTracking::SMPBunch* ParticleBunchConverter(ParticleTracking::ParticleBunch*  
     
     return bunch;
 
-};
-
+}

@@ -45,7 +45,7 @@ inline RealVector MultiNormal<N>::GetRandVec() {  // v=Lx+m
                 x[i]+=L(i,j)*x[j];
           }
           return RealVector(x,N);
-};
+}
             
 template<int N>
     MultiNormal<N>::MultiNormal(const RealMatrix& Cov, const RealVector& M) : Mean(M), L(Cov) {
@@ -53,7 +53,7 @@ template<int N>
         CholeskyDecomp();
         // MatrixForm(L,cout,OPFormat().precision(6).fixed());
         x = new double[N];
-    };
+    }
     
 template<int N>
     MultiNormal<N>::MultiNormal(const TCovMtrx<double, N>& Cov, const RealVector& M)
@@ -64,7 +64,7 @@ template<int N>
         CholeskyDecomp();
         // MatrixForm(L,cout,OPFormat().precision(6).fixed());
         x = new double[N];
-    };
+    }
 
 template<int N>
     MultiNormal<N>::MultiNormal(const TPSMoments<N/2>& pm)
@@ -75,10 +75,10 @@ template<int N>
         }
         CholeskyDecomp();
         x = new double[N];
-    };
+    }
 
 template<int N>
-    MultiNormal<N>::~MultiNormal(){ delete[] x; };
+    MultiNormal<N>::~MultiNormal(){ delete[] x; }
 
 template<int N>
     void MultiNormal<N>::CholeskyDecomp() { // copied from John Ellithorpe based on Numerival Recipeces
@@ -103,9 +103,8 @@ template<int N>
               }
          }
          for(i=0;i<N;i++) L(i,i)=dp[i];
-    };
+    }
 
      
 
 #endif
-

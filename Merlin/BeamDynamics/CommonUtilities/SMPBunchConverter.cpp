@@ -95,4 +95,4 @@ ParticleTracking::ParticleBunch* SMPBunchConverter(SMPTracking::SMPBunch*  SB, i
 
     return np;
 
-};
+}

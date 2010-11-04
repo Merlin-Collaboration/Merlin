@@ -54,6 +54,6 @@ private:
     bool nullRotation;
 };
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking
 
 #endif // SMPTransform3D_h

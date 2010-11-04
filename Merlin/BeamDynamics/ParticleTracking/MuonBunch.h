@@ -41,17 +41,18 @@ public:
 	virtual double GetParticleLifetime() const;
 
 	
-	int Scatter(PSvector& pi, double x, double E0, const Aperture* ap);
+	//int Scatter(PSvector& pi, double x, double E0, const Aperture* ap);
+	int Scatter(PSvector&, double, double, const Aperture*);
 
 	void set()
 	{
-		for(int i=0;i<ntally;tally[i++]=0);
+		for(int i=0;i<ntally;tally[i++]=0){}
 	}
 
 	void report()
 	{
 		cout<<"Muon Scatter tallies ";
-		for(int i=0; i<ntally; cout << tally[i++] << " ");
+		for(int i=0; i<ntally; cout << tally[i++] << " "){}
 		cout<<endl;
 	}
 }; // end MuonBunch class

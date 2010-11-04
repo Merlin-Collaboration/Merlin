@@ -49,7 +49,7 @@ inline Normal::Normal(double xmean, double xvariance, RNG *gen)
     haveCachedNormal = 0;
 }
 
-inline double Normal::mean() { return pMean; };
+inline double Normal::mean() { return pMean; }
 inline double Normal::mean(double x) {
     double t=pMean; pMean = x;
     return t;
@@ -60,6 +60,6 @@ inline double Normal::variance(double x) {
     double t=pVariance; pVariance = x;
     pStdDev = sqrt(pVariance);
     return t;
-};
+}
 
 #endif

@@ -100,9 +100,6 @@ public:
 //    void Set_y_emittance(double emittance);
 
 protected:
-    double z;	//Distance along the lattice
-//    double emittance_x;
-//    double emittance_y;
     double energy;
     ifstream *ifs;
     ostream* log;
@@ -122,6 +119,7 @@ protected:
     double ReadComponent ();
     void Initialise();
     Collimator_Database* collimator_db;
+    double z;	//Distance along the lattice
 };
 
 inline void MADInterface::SetLogFile (ostream& os)

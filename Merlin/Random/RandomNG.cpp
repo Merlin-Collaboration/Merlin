@@ -24,7 +24,7 @@ namespace {
 // table size for random number generator
 	#define TABLE_SIZE 100
 
-};
+}
 
 RandGenerator* RandomNG::generator;
 
@@ -122,4 +122,3 @@ void RandGenerator::ResetGenerators ()
     uniformGen = new Uniform(0,1,gen);
     poissonGen = new Poisson(1,gen);
 }
-

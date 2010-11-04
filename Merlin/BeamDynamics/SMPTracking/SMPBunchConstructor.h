@@ -47,6 +47,6 @@ private:
     double nSigZ,nSigDP;
 };
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking
 
 #endif

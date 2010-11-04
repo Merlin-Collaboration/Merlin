@@ -85,7 +85,7 @@ inline ParticleMap::~ParticleMap ()
 
 // Class ParticleMap
 
-}; //end namespace ParticleTracking
+} //end namespace ParticleTracking
 
 
 

@@ -25,5 +25,5 @@ public:
 
 };
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif

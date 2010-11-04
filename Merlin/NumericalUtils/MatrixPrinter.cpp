@@ -26,7 +26,7 @@ inline int max(int a, int b)
     return (a>b)?a:b;
 }
 
-}; // end anonymous namespace
+} // end anonymous namespace
 
 void MatrixForm(const RealMatrix& M, std::ostream& os, const OPFormat& fmt)
 {

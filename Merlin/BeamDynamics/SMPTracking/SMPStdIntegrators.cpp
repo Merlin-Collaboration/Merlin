@@ -424,4 +424,4 @@ void SWRFStructureCI::TrackStep(double ds)
     return;
 }
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking

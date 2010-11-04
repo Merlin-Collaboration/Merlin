@@ -96,6 +96,11 @@ public:
     //	Unique index for an Accelerator component.
     static const int ID;
 
+    //Set the distance from the start of the lattice to the START of the element
+    void SetComponentLatticePosition(double);
+
+    //Get the distance from the start of the lattice to the START of the element    
+    double GetComponentLatticePosition() const;
 protected:
 
     //	Protected constructors used by derived classes.
@@ -115,7 +120,7 @@ protected:
     AcceleratorGeometry* itsGeometry;
     Aperture* itsAperture;
     WakePotentials* itsWakes;
-
+    double position;
 	// beamline index associated with this component
 	size_t blI; 
 private:
@@ -185,4 +190,14 @@ inline void AcceleratorComponent::AppendBeamlineIndecies(std::vector<size_t>& iv
 	ivec.push_back(blI);
 }
 
+inline void AcceleratorComponent::SetComponentLatticePosition(double distance)
+{
+	position = distance;
+}
+
+
+inline double AcceleratorComponent::GetComponentLatticePosition() const
+{
+	return position;
+}
 #endif

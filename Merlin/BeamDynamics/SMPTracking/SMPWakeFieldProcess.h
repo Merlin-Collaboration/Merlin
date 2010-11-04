@@ -71,6 +71,6 @@ private:
 
 };
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking
 
 #endif

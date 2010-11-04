@@ -36,18 +36,18 @@
 namespace ParticleTracking {
 
 // common integrators
-DECL_SIMPLE_INTG(MonitorCI,Monitor);
-DECL_SIMPLE_INTG(MarkerCI,Marker);
-DECL_SIMPLE_INTG(SolenoidCI,Solenoid);
-//DECL_SIMPLE_INTG(ParticleMapCI,ParticleMapComponent);
+DECL_SIMPLE_INTG(MonitorCI,Monitor)
+DECL_SIMPLE_INTG(MarkerCI,Marker)
+DECL_SIMPLE_INTG(SolenoidCI,Solenoid)
+//DECL_SIMPLE_INTG(ParticleMapCI,ParticleMapComponent)
 
 namespace THIN_LENS {
 
-DECL_SIMPLE_INTG(DriftCI,Drift);
-DECL_SIMPLE_INTG(KickerCI,Kicker);
-DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole);
-DECL_SIMPLE_INTG(TWRFStructureCI,TWRFStructure);
-DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure);
+DECL_SIMPLE_INTG(DriftCI,Drift)
+DECL_SIMPLE_INTG(KickerCI,Kicker)
+DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
+DECL_SIMPLE_INTG(TWRFStructureCI,TWRFStructure)
+DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure)
 
 class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend> {
 public:
@@ -59,13 +59,13 @@ protected:
 };
 
 DECL_INTG_SET(ParticleComponentTracker,StdISet)
-};
+} //end namespace THIN_LENS
 
 namespace TRANSPORT {
 
-DECL_SIMPLE_INTG(DriftCI,Drift);
-DECL_SIMPLE_INTG(KickerCI,Kicker);
-DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole);
+DECL_SIMPLE_INTG(DriftCI,Drift)
+DECL_SIMPLE_INTG(KickerCI,Kicker)
+DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
 
 class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend> {
 public:
@@ -77,8 +77,8 @@ protected:
 };
 
 DECL_INTG_SET(ParticleComponentTracker,StdISet)
-};
+} //end namespace TRANSPORT
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif

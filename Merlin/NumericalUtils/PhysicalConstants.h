@@ -52,6 +52,7 @@ extern const double MuonMassMeV;
 
 extern const double MuonLifetime;
 
+extern const double FineStructureConstant;
 }
 
 // Class Utility PhysicalConstants

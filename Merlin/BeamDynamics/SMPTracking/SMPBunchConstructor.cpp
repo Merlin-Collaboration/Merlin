@@ -26,7 +26,7 @@ void MakeDistribution(double ns, vector<double>& d)
         d[n] = NormalBin(x,x+dx);
 }
 
-}; // end anonymous namespace
+} // end anonymous namespace
 
 
 namespace SMPTracking {
@@ -94,5 +94,4 @@ SMPBunch* SMPBunchConstructor::ConstructSMPBunch () const
     return static_cast<SMPBunch*>(ConstructBunch());
 }
 
-}; // end namespace SMPTracking
-
+} // end namespace SMPTracking

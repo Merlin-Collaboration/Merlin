@@ -71,7 +71,7 @@ struct AWK {
         p(3,3)*=Er2;
     }
 };
-};
+}
 
 namespace SMPTracking {
 
@@ -253,4 +253,4 @@ void WakeFieldProcess::PrepSlices()
     //		cout<<slice_z.size()<<" bins identified"<<endl;
 }
 
-}; // end namespace SMPTracking
+} // end namespace SMPTracking

@@ -22,7 +22,7 @@ namespace {
 
 		return make_pair(y_plane,theta_plane);
 	}
-};
+}
 
 void ScatterParticle(PSvector& p, double X0, double x, double E0)
 {
@@ -67,4 +67,3 @@ void ScatterParticle(PSvector& p, double X0, double x, double E0)
 	p.y() += s.first;
 	p.yp()+= s.second;
 }
-

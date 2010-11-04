@@ -1,6 +1,8 @@
 # the compiler to use
+#export CPP= g++451
 export CPP= g++43
 #export CPP=distcc
+#export LINK=gcc451
 export LINK=gcc43
 #export LINK=gcc45svn
 
@@ -57,7 +59,7 @@ ifeq ($(build),debug)
 	CCFLAGS = -ggdb3 -pg -Wall -W -Wextra -pipe -fPIC -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)debug
 else ifeq ($(build),release)
-	CCFLAGS = -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP -O2 -mtune=generic -msse -msse2 -mfpmath=sse -pipe  # -ffloat-store -fno-signed-zeros
+	CCFLAGS = -fPIC -DNDEBUG -Wall -fopenmp -DENABLE_OPENMP -O2 -mtune=generic -msse -msse2 -mfpmath=sse -pipe  -pedantic # -ffloat-store -fno-signed-zeros
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
 	##set to the compiler one wishes openMPI to use

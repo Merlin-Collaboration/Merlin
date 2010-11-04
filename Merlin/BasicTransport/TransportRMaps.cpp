@@ -397,4 +397,4 @@ void SWRFCavity (int ncells, double g, double f, double phi, double E0, R2Map& R
     R.r22 = E0*(cosAlpha+root2*cosPhi*sinAlpha)/E1;
 }
 
-}; // end namespace TransportRMap
+} // end namespace TransportRMap

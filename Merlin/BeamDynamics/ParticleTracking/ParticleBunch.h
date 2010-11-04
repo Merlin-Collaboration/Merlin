@@ -137,8 +137,8 @@ public:
     int coords;
 
     //Per-particle type scattering.
-    virtual int Scatter(Particle& p, double x, double E0, const  Aperture* tap){return 0;}
-    virtual void Scatter(PSvector & p){ return;}
+    virtual int Scatter(Particle&, double, double, const Aperture*){return 0;}
+    virtual void Scatter(PSvector &){ return;}
 
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;

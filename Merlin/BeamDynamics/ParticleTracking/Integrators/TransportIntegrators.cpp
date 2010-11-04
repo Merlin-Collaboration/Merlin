@@ -39,13 +39,13 @@ ADD_INTG(SolenoidCI)
 ADD_INTG(THIN_LENS::SWRFStructureCI)
 ADD_INTG(MarkerCI)
 ADD_INTG(MonitorCI)
-END_INTG_SET;
+END_INTG_SET
 
-}; // end namespace TRANSPORT
-}; // end namespace ParticleTracking
+} // end namespace TRANSPORT
+} // end namespace ParticleTracking
 
 
-template<> MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::TRANSPORT::StdISet);
+template<> MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::TRANSPORT::StdISet)
 
 #define CHK_ZERO(s) if(s==0) return;
 
@@ -128,7 +128,7 @@ struct ApplyRFMap {
     {
         cosPhi0=cos(phi0);
         d0=1+Vn*cosPhi0;
-    };
+    }
 
     void operator()(PSvector& p) const {
         m->Apply(p);
@@ -183,7 +183,7 @@ inline bool operator!=(const Complex& z, double x)
 {
     return !(z==x);
 }
-};
+}
 
 namespace TRANSPORT {
 
@@ -449,6 +449,5 @@ void SWRFStructureCI::TrackStep(double ds)
 }
 **/
 
-}; // end of namespace TRANSPORT
-}; // end of namespace ParticleTracking
-
+} // end of namespace TRANSPORT
+} // end of namespace ParticleTracking
