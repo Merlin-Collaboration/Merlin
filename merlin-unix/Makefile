@@ -1,9 +1,9 @@
 # the compiler to use
 #export CPP= g++451
-export CPP= g++43
+export CPP= g++
 #export CPP=distcc
 #export LINK=gcc451
-export LINK=gcc43
+export LINK=gcc
 #export LINK=gcc45svn
 
 # the root directory for the Merlin source code
@@ -18,7 +18,7 @@ export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR}
 
-export CCFLAGS=-pipe -fPIC -DNDEBUG -fopenmp
+export CCFLAGS=-pipe -fPIC -O2 -pedantic -Wall
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/
 
 SUBDIRS= AcceleratorModel \
@@ -56,22 +56,22 @@ SUBDIRS= AcceleratorModel \
       RingDynamics 
 
 ifeq ($(build),debug)
-	CCFLAGS = -ggdb3 -pg -Wall -W -Wextra -pipe -fPIC -fopenmp -DENABLE_OPENMP
+	CCFLAGS:=${CCFLAGS} -ggdb3 -pg -W -Wextra -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)debug
 else ifeq ($(build),release)
-	CCFLAGS = -fPIC -DNDEBUG -Wall -fopenmp -DENABLE_OPENMP -O2 -mtune=generic -msse -msse2 -mfpmath=sse -pipe  -pedantic # -ffloat-store -fno-signed-zeros
+	CCFLAGS:=${CCFLAGS} -DNDEBUG -fopenmp -DENABLE_OPENMP -mtune=generic -msse -msse2 -mfpmath=sse
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
 	##set to the compiler one wishes openMPI to use
-	export OMPI_CXX=g++43
-	export OMPI_CC=gcc43
+	export OMPI_CXX=g++
+	export OMPI_CC=gcc
 	CPP=mpiCC
 	LINK=mpiCC
-	CCFLAGS=-DENABLE_MPI -pipe -fPIC -DNDEBUG -march=native -mfpmath=sse -O2  #-ffloat-store -fno-signed-zeros
+	CCFLAGS:= ${CCFLAGS} -DENABLE_MPI -DNDEBUG -march=native -mfpmath=sse
 	OBJDIR:= $(OBJDIR)mpi
 else
 	##Default to release if no type specified
-	CCFLAGS = -O3 -march=native -mfpmath=sse -pipe -fPIC -DNDEBUG -fopenmp -DENABLE_OPENMP
+	CCFLAGS:=${CCFLAGS} -march=native -mfpmath=sse -DNDEBUG -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)release
 endif
 default: build
