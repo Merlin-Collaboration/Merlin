@@ -7,6 +7,8 @@
 #include "Exception/MerlinException.h"
 #include "AcceleratorModel/Aperture.h"
 #include "AcceleratorModel/Apertures/TiltedAperture.hpp"
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_rng.h>
 
 using namespace std;
 using namespace ParticleTracking;
@@ -37,7 +39,7 @@ bool ProtonBunch::IsStable() const
 	return true;
 }
 
-int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
+int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 {
 	// p is the scattering Proton - a single particle.
 	// x is the length of the collimator
@@ -50,113 +52,31 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 
 	//proton-nucleon elastic		OK
 	//proton-nucleon inelastic		OK
-	//proton-nucleus elastic		TODO
+	//proton-nucleus elastic		OK
 	//proton-nucleus inelastic		OK
 
 	//Single Diffractive			OK - CHECK 1/26 FACTOR
 	//Rutherford scattering			TODO
 
+	if(!ScatterConfigured)
+	{
+		ConfigureScatter(ap);
+	}
+	const TiltedAperture* tap= dynamic_cast<const TiltedAperture*> (ap);
       
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
 	double z = 0; 	// distance travelled along the collimator. Units (m)
 
 	static const double MAXDP = 1.0 - 0.05;	// maximum allowed energy loss - 95%
 
-	//Do a cast to check if we have a "TiltedAperture"
-	const TiltedAperture* tap= dynamic_cast<const TiltedAperture*> (ap);
-	//  if((++counter %  10000) ==0) cout<<" Event "<<counter<<endl;
-	if(!tap)
-	{
-		throw MerlinException("ScatterProton : No Tilted Aperture");
-	}
-
-	const double sigma_pN_total_reference = tap->Material->sigma_pN_total;		//Material reference proton-Nucleus total scattering cross section
-	const double sigma_pN_inelastic_reference = tap->Material->sigma_pN_inelastic;	//Material reference proton-Nucleus inelastic scattering cross section
-	const double sigma_Rutherford_reference = tap->Material->sigma_Rutherford;		//Material reference Rutherford scattering cross section
-	//const double dEdx = tap->Material->dEdx*tap->Material->rho/10;			//dE/dx - (GeV m^-1)
-	const double dEdx = tap->Material->dEdx;					//dE/dx - (GeV m^-1)
-	const double rho = tap->Material->rho;						//density (g /cm^3)
-	const double A = tap->Material->A;						//Atomic mass
-	//const double Z = tap->Material->atomic_number;					//Atomic number
-	//const double X0 = (tap->Material->X0*centimeter)/tap->Material->rho;
-	const double X0 = tap->Material->X0;
-	const double b_N_ref = tap->Material->b_N;
-
-	//We have now read the material properties, now to scale these if required to the current energy scale etc
-	double center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;	//ecmsq in SixTrack
-
-	//pp cross-sections and parameters for energy dependence scaling
-	const double p_reference = 450.0 * GeV;			//Reference energy at which the scattering data is based on.	(pref)
-	const double pp_total_reference = 0.04;			//Proton total cross section at reference energy		(pptref)
-	const double pp_elastic_reference = 0.007;		//Proton elastic cross section at reference energy		(pperef)
-	const double single_diffractive_constant = 0.00068;	//Single Diffractive constant					(sdcoe)
-	const double pp_total_constant = 0.05788;		//pp total cross section constant				(pptco)
-	const double pp_elastic_constant = 0.04792;		//pp elastic scattering cross section power constant		(ppeco)
-	const double free_nucleon_constant = 1.618;		//free nucleon constant						(freeco)
-	const double t_low_cut = 0.0009982;			//Rutherford scattering cut scale (GeV^2)			(tlcut)
-	//emr - material atomic size for Rutherford - see NCL thesis for correct term FIXME
-	//bnref -  b_N slope - nucleus elastic FIXME
-
-	//Atom radius
-	//double atomic_radius = 1.2e-15 * pow(A,(1.0/3.0);	// In m, remember elsewhere if using area, to convert to barns
-	
-	//First calculate the number of "free nucleons" available for scattering
-	const double free_nucleon_count = free_nucleon_constant * pow(A,1.0/3.0);
-
-	//Could put the following block within the collimator iteration loop if one is being ultra-pedantic.
-
-	//Cross sections need scaling from the reference energy to the beam energy
-	//Nucleus cross sections need scaling to the number of nucleons
-	//First task is to calculate the adjusted total cross section at this energy from the reference energy
-	double sigma_pp_total = pp_total_reference * pow((E0 / p_reference),pp_total_constant);		//(pptot)
-	
-	//Next we also scale the elastic proton-nucleon cross section to the current energy
-	//Remember this is for a single nucleon, when applying to a nucleus
-	double sigma_pp_elastic = pp_elastic_reference * pow((E0 / p_reference),pp_elastic_constant);	// demolaize equation 1.21 / catalan 3.7
-	//And here the elastic cross section is adjusted to the number of nucleons in this material
-	double sigma_pn_elastic	= free_nucleon_count * sigma_pp_elastic;
-
-	//Single diffractive cross section
-	double sigma_pp_SingleDiffractive = single_diffractive_constant * log(0.15 * center_of_mass_squared);
-	//And again scale to the number of nucleons
-	double sigma_pn_SingleDiffractive = free_nucleon_count * sigma_pp_SingleDiffractive;
-
-	//Next fix Rutherford coulomb scattering
-	//FIXME
-	double sigma_Rutherford = sigma_Rutherford_reference;
-
-	//Correct total without Rutherford inclusion
-	double sigma_pN_total = sigma_pN_total_reference + free_nucleon_count * (sigma_pp_total - pp_total_reference);
-	
-	//And the inelastic
-	double sigma_pN_inelastic = sigma_pN_inelastic_reference * sigma_pN_total / sigma_pN_total_reference;
-
-	//Caluclate the full nucleus elastic contribution
-	double sigma_pN_elastic	= sigma_pN_total - sigma_pN_inelastic - sigma_pn_elastic - sigma_pn_SingleDiffractive; 
-
-	//Work on slopes next
-	double b_pp = 8.5 + 1.086 * log(sqrt(center_of_mass_squared)) ; // slope given on GeV units
-
-	double b_N = b_N_ref * (sigma_pN_total/sigma_pN_total_reference);
-
-	//Finally calculate the mean free path
-	double lambda_tot = A * 1.e-6 / ((sigma_pN_total + sigma_Rutherford) * barn * rho * Avogadro);	// total mean free path (units meter)
-
 	//Track back a drift
 	p.x() -= x * p.xp();
 	p.y() -= x * p.yp();
-/*
-	cout << "MFP:\t"  << lambda_tot << "\t" << sigma_pN_total_reference << endl;
-	cout << "Total:\t" << sigma_pN_total << endl;
-	cout << "pN el:\t" << sigma_pN_elastic << endl;
-	cout << "pN inel:\t" << sigma_pN_inelastic << endl;
-	cout << "pn el:\t" << sigma_pn_elastic << endl;
-	cout << "pn SD:\t" << sigma_pn_SingleDiffractive << endl;
-	cout << "pN Ruth:\t" << sigma_Rutherford << endl;
-	
-	cout << b_N << "\t" << free_nucleon_count << endl;
-	abort();
-*/
+
+     	const double Mx_lo2 = pow((ProtonMassMeV * MeV + PionZeroMassMeV*MeV),2);   // SD Mx2_lo =  mp2
+	const double Mx_hi2 =  Mx_lo2 + 0.15 * center_of_mass_squared;  // SD: Mx2_hi = Mp2 +0.15 *center_of_mass_squared
+	double TargetMass=A*AtomicMassUnit; // Nucleus mass
+
 	while( x > 0 )
 	{
 		bool interacted;	//Interacted on this step or not - true/false?
@@ -174,9 +94,84 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 		double E1 = E0 * (1 + p.dp());	// particle energy
 		double thick = step_size / X0;	// material length in radiation lengths
 		
-		double dp = dEdx * step_size;	//(units of GeV )
 
+
+		double gamma = E1/(ProtonMassMeV*MeV);
+		double beta = 1 - ( 1 / (gamma*gamma));
+		double land = gsl_ran_landau(rnd);
+
+		double xi = (xi0 * step_size /(beta*beta)) / ElectronCharge * (eV/MeV);
+		//cout << xi << endl;
+
+/*
+		double K =0.307075;
+		xi = (K/2)*(Z/A)*(rho*step_size*100.0/(beta*beta));
+		cout << xi << endl << endl;
+*/
+
+		//double deltaE = (log((2*ElectronMassMeV*xi)/pow(58.27,2)) + 0.2)*xi;//0.2
+		//double dd = 2 * (log(58.27/I) + log(beta*gamma) - 0.5);
+
+		//Density correction
+		double ddx = log10(beta*gamma);
+		if(ddx > C1)
+		{
+			delta = 4.606*ddx - C;
+		}
+		else if(ddx >= C0 && ddx <= C1)
+		{
+			double m = 3.0;
+			double xa = C /4.606;
+			double a = 4.606 * (xa - C0) / pow((C1-C0),m);
+			delta = 4.606*ddx -C + a*pow((C1 - ddx),m);
+		}
+		else
+		{
+			cout << "Delta is zero" << endl;
+			delta = 0.0;
+		}
+
+		double tcut = 100.0*keV;
+		tcut = tmax;
+
+		//Mott Correction
+		double G = pi*FineStructureConstant*beta/2.0;
+//		double q = (2*(tmax/MeV)*(ElectronMassMeV)*SpeedOfLight*SpeedOfLight )/(pow((0.843/MeV),2));
+		double q = (2*(tmax/MeV)*(ElectronMassMeV) )/(pow((0.843/MeV),2));
+		double S = log(1+q);
+//		cout << S << endl;
+	//	double L1c = (beta*beta)/(Z*FineStructureConstant*FineStructureConstant);
+		double L1 = 0.0;
+
+		double yL2 = FineStructureConstant/beta;
+
+/*		double L2sum = 0.0;
+		for (int n=1; n<2000000; n++)
+		{
+			L2sum += 1/(n * ( (n*n) + (yL2*yL2) ) );
+		}
+*/
+		double L2sum = 1.202001688211;	//Sequence limit calculated with mathematica
+		double L2 = -yL2*yL2*L2sum;
+//S = 0.0;
+		double F = G - S + 2*(L1 + L2);
+
+//cout << F << endl;
+		//double delta = xi * (log(2 * ElectronMassMeV * beta*beta * gamma * gamma * tcut/I) + log(xi/I) + 0.2 -(beta*beta)*(1 + (tcut/tmax)) -dd);
+		//double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma * gamma * (tcut/MeV)/pow(I*eV/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F);
 		
+//		double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F);
+
+		double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F);
+		double dp = ((xi * land) - deltaE) * MeV;
+
+//		double epsp = (pow(I/MeV,2) / (2*ElectronMassMeV * beta*beta * gamma*gamma ) ) + exp(beta*beta);
+//		dp = ((xi * land)  + (xi * ( log(xi) - log(epsp) + 1 - euler))) * MeV;
+//		double delta_tot = xi * ( log(xi/epsp) + 0.37);
+//		cout << delta_tot << "\t" << xi <<endl;
+
+
+
 		double E2 = E1 - dp;
 		p.dp () =  ((E1 - dp) - E0) / E0;
 		double Eav = (E1+E2) / 2.0;
@@ -186,7 +181,6 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 		*	MULTIPLE COULOMB SCATTERING
 		*
 		*/
-
 		double theta0 = 13.6*MeV * sqrt (thick) * (1.0 + 0.038 * log (thick)) / Eav;	// small-angle Coulomb scattering
 
 		pair < double, double > s = CoulombScatter (step_size, theta0);
@@ -212,15 +206,14 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 			return 0;
 		}
 
-//		interacted = false;
+
+		//Point process interaction
 	        if (interacted)
 		{
 			E1 = E0 * (1 + p.dp());
-			double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);    
+			double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);
 
-			//Point process interaction
 			//Choose which scattering process to do
-
 			/*
 			*
 			*	Elastic scatter pN (proton - Nucleus)
@@ -228,14 +221,10 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 			*/
 			if ( (r -= sigma_pN_elastic) < 0  )
 			{
-
 				tally[1]++;
 				t = -log(RandomNG::uniform(0,1))/b_N;
-//				t = -log(0.5)/b_N;
 				//histt1->Fill(t);
-				double mass=A*AtomicMassUnit;
-				dp = t/(2*mass); // units of GeV
-//dp = 0.0;
+				dp = t/(2*TargetMass); // units of GeV
 			}
 
 			/*
@@ -245,13 +234,10 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 			*/
 			else if ( (r -= sigma_pn_elastic) < 0  )
 			{
-
 				tally[2]++; 
 				t = -log(RandomNG::uniform(0,1))/b_pp;
 				//histt2->Fill(t);
 				dp = t/(2*AtomicMassUnit);
-//				t=0.0;
-//				dp=0.0;
 			}
 
 			/*
@@ -261,31 +247,12 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 			*/
 			else if ( (r -= sigma_pn_SingleDiffractive) < 0 )
 			{
-				tally[3]++; 
-
-				double Mx2 = exp( RandomNG::uniform(0,1) * log(0.15 * center_of_mass_squared) );
-				double b_sd = 1.0;
-				double p = E1  * (1.0 - Mx2/center_of_mass_squared);
-				dp = E1 - p;
-
-				if ( Mx2 < 2.0 )
-				{
-					b_sd = 2.0 * b_pp;
-				}
-				else if (( Mx2 >= 2.0 ) && ( Mx2 <= 5.0 ))
-				{
-					b_sd = (106.0 - (17.0*Mx2)) *  b_pp / 36.0;
-				}
-				else if ( Mx2 > 5.0 )
-				{
-					b_sd = 7.0 * b_pp / 12.0;
-				}
-				t = -log(RandomNG::uniform(0,1))/b_sd;
-
-//				t=0.0;
-//				dp=0.0;
-				//histt4->Fill(t);
-				//histt3->Fill(Mx2);
+				tally[3]++;
+				double u = RandomNG::uniform(0,1);
+				double Mx2 = pow((1+1/pow(Mx_lo2,0.08)+u*(1/pow(Mx_hi2,0.08)-1/pow(Mx_lo2,0.08))),1/0.08); //if the cross section ~ 1/(Mx2)^(1+epsilon) where epsilon = 0.08 
+				double b = 25.51 + 0.5 * log(center_of_mass_squared/Mx2); //Goulianos
+				t =-log(RandomNG::uniform(0,1))/b;
+				dp = (t + Mx2 - pow(ProtonMassMeV * MeV,2))/(2*ProtonMassMeV * MeV);
 			}
 
 			/*
@@ -298,12 +265,8 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 				tally[4]++;
 				double tcut=t_low_cut;			
 				t=tcut/(1-RandomNG::uniform(0,1)); // generates 1/t squared distribution,
-				double mass=A*AtomicMassUnit; // Nucleus mass
-				dp = t/(2*mass); //units of GeV
+				dp = t/(2*TargetMass); //units of GeV
 				//ruth = 2.607e-4 * exp(-t * 0.8561e3 * emr^2 ) * (atomic_number / t) ^2
-
-//				t=0.0;
-//				dp=0.0;
 			}
 
 			/*
@@ -314,7 +277,6 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 			else
 			{
 				tally[5]++; 
-				//p.dp()=-1.;
 				//lose particle
 				p.ct() = z;
 				return 1;
@@ -326,27 +288,6 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 			double phi = RandomNG::uniform(-pi,pi);
 			p.xp() += theta * cos(phi);
 			p.yp() += theta * sin(phi);
-
-			//double phi = RandomNG::uniform(-1,1);
-			//p.xp() += theta * phi;
-			//p.yp() += theta * phi;
-
-			/* 
-			// SIXTRACK METHOD
-			double teta = sqrt(t)/E3;
-			double va,vb,va2,vb2,r2 = 2;
-
-			while( r2 > 1.0)
-			{
-				va = (2.0 * RandomNG::uniform(0,1))-1.0; // -1 to +1
-				vb = RandomNG::uniform(0,1);
-				va2 = va*va;
-				vb2 = vb*vb;
-				r2 = va2 + vb2;
-			}
-			p.xp() += teta * (2.0*va*vb) / r2;
-			p.yp() += teta * (va2 - vb2) / r2;
-			*/
 		}
 
 	x -= step_size;
@@ -354,16 +295,245 @@ int ProtonBunch::Scatter(PSvector& p, double x, double E0, const Aperture* ap)
 
 	if(p.dp() < -MAXDP)	//dp cut should be at 95%
 	{
-		cout << "95% P loss" << endl;
-		//p.dp()=-1;
+		p.ct() = z;
+		cout << (MAXDP*100.0) << "% P loss" << endl;
 		return 1;
-	} 
+	}
 
 	return 0;
 
 } //End of ScatterProton
 
-//data (mname(i),i=1,nrmat)/ 'Be','Al','Cu','W','Pb','C','C2' /
-// in Cs and CsRef,1st index: Cross-sections for processes
-// 0:Total, 1:absorption, 2:nuclear elastic, 3:pp or pn elastic
-// 4:Single Diffractive pp or pn, 5:Coulomb for t above mcs
+void ProtonBunch::ConfigureScatter(const Aperture* ap)
+{
+	//Do a cast to check if we have a "TiltedAperture"
+	const TiltedAperture* tap= dynamic_cast<const TiltedAperture*> (ap);
+	if(!tap)
+	{
+		throw MerlinException("ScatterProton : No Tilted Aperture");
+	}
+
+	E0 = GetReferenceMomentum();
+	const double sigma_pN_total_reference = tap->Material->sigma_pN_total;		//Material reference proton-Nucleus total scattering cross section
+	const double sigma_pN_inelastic_reference = tap->Material->sigma_pN_inelastic;	//Material reference proton-Nucleus inelastic scattering cross section
+	const double sigma_Rutherford_reference = tap->Material->sigma_Rutherford;		//Material reference Rutherford scattering cross section
+	//const double dEdx = tap->Material->dEdx*tap->Material->rho/10;			//dE/dx - (GeV m^-1)
+	dEdx = tap->Material->dEdx;					//dE/dx - (GeV m^-1)
+	rho = tap->Material->rho;						//density (g /cm^3)
+	A = tap->Material->A;						//Atomic mass
+	Z = tap->Material->atomic_number;				//Atomic number
+	//const double X0 = (tap->Material->X0*centimeter)/tap->Material->rho;
+	X0 = tap->Material->X0;
+	I = tap->Material->MeanExcitationEnergy/eV;
+	const double ElectronDensity = tap->Material->ElectronDensity;		//N_e / m^3
+	const double PlasmaEnergy = tap->Material->PlasmaEnergy/eV;
+	const double b_N_ref = tap->Material->b_N;
+
+	//We have now read the material properties, now to scale these if required to the current energy scale etc
+	//double center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;	//ecmsq in SixTrack
+	center_of_mass_squared = (2 * ProtonMassMeV * MeV * E0) + (2 * ProtonMassMeV * MeV);
+
+	//pp cross-sections and parameters for energy dependence scaling
+	const double p_reference = 450.0 * GeV;			//Reference energy at which the scattering data is based on.	(pref)
+	const double pp_total_reference = 0.04;			//Proton total cross section at reference energy		(pptref)
+	const double pp_elastic_reference = 0.007;		//Proton elastic cross section at reference energy		(pperef)
+	//const double single_diffractive_constant = 0.00068;	//Single Diffractive constant					(sdcoe)
+	const double pp_total_constant = 0.05788;		//pp total cross section constant				(pptco)
+	const double pp_elastic_constant = 0.04792;		//pp elastic scattering cross section power constant		(ppeco)
+	const double free_nucleon_constant = 1.618;		//free nucleon constant						(freeco)
+	t_low_cut = 0.0009982;					//Rutherford scattering cut scale (GeV^2)			(tlcut)
+	//emr - material atomic size for Rutherford - see NCL thesis for correct term FIXME
+
+	//Atom radius
+	//double atomic_radius = 1.2e-15 * pow(A,(1.0/3.0);	// In m, remember elsewhere if using area, to convert to barns
+	
+	//First calculate the number of "free nucleons" available for scattering
+	const double free_nucleon_count = free_nucleon_constant * pow(A,1.0/3.0);
+
+	//Could put the following block within the collimator iteration loop if one is being ultra-pedantic.
+
+	//Cross sections need scaling from the reference energy to the beam energy
+	//Nucleus cross sections need scaling to the number of nucleons
+	//First task is to calculate the adjusted total cross section at this energy from the reference energy
+	double sigma_pp_total = pp_total_reference * pow((E0 / p_reference),pp_total_constant);		//(pptot)
+	
+	//Next we also scale the elastic proton-nucleon cross section to the current energy
+	//Remember this is for a single nucleon, when applying to a nucleus
+	double sigma_pp_elastic = pp_elastic_reference * pow((E0 / p_reference),pp_elastic_constant);	// demolaize equation 1.21 / catalan 3.7
+	//And here the elastic cross section is adjusted to the number of nucleons in this material
+	sigma_pn_elastic = free_nucleon_count * sigma_pp_elastic;
+
+	//Single diffractive cross section
+	//double sigma_pp_SingleDiffractive = single_diffractive_constant * (1 + (36/center_of_mass_squared)) * log(0.6 + (0.1 * center_of_mass_squared));
+	double sigma_pp_SingleDiffractive = 0.18 * sigma_pp_elastic;
+	//And again scale to the number of nucleons
+	sigma_pn_SingleDiffractive = free_nucleon_count * sigma_pp_SingleDiffractive;
+
+	//Next fix Rutherford coulomb scattering
+	//FIXME
+	sigma_Rutherford = sigma_Rutherford_reference;
+
+	//Correct total without Rutherford inclusion
+	sigma_pN_total = sigma_pN_total_reference + free_nucleon_count * (sigma_pp_total - pp_total_reference);
+	
+	//And the inelastic
+	double sigma_pN_inelastic = sigma_pN_inelastic_reference * sigma_pN_total / sigma_pN_total_reference;
+
+	//Caluclate the full nucleus elastic contribution
+	sigma_pN_elastic = sigma_pN_total - sigma_pN_inelastic - sigma_pn_elastic - sigma_pn_SingleDiffractive; 
+
+	//Work on slopes next
+	b_pp = 8.5 + 1.086 * log(sqrt(center_of_mass_squared)) ; // slope given on GeV units
+
+	b_N = b_N_ref * (sigma_pN_total/sigma_pN_total_reference);
+
+	double gamma = E0/(ProtonMassMeV*MeV);
+	double beta = 1 - ( 1 / (gamma*gamma));
+
+	tmax = (2*ElectronMassMeV * beta * beta * gamma * gamma ) / (1 + (2 * gamma * (ElectronMassMeV/ProtonMassMeV)) + pow((ElectronMassMeV/ProtonMassMeV),2))*MeV;
+	//cout << "Tmax: " << tmax/GeV << " GeV" << endl;
+
+	static const double xi1 = 2 * pi * pow(ElectronRadius,2) * ElectronMass * pow(SpeedOfLight,2);
+	xi0 = xi1 * ElectronDensity;
+
+	C = 1 + 2*log(I/PlasmaEnergy);
+
+	if((I/eV) < 100)
+	{
+		if(C <= 3.681)
+		{
+			C0 = 0.2;
+			C1 = 2.0;
+		}
+		else
+		{
+			C0 = 0.326*C - 1.0;
+			C1 = 2.0;
+		}
+	}
+	else	//I >= 100eV
+	{
+		if(C <= 5.215)
+		{
+			C0 = 0.2;
+			C1 = 3.0;
+		}
+		else
+		{
+			C0 = 0.326*C - 1.5;
+			C1 = 3.0;
+		}
+	}
+
+	//cout << C << "\t" << C0 << "\t" << C1 << "\t" << endl;
+	//Finally calculate the mean free path
+	lambda_tot = A * 1.e-6 / ((sigma_pN_total + sigma_Rutherford) * barn * rho * Avogadro);	// total mean free path (units meter)
+
+	SetScatterConfigured(true);
+}
+
+
+
+
+
+
+
+
+
+
+
+		/*
+		double Mx2 = 0.0;
+	     	static const double Mx_low =  pow((ProtonMassMeV * MeV) + (PionZeroMassMeV * MeV),2);   // SD Mx2_lo =  mp2
+		//double Mx_high = 0.15 * center_of_mass_squared;
+		double Mx_high = sqrt(ProtonMassMeV * MeV * ProtonMassMeV * MeV + 0.15 * center_of_mass_squared);  // SD: Mx2_hi = mp2 +0.15 *center_of_mass_squared
+		//cout << Mx_low << "\t" << Mx_high << endl;
+		while ((Mx2 < Mx_low) || (Mx2 > Mx_high))
+		{
+			//cout << "hit" << endl;
+			Mx2 = exp( RandomNG::uniform(0,1) * log(0.15 * center_of_mass_squared) );
+			//cout << Mx_low << "\t" << Mx_high << "\t" << Mx2 << endl;
+		}
+
+		double b_sd = 1.0;
+		double p = E1  * (1.0 - Mx2/center_of_mass_squared);
+		dp = E1 - p;
+
+		if ( Mx2 < 2.0 )
+		{
+			b_sd = 2.0 * b_pp;
+		}
+		else if (( Mx2 >= 2.0 ) && ( Mx2 <= 5.0 ))
+		{
+					b_sd = (106.0 - (17.0*Mx2)) *  b_pp / 36.0;
+				}
+				else if ( Mx2 > 5.0 )
+				{
+					b_sd = 7.0 * b_pp / 12.0;
+				}
+				t = -log(RandomNG::uniform(0,1))/b_sd;
+*/
+//				t=0.0;
+//				dp=0.0;
+				//histt4->Fill(t);
+				//histt3->Fill(Mx2);
+/*
+			     	//static const double Mx_low =  pow((ProtonMassMeV * MeV) + (PionZeroMassMeV * MeV),2);   // SD Mx2_lo =  mp2
+			     	static const double Mx_low =  (ProtonMassMeV * MeV);   // SD Mx2_lo =  mp2
+				//double Mx_high = 0.15 * center_of_mass_squared;
+				double Mx_high = sqrt(ProtonMassMeV * MeV * ProtonMassMeV * MeV + 0.1 * center_of_mass_squared);  // SD: Mx2_hi = mp2 +0.15 *center_of_mass_squared
+				double Mx2 = pow((Mx_low*Mx_high) /(Mx_high - ( Mx_high - Mx_low ) * RandomNG::uniform(0,1) ),2);
+				//double Mx2 = exp( -RandomNG::uniform(0,1) * log(0.15 * center_of_mass_squared) );
+
+				//double Mx2 = RandomNG::uniform(Mx_low,Mx_high);
+				double b = 25.51 + 0.5 * log(center_of_mass_squared/Mx2); //Goulianos
+				t=- log(RandomNG::uniform(0,1))/b;
+				dp = ( t + Mx2 - pow(ProtonMassMeV * MeV,2) ) / ( 2 * ProtonMassMeV * MeV );
+				//dp = 0.0;
+				//double Mx2 = Mx_lo2*exp(u*log(Mx_hi2/Mx_lo2)); //
+*/
+
+
+/*
+	cout << "MFP:\t"  << lambda_tot << "\t" << sigma_pN_total_reference << endl;
+	cout << "Total:\t" << sigma_pN_total << endl;
+	cout << "pN el:\t" << sigma_pN_elastic << endl;
+	cout << "pN inel:\t" << sigma_pN_inelastic << endl;
+	cout << "pn el:\t" << sigma_pn_elastic << endl;
+	cout << "pn SD:\t" << sigma_pn_SingleDiffractive << endl;
+	cout << "pN Ruth:\t" << sigma_Rutherford << endl;
+	
+	cout << b_N << "\t" << free_nucleon_count << endl;
+	abort();
+*/
+
+
+/*
+		double gamma = E1/(ProtonMassMeV*MeV);
+		double beta = 1 - ( 1 / (gamma*gamma));
+		const double density = rho  /( 1000 * centimeter * centimeter * centimeter);
+		const double ElectronDensity = Z * Avogadro * density / (A/1000);
+		//double ElectronRadius1 = ElectronCharge*ElectronCharge/16.0/atan(1.0)/FreeSpacePermittivity/(ElectronMassMeV*MeV);
+		//double ElectronRadius1 = ElectronCharge*eV/ElectronRadius;
+		//double bvar = 2 * pi * ElectronRadius1 * ElectronRadius1 * ElectronDensity * ElectronMassMeV*MeV * ( 1 / beta ) * ( 1 - (beta*beta / 2 )) * step_size * 0.001;
+		//cout << bvar << "\t" << ElectronRadius1 << "\t" << ElectronDensity <<  endl;
+		//double dedx1 = dEdx + 0.2;
+
+*/
+		//xi = (step_size * 2 * pi * Avogadro * pow(ElectronCharge,4) * rho*1000 *Z) / (ElectronMass * pow(beta*SpeedOfLight,2) * A);
+//		double epsp = ((I*I) / (2*ElectronMassMeV * beta *beta * gamma * gamma ) ) + exp(beta*beta);
+//		dp = ((xi * land)  + (xi * ( log(xi/epsp) + 1 - euler))) * MeV;
+
+/*
+		//double dp = prefac*( land + log(0.1536 * gamma * gamma)*mass_thick/(A*Z) + 15.963 -(beta*beta))*keV;
+*/
+		//double zeta = 12.0e-2/(beta*beta);
+		//zeta = 0.03142631811023623;
+//		double mass_thick = (rho*1000) * step_size * 100;	//mg/cm^2
+		//double xi = (0.1536/beta*beta)*(Z/A)*mass_thick*keV;	//Converted to GeV from keV
+		//double delta = (land + log(0.1536*pow(gamma,2)*(mass_thick/(Z*A))) + 50.963 - (beta*beta))    * (mass_thick*Z)/(A*(20.51*beta*beta)); //15.963
+		//double delta = (land + log(0.1536*pow(gamma,2)*(mass_thick/(Z*A))) + 15.963 - (beta*beta))    * (mass_thick*Z)/(A*(6.51*beta*beta)); //15.963
+		//double delta = (land + log(0.1536*pow(gamma,2)*(mass_thick/(Z*A))) - 9.0 - (beta*beta))    * (mass_thick*Z)/(A*(2.85*beta*beta)); //15.963
+//		cout << xi << endl;
+		//double dp = ((land * xi) + (dEdx * step_size));
+		//double dp = delta * keV;

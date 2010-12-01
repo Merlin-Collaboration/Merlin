@@ -16,9 +16,9 @@ export MERLIN_BUILD_DIR=${PWD}
 # the install directory where the libs will be placed
 export MERLIN_INSTALL_DIR=${HOME}/lib
 
-export INCPATH= -I${MERLIN_ROOT_DIR}
+export INCPATH= -I${MERLIN_ROOT_DIR} -I${HOME}/include
 
-export CCFLAGS=-pipe -fPIC -O2 -pedantic -Wall
+export CCFLAGS=-pipe -fPIC -O2 -pedantic -Wall -lgsl -L${HOME}/lib
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/
 
 SUBDIRS= AcceleratorModel \

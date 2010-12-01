@@ -137,8 +137,11 @@ public:
     int coords;
 
     //Per-particle type scattering.
-    virtual int Scatter(Particle&, double, double, const Aperture*){return 0;}
+    virtual int Scatter(Particle&, double length, const Aperture*){return 0;}
     virtual void Scatter(PSvector &){ return;}
+    void SetScatterConfigured(bool);
+    bool ScatterConfigured;
+
 
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;
@@ -290,6 +293,10 @@ inline void ParticleBunch::clear ()
     pArray.clear();
 }
 
+inline void ParticleBunch::SetScatterConfigured(bool state)
+{
+	ScatterConfigured = state;
+}
 
 } // end namespace ParticleTracking
 

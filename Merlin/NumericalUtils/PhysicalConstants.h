@@ -32,6 +32,8 @@ extern const double ProtonMass;
 
 extern const double PlanckConstant;
 
+extern const double PlanckConstantBar;
+
 extern const double ElectronCharge;
 
 extern const double ElectronMassMeV;

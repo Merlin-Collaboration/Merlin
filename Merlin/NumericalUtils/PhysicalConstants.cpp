@@ -34,6 +34,8 @@ const double ProtonMass = 1.672621637e-27; // kilogram  (old = 1.67261e-27)
 
 const double PlanckConstant = 6.62606896e-34; // Joule second (old = 6.62620e-34)
 
+const double PlanckConstantBar = PlanckConstant/(2*pi);
+
 const double ElectronCharge = 1.602176487e-19; // Coulomb (old = 1.60219e-19)
 
 const double ElectronMassMeV = 0.510998910; // MeV (old = 0.511005)
@@ -48,9 +50,9 @@ const double ElectronRadius = ElectronCharge*ElectronCharge/16.0/atan(1.0)/FreeS
 
 const double ElectronGe = 0.001159652181; //Magnetic moment anomaly e cm (old = 0.00115965219)
 
-const double MuonMass = ProtonMass * MuonMassMeV/ProtonMassMeV; //AtomicMassUnit * 0.11342892;
-
 const double MuonMassMeV = 105.65836;
+
+const double MuonMass = ProtonMass * MuonMassMeV/ProtonMassMeV; //AtomicMassUnit * 0.11342892;
 
 const double MuonLifetime = 2.1970e-6 * second;	//In the rest frame
 

@@ -17,5 +17,5 @@
 
 extern const double pi;
 extern const double twoPi;
-
+extern const double euler;
 #endif

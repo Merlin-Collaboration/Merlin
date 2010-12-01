@@ -98,7 +98,8 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 			at_entr = at_cent = false; // currently scatter only at exit
 			at_exit = true;
 			SetNextS();
-			Xr = aSpoiler->GetMaterialRadiationLength();
+			//Xr = aSpoiler->GetMaterialRadiationLength();
+			currentBunch->SetScatterConfigured(false);
 			len = aSpoiler->GetLength();
 		}
 	}
@@ -355,10 +356,10 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 
 bool CollimateParticleProcess::DoScatter (Particle& p)
 {
-	double E0=currentBunch->GetReferenceMomentum();
+	//double E0=currentBunch->GetReferenceMomentum();
 	const TiltedAperture *tap = (TiltedAperture*) currentComponent->GetAperture();
 
-	int scatter_type = currentBunch->Scatter(p,len,E0,tap);
+	int scatter_type = currentBunch->Scatter(p,len,tap);
 
 //	return p.dp()<=-0.99; // return true if E below 1% cut-off
 	if(scatter_type == 1)
