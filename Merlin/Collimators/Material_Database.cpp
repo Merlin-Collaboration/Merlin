@@ -11,8 +11,9 @@ using namespace PhysicalUnits;
 
 Material_Database::Material_Database() : db(0) //size of the db vector, aka number of materials, increase as required.
 {
-	//Here we create new materials, add their properties, then push them onto a vector for manipulation.
-	//Need to get references for all data.
+
+//Here we create new materials, add their properties, then push them onto a vector for manipulation.
+//Need to get references for all data.
 /*
 References:
 Particle data group: http://pdg.lbl.gov/2010/AtomicNuclearProperties/

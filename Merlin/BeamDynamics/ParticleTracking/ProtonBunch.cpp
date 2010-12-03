@@ -96,21 +96,12 @@ int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 		
 
 
+		//Start dEdx
 		double gamma = E1/(ProtonMassMeV*MeV);
 		double beta = 1 - ( 1 / (gamma*gamma));
 		double land = gsl_ran_landau(rnd);
 
 		double xi = (xi0 * step_size /(beta*beta)) / ElectronCharge * (eV/MeV);
-		//cout << xi << endl;
-
-/*
-		double K =0.307075;
-		xi = (K/2)*(Z/A)*(rho*step_size*100.0/(beta*beta));
-		cout << xi << endl << endl;
-*/
-
-		//double deltaE = (log((2*ElectronMassMeV*xi)/pow(58.27,2)) + 0.2)*xi;//0.2
-		//double dd = 2 * (log(58.27/I) + log(beta*gamma) - 0.5);
 
 		//Density correction
 		double ddx = log10(beta*gamma);
@@ -131,15 +122,16 @@ int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 			delta = 0.0;
 		}
 
-		double tcut = 100.0*keV;
+		double tcut = 297.504*keV;
 		tcut = tmax;
+
 
 		//Mott Correction
 		double G = pi*FineStructureConstant*beta/2.0;
 //		double q = (2*(tmax/MeV)*(ElectronMassMeV)*SpeedOfLight*SpeedOfLight )/(pow((0.843/MeV),2));
 		double q = (2*(tmax/MeV)*(ElectronMassMeV) )/(pow((0.843/MeV),2));
 		double S = log(1+q);
-//		cout << S << endl;
+
 	//	double L1c = (beta*beta)/(Z*FineStructureConstant*FineStructureConstant);
 		double L1 = 0.0;
 
@@ -153,24 +145,13 @@ int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 */
 		double L2sum = 1.202001688211;	//Sequence limit calculated with mathematica
 		double L2 = -yL2*yL2*L2sum;
-//S = 0.0;
+
 		double F = G - S + 2*(L1 + L2);
-
-//cout << F << endl;
-		//double delta = xi * (log(2 * ElectronMassMeV * beta*beta * gamma * gamma * tcut/I) + log(xi/I) + 0.2 -(beta*beta)*(1 + (tcut/tmax)) -dd);
-		//double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma * gamma * (tcut/MeV)/pow(I*eV/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F);
-		
-//		double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F);
-
-		double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F);
+		double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F + 2.0);
 		double dp = ((xi * land) - deltaE) * MeV;
 
-//		double epsp = (pow(I/MeV,2) / (2*ElectronMassMeV * beta*beta * gamma*gamma ) ) + exp(beta*beta);
-//		dp = ((xi * land)  + (xi * ( log(xi) - log(epsp) + 1 - euler))) * MeV;
-//		double delta_tot = xi * ( log(xi/epsp) + 0.37);
-//		cout << delta_tot << "\t" << xi <<endl;
 
-
+		//End dEdx
 
 		double E2 = E1 - dp;
 		p.dp () =  ((E1 - dp) - E0) / E0;
@@ -247,12 +228,15 @@ int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 			*/
 			else if ( (r -= sigma_pn_SingleDiffractive) < 0 )
 			{
+			
 				tally[3]++;
 				double u = RandomNG::uniform(0,1);
 				double Mx2 = pow((1+1/pow(Mx_lo2,0.08)+u*(1/pow(Mx_hi2,0.08)-1/pow(Mx_lo2,0.08))),1/0.08); //if the cross section ~ 1/(Mx2)^(1+epsilon) where epsilon = 0.08 
+				//double Mx2 =1/ pow((1+1/pow(Mx_lo2,0.08)+u*(1/pow(Mx_hi2,0.08)-1/pow(Mx_lo2,0.08))),1/0.08);
 				double b = 25.51 + 0.5 * log(center_of_mass_squared/Mx2); //Goulianos
 				t =-log(RandomNG::uniform(0,1))/b;
 				dp = (t + Mx2 - pow(ProtonMassMeV * MeV,2))/(2*ProtonMassMeV * MeV);
+				
 			}
 
 			/*
@@ -393,7 +377,7 @@ void ProtonBunch::ConfigureScatter(const Aperture* ap)
 	tmax = (2*ElectronMassMeV * beta * beta * gamma * gamma ) / (1 + (2 * gamma * (ElectronMassMeV/ProtonMassMeV)) + pow((ElectronMassMeV/ProtonMassMeV),2))*MeV;
 	//cout << "Tmax: " << tmax/GeV << " GeV" << endl;
 
-	static const double xi1 = 2 * pi * pow(ElectronRadius,2) * ElectronMass * pow(SpeedOfLight,2);
+	static const double xi1 = 2.0 * pi * pow(ElectronRadius,2) * ElectronMass * pow(SpeedOfLight,2);
 	xi0 = xi1 * ElectronDensity;
 
 	C = 1 + 2*log(I/PlasmaEnergy);
@@ -431,109 +415,3 @@ void ProtonBunch::ConfigureScatter(const Aperture* ap)
 
 	SetScatterConfigured(true);
 }
-
-
-
-
-
-
-
-
-
-
-
-		/*
-		double Mx2 = 0.0;
-	     	static const double Mx_low =  pow((ProtonMassMeV * MeV) + (PionZeroMassMeV * MeV),2);   // SD Mx2_lo =  mp2
-		//double Mx_high = 0.15 * center_of_mass_squared;
-		double Mx_high = sqrt(ProtonMassMeV * MeV * ProtonMassMeV * MeV + 0.15 * center_of_mass_squared);  // SD: Mx2_hi = mp2 +0.15 *center_of_mass_squared
-		//cout << Mx_low << "\t" << Mx_high << endl;
-		while ((Mx2 < Mx_low) || (Mx2 > Mx_high))
-		{
-			//cout << "hit" << endl;
-			Mx2 = exp( RandomNG::uniform(0,1) * log(0.15 * center_of_mass_squared) );
-			//cout << Mx_low << "\t" << Mx_high << "\t" << Mx2 << endl;
-		}
-
-		double b_sd = 1.0;
-		double p = E1  * (1.0 - Mx2/center_of_mass_squared);
-		dp = E1 - p;
-
-		if ( Mx2 < 2.0 )
-		{
-			b_sd = 2.0 * b_pp;
-		}
-		else if (( Mx2 >= 2.0 ) && ( Mx2 <= 5.0 ))
-		{
-					b_sd = (106.0 - (17.0*Mx2)) *  b_pp / 36.0;
-				}
-				else if ( Mx2 > 5.0 )
-				{
-					b_sd = 7.0 * b_pp / 12.0;
-				}
-				t = -log(RandomNG::uniform(0,1))/b_sd;
-*/
-//				t=0.0;
-//				dp=0.0;
-				//histt4->Fill(t);
-				//histt3->Fill(Mx2);
-/*
-			     	//static const double Mx_low =  pow((ProtonMassMeV * MeV) + (PionZeroMassMeV * MeV),2);   // SD Mx2_lo =  mp2
-			     	static const double Mx_low =  (ProtonMassMeV * MeV);   // SD Mx2_lo =  mp2
-				//double Mx_high = 0.15 * center_of_mass_squared;
-				double Mx_high = sqrt(ProtonMassMeV * MeV * ProtonMassMeV * MeV + 0.1 * center_of_mass_squared);  // SD: Mx2_hi = mp2 +0.15 *center_of_mass_squared
-				double Mx2 = pow((Mx_low*Mx_high) /(Mx_high - ( Mx_high - Mx_low ) * RandomNG::uniform(0,1) ),2);
-				//double Mx2 = exp( -RandomNG::uniform(0,1) * log(0.15 * center_of_mass_squared) );
-
-				//double Mx2 = RandomNG::uniform(Mx_low,Mx_high);
-				double b = 25.51 + 0.5 * log(center_of_mass_squared/Mx2); //Goulianos
-				t=- log(RandomNG::uniform(0,1))/b;
-				dp = ( t + Mx2 - pow(ProtonMassMeV * MeV,2) ) / ( 2 * ProtonMassMeV * MeV );
-				//dp = 0.0;
-				//double Mx2 = Mx_lo2*exp(u*log(Mx_hi2/Mx_lo2)); //
-*/
-
-
-/*
-	cout << "MFP:\t"  << lambda_tot << "\t" << sigma_pN_total_reference << endl;
-	cout << "Total:\t" << sigma_pN_total << endl;
-	cout << "pN el:\t" << sigma_pN_elastic << endl;
-	cout << "pN inel:\t" << sigma_pN_inelastic << endl;
-	cout << "pn el:\t" << sigma_pn_elastic << endl;
-	cout << "pn SD:\t" << sigma_pn_SingleDiffractive << endl;
-	cout << "pN Ruth:\t" << sigma_Rutherford << endl;
-	
-	cout << b_N << "\t" << free_nucleon_count << endl;
-	abort();
-*/
-
-
-/*
-		double gamma = E1/(ProtonMassMeV*MeV);
-		double beta = 1 - ( 1 / (gamma*gamma));
-		const double density = rho  /( 1000 * centimeter * centimeter * centimeter);
-		const double ElectronDensity = Z * Avogadro * density / (A/1000);
-		//double ElectronRadius1 = ElectronCharge*ElectronCharge/16.0/atan(1.0)/FreeSpacePermittivity/(ElectronMassMeV*MeV);
-		//double ElectronRadius1 = ElectronCharge*eV/ElectronRadius;
-		//double bvar = 2 * pi * ElectronRadius1 * ElectronRadius1 * ElectronDensity * ElectronMassMeV*MeV * ( 1 / beta ) * ( 1 - (beta*beta / 2 )) * step_size * 0.001;
-		//cout << bvar << "\t" << ElectronRadius1 << "\t" << ElectronDensity <<  endl;
-		//double dedx1 = dEdx + 0.2;
-
-*/
-		//xi = (step_size * 2 * pi * Avogadro * pow(ElectronCharge,4) * rho*1000 *Z) / (ElectronMass * pow(beta*SpeedOfLight,2) * A);
-//		double epsp = ((I*I) / (2*ElectronMassMeV * beta *beta * gamma * gamma ) ) + exp(beta*beta);
-//		dp = ((xi * land)  + (xi * ( log(xi/epsp) + 1 - euler))) * MeV;
-
-/*
-		//double dp = prefac*( land + log(0.1536 * gamma * gamma)*mass_thick/(A*Z) + 15.963 -(beta*beta))*keV;
-*/
-		//double zeta = 12.0e-2/(beta*beta);
-		//zeta = 0.03142631811023623;
-//		double mass_thick = (rho*1000) * step_size * 100;	//mg/cm^2
-		//double xi = (0.1536/beta*beta)*(Z/A)*mass_thick*keV;	//Converted to GeV from keV
-		//double delta = (land + log(0.1536*pow(gamma,2)*(mass_thick/(Z*A))) + 50.963 - (beta*beta))    * (mass_thick*Z)/(A*(20.51*beta*beta)); //15.963
-		//double delta = (land + log(0.1536*pow(gamma,2)*(mass_thick/(Z*A))) + 15.963 - (beta*beta))    * (mass_thick*Z)/(A*(6.51*beta*beta)); //15.963
-		//double delta = (land + log(0.1536*pow(gamma,2)*(mass_thick/(Z*A))) - 9.0 - (beta*beta))    * (mass_thick*Z)/(A*(2.85*beta*beta)); //15.963
-//		cout << xi << endl;
-		//double dp = ((land * xi) + (dEdx * step_size));
-		//double dp = delta * keV;
