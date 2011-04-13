@@ -353,12 +353,6 @@ int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 
 	
 
-		//double brem_high = 4.0 * ed * (Z+1) * FineStructureConstant * bla * log(gamma) * gamma * ProtonMassMeV * step_size * log(233*ProtonMassMeV/(pow(Z,(1.0/3.0))*ElectronMassMeV) );
-		//dp += (brem_high*MeV);
-
-//		double n = RandomNG::poisson(deltaE);
-//		dp = deltaE*deltaE*n*MeV;
-
 		//End dEdx
 		//
 		double E2 = E1 - dp;
@@ -366,90 +360,9 @@ int ProtonBunch::Scatter(PSvector& p, double x, const Aperture* ap)
 		if(E2 <=1.0)
 		{
 			p.ct() = z;
-		//	cout << "E2 <= 1 GeV\t" << dp << "\t" << E2 << "\t" << E1 << endl;
 			return 1;
 		}
 
-bool brem = true;
-if (brem)
-{
-		double E2_in = E2;
-		double n_gamma = RandomNG::poisson (7);
-		cout << n_gamma << endl;
-		double rad_sig = 0.0;
-		double rng_sig = 1.0;
-		double e_gamma = 0.0;
-		double rn = 1.38e-15*pow(A,(1.0/3.0));
-//n_gamma = 0;
-//		cout << "HERE 1" << endl;
-		for (int g=1; g<= n_gamma; g++)
-		{
-			//cout << rng_sig << "\t" << rad_sig << "\t" << g << "\t" << n_gamma << endl;
-			//while ( rng_sig <= rad_sig )
-//			cout << "FAIL" << endl;
-			int count = 0;
-			while ( rng_sig > rad_sig )
-			{
-				count++;
-				//cout << "HIT" << endl;
-				//if(E2 < 0.0)
-				//{
-				//	cout << "E2 fail: " << E2 << endl;
-				//	E2 = 0.0;
-				//	break;
-				//}
-				e_gamma = exp(-0.01*RandomNG::uniform (0.0,E2))*E2;
-				double v = e_gamma/E2;
-				if(v >=1.0 || v <=0.0){cout << "v badness: " << v << endl;}
-
-				double F1 = (1-v + (3/4)*v*v);
-		        	//F2 = (log((2*U * (1-v))/(m*v)) - 0.5);                                                  //Without nuclear size
-				double F3 = (log((2*E2 * (PlanckConstant/(2*pi*ProtonMass*MeV*SpeedOfLight*rn)) * (1-v))/(ProtonMassMeV*MeV*v)) - 0.5);      //With nuclear size
-				rad_sig = abs(F1 *F3);
-				rng_sig = RandomNG::uniform (0.0,100.0);
-				//cout << rng_sig << "\t" << rad_sig << "\t" << e_gamma << endl;
-			if(count > 10)
-{
-cout << e_gamma << "\t" << rad_sig << "\t" << rng_sig << endl;
-if(e_gamma < 1){return 1;}
-}
-
-//		cout << "HERE 3" << endl;
-			}
-			//cout << e_gamma << endl;
-			if(e_gamma >= E2 || e_gamma <= 0.0)
-			{
-				cout << "e_gamma is big: " << e_gamma << "\t" << E2 << endl;
-			}
-			E2 -= e_gamma;
-			dp += e_gamma;
-			//E2 -= e_gamma*8.5e-4;
-			//dp += e_gamma*8.5e-4;
-//			if(E2 < 0.0 || e_gamma < 0)
-//			{
-//				cout << "brem killer " << e_gamma << "\t" << E2 << endl;
-//				return 1;
-//			}
-	rad_sig = 0.0;
-	rng_sig = 1.0;
-	e_gamma = 0.0;
-
-		}
-//		cout << "HERE 2" << endl;
-		if(E2 > E2_in)
-		{
-			cout << "Energy gain" << rng_sig << "\t" << rad_sig << "\t" << e_gamma << endl;
-			return 1;
-		//	abort();
-		}
-}
-		if(E2 <=1.0)
-		{
-			p.ct() = z;
-		//	cout << "E2 <= 1 GeV\t" << dp << "\t" << E2 << "\t" << E1 << endl;
-			return 1;
-		}
-if(dp < 0.0){cout <<"dp broken" << endl;}
 		p.dp () =  ((E1 - dp) - E0) / E0;
 		double Eav = (E1+E2) / 2.0;
 
@@ -642,7 +555,7 @@ void ProtonBunch::ConfigureScatter(const Aperture* ap)
 	//We have now read the material properties, now to scale these if required to the current energy scale etc
 	//double center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;	//ecmsq in SixTrack
 	center_of_mass_squared = (2 * ProtonMassMeV * MeV * E0) + (2 * ProtonMassMeV * MeV * ProtonMassMeV * MeV);
-	cout << center_of_mass_squared << "\t" << sqrt(center_of_mass_squared) << endl;
+	//cout << center_of_mass_squared << "\t" << sqrt(center_of_mass_squared) << endl;
 
 	//pp cross-sections and parameters for energy dependence scaling
 	const double p_reference = 450.0 * GeV;			//Reference energy at which the scattering data is based on.	(pref)
@@ -797,7 +710,6 @@ void ProtonBunch::ConfigureScatter(const Aperture* ap)
 	//cout << C << "\t" << C0 << "\t" << C1 << "\t" << endl;
 	//Finally calculate the mean free path
 	lambda_tot = A * 1.e-6 / ((sigma_pN_total + sigma_Rutherford) * barn * rho * Avogadro);	// total mean free path (units meter)
-cout << lambda_tot << endl;
 	SetScatterConfigured(true);
 /*
 	std::cout << "pp total\t" << sigma_pp_total << std::endl;
