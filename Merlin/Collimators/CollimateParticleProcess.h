@@ -110,6 +110,9 @@ public:
     // turns logging off.
     void SetLogStream(std::ostream* anOs);
 
+    //Enable collimator jaw imperfections
+    void EnableImperfections(bool);
+
 protected:
 
     int cmode;
@@ -126,6 +129,8 @@ private:
     void SetNextS ();
     void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
     void bin_lost_output(const PSvectorArray& lostb);
+    double GetOutputBinSize() const;
+    void SetOutputBinSize(double);
     double s_total;
     double s;
     double next_s;
@@ -141,7 +146,9 @@ private:
     bool is_spoiler;
     double Xr; // radiation length 
     double len; // physical length     
+    double bin_size;
     bool DoScatter(Particle&);
+    bool Imperfections;
 };
 
 inline void CollimateParticleProcess::CreateParticleLossFiles (bool flg, string fprefix)
