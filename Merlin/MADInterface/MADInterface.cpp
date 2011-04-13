@@ -26,7 +26,7 @@
 #include "AcceleratorModel/Frames/SequenceFrame.h"
 // SimpleApertures
 #include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
+#include "AcceleratorModel/Apertures/CollimatorAperture.hpp"
 
 // AcceleratorModelConstructor
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
@@ -91,8 +91,9 @@ inline string StripQuotes(const string& text)
 Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 {
 	Aperture* ap;
-	double w,h,d,t,r,a,b;
-	string::size_type n,n2;
+//	double w,h,d,t,r,a,b;
+//	string::size_type n,n2;
+	double w,h,r,a,b;
 
 	/*
 	Aperture types - from MADX: http://mad.web.cern.ch/mad/Introduction/aperture.html
@@ -225,7 +226,6 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	//Addition of missing elements in V6.503 LHC "as built" optics
 	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
-	TreatTypeAsDrift("MONITOR");	
 	TreatTypeAsDrift("VKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
 	TreatTypeAsDrift("HKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
 
@@ -470,7 +470,7 @@ double MADInterface::ReadComponent ()
 #define  _READ(value) if(!((*ifs)>>value)) return 0;
 
 	string name,type,aptype,parent,aperture;
-	double len,ks,angle,e1,e2,k1,k2,k3,k4,k5,h,tilt;
+	double len,ks,angle,e1,e2,k1,k2,k3,h,tilt;
 	_READ(name);
 	_READ(type);
 
@@ -481,7 +481,7 @@ double MADInterface::ReadComponent ()
 
 	//cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
 
-	AcceleratorComponent *component;
+	AcceleratorComponent *component = NULL;
 	double brho = energy/eV/SpeedOfLight;
 
 	//Do we want to build apertures, and do we have the required information required?
@@ -675,7 +675,7 @@ double MADInterface::ReadComponent ()
 				if(!collimator_db->use_sigma)
 				{
 					//Create an aperture for the collimator jaws
-					TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
+					CollimatorAperture* app=new CollimatorAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
 		
 					//Set the aperture for collimation
 					aSpoiler->SetAperture(app);
