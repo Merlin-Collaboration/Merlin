@@ -20,6 +20,10 @@
 #include "AcceleratorModel/AcceleratorComponent.h"
 #include "stdext/deleters.h"
 
+#ifdef MERLIN_PROFILE
+#include "utility/MerlinProfile.hpp"
+#endif
+
 namespace {
 
 #ifndef  _MSC_VER
@@ -40,7 +44,13 @@ struct InitProc {
     InitProc(Bunch& b) : ibunch(b) {}
     void operator()(BunchProcess* proc) {
     	//cout<<"Debug: "<<proc->GetID()<<end;;
+	#ifdef MERLIN_PROFILE
+        MerlinProfile::StartProcessTimer(proc->GetID());
+	#endif
     	proc->InitialiseProcess(ibunch);
+	#ifdef MERLIN_PROFILE
+        MerlinProfile::EndProcessTimer(proc->GetID());
+	#endif
     }
 };
 
@@ -73,7 +83,13 @@ struct DoProc {
     void operator()(BunchProcess* proc) {
         if(proc->IsActive()) {
             if(vos!=0) Trace(proc);
+	    #ifdef MERLIN_PROFILE
+            MerlinProfile::StartProcessTimer(proc->GetID());
+	    #endif
             proc->DoProcess(ds);
+	    #ifdef MERLIN_PROFILE
+            MerlinProfile::EndProcessTimer(proc->GetID());
+	    #endif
         }
     }
 
@@ -137,6 +153,9 @@ void ProcessStepManager::AddProcess (BunchProcess* aProcess)
                 p!=processTable.end() && (*p)->GetPriority() <= aProcess->GetPriority();
                 p++);
         processTable.insert(p,aProcess);
+	#ifdef MERLIN_PROFILE
+        MerlinProfile::AddProcess(aProcess->GetID());
+	#endif
     }
 }
 
