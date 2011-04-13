@@ -19,6 +19,10 @@
 #include <cmath>
 #include "AcceleratorModel/Aperture.h"
 
+#ifdef MERLIN_PROFILE
+#include "utility/MerlinProfile.hpp"
+#endif
+
 //	Represents an aperture with a rectangular cross-section.
 //	The aperture is assumed symmetric about the axis, and
 //	extruded along its geometry.
@@ -98,7 +102,7 @@ inline void RectangularAperture::SetFullHeight (double h)
     hh=fabs(h)/2;
 }
 
-inline bool RectangularAperture::PointInside (double x, double y, double z) const
+inline bool RectangularAperture::PointInside (double x, double y, double z=0.0) const
 {
     return fabs(x)<hw && fabs(y)<hh;
 }
@@ -134,7 +138,7 @@ inline bool CircularAperture::PointInside (double x, double y, double z) const
 
 
 
-//Rectelipse Aperture
+//Rectellipse Aperture
 class RectEllipseAperture : public Aperture
 {
 public:
@@ -142,6 +146,9 @@ public:
 	RectEllipseAperture (double rect_half_width, double rect_half_height, double ellipse_half_horizontal, double ellipse_half_vertical)
 	:rect_half_width(rect_half_width),rect_half_height(rect_half_height),ellipse_half_horizontal(ellipse_half_horizontal),ellipse_half_vertical(ellipse_half_vertical)
 	{
+		#ifdef MERLIN_PROFILE
+		MerlinProfile::AddProcess("APERTURE");
+		#endif
 		Material = NULL;
 	}
 
