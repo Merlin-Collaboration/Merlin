@@ -224,10 +224,12 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
-	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
-	TreatTypeAsDrift("VKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
-	TreatTypeAsDrift("HKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
+
+	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
+	TreatTypeAsDrift("VKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
+	TreatTypeAsDrift("HKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
+	//TreatTypeAsDrift("RFCAVITY");	// merlin bug! - Fix tracking with zero cavity voltage.
 
 }
 
@@ -538,8 +540,8 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type =="RFCAVITY")
 	{
-		type="DRIFT";
-		//type="RFCAVITY";
+		//type="DRIFT";
+		type="RFCAVITY";
 	}
 	else if(type=="LCAV")
 	{
@@ -652,8 +654,8 @@ double MADInterface::ReadComponent ()
 
 				if(!collimator_db->use_sigma)
 				{
-					collimator_aperture_width = collimator_db->Collimator[i].x_gap*2;
-					collimator_aperture_height = collimator_db->Collimator[i].y_gap*2;
+					collimator_aperture_width = collimator_db->Collimator[i].x_gap*2.0;
+					collimator_aperture_height = collimator_db->Collimator[i].y_gap*2.0;
 					collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
 					collimator_material = collimator_db->Collimator[i].Material;
 				}
