@@ -63,7 +63,7 @@ public:
 
 
     RMSProfileMonitor (const string& id, double uphi = pi/4, double len = 0, double mpt = 0)
-            : Monitor(id,len),res_x(0),res_y(0),res_u(0),uangle(uphi)
+            : Monitor(id,len,mpt),res_x(0),res_y(0),res_u(0),uangle(uphi)
     {}
 
     void SetResolution (double rx, double ry, double ru)
