@@ -5,7 +5,6 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include "Exception/MerlinException.h"
 #include "AcceleratorModel/Aperture.h"
-#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
 
 using namespace std;
 using namespace ParticleTracking;

@@ -1,5 +1,5 @@
 #include "Collimators/Collimator_Database.hpp"
-#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
+#include "AcceleratorModel/Apertures/CollimatorAperture.hpp"
 #include "Collimators/ResistiveWakePotentials.h"
 #include <cstdlib>
 #include <fstream>
@@ -131,7 +131,7 @@ double Collimator_Database::Configure_collimators(AcceleratorModel* model, doubl
 						material* collimator_material = Collimator[i].Material;
 
 						//Create an aperture for the collimator jaws
-						TiltedAperture* app=new TiltedAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
+						CollimatorAperture* app=new CollimatorAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
 
 						//Set the aperture for collimation
 						(*c)->SetAperture(app);
