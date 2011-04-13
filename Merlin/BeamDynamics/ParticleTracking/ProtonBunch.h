@@ -7,6 +7,7 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
+#include <vector>
 
 using namespace std;
 using namespace ParticleTracking;
@@ -86,6 +87,18 @@ public:
 
     void ConfigureScatter(const Aperture* ap);
 
+    // set table of t against sigma for calculating b
+    void ConfigureScatter_pp_table(const char*);
+    double get_ft(double t);
+    vector<double> t_sigma_table;
+    double t_sigma_table_step;
+
+    // set table of xi against sigma for calculating b
+    void ConfigureScatter_xi_table(const char*);
+    double get_fxi(double xi);
+    vector<double> xi_sigma_table;
+    double xi_sigma_table_step;
+
     //Scattering physics variables
     double A,Z,E0,X0,rho;
     double lambda_tot;
@@ -102,6 +115,8 @@ public:
     double C,C0,C1,delta;
     double dEdx;
     double xi0;
+    
+
 
 }; // end ProtonBunch class
 
