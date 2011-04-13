@@ -14,9 +14,8 @@
 #include <typeinfo>
 #include <fstream>
 #include <sstream>
-#include "AcceleratorModel/Apertures/CollimatorAperture.hpp"
+#include "AcceleratorModel/Apertures/TiltedAperture.hpp"
 #include "NumericalUtils/utils.h"
-#include "NumericalUtils/PhysicalUnits.h"
 // CollimateParticleProcess
 #include "Collimators/CollimateParticleProcess.h"
 // Aperture
@@ -26,8 +25,8 @@
 
 using namespace std;
 
-//extern void ScatterParticle(PSvector& p, double X0, double x, double E0);
-//extern void ScatterProton(PSvector& p, double x, double E0, const TiltedAperture* tap);
+extern void ScatterParticle(PSvector& p, double X0, double x, double E0);
+extern void ScatterProton(PSvector& p, double x, double E0, const TiltedAperture* tap);
 
 namespace {
 
@@ -53,7 +52,7 @@ namespace ParticleTracking {
 
 CollimateParticleProcess::CollimateParticleProcess (int priority, int mode, std::ostream* osp)
         : ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
-        createLossFiles(false),file_prefix(""),lossThreshold(1),nstart(0),pindex(0),scatter(false),bin_size(0.1*PhysicalUnits::meter),Imperfections(false)
+        createLossFiles(false),file_prefix(""),lossThreshold(1),nstart(0),pindex(0),scatter(false)
 {}
 
 CollimateParticleProcess::~CollimateParticleProcess ()
@@ -102,16 +101,6 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 			//Xr = aSpoiler->GetMaterialRadiationLength();
 			currentBunch->SetScatterConfigured(false);
 			len = aSpoiler->GetLength();
-			CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(aSpoiler->GetAperture());
-			if(CollimatorJaw)
-			{
-				//CollimatorJaw->
-				if(Imperfections)
-				{
-					CollimatorJaw->SetJawLength(len);
-					CollimatorJaw->EnableErrors(true);
-				}
-			}
 		}
 	}
 	else
@@ -193,7 +182,7 @@ void CollimateParticleProcess::DoCollimation ()
 			if(!is_spoiler || DoScatter(*p)) 
 			{
 				lost.push_back(*p);
-				/* This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster */
+				/* This is slow for a STL Vector */
 				//p=currentBunch->erase(p);
 				p++;
 				if(pindex!=0)
@@ -274,57 +263,56 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 //	PSvectorArray lostp = bin_lost_output(lostb);
         	if(os!=0)
 		{
+
 			double length = currentComponent->GetLength();
-			//We bin in 0.1m sections of the element, this is how many bins we have
-			//n is our number of bins
-			int n = length / bin_size;
+			int n = length / 0.1;
 
 			bool overflow = false;
-			//The element length may not be an exact multiple of the bin size, so we must take this into account.
 			if ((length/(double)n) != 0.0)
 			{
-				//Add an aditional bin
 				n++;
 				overflow = true;
 			}
 
-			//Create the array - n rows, 3 cols
+			//Create the array
 			double** lostp = new double*[n];
 			for(int i = 0; i<n; ++i)
 			{
 				lostp[i] = new double[3];
 			}
-
-			//Initialize the array elements
+			//fill the aray
 			for(int j = 0; j<n; j++)
 			{
-				lostp[j][0] = bin_size*j;	//Start position
-				lostp[j][1] = bin_size;		//Length
-				lostp[j][2] = 0.0;		//Entries
+				lostp[j][0] = 0.1*j;	//Start position
+				lostp[j][1] = 0.1;	//Length
+				lostp[j][2] = 0.0;	//Entries
 			}
-
-			//deal with the last bin if needed - will have a different length.
+			//deal with the last bin
 			if(overflow)
 			{
-				lostp[n-1][0] = bin_size*(n-1);
-				lostp[n-1][1] = length - (bin_size*(n-1));
+				lostp[n-1][0] = 0.1*(n-1);
+				lostp[n-1][1] = length - (0.1*(n-1));
 				lostp[n-1][2] = 0.0;
 			}
 
-			//Now to do the output - first loop over each bin
+
+			for(size_t l = 0; l < lostb.size(); l++)
+			{
+				int x = lostb[l].ct()/0.1;
+				lostp[x][2]++;
+			}
+
 			for(int j = 0; j<n; j++)
 			{
-				//We then check if there are any lost particles in this bin
-				//If there are lost particles, then we must output the count (lost count > 0)
-				if(lostp[j][2] > 0.0)
+				if(lostp[j][2] != 0.0)
 				{
 				//cout << lostp[j][0] << "\t" << lostp[j][1] << "\t" << lostp[j][2] << endl;
 				(*os).precision(16);
-				(*os) << std::setw(35)<<left<<(*currentComponent).GetQualifiedName().c_str();			//Component name - can be quite long for certain LHC magnets
+				(*os) << std::setw(24)<<left<<(*currentComponent).GetQualifiedName().c_str();
 				//(*os) << std::setw(24)<<left<<lostp[j][0] + currentBunch->GetReferenceTime()-length;	//Bin start position
 				(*os) << std::setw(24)<<left<<lostp[j][0] + currentComponent->GetComponentLatticePosition();	//Bin start position
-				(*os) << std::setw(24)<<left<<lostp[j][1];							//Bin length
-				(*os) << "\t" << lostp[j][2];									//Loss count
+				(*os) << std::setw(24)<<left<<lostp[j][1]; //Bin length
+				(*os) << "\t" << lostp[j][2]; //Loss count
 				(*os) << endl;
 				}
 			}
@@ -369,7 +357,7 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 bool CollimateParticleProcess::DoScatter (Particle& p)
 {
 	//double E0=currentBunch->GetReferenceMomentum();
-	const CollimatorAperture *tap = (CollimatorAperture*) currentComponent->GetAperture();
+	const TiltedAperture *tap = (TiltedAperture*) currentComponent->GetAperture();
 
 	int scatter_type = currentBunch->Scatter(p,len,tap);
 
@@ -443,18 +431,4 @@ void CollimateParticleProcess::bin_lost_output(const PSvectorArray& lostb)
 	}
 }
 
-void CollimateParticleProcess::SetOutputBinSize(double binsize)
-{
-
-}
-
-double CollimateParticleProcess::GetOutputBinSize() const
-{
-	return bin_size;
-}
-
-void CollimateParticleProcess::EnableImperfections(bool enable)
-{
-	Imperfections = enable;
-}
 } // end namespace ParticleTracking
