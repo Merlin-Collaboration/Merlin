@@ -147,7 +147,7 @@ namespace {
 		double len   = data[L];
 		double angle = data[ANGLE];
 		double k1    = data[K1];
-		double k2    = data[K2];
+		//double k2    = data[K2];
 		double e1    = data[E1];
 		double e2    = data[E2];
 		double tilt  = data[TILT];
@@ -176,7 +176,7 @@ namespace {
 		double len   = data[L];
 		double angle = data[ANGLE];
 		double k1    = data[K1];
-		double k2    = data[K2];
+		//double k2    = data[K2];
 		double e1    = angle/2;
 		double e2    = angle/2;
 		double tilt  = data[TILT];
