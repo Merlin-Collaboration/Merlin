@@ -23,6 +23,10 @@
 // ParticleBunch
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 
+#ifdef MERLIN_PROFILE
+#include "utility/MerlinProfile.hpp"
+#endif
+
 using namespace std;
 
 // needed by sort algorithm
@@ -618,6 +622,11 @@ void ParticleBunch::gather()
 //Will involve a call to size() and sending this to the master first from each node
 //MPI::COMM_WORLD.Gather() on 1 int each.
 
+#ifdef MERLIN_PROFILE
+MerlinProfile::AddProcess("GATHER");
+MerlinProfile::StartProcessTimer("GATHER");
+#endif
+
 if (init == false)
 {
 	MPI_Initialize();
@@ -633,11 +642,20 @@ if (init == false)
 	{
 		node_send_particles_to_master();
 	}
+
+#ifdef MERLIN_PROFILE
+MerlinProfile::EndProcessTimer("GATHER");
+#endif
 }
 
 //Particle distribution function: Here all particles on the master are distributed between the nodes/
 void ParticleBunch::distribute()
 {
+	#ifdef MERLIN_PROFILE
+	MerlinProfile::AddProcess("SCATTER");
+	MerlinProfile::StartProcessTimer("SCATTER");
+	#endif
+
 //Should use MPI::COMM_WORLD.Scatterv() as per the gather
 	Check_MPI_init();
 	MPI::COMM_WORLD.Barrier();
@@ -651,6 +669,11 @@ void ParticleBunch::distribute()
 	{
 		node_recv_particles_from_master();
 	}
+
+	#ifdef MERLIN_PROFILE
+	MerlinProfile::EndProcessTimer("SCATTER");
+	#endif
+
 	/*
 	MPI::COMM_WORLD.Scatterv()
 	if (MPI_rank == 0)
