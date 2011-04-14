@@ -311,6 +311,15 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 				lostp[n-1][2] = 0.0;
 			}
 
+			//cout << "Number of lost particles at " << currentComponent->GetName() << ": " << lostb.size() << endl;
+
+			for(size_t l=0; l<lostb.size(); l++)
+			{
+				int x = lostb[l].ct()/bin_size;
+				//Add one loss count to this bin
+				lostp[x][2]++;
+			}
+
 			//Now to do the output - first loop over each bin
 			for(int j = 0; j<n; j++)
 			{
