@@ -118,14 +118,14 @@ inline void SortArray(std::list<T>& array)
 namespace ParticleTracking {
 
 ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
-        : Bunch(P0,Q),init(false),pArray(),coords((int) sizeof(PSvector)/sizeof(double)),qPerMP(Q/particles.size())
+        : Bunch(P0,Q),init(false),pArray(),coords((int) sizeof(PSvector)/sizeof(double)),qPerMP(Q/particles.size()),ScatteringPhysicsModel(0)
         //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
     pArray.swap(particles);
 }
 
 ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
-        : Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double))
+        : Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0)
         //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
     PSvector p;
@@ -136,7 +136,7 @@ ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double Part
 }
 
 ParticleBunch::ParticleBunch (double P0, double Qm, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
-        : Bunch(P0,Qm),qPerMP(Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double))
+        : Bunch(P0,Qm),qPerMP(Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0)
         //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {}
 

@@ -85,8 +85,6 @@ public:
 		cout<<endl;
 	}
 
-    void ConfigureScatter(const Aperture* ap);
-
     // set table of t against sigma for calculating b
     void ConfigureScatter_pp_table(const char*);
     double get_ft(double t);
@@ -116,7 +114,15 @@ public:
     double dEdx;
     double xi0;
     
+    //Scattering physics mode
+    void EnableSixtrackPhysics(bool);
 
+    int ScatterSixtrack(PSvector& pi, double x, const Aperture* ap);
+    int ScatterMerlin(PSvector& pi, double x, const Aperture* ap);
+    
+    void ConfigureScatter(const Aperture* ap);
+    void ConfigureScatterMerlin(const Aperture* ap);
+    void ConfigureScatterSixtrack(const Aperture* ap);
 
 }; // end ProtonBunch class
 

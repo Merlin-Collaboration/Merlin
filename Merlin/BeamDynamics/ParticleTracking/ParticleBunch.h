@@ -141,7 +141,7 @@ public:
     virtual void Scatter(PSvector &){ return;}
     void SetScatterConfigured(bool);
     bool ScatterConfigured;
-
+    size_t ScatteringPhysicsModel;
 
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;
