@@ -108,6 +108,7 @@ double ProtonBunch::get_ft(const double t)
                 exit(1);
         }
 
+        size_t index = size_t(0.5+t/t_sigma_table_step);
 	if(t < 0)
 	{
 		cerr << "WARNING: outside range of t_sigma_table" << endl;
@@ -115,13 +116,12 @@ double ProtonBunch::get_ft(const double t)
 		<< " t_sigma_table_step=" << t_sigma_table_step << endl;
 	}
 
-        size_t index = size_t(0.5+t/t_sigma_table_step);
 
         if (index > t_sigma_table.size())
         {
                 cerr << "WARNING: outside range of t_sigma_table \n";
                 cerr << "t="<< t << " index=" << index << " t_sigma_table.size()" << t_sigma_table.size()
-                        << " t_sigma_table_step=" << t_sigma_table_step << endl;
+		<< " t_sigma_table_step=" << t_sigma_table_step << endl;
         }
 
         if(index<0) index=0;
@@ -212,6 +212,7 @@ double ProtonBunch::get_fxi(const double xi)
                 exit(1);
         }
 
+	size_t index = size_t(0.5+xi/xi_sigma_table_step);
 	if(xi < 0)
 	{
 		cerr << "WARNING: outside range of xi_sigma_table \n";
@@ -219,7 +220,6 @@ double ProtonBunch::get_fxi(const double xi)
 		<< " xi_sigma_table_step=" << xi_sigma_table_step << endl;
 	}
 
-	size_t index = size_t(0.5+xi/xi_sigma_table_step);
 
         if (index > xi_sigma_table.size())
         {
