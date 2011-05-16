@@ -1032,7 +1032,7 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 					b = 7.0 * b_pp / 12.0;
 				}
 				t =-log(RandomNG::uniform(0,1))/b;
-				dp = xm2/center_of_mass_squared;
+				dp = xm2*E1/center_of_mass_squared;
 				
 			}
 
