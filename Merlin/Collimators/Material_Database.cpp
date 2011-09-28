@@ -90,8 +90,8 @@ Particle data group: http://pdg.lbl.gov/2010/AtomicNuclearProperties/
 	Cu->sigma_pN_total		=	1.232;
 	Cu->sigma_pN_inelastic		=	0.782;
 	Cu->sigma_Rutherford		=	0.00153;
-//	Cu->dEdx			=	2.69;
-	Cu->dEdx			=	1.250776630157339;
+	Cu->dEdx			=	2.69;
+//	Cu->dEdx			=	1.250776630157339;
 	Cu->rho				=	8.96;
 	Cu->A				=	63.546;
 	Cu->sigma			=	5.98E7;
