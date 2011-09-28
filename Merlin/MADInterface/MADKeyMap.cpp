@@ -30,10 +30,8 @@ MADKeyMap::MADKeyMap (const std::string& hstr): has_type(false), has_apertype(fa
 	{
 		if(s=="TYPE")
 		{
-			//This if test is essentially old legacy code and should be removed.
+			//This if test is essentially old legacy code and should be removed, but kept to keep compatibility.
 			has_type=true;
-			//This fixes the loading of the tfs files, before the extra column would not be counted.
-			kmap[s]=n++;
 		}
 		else if(s=="APERTYPE")
 		{

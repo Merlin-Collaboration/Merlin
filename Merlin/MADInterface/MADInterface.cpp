@@ -486,6 +486,12 @@ double MADInterface::ReadComponent ()
 	AcceleratorComponent *component = NULL;
 	double brho = energy/eV/SpeedOfLight;
 
+	if(prmMap->has_type)
+	{
+		_READ(aptype);
+		aptype=StripQuotes(aptype);
+	}
+
 	//Do we want to build apertures, and do we have the required information required?
 	if(incApertures && !prmMap->has_apertype)
 	{
