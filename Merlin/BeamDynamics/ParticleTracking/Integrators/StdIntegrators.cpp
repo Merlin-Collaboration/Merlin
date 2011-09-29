@@ -399,8 +399,14 @@ void SWRFStructureCI::TrackStep (double ds)
 	RMtrx Rm(2);
 	TransportMatrix::SWRFCavity(ncells,g,f,phi,E0,Rm.R);
 
-	for_each(currentBunch->begin(),currentBunch->end(),ApplyRFdp(g*ds/E0,f,phi,Rm,true));
-
+	if(g == 0)	//no RF voltage, apply a drift instead
+	{
+	        ApplyDrift(currentBunch->GetParticles(),ds);
+        }
+        else
+        {
+		for_each(currentBunch->begin(),currentBunch->end(),ApplyRFdp(g*ds/E0,f,phi,Rm,true));
+	}
 	if(true)
 	{
 		currentBunch->IncrReferenceMomentum(g*ds*cos(phi));
