@@ -225,15 +225,11 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
-
-	IgnoreZeroLengthType("RCOLLIMATOR");
-//	IgnoreZeroLengthType("VKICKER");
 	
 	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
-//	TreatTypeAsDrift("VKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
-//	TreatTypeAsDrift("HKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
 	//TreatTypeAsDrift("RFCAVITY");	// merlin bug! - Fix tracking with zero cavity voltage.
 
+	IgnoreZeroLengthType("RCOLLIMATOR");
 }
 
 void MADInterface::Initialise()
@@ -833,12 +829,6 @@ double MADInterface::ReadComponent ()
 		Sextupole* sx = new Sextupole(name,len,brho*k2/len);
 		ctor->AppendComponent(*sx);
 		component=sx;
-
-/*
-		Drift* aDrift = new Drift(name,len);
-		ctor->AppendComponent(*aDrift);
-		component=aDrift;
-*/
         }
         else if(type=="OCTUPOLE")
         {
@@ -908,13 +898,13 @@ double MADInterface::ReadComponent ()
         {
 		if(name.substr(0,4)=="BPM_")
 		{
-			BPM* bpm = new BPM("BPM"+name.substr(4));
+			BPM* bpm = new BPM("BPM"+name.substr(4),len);
 			ctor->AppendComponent(*bpm);
 			component=bpm;
 		}
 		else if(name.substr(0,3)=="WS_")
 		{
-			RMSProfileMonitor* ws = new RMSProfileMonitor("WS"+name.substr(3));
+			RMSProfileMonitor* ws = new RMSProfileMonitor("WS"+name.substr(3),len);
 			ctor->AppendComponent(*ws);
 			component=ws;
 		}
@@ -923,7 +913,7 @@ double MADInterface::ReadComponent ()
 			#ifndef NDEBUG
 			MERLIN_WARN << "Unknown monitor type: "<<name<<" defaulting to BPM" << endl;
 			#endif
-			BPM* bpm = new BPM(name);
+			BPM* bpm = new BPM(name,len);
 			ctor->AppendComponent(*bpm);
 			component=bpm;
 		}
