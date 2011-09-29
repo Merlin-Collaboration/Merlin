@@ -220,15 +220,18 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	}
 
 	// By default, we currently treat the following MAD types as drifts
-	TreatTypeAsDrift("MARKER");	// merlin bug!
+//	TreatTypeAsDrift("MARKER");	// merlin bug!
 	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
 
+	IgnoreZeroLengthType("RCOLLIMATOR");
+//	IgnoreZeroLengthType("VKICKER");
+	
 	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
-	TreatTypeAsDrift("VKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
-	TreatTypeAsDrift("HKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
+//	TreatTypeAsDrift("VKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
+//	TreatTypeAsDrift("HKICKER");	// merlin bug! - orbit correctors, injection + extraction kickers + friends.
 	//TreatTypeAsDrift("RFCAVITY");	// merlin bug! - Fix tracking with zero cavity voltage.
 
 }
@@ -518,7 +521,7 @@ double MADInterface::ReadComponent ()
 
         if(len==0 && zeroLengths.find(type)!=zeroLengths.end())
         {
-		MerlinIO::warning() << "Ignoring zero length " << type << endl;
+		MerlinIO::warning() << "Ignoring zero length " << type << ": " << name << endl;
 		return 0;
         }
 	else if(type =="KICKER")
@@ -529,7 +532,7 @@ double MADInterface::ReadComponent ()
 	{
 		type="DRIFT";
 	}
-	else if(type=="VKICKER")
+/*	else if(type=="VKICKER")
 	{
 		if (prmMap->GetParameter("VKICK") == 0)
 		{
@@ -542,8 +545,8 @@ double MADInterface::ReadComponent ()
 		{
 			type="DRIFT";
 		}
-
 	}
+*/
 	else if(type =="RFCAVITY")
 	{
 		//type="DRIFT";
@@ -555,7 +558,6 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type=="RCOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
 	{
-		//type="SPOILER";
 		type="COLLIMATOR";
 	}
 	else if(type=="ECOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
@@ -594,34 +596,48 @@ double MADInterface::ReadComponent ()
         }
 	else if(type=="VKICKER")
 	{
+		double scale;
+		if(len > 0)
+		{
+			scale = brho/len;
+		}
+		else	//treat as an integrated length
+		{
+			scale = brho;
+		}
+
+		double kick = prmMap->GetParameter("VKICK");
 		//X,Y,tilt
-		cout << "VKICKER " << name << "\t" << len << "\t" << prmMap->GetParameter("VKICK") << endl;
-		Kicker* aKicker = new Kicker(name,len,0.0,prmMap->GetParameter("VKICK"),tilt);
+//		cout << "VKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
+		YCor* aKicker = new YCor(name,len,scale*kick);
+//		if(tilt!=0)
+//		(*aKicker).GetGeometry().SetTilt(tilt);
 		ctor->AppendComponent(*aKicker);
 		component=aKicker;
-
-/*
-		Drift* aDrift = new Drift(name,len);
-		ctor->AppendComponent(*aDrift);
-		component=aDrift;
-*/
 	}
 	else if(type=="HKICKER")
 	{
+		double scale;
+		if(len > 0)
+		{
+			scale = brho/len;
+		}
+		else	//treat as an integrated length
+		{
+			scale = brho;
+		}
+		double kick = prmMap->GetParameter("HKICK");
 		//X,Y,tilt
-		cout << "HKICKER " << name << "\t" << len << "\t" << prmMap->GetParameter("HKICK") << endl;
-		Kicker* aKicker = new Kicker(name,len,prmMap->GetParameter("HKICK"),0.0,tilt);
+//		cout << "HKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
+		XCor* aKicker = new XCor(name,len,-scale*kick);
+//		if(tilt!=0)
+//		(*aKicker).GetGeometry().SetTilt(tilt);
 		ctor->AppendComponent(*aKicker);
 		component=aKicker;
-
-/*
-		Drift* aDrift = new Drift(name,len);
-		ctor->AppendComponent(*aDrift);
-		component=aDrift;
-*/
 	}
 	else if(type=="COLLIMATOR")
 	{
+		/*
 		//Check we have collimator info
 		if(collimator_db == NULL)
 		{
@@ -732,6 +748,14 @@ double MADInterface::ReadComponent ()
 			ctor->AppendComponent(*aDrift);
 			component=aDrift;
 		}
+		*/
+
+
+		Spoiler* aSpoiler = new Spoiler(name,len);
+
+		//Add the component to the accelerator
+		ctor->AppendComponent(*aSpoiler);
+		component=aSpoiler;
 	}//End of Collimators
 
 	//Magnets
@@ -932,6 +956,12 @@ double MADInterface::ReadComponent ()
 	{
 		ctor->AppendComponentFrame(ConstructSrot(prmMap->GetParameter("L"),name));
 		component=0;
+	}
+	else if(type=="MARKER")
+	{
+		Marker* aMarker = new Marker(name);
+		ctor->AppendComponent(*aMarker);
+		component=aMarker;
 	}
         else
 	{
