@@ -63,7 +63,7 @@ struct MultipoleKick {
     MultipoleKick(const MultipoleField& f, double len, double P0, double q, double phi =0)
             : field(f)
     {
-      // cout <<"aply multipolekick"<<endl;
+       //cout <<"apply multipolekick"<<endl;
        scale = q*len*eV*SpeedOfLight/P0*Complex(cos(phi),sin(phi));
     }
 
@@ -74,8 +74,8 @@ struct MultipoleKick {
         Complex F = scale*field.GetField2D(x,y)/(1+dp);
         v.xp() += -F.real();
         v.yp() +=  F.imag();
-        v.x()=x;
-        v.y()=y;
+//        v.x()=x;
+//        v.y()=y;
         //cout<<"x vector v component=" <<x<<endl;
         //cout<<"y vector v component =" <<y<<endl;
     };
@@ -293,7 +293,9 @@ void SectorBendCI::ApplyPoleFaceRotation (const SectorBend::PoleFace* pf)
     double c = 0; // currently not implemented
     double hg = _PFV(pf,hgap);
     double fint = _PFV(pf,fint);
-    RTMap* M = PoleFaceTM(h,k,beta,c,fint,hg);
+    double ent = _PFV(pf,type);
+//	cout << (*pf).type << endl;
+    RTMap* M = PoleFaceTM(h,k,beta,c,fint,hg,ent);
     ApplyMapToBunch(*currentBunch,M);
     delete M;
 }
@@ -336,6 +338,7 @@ void RectMultipoleCI::TrackStep (double ds)
     //  - there is a sextupole    "     "     "        "
 
     bool splitMagnet = abs(ch)!=0 || (cK1!=Complex(0) && np>1) || np>2;
+	//cout << "split? : " << splitMagnet << "\t" <<  endl;
     double len = splitMagnet ? ds/2 : ds;
 
 
@@ -400,6 +403,7 @@ void RectMultipoleCI::TrackStep (double ds)
     else { // drift with a kick in the middle
         ApplyDriftToBunch(*currentBunch,len);
         if(splitMagnet) {
+	//pocout <<(*currentComponent).GetQualifiedName() << "\t" << (*currentComponent).GetLength() << "\t" << len << "\t" << ds << endl;
             for_each((*currentBunch).begin(),(*currentBunch).end(),MultipoleKick(field,ds,P0,q));
             // Apply second half of map
             ApplyDriftToBunch(*currentBunch,len);

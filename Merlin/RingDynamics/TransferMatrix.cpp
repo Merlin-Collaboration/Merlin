@@ -90,7 +90,9 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit)
             p[k-1] += delta;
         bunch.push_back(p);
     }
-
+//cout <<"bunch dump 1" << endl;
+	//MatrixForm(M,std::cout,OPFormat().precision(6).fixed());
+//	bunch.Output(std::cout);
     ParticleTracker tracker(theModel->GetRing(obspnt),&bunch,false);
 
     if(radiation) {
@@ -120,11 +122,10 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit)
         for(int m=0; m<6; m++)
             M(m,k) = ((*ip)[m] - pref[m]) / delta;
 
-    /*
-    	cout<<"Transfer Matrix: "<<endl;
-    	cout<<orbit;
-    	cout<<pref<<endl;
-    	MatrixForm(M,cout,OPFormat().precision(6).fixed());
-    	cout<<endl;
-    */
+
+//    	cout<<"Transfer Matrix: "<<endl;
+//    	cout<<orbit;
+//    	cout<<pref<<endl;
+//    	MatrixForm(M,cout,OPFormat().precision(6).fixed());
+//    	cout<<endl;
 }

@@ -67,7 +67,7 @@ public:
     class PoleFace
     {
     public:
-        PoleFace (double angle = 0, double f_int = 0, double hg = 0);
+        PoleFace (double angle = 0, double f_int = 0, double hg = 0, double type = 1);
 
         // Data Members for Class Attributes
 
@@ -79,6 +79,9 @@ public:
 
         //	half gap magnet.
         double hgap;
+	
+	//	Pole face type
+	double type;
 
     protected:
     private:
@@ -120,12 +123,20 @@ public:
             Clear();
             entrance=e1;
             exit=e2;
+            entrance->type = 1;
+            exit->type = 0;
+//	cout << "entrance\t" << entrance->type << endl;
+	//cout << "exit\t" << exit->type << endl << endl;
         }
 
         void SetInfo (PoleFace* e1)
         {
             Clear();
             entrance=exit=e1;
+            entrance->type = 1;
+            exit->type = 0;
+//	cout << "entrance\t" << entrance->type << endl;
+//	cout << "exit\t" << exit->type << endl << endl;
         }
 
         // Data Members for Class Attributes

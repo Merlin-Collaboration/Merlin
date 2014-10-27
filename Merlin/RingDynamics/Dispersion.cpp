@@ -38,10 +38,12 @@ void Dispersion::FindDispersion(int n)
 
     PSvector p(0);
     p.dp() = -delta;
+    //p.dp() = delta;
     co.FindClosedOrbit(p, n);
 
     PSvector q(0);
     q.dp() = delta;
+    //q.dp() = -delta;
     co.FindClosedOrbit(q, n);
 
     Dx  = (q.x() - p.x())/2/delta;

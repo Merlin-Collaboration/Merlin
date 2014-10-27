@@ -23,10 +23,6 @@
 #include "AcceleratorModel/AcceleratorModel.h"
 //#include "AcceleratorModel/Components.h"
 
-#include "Collimators/Collimator_Database.hpp"
-#include "Collimators/Material_Database.hpp"
-#include "Collimators/Material.hpp"
-
 class AcceleratorModelConstructor;
 class MADKeyMap;
 
@@ -95,9 +91,6 @@ public:
 
     void ConstructNewFrame (const string& name);
     void EndFrame (const string& name);
-    void Set_Collimator_Database(Collimator_Database*);
-//    void Set_x_emittance(double emittance);
-//    void Set_y_emittance(double emittance);
 
 protected:
     double energy;
@@ -118,7 +111,6 @@ protected:
 
     double ReadComponent ();
     void Initialise();
-    Collimator_Database* collimator_db;
     double z;	//Distance along the lattice
 };
 

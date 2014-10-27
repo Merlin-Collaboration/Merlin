@@ -26,7 +26,8 @@
 #include "AcceleratorModel/Frames/SequenceFrame.h"
 // SimpleApertures
 #include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/Apertures/CollimatorAperture.hpp"
+#include "AcceleratorModel/Apertures/CollimatorAperture.h"
+#include "AcceleratorModel/Apertures/RectEllipseAperture.h"
 
 // AcceleratorModelConstructor
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
@@ -204,10 +205,16 @@ void check_column_heading(istream& is, const string& hd)
 } // Namespace end
 
 // Class MADInterface
+/*
 MADInterface::MADInterface (const std::string& madFileName, double P0)
         : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
         incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL),z(0)
+*/
+MADInterface::MADInterface (const std::string& madFileName, double P0)
+        : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
+        log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
+        incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0)
 {
 	if(ifs)
 	{
@@ -604,7 +611,7 @@ double MADInterface::ReadComponent ()
 
 		double kick = prmMap->GetParameter("VKICK");
 		//X,Y,tilt
-//		cout << "VKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
+	//	cout << "VKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
 		YCor* aKicker = new YCor(name,len,scale*kick);
 //		if(tilt!=0)
 //		(*aKicker).GetGeometry().SetTilt(tilt);
@@ -624,7 +631,7 @@ double MADInterface::ReadComponent ()
 		}
 		double kick = prmMap->GetParameter("HKICK");
 		//X,Y,tilt
-//		cout << "HKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
+	//	cout << "HKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
 		XCor* aKicker = new XCor(name,len,-scale*kick);
 //		if(tilt!=0)
 //		(*aKicker).GetGeometry().SetTilt(tilt);
@@ -796,7 +803,7 @@ double MADInterface::ReadComponent ()
 
 		if(e1!=0 || e2!=0)
 		{
-			if(e1==e2)
+/*			if(e1==e2)
 			{
 				bend->SetPoleFaceInfo(new SectorBend::PoleFace(e1));
 			}
@@ -807,6 +814,10 @@ double MADInterface::ReadComponent ()
 				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
 				bend->SetPoleFaceInfo(pf1,pf2);
 			}
+*/
+			SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
+			SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
+			bend->SetPoleFaceInfo(pf1,pf2);
 		}
 
 		if(tilt!=0)
@@ -983,29 +994,3 @@ double MADInterface::ReadComponent ()
 
 	return component ? component->GetLength() : 0.0;
 }
-
-
-void MADInterface::Set_Collimator_Database(Collimator_Database *db)
-{
-	collimator_db = db;
-}
-/*
-void MADInterface::Set_x_emittance(double emitt)
-{
-	emittance_x = emitt;
-}
-
-void MADInterface::Set_y_emittance(double emitt)
-{
-	emittance_y = emitt;
-}
-*/
-
-			/*
-					double beta_x = prmMap->GetParameter("BETX");
-					double beta_y = prmMap->GetParameter("BETY");
-					double sigma = sqrt( ( beta_x * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
-					(beta_y * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
-					collimator_aperture_width = collimator_db->Collimator[i].sigma_x*sigma*2;
-					collimator_aperture_height = collimator_db->Collimator[i].sigma_y*sigma*2;
-					*/

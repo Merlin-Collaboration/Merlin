@@ -45,8 +45,8 @@
 
 
 
-SectorBend::PoleFace::PoleFace (double angle, double f_int, double hg)
-        : rot(angle),fint(f_int),hgap(hg)
+SectorBend::PoleFace::PoleFace (double angle, double f_int, double hg, double face_type)
+        : rot(angle),fint(f_int),hgap(hg),type(face_type)
 {
 }
 

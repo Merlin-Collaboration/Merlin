@@ -157,7 +157,13 @@ void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
                 ynorm += y(n) * y(n);
                 ydotb += y(n) * b(n);
             }
-
+//	cout << "ynorm" << ynorm << "\t" << sqrt(ynorm) << "\t" << endl;
+/*
+	for(int rr=0; rr<6; rr++)
+	{
+		cout << "y: " << rr << "\t" << y(rr) << endl;
+	}
+*/
             b = y / sqrt(ynorm);
             lambda += 1.0/ydotb;
             iter++;
@@ -166,12 +172,16 @@ void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
         //Now normalise to Transpose[Conjugate[b]].s.b = I
         Complex bnorm = 0.;
 
-        for(row=0; row<6; row++) {
-            for(Subscript col=0; col<6; col++) {
+        for(row=0; row<6; row++)
+	{
+            for(Subscript col=0; col<6; col++)
+	    {
                 bnorm += Complex(real(b(row)),-imag(b(row))) * Complex(s(row,col),0) * b(col);
             }
         }
-        for(row=0; row<6; row++) {
+
+        for(row=0; row<6; row++)
+	{
             b(row) *= sqrt(Complex(1,0)/abs(bnorm));
         }
 
@@ -180,10 +190,10 @@ void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
             for(int row=0; row<6; row++)
                 b(row) = Complex(real(b(row)),-imag(b(row)));
         }
-
         eigenvalues(pln) = lambda;
         eigenvectors.row(pln) = b;
     }
+
 }
 
 void Symplectify(RealMatrix& a)

@@ -18,7 +18,12 @@ export MERLIN_INSTALL_DIR=${HOME}/lib
 
 export INCPATH= -I${MERLIN_ROOT_DIR} -I${HOME}/include
 
-export CCFLAGS=-pipe -fPIC -O2 -pedantic -Wall -lgsl -L${HOME}/lib
+#export CCFLAGS=-pipe -fPIC -O2 -march=nocona -msse -msse2 -mfpmath=sse -pedantic -Wall -lgsl -L${HOME}/lib
+
+export CCFLAGS=-flto -pipe -fPIC -O3 -march=native -ffast-math -std=c++11 -msse -msse2 -mfpmath=sse,387 -pedantic -Wall #-lgsl -L${HOME}/lib
+#export CCFLAGS=-pipe -fPIC -ggdb -g -pg -pedantic -Wall -lgsl -L${HOME}/lib
+
+#export CCFLAGS=-pipe -fPIC -pedantic -Wall #-lgsl -L${HOME}/lib 
 export OBJDIR=${MERLIN_BUILD_DIR}/obj/
 
 SUBDIRS= AcceleratorModel \
@@ -56,10 +61,10 @@ SUBDIRS= AcceleratorModel \
       RingDynamics 
 
 ifeq ($(build),debug)
-	CCFLAGS:=${CCFLAGS} -ggdb3 -pg -W -Wextra -fopenmp -DENABLE_OPENMP
+	CCFLAGS:=${CCFLAGS} -ggdb3 -ggdb -g3 -W -Wextra -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)debug
 else ifeq ($(build),release)
-	CCFLAGS:=${CCFLAGS} -DNDEBUG -fopenmp -DENABLE_OPENMP -mtune=generic -msse -msse2 -mfpmath=sse
+	CCFLAGS:=${CCFLAGS} -DNDEBUG -fopenmp -DENABLE_OPENMP -O3 -march=native -mfpmath=sse,387
 	OBJDIR:= $(OBJDIR)release
 else ifeq ($(build),mpi)
 	##set to the compiler one wishes openMPI to use
@@ -67,11 +72,14 @@ else ifeq ($(build),mpi)
 	export OMPI_CC=gcc
 	CPP=mpiCC
 	LINK=mpiCC
-	CCFLAGS:= ${CCFLAGS} -DENABLE_MPI -DNDEBUG -march=native -mfpmath=sse
+	##CPP=mpicc
+	##LINK=mpicc
+	CCFLAGS:= ${CCFLAGS} -DENABLE_MPI -DNDEBUG -O3 -march=native -mfpmath=sse,387
+	#CCFLAGS:= ${CCFLAGS} -DENABLE_MPI
 	OBJDIR:= $(OBJDIR)mpi
 else
 	##Default to release if no type specified
-	CCFLAGS:=${CCFLAGS} -march=native -mfpmath=sse -DNDEBUG -fopenmp -DENABLE_OPENMP
+	CCFLAGS:=${CCFLAGS} -mfpmath=sse -DNDEBUG -fopenmp -DENABLE_OPENMP
 	OBJDIR:= $(OBJDIR)release
 endif
 default: build
@@ -96,7 +104,7 @@ obj:
 	fi
 
 build: subdirs
-	$(LINK)  -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
+	$(LINK) -flto -fPIC -shared -Wl,--export-dynamic,-soname=libmerlin.so -o ${MERLIN_INSTALL_DIR}/libmerlin.so ${OBJDIR}/*.o
 # -lrt
 #	uncomment the following line for static linking
 #	ar rcsv ${MERLIN_INSTALL_DIR}/libmerlin.a ${OBJDIR}/*.o

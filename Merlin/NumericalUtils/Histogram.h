@@ -16,6 +16,7 @@
 #define _h_Histogram 1
 
 #include <vector>
+#include <cstddef>
 
 size_t Hist(const std::vector<double>& data, double x1, double x2, double dx, std::vector<double>& hist);
 

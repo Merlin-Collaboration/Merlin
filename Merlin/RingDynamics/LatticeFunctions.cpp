@@ -271,9 +271,12 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	} else {
 		ClosedOrbit co(theModel, p0);
 		co.SetDelta(delta);
+		co.TransverseOnly(true);
 		co.ScaleBendPathLength(cscale);
 		co.FindClosedOrbit(p);
 	}
+
+//cout << p << endl;
 
     RealMatrix M(6);
 	if(MInit) {
@@ -284,7 +287,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		tm.ScaleBendPathLength(cscale);
 		tm.FindTM(M,p);
 	}
-	
+//	cout << "Matrix 00 " << M(0,0) << endl;
     ComplexVector eigenvalues(3);
     ComplexMatrix eigenvectors(3,6);
 	if(symplectify)
@@ -292,17 +295,28 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
     EigenSystem(M, eigenvalues, eigenvectors);
 
 	int row, col;
+//cout << "eigenvalues" << endl;
+//cout << eigenvalues(0) << endl;
+//cout << eigenvalues(1) << endl;
+//cout << eigenvalues(2) << endl;
+//cout << endl;
 
     RealMatrix N(6);
-	RealMatrix R(6);
+    RealMatrix R(6);
     for(row=0; row<6; row++) {
-        for(col=0; col<3; col++) {
+        for(col=0; col<3; col++)
+	{
+		//cout << sqrt(2.)*eigenvectors(col,row).real() << endl;
+		//cout << sqrt(2.)*eigenvectors(col,row).imag() << endl;
+
             N(row,2*col)   = sqrt(2.)*eigenvectors(col,row).real();
             N(row,2*col+1) = sqrt(2.)*eigenvectors(col,row).imag();
 			R(row,2*col)   = 0.0;
 			R(row,2*col+1) = 0.0;
         }
     }
+	ofstream nfile("DataFiles/NormMatrix.dat");
+	MatrixForm(N,nfile,OPFormat().precision(6).fixed());
 
 	for(row=0; row<3; row++) {
 		int i = 2*row;
@@ -315,9 +329,12 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	}
 
 	N = N*R;
+	nfile << endl;
+	MatrixForm(R,nfile,OPFormat().precision(6).fixed());
+	nfile << endl;
+	MatrixForm(N,nfile,OPFormat().precision(6).fixed());
 
-//	ofstream nfile("DataFiles/NormMatrix.dat");
-//	MatrixForm(N,nfile,OPFormat().precision(6).fixed());
+
 
     ParticleBunch* particle = new ParticleBunch(p0, 1.0);
     particle->push_back(p);
@@ -391,14 +408,16 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		if(isMore){
 			s += tracker.GetCurrentComponent().GetLength();
 			isMore = tracker.StepComponent();
-
+			//cout << tracker.GetCurrentComponent().GetQualifiedName() << endl;
+			//MatrixForm(N,std::cout,OPFormat().precision(6).fixed());
+			//cout << endl;
 		}else
 			loop = false;
 
     } while(loop);
 
-//	ofstream mfile("TransferMatrix.dat");
-//	MatrixForm(M2,mfile,OPFormat().precision(6).fixed());
+	ofstream mfile("TransferMatrix.dat");
+	MatrixForm(M2,mfile,OPFormat().precision(6).fixed());
 
     return p.dp();
 }
@@ -460,7 +479,7 @@ public:
             : row(r), os(&_os) {};
 
     void operator()(LatticeFunction* lfn) {
-        (*os)<<std::setw(14)<<lfn->GetValue(row);
+        (*os)<<std::setw(24)<<lfn->GetValue(row);
     };
 
 };

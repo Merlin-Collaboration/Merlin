@@ -86,6 +86,7 @@ struct DoProc {
 	    #ifdef MERLIN_PROFILE
             MerlinProfile::StartProcessTimer(proc->GetID());
 	    #endif
+//	    cout << proc->GetID() << "\t" << ds << endl;
             proc->DoProcess(ds);
 	    #ifdef MERLIN_PROFILE
             MerlinProfile::EndProcessTimer(proc->GetID());

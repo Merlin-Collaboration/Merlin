@@ -10,6 +10,7 @@ MonitorProcess::MonitorProcess(const string& aID ,int prio, const string& prefix
         //cout << "MonitorProcess()" << endl;
         active = true;
         file_prefix = prefix;
+	count = 1;
 }
 
 void MonitorProcess::SetPrefix(const string& prefix)
@@ -36,7 +37,13 @@ void MonitorProcess::DoProcess (const double ds)
 {
         string filename;
         filename = file_prefix + currentComponent->GetName();
-
+	
+	stringstream f;
+	f << file_prefix;
+	f <<count;
+	filename = f.str();
+	count++;
+	cout << filename << endl;
 	#ifndef ENABLE_MPI
 	//cout << "MonitorProcess::DoProcess(): " << filename << endl;
 	ofstream out_file(filename.c_str());
@@ -65,7 +72,8 @@ void MonitorProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
         currentComponent = &component;
         std::vector<string>::iterator result = dump_at_elements.begin();
-	active = false;
+	//active = false;
+	active = true;
 	while(result != dump_at_elements.end())
 	{
 		//cout << (*result) << "\t" << component.GetName() << endl;

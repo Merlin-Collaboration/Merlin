@@ -42,15 +42,24 @@ struct collimator
 	collimator* Collimator;
 	size_t number_collimators;
 	bool use_sigma;
+	bool enable_resistive_wakes;
+	double ConfigureCollimators(AcceleratorModel* model, double energy, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
+	void SelectImpactFactor(string collimator, double impact);
+	void SetLogFile (ostream& os);
+	void EnableLogging(bool);
 
-	double Configure_collimators(AcceleratorModel* model, double energy, double emittance_x, double emittance_y, double scale = 1.0e-20);
-	void Select_impact_factor(string collimator, double impact);
+	//Do we match the collimator positions at entry AND exit to the beam envelope? (beta function + orbit offset)
+	void MatchBeamEnvelope(bool);
+    
+
 protected:
 
 	string primary_collimator;		//name of collimator where first impact will occur
 	double requested_impact_factor;		//Impact factor in m
 	double impact_sigma;			//Impact factor at collimator in number of sigmas
-
+	ostream* log;
+	bool logFlag;
+	bool MatchCollimatorToBeamEnvelope;
 private:
 
 };

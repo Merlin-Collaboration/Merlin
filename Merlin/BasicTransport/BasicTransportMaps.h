@@ -28,6 +28,6 @@ RTMap* SectorBendTM(double s, double h);
 RTMap* SextupoleTM(double s, double K2);
 RTMap* QuadrupoleTM(double s, double K1);
 RTMap* GenSectorBendTM(double s, double h, double K1, double K2);
-RTMap* PoleFaceTM(double h, double K1, double beta, double c, double fint, double hgap);
+RTMap* PoleFaceTM(double h, double K1, double beta, double c, double fint, double hgap, bool ent);
 
 #endif

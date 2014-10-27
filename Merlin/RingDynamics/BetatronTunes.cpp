@@ -49,7 +49,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 
 	CollimateParticleProcess collimate(1,COLL_AT_EXIT);
 	collimate.SetLossThreshold(200);
-	tracker.AddProcess(&collimate);
+//	tracker.AddProcess(&collimate);
 
     vector<double>* xData = &xData1;
     vector<double>* yData = &yData1;
@@ -58,6 +58,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
     int trackn = diffusion ? ntrack*2 : ntrack;
     for(int nturn=0; nturn<trackn; nturn++)
     {
+	cout << "Tune turn: " << nturn << endl;
         if(nturn==0)
             tracker.Run();
         else
@@ -102,10 +103,13 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 
     dQx = Qx2 - Qx;
     dQy = Qy2 - Qy;
+
+//    tracker.RemoveProcess(&collimate);
 }
 
 double BetatronTunes::FindTune(vector<double>& data)
 {
+	cout << "In FindTune" << endl;
     vector<double> spectrum;
     int nvals = data.size()/2;
     spectrum.reserve(nvals);

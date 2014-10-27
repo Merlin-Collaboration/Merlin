@@ -41,7 +41,7 @@ public:
 };
 
 typedef enum {normalDistribution,flatDistribution,ringDistribution,skewHaloDistribution,\
-		horizontalHaloDistribution1,verticalHaloDistribution1,horizontalHaloDistribution2,verticalHaloDistribution2} DistributionType;
+		horizontalHaloDistribution1,verticalHaloDistribution1,horizontalHaloDistribution2,horizontalHaloDistribution3,verticalHaloDistribution2} DistributionType;
 
 //	Constructs a particle bunch with random particles taken
 //	from a 6D distribution. The phase space moments are
@@ -85,7 +85,7 @@ public:
     //	bunch parameter settings. Each call to ConstructBunch
     //	generates a new random distribution (seed). The bunch
     //	Index is ignored in this case.
-    //Required due to pure virtual in Bunch.h
+    //  Required due to pure virtual in Bunch.h
     virtual Bunch* ConstructBunch (int bunchIndex = 0) const;
 
     //template <class T_bunch> T_bunch* ConstructParticleBunch () const;

@@ -301,6 +301,8 @@ double ParticleBunch::GetParticleLifetime() const
 	return 0;
 }
 
+
+
 //MPI code
 #ifdef ENABLE_MPI
 
@@ -331,14 +333,14 @@ void ParticleBunch::MPI_Initialize()
 	
 	//Total number of processors in the cluster
 	MPI_size = MPI::COMM_WORLD.Get_size();
-
+/*
 	//Make sure we have 1 master, 2 nodes until the particle distribution is "fixed"
 	if (MPI_size <= 2)
 	{
 		cout << "At least 2 nodes are currently required." << endl;
 		MPI::COMM_WORLD.Abort(1);
 	}
-
+*/
 	//find this processes rank
 	MPI_rank = MPI::COMM_WORLD.Get_rank();
 

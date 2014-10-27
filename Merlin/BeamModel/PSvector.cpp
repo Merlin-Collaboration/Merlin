@@ -21,8 +21,8 @@ using namespace std;
 
 ostream& operator<<(ostream& os, const PSvector& v)
 {
-    for(size_t i=0; i<6; i++)
-        os<<setw(14)<<scientific<<setprecision(5)<<v[i];
+    for(size_t i=0; i<PS_LENGTH; i++)
+        os<<setw(24)<<scientific<<setprecision(10)<<v[i];
 
 //    copy(v.v,v.v+6,ostream_iterator<double>(os," "));
     return os<<'\n';
@@ -30,7 +30,7 @@ ostream& operator<<(ostream& os, const PSvector& v)
 
 std::istream& operator>>(std::istream& is, PSvector& v)
 {
-    for(double *q = v.v; (q!=v.v+6) && is; q++)
+    for(double *q = v.v; (q!=v.v+PS_LENGTH) && is; q++)
         is>>*q;
     return is;
 }

@@ -5,11 +5,11 @@
 #include "BeamModel/BeamData.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/SpoilerWakeProcess.h" 
-#include "BeamDynamics/ParticleTracking/CollimateParticleProcess.h"
+#include "Collimators/SpoilerWakeProcess.h" 
+#include "Collimators/CollimateParticleProcess.h"
 #include "Random/RandomNG.h"
 #include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/SpoilerWakePotentials.h"
+#include "Collimators/SpoilerWakePotentials.h"
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
@@ -21,7 +21,7 @@
 // these classes implement examples of wake potentials
 // see A.M. Toader et al., EPAC08, Genua, WEPP161 for 
 // a collection of collimator wakefield formulae 
-#include "AcceleratorModel/SpoilerPotentialModels.h"
+#include "Collimators/SpoilerPotentialModels.h"
   
 using namespace std;
 using namespace PhysicalUnits;

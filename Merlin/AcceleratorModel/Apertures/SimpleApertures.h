@@ -19,9 +19,17 @@
 #include <cmath>
 #include "AcceleratorModel/Aperture.h"
 
+#include <string>
+#include <iostream>
+using std::cout;
+using std::endl;
+
+
 #ifdef MERLIN_PROFILE
 #include "utility/MerlinProfile.hpp"
 #endif
+
+using std::string;
 
 //	Represents an aperture with a rectangular cross-section.
 //	The aperture is assumed symmetric about the axis, and
@@ -45,12 +53,20 @@ public:
     //	z coordinate is ignored.
     virtual double GetRadiusAt (double phi, double z) const;
 
+    virtual string GetApertureType() const;
+
     //material* Material;
 private:
 
     double hw;
     double hh;
 };
+
+inline string RectangularAperture::GetApertureType() const
+{
+	return "RECTANGULAR";
+}
+
 
 //	Represents an aperture with a circular cross-section.
 //	The aperture is assumed to be extruded along its
@@ -73,6 +89,7 @@ public:
     //	Returns the radius.
     virtual double GetRadiusAt (double phi, double z) const;
 
+    virtual std::string GetApertureType() const;
 private:
 
     double r2;
@@ -80,7 +97,7 @@ private:
 
 inline RectangularAperture::RectangularAperture (double width, double height)
         :hw(fabs(width)/2),hh(fabs(height)/2)
-{Material = NULL;}
+{ApertureMaterial = NULL;}
 
 inline double RectangularAperture::GetFullWidth () const
 {
@@ -133,11 +150,27 @@ inline void CircularAperture::SetDiameter (double d)
 
 inline bool CircularAperture::PointInside (double x, double y, double z) const
 {
+/*
+if(x*x+y*y<r2)
+{
     return x*x+y*y<r2;
 }
+else
+{
+	cout << "lost in circular aperture r: " << r2 << "\tr_particle: " <<  x*x+y*y << endl;
 
+	return x*x+y*y<r2;
+}
+*/
+	return x*x+y*y<r2;
+}
 
+inline string CircularAperture::GetApertureType() const
+{
+	return "CIRCULAR";
+}
 
+/*
 //Rectellipse Aperture
 class RectEllipseAperture : public Aperture
 {
@@ -149,7 +182,7 @@ public:
 		#ifdef MERLIN_PROFILE
 		MerlinProfile::AddProcess("APERTURE");
 		#endif
-		Material = NULL;
+		ApertureMaterial = NULL;
 	}
 
 	//Returns true if the point (x,y,z) is within the
@@ -163,8 +196,9 @@ public:
 	//Returns the radius to the aperture at location z and angle phi.
 	virtual double GetRadiusAt (double phi, double z) const;
 	double GetFullHeight () const;
+	virtual std::string GetApertureType() const;
 
-	private:
+private:
 	double rect_half_width;
 	double rect_half_height;
 	double ellipse_half_horizontal;
@@ -176,4 +210,9 @@ inline double RectEllipseAperture::GetFullHeight () const
     return 2*rect_half_height;
 }
 
+inline string RectEllipseAperture::GetApertureType() const
+{
+	return "RECTELLIPSE";
+}
+*/
 #endif

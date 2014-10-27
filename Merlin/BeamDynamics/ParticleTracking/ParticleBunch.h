@@ -142,6 +142,8 @@ public:
     void SetScatterConfigured(bool);
     bool ScatterConfigured;
     size_t ScatteringPhysicsModel;
+    double int_s;
+    void SetIntS(double);
 
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;
@@ -297,7 +299,10 @@ inline void ParticleBunch::SetScatterConfigured(bool state)
 {
 	ScatterConfigured = state;
 }
-
+inline void ParticleBunch::SetIntS(double step)
+{
+	int_s = step;
+}
 } // end namespace ParticleTracking
 
 #endif

@@ -113,6 +113,9 @@ public:
     //Enable collimator jaw imperfections
     void EnableImperfections(bool);
 
+    double GetOutputBinSize() const;
+    void SetOutputBinSize(double);
+
 protected:
 
     int cmode;
@@ -129,8 +132,6 @@ private:
     void SetNextS ();
     void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
     void bin_lost_output(const PSvectorArray& lostb);
-    double GetOutputBinSize() const;
-    void SetOutputBinSize(double);
     double s_total;
     double s;
     double next_s;
@@ -149,6 +150,11 @@ private:
     double bin_size;
     bool DoScatter(Particle&);
     bool Imperfections;
+    
+    //For precision tracking of lost particles in non-collimators
+    //Remember to clear after each usage
+    PSvectorArray InputArray;				//The input array
+    std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
 };
 
 inline void CollimateParticleProcess::CreateParticleLossFiles (bool flg, string fprefix)

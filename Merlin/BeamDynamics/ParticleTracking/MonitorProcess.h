@@ -15,6 +15,8 @@ public:
         vector<string> dump_at_elements;
         string file_prefix;
 
+	unsigned int count;
+
         MonitorProcess(const string& aID = "MONITOR",  int prio=0, const string& prefix = "");
         void SetPrefix(const string& prefix);
         void AddElement(const string e);

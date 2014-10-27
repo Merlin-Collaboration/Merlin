@@ -30,6 +30,8 @@ typedef int PScoord;
 #define ps_CT 4
 #define ps_DP 5
 
+#define PS_LENGTH 10
+
 class PSvector {
 public:
 
@@ -37,7 +39,7 @@ public:
     {}
 
     explicit PSvector (double x) {
-        std::fill(v,v+6,x);
+        std::fill(v,v+PS_LENGTH,x);
     }
 
     //	Component accessors.
@@ -47,6 +49,10 @@ public:
     double xp () const{ return v[1];}
     double yp () const{ return v[3];}
     double dp () const{ return v[5];}
+    double type () const{ return v[6];}
+    double location () const{ return v[7];}
+    double id () const{ return v[8];}
+    double sd () const{ return v[9];}
 
     //	Array access.
     double operator [] (PScoord coord) const{ return v[coord];}
@@ -58,49 +64,53 @@ public:
     double& xp (){ return v[1];}
     double& yp (){ return v[3];}
     double& dp (){ return v[5];}
+    double& type (){ return v[6];}
+    double& location (){ return v[7];}
+    double& id (){ return v[8];}
+    double& sd (){ return v[9];}
 
     //	Array access.
     double& operator [] (PScoord coord) {return v[coord];}
 
     //	Conversion to a RealVector.
-    operator RealVector () const {return RealVector(v,6);}
+    operator RealVector () const {return RealVector(v,PS_LENGTH);}
 
     bool operator == (const PSvector& psv) const{
-        return memcmp(v,psv.v,6*sizeof(double))==0;
+        return memcmp(v,psv.v,PS_LENGTH*sizeof(double))==0;
     }
 
     bool operator != (const PSvector& psv) const{
-        return memcmp(v,psv.v,6*sizeof(double))!=0;
+        return memcmp(v,psv.v,PS_LENGTH*sizeof(double))!=0;
     }
 
     //	Sets the vector to zero.
     void zero () {
-        std::fill(v,v+6,0.0);
+        std::fill(v,v+PS_LENGTH,0.0);
     }
 
     //	Arithmetic assignment
     PSvector& operator += (const PSvector& p) {
         double *q=v;
         const double *r=p.v;
-        while(q!=(v+6)) *(q++) += *(r++);
+        while(q!=(v+PS_LENGTH)) *(q++) += *(r++);
         return *this;
     }
 
     PSvector& operator -= (const PSvector& p) {
         double *q=v;
         const double *r=p.v;
-        while(q!=(v+6)) *(q++) -= *(r++);
+        while(q!=(v+PS_LENGTH)) *(q++) -= *(r++);
         return *this;
     }
 
     PSvector& operator *= (double x) {
-        for(double *q = v; q!=v+6;q++)
+        for(double *q = v; q!=v+PS_LENGTH;q++)
             (*q)*=x;
         return *this;
     }
 
     PSvector& operator /= (double x) {
-        for(double *q = v; q!=v+6;q++)
+        for(double *q = v; q!=v+PS_LENGTH;q++)
             (*q)/=x;
         return *this;
     }
@@ -125,7 +135,7 @@ public:
     friend std::istream& operator>>(std::istream& is, PSvector& v);
 
 private:
-    double v[6];
+    double __attribute__((aligned(16))) v[PS_LENGTH];
 };
 
 //	A linear array of PSvector objects.

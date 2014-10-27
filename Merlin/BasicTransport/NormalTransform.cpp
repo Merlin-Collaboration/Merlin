@@ -17,6 +17,7 @@
 #include "BasicTransport/NormalTransform.h"
 #include "BasicTransport/RMap.h"
 #include <fstream>
+#include "NumericalUtils/MatrixPrinter.h"
 
 double ProjectedEmittance(const PSmoments& s, PScoord x1, PScoord x2)
 {
@@ -97,6 +98,7 @@ RealMatrix DispersionMatrix(double Dx, double Dxp, double Dy, double Dyp)
     D(2,5)=Dy;
     D(3,5)=Dyp;
     return D;
+
 }
 
 RealMatrix InverseBetaTransform(double bx, double by, double ax, double ay)
@@ -123,7 +125,20 @@ RealMatrix NormalTransform(const BeamData& t)
     RealMatrix B=BetaMatrix(t.beta_x,t.beta_y);
     RealMatrix A=AlphaMatrix(t.alpha_x,t.alpha_y);
     RealMatrix C=CouplingMatrix(t.c_xy,t.c_xyp,t.c_xpy,t.c_xpyp);
-
+    RealMatrix E = D*B*A*C;
+//    MatrixForm(E, std::cout);
+/*
+    cout << "Dispersion Matrix D:" << endl;
+    MatrixForm(D, std::cout);
+    cout << "Beta Matrix B" << endl;
+    MatrixForm(B, std::cout);
+    cout << "Alpha Matrix A" << endl;
+    MatrixForm(A, std::cout);
+    cout << "Coupling Matrix C" << endl;
+    MatrixForm(C, std::cout);  
+    cout << "E = D*B*A*C" << endl;
+    MatrixForm(E, std::cout);  
+*/ 
     return D*B*A*C;
 }
 
