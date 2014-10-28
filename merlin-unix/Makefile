@@ -131,5 +131,5 @@ config:
 	for dirn in ${SUBDIRS}; do \
 		cd ${MERLIN_ROOT_DIR}/$${dirn}; \
 		echo "building makefile for " $${dirn}; \
-		${MERLIN_BUILD_DIR}/build_makefile; \
+		sh ${MERLIN_BUILD_DIR}/build_makefile; \
 	done
