@@ -608,6 +608,7 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 			fname << "_" << currentComponent->GetComponentLatticePosition() << "_";
 			fname << id << '.' << n << ".loss";
 			ofstream file(fname.str().c_str());
+			if (!file) {cerr << "CollimateParticleProcess::DoOutput(): Failed to open " << fname.str() << endl; exit(1);}
 
 			if(pindex==0)
 			{

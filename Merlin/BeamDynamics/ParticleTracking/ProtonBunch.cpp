@@ -136,6 +136,10 @@ int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
 	{
 		returnvalue = ScatterMerlin(p,x,ap);
 	}
+	if (isnan(p.x()) or isnan(p.xp()) or isnan(p.y()) or isnan(p.yp()) or isnan(p.dp()) or isnan(p.ct())){
+		cerr << "ProtonBunch::Scatter(): Particle has nan coordinate after scatter. ScatteringPhysicsModel=" << ScatteringPhysicsModel << endl;
+		abort();
+	}
 	return returnvalue;
 }
 //End of ScatterProton
