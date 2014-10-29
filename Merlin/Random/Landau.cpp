@@ -1,5 +1,6 @@
 #include "Random/Landau.h"
 #include <cmath>
+#include <iostream>
 
 double Landau::operator()()
 {
@@ -224,7 +225,7 @@ static const float F[] = {0,0,0,0,0,0,
 		double V=1/L;
 		double VV = V*V;
 		//return ((0.99858950+(3.45213058E1+1.70854528E1*du)*du)/(1+(3.41760202E1+4.01244582*du)*du))*(-log(-0.91893853-V)-1);
-		return (-log(-0.91893853 - V)-1.0) * ((0.99858950 + 34.5213058*V + 17.0854528*VV) / (1.0 + 34.1760202*V + 4.01244582*VV));
+		return (-log(-0.91893853 - L)-1.0) * ((0.99858950 + 34.5213058*V + 17.0854528*VV) / (1.0 + 34.1760202*V + 4.01244582*VV));
 	}
 	else if(I <= 999)
 	{
