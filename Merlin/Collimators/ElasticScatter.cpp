@@ -60,7 +60,7 @@ double q[3]={8.38,3.78,1.36};
 /**
 * trajectory slope parameters.
 */
-double apr0=0.1, apr1=0.25, apr2=0.8, apr3=0.9;
+double apr0=0.1, apr1=0.25, apr2=0.821595, apr3=0.904556;
 
 double par[12];
 
@@ -177,32 +177,23 @@ void ppElasticScatter::GenerateTDistribution(double energy)
 void ppElasticScatter::GenerateDsigDt(double energy)
 {
 	std::cout << "Call Generate DsigDt " << std::endl;
-/*
-	par[0] = 0.194726;		//eps0
-	par[1] = 0.0867236;		//eps1
-	par[2] = -0.360;		//eps2
-	par[3] = -0.533;		//eps3
-	par[4] = 15.3427;		//X0
-	par[5] = 234.868;		//X1
-	par[6] = 246.9;			//X2
-	par[7] = 136.7;			//X3
-	par[8] = 0.472207;		//lambda
-	par[9] = 5.55837;		//t0 for ggg
-	par[10] = 0.254673;		//alpha pomeron
-	par[11] = 0.167039;		//alpha hard pomeron
-*/
-	par[0] = 0.243149;		//eps0
-	par[1] = 0.0914708;		//eps1
-	par[2] = -0.413714;		//eps2
-	par[3] = -0.557954;		//eps3
-	par[4] = 4.46526e5;		//X0
-	par[5] = 264.283;		//X1
-	par[6] = 333.917;			//X2
-	par[7] = 94.6521;			//X3
-	par[8] = 0.485898;		//lambda
-	par[9] = 4.86654;		//t0 for ggg
-	par[10] = 0.234272;		//alpha pomeron
-	par[11] = 1.34299e-5;		//alpha hard pomeron
+
+	// Values from James Molson's Thesis
+
+	par[0] = 0.106231;		//eps0
+	par[1] = 0.0972043;		//eps1
+	par[2] = -0.510662;		//eps2
+	par[3] = -0.302082;		//eps3
+	par[4] = 228.359;		//X0
+	par[5] = 193.811;		//X1
+	par[6] = 518.686;			//X2
+	par[7] = 10.7843;			//X3
+	par[8] = 0.521223;		//lambda
+	par[9] = 5.02965;		//t0 for ggg
+	par[10] = 0.0449029;		//alpha pomeron
+	par[11] = 0.278037;		//alpha hard pomeron
+
+
 	unsigned int nSteps = (t_max - t_min) / step;
 	Uniformt.reserve(nSteps);
 	DSig.reserve(nSteps);

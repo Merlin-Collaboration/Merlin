@@ -717,7 +717,14 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 		    +(cl04/x) * (ml04*gammaL04) / ( pow( (x*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) ) 
 		    *exp(13.5*(t + 0.05));// Normalization factors Sandy's note 
 		     //* sqrt(565/s)*exp(13.5*(t + 0.05));// Normalization factors Sandy's note 
-	double BRMatch = - 588.20982975 *exp(13.5*(t + 0.05))*(x - xi_th)/(xi_c - xi_th);
+//	double BRMatch = - 588.20982975 *exp(13.5*(t + 0.05))*(x - xi_th)/(xi_c - xi_th);
+	double BRMatch = -  ( (cl01/xi_c) * (ml01*gammaL01) / ( pow( (xi_c*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2))
+		    +(cl02/xi_c) * (ml02*gammaL02) / ( pow( (xi_c*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
+		    +(cl03/xi_c) * (ml03*gammaL03) / ( pow( (xi_c*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
+		    +(cl04/xi_c) * (ml04*gammaL04) / ( pow( (xi_c*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) )
+		    *exp(13.5*(t + 0.05)) *(x - xi_th)/(xi_c - xi_th);
+
+
 //			   *sqrt(565/s)*exp(13.5*(t + 0.05))*(x - xi_th)/(xi_c - xi_th);
 
 	//std::cout << "t = " << t << std::endl;	
