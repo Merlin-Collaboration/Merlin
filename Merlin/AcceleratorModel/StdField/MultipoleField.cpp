@@ -90,16 +90,16 @@ Complex MultipoleField::GetField2D (double x, double y, int exclude) const
 
     Complex B(0,0);
     Complex z(1);
-#ifndef NDEBUG
-    cout<<" INVOKED 1 "<<x<<" "<<y<<" "<<exclude<<endl;
-#endif
+//#ifndef NDEBUG
+//    cout<<" INVOKED 1 "<<x<<" "<<y<<" "<<exclude<<endl;
+//#endif
     for(int n=0; n<exclude; n++) z*=z0;
 
     for(const_iterator ti=expansion.begin()+exclude;ti!=expansion.end();ti++)
     {
-#ifndef NDEBUG
-        cout<<z<<" "<<z0<<" "<<B<<endl;
-#endif
+//#ifndef NDEBUG
+//        cout<<z<<" "<<z0<<" "<<B<<endl;
+//#endif
         B+=(*ti)*z;
         z*=z0;
     }
