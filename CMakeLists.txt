@@ -190,3 +190,33 @@ endif()
 install(TARGETS merlin LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib )
 install(DIRECTORY Merlin/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATCHING PATTERN "*.h")
 
+# Build doxygen documentation
+# make doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+	find_file(DOXYFILE_IN "Merlin.Doxyfile.in"
+			PATHS "${MERLIN_SOURCE_DIR}/doxygen"
+			NO_DEFAULT_PATH
+			DOC "Path to the doxygen configuration template file")
+	set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
+	include(FindPackageHandleStandardArgs)
+	find_package_handle_standard_args(DOXYFILE_IN DEFAULT_MSG "DOXYFILE_IN")
+endif()
+
+set(DOXYFILE "Merlin.Doxyfile")
+set(DOXYFILE_OUTPUT_DIR "doc")
+add_custom_target(doxygen
+		COMMAND "${DOXYGEN_EXECUTABLE}"
+			"${DOXYFILE}" 
+		COMMENT "Writing documentation to ${DOXYFILE_OUTPUT_DIR}...")
+
+configure_file("${DOXYFILE_IN}" "${DOXYFILE}" @ONLY)
+
+set_property(DIRECTORY 
+		APPEND PROPERTY
+		ADDITIONAL_MAKE_CLEAN_FILES
+		"${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
+
+
+
+
