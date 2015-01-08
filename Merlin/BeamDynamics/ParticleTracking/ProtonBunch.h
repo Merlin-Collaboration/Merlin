@@ -29,13 +29,13 @@ public:
 	* particles is empty.
 	*/
 	//ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles) {rng();};
-	ProtonBunch (double P0, double Q, PSvectorArray& particles) : GotDiffractive(false),GotElastic(false),ParticleBunch(P0, Q, particles) {};
+	ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles), GotElastic(false),GotDiffractive(false) {};
 
 	/**
 	* Read phase space vectors from specified input stream.
 	*/
 	//ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is) {rng();};
-	ProtonBunch (double P0, double Q, std::istream& is) : GotDiffractive(false),GotElastic(false),ParticleBunch(P0, Q, is) {};
+	ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is),GotElastic(false),GotDiffractive(false) {};
 
 	/**
 	* Constructs an empty ProtonBunch with the specified
@@ -43,7 +43,7 @@ public:
 	* 	+1).
 	*/
 	//ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm) {rng();};
-	ProtonBunch (double P0, double Qm = 1) : GotDiffractive(false),GotElastic(false),ParticleBunch(P0, Qm) {};
+	ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm),GotElastic(false),GotDiffractive(false) {};
 
 	// Proton Bunch Destructor
 	//~ProtonBunch(){delete ElasticScatter; delete DiffractiveScatter;};

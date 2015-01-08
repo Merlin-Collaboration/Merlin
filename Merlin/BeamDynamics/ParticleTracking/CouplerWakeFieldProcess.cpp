@@ -142,7 +142,7 @@ void CouplerWakeFieldProcess::CalculateWakeT() {
 	      wake_x[i] += rfxy.x*V/clen/a0;  // V[GeV] -> V[V]
 	      wake_y[i] += rfxy.y*V/clen/a0;
        }
-       for(int j=i; j<bunchSlices.size()-1; j++) {
+       for(size_t j=i; j<bunchSlices.size()-1; j++) {
 
 	      // cavity transverse wake
 	      // kick goes into the same direction as offset

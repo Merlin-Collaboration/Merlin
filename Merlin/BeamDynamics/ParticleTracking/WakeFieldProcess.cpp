@@ -341,8 +341,8 @@ void WakeFieldProcess::CalculateWakeL()
 
     if(currentWake->Is_CSR())
     {
-        for(int i=0; i<bunchSlices.size(); i++) {
-            for(int j=1; j<i; j++) {
+        for(size_t i=0; i<bunchSlices.size(); i++) {
+            for(size_t j=1; j<i; j++) {
                 wake_z[i] += Qdp[j]*(currentWake->Wlong((j-i+0.5)*dz))/dz;
             }
             wake_z[i]*=a0;
@@ -350,8 +350,8 @@ void WakeFieldProcess::CalculateWakeL()
     }
     else
     {
-        for(int i=0; i<bunchSlices.size(); i++) {
-            for(int j=i; j<bunchSlices.size()-1; j++) {
+        for(size_t i=0; i<bunchSlices.size(); i++) {
+            for(size_t j=i; j<bunchSlices.size()-1; j++) {
                 wake_z[i] += Qd[j]*(currentWake->Wlong((j-i+0.5)*dz));
             }
             wake_z[i]*=a0;
@@ -387,7 +387,7 @@ void WakeFieldProcess::CalculateWakeT()
     wake_y = vector<double>(bunchSlices.size(),0.0);
     for(i=0; i<bunchSlices.size(); i++)
     {
-        for(int j=i; j<bunchSlices.size()-1; j++)
+        for(size_t j=i; j<bunchSlices.size()-1; j++)
         {
             double wxy = Qd[j]*(currentWake->Wtrans((j-i+0.5)*dz));
             wake_x[i] += wxy*xyc[j].x;

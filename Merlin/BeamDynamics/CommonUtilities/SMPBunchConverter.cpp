@@ -18,7 +18,7 @@ using namespace SMPTracking;
 // with gauss(delta/2) where delta is given by the distance in either ct or dp.
 // DK 1.4.2006
 //
-ParticleTracking::ParticleBunch* SMPBunchConverter(SMPTracking::SMPBunch*  SB, int N,bool adjust){
+ParticleTracking::ParticleBunch* SMPBunchConverter(SMPTracking::SMPBunch*  SB, size_t N, bool adjust){
 
     if(N<SB->Size()) {
        cout<<"SMPBunchConverter: Warning, you asked for a low number of particles!"<<endl; 

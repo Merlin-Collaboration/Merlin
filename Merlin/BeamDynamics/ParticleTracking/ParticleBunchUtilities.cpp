@@ -78,7 +78,7 @@ namespace ParticleTracking {
 // hdp contains the derivative of the distribution
 // calculated using the Savitzky-Golay filter c
 // If c is empty, then the derivative will be zero.
-size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, int nbins,
+size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nbins,
                        vector<ParticleBunch::iterator>& pbins,
                        vector<double>& hd, vector<double>& hdp, vector<double>* c)
 {
@@ -158,7 +158,7 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, int nbins
 		fbins[n] = hbins[n]*a;
 		if(c)
 			//for(m=_MAX(0,int(n)-w); m<=_MIN(nbins,int(n)+w); m++)// ERROR! m can be set to nbins -> out of range!
-			for(m=_MAX(0,int(n)-w); m<_MIN(nbins,int(n)+w); m++)   // This needs to be checked!
+			for(m=_MAX(0,int(n)-w); m<_MIN(nbins,size_t(n)+w); m++)   // This needs to be checked!
 				fpbins[n] += hbins[m]*(*c)[m-n+w]*a;
 	}
 

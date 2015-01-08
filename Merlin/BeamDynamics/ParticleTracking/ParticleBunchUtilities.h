@@ -44,7 +44,7 @@ namespace ParticleTracking {
 // Returns the number of particles removed from tails
 // i.e. z<zmin || z>=zmax
 //
-size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, int nbins,
+size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nbins,
                        std::vector<ParticleBunch::iterator>& pbins,
                        vector<double>& hd, vector<double>& hdp, vector<double>* c = 0);
 

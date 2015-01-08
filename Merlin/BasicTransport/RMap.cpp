@@ -84,8 +84,8 @@ double& RMap::operator()(int i, int j)
 RMap::RMap(const RealMatrix& R) : rterms()
 {
     rterms.reserve(8);
-    for(int i=0; i<R.nrows(); i++)
-        for(int j=0; j<R.ncols(); j++) {
+    for(size_t i=0; i<R.nrows(); i++)
+        for(size_t j=0; j<R.ncols(); j++) {
             if(R(i,j)!=0)
                 rterms.push_back(Rij(i,j,R(i,j)));
         }

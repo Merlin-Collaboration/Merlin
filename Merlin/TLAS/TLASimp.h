@@ -187,8 +187,8 @@ template<class T>
 void ludcmp(Matrix<T>& a, std::vector<int>& indecies, T& d)
 {
     static const T tiny = numeric_limits<T>::epsilon();
-    int imax,i,j,k;
-    const int n = a.ncols();
+    size_t imax,i,j,k;
+    const size_t n = a.ncols();
 
     if(n!=a.nrows())
         throw DimensionError();

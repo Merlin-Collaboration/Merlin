@@ -149,7 +149,7 @@ void MultipoleField::PrintField (std::ostream& os) const
     os<<endl;
 }
 
-void MultipoleField::SetComponent (int np, double bn, double an, double r0)
+void MultipoleField::SetComponent (size_t np, double bn, double an, double r0)
 {
     assert(B0!=0);
 
@@ -159,12 +159,12 @@ void MultipoleField::SetComponent (int np, double bn, double an, double r0)
     expansion[np]=Complex(bn,an)/(B0*pow(r0,np));
 }
 
-Complex MultipoleField::GetComponent (int np, double r0) const
+Complex MultipoleField::GetComponent (size_t np, double r0) const
 {
     return B0*GetCoefficient(np,r0);
 }
 
-Complex MultipoleField::GetCoefficient (int np, double r0) const
+Complex MultipoleField::GetCoefficient (size_t np, double r0) const
 {
     if(np+1>expansion.size())
         const_cast<MultipoleField&>(*this).expansion.resize(np+1,Complex(0,0));
@@ -172,7 +172,7 @@ Complex MultipoleField::GetCoefficient (int np, double r0) const
     return expansion[np]*pow(r0,np);
 }
 
-void MultipoleField::SetCoefficient (int np, const Complex& b, double r0)
+void MultipoleField::SetCoefficient (size_t np, const Complex& b, double r0)
 {
     if(np+1>expansion.size())
         expansion.resize(np+1,Complex(0,0));

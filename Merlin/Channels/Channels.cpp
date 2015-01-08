@@ -48,7 +48,7 @@ void ROChannelArray::Print (std::ostream& os) const
 {
     vector<string> idlist(Size());
     vector<double> vallist(Size());
-    int n=0;
+    size_t n=0;
     size_t i;
 
     for(i=0; i<Size(); i++) {

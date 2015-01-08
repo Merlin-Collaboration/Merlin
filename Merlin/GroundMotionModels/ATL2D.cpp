@@ -137,7 +137,7 @@ double ATL2D::DoStep (double dt)
 
     double at = (atlMode==increment) ? A * dt : A * t;
 
-    for(int n=0; n<theSupports.size(); n++)
+    for(size_t n=0; n<theSupports.size(); n++)
         yy(n) = rg->normal(0,at*evals[n]);
 
     RealVector dy = evecsT * yy;

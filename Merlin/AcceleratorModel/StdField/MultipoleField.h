@@ -118,21 +118,21 @@ public:
     //	Add the specified component to the field. The field
     //	components bn and an are in Tesla , and are normalised
     //	to the radius r (default = 1 meter).
-    void SetComponent (int np, double bn, double an = 0, double r0 = 1);
+    void SetComponent (size_t np, double bn, double an = 0, double r0 = 1);
 
     //	Returns the field (in Tesla) at the radius r0 due to the
     //	np-th multipole component
-    Complex GetComponent (int np, double r0 = 1.0) const;
+    Complex GetComponent (size_t np, double r0 = 1.0) const;
 
     //	Returns the unitless complex coefficient for the np-th
     //	term (bn+i*an).The coefficient is relative to the
     //	specified pole radius r0 (default = 1meter).
-    Complex GetCoefficient (int np, double r0 = 1.0) const;
+    Complex GetCoefficient (size_t np, double r0 = 1.0) const;
 
     //	Sets the unitless complex coefficient for the np-th term
     //	(bn+i*an).The coefficient is relative to the specified
     //	pole radius r0 (default = 1meter).
-    void SetCoefficient (int np, const Complex& b, double r0 = 1.0);
+    void SetCoefficient (size_t np, const Complex& b, double r0 = 1.0);
 
     // Return the highest non-zero multipole index.
     int HighestMultipole () const;
