@@ -23,6 +23,9 @@ add_custom_command(TARGET TestDataFiles
 merlin_test(BasicTests bunch_test bunch_test.cpp)
 add_test(bunch_test BasicTests/bunch_test)
 
+merlin_test(BasicTests landau_test landau_test.cpp)
+add_test(landau_test BasicTests/landau_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
 INCLUDE(Dart)
 
