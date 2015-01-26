@@ -26,6 +26,12 @@ add_test(bunch_test BasicTests/bunch_test)
 merlin_test(BasicTests landau_test landau_test.cpp)
 add_test(landau_test BasicTests/landau_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
 
+merlin_test(BasicTests aperture_test aperture_test.cpp)
+add_test(aperture_test BasicTests/aperture_test)
+
+merlin_test(BasicTests collimate_particle_process_test collimate_particle_process_test.cpp)
+add_test(collimate_particle_process_test BasicTests/collimate_particle_process_test)
+
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
 add_test(lhc_optics_test OpticsTests/lhc_optics_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
 
