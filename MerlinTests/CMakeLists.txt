@@ -35,6 +35,12 @@ add_test(collimate_particle_process_test BasicTests/collimate_particle_process_t
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
 add_test(lhc_optics_test OpticsTests/lhc_optics_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
 
+merlin_test(ScatteringTests cu50_test cu50_test.cpp)
+add_test(cu50_test ScatteringTests/cu50_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+
+merlin_test(ScatteringTests cu50_sixtrack_test cu50_sixtrack_test.cpp)
+add_test(cu50_sixtrack_test ScatteringTests/cu50_sixtrack_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
 INCLUDE(Dart)
 
