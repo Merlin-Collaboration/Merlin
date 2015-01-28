@@ -201,22 +201,22 @@ if(DOXYGEN_FOUND)
 	set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
 	include(FindPackageHandleStandardArgs)
 	find_package_handle_standard_args(DOXYFILE_IN DEFAULT_MSG "DOXYFILE_IN")
+
+	set(DOXYFILE "Merlin.Doxyfile")
+	set(DOXYFILE_OUTPUT_DIR "doc")
+	add_custom_target(doxygen
+			COMMAND "${DOXYGEN_EXECUTABLE}"
+				"${DOXYFILE}" 
+			COMMENT "Writing documentation to ${DOXYFILE_OUTPUT_DIR}...")
+
+	configure_file("${DOXYFILE_IN}" "${DOXYFILE}" @ONLY)
+
+	set_property(DIRECTORY 
+			APPEND PROPERTY
+			ADDITIONAL_MAKE_CLEAN_FILES
+			"${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
+
 endif()
-
-set(DOXYFILE "Merlin.Doxyfile")
-set(DOXYFILE_OUTPUT_DIR "doc")
-add_custom_target(doxygen
-		COMMAND "${DOXYGEN_EXECUTABLE}"
-			"${DOXYFILE}" 
-		COMMENT "Writing documentation to ${DOXYFILE_OUTPUT_DIR}...")
-
-configure_file("${DOXYFILE_IN}" "${DOXYFILE}" @ONLY)
-
-set_property(DIRECTORY 
-		APPEND PROPERTY
-		ADDITIONAL_MAKE_CLEAN_FILES
-		"${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
-
 
 
 
