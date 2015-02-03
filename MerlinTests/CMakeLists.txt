@@ -24,7 +24,7 @@ merlin_test(BasicTests bunch_test bunch_test.cpp)
 add_test(bunch_test BasicTests/bunch_test)
 
 merlin_test(BasicTests landau_test landau_test.cpp)
-add_test(landau_test BasicTests/landau_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+add_test(landau_test BasicTests/landau_test)
 
 merlin_test(BasicTests aperture_test aperture_test.cpp)
 add_test(aperture_test BasicTests/aperture_test)
@@ -33,13 +33,13 @@ merlin_test(BasicTests collimate_particle_process_test collimate_particle_proces
 add_test(collimate_particle_process_test BasicTests/collimate_particle_process_test)
 
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
-add_test(lhc_optics_test OpticsTests/lhc_optics_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+add_test(lhc_optics_test OpticsTests/lhc_optics_test)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
-add_test(cu50_test ScatteringTests/cu50_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+add_test(cu50_test ScatteringTests/cu50_test)
 
 merlin_test(ScatteringTests cu50_sixtrack_test cu50_sixtrack_test.cpp)
-add_test(cu50_sixtrack_test ScatteringTests/cu50_sixtrack_test WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/)
+add_test(cu50_sixtrack_test ScatteringTests/cu50_sixtrack_test)
 
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
 INCLUDE(Dart)
