@@ -35,6 +35,9 @@ add_test(collimate_particle_process_test BasicTests/collimate_particle_process_t
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
 add_test(lhc_optics_test OpticsTests/lhc_optics_test)
 
+merlin_test(OpticsTests lhc_fft_tune_test lhc_fft_tune_test.cpp)
+add_test(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
+
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 add_test(cu50_test ScatteringTests/cu50_test)
 
