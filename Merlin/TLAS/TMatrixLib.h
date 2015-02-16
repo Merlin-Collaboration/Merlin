@@ -1173,6 +1173,18 @@ Vector<T> operator*(const Matrix<T>& M, const Vector<T> V)
     tblas2::tgemv(false,T(1),M,V,T(1),U);
     return U;
 }
+
+template<class T>
+ostream& operator<<(ostream& os, const Matrix<T>& M){
+	for(size_t i=0; i<M.ncols(); i++){
+		for(size_t j=0; j<M.nrows(); j++){
+			os << M(i,j) << " ";
+		}
+		os << endl;
+	}
+	return os;
+}
+
 } // end of namespace TLAS
 
 #endif	// _h_TMatrixLib
