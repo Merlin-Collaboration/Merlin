@@ -118,7 +118,8 @@ double BetatronTunes::FindTune(vector<double>& data)
     double peak_height = 0.0;
     int peak_position = 0;
 
-    for(int i=0; i<2*nvals; i+=2)
+	// skip artifacts in first 2 bins
+    for(int i=2; i<2*nvals; i+=2)
     {
         double vamp = sqrt(data[i]*data[i] + data[i+1]*data[i+1]);
         spectrum.push_back(vamp);
