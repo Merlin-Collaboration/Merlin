@@ -18,6 +18,8 @@ add_custom_target(TestDataFiles ALL)
 add_custom_command(TARGET TestDataFiles
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_CURRENT_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data)
+add_custom_command(TARGET TestDataFiles
+                   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/outputs)
 
 
 merlin_test(BasicTests bunch_test bunch_test.cpp)
@@ -40,6 +42,10 @@ add_test(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 add_test(cu50_test ScatteringTests/cu50_test)
+
+merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
+add_test(lhc_collimation_test ScatteringTests/lhc_collimation_test)
+merlin_test(ScatteringTests rand_test rand_test.cpp)
 
 merlin_test(ScatteringTests cu50_sixtrack_test cu50_sixtrack_test.cpp)
 add_test(cu50_sixtrack_test ScatteringTests/cu50_sixtrack_test)
