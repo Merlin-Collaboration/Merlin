@@ -25,7 +25,9 @@ using namespace std;
 using namespace PhysicalUnits;
 
 /*
- * Note this test should fail occasionally
+ * Note this test should fail occasionally. Actually it fails quite often.
+ * By default it only uses 1000 particles, which is too few. 10k or 100k
+ * are really needed for a more reliable test, but this makes it slow.
  *
  * Compute the loss map for the nominal LHC lattice, and compare with
  * a pre-computed version.
@@ -304,7 +306,6 @@ int main(int argc, char* argv[])
 	myCollimateProcess->ScatterAtSpoiler(true);
 
 	myCollimateProcess->SetLossThreshold(200.0);
-	myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
 	myCollimateProcess->SetOutputBinSize(0.1);
 	tracker->AddProcess(myCollimateProcess);
 
