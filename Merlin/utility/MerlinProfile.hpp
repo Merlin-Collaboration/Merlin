@@ -1,13 +1,30 @@
 #ifndef _MerlinProfile_hpp_
 #define _MerlinProfile_hpp_ 1
 
-#include <ctime>
+
+
+// Macros that do nothing if profiling not enabled
+#ifdef MERLIN_PROFILE
+#define MERLIN_PROFILE_ADD_PROCESS(s) MerlinProfile::AddProcess(s)
+#define MERLIN_PROFILE_START_TIMER(s) MerlinProfile::StartProcessTimer(s)
+#define MERLIN_PROFILE_END_TIMER(s) MerlinProfile::EndProcessTimer(s)
+#else
+#define MERLIN_PROFILE_ADD_PROCESS(s)
+#define MERLIN_PROFILE_START_TIMER(s)
+#define MERLIN_PROFILE_END_TIMER(s)
+#endif
+
 #include <string>
+#include <ctime>
+#include <iostream>
 #include <map>
+
+#ifdef MERLIN_PROFILE
+
 #include <utility>
 #include <algorithm>
-#include <iostream>
 #include <iomanip>
+
 
 class MerlinProfile
 {
@@ -105,6 +122,8 @@ static void ClearTime()
 
 static void GetProfileData()
 {
+	if (!IsEnabled())
+		std::cout << "Profiling disabled in libmerlin. Build Merlin with -DMERLIN_PROFILE to enable" << std::endl;
 	double total_t = 0.0;
 	std::cout << std::endl << std::setw(24) << std::left << "PROCESS NAME\tTIME" << std::endl;
 	std::map<std::string, timespec>::iterator Location = pData.begin();
@@ -121,11 +140,31 @@ static void GetProfileData()
 		Location++;
 	}
 }
+
+static bool IsEnabled();
+
 private:
 static std::map<std::string, timespec> pData;
 static std::map<std::string, timespec> StartTime;
 
 };
-//std::map<std::string, timespec> MerlinProfile::pData;
-//std::map<std::string, timespec> MerlinProfile::StartTime;
+
+#else
+class MerlinProfile
+{
+	public:
+	static void AddProcess(std::string ID) {}
+	static void RemoveProcess(std::string ID) {}
+	static void StartProcessTimer(std::string ID){}
+	static void EndProcessTimer(std::string ID) {}
+	static void SetProcessDuration(timespec t, std::string ID){}
+	static void ClearTime() {}
+	static void GetProfileData() {std::cout << "Profiling disabled. Build Merlin with -DMERLIN_PROFILE to enable" << std::endl;}
+	static bool IsEnabled();
+private:
+static std::map<std::string, timespec> pData;
+static std::map<std::string, timespec> StartTime;
+};
+
+#endif
 #endif
