@@ -10,6 +10,7 @@
 #include <vector>
 #include "Collimators/ElasticScatter.h"
 #include "Collimators/DiffractiveScatter.h"
+#include "utility/MerlinProfile.hpp"
 
 using namespace std;
 using namespace ParticleTracking;
@@ -29,13 +30,13 @@ public:
 	* particles is empty.
 	*/
 	//ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles) {rng();};
-	ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles), GotElastic(false),GotDiffractive(false) {};
+	ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles), GotElastic(false),GotDiffractive(false) {SetUpProfiling();};
 
 	/**
 	* Read phase space vectors from specified input stream.
 	*/
 	//ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is) {rng();};
-	ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is),GotElastic(false),GotDiffractive(false) {};
+	ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is),GotElastic(false),GotDiffractive(false) {SetUpProfiling();};
 
 	/**
 	* Constructs an empty ProtonBunch with the specified
@@ -43,7 +44,7 @@ public:
 	* 	+1).
 	*/
 	//ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm) {rng();};
-	ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm),GotElastic(false),GotDiffractive(false) {};
+	ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm),GotElastic(false),GotDiffractive(false) {SetUpProfiling();};
 
 	// Proton Bunch Destructor
 	//~ProtonBunch(){delete ElasticScatter; delete DiffractiveScatter;};
@@ -143,6 +144,8 @@ public:
 	bool GotDiffractive;
 	ppDiffractiveScatter* DiffractiveScatter;
 
+	private:
+	void SetUpProfiling() const;
 }; // end ProtonBunch class
 
 } // end namespace ParticleTracking

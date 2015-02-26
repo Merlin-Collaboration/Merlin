@@ -135,6 +135,7 @@ int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
 	else if(ScatteringPhysicsModel == 4)
 	{
 		returnvalue = ScatterMerlin(p,x,ap);
+		MERLIN_PROFILE_END_TIMER("ProtonBunch::ScatterMerlin");
 	}
 	if (isnan(p.x()) or isnan(p.xp()) or isnan(p.y()) or isnan(p.yp()) or isnan(p.dp()) or isnan(p.ct())){
 		cerr << "ProtonBunch::Scatter(): Particle has nan coordinate after scatter. ScatteringPhysicsModel=" << ScatteringPhysicsModel << endl;
@@ -168,7 +169,9 @@ void ProtonBunch::ConfigureScatter(const Aperture* ap)
 	}
 	else if(ScatteringPhysicsModel == 4)
 	{
+		MERLIN_PROFILE_START_TIMER("ProtonBunch::ConfigureScatterMerlin");
 		ConfigureScatterMerlin(ap);
+		MERLIN_PROFILE_END_TIMER("ProtonBunch::ConfigureScatterMerlin");
 		//cout << "MERLIN new scattering configuration!" << endl;
 	}
 }
@@ -521,6 +524,7 @@ int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 	{
 		ConfigureScatter(ap);
 	}
+	MERLIN_PROFILE_START_TIMER("ProtonBunch::ScatterMerlin");
 	const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (ap);
       
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
@@ -2458,5 +2462,8 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 	return 0;
 }
 
-
+void ProtonBunch::SetUpProfiling() const{
+	MERLIN_PROFILE_ADD_PROCESS("ProtonBunch::ConfigureScatterMerlin");
+	MERLIN_PROFILE_ADD_PROCESS("ProtonBunch::ScatterMerlin");
+}
 
