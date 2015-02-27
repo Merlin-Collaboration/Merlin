@@ -236,10 +236,11 @@ void ppDiffractiveScatter::GenerateDsigDtDxi(double energy)
 	{
 	}
 }*/
-void ppDiffractiveScatter::GenerateDsigDtDxi(double energy)
+void  __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveScatter::GenerateDsigDtDxi(const double energy)
 {
 	std::cout << "Call generateDsigDtDxi " << std::endl;
-	s = (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * energy) + (2 * pow(PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV,2));
+	const double s = (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * energy) + (2 * pow(PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV,2));
+	ss = s;
 	std::cout << "s =" << s << std::endl;
 	const int NN=10*N;
 	//std::cout << "s =" << s << std::endl;
@@ -249,16 +250,12 @@ void ppDiffractiveScatter::GenerateDsigDtDxi(double energy)
 	std::cout << "t_max" << "\t" << t_max << "\t" << "t_min" << "\t" << t_min << std::endl;
 	std::cout << "xi_max" << "\t" << xi_max << "\t" << "xi_min" << "\t" << xi_min << std::endl;
 	std::cout << "xi_step" << "\t" << xi_step << "\t" << "t_step" << "\t" << t_step << std::endl;
-	double xdist[NN];
-	double tdist[NN];
+	double xdist[NN] = {0};
+	double tdist[NN] = {0};
 	//double xxx[NN];
 	//double ttt[NN];
 	//	double a[NN][NN];
-	for(int i=0;i<NN;i++)
-	{
-		//xdist[i]=tdist[i]=xxx[i]=ttt[i]=a[i][i]=0;
-		xdist[i]=tdist[i]=0;
-	}
+
 
 	double sum=0;
 //	std::cout << "PomeronScatter(-0.0001,0.0002,s) " << PomeronScatter(0.0001,0.0002,s) << std::endl;
@@ -279,12 +276,12 @@ void ppDiffractiveScatter::GenerateDsigDtDxi(double energy)
 	//double mrec=sqrt(s*x);
 	for(int i=0;i<NN;i++)
 	{
-		double t=t_min + i * t_step;
+		const double t=t_min + i * t_step;
 		//std::cout << "t " << t << std::endl;
 		for(int j=0;j<NN;j++)
 		{
-			double x=xi_min + j*xi_step;
-			double ds=PomeronScatter(t,x,s);
+			const double x=xi_min + j*xi_step;
+			const double ds=PomeronScatter(t,x,s);
 			sum=sum+ds;
 			tdist[i]+=ds;
 			xdist[j]+=ds;
@@ -556,7 +553,7 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 	//double sum = 101460;
 	//int foo = std::cout.precision(10);
 	//std::cout.precision(foo);
-	double ds=PomeronScatter(tt,xx,s)*0.001;
+	double ds=PomeronScatter(tt,xx,ss)*0.001;
 	//if(RandomNG::uniform(0,1)*sum > ds)
 	//{
 		//std::cout << "ds = " << ds  << std::endl;
@@ -608,7 +605,7 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 	//double tt = std::make_pair( t, sqrt(s*x)).first;
 
 	//std::cout << count << std::endl;
-	double mrec=sqrt(s*xx);
+	double mrec=sqrt(ss*xx);
 	//std::cout << xx << "\t" << tt << std::endl;
 //	ff << xx<<" "<<tt<<endl;
 //	std::cout << "crash 3" << std::endl;
@@ -631,32 +628,32 @@ double ppDiffractiveScatter::PomeronScatter2(double tt, double x, double s)
 	return pow(x,2);
 	
 }
-
-double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
+// 
+inline double  __attribute__((optimize("O3,unsafe-math-optimizations"))) __attribute__ ((hot)) ppDiffractiveScatter::PomeronScatter(const double tt, const double x, const double s)   const
 {
 	//std::cout << "Call PomeronScatter SD " << std::endl;
-	double t= - tt;
+	const double t= - tt;
 
 	// Parameters for the resonance term in the background
-	double Mproton = 0.938272013;                            
-	double Mpion = 0.1349766;
-	double Mmin2 = pow(Mproton+Mpion,2);      
-	double ml01 = 1.44;  //mass of the resonance P11 D13 G15 F17               
-        double ml02 = 1.52;                         
-        double ml03 = 1.68;
-	double ml04 = 2.19;
-	double GammaL1 = 0.325; // width of the resonance       
-	double GammaL2 = 0.13; 
-	double GammaL3 = 0.14;
-	double GammaL4 = 0.45; 
-	double cl01 = 3.07;   // coupling coefficient from the data fit               
-        double cl02 = 0.4149; 
-	double cl03 = 1.108  ;
-	double cl04 = 0.9515;	
-	double Mcut = 3; // this is chosen from the fit on the crosss section data
-	double xi_c = pow(Mcut,2)/s;
-	double xi_th = Mmin2/s; // (M_p + M_pion)^2/s 
-	double Mmin2bar = pow(Mproton-Mpion,2);
+	const double Mproton = 0.938272013;
+	const double Mpion = 0.1349766;
+	const double Mmin2 = pow(Mproton+Mpion,2);
+	const double ml01 = 1.44;  //mass of the resonance P11 D13 G15 F17
+        const double ml02 = 1.52;
+        const double ml03 = 1.68;
+	const double ml04 = 2.19;
+	const double GammaL1 = 0.325; // width of the resonance
+	const double GammaL2 = 0.13;
+	const double GammaL3 = 0.14;
+	const double GammaL4 = 0.45;
+	const double cl01 = 3.07;   // coupling coefficient from the data fit
+        const double cl02 = 0.4149; 
+	const double cl03 = 1.108  ;
+	const double cl04 = 0.9515;
+	const double Mcut = 3; // this is chosen from the fit on the crosss section data
+	const double xi_c = pow(Mcut,2)/s;
+	const double xi_th = Mmin2/s; // (M_p + M_pion)^2/s
+	const double Mmin2bar = pow(Mproton-Mpion,2);
 	if(x <= xi_th){return 0;}
 
 	double cc[4][3];
@@ -700,25 +697,25 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 
 
 
-	double q = sqrt((x*s-Mmin2)*(x*s-Mmin2bar)/(4*x*s));
-	double ql1 = sqrt( (pow(ml01,2) - Mmin2) * (pow(ml01,2) - Mmin2bar) /(4*pow(ml01,2)) );
-	double ql2 = sqrt( (pow(ml02,2) - Mmin2) * (pow(ml02,2) - Mmin2bar) /(4*pow(ml02,2)) );
-	double ql3 = sqrt( (pow(ml03,2) - Mmin2) * (pow(ml03,2) - Mmin2bar) /(4*pow(ml03,2)) );
-	double ql4 = sqrt( (pow(ml04,2) - Mmin2) * (pow(ml04,2) - Mmin2bar) /(4*pow(ml04,2)) );
+	const double q = sqrt((x*s-Mmin2)*(x*s-Mmin2bar)/(4*x*s));
+	const double ql1 = sqrt( (pow(ml01,2) - Mmin2) * (pow(ml01,2) - Mmin2bar) /(4*pow(ml01,2)) );
+	const double ql2 = sqrt( (pow(ml02,2) - Mmin2) * (pow(ml02,2) - Mmin2bar) /(4*pow(ml02,2)) );
+	const double ql3 = sqrt( (pow(ml03,2) - Mmin2) * (pow(ml03,2) - Mmin2bar) /(4*pow(ml03,2)) );
+	const double ql4 = sqrt( (pow(ml04,2) - Mmin2) * (pow(ml04,2) - Mmin2bar) /(4*pow(ml04,2)) );
 	//std::cout << ql1 << '\t' << ql2 << '\t' << ql3 <<  '\t' << ql4 << std::endl;
-	double gammaL01 = GammaL1*pow(q/ql1,3)*((1 + 5*ql1)/(1 + 5*q));
-	double gammaL02 = GammaL2*pow(q/ql2,5)*pow(((1 + 5*ql2)/(1 + 5*q)),2);
-	double gammaL03 = GammaL3*pow(q/ql3,7)*pow(((1 + 5*ql3)/(1 + 5*q)),3);	
-	double gammaL04 = GammaL4*pow(q/ql4,9)*pow(((1 + 5*ql4)/(1 + 5*q)),4);
+	const double gammaL01 = GammaL1*pow(q/ql1,3)*((1 + 5*ql1)/(1 + 5*q));
+	const double gammaL02 = GammaL2*pow(q/ql2,5)*pow(((1 + 5*ql2)/(1 + 5*q)),2);
+	const double gammaL03 = GammaL3*pow(q/ql3,7)*pow(((1 + 5*ql3)/(1 + 5*q)),3);
+	const double gammaL04 = GammaL4*pow(q/ql4,9)*pow(((1 + 5*ql4)/(1 + 5*q)),4);
 
-	double R = ( (cl01/x) * (ml01*gammaL01) / ( pow( (x*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2)) 
+	const double R = ( (cl01/x) * (ml01*gammaL01) / ( pow( (x*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2)) 
 		    +(cl02/x) * (ml02*gammaL02) / ( pow( (x*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
 		    +(cl03/x) * (ml03*gammaL03) / ( pow( (x*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
 		    +(cl04/x) * (ml04*gammaL04) / ( pow( (x*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) ) 
 		    *exp(13.5*(t + 0.05));// Normalization factors Sandy's note 
 		     //* sqrt(565/s)*exp(13.5*(t + 0.05));// Normalization factors Sandy's note 
 //	double BRMatch = - 588.20982975 *exp(13.5*(t + 0.05))*(x - xi_th)/(xi_c - xi_th);
-	double BRMatch = -  ( (cl01/xi_c) * (ml01*gammaL01) / ( pow( (xi_c*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2))
+	const double BRMatch = -  ( (cl01/xi_c) * (ml01*gammaL01) / ( pow( (xi_c*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2))
 		    +(cl02/xi_c) * (ml02*gammaL02) / ( pow( (xi_c*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
 		    +(cl03/xi_c) * (ml03*gammaL03) / ( pow( (xi_c*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
 		    +(cl04/xi_c) * (ml04*gammaL04) / ( pow( (xi_c*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) )
@@ -733,7 +730,7 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 		//std::cout << "t less than 1.15" << std::endl;
 		if(x > xi_th && x <= xi_c)
 		{
-			double Axi_c = (0.4+0.5*t)*pow(s,0.08) * pow(xi_c,-1.08 -0.5*t)	//ppp
+			const double Axi_c = (0.4+0.5*t)*pow(s,0.08) * pow(xi_c,-1.08 -0.5*t)	//ppp
 			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
 			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
 			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
@@ -741,18 +738,18 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
 		
 						
-			double Aprimexi_c =(0.4+0.5*t)*pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t)	//ppp
+			const double Aprimexi_c =(0.4+0.5*t)*pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t)	//ppp
 			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
 			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
 			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
 			+1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2) 
-			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808)) 
+			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
 			+ (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
 	 	
-			double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
-			double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
+			const double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
+			const double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
 			
-			double B = d * pow(x - xi_th,2) + e * (x - xi_th);
+			const double B = d * pow(x - xi_th,2) + e * (x - xi_th);
 			//return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  B << "\t" << R << "\t" << B+R+BRMatch <<std::endl;
 			return B + R + BRMatch; 
@@ -778,7 +775,7 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 		//std::cout << "t less than 1.15" << std::endl;
 		if(x > xi_th && x <= xi_c)
 		{
-			double Axi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(xi_c,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
+			const double Axi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(xi_c,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
 			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
 			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
 			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
@@ -786,18 +783,18 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
 		
 						
-			double Aprimexi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t) * (t/(t - 0.05))	//ppp
+			const double Aprimexi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t) * (t/(t - 0.05))	//ppp
 			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
 			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
 			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2) 
-			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808)) 
+			+1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2)
+			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
 			+ (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
 	 	
-			double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
-			double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
+			const double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
+			const double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
 			
-			double B = d * pow(x - xi_th,2) + e * (x - xi_th);
+			const double B = d * pow(x - xi_th,2) + e * (x - xi_th);
 			//return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  B << "\t" << R << "\t" << B+R+BRMatch <<std::endl;
 			return B + R + BRMatch; 
@@ -823,7 +820,7 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 	{	//std::cout << "t bigger or equal than 1.15" << std::endl;
 		if(x > xi_th && x <= xi_c)
 		{
-			double Axi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(xi_c,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
+			const double Axi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(xi_c,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
 			*(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
 			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
 			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
@@ -832,7 +829,7 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
 		
 						
-			double Aprimexi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t) * (t/(t - 0.05))	//ppp
+			const double Aprimexi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t) * (t/(t - 0.05))	//ppp
 			*(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
 			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
 			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
@@ -841,10 +838,10 @@ double ppDiffractiveScatter::PomeronScatter(double tt, double x, double s)
 			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808)) 
 			+ (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
 	 	
-			double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
-			double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
+			const double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
+			const double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
 			
-			double B = d * pow(x - xi_th,2) + e * (x - xi_th);
+			const double B = d * pow(x - xi_th,2) + e * (x - xi_th);
 			//return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  B << "\t" << R << "\t" << B+R+BRMatch <<std::endl;
 			return B + R + BRMatch; 

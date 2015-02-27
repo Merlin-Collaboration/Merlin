@@ -132,12 +132,6 @@ double GetXiStepSize() const;
 */
 double GetDiffractiveCrossSection() const;
 
-/**
-* Generates the differential cross section at a given t value and energy
-* The energy is the sqrt(s) of the interaction
-*/
-double PomeronScatter(double t_input,double xi_input,double energy);
-double PomeronScatter2(double t_input,double xi_input,double energy);
 
 /**
 * Debug toggle - set to true or false to enable/disable debugging output
@@ -149,6 +143,13 @@ void EnableDebug(bool debug);
 std::pair<double,double> Select();
 
 private:
+/**
+* Generates the differential cross section at a given t value and energy
+* The energy is the sqrt(s) of the interaction
+*/
+inline double PomeronScatter(const double t_input,const double xi_input,const double energy) const;
+double PomeronScatter2(double t_input,double xi_input,double energy);
+
 /**
 * Interpolation classes for the cross section data
 */
@@ -212,7 +213,7 @@ static const int N = 500;
 double xarray[N];
 double tarray[N];
 //s of the interaction
-double s;
+double ss;
 
 /**
 *
