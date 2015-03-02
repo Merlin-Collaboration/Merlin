@@ -196,6 +196,33 @@ void CollimateParticleProcess::DoCollimation ()
 	//The apture of this element
 	const Aperture *ap = currentComponent->GetAperture();
 
+	// If there are no losses there is no need to go through the expensive
+	// process of copying all the particles to a new bunch. So check first
+	bool any_loss = false;
+	size_t first_loss = 0;
+	if (is_spoiler){
+		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();p++)
+		{
+			if (!ap->PointInside( (*p).x()-bin_size*(*p).xp(), (*p).y()-bin_size*(*p).yp(), s) ){
+				any_loss = true;
+				first_loss = p-currentBunch->begin();
+				break;
+			}
+		}
+	}else{
+		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();p++)
+		{
+			if (!ap->PointInside( (*p).x(), (*p).y(), s) ){
+				any_loss = true;
+				first_loss = p-currentBunch->begin();
+				break;
+			}
+		}
+	}
+	
+	if (!any_loss) return;
+
+
 	//The array of lost particles
 	PSvectorArray lost;
 	list<size_t>  lost_i;
@@ -226,7 +253,7 @@ void CollimateParticleProcess::DoCollimation ()
 	}
 */
 
-	unsigned int particle_number=0;
+	size_t particle_number=0;
 
 	if(is_spoiler) 
 	{
@@ -250,7 +277,7 @@ void CollimateParticleProcess::DoCollimation ()
 //		}
 
 //		if(!ap->PointInside(( *p).x(), (*p).y(), s + (*p).ct() ))
-		if(!ap->PointInside( (*p).x(), (*p).y(), s) )
+		if(particle_number >= first_loss && !ap->PointInside( (*p).x(), (*p).y(), s) )
 		{
 			// If the 'aperture' is a spoiler, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
