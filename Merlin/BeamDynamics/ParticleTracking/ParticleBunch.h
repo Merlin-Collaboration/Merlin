@@ -113,6 +113,7 @@ public:
     size_t size () const;
     virtual void push_back (const Particle& p);
     virtual ParticleBunch::iterator erase (ParticleBunch::iterator p);
+	void reserve(const size_t n);
 
     PSvectorArray& GetParticles ();
     const PSvectorArray& GetParticles () const;
@@ -263,6 +264,11 @@ inline ParticleBunch::const_iterator ParticleBunch::end () const
 inline size_t ParticleBunch::size () const
 {
     return pArray.size();
+}
+
+inline void ParticleBunch::reserve (const size_t n)
+{
+	pArray.reserve(n);
 }
 
 inline ParticleBunch::iterator ParticleBunch::erase (ParticleBunch::iterator p)

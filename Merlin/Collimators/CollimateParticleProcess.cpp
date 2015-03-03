@@ -233,6 +233,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 	//For copying surviving particles to, which is faster than deleting the individual lost particles
 	ParticleBunch* NewBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
+	NewBunch->reserve(currentBunch->size());
 
 /*
 	//For precision tracking of lost particles in non-collimators
