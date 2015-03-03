@@ -35,7 +35,7 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 	}
 
 	//The z coordinate is used to find the other aperture components
-	for(size_t n=0; n < ApertureList.size(); n++)
+	for(size_t n=1; n < ApertureList.size(); n++)
 	{
 		if(ApertureList[n].s > z)
 		{
@@ -140,7 +140,7 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 	}
 
 	//The z coordinate is used to find the other aperture components
-	for(size_t n=0; n < ApertureList.size(); n++)
+	for(size_t n=1; n < ApertureList.size(); n++)
 	{
 		if(ApertureList[n].s > z)
 		{
@@ -213,7 +213,7 @@ double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
 	apBack.ap4 = 0;
 
 	//The z coordinate is used to find the other aperture components
-	for(size_t n=0; n < ApertureList.size(); n++)
+	for(size_t n=1; n < ApertureList.size(); n++)
 	{
 		if(ApertureList[n].s > z)
 		{
