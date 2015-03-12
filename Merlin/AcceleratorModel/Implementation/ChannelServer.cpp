@@ -252,3 +252,7 @@ void ChannelServer::FindElements (const std::string& id_pat, std::vector<ModelEl
     sort(elements.begin(),elements.end(),TYPE_CMP());
 }
 
+ChannelServer::~ChannelServer(){
+	for(CtorTable::iterator it = chCtors.begin(); it != chCtors.end(); it++)
+		delete it->second;
+	}

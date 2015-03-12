@@ -88,6 +88,8 @@ public:
     void RegisterCtor (ChannelCtor* chctor);
 
     void SetRepository (ElementRepository* me_repo);
+    
+    ~ChannelServer();
 
 private:
 
