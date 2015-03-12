@@ -90,6 +90,8 @@ AcceleratorModel::~AcceleratorModel ()
         delete chServer;
     if(theElements)
         delete theElements;
+	if (globalFrame)
+		delete globalFrame;
 }
 
 AcceleratorModel::Beamline AcceleratorModel::GetBeamline ()
