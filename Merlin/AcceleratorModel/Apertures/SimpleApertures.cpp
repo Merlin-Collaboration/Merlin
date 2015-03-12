@@ -32,10 +32,22 @@ double RectangularAperture::GetRadiusAt (double phi, double z) const
     return phi<phi0 ? hw/cos(phi) : hh/sin(phi);
 }
 
+void RectangularAperture::printout(std::ostream& out) const
+{
+	out << GetApertureType() << "(" << hw << ", " << hh <<")";
+}
+
+
 double CircularAperture::GetRadiusAt (double phi, double z) const
 {
     return GetRadius();
 }
+
+void CircularAperture::printout(std::ostream& out) const
+{
+	out << GetApertureType() << "(" << GetRadius () <<")";
+}
+
 /*
 //	Returns true if the point (x,y,z) is within the aperture.
 inline bool RectEllipseAperture::PointInside (double x, double y, double z) const

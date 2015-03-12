@@ -115,6 +115,17 @@ void InterpolatedRectEllipseAperture::EnablePrint()
 	Print = true;
 }
 
+void InterpolatedRectEllipseAperture::printout(std::ostream& out) const
+{
+    out << GetApertureType() << "(";
+	for(size_t n=0; n < ApertureList.size(); n++){
+		out << ApertureList[n].s << " [";
+		out << ApertureList[n].ap1<< ", " << ApertureList[n].ap2<< ", "<< ApertureList[n].ap3<< ", "<< ApertureList[n].ap4;
+		out << "]";
+		if (n < ApertureList.size()-1) out << ", ";
+	}
+	out << ")";
+}
 
 inline bool InterpolatedCircularAperture::PointInside (double x, double y, double z) const
 {
@@ -246,7 +257,17 @@ double InterpolatedCircularAperture::GetRadius () const
 //    return sqrt(r2);
 }
 
-
+void InterpolatedCircularAperture::printout(std::ostream& out) const
+{
+    out << GetApertureType() << "(";
+	for(size_t n=0; n < ApertureList.size(); n++){
+		out << ApertureList[n].s << " [";
+		out << sqrt(ApertureList[n].ap3);
+		out << "]";
+		if (n < ApertureList.size()-1) out << ", ";
+	}
+	out << ")";
+}
 
 
 /*

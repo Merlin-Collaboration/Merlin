@@ -54,7 +54,7 @@ public:
     virtual double GetRadiusAt (double phi, double z) const;
 
     virtual string GetApertureType() const;
-
+	virtual void printout(std::ostream& out) const;
     //material* Material;
 private:
 
@@ -90,6 +90,7 @@ public:
     virtual double GetRadiusAt (double phi, double z) const;
 
     virtual std::string GetApertureType() const;
+	virtual void printout(std::ostream& out) const;
 private:
 
     double r2;

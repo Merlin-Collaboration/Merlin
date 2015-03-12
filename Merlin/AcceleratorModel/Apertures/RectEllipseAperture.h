@@ -14,7 +14,9 @@ class RectEllipseAperture : public Aperture
 public:
         //Constructor
         RectEllipseAperture (double rhw, double rhh, double ehh, double ehv)
-        : Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
+        : Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),
+		EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),
+		EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)){};
         //: Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
 
         //Returns true if the point (x,y,z) is within the
@@ -24,14 +26,13 @@ public:
         //Returns the radius to the aperture at location z and angle phi.
         double GetRadiusAt (double phi, double z) const;
         std::string GetApertureType() const;
+		virtual void printout(std::ostream& out) const;
 
 protected:
 	const double RectHalfWidth;
 	const double RectHalfHeight;
-	/*
 	const double EllipseHalfHorizontal;
 	const double EllipseHalfVertical;
-	*/
 
 	/*
 	* The squares of the above numbers

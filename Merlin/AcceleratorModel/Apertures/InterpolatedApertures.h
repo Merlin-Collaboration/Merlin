@@ -82,6 +82,7 @@ public:
 
 	void EnablePrint();
 	bool Print;
+	virtual void printout(std::ostream& out) const;
 
 /*
 	void SetRectHalfWidth(double);
@@ -119,7 +120,7 @@ public:
 	virtual double GetRadiusAt (double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
-
+	virtual void printout(std::ostream& out) const;
 private:
 	double r2;
 };

@@ -26,3 +26,11 @@ std::string RectEllipseAperture::GetApertureType() const
 {
 	return "RECTELLIPSE";
 }
+
+void RectEllipseAperture::printout(std::ostream& out) const
+{
+	out << GetApertureType() << "(" << RectHalfWidth << ", "<< RectHalfHeight << ", "<< 
+                                       EllipseHalfHorizontal << ", "<<EllipseHalfVertical << ")";
+}
+
+

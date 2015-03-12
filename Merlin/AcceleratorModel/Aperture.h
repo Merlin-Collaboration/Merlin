@@ -18,6 +18,8 @@
 #include "merlin_config.h"
 #include "EuclideanGeometry/Space3D.h"
 #include "Collimators/Material.h"
+#include <iostream>
+#include <string>
 
 /**
 * Represents the cross section of the vacuum pipe or other
@@ -58,6 +60,7 @@ public:
 
 	Material* GetMaterial() const {return ApertureMaterial;}
 	void SetMaterial(Material* m){ApertureMaterial = m ;}
+	virtual void printout(std::ostream& out) const;
 
 protected:
 	Material* ApertureMaterial;
@@ -69,5 +72,8 @@ inline bool Aperture::PointInside (const Point3D& p) const
 {
 	return PointInside(p.x,p.y,p.z);
 }
+
+
+std::ostream& operator<< (std::ostream& out, const Aperture& ap);
 
 #endif
