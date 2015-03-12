@@ -239,6 +239,16 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	IgnoreZeroLengthType("RCOLLIMATOR");
 }
 
+MADInterface::~MADInterface(){
+	if(ctor)
+		delete ctor;
+	if(prmMap)
+		delete prmMap;
+	if(ifs)
+		ifs->close();
+		delete ifs;
+}
+
 void MADInterface::Initialise()
 {
 	if(prmMap!=0)

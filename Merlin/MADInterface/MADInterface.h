@@ -44,7 +44,7 @@ public:
     //  Constructor taking the name of the MAD optics file, and
     //  the momentum in GeV/c.
     MADInterface (const std::string& madFileName="", double P0=0);
-
+    ~MADInterface();
     //   Causes the construction of an AcceleratorModel object
     //   based on the MAD optics file.
     AcceleratorModel* ConstructModel ();
