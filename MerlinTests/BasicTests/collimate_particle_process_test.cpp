@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
 	assert(test_bunch->size() == 4);
 	delete test_bunch;
 
-	
+	delete rect_app;
 
 	delete myBunch;
 	delete tracker;
