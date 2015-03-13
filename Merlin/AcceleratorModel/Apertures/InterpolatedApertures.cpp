@@ -262,7 +262,7 @@ void InterpolatedCircularAperture::printout(std::ostream& out) const
     out << GetApertureType() << "(";
 	for(size_t n=0; n < ApertureList.size(); n++){
 		out << ApertureList[n].s << " [";
-		out << sqrt(ApertureList[n].ap3);
+		out << ApertureList[n].ap3;
 		out << "]";
 		if (n < ApertureList.size()-1) out << ", ";
 	}
