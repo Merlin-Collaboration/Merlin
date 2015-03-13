@@ -322,8 +322,11 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 			}
 		}
 		}	
-		if(logFlag)
-		*log << (*comp)->GetName() << "\t" << (*comp)->GetLength() << "\t" << (*comp)->GetComponentLatticePosition() << "\t" <<  ApertureType << endl;
+		if(logFlag){
+			*log << (*comp)->GetName() << "\t" << (*comp)->GetLength() << "\t" << (*comp)->GetComponentLatticePosition() << "\t";
+			if ((*comp)->GetAperture() != NULL) (*comp)->GetAperture()->printout(*log);
+			*log << endl;
+		}
 	}
 }
 
