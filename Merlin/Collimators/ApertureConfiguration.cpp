@@ -77,9 +77,9 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 
 	for(vector<AcceleratorComponent*>::iterator comp = elements.begin(); comp!=elements.end(); comp++)
 	{
-		//Do not set collimator apertures
+		//Do not overwrite collimator apertures
 		Spoiler* collimator = NULL;
-		if(!(collimator = dynamic_cast<Spoiler*>(*comp)))
+		if((*comp)->GetAperture() == NULL)
 		{
 
 		double element_length = (*comp)->GetLength();
