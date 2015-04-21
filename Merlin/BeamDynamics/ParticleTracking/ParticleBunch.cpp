@@ -24,7 +24,7 @@
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 
 #ifdef MERLIN_PROFILE
-#include "utility/MerlinProfile.hpp"
+#include "utility/MerlinProfile.h"
 #endif
 
 using namespace std;

@@ -1,4 +1,4 @@
-#include "utility/MerlinProfile.hpp"
+#include "utility/MerlinProfile.h"
 
 #include <map>
 #include <string>

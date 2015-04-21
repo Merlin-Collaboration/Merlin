@@ -26,7 +26,7 @@ using std::endl;
 
 
 #ifdef MERLIN_PROFILE
-#include "utility/MerlinProfile.hpp"
+#include "utility/MerlinProfile.h"
 #endif
 
 using std::string;

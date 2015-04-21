@@ -21,7 +21,7 @@
 #include "stdext/deleters.h"
 
 
-#include "utility/MerlinProfile.hpp"
+#include "utility/MerlinProfile.h"
 
 
 namespace {

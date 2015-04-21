@@ -10,7 +10,7 @@
 #include <vector>
 #include "Collimators/ElasticScatter.h"
 #include "Collimators/DiffractiveScatter.h"
-#include "utility/MerlinProfile.hpp"
+#include "utility/MerlinProfile.h"
 
 using namespace std;
 using namespace ParticleTracking;
