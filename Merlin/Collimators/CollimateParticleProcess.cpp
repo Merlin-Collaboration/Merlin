@@ -92,7 +92,10 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 //		cout << currentComponent->GetQualifiedName() << "\t" << currentComponent->GetAperture()->GetApertureType() << endl;
 		s=0;
 		Spoiler* aSpoiler = dynamic_cast<Spoiler*>(&component);
-		is_spoiler = scatter && aSpoiler;
+		//is_spoiler = scatter && aSpoiler;
+		
+		const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (currentComponent->GetAperture());
+		is_spoiler = scatter && tap;
 
 		if(!is_spoiler)
 		{ // not a spoiler so set up for normal hard-edge collimation
@@ -387,6 +390,7 @@ if(LostParticlePositions.size() != 0 && !is_spoiler)
 			/*cout << "Tracking: " << currentComponent->GetQualifiedName() << "\tStepsize: " << StepSize << "\tPreStep: " << LostParticleTracker->GetIntegratedLength() << \
 				"\tPostStep: " << LostParticleTracker->GetIntegratedLength() + StepSize << "\tLength: " << currentComponent->GetLength() << endl;*/
 
+
 			double IntegratedLength = LostParticleTracker->GetIntegratedLength();
 			//Now loop over each particle in turn
 			for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end();)
@@ -431,6 +435,8 @@ if(LostParticlePositions.size() != 0 && !is_spoiler)
 			{
 				LostParticleTracker->TrackStep(StepSize);			
 			}
+			if (LostParticleTracker->GetRemainingLength() == 0) break;
+			cout << "GetRemainingLength2: " << LostParticleTracker->GetRemainingLength() << endl;
 		}
 //		cout << "LostBunch size: " << LostBunch->size() << "\tLost size: " << lost.size() << endl;
 

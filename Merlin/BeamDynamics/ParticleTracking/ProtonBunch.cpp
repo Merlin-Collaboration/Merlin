@@ -185,6 +185,7 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (ap);
 	if(!tap)
 	{
+		cout << "ProtonBunch::ConfigureScatterMerlin() ap is not CollimatorAperture" << endl;
 		throw MerlinException("ScatterProton : No Collimator Aperture");
 	}
 
