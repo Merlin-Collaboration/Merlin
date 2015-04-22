@@ -436,7 +436,6 @@ if(LostParticlePositions.size() != 0 && !is_spoiler)
 				LostParticleTracker->TrackStep(StepSize);			
 			}
 			if (LostParticleTracker->GetRemainingLength() == 0) break;
-			cout << "GetRemainingLength2: " << LostParticleTracker->GetRemainingLength() << endl;
 		}
 //		cout << "LostBunch size: " << LostBunch->size() << "\tLost size: " << lost.size() << endl;
 
