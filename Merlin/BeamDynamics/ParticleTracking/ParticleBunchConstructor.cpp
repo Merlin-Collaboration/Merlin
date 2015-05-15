@@ -104,6 +104,10 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 
             M.Apply(p);
             p+=pbunch.front(); // add centroid
+            p.type() = -1.0;
+            p.location() = -1.0;
+            p.id() = 0;
+            p.sd() = 0.0;
 
             if(itsFilter==0 || itsFilter->Apply(p)) {
                 pbunch.push_back(p);
@@ -133,6 +137,11 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
             p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
             M.Apply(p);
             p+=pbunch.front(); // add centroid
+            p.type() = -1.0;
+            p.location() = -1.0;
+            p.id() = 0;
+            p.sd() = 0.0;
+            
 
             if(itsFilter==0 || itsFilter->Apply(p)) {
                 pbunch.push_back(p);
@@ -156,6 +165,10 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
 	               M.Apply(p);
 	               p+=pbunch.front(); // add centroid
+            p.type() = -1.0;
+            p.location() = -1.0;
+            p.id() = 0;
+            p.sd() = 0.0;
 			//cout<<p<<endl;
 	               if(itsFilter==0 || itsFilter->Apply(p)) {
 	                   pbunch.push_back(p);
@@ -175,14 +188,13 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               p.yp()	= 0.0;
 	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+                       // cout<<p<<endl;
+		       M.Apply(p);
+	               p+=pbunch.front(); // add centroid
 	               p.type() = -1.0;
 	               p.location() = -1.0;
 	               p.sd() = 0.0;
 	               p.id() = i;
-                       // cout<<p<<endl;
-		       M.Apply(p);
-	               p+=pbunch.front(); // add centroid
-						
 	               if(itsFilter==0 || itsFilter->Apply(p)) {
 	                   pbunch.push_back(p);
 	                   i++;
@@ -202,12 +214,14 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
 	              cout<<"rx\t"<< rx << endl;
-		      cout<<"beamdat.emit_x"<<'\t'<<beamdat.emit_x<<endl;			
-	               p.type() = -1.0;
-	               p.location() = -1.0;
+		      cout<<"beamdat.emit_x"<<'\t'<<beamdat.emit_x<<endl;
                        M.Apply(p);
 	               p+=pbunch.front(); // add centroid
-			//cout<<p<<endl;
+	               p.type() = -1.0;
+	               p.location() = -1.0;
+	               p.sd() = 0.0;
+	               p.id() = i;
+	               //cout<<p<<endl;
 	               if(itsFilter==0 || itsFilter->Apply(p)) {
 	                   pbunch.push_back(p);
 	                   i++;
@@ -226,14 +240,13 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               p.yp()	= RandomGauss(beamdat.emit_y,cutoffs.yp());
 	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);	               
+		      //cout << p << endl;
+		       M.Apply(p);
+	               p+=pbunch.front(); // add centroid
 	               p.type() = -1.0;
 	               p.location() = -1.0;
 	               p.sd() = 0.0;
 	               p.id() = i;
-		      //cout << p << endl;
-		       M.Apply(p);
-	               p+=pbunch.front(); // add centroid
-
 	               if(itsFilter==0 || itsFilter->Apply(p)) {
 	                   pbunch.push_back(p);
 	                   i++;
@@ -255,12 +268,13 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               p.yp()	= 0;//RandomGauss(beamdat.emit_y,cutoffs.yp());
 	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);	               
-	               p.type() = -1.0;
-	               p.location() = -1.0;
 		      //cout << p << endl;
 		       //M.Apply(p);
 	               p+=pbunch.front(); // add centroid
-
+	               p.type() = -1.0;
+	               p.location() = -1.0;
+	               p.sd() = 0.0;
+	               p.id() = i;
 	               if(itsFilter==0 || itsFilter->Apply(p)) {
 	                   pbunch.push_back(p);
 	                   i++;
@@ -279,11 +293,12 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               p.yp()	= ry * sin(u);
 	               p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
 	               p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
-	               p.type() = -1.0;
-	               p.location() = -1.0;
 	               M.Apply(p);
 	               p+=pbunch.front(); // add centroid
-
+	               p.type() = -1.0;
+	               p.location() = -1.0;
+	               p.sd() = 0.0;
+	               p.id() = i;
 	               if(itsFilter==0 || itsFilter->Apply(p)) {
 	                   pbunch.push_back(p);
 	                   i++;
