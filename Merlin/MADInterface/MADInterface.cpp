@@ -842,6 +842,13 @@ double MADInterface::ReadComponent ()
 		ctor->AppendComponent(*bend);
 		component=bend;
 	} //End SBEND
+	
+	else if(type=="HEL")
+	{
+		HollowElectronLens* hel = new HollowElectronLens(name, len);
+		ctor->AppendComponent(*hel);
+		component=hel;
+	}
 
 	else if(type=="SEXTUPOLE")
 	{

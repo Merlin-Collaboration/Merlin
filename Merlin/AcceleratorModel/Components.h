@@ -48,4 +48,6 @@
 #include "AcceleratorModel/StdComponent/Kicker.h"
 //Spoiler
 #include "AcceleratorModel/StdComponent/Spoiler.h"
+// HollowElectronLens
+#include "AcceleratorModel/StdComponent/HollowElectronLens.h"
 #endif
