@@ -8,6 +8,25 @@ using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
+/*
+Basic constructor taking the following arguments: 
+Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
+*/
+Material::Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0){
+	Name = name0;
+	Symbol = sym0;
+	AtomicMass = A0;
+	AtomicNumber = AtomicNumber0;
+	sigma_pN_elastic = Sigma_E0;
+	sigma_pN_inelastic = Sigma_I0;
+	sigma_Rutherford = Sigma_R0;
+	dEdx = dEdx0;
+	X0 = X00;
+	Density = Density0;
+	Conductivity = Conductivity0;
+};
+
+
 double Material::CalculateElectronDensity()
 {
 	return AtomicNumber * Avogadro * Density * 0.001 / (AtomicMass * pow(centimeter,3)); // n_e m^-3 (1e6 conversion from cm^3)

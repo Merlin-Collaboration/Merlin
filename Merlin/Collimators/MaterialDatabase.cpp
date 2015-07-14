@@ -20,27 +20,34 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 
 //ALL CROSS SECTIONS IN BARNS!
 
+	//new Material(Name, A, AN, SE, SI, SR, dE, X, rho, sig);
 	//Beryllium
+	Material* Be = new Material("Beryllium", "Be", 9.012182, 4, 0.069, 0.199, 0.000035, 0.55, 651900, 1848, 3.08E7);	
+	Be->SetSixtrackTotalNucleusCrossSection(0.268);
+	Be->SetSixtrackNuclearSlope(74.7);
+	Be->SetMeanExcitationEnergy(63.7*eV);
+	Be->SetElectronDensity(Be->CalculateElectronDensity());
+	Be->SetPlasmaEnergy(Be->CalculatePlasmaEnergy());
+	db.insert(pair<string,Material*>(Be->GetSymbol(),Be));
+/*
+	//Obsolete due to constructor
 	Material* Be = new Material();
 	Be->SetAtomicNumber(4);
 	Be->SetAtomicMass(9.012182);
 	Be->SetName("Beryllium");
 	Be->SetSymbol("Be");
-	Be->SetSixtrackTotalNucleusCrossSection(0.268);
 	Be->SetSixtrackInelasticNucleusCrossSection(0.199);
 	Be->SetSixtrackRutherfordCrossSection(0.000035);
-	Be->SetSixtrackdEdx(0.55);
-//	Be->rho=1.848;
 	Be->SetConductivity(3.08E7);
 	Be->SetRadiationLength(651900);
-//	Be->SetRadiationLength(Be->CalculateRadiationLength());
+	Be->SetSixtrackdEdx(0.55);
 	Be->SetDensity(1848);
-	Be->SetSixtrackNuclearSlope(74.7);
-	Be->SetMeanExcitationEnergy(63.7*eV);
-	Be->SetElectronDensity(Be->CalculateElectronDensity());
+*/
+	
+//	Be->rho=1.848;
+//	Be->SetRadiationLength(Be->CalculateRadiationLength());	
 //	Be->SetElectronCriticalEnergy(113.70*MeV);
-	Be->SetPlasmaEnergy(Be->CalculatePlasmaEnergy());
-	db.insert(pair<string,Material*>(Be->GetSymbol(),Be));
+	
 
 	//Carbon (graphite)
 	Material* C = new Material();
