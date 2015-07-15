@@ -40,6 +40,8 @@ extern const double ElectronMassMeV;
 
 extern const double ProtonMassMeV;
 
+extern const double ProtonMassGeV;
+
 extern const double FreeSpacePermeability;
 
 extern const double FreeSpacePermittivity;

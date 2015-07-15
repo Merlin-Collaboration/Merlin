@@ -194,6 +194,11 @@ void Material::SetSixtrackInelasticNucleusCrossSection(double p)
 	sigma_pN_inelastic = p;
 }
 
+void Material::SetSixtrackElasticNucleusCrossSection(double p)
+{
+	sigma_pN_elastic = p;
+}
+
 void Material::SetSixtrackRutherfordCrossSection(double p)
 {
 	sigma_Rutherford = p;
@@ -280,6 +285,11 @@ double Material::GetSixtrackTotalNucleusCrossSection() const
 double Material::GetSixtrackInelasticNucleusCrossSection() const
 {
 	return sigma_pN_inelastic;
+}
+
+double Material::GetSixtrackElasticNucleusCrossSection() const
+{
+	return sigma_pN_elastic;
 }
 
 double Material::GetSixtrackRutherfordCrossSection() const

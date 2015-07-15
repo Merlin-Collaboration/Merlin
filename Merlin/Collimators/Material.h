@@ -49,6 +49,7 @@ public:
 	virtual void SetPlasmaEnergy(double);
 
 	virtual void SetSixtrackTotalNucleusCrossSection(double);
+	virtual void SetSixtrackElasticNucleusCrossSection(double);
 	virtual void SetSixtrackInelasticNucleusCrossSection(double);
 	virtual void SetSixtrackRutherfordCrossSection(double);
 	virtual void SetSixtrackdEdx(double);
@@ -72,6 +73,7 @@ public:
 
 	virtual double GetSixtrackTotalNucleusCrossSection() const;
 	virtual double GetSixtrackInelasticNucleusCrossSection() const;
+	virtual double GetSixtrackElasticNucleusCrossSection() const;
 	virtual double GetSixtrackRutherfordCrossSection() const;
 	virtual double GetSixtrackdEdx() const;
 	virtual double GetSixtrackNuclearSlope() const;
