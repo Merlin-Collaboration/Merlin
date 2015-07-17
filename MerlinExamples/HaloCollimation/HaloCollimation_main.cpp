@@ -1,4 +1,4 @@
-// Beam Delivery System Spoiler Studies
+// Beam Delivery System Collimator Studies
 // --------------------------------------------------------------------
 //
 // The application tracks a halo of particles with the specified extents,
@@ -59,8 +59,8 @@ int main()
     // the surviving particles (data/particles.out.dat)
     ht.dump_particles = true;
 
-	// Turn scattering on/off at SPOILER elements
-	ht.scatter_at_spoiler = false;
+	// Turn scattering on/off at Collimator elements
+	ht.scatter_at_collimator = false;
 
     // Track halo with 1e4 particles
     ht.Run(10000);

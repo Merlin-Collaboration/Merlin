@@ -1,13 +1,15 @@
-#include "Collimators/ApertureConfiguration.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/Apertures/RectEllipseAperture.h"
-#include "AcceleratorModel/Apertures/InterpolatedApertures.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#include "AcceleratorModel/AcceleratorModel.h"
+#include "AcceleratorModel/Apertures/SimpleApertures.h"
+#include "AcceleratorModel/Apertures/RectEllipseAperture.h"
+#include "AcceleratorModel/Apertures/InterpolatedApertures.h"
+#include "AcceleratorModel/StdComponent/Collimator.h"
+
+#include "Collimators/ApertureConfiguration.h"
 
 using namespace std;
 
@@ -78,7 +80,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 	for(vector<AcceleratorComponent*>::iterator comp = elements.begin(); comp!=elements.end(); comp++)
 	{
 		//Do not overwrite collimator apertures
-		Spoiler* collimator = NULL;
+		Collimator* collimator = NULL;
 		if((*comp)->GetAperture() == NULL)
 		{
 

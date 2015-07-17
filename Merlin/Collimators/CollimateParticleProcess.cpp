@@ -8,25 +8,25 @@
 // 
 /////////////////////////////////////////////////////////////////////////
 
-#include "merlin_config.h"
 #include <iterator>
 #include <iomanip>
 #include <typeinfo>
 #include <fstream>
 #include <sstream>
-#include "AcceleratorModel/Apertures/CollimatorAperture.h"
-#include "NumericalUtils/utils.h"
-#include "NumericalUtils/PhysicalUnits.h"
-// CollimateParticleProcess
-#include "Collimators/CollimateParticleProcess.h"
-// Aperture
+
+#include "merlin_config.h"
+
 #include "AcceleratorModel/Aperture.h"
-// Spoiler
-#include "AcceleratorModel/StdComponent/Spoiler.h"
+#include "AcceleratorModel/Apertures/InterpolatedApertures.h"
+#include "AcceleratorModel/Apertures/CollimatorAperture.h"
+#include "AcceleratorModel/StdComponent/Collimator.h"
 
 #include "BeamDynamics/ParticleTracking/ParticleComponentTracker.h"
 
-#include "AcceleratorModel/Apertures/InterpolatedApertures.h"
+#include "Collimators/CollimateParticleProcess.h"
+
+#include "NumericalUtils/utils.h"
+#include "NumericalUtils/PhysicalUnits.h"
 
 using namespace std;
 
@@ -91,14 +91,14 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 //		cout << currentComponent->GetQualifiedName() << "\t" << nstart << endl;
 //		cout << currentComponent->GetQualifiedName() << "\t" << currentComponent->GetAperture()->GetApertureType() << endl;
 		s=0;
-		Spoiler* aSpoiler = dynamic_cast<Spoiler*>(&component);
-		//is_spoiler = scatter && aSpoiler;
+		Collimator* aCollimator = dynamic_cast<Collimator*>(&component);
+		//is_collimator = scatter && aCollimator;
 		
 		const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (currentComponent->GetAperture());
-		is_spoiler = scatter && tap;
+		is_collimator = scatter && tap;
 
-		if(!is_spoiler)
-		{ // not a spoiler so set up for normal hard-edge collimation
+		if(!is_collimator)
+		{ // not a collimatorso set up for normal hard-edge collimation
 			at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
 			at_cent = (COLL_AT_CENTER & cmode)!=0;
 			at_exit = (COLL_AT_EXIT & cmode)!=0;
@@ -110,16 +110,16 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 			at_cent = false; // currently scatter only at exit
 			at_exit = at_entr = true;
 			SetNextS();
-			//Xr = aSpoiler->GetMaterialRadiationLength();
+			//Xr = aCollimator->GetMaterialRadiationLength();
 			currentBunch->SetScatterConfigured(false);
-			len = aSpoiler->GetLength();
-		//	CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(aSpoiler->GetAperture());
+			len = aCollimator->GetLength();
+		//	CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(aCollimator->GetAperture());
 		}
 
 		//For precision tracking of lost particles in non-collimators
 		//make a copy of the input array if we are a magnet.
 		//This should also occur before any tracking, hence also any poleface rotations on a dipole, etc
-		if(!is_spoiler)
+		if(!is_collimator)
 		{
 			InputArray = currentBunch->GetParticles();
 		}
@@ -155,7 +155,7 @@ void CollimateParticleProcess::DoProcess (double ds)
 
 double CollimateParticleProcess::GetMaxAllowedStepSize () const
 {
-	if(!is_spoiler)
+	if(!is_collimator)
 	{
 		return next_s-s;
 	}
@@ -203,7 +203,7 @@ void CollimateParticleProcess::DoCollimation ()
 	// process of copying all the particles to a new bunch. So check first
 	bool any_loss = false;
 	size_t first_loss = 0;
-	if (is_spoiler){
+	if (is_collimator){
 		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();p++)
 		{
 			if (!ap->PointInside( (*p).x()-bin_size*(*p).xp(), (*p).y()-bin_size*(*p).yp(), s) ){
@@ -244,14 +244,14 @@ void CollimateParticleProcess::DoCollimation ()
 	std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
 
 	//make a copy of the input array if we are a magnet.
-	if(!is_spoiler)
+	if(!is_collimator)
 	{
 		InputArray = currentBunch->GetParticles();
 	}
 */
 
 /*	cout << currentComponent->GetQualifiedName() << "\t" << currentComponent->GetLength() << "\t" << s << endl;
-	if(currentComponent->GetQualifiedName() != "Spoiler.TCP.C6L7.B1")
+	if(currentComponent->GetQualifiedName() != "collimator.TCP.C6L7.B1")
 	{
 		abort();
 	}
@@ -259,7 +259,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 	size_t particle_number=0;
 
-	if(is_spoiler) 
+	if(is_collimator) 
 	{
 		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
 		{
@@ -274,7 +274,7 @@ void CollimateParticleProcess::DoCollimation ()
 		//If we are collimating at the end of the element, track back a drift
 		//Do not do this at the start of the element.
 
-//		if(is_spoiler) 
+//		if(is_collimator) 
 //		{
 //			(*p).x() -= bin_size * (*p).xp();
 //			(*p).y() -= bin_size * (*p).yp();
@@ -283,13 +283,13 @@ void CollimateParticleProcess::DoCollimation ()
 //		if(!ap->PointInside(( *p).x(), (*p).y(), s + (*p).ct() ))
 		if(particle_number >= first_loss && !ap->PointInside( (*p).x(), (*p).y(), s) )
 		{
-			// If the 'aperture' is a spoiler, then the particle is lost
+			// If the 'aperture' is a collimator, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
-			// If not a spoiler, then do not scatter and directly remove the particle.
-			if(!is_spoiler || DoScatter(*p))
+			// If not a collimator, then do not scatter and directly remove the particle.
+			if(!is_collimator || DoScatter(*p))
 			{
 //				cout << "Lost Particle at: " << s + (*p).ct() << endl;
-				if(is_spoiler)
+				if(is_collimator)
 				{
 					(*p).ct() += (s-bin_size);
 				}
@@ -321,7 +321,7 @@ void CollimateParticleProcess::DoCollimation ()
 		}
 		else
 		{
-			if(is_spoiler) 
+			if(is_collimator) 
 			{
 				(*p).x() += bin_size * (*p).xp();
 				(*p).y() += bin_size * (*p).yp();
@@ -347,7 +347,7 @@ void CollimateParticleProcess::DoCollimation ()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Only copy the output if we are not a collimator and there are lost particles
-if(LostParticlePositions.size() != 0 && !is_spoiler)
+if(LostParticlePositions.size() != 0 && !is_collimator)
 {
 //cout << currentComponent->GetQualifiedName() << "\tLostParticlePositions: " << LostParticlePositions.size() << endl;
 	//make a new particle bunch to track the lost particles
@@ -511,7 +511,7 @@ void CollimateParticleProcess::SetNextS ()
 		active=false;
 	}
 
-	if(is_spoiler)
+	if(is_collimator)
 	{
 		active = true;
 		next_s = s + bin_size;

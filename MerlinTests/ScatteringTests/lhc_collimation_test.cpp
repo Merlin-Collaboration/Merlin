@@ -303,7 +303,7 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 	myCollimateProcess=new CollimateParticleProcess(2,4,col_output);
-	myCollimateProcess->ScatterAtSpoiler(true);
+	myCollimateProcess->ScatterAtCollimator(true);
 
 	myCollimateProcess->SetLossThreshold(200.0);
 	myCollimateProcess->SetOutputBinSize(0.1);

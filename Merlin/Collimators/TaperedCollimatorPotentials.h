@@ -1,28 +1,34 @@
+#include <typeinfo>
+#include <iostream>
+
+#include "AcceleratorModel/AcceleratorModel.h"
+#include "AcceleratorModel/WakePotentials.h"
+#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
+#include "AcceleratorModel/StdComponent/Drift.h"
+#include "AcceleratorModel/StdComponent/Collimator.h"
+
 #include "BeamModel/BeamData.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "Collimators/SpoilerWakeProcess.h"
-#include "Random/RandomNG.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "AcceleratorModel/WakePotentials.h"
-#include "Collimators/SpoilerWakePotentials.h"
+
+#include "Collimators/CollimatorWakeProcess.h"
+#include "Collimators/CollimatorWakePotentials.h"
+
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/StdComponent/Drift.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
-#include <typeinfo>
-#include <iostream>
+
+#include "Random/RandomNG.h"
+
 using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
 
-class TaperedCollimatorPotentials:public SpoilerWakePotentials  {
+class TaperedCollimatorPotentials:public CollimatorWakePotentials  {
 public:
     double a,b;
     double* coeff;
-    TaperedCollimatorPotentials(int m, double rada, double radb):SpoilerWakePotentials(m,0.,0.){
+    TaperedCollimatorPotentials(int m, double rada, double radb):CollimatorWakePotentials(m,0.,0.){
       a=rada;
       b=radb;
       coeff=new double[m+1];

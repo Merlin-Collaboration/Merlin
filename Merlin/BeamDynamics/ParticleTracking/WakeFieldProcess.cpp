@@ -1,31 +1,33 @@
 // Modified by D.Kruecker 18.2.2008
-// to be used as base class for other wakefield types (spoiler,coupler,...)
+// to be used as base class for other wakefield types (collimator,coupler,...)
 //
-#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchUtilities.h"
-
-#include "AcceleratorModel/StdComponent/SWRFStructure.h"
-#include "AcceleratorModel/StdComponent/TWRFStructure.h"
-#include "AcceleratorModel/StdComponent/SectorBend.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/utils.h"
-#include "IO/MerlinIO.h"
-#include "TLAS/TLASimp.h"
-
+//Time for load leveling
+//#include <ctime>
+#include <time.h>
 #include <stdexcept>
 #include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <fstream>
 
+#include "AcceleratorModel/StdComponent/SWRFStructure.h"
+#include "AcceleratorModel/StdComponent/TWRFStructure.h"
+#include "AcceleratorModel/StdComponent/SectorBend.h"
+
+#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
+#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
+#include "BeamDynamics/ParticleTracking/ParticleBunchUtilities.h"
+
+#include "IO/MerlinIO.h"
+
+#include "NumericalUtils/PhysicalConstants.h"
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/utils.h"
+
+#include "TLAS/TLASimp.h"
+
 #ifdef ENABLE_MPI
 #include <mpi.h>
-
-//Time for load leveling
-//#include <ctime>
-#include <time.h>
 #endif
 
 namespace {

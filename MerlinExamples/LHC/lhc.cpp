@@ -1,7 +1,7 @@
 //#include "BeamModel/BeamData.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "Collimators/SpoilerWakeProcess.h"
+#include "Collimators/CollimatorWakeProcess.h"
 #include "MADInterface/MADInterface.h"
 
 #include "Random/RandomNG.h"
@@ -195,7 +195,7 @@ int main(int argc, char* argv[])
 	CollimateParticleProcess* myCollimateProcess=new CollimateParticleProcess(2,7,myout);
 	
 	//Enable scattering
-	myCollimateProcess->ScatterAtSpoiler(true);
+	myCollimateProcess->ScatterAtCollimator(true);
 	
 	//Create individual loss files
 	myCollimateProcess->CreateParticleLossFiles(true, "lostlist");
@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
 
 	// apply the resistive wakefields
 	// modes, priority, nbins, nsigma
-	SpoilerWakeProcess* myWakeProcess = new SpoilerWakeProcess(modes, 1, 10, 3);
+	CollimatorWakeProcess* myWakeProcess = new CollimatorWakeProcess(modes, 1, 10, 3);
 	
 	//Enable the Wakefield process
 	tracker ->AddProcess(myWakeProcess);

@@ -5,7 +5,7 @@
 #include <string>
 
 #include "AcceleratorModel/AcceleratorModel.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
+#include "AcceleratorModel/StdComponent/Collimator.h"
 
 #include "BeamModel/BeamData.h"
 

@@ -15,16 +15,16 @@
 #ifndef CollimateParticleProcess_h
 #define CollimateParticleProcess_h 1
 
-#include "merlin_config.h"
 #include <map>
 #include <set>
 #include <list>
 
-// ParticleBunchProcess
+#include "merlin_config.h"
+
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
-// PSTypes
+
 #include "BeamModel/PSTypes.h"
-// MerlinException
+
 #include "Exception/MerlinException.h"
 
 #define COLL_AT_ENTRANCE 1
@@ -78,9 +78,9 @@ public:
     virtual double GetMaxAllowedStepSize () const;
 
     // If set to true, the process scatters the particles in
-    // energy and angle at a Spoiler element, if the particle is
+    // energy and angle at a Collimator element, if the particle is
     // outside the aperture.
-    void ScatterAtSpoiler(bool tf);
+    void ScatterAtCollimator(bool tf);
 
     //	If flg is true, then files are generated containing the
     //	lost (collimated) particles. The file names have the
@@ -144,7 +144,7 @@ private:
     std::list< size_t >* pindex;
 
     bool scatter;
-    bool is_spoiler;
+    bool is_collimator;
     double Xr; // radiation length 
     double len; // physical length     
     double bin_size;
@@ -173,7 +173,7 @@ inline const std::list<size_t>& CollimateParticleProcess::GetIndecies() const
     return *pindex;
 }
 
-inline void CollimateParticleProcess::ScatterAtSpoiler(bool tf)
+inline void CollimateParticleProcess::ScatterAtCollimator(bool tf)
 {
     scatter=tf;
 }

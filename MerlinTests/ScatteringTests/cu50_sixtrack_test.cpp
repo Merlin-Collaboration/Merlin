@@ -1,18 +1,23 @@
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
-#include "Random/RandomNG.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "Collimators/CollimateParticleProcess.h"
-#include "Collimators/MaterialDatabase.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <ctime>
-#include "AcceleratorModel/Components.h"
 #include <unistd.h>
+
+#include "AcceleratorModel/Components.h"
 #include "AcceleratorModel/Apertures/CollimatorAperture.h"
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
+
+#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
+
+#include "Collimators/CollimateParticleProcess.h"
+#include "Collimators/MaterialDatabase.h"
+
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/PhysicalConstants.h"
+
+#include "Random/RandomNG.h"
 
 using namespace std;
 using namespace PhysicalUnits;
@@ -123,7 +128,7 @@ int main(int argc, char* argv[])
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();	
 	construct->NewModel();
 	double length = 0.5;
-	Spoiler* TestCol = new Spoiler("TestCollimator",length);
+	Collimator* TestCol = new Collimator("TestCollimator",length);
 
 	Material* CollimatorMaterial = mat->FindMaterial("Cu");
 	CollimatorAperture* app=new CollimatorAperture(2,2,0,CollimatorMaterial,length, 0,0);
@@ -162,7 +167,7 @@ int main(int argc, char* argv[])
 	//New Collimation process
 	myCollimateProcess=new CollimateParticleProcess(2,4);
 
-	myCollimateProcess->ScatterAtSpoiler(true);
+	myCollimateProcess->ScatterAtCollimator(true);
 
 	// Sets maximum allowed loss percentage at a single collimator.
 	myCollimateProcess->SetLossThreshold(101.0);

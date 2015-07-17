@@ -1,14 +1,18 @@
-#include "Collimators/CollimatorDatabase.h"
-#include "AcceleratorModel/Apertures/CollimatorAperture.h"
-#include "Collimators/ResistiveWakePotentials.h"
-#include "Random/RandomNG.h"
-#include "NumericalUtils/PhysicalUnits.h"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <map>
 #include <vector>
+
+#include "AcceleratorModel/Apertures/CollimatorAperture.h"
+
+#include "Collimators/CollimatorDatabase.h"
+#include "Collimators/ResistiveWakePotentials.h"
+
+#include "NumericalUtils/PhysicalUnits.h"
+
+#include "Random/RandomNG.h"
 
 using namespace std;
 using namespace PhysicalUnits;
@@ -89,7 +93,7 @@ CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, 
 
 void CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model)
 {
-	vector<Spoiler*> Collimators;
+	vector<Collimator*> Collimators;
 	size_t n_collimators = model->ExtractTypedElements(Collimators,"*");
 	if(logFlag)
 	{
@@ -99,12 +103,12 @@ void CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model)
 		*log << "#" << std::setw(20) << "name" << std::setw(7) << "row" << std::setw(14) << std::setw(15)<<"Distance"  <<std::setw(15)<< "beta x "\
 		<<  std::setw(15)<< "beta y" << std::setw(15) <<"cent x" << std::setw(15)<<"cent y" << std::setw(15)<<"x half gap" <<  std::setw(15)<<"y half gap" << endl;
 	}
-	map<string,Spoiler*> CollimatorMap;
-	map<string,Spoiler*>::iterator CMapit;
+	map<string,Collimator*> CollimatorMap;
+	map<string,Collimator*>::iterator CMapit;
 
-	for(vector<Spoiler*>::iterator c = Collimators.begin(); c!=Collimators.end(); c++)
+	for(vector<Collimator*>::iterator c = Collimators.begin(); c!=Collimators.end(); c++)
 	{
-		CollimatorMap.insert(pair<string,Spoiler*>((*c)->GetName(),(*c)));
+		CollimatorMap.insert(pair<string,Collimator*>((*c)->GetName(),(*c)));
 	}
 
 	for(size_t n=0; n<number_collimators; n++)
@@ -132,7 +136,7 @@ void CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model)
 double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
 {
 	//std::cout << "point1" << std::endl;
-	vector<Spoiler*> Collimators;
+	vector<Collimator*> Collimators;
 	size_t n_collimators = model->ExtractTypedElements(Collimators,"*");
 	//std::cout << "point2" << std::endl;
 	if(logFlag)
@@ -143,16 +147,16 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 		*log << "#" << std::setw(20) << "name" << std::setw(7) << "row" << std::setw(14) << std::setw(15)<<"Distance"  <<std::setw(15)<< "beta x "\
 		<<  std::setw(15)<< "beta y" << std::setw(15) <<"cent x" << std::setw(15)<<"cent y" << std::setw(15)<<"x half gap" <<  std::setw(15)<<"y half gap" << endl;
 	}
-	map<string,Spoiler*> CollimatorMap;
-	map<string,Spoiler*>::iterator CMapit;
+	map<string,Collimator*> CollimatorMap;
+	map<string,Collimator*>::iterator CMapit;
 	//std::cout << "point3" << std::endl;
-	for(vector<Spoiler*>::iterator c = Collimators.begin(); c!=Collimators.end(); c++)
+	for(vector<Collimator*>::iterator c = Collimators.begin(); c!=Collimators.end(); c++)
 	{
-		CollimatorMap.insert(pair<string,Spoiler*>((*c)->GetName(),(*c)));
+		CollimatorMap.insert(pair<string,Collimator*>((*c)->GetName(),(*c)));
 		//cout << (*c)->GetName() << endl;
 	}
 	//std::cout << "point4" << std::endl;
-	//for(vector<Spoiler*>::iterator c = collimators.begin(); c!=collimators.end(); c++)
+	//for(vector<Collimator*>::iterator c = collimators.begin(); c!=collimators.end(); c++)
 	//{
 		//cout <<(*c)->GetName() << "\t" << (*c)->GetLength() << endl;
 		for(size_t i=0; i < number_collimators; i++)
@@ -574,13 +578,13 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
 {
 	
-	vector<Spoiler*> Collimators;
+	vector<Collimator*> Collimators;
 	size_t n_collimators = model->ExtractTypedElements(Collimators,"TCDQA*");
-	map<string,Spoiler*> CollimatorMap;
-	map<string,Spoiler*>::iterator CMapit;
-	for(vector<Spoiler*>::iterator ch = Collimators.begin(); ch!=Collimators.end(); ch++)
+	map<string,Collimator*> CollimatorMap;
+	map<string,Collimator*>::iterator CMapit;
+	for(vector<Collimator*>::iterator ch = Collimators.begin(); ch!=Collimators.end(); ch++)
 	{
-		CollimatorMap.insert(pair<string,Spoiler*>((*ch)->GetName(),(*ch)));
+		CollimatorMap.insert(pair<string,Collimator*>((*ch)->GetName(),(*ch)));
 	}
 	//cout <<(*ch)->GetName() << "\t" << (*ch)->GetLength() << endl;
 	for(size_t i=0; i < number_collimators; i++)
