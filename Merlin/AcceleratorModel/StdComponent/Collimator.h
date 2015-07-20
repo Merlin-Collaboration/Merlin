@@ -32,6 +32,9 @@
 
 #include "AcceleratorModel/StdComponent/Drift.h"
 
+#include "Collimators/Material.h"
+#include "Collimators/ScatteringModel.h"
+
 class ComponentTracker;
 
 // A collimator represents a scattering element in the beamline. Collimator objects
@@ -43,8 +46,10 @@ class Collimator : public Drift
 {
 public:
 
+	// Overloaded constructor
+	Collimator (const string& id, double len);
     Collimator (const string& id, double len, double radLength);
-    Collimator (const string& id, double len);
+	Collimator (const string& id, double len, Material* pp, ScatteringModel* s, double P0);
 
     // Returns the length of the collimator in units of its
     // radiation length
@@ -78,6 +83,15 @@ public:
     static const int ID;
 
 	bool scatter_at_this_collimator;
+
+	// Collimator material
+    Material* p;
+	virtual void SetMaterial(Material* pp){p = pp;};
+	
+	// ScatteringModel contains the relevent ScatteringProcess to use when performing scattering
+    ScatteringModel* scatter;
+	virtual void SetScatteringModel(ScatteringModel* s, double P0);
+
 
 private:
 

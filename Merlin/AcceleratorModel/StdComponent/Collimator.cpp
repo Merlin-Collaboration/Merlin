@@ -32,13 +32,20 @@
 // Class Collimator
 const int Collimator::ID = UniqueIndex();
 
+Collimator::Collimator (const string& id, double len)
+        : Drift(id,len),Xr(0)
+{scatter_at_this_collimator = true;}
+
 Collimator::Collimator (const string& id, double len, double radLength)
         : Drift(id,len),Xr(radLength)
 {scatter_at_this_collimator = true;}
 
-Collimator::Collimator (const string& id, double len)
-        : Drift(id,len),Xr(0)
-{scatter_at_this_collimator = true;}
+Collimator::Collimator (const string& id, double len, Material* pp, ScatteringModel* s, double P0)
+        : Drift(id, len), p(pp), scatter(s)
+{
+ vector<ScatteringProcess*>::iterator m;
+ for (m=scatter->Processes.begin(); m!=scatter->Processes.end();m++) {(*m)->Configure(pp,P0);}
+}
 
 const string& Collimator::GetType () const
 {
@@ -59,6 +66,13 @@ void Collimator::RotateY180 ()
 {
     // nothing to do
 }
+
+void Collimator::SetScatteringModel(ScatteringModel* s, double P0){
+	scatter = s;vector<ScatteringProcess*>::iterator m;
+ 	for (m=scatter->Processes.begin(); m!=scatter->Processes.end();m++) {
+		(*m)->Configure(p,P0);
+	}
+};
 
 ModelElement* Collimator::Copy () const
 {

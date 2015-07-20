@@ -18,6 +18,7 @@
 #include <map>
 #include <set>
 #include <list>
+#include <vector>
 
 #include "merlin_config.h"
 
@@ -117,43 +118,48 @@ public:
     void SetOutputBinSize(double);
 
 protected:
+    
 
     int cmode;
     std::ostream* os;
-    bool createLossFiles;
+	bool createLossFiles;
     string file_prefix;
     double lossThreshold;
+    size_t nstart;
+    std::list< size_t >* pindex;
 
     IDTBL idtbl;
+    PSvectorArray InputArray;	//The input array
 
-private:
-
-    void DoCollimation ();
-    void SetNextS ();
-    void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
-    void bin_lost_output(const PSvectorArray& lostb);
-    double s_total;
+	double s_total;
     double s;
     double next_s;
+	double len; // physical length     
+
+
+	bool is_collimator;
     bool at_entr;
     bool at_cent;
     bool at_exit;
-    size_t nstart;
+
     size_t nlost;
 
-    std::list< size_t >* pindex;
+	vector<double> lostparticles;
+
+private:
+
+    virtual void DoCollimation ();
+    void SetNextS ();
+    virtual void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
+    void bin_lost_output(const PSvectorArray& lostb); 
 
     bool scatter;
-    bool is_collimator;
-    double Xr; // radiation length 
-    double len; // physical length     
     double bin_size;
-    bool DoScatter(Particle&);
     bool Imperfections;
+
+    double Xr; // radiation length    
+    virtual bool DoScatter(Particle&);
     
-    //For precision tracking of lost particles in non-collimators
-    //Remember to clear after each usage
-    PSvectorArray InputArray;				//The input array
     std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
 };
 
