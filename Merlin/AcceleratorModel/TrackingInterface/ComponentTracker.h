@@ -114,6 +114,12 @@ public:
         IMap itsMap;
     };
 
+	void ClearIntegratorSet(){
+		if (iSet)
+			delete iSet;
+		iSet = new IntegratorSet();
+	}
+
 protected:
 
     //	Constructor(s) made protected to prevent instantiation

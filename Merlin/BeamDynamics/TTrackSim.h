@@ -70,6 +70,11 @@ public:
     double GetMaxAllowedStepSize() const {
         return this->active ? ctracker.GetRemainingLength() : 0;
     }
+    
+    void SetIntegratorSet(const integrator_set_base* iset) {
+		ctracker.ClearIntegratorSet();
+		iset->Init(ctracker);
+	}
 
 private:
 
@@ -90,6 +95,7 @@ public:
     typedef __TYPENAME__ bunch_type::particle_type particle_type;
     typedef TTrnsProc<T> transport_process;
     typedef __TYPENAME__ transport_process::integrator_type integrator_type;
+    typedef __TYPENAME__ T::ISetBase integrator_set_base;
 
     //	Constructor taking the beamline to be tracked and a
     //	pointer to the initial ParticleBunch. If bunch0=0
@@ -149,6 +155,10 @@ public:
     bunch_type& GetTrackedBunch () {
         return static_cast<bunch_type&>(*bunch);
     }
+    
+	void SetIntegratorSet(const integrator_set_base* iset) {
+		transportProc->SetIntegratorSet(iset);
+	}
 
 private:
     transport_process* transportProc;

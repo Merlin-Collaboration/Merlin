@@ -23,6 +23,8 @@
 // AcceleratorComponent
 #include "AcceleratorModel/AcceleratorComponent.h"
 
+#include <iostream>
+
 const int AcceleratorComponent::ID = UniqueIndex();
 
 AcceleratorComponent::~AcceleratorComponent ()
@@ -44,6 +46,7 @@ double AcceleratorComponent::GetLength () const
 void AcceleratorComponent::PrepareTracker (ComponentTracker& aTracker)
 {
     if(!aTracker.SelectIntegrator(AcceleratorComponent::ID,*this))
+        std::cerr << "AcceleratorComponent::PrepareTracker(): could not select integrator for " << GetType()<< std::endl;
         throw ComponentTracker::UnknownComponent();
 }
 
