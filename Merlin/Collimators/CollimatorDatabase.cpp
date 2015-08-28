@@ -130,6 +130,7 @@ void CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model)
 				app->SetExitYOffset(0);	//Vertical
 			}
 			(CMapit->second)->SetAperture(app);
+			(CMapit->second)->SetMaterial(collimator_material);
 		}
 	}
 }
@@ -242,6 +243,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 							app->SetExitYOffset(y_orbit_exit);	//Vertical
 							//Set the aperture for collimation
 							(CMapit->second)->SetAperture(app);
+							(CMapit->second)->SetMaterial(collimator_material);
 						}
 						else if(!EnableMatchBeamEnvelope  && !JawFlattnessErrors && !JawAlignmentErrors)
 						{
@@ -305,6 +307,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							//Set the aperture for collimation
 							(CMapit->second)->SetAperture(app);
+							(CMapit->second)->SetMaterial(collimator_material);
 							//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							else if(CollData[i].name == "TCDQA.B4R6.B1")
@@ -314,6 +317,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							//Set the aperture for collimation
 							(CMapit->second)->SetAperture(app);
+							(CMapit->second)->SetMaterial(collimator_material);
 							//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							else if(CollData[i].name == "TCDQA.C4R6.B1")
@@ -323,6 +327,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							//Set the aperture for collimation
 							(CMapit->second)->SetAperture(app);
+							(CMapit->second)->SetMaterial(collimator_material);
 							//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							else
@@ -332,6 +337,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							//Set the aperture for collimation
 							(CMapit->second)->SetAperture(app);
+							(CMapit->second)->SetMaterial(collimator_material);
 							//cout << "COLLIMATOR: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							if(logFlag)
@@ -531,6 +537,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							//Set the aperture for collimation
 							(CMapit->second)->SetAperture(app);
+							(CMapit->second)->SetMaterial(collimator_material);
 						}
 						else
 						{

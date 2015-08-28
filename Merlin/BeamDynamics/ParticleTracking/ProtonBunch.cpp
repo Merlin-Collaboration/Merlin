@@ -500,8 +500,6 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	}
 }
 
-
-
 int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 {
 	// p is the scattering Proton - a single particle.

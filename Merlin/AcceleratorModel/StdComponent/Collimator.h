@@ -49,7 +49,8 @@ public:
 	// Overloaded constructor
 	Collimator (const string& id, double len);
     Collimator (const string& id, double len, double radLength);
-	Collimator (const string& id, double len, Material* pp, ScatteringModel* s, double P0);
+	Collimator (const string& id, double len, Material* pp, double P0);
+	//~ Collimator (const string& id, double len, Material* pp, Collimation::ScatteringModel* s, double P0);
 
     // Returns the length of the collimator in units of its
     // radiation length
@@ -89,8 +90,8 @@ public:
 	virtual void SetMaterial(Material* pp){p = pp;};
 	
 	// ScatteringModel contains the relevent ScatteringProcess to use when performing scattering
-    ScatteringModel* scatter;
-	virtual void SetScatteringModel(ScatteringModel* s, double P0);
+    //~ Collimation::ScatteringModel* scatter;
+	//~ virtual void SetScatteringModel(Collimation::ScatteringModel* s);
 
 
 private:

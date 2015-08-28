@@ -283,11 +283,13 @@ void CollimateParticleProcess::DoCollimation ()
 //		if(!ap->PointInside(( *p).x(), (*p).y(), s + (*p).ct() ))
 		if(particle_number >= first_loss && !ap->PointInside( (*p).x(), (*p).y(), s) )
 		{
+			//~ cout << "\nCollimateParticleProcess: p.x() = " << (*p).x() << std::endl;
 			// If the 'aperture' is a collimator, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
 			// If not a collimator, then do not scatter and directly remove the particle.
+			//~ std::cout << "\n\tCollimateParticleProcess:: Calling DoScatter" << endl;
 			if(!is_collimator || DoScatter(*p))
-			{
+			{	
 //				cout << "Lost Particle at: " << s + (*p).ct() << endl;
 				if(is_collimator)
 				{

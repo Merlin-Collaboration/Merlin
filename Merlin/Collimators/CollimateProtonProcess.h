@@ -18,9 +18,12 @@
 #include <vector>
 
 #include "Collimators/CollimateParticleProcess.h"
+#include "Collimators/ScatteringModel.h"
 #include "Collimators/Dustbin.h"
 
 using namespace std;
+using namespace Collimation;
+
 namespace ParticleTracking {
 
 
@@ -33,14 +36,22 @@ public:
     //	null pointer for osp (default) suppresses output.
     CollimateProtonProcess (int priority, int mode, std::ostream* osp = 0);
 
-	void SetDustbin (Dustbin& odb){outputdustbin = &odb;}
+	void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
+	
+	void SetScatter(Collimation::ScatteringModel* sm);
+	
+	void SetScatteringModel(Collimation::ScatteringModel* s);
 	
 	// Dustbin object to hold output data
 	Dustbin* outputdustbin;
+	Collimation::ScatteringModel* scattermodel;	
 
 private:
 
-    //bool DoScatter(Particle&);
+    bool DoScatter(Particle&);    
+    
+    // 0 when no dustbin is set
+    bool dustset;
 
 };
 
