@@ -20,10 +20,10 @@
 /*
 
 Definition of the virtual ScatteringProcess class and
-also several child classes derived from itW
+also several child classes derived from it
  
 Created RJB 23 October 2012
-Modified HR 2013
+Modified HR 07.09.2015
 
 */
 
@@ -31,6 +31,7 @@ namespace Collimation {
 	
 	struct CrossSections{
 	private:
+		double E0;
 		double sig_pN_tot_ref;
 		double sig_pN_inel_ref;
 		double sig_R_ref;
@@ -49,12 +50,14 @@ namespace Collimation {
 		double density;
 		double atomic_mass;
 		double atomic_no;
-		//~ Material* material;
 		int scat_type;
 		
 	public:
 		ParticleTracking::ppElasticScatter* ElasticScatter;
 		ParticleTracking::ppDiffractiveScatter* DiffractiveScatter;
+		
+		void Set_E0(double a){E0 = a;}
+		const double Get_E0(){return E0;}
 		
 		void Set_sig_pN_tot_ref(double a){sig_pN_tot_ref = a;}
 		const double Get_sig_pN_tot_ref(){return sig_pN_tot_ref;}
@@ -135,13 +138,13 @@ namespace Collimation {
 			Set_density(0.);
 			Set_atomic_mass(0.);
 			Set_atomic_no(0.);
-			//~ material 		= NULL;	
 			ElasticScatter 		= NULL;
 			DiffractiveScatter 	= NULL;
+			Set_E0(0.);
 		}
 				
 		//overloaded constructor
-		CrossSections(Material* mat, double E0, int scattertype){
+		CrossSections(Material* mat, double E, int scattertype){
 			Set_sig_pN_tot_ref(mat->GetSixtrackTotalNucleusCrossSection());
 			Set_sig_pN_inel_ref(mat->GetSixtrackInelasticNucleusCrossSection());
 			Set_sig_R_ref(mat->GetSixtrackRutherfordCrossSection());
@@ -161,13 +164,20 @@ namespace Collimation {
 			Set_density(mat->GetDensity()/1E3);
 			Set_atomic_mass(mat->GetAtomicMass());
 			Set_atomic_no(mat->GetAtomicNumber());
-			//~ material 		= mat;	
 			Set_scat_type(scattertype);
 			ElasticScatter 		= NULL;
 			DiffractiveScatter 	= NULL;
+			Set_E0(E);
 			
-			ConfigureCrossSections(E0);		
+			ConfigureCrossSections(Get_E0());		
 			Set_lambda_tot(GetTotalMeanFreePath());		
+			
+			std::cout << "ScatteringProcess::CrossSections: dEdx = " << mat->GetSixtrackdEdx() << endl;
+			std::cout << "ScatteringProcess::CrossSections: rho = " << mat->GetDensity()/1000.0 << endl;
+			std::cout << "ScatteringProcess::CrossSections: A = " << mat->GetAtomicMass() << endl;
+			std::cout << "ScatteringProcess::CrossSections: Z = " << mat->GetAtomicNumber() << endl;
+			std::cout << "ScatteringProcess::CrossSections: X0 = " << mat->GetRadiationLengthInM() << endl;
+			std::cout << "ScatteringProcess::CrossSections: b_N_ref = " << mat->GetSixtrackNuclearSlope() << endl;
 		}
 		
 		inline bool operator==(const CrossSections& rhs){
@@ -179,12 +189,14 @@ namespace Collimation {
 		void ConfigureCrossSections(double E0){		
 			if (scat_type == 4){ //Merlin
 				Set_com_sqd((2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0) + 2 * pow( (PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV),2));
+				std::cout << "\n\nScatteringProcess::Configure: com_sqd = " << Get_com_sqd() << endl;
 			}
 			else { //SixTrack
 				Set_com_sqd(2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0);	//ecmsq in SixTrack
+				std::cout << "\n\nScatteringProcess::Configure: com_sqd = " << Get_com_sqd() << endl;
 			}
 			 
-			double P_ref = 450.;
+			double P_ref = 450.0 * PhysicalUnits::GeV;
 			double pp_elastic_reference = 0.007;
 			double pp_elastic_const = 0.04792;
 			double pp_total_const = 0.05788;
@@ -192,7 +204,7 @@ namespace Collimation {
 			double single_diffractive_const = 0.00068;
 			double pp_tot_ref = 0.04;
 			
-			double free_nucleon_count =  free_nucleon_const * pow(atomic_no,(1./3.));
+			double free_nucleon_count =  free_nucleon_const * pow(atomic_mass,(1./3.));
 			
 			//SixTrack with Advanced Elastic Scattering					
 			double sigma_pp_elasticEM = 0;		
@@ -202,7 +214,7 @@ namespace Collimation {
 				ElasticScatter->SetTMin(1e-4);
 				ElasticScatter->SetTMax(1.0);
 				ElasticScatter->SetStepSize(1e-4);
-				ElasticScatter->GenerateTDistribution(E0);
+				ElasticScatter->GenerateTDistribution(Get_E0());
 			}
 			
 			//SixTrack with Advanced Single Diffractive Scattering			
@@ -220,7 +232,7 @@ namespace Collimation {
 				DiffractiveScatter->SetXiMin(xi_th);//Threshould at (M_proton + M_pion)^2/s
 				DiffractiveScatter->SetXiMax(0.12);
 				DiffractiveScatter->SetXiStepSize(1e-6);
-				DiffractiveScatter->GenerateDistribution(E0);
+				DiffractiveScatter->GenerateDistribution(Get_E0());
 			}	
 
 			//Merlin Scattering
@@ -249,19 +261,26 @@ namespace Collimation {
 				Set_sig_pn_sd(free_nucleon_count * sig_pp_sd);
 				
 				Set_sig_pN_tot(sig_pN_tot_ref + free_nucleon_count * (sig_pp_tot - pp_tot_ref));
-				
-				
+								
 				Set_sig_pN_inel(sig_pN_inel_ref);
 				
 				Set_sig_pN_el(Get_sig_pN_tot() - Get_sig_pN_inel() - Get_sig_pn_el() - Get_sig_pn_sd());
 				
-				//Rutherford
-				Set_sig_R(sig_R_ref);				
+				Set_sig_R(sig_R_ref);		
+				
+				std::cout << "\nScatteringProcess::Configure: sig_pN_tot_ref = " << Get_sig_pN_tot_ref() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pN_inel_ref = " << Get_sig_pN_inel_ref() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_R_ref = " << Get_sig_R_ref() << endl;				
+				std::cout << "ScatteringProcess::Configure: sig_pn_el = " << Get_sig_pn_el() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pn_sd = " << Get_sig_pn_sd() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pN_inel = " << Get_sig_pN_inel() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pN_el = " << Get_sig_pN_el() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_R = " << Get_sig_R() << endl;
 			}
 			//SixTrack like scattering
 			else{
 				//pp total
-				Set_sig_pp_tot(0.4 * pow((E0 / P_ref), pp_total_const));
+				Set_sig_pp_tot(pp_tot_ref * pow((Get_E0() / P_ref), pp_total_const));
 				
 				//pp & pn elastic
 				if(Get_scat_type() == 2){
@@ -270,7 +289,7 @@ namespace Collimation {
 					Set_elastic_diff(sigma_pp_elasticEM - sig_pp_el);					
 				}
 				else{
-					Set_sig_pp_el(pp_elastic_reference * pow((E0/P_ref), pp_elastic_const));					
+					Set_sig_pp_el(pp_elastic_reference * pow((Get_E0()/P_ref), pp_elastic_const));					
 				}
 				Set_sig_pn_el(free_nucleon_count * sig_pp_el);
 				
@@ -280,24 +299,11 @@ namespace Collimation {
 				}
 				else{
 					Set_sig_pp_sd(single_diffractive_const * log(0.15 * Get_com_sqd() ));
-					//~ std::cout << "\n\tCrossSections::ConfigureCrossSections: SixTrack config, com_sqd = " << Get_com_sqd() << endl;				
-					//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, log(0.15 * com_sqd) = " << log(0.15 * Get_com_sqd()) << endl;				
-					//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, single_diffractive_const = " << single_diffractive_const << endl;				
-					//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, sig_pp_sd = " << Get_sig_pp_sd() << endl;			
 				}
 				Set_sig_pn_sd(free_nucleon_count * sig_pp_sd);
-					//~ std::cout << "\n\tCrossSections::ConfigureCrossSections: SixTrack config, free_nucleon_count = " << free_nucleon_count << endl;				
-					//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, sig_pn_sd = " << Get_sig_pn_sd() << endl;			
-				
-				
+									
 				//pN total
 				Set_sig_pN_tot(sig_pN_tot_ref +  free_nucleon_count * (sig_pp_tot - pp_tot_ref));
-				
-				//~ std::cout << "\n\tCrossSections::ConfigureCrossSections: SixTrack config, sig_pN_tot_ref = " << Get_sig_pN_tot_ref() << endl;				
-				//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, free_nucleon_count = " << free_nucleon_count << endl;				
-				//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, sig_pp_tot = " << Get_sig_pp_tot() << endl;				
-				//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, pp_tot_ref = " << pp_tot_ref << endl;				
-				//~ std::cout << "\tCrossSections::ConfigureCrossSections: SixTrack config, sig_pN_tot = " << Get_sig_pN_tot() << endl;				
 				
 				//pN inelastic
 				Set_sig_pN_inel(sig_pN_inel_ref * sig_pN_tot / sig_pN_tot_ref);
@@ -307,13 +313,20 @@ namespace Collimation {
 				
 				//Rutherford
 				Set_sig_R(sig_R_ref);
+				
+				std::cout << "\nScatteringProcess::Configure: sig_pN_tot_ref = " << Get_sig_pN_tot_ref() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pN_inel_ref = " << Get_sig_pN_inel_ref() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_R_ref = " << Get_sig_R_ref() << endl;				
+				std::cout << "ScatteringProcess::Configure: sig_pn_el = " << Get_sig_pn_el() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pn_sd = " << Get_sig_pn_sd() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pN_inel = " << Get_sig_pN_inel() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_pN_el = " << Get_sig_pN_el() << endl;
+				std::cout << "ScatteringProcess::Configure: sig_R = " << Get_sig_R() << endl;
 			}				
 		
 		}				
 		
 		double GetTotalMeanFreePath(){			
-		//~ if (lambda_tot == 0. || lambda_tot == 1/0){
-			//~ std::cout << "\n\tCrossSections::GetTotalMeanFreePath: scat_type = "<< Get_scat_type() << endl;
 			//Merlin scattering
 			if(Get_scat_type() == 4){
 				Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_atomic_no() * Get_elastic_diff()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
@@ -329,30 +342,21 @@ namespace Collimation {
 			//Sixtrack
 			else{
 				Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_sig_R()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );				
-				//~ std::cout << "\n\tCrossSections::GetTotalMeanFreePath: SixTrack config, atomic_mass = " << Get_atomic_mass() << endl;				
-				//~ std::cout << "\tCrossSections::GetTotalMeanFreePath: SixTrack config, sig_pN_tot = " << Get_sig_pN_tot() << endl;				
-				//~ std::cout << "\tCrossSections::GetTotalMeanFreePath: SixTrack config, density = " << Get_density() << endl;				
-				//~ std::cout << "\tCrossSections::GetTotalMeanFreePath: SixTrack config, PhysicalConstants::Avogadro = " << PhysicalConstants::Avogadro << endl;				
 				//~ std::cout << "\tCrossSections::GetTotalMeanFreePath: SixTrack config, lambda = " << Get_lambda_tot() << endl;				
 				return Get_lambda_tot();
-			}
-		//~ }
-		//~ else {
-			//~ std::cout << "\n\tCrossSections::GetTotalMeanFreePath: lambda stored = " << lambda_tot << endl;
-			//~ return lambda_tot;
-		//~ } 	
+			}	
 	}
 };
 
 class ScatteringProcess {
 public:
-	double sigma; // integrated cross section for this process
+	double sigma; 					// Integrated cross section for this process
 
 protected:
-	//double E0;    	// Beam energy
-	Material* mat; 		// Material of the collimator being hit	
+	double E0;						// Reference energy
+	Material* mat; 					// Material of the collimator being hit	
 	Collimation::CrossSections* cs;	// CrossSections object holding all configured cross sections
-	double t;			// Momentum transfer
+	double t;						// Momentum transfer
 	
 public:
 	// The first function must be provided for all child classes, and probably the second as well

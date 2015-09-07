@@ -114,8 +114,8 @@ public:
     //Enable collimator jaw imperfections
     void EnableImperfections(bool);
 
-    double GetOutputBinSize() const;
-    void SetOutputBinSize(double);
+    virtual double GetOutputBinSize() const;
+    virtual void SetOutputBinSize(double);
 
 protected:
     

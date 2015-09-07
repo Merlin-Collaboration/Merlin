@@ -59,6 +59,6 @@ double kGauss=1.0e-1*Tesla;
 double Gauss=1.0e-3*kGauss;
 
 // mass
-const double amu = 931.494*MeV; // atomic mass unit in MeV
+const double amu = 931.494028*MeV; // atomic mass unit in MeV
 
 }

@@ -15,7 +15,10 @@
 #include "Random/RandomNG.h"
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
-#include "Collimators/CollimateParticleProcess.h"
+//~ #include "Collimators/CollimateParticleProcess.h"
+#include "Collimators/CollimateProtonProcess.h"
+#include "Collimators/ScatteringProcess.h"
+#include "Collimators/ScatteringModel.h"
 #include "Collimators/CollimatorDatabase.h"
 #include "Collimators/MaterialDatabase.h"
 #include "Collimators/ApertureConfiguration.h"
@@ -88,6 +91,9 @@ int main(int argc, char* argv[])
 	int seed = (int)time(NULL);
 	int npart = 1000;
 	int nturns = 200;
+	
+	//Loss_Map or Merged Collimation
+    bool Loss_Map 				= 0;
 
 	if (argc >=2)
 	{
@@ -260,8 +266,8 @@ int main(int argc, char* argv[])
 	mybeam.c_xpyp=0.0;
 
 	delete disp;
+	
 	//	BUNCH SETTINGS
-
 	ProtonBunch* myBunch;
 	int node_particles = npart;
 
@@ -281,34 +287,59 @@ int main(int argc, char* argv[])
 	delete constructor;
 
 	myBunch->SetMacroParticleCharge(mybeam.charge);
-	myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
-	//myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
- 
+	
+	if(Loss_Map){
+		//~ myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
+		myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
+	}
+	
 	//	PARTICLE TRACKER
 	AcceleratorModel::RingIterator bline = model->GetRing(start_element_number);
 	ParticleTracker* tracker = new ParticleTracker(bline,myBunch);
 	tracker->SetLogStream(std::cout);
 	
-	//	COLLIMATION SETTINGS
-	CollimateParticleProcess* myCollimateProcess;
+	//	COLLIMATION SETTINGS	
+	
 	//Output stream for collimator losses
 	ostringstream col_output_file;
 	col_output_file << result_dir << "/Loss.txt";
-
+	
 	if (1){ // disable tracking
-	ofstream* col_output = new ofstream(col_output_file.str().c_str());
+		ofstream* col_output = new ofstream(col_output_file.str().c_str());
 	if(!col_output->good())
 	{
 		std::cerr << "Could not open collimation loss file" << std::endl;
 		exit(EXIT_FAILURE);
+	}	
+	
+	if(Loss_Map){		
+		CollimateParticleProcess* myCollimateProcess;		
+		
+		myCollimateProcess=new CollimateParticleProcess(2,4,col_output);		
+		myCollimateProcess->ScatterAtCollimator(true);
+
+		myCollimateProcess->SetLossThreshold(200.0);
+		myCollimateProcess->SetOutputBinSize(0.1);
+		tracker->AddProcess(myCollimateProcess);				
 	}
-	myCollimateProcess=new CollimateParticleProcess(2,4,col_output);
-	myCollimateProcess->ScatterAtCollimator(true);
+	else{
+		CollimateProtonProcess* myCollimateProcess;		
+		
+		myCollimateProcess=new CollimateProtonProcess(2,4,col_output);		
+		myCollimateProcess->ScatterAtCollimator(true);
+		
+		ScatteringModel* myScatter = new ScatteringModel;
+		//~ myScatter->SetScatterType(4);
+		myScatter->SetScatterType(0);
 
-	myCollimateProcess->SetLossThreshold(200.0);
-	myCollimateProcess->SetOutputBinSize(0.1);
-	tracker->AddProcess(myCollimateProcess);
+		myCollimateProcess->SetScatteringModel(myScatter);
 
+		myCollimateProcess->SetLossThreshold(200.0);
+		myCollimateProcess->SetOutputBinSize(0.1);
+		tracker->AddProcess(myCollimateProcess);
+		
+	}	
+		 
 	//	TRACKING RUN
 	for (int turn=1; turn<=nturns; turn++)
 	{

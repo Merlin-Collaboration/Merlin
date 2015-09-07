@@ -12,6 +12,7 @@
 #include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
 
 #include "Collimators/CollimateParticleProcess.h"
+#include "Collimators/CollimateProtonProcess.h"
 #include "Collimators/MaterialDatabase.h"
 
 #include "NumericalUtils/PhysicalUnits.h"
@@ -60,18 +61,26 @@ int main(int argc, char* argv[])
     {
         seed = atoi(argv[1]);
     }	
-
+    
 	cout << "Seed: " << seed << endl;
 	RandomNG::init(seed);
 	/*********************************************************************
 	**	GENERAL SETTINGS
 	*********************************************************************/
+    //Loss_Map or Merged Collimation
+	bool Loss_Map 				= 0;
+		if(Loss_Map){std::cout << "LOSSMAP Collimation (ProtonBunch)" << std::endl;}
+		else{std::cout << "MERGED Collimation (based on HEL code)" << std::endl;}
+    bool output_initial_bunch 	= 1;
+    bool output_final_bunch 	= 1;
+
 	//Beam energy (GeV) 7000,3500,450 etc
 	//double beam_energy = 7000.0;
 	const double beam_energy = 7000.0;
 
 	//Number of particles
 	const int npart = 1e6;
+	//~ const int npart = 10;
 
 	const size_t nbins = 100;
 	const double bin_min_x = -50e-6, bin_max_x = 50e-6;
@@ -99,7 +108,6 @@ int main(int argc, char* argv[])
 		cout << "Failed to open dist file"<< endl;
 		exit(1);
 	}
-
 	
 	size_t dist_bin;
 	double dist_val_x, dist_val_xp, dist_val_dp;
@@ -124,13 +132,14 @@ int main(int argc, char* argv[])
 	*********************************************************************/
 
   	MaterialDatabase* mat = new MaterialDatabase();
+	Material* CollimatorMaterial = mat->FindMaterial("Cu");
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();	
 	construct->NewModel();
 	double length = 0.5;
 	Collimator* TestCol = new Collimator("TestCollimator",length);
+	TestCol->SetMaterial(CollimatorMaterial);
 
-	Material* CollimatorMaterial = mat->FindMaterial("Cu");
 	CollimatorAperture* app=new CollimatorAperture(2,2,0,CollimatorMaterial,length, 0,0);
 	app->SetExitWidth(app->GetFullEntranceWidth());      //Horizontal
 	app->SetExitHeight(app->GetFullEntranceHeight());    //Vertical
@@ -151,6 +160,22 @@ int main(int argc, char* argv[])
 	{
 		myBunch->AddParticle(p);
 	}
+	
+	/*********************************************************************
+	**	Output Initial Bunch
+	*********************************************************************/
+	if(output_initial_bunch)
+	{
+		ostringstream bunch_output_file;
+		if(Loss_Map)
+			bunch_output_file << "Bunch/LM_ST_initial.txt";
+		else
+			bunch_output_file << "Bunch/HEL_ST_initial.txt";
+		
+		ofstream* bunch_output = new ofstream(bunch_output_file.str().c_str());
+		myBunch->Output(*bunch_output);
+		delete bunch_output;
+	 }
 
 	/*********************************************************************
 	**	PARTICLE TRACKER
@@ -161,27 +186,43 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	**	COLLIMATION SETTINGS
 	*********************************************************************/
-	CollimateParticleProcess* myCollimateProcess;
-	stringstream loststr;
-	
-	//New Collimation process
-	myCollimateProcess=new CollimateParticleProcess(2,4);
+	if(Loss_Map){
+		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2,4);
+		//myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
+		myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
+		stringstream loststr;	
 
-	myCollimateProcess->ScatterAtCollimator(true);
+		myCollimateProcess->ScatterAtCollimator(true);
 
-	// Sets maximum allowed loss percentage at a single collimator.
-	myCollimateProcess->SetLossThreshold(101.0);
+		// Sets maximum allowed loss percentage at a single collimator.
+		myCollimateProcess->SetLossThreshold(101.0);
 
-	//sets process log stream, NULL to disable. aka, what col_output is above
-	myCollimateProcess->SetLogStream(NULL);
+		//sets process log stream, NULL to disable. aka, what col_output is above
+		myCollimateProcess->SetLogStream(NULL);
 
-	//myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
-	myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
+		//Add Collimation process to the tracker.
+		myCollimateProcess->SetOutputBinSize(length);
+		tracker->AddProcess(myCollimateProcess);	
+	}
+	else{
+		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2,4);
+		ScatteringModel* myScatter = new ScatteringModel;
+		myScatter->SetScatterType(0);
+		myCollimateProcess->SetScatteringModel(myScatter);
+		stringstream loststr;	
 
-	//Add Collimation process to the tracker.
-	myCollimateProcess->SetOutputBinSize(length);
-	tracker->AddProcess(myCollimateProcess);
+		myCollimateProcess->ScatterAtCollimator(true);
 
+		// Sets maximum allowed loss percentage at a single collimator.
+		myCollimateProcess->SetLossThreshold(101.0);
+
+		//sets process log stream, NULL to disable. aka, what col_output is above
+		myCollimateProcess->SetLogStream(NULL);
+
+		//Add Collimation process to the tracker.
+		myCollimateProcess->SetOutputBinSize(length);
+		tracker->AddProcess(myCollimateProcess);
+	}
 	/*********************************************************************
 	**	Tracking
 	*********************************************************************/
@@ -200,12 +241,27 @@ int main(int argc, char* argv[])
 		*bunch_output_out << "#T0 P0 x xp y yp ct dp" << endl;
 		myBunch->Output(*bunch_output_out);
 	}
+	
+	/*********************************************************************
+	**	Output Final Bunch
+	*********************************************************************/
+	if(output_final_bunch){
+		ostringstream bunch_output_file2;
+		if(Loss_Map)
+			bunch_output_file2 << "Bunch/LM_ST_final.txt";
+		else
+			bunch_output_file2 << "Bunch/HEL_ST_final.txt";
 
+		ofstream* bunch_output2 = new ofstream(bunch_output_file2.str().c_str());
+		myBunch->Output(*bunch_output2);
+		delete bunch_output2;
+	 }
 
 	// Histogramming
 	for (PSvectorArray::iterator ip=myBunch->begin(); ip!=myBunch->end(); ip++){
 
 		int bin_x = ((ip->x() - bin_min_x) / (bin_max_x-bin_min_x) * (nbins)) +1; // +1 because bin zero for outliers
+		//cout << "\nbin_x = " << bin_x << " x = " << ip->x() << endl;
 		// so handle end bins, by check against x, not bin
 		if (ip->x() < bin_min_x) bin_x = 0;
 		if (ip->x() > bin_max_x) bin_x = nbins+1;
@@ -221,14 +277,33 @@ int main(int argc, char* argv[])
 		if (-ip->dp() > bin_max_dp) bin_dp = nbins+1;
 		hist_dp[bin_dp] += 1;
 	}
+	
 
 	delete myBunch;
 
-	cout << "i x xp dp" << endl;
-	for (size_t i=0; i<nbins+2; i++){
-		cout << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
+	//~ cout << "i x xp dp" << endl;
+	//~ for (size_t i=0; i<nbins+2; i++){
+		//~ cout << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
+	//~ }
+	
+	/*********************************************************************
+	**	Output Final Hist
+	*********************************************************************/
+	if(Loss_Map){
+		std::ofstream out2 ("Bunch/LM_S_hist.txt", std::ofstream::out); 
+		for (size_t i=0; i<nbins+2; i++){
+			out2 << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
+		}		
 	}
-
+	else{
+		std::ofstream out2 ("Bunch/HEL_S_hist.txt", std::ofstream::out);
+		for (size_t i=0; i<nbins+2; i++){
+			out2 << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
+		}		
+	}
+	
+	
+	
 	
 	// Calculate sigma from sqrt(<n>)
 	// Count number of bins out by more than n-sigma

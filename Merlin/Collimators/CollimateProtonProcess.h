@@ -7,8 +7,8 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created:		2010	 RJB
-// Modified:	08.01.15 Haroon Rafique		
-// Last Edited: 20.07.15 HR
+// Modified:	07.09.15 Haroon Rafique		
+// Last Edited: 07.09.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 #ifndef CollimateProtonProcess_h
@@ -50,9 +50,10 @@ private:
 
     bool DoScatter(Particle&);    
     
+    bool scatterset;
+    
     // 0 when no dustbin is set
     bool dustset;
-
 };
 
 }; // end namespace ParticleTracking

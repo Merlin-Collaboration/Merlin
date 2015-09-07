@@ -7,8 +7,8 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created:		2010	 RJB
-// Modified:	08.01.15 Haroon Rafique		
-// Last Edited: 20.07.15 HR
+// Modified:	07.09.15 Haroon Rafique		
+// Last Edited: 07.09.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 
@@ -63,223 +63,137 @@ void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i
 namespace ParticleTracking {
 
 CollimateProtonProcess::CollimateProtonProcess (int priority, int mode, std::ostream* osp)
-        : CollimateParticleProcess(priority, mode, osp), dustset(0)
+        : CollimateParticleProcess(priority, mode, osp), dustset(0), scattermodel(NULL)
 { 
 	
 }
 
 bool CollimateProtonProcess::DoScatter(Particle& p)
 {  // returns true if particle survives, false if it dies
-	//~ std::cout << "\nCollimateProtonProcess::DoScatter" << endl;
-	double E0 = currentBunch->GetReferenceMomentum();
+	double P0 = currentBunch->GetReferenceMomentum();	
+	double E0 = sqrt(P0*P0 + pow(PhysicalConstants::ProtonMassMeV*PhysicalUnits::MeV,2));
 	
 	Collimator* C = static_cast<Collimator*> (currentComponent); 
 	const Aperture *colap = C->GetAperture();
 	
-	//set scattering model
-	SetScatter(scattermodel);
-	int smode = scattermodel->GetScatteringPhysicsModel();		
-
-	// this is only ever called for a collimator
-//TODO
-	//change to step length
 	double lengthtogo = GetMaxAllowedStepSize();
 	double z = 0;
-	int n = 0;
+	
+	//set scattering model
+	if (scattermodel == NULL){
+		std::cout << "\nCollimateProtonProcess::SoScatter::WARNING: no ScatteringModel set." << std::endl;
+		std::cout << "Use 'myCollimateProcess->SetScatteringModel(myScatter);'" << std::endl;
+		std::cout << "Don't forget to assign a scattering mode using 'myScatter->SetScatterType(n);'" << std::endl;
+		std::cout << "Where n: 0=SixTrack, 1=ST+Adv. Ionisation, 2=ST+Adv. Elastic, 3=ST+Adv. Single Diffractive, 4=Merlin" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-	do{
+	int smode = scattermodel->GetScatteringPhysicsModel();		
+
+	while(lengthtogo>0){
 		double E1 = E0 * (1 + p.dp());
 		//Note that pathlength should be calculated with E0
-		//~ std::cout << "\nCollimateProtonProcess::DoScatter Call PathLength" << endl;
 		double xlen = scattermodel->PathLength(C->p, E0);
 		
 		double E2 = 0;
 		double minLength = min(xlen, lengthtogo);		
 		
-		double zstep = xlen * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
-		p.x() += xlen * p.xp();
-		p.y() += xlen * p.yp();
-		//~ std::cout << "CollimateProtonProcess: p.x() = " << p.x() << std::endl;
+		double zstep = minLength * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
+		p.x() += minLength * p.xp();
+		p.y() += minLength * p.yp();
 
 //Energy Loss		
 		if(smode == 1 || smode == 4){
 			//Advanced
-			//~ std::cout << "\nCollimateProtonProcess::DoScatter Call Advanced EnergyLoss" << endl;
 			scattermodel->EnergyLoss(p, minLength, C->p, E0);
 			E2 = E0 * (1 + p.dp());
 		}
 		else{
 			//Simple
-			//~ std::cout << "\nCollimateProtonProcess::DoScatter Call Simple EnergyLoss" << endl;
 			scattermodel->EnergyLoss(p, minLength, C->p, E0, E1);
 			E2 = E0 * (1 + p.dp());
 		}
-			if(p.dp() < -0.95){
-				scattermodel->DeathReport(p, minLength, currentComponent->GetComponentLatticePosition(), lostparticles);
-				if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
-				return true;}	
-//Straggle
-		//~ std::cout << "\nCollimateProtonProcess::DoScatter Call Straggle" << endl;
+		if(p.dp() < ((1/E0) - 1)){
+		//~ if(E2 <=1.0){
+			scattermodel->DeathReport(p, minLength, currentComponent->GetComponentLatticePosition(), lostparticles);
+			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
+			p.ct() = z;
+			return true;
+		}	
+//MCS
 		scattermodel->Straggle(p, minLength, C->p, E1, E2);
-			if(colap->PointInside( (p.x()), (p.y()), z+=zstep )){			
-			   	//cout << "\n colap->PointInside = " << colap->PointInside( (p.x() + z*p.xp()), (p.y() + z*p.yp()), z ) << " back in aperture"<< endl;
-				return false;
-			}
+		
+		//~ if( (E2 < (E0 / 100.0)) ) {
+			//~ return false;					
+		//~ }	
 
-//Check if exited Collimator - path length longer than collimator remaining length; not scattered
-		if(xlen>lengthtogo) {
-			//cout << "Exited Collimator: xlen > LengthToGo" << endl;
+
+//Check if (returned to aperture) OR (travelled through length) 
+		z+=zstep;
+		if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) ) {
+			p.x() += p.xp()*lengthtogo;
+			p.y() += p.yp()*lengthtogo;
 			return false;					
 		}				
 		
 
-//Scattering - use E2 as particle has lost energy up untill this point at which it has scattered
-		//~ std::cout << "\nCollimateProtonProcess::DoScatter Call ParticleScatter" << endl;
-		if(!scattermodel->ParticleScatter(p, C->p, E2)){			
-			//~ p.x() += lengthtogo * p.xp();			//Just for outputting kicks
-			//~ p.y() += lengthtogo * p.yp();	
-			//~ cout << "CollimateProtonProcess::DoScatter: Inelastic Scatter: particle lost" << endl;	
-			scattermodel->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
-			//~ cout << "CollimateProtonProcess::DoScatter: Inelastic Scatter: Dispose()" << endl;	
-			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
-			return true;
-		}
-		if(p.dp() < -0.95){
-			//cout << "dp <-0.95: particle lost" << endl;
+//Scattering - use E2
+		if(!scattermodel->ParticleScatter(p, C->p, E2)){		
 			scattermodel->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
 			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
+			p.ct() = z;
 			return true;
 		}
-		//cout << "z = " << z << endl;
-		//cout << "\nRestart DoScatter n = " << n  << endl;
-			
-		lengthtogo -= xlen;
-		++n;
-
-	} while(true);
-
-	//~ std::cout << "\nCollimateProtonProcess::DoScatter End DoScatter" << endl;
+		
+		//if E < 350 GeV || E < 0 || E < 0.1 GeV
+		if( (p.dp() < -0.95) || (p.dp() < -1) || (p.dp() < ((0.1/E0) - 1)) ){
+			scattermodel->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
+			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
+			p.ct() = z;
+			return true;
+		}
+		
+		lengthtogo -= minLength;		
+	}
 }
 
-/*
-//OLD - used when projecting and not tracking protons forward in 10cm bins
-bool CollimateProtonProcess::DoScatter(Particle& p)
-{  // returns true if particle survives, false if it dies
-	double E0 = currentBunch->GetReferenceMomentum();
-	
-	Collimator* C = static_cast<Collimator*> (currentComponent); 
-	const Aperture *colap = C->GetAperture();
-	
-	//set scattering mode
-	CrossSections* SCS = CS_iterator->second;
-	int smode = SCS->scat_type;	
-
-	// this is only ever called for a collimator
-//TODO
-	//change to step length
-	double lengthtogo = C->GetLength();
-	double z = next_s;
-	int n = 0;
-
-	do{
-		double E1 = E0 * (1 + p.dp());
-		//Note that pathlength should be calculated with E0
-		double xlen = C->scatter->PathLength(C->p, E0);
-		
-		double E2 = 0;
-		double minLength = min(xlen, lengthtogo);
-		z += minLength;
-
-//Energy Loss		
-		if(smode == 1 || smode == 4){
-			//Advanced
-			E2 = C->scatter->EnergyLoss(p, minLength, C->p, E0, E1);
-		}
-		else{
-		//Simple
-		C->scatter->EnergyLoss(p, minLength, C->p, E0, E1);
-		E2 = E0 * (1 + p.dp());
-		}
-			if(p.dp() < -0.95){
-				C->scatter->DeathReport(p, minLength, currentComponent->GetComponentLatticePosition(), lostparticles);
-				outputdustbin->Dispose(*currentComponent, xlen, p);
-				return true;}	
-//Straggle
-		C->scatter->Straggle(p, minLength, C->p, E1, E2);
-			if(colap->PointInside( (p.x() + z*p.xp()), (p.y() + z*p.yp()), z )){			
-			   	//cout << "\n colap->PointInside = " << colap->PointInside( (p.x() + z*p.xp()), (p.y() + z*p.yp()), z ) << " back in aperture"<< endl;
-				return false;
-			}
-
-//Check if exited Collimator - path length longer than collimator remaining length; not scattered
-		if(xlen>lengthtogo) {
-			//cout << "Exited Collimator: xlen > LengthToGo" << endl;
-			return false;					
-		}				
-		
-
-//Scattering - use E2 as particle has lost energy up untill this point at which it has scattered
-		if(!C->scatter->ParticleScatter(p, C->p, E2)){			
-			p.x() += lengthtogo * p.xp();			//Just for outputting kicks
-			p.y() += lengthtogo * p.yp();	
-			//cout << "Inelastic Scatter: particle lost" << endl;	
-			C->scatter->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
-			outputdustbin->Dispose(*currentComponent, xlen, p);
-			return true;
-		}
-		if(p.dp() < -0.95){
-			//cout << "dp <-0.95: particle lost" << endl;
-			C->scatter->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
-			outputdustbin->Dispose(*currentComponent, xlen, p);
-			return true;
-		}
-		//cout << "z = " << z << endl;
-		//cout << "\nRestart DoScatter n = " << n  << endl;
-			
-		lengthtogo -= xlen;
-		++n;
-
-	} while(true);
-
-}*/
-
 void CollimateProtonProcess::SetScatter(ScatteringModel* sm){
-
-//set scattering mode
+// set scattering mode
+// Note that inelastic should always be the last added process
 	if (sm->GetScatteringPhysicsModel() == 0){	//SixTrack
-		(sm)->AddProcess(new Inelastic());
 		(sm)->AddProcess(new SixTrackElasticpN());
 		(sm)->AddProcess(new SixTrackElasticpn());
 		(sm)->AddProcess(new SixTrackSingleDiffractive());
 		(sm)->AddProcess(new SixTrackRutherford());
+		(sm)->AddProcess(new Inelastic());
 	}
-	else if (sm->GetScatteringPhysicsModel() ==1){ //ST + Adv Ionisation
-		(sm)->AddProcess(new Inelastic());
+	else if (sm->GetScatteringPhysicsModel() ==1){ //ST + Adv Ionisation	
 		(sm)->AddProcess(new SixTrackElasticpN());
 		(sm)->AddProcess(new SixTrackElasticpn());
 		(sm)->AddProcess(new SixTrackSingleDiffractive());
 		(sm)->AddProcess(new SixTrackRutherford());
+		(sm)->AddProcess(new Inelastic());
 	}
 	else if (sm->GetScatteringPhysicsModel() == 2){ //ST + Adv Elastic
-		(sm)->AddProcess(new Inelastic());
 		(sm)->AddProcess(new ElasticpN());
 		(sm)->AddProcess(new Elasticpn());
 		(sm)->AddProcess(new SixTrackSingleDiffractive());	
-		(sm)->AddProcess(new SixTrackRutherford());	
+		(sm)->AddProcess(new SixTrackRutherford());			
+		(sm)->AddProcess(new Inelastic());
 	}
 	else if (sm->GetScatteringPhysicsModel() == 3){ //ST + Adv SD
-		(sm)->AddProcess(new Inelastic());
 		(sm)->AddProcess(new SixTrackElasticpN());
 		(sm)->AddProcess(new SixTrackElasticpn());
 		(sm)->AddProcess(new SingleDiffractive());
 		(sm)->AddProcess(new SixTrackRutherford());
+		(sm)->AddProcess(new Inelastic());
 	}
 	else if (sm->GetScatteringPhysicsModel() == 4){ //Merlin
-		(sm)->AddProcess(new Inelastic());
 		(sm)->AddProcess(new ElasticpN());
 		(sm)->AddProcess(new Elasticpn());
 		(sm)->AddProcess(new SingleDiffractive());
 		(sm)->AddProcess(new Rutherford());
+		(sm)->AddProcess(new Inelastic());
 	}
 	else{
 		std::cout << "Warning ScatteringModel::SetScatterType: No scatter type selected, no ScatteringProcesses set by default - may be set by user" << endl;
@@ -289,9 +203,8 @@ void CollimateProtonProcess::SetScatter(ScatteringModel* sm){
 
 void CollimateProtonProcess::SetScatteringModel(Collimation::ScatteringModel* s){
 	scattermodel = s;
+	SetScatter(scattermodel);
 };
-
-
 
 }; // end namespace ParticleTracking
 

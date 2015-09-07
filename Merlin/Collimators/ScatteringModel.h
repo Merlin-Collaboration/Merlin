@@ -30,6 +30,7 @@ public:
 
 	// Add ScatteringProcesses
 	void AddProcess(Collimation::ScatteringProcess* S){ Processes.push_back(S); fraction.push_back(0); }
+	void ClearProcesses(){Processes.clear();}
 	
 	// Set ScatterType
 	void SetScatterType(int st);
@@ -39,6 +40,7 @@ public:
 
 	// Function performs scattering and returns true if inelastic scatter
 	bool ParticleScatter(PSvector& p, Material* mat, double E0);
+	//~ bool ParticleScatter(PSvector& p, Material* mat, double E0, double sigpNtot, double sigR);
 
 	// Used for output
 	void DeathReport(PSvector& p, double x, double position, vector<double>& lost);
@@ -53,7 +55,7 @@ public:
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0);
 
 	// Multiple Coulomb scattering
-	void Straggle(PSvector& p, double x, Material* mat, double E0, double E2);
+	void Straggle(PSvector& p, double x, Material* mat, double E1, double E2);
 
 	// vector holding all scattering processes
 	vector <Collimation::ScatteringProcess*> Processes;
@@ -65,8 +67,7 @@ public:
 	std::map< string, Collimation::CrossSections* >::iterator CS_iterator;	
 	
 	int GetScatteringPhysicsModel(){return ScatteringPhysicsModel;}
-	
-	
+		
 protected:
 
 private:

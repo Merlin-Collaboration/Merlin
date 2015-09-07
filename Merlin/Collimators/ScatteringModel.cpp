@@ -7,8 +7,8 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created:		
-// Modified:	
-// Last Edited: 18.03.15 HR
+// Modified:	07.09.15 Haroon Rafique		
+// Last Edited: 07.09.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 #include <iostream>
@@ -36,8 +36,7 @@ double ScatteringModel::PathLength(Material* mat, double E0){
 	//~ std::cout << "\nScatteringModel::PathLength: Start PathLength()" << std::endl;
 	
 	static double lambda; 
-	CrossSections* CurrentCS = new CrossSections();
-	CrossSections* NewCS;
+	CrossSections* CurrentCS;
 	
 	//~ std::cout << "\nScatteringModel::PathLength: CrossSections object made" << std::endl;
 	//~ std::cout << "ScatteringModel::PathLength: map.size = " << stored_cross_sections.size()  << std::endl;
@@ -52,20 +51,13 @@ double ScatteringModel::PathLength(Material* mat, double E0){
 		//~ std::cout << "\nScatteringModel::PathLength: Stored cross sections not found " << endl;
 	
 		//No previously calculated CrossSections, start from scratch	
-		NewCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
+		CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
 		
 		//~ stored_cross_sections.insert(mat->GetSymbol(), NewCS);		
-		stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), NewCS));
+		stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), CurrentCS));
 		
 		//Set iterator to correct position
-		CS_iterator = stored_cross_sections.find(mat->GetSymbol());	
-		
-		CurrentCS = NewCS;
-		if (CurrentCS == NewCS){
-			//~ cout << "\n\tScatteringModel::PathLength: CurrentCS == NewCS" << endl;
-			//~ delete NewCS;
-		}
-		else {cout <<  "\n\tWarning: ScatteringModel::PathLength: CurrentCS != NewCS" << endl;}
+		CS_iterator = stored_cross_sections.find(mat->GetSymbol());			
 		
 		//~ std::cout << "\nScatteringModel::PathLength: Calculating fractions " << endl;
 		//Find fractions of cross sections
@@ -73,9 +65,10 @@ double ScatteringModel::PathLength(Material* mat, double E0){
 		int i = 0;
 		vector<ScatteringProcess*>::iterator p;
 
+		std::cout << "ScatteringModel::PathLength: MATERIAL = " << mat->GetSymbol()  << std::endl;
 		for(p = Processes.begin(); p != Processes.end(); p++){
 			(*p)->Configure(mat, CurrentCS);
-			fraction[i]= (*p)->sigma;
+			fraction[i] = (*p)->sigma;
 			cout << (*p)->GetProcessType() << "\t\t sigma = " << (*p)->sigma << " barns" << endl;
 			sigma+= fraction[i];
 			++i;
@@ -99,18 +92,11 @@ double ScatteringModel::PathLength(Material* mat, double E0){
 		}	
 		else {
 			cout <<  "\n\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections" << endl;
-			NewCS = new CrossSections(mat, E0, ScatteringPhysicsModel);			
-			stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), NewCS));		
+			CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);			
+			stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), CurrentCS));		
 			
 			//Set iterator to correct position
-			CS_iterator = stored_cross_sections.find(mat->GetSymbol());
-			
-			CurrentCS = NewCS;
-			if (CurrentCS == NewCS){
-				//~ cout << "\n\tScatteringModel::PathLength: CurrentCS == NewCS" << endl;
-				//~ delete NewCS;
-			}
-			else {cout <<  "\n\tWarning: ScatteringModel::PathLength: CurrentCS != NewCS" << endl;}			
+			CS_iterator = stored_cross_sections.find(mat->GetSymbol());				
 		}		
 		 		
 	}
@@ -146,7 +132,7 @@ void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0
 	double xi0 = xi1 * mat->GetElectronDensity();	
 	double xi = (xi0 * x /(beta*beta)) / ElectronCharge * (eV/MeV);
 
-	double C = 1 + 2*log(I/mat->GetPlasmaEnergy()/eV);
+	double C = 1 + 2*log(I/(mat->GetPlasmaEnergy()/eV));
 	double C1 = 0;
 	double C0 = 0;
 
@@ -220,23 +206,18 @@ void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0
 
 
 //HR 29Aug13
-void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E0, double E2){
-		
-	// working
+void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, double E2){
+
 	static const double root12 = sqrt(12.0);
 	double scaledx=x/mat->GetRadiationLengthInM();
-	double Eav = (E0+E2)/2.0;
-	//sixtrack plus
+	double Eav = (E1+E2)/2.0;
 	double theta0 = 13.6*MeV * sqrt (scaledx) * (1.0 + 0.038 * log(scaledx)) / Eav; 
-	//sixtrack
-	//double theta0 = 13.6*MeV * sqrt (scaledx) / Eav; 
 	
-	//JM
 	double theta_plane_x = RandomNG::normal(0,1) * theta0;
 	double theta_plane_y = RandomNG::normal(0,1) * theta0;
 	
-	double x_plane = RandomNG::normal(0,1) * x * (theta0/root12) + x * theta_plane_x/2;
-	double y_plane = RandomNG::normal(0,1) * x * (theta0/root12) + x * theta_plane_y/2;
+	double x_plane = RandomNG::normal(0,1) * x * theta0 / root12 + x * theta_plane_x / 2;
+	double y_plane = RandomNG::normal(0,1) * x * theta0 / root12 + x * theta_plane_y / 2;
 	
 	p.x ()  += x_plane;
 	p.xp () += theta_plane_x; 
@@ -249,17 +230,39 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E0, 
 
 bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E0){ 
 	//~ std::cout << "\nScatteringModel::ParticleScatter" << std::endl;
-	double r = RandomNG::uniform(0,1);
-	for(int i = 0; i<fraction.size(); i++)  
-	{ 
-		//~ std::cout << "ScatteringModel::ParticleScatter: p.x() = " << p.x()<< std::endl;
-		//~ std::cout << "\nScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << fraction[i] << std::endl;
-	    r -= fraction[i]; 
-	    if(r<0)
+		
+	CrossSections* CrossSec = CS_iterator->second;
+	double sigma_pN_total = CrossSec->Get_sig_pN_tot();
+	double sigma_Rutherford = CrossSec->Get_sig_R();	
+	
+	//~ std::cout << "ScatteringModel::ParticleScatter: total cross section = " << (sigma_pN_total + sigma_Rutherford) << std::endl;
+
+
+	double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);	
+	
+	vector<ScatteringProcess*>::iterator spit;
+	for(spit = Processes.begin(); spit != Processes.end(); spit++){
+		//~ std::cout << "ScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << (*spit)->sigma << std::endl;
+		r -= (*spit)->sigma;
+		//~ if(r<0)
+		if( (r<0) || (spit == Processes.end()) )
 	    {
-	        return Processes[i]->Scatter(p, E0);
+			//~ std::cout << "ScatteringModel::ParticleScatter: SCATTERED" << std::endl;
+	        return (*spit)->Scatter(p, E0);
 	    }
 	}
+	
+	//~ double r = RandomNG::uniform(0,1);
+	//~ for(int i = 0; i<fraction.size(); i++)  
+	//~ { 
+		//~ std::cout << "ScatteringModel::ParticleScatter: p.x() = " << p.x()<< std::endl;
+		//~ std::cout << "ScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << fraction[i] << std::endl;
+	    //~ r -= fraction[i]; 
+	    //~ if(r<0)
+	    //~ {
+	        //~ return Processes[i]->Scatter(p, E0);
+	    //~ }
+	//~ }
 	cout << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0" << endl;
 	return Processes[0]->Scatter(p, E0);
 }
@@ -267,7 +270,6 @@ bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E0){
 void ScatteringModel::DeathReport(PSvector& p, double x, double position, vector<double>& lost){
     //cout << " particle absorbed\n";
     //~ std::cout << "\nScatteringModel::DeathReport" << std::endl;
-	double r = RandomNG::uniform(0,1);
 	double pos = x + position;
 	lost.push_back(pos);
 }
