@@ -10,26 +10,27 @@
 // 
 /////////////////////////////////////////////////////////////////////////
 
-#ifndef SpoilerWakePotentials_h
-#define SpoilerWakePotentials_h 1
+#ifndef CollimatorWakePotentials_h
+#define CollimatorWakePotentials_h 1
+
+#include "merlin_config.h"
 
 #include "AcceleratorModel/WakePotentials.h"
-#include "merlin_config.h"
 
 //	Abstract class for calculating the longitudinal and
 //	transverse single-bunch wakefield potentials (Greens
 //	functions) with modes
 
-class SpoilerWakePotentials : public WakePotentials
+class CollimatorWakePotentials : public WakePotentials
 {
   
 
 public:
 
-SpoilerWakePotentials(int m, double r=0, double s=0) 
+CollimatorWakePotentials(int m, double r=0, double s=0) 
    : WakePotentials(r,s) { nmodes = m; }   //take the radius and the conductivity out of WakePotentials
 
-    virtual ~SpoilerWakePotentials () {};
+    virtual ~CollimatorWakePotentials () {};
    
     virtual double Wlong (double s, int m) const = 0;
     virtual double Wtrans(double s, int m) const = 0;

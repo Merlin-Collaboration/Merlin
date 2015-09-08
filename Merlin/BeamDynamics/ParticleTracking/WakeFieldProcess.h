@@ -15,16 +15,18 @@
 #ifndef _h_WakeFieldProcess
 #define _h_WakeFieldProcess
 
-#include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
-#include "AcceleratorModel/WakePotentials.h"
-#include "utility/StringPattern.h"
-#include <vector>
-#include <typeinfo>
-
 #ifdef ENABLE_MPI
 //#include <ctime>
 #include <time.h>
 #endif
+#include <vector>
+#include <typeinfo>
+
+#include "AcceleratorModel/WakePotentials.h"
+
+#include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
+
+#include "utility/StringPattern.h"
 
 class WakePotentials;
 
@@ -38,7 +40,7 @@ namespace ParticleTracking {
 // for handling CSR wake fields.
 //
 // Modified by D.Kruecker 18.2.2008
-// to be used as base class for other wakefield types (spoiler,coupler,...)
+// to be used as base class for other wakefield types (collimator,coupler,...)
 
 class WakeFieldProcess : public ParticleBunchProcess {
 public:

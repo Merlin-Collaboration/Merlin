@@ -13,32 +13,27 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
+
 #include "AcceleratorModel/Components.h"
 
 #include "IO/MerlinIO.h"
 #include "NumericalUtils/utils.h"
 
-// SupportStructure
-#include "AcceleratorModel/Supports/SupportStructure.h"
-// MagnetMover
-#include "AcceleratorModel/Supports/MagnetMover.h"
-// SequenceFrame
-#include "AcceleratorModel/Frames/SequenceFrame.h"
-// SimpleApertures
 #include "AcceleratorModel/Apertures/SimpleApertures.h"
 #include "AcceleratorModel/Apertures/CollimatorAperture.h"
 #include "AcceleratorModel/Apertures/RectEllipseAperture.h"
-
-// AcceleratorModelConstructor
 #include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-// PhysicalConstants
-#include "NumericalUtils/PhysicalConstants.h"
-// MADKeyMap
-#include "MADInterface/MADKeyMap.h"
-// MADInterface
-#include "MADInterface/MADInterface.h"
-#include "MADInterface/ConstructSrot.h"
+#include "AcceleratorModel/Frames/SequenceFrame.h"
+#include "AcceleratorModel/Supports/SupportStructure.h"
+#include "AcceleratorModel/Supports/MagnetMover.h"
+
 #include "Collimators/ResistiveWakePotentials.h"
+
+#include "NumericalUtils/PhysicalConstants.h"
+
+#include "MADInterface/ConstructSrot.h"
+#include "MADInterface/MADKeyMap.h"
+#include "MADInterface/MADInterface.h"
 
 using namespace std;
 using namespace PhysicalConstants;
@@ -575,7 +570,6 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type=="ECOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
 	{
-		//type="SPOILER";
 		type="COLLIMATOR";
 	}
 
@@ -701,11 +695,11 @@ double MADInterface::ReadComponent ()
 					collimator_db->Collimator[i].position = z;
 				}
 				
-				//Create a new spoiler
-				Spoiler* aSpoiler = new Spoiler(name,len);
+				//Create a new collimator
+				Collimator* aCollimator = new Collimator(name,len);
 
 				//Enable scattering
-				aSpoiler->scatter_at_this_spoiler = true;
+				aCollimator->scatter_at_this_collimator = true;
 
 				//Will calculate the collimator jaw aperture later; same with any collimator related wakes
 				//Use Collimator_Database::Configure_collimators() to do so.
@@ -715,12 +709,12 @@ double MADInterface::ReadComponent ()
 					CollimatorAperture* app=new CollimatorAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
 		
 					//Set the aperture for collimation
-					aSpoiler->SetAperture(app);
+					aCollimator->SetAperture(app);
 				}
 
 				//Add the component to the accelerator
-				ctor->AppendComponent(*aSpoiler);
-				component=aSpoiler;
+				ctor->AppendComponent(*aCollimator);
+				component=aCollimator;
 
 				//Again, only if we have already specified the aperture
 				if(!collimator_db->use_sigma)
@@ -738,7 +732,7 @@ double MADInterface::ReadComponent ()
 					ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
 
 					//Set the Wake potentials for this collimator
-					aSpoiler->SetWakePotentials(resWake);
+					aCollimator->SetWakePotentials(resWake);
 				}
 			}
 
@@ -764,11 +758,11 @@ double MADInterface::ReadComponent ()
 		*/
 
 
-		Spoiler* aSpoiler = new Spoiler(name,len);
+		Collimator* aCollimator = new Collimator(name,len);
 
 		//Add the component to the accelerator
-		ctor->AppendComponent(*aSpoiler);
-		component=aSpoiler;
+		ctor->AppendComponent(*aCollimator);
+		component=aCollimator;
 	}//End of Collimators
 
 	//Magnets
@@ -842,6 +836,13 @@ double MADInterface::ReadComponent ()
 		ctor->AppendComponent(*bend);
 		component=bend;
 	} //End SBEND
+	
+	else if(type=="HEL")
+	{
+		HollowElectronLens* hel = new HollowElectronLens(name, len);
+		ctor->AppendComponent(*hel);
+		component=hel;
+	}
 
 	else if(type=="SEXTUPOLE")
 	{

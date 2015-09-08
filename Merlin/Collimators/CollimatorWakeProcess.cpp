@@ -10,16 +10,6 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-#include "merlin_config.h"
-#include "Collimators/SpoilerWakePotentials.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchUtilities.h"
-#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
-#include "Collimators/SpoilerWakeProcess.h"
-#include "AcceleratorModel/Aperture.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/NumericalConstants.h"
 #include <cmath>
 #include <stdexcept>
 #include <sstream>
@@ -27,6 +17,22 @@
 #include <algorithm>
 #include <fstream>
 #include <vector>
+
+#include "merlin_config.h"
+
+#include "AcceleratorModel/Aperture.h"
+
+#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
+#include "BeamDynamics/ParticleTracking/ParticleBunchUtilities.h"
+#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
+
+#include "Collimators/CollimatorWakePotentials.h"
+#include "Collimators/CollimatorWakeProcess.h"
+
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/PhysicalConstants.h"
+#include "NumericalUtils/NumericalConstants.h"
+
 
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
@@ -49,10 +55,10 @@ namespace ParticleTracking{
 
 // Constructor
 
-SpoilerWakeProcess::SpoilerWakeProcess(int modes, int prio, size_t nb, double ns)
+CollimatorWakeProcess::CollimatorWakeProcess(int modes, int prio, size_t nb, double ns)
   : WakeFieldProcess (prio, nb, ns)
 {
-	// cout<<" SpoilerWakeProcess "<<modes<<endl;
+	// cout<<" CollimatorWakeProcess "<<modes<<endl;
 	nmodes = modes;
 	Cm=new double*[modes+1];
 	Sm=new double*[modes+1];
@@ -73,7 +79,7 @@ SpoilerWakeProcess::SpoilerWakeProcess(int modes, int prio, size_t nb, double ns
 
 // Destructor
 
-SpoilerWakeProcess:: ~SpoilerWakeProcess()
+CollimatorWakeProcess:: ~CollimatorWakeProcess()
 {
 	for (int i=0;i<nmodes;i++)
 	{
@@ -95,7 +101,7 @@ SpoilerWakeProcess:: ~SpoilerWakeProcess()
   
 
 // Calculates the moments Cm for each slice 
-double SpoilerWakeProcess::CalculateCm(int mode, int slice)
+double CollimatorWakeProcess::CalculateCm(int mode, int slice)
 {	
 	// cout<<"Cm  mode and slice "<<mode<<" "<<slice<<endl;
 	double x=0;
@@ -111,7 +117,7 @@ double SpoilerWakeProcess::CalculateCm(int mode, int slice)
 
 
 // Calculates  the moments Sm for each slice 
-double SpoilerWakeProcess::CalculateSm(int mode, int slice)
+double CollimatorWakeProcess::CalculateSm(int mode, int slice)
 {
 	double x=0;
 	// cout<<"Sm  mode and slice "<<mode<<" "<<slice<<endl;
@@ -126,12 +132,12 @@ double SpoilerWakeProcess::CalculateSm(int mode, int slice)
 }
 
 // Calculate the transverse wake with modes 
-void SpoilerWakeProcess::CalculateWakeT(double dz, int currmode)
+void CollimatorWakeProcess::CalculateWakeT(double dz, int currmode)
 {
 	vector <double> w(nbins);
 	for (size_t slice=0; slice<nbins; slice++)
 	{
-		w[slice] = spoiler_wake-> Wtrans(slice*dz, currmode);
+		w[slice] = collimator_wake-> Wtrans(slice*dz, currmode);
 		//cout<<" Wake "<<currmode<<" "<<slice<<" "<<w[slice]<<endl;
 		//cout << w[slice] << "\t" << slice << "\t" << dz << endl;
 	}
@@ -151,12 +157,12 @@ void SpoilerWakeProcess::CalculateWakeT(double dz, int currmode)
 }
 
 // This function calculates the longitudinal wake with modes
-void SpoilerWakeProcess::CalculateWakeL(double dz, int currmode)
+void CollimatorWakeProcess::CalculateWakeL(double dz, int currmode)
 {
 	vector<double> w(nbins);
 	for (size_t slice=0; slice<nbins; slice++)
 	{
-		w[slice] = spoiler_wake-> Wlong(slice*dz, currmode);
+		w[slice] = collimator_wake-> Wlong(slice*dz, currmode);
 	}
 
 	for (size_t i=0; i<nbins; i++)
@@ -171,7 +177,7 @@ void SpoilerWakeProcess::CalculateWakeL(double dz, int currmode)
 	}
 }
 
-void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
+void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 {
 	//CalculateQdist();
 
@@ -184,7 +190,7 @@ void SpoilerWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 	//currentBunch->Output(*bunchafterfile);
 	//delete bunchafterfile;
 	
-	spoiler_wake=(SpoilerWakePotentials*) currentWake;
+	collimator_wake=(CollimatorWakePotentials*) currentWake;
 	for(int m=1;m<=nmodes;m++)
 	{
 		for (size_t  n=0;n<nbins;n++)

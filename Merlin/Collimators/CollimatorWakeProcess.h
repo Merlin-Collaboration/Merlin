@@ -9,31 +9,36 @@
 // Created: June, 2006
 /////////////////////////////////////////////////////////////////////////
 
-#ifndef _h_SpoilerWakeProcess
-#define _h_SpoilerWakeProcess
+#ifndef _h_CollimatorWakeProcess
+#define _h_CollimatorWakeProcess
+
+#include <vector>
 
 #include "merlin_config.h"
-#include "Collimators/SpoilerWakePotentials.h"
+
+#include "Collimators/CollimatorWakePotentials.h"
+
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
 #include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
+
 #include "utility/StringPattern.h"
-#include <vector>
+
 
 
 //	Class for calculating the longitudinal and
 //	transverse single-bunch wakefields 
-//	for Spoilers with modes
+//	for Collimators with modes
 
 namespace ParticleTracking {
 
 
-class SpoilerWakeProcess : public WakeFieldProcess
+class CollimatorWakeProcess : public WakeFieldProcess
 {
 public:
 
-  SpoilerWakeProcess(int, int, size_t, double);
-     ~SpoilerWakeProcess ();
+  CollimatorWakeProcess(int, int, size_t, double);
+     ~CollimatorWakeProcess ();
 
     virtual void ApplyWakefield(double);
     virtual void CalculateWakeT (double, int);
@@ -59,7 +64,7 @@ public:
     double** wake_st;
 
 //    ParticleBunch* currentBunch;
-    SpoilerWakePotentials* spoiler_wake;  
+    CollimatorWakePotentials* collimator_wake;  
 };
 
 }

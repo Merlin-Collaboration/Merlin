@@ -30,7 +30,7 @@ public: // flags
 
 	bool collimate_halo;
 	bool dump_particles;
-	bool scatter_at_spoiler;
+	bool scatter_at_collimator;
 
 private:
 

@@ -42,6 +42,8 @@ const double ElectronMassMeV = 0.510998910; // MeV (old = 0.511005)
 
 const double ProtonMassMeV = 938.272013; // MeV (old = 938.2578)
 
+const double ProtonMassGeV = 0.938272013;
+
 const double FreeSpacePermeability = 16.0e-7*atan(1.0); // Henry per meter
 
 const double FreeSpacePermittivity = 1.0/FreeSpacePermeability/SpeedOfLight/SpeedOfLight; // Farad per meter

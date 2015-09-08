@@ -4,7 +4,7 @@
 *
 * Class library version 2.0 (2000)
 *
-* file Merlin\AcceleratorModel\StdComponent\Spoiler.h
+* file Merlin\AcceleratorModel\StdComponent\Collimator.h
 * last modified 04/04/01 15:25:43
 * This file is derived from software bearing the following
 * restrictions:
@@ -25,28 +25,34 @@
 * or implied warranty.
 */
 
-#ifndef Spoiler_h
-#define Spoiler_h 1
+#ifndef Collimator_h
+#define Collimator_h 1
 
 #include "merlin_config.h"
 
 #include "AcceleratorModel/StdComponent/Drift.h"
 
+#include "Collimators/Material.h"
+#include "Collimators/ScatteringModel.h"
+
 class ComponentTracker;
 
-// A spoiler represents a scattering element in the beamline. Spoiler objects
+// A collimator represents a scattering element in the beamline. Collimator objects
 // are optically drifts, but when associated with an Aperture, they have the
 // material property of radiation length, which is used by specific scattering
-// process to approximate the interaction of particles with the spoiler material.
+// process to approximate the interaction of particles with the collimator material.
 
-class Spoiler : public Drift
+class Collimator : public Drift
 {
 public:
 
-    Spoiler (const string& id, double len, double radLength);
-    Spoiler (const string& id, double len);
+	// Overloaded constructor
+	Collimator (const string& id, double len);
+    Collimator (const string& id, double len, double radLength);
+	Collimator (const string& id, double len, Material* pp, double P0);
+	//~ Collimator (const string& id, double len, Material* pp, Collimation::ScatteringModel* s, double P0);
 
-    // Returns the length of the spoiler in units of its
+    // Returns the length of the collimator in units of its
     // radiation length
     double GetNumRadLengths() const {
         return GetLength()/Xr;
@@ -77,7 +83,16 @@ public:
     //	Unique index for an Accelerator component.
     static const int ID;
 
-	bool scatter_at_this_spoiler;
+	bool scatter_at_this_collimator;
+
+	// Collimator material
+    Material* p;
+	virtual void SetMaterial(Material* pp){p = pp;};
+	
+	// ScatteringModel contains the relevent ScatteringProcess to use when performing scattering
+    //~ Collimation::ScatteringModel* scatter;
+	//~ virtual void SetScatteringModel(Collimation::ScatteringModel* s);
+
 
 private:
 

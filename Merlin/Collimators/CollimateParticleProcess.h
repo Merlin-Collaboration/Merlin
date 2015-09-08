@@ -15,16 +15,17 @@
 #ifndef CollimateParticleProcess_h
 #define CollimateParticleProcess_h 1
 
-#include "merlin_config.h"
 #include <map>
 #include <set>
 #include <list>
+#include <vector>
 
-// ParticleBunchProcess
+#include "merlin_config.h"
+
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
-// PSTypes
+
 #include "BeamModel/PSTypes.h"
-// MerlinException
+
 #include "Exception/MerlinException.h"
 
 #define COLL_AT_ENTRANCE 1
@@ -78,9 +79,9 @@ public:
     virtual double GetMaxAllowedStepSize () const;
 
     // If set to true, the process scatters the particles in
-    // energy and angle at a Spoiler element, if the particle is
+    // energy and angle at a Collimator element, if the particle is
     // outside the aperture.
-    void ScatterAtSpoiler(bool tf);
+    void ScatterAtCollimator(bool tf);
 
     //	If flg is true, then files are generated containing the
     //	lost (collimated) particles. The file names have the
@@ -113,47 +114,52 @@ public:
     //Enable collimator jaw imperfections
     void EnableImperfections(bool);
 
-    double GetOutputBinSize() const;
-    void SetOutputBinSize(double);
+    virtual double GetOutputBinSize() const;
+    virtual void SetOutputBinSize(double);
 
 protected:
+    
 
     int cmode;
     std::ostream* os;
-    bool createLossFiles;
+	bool createLossFiles;
     string file_prefix;
     double lossThreshold;
+    size_t nstart;
+    std::list< size_t >* pindex;
 
     IDTBL idtbl;
+    PSvectorArray InputArray;	//The input array
 
-private:
-
-    void DoCollimation ();
-    void SetNextS ();
-    void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
-    void bin_lost_output(const PSvectorArray& lostb);
-    double s_total;
+	double s_total;
     double s;
     double next_s;
+	double len; // physical length     
+
+
+	bool is_collimator;
     bool at_entr;
     bool at_cent;
     bool at_exit;
-    size_t nstart;
+
     size_t nlost;
 
-    std::list< size_t >* pindex;
+	vector<double> lostparticles;
+
+private:
+
+    virtual void DoCollimation ();
+    void SetNextS ();
+    virtual void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
+    void bin_lost_output(const PSvectorArray& lostb); 
 
     bool scatter;
-    bool is_spoiler;
-    double Xr; // radiation length 
-    double len; // physical length     
     double bin_size;
-    bool DoScatter(Particle&);
     bool Imperfections;
+
+    double Xr; // radiation length    
+    virtual bool DoScatter(Particle&);
     
-    //For precision tracking of lost particles in non-collimators
-    //Remember to clear after each usage
-    PSvectorArray InputArray;				//The input array
     std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
 };
 
@@ -173,7 +179,7 @@ inline const std::list<size_t>& CollimateParticleProcess::GetIndecies() const
     return *pindex;
 }
 
-inline void CollimateParticleProcess::ScatterAtSpoiler(bool tf)
+inline void CollimateParticleProcess::ScatterAtCollimator(bool tf)
 {
     scatter=tf;
 }

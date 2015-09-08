@@ -57,6 +57,10 @@ extern const double degree;
 extern double Tesla;
 extern double kGauss;
 extern double Gauss;
+
+// mass
+extern const double amu;
+
 }
 
 #endif

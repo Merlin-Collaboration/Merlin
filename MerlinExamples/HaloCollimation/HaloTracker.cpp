@@ -73,8 +73,8 @@ void HaloTracker::Run(size_t npart)
         // Index the loss particle files
         collproc->IndexParticles(true);
 
-		// Turn on/off spoiler scattering
-		collproc->ScatterAtSpoiler(scatter_at_spoiler);
+		// Turn on/off collimator scattering
+		collproc->ScatterAtCollimator(scatter_at_collimator);
         
         tracker.AddProcess(collproc);
     }

@@ -7,14 +7,14 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created: DK 25.2.2008
-//    see BeamDynamics/ParticleTracking/SpoilerWakeProcess.cpp
+//    see BeamDynamics/ParticleTracking/CollimatorWakeProcess.cpp
 /////////////////////////////////////////////////////////////////////////
 
-#ifndef SpoilerPotentialModels_h
-#define SpoilerPotentialModels_h 1
+#ifndef CollimatorPotentialModels_h
+#define CollimatorPotentialModels_h 1
 
 #include "merlin_config.h"
-#include "Collimators/SpoilerWakePotentials.h"
+#include "Collimators/CollimatorWakePotentials.h"
 
 /**
 * The geometric wake potential:
@@ -23,7 +23,7 @@
 * B.W.Zotter and S.A.Kheifets, Impedances and Wakes in High-Energy Particle Accelerators, 
 * World Scientific (1998)
 */
-class TaperedCollimatorPotentials: public SpoilerWakePotentials
+class TaperedCollimatorPotentials: public CollimatorWakePotentials
 {
 public:
 	TaperedCollimatorPotentials(int m, double aa, double bb);
@@ -40,7 +40,7 @@ private:
 /**
 * the resistive wake potentials  (in MKS ssytem)
 */
-class ResistiveWakePotentials: public SpoilerWakePotentials
+class ResistiveWakePotentials: public CollimatorWakePotentials
 {
 public:
 	ResistiveWakePotentials(int m, double r, double s, double l) ;

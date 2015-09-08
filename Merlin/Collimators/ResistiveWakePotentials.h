@@ -1,20 +1,26 @@
-#include "BeamModel/BeamData.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "Collimators/SpoilerWakeProcess.h"
-#include "Collimators/SpoilerWakePotentials.h"
-#include "Random/RandomNG.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "AcceleratorModel/WakePotentials.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/StdComponent/Drift.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "collimatortable.h"
 #include <typeinfo>
 #include <iostream>
 #include <sstream>
+
+#include "AcceleratorModel/AcceleratorModel.h"
+#include "AcceleratorModel/WakePotentials.h"
+#include "AcceleratorModel/StdComponent/Collimator.h"
+#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
+#include "AcceleratorModel/StdComponent/Drift.h"
+
+#include "BeamModel/BeamData.h"
+#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
+#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+
+#include "Collimators/CollimatorWakeProcess.h"
+#include "Collimators/CollimatorWakePotentials.h"
+#include "Collimators/collimatortable.h"
+
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/PhysicalConstants.h"
+
+#include "Random/RandomNG.h"
+
 using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
@@ -24,7 +30,7 @@ using namespace ParticleTracking;
 //      the resistive wake potentials  (in MKS ssytem)
 //------------------------------------------------------------------------------------------------------------
 
-class ResistivePotential: public SpoilerWakePotentials
+class ResistivePotential: public CollimatorWakePotentials
 {
 public:
 	double sigma,b,leng,scale,step;
@@ -33,7 +39,7 @@ public:
 	collimatortable** Transverse;
 	collimatortable** Longitudinal;
 
-ResistivePotential(int m, double ss, double bb, double l, string filename, double tau=0) : SpoilerWakePotentials(m, 0., 0.), sigma(ss), b(bb), leng(l)
+ResistivePotential(int m, double ss, double bb, double l, string filename, double tau=0) : CollimatorWakePotentials(m, 0., 0.), sigma(ss), b(bb), leng(l)
 {
 	double Z0=377;
 	scale=pow(2*b*b/(Z0*sigma),1./3.);
@@ -80,14 +86,14 @@ ResistivePotential(int m, double ss, double bb, double l, string filename, doubl
 
 
 
-class ResistiveWakePotentials:public SpoilerWakePotentials
+class ResistiveWakePotentials:public CollimatorWakePotentials
 {
 public: 
   
 	double* coeff;
 	double rad, sigma, length;
   
-	ResistiveWakePotentials(int m, double r, double s, double l) : SpoilerWakePotentials(m, r, s), rad(r),sigma(s),length(l)
+	ResistiveWakePotentials(int m, double r, double s, double l) : CollimatorWakePotentials(m, r, s), rad(r),sigma(s),length(l)
 	{
 		cout << "Making new ResistiveWakePotentials with length: " << length << endl;
 		coeff = new double[m+1];

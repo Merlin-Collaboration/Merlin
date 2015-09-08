@@ -2,26 +2,30 @@
 //    example on using collimator wakefields
 //    DK 29.11.2008
 //
+#include <fstream>
+#include <iostream>
+
+#include "AcceleratorModel/Apertures/SimpleApertures.h"
+#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
+#include "AcceleratorModel/StdComponent/Collimator.h"
+
 #include "BeamModel/BeamData.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "Collimators/SpoilerWakeProcess.h" 
+
+#include "Collimators/CollimatorWakeProcess.h" 
 #include "Collimators/CollimateParticleProcess.h"
-#include "Random/RandomNG.h"
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "Collimators/SpoilerWakePotentials.h"
+#include "Collimators/CollimatorWakePotentials.h"
+
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/StdComponent/Spoiler.h"
 
-#include <fstream>
-#include <iostream>
+#include "Random/RandomNG.h"
 
 // these classes implement examples of wake potentials
 // see A.M. Toader et al., EPAC08, Genua, WEPP161 for 
 // a collection of collimator wakefield formulae 
-#include "Collimators/SpoilerPotentialModels.h"
+#include "Collimators/CollimatorPotentialModels.h"
   
 using namespace std;
 using namespace PhysicalUnits;
@@ -83,7 +87,7 @@ int main() {
 
 //-----------------------------------------------------
 //             construct the accelerator model
-//             a spoiler between 2 drifts
+//             a collimator between 2 drifts
 //-----------------------------------------------------
 
   AcceleratorModelConstructor* accelerator_model = new AcceleratorModelConstructor();
@@ -92,38 +96,38 @@ int main() {
   double driftlength1 = 1.0*meter;
   Drift* drift1       = new Drift("aDrift1", driftlength1);
 
-  double spoilerlength  = 177.*millimeter;  
-  double spoilerthick   = 0.004*meter;  
-  Spoiler* spoiler      = new Spoiler("aSpoiler", spoilerlength, spoilerthick);
+  double collimatorlength  = 177.*millimeter;  
+  double collimatorthick   = 0.004*meter;  
+  Collimator* collimator      = new Collimator("aCollimator", collimatorlength, collimatorthick);
   double aperturewidth  = 1.9*millimeter;  
   double apertureheight = 1.9*millimeter; 
   RectangularAperture* aperture = new RectangularAperture(aperturewidth, apertureheight);
-  spoiler->SetAperture(aperture);
+  collimator->SetAperture(aperture);
 
   double driftlength2 = 1.0*meter;
   Drift* drift2       = new Drift("aDrift2", driftlength2);
 
   accelerator_model->AppendComponent(drift1);
-  accelerator_model->AppendComponent(spoiler);
+  accelerator_model->AppendComponent(collimator);
   accelerator_model->AppendComponent(drift2);
 
-  // the spoiler needs a CollimateParticleProcess
+  // the collimator needs a CollimateParticleProcess
   // and we want to have scattering 
   ofstream lossummary("loss_summary.dat");
   CollimateParticleProcess* collimation = new CollimateParticleProcess(0,COLL_AT_EXIT, &lossummary);
-  collimation->ScatterAtSpoiler(true); 
+  collimation->ScatterAtCollimator(true); 
 
   AcceleratorModel* model = accelerator_model->GetModel();
  
 //-----------------------------------------------------
 //             Create a wake potential and
-//             add it to the spoiler element
+//             add it to the collimator element
 //-----------------------------------------------------
       
  // apply the geometric wakefields 
  TaperedCollimatorPotentials* collWake 
      =  new TaperedCollimatorPotentials(modes,aperturewidth/2,apertureheight/2);
- spoiler->SetWakePotentials(collWake);
+ collimator->SetWakePotentials(collWake);
     
  // //another example: a resistive wakefield
  // double conductivity = 2.38e6;         //titanium 
@@ -131,8 +135,8 @@ int main() {
  // double conductivity = 3.08e7;         //berrilium
  // double conductivity = 6.e4;           //carbon 
  // double conductivity = 4.5e6;          //for TiN
- // ResistiveWakePotentials* resWake =  new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, spoilerlength);
- // spoiler->SetWakePotentials(resWake);
+ // ResistiveWakePotentials* resWake =  new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, collimatorlength);
+ // collimator->SetWakePotentials(resWake);
 
 
 //-----------------------------------------------------
@@ -140,11 +144,11 @@ int main() {
 //             and tie it to the wake potential
 //-----------------------------------------------------
 
-  SpoilerWakeProcess* collWakeProc = new SpoilerWakeProcess(modes, 1, 100, 3);
+  CollimatorWakeProcess* collWakeProc = new CollimatorWakeProcess(modes, 1, 100, 3);
 
-  // here we connect the SpoilerWakeProcess  
+  // here we connect the CollimatorWakeProcess  
   // and the TaperedCollimatorPotentials
-  // i.e. the SpoilerWakeProcess will only 
+  // i.e. the CollimatorWakeProcess will only 
   // take care if he finds a wake potential
   // of type TaperedCollimatorPotentials 
   collWake->SetExpectedProcess(collWakeProc);

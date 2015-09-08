@@ -7,14 +7,15 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created: DK 25.2.2008
-//    see BeamDynamics/ParticleTracking/SpoilerWakeProcess.cpp
+//    see BeamDynamics/ParticleTracking/CollimatorWakeProcess.cpp
 /////////////////////////////////////////////////////////////////////////
 
+#include <math.h>
+
+#include "Collimators/CollimatorPotentialModels.h"
 
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
-#include "Collimators/SpoilerPotentialModels.h"
-#include <math.h>
 
 using namespace std;
 using namespace PhysicalUnits;
@@ -24,7 +25,7 @@ using namespace PhysicalConstants;
 * The geometric wake potential
 */
 TaperedCollimatorPotentials::TaperedCollimatorPotentials(int m, double aa, double bb)
-: SpoilerWakePotentials(m), a(aa), b(bb)
+: CollimatorWakePotentials(m), a(aa), b(bb)
 {
 	coeff=new double[m+1];
    	for(int i=0;i<(m+1);i++)
@@ -53,7 +54,7 @@ double TaperedCollimatorPotentials::Wtrans(double z, int m) const
 * the resistive wake potentials  (in MKS ssytem)
 */
 ResistiveWakePotentials::ResistiveWakePotentials(int m, double r, double s, double l)
-: SpoilerWakePotentials(m), rad(r), sigma(s), length(l)
+: CollimatorWakePotentials(m), rad(r), sigma(s), length(l)
 {
 	coeff = new double[m+1];
 

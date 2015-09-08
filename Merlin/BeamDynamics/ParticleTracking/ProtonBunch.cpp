@@ -500,8 +500,6 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	}
 }
 
-
-
 int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 {
 	// p is the scattering Proton - a single particle.
@@ -699,6 +697,7 @@ int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 			{
 				tally[2]++;
 				t = ElasticScatter->SelectT();
+				//~ std::cout << "ElasticScatter->SelectT() = " << t << std::endl;
 				dp = t/(2*AtomicMassUnit);
 				p.type() = 1;
 				//std::cout << "Elastic_nucleon:t=\t" << t << "\tdp\t" << dp << std::endl;
@@ -905,7 +904,7 @@ void ProtonBunch::ConfigureScatterSixtrack(const Aperture* ap)
 	lambda_tot = A * 1.e-6 / ((sigma_pN_total + sigma_Rutherford) * barn * rho * Avogadro);	// total mean free path (units meter)
 	
 	SetScatterConfigured(true);
-	bool output_scattering_details = false;	
+	bool output_scattering_details = true;	
 	if(output_scattering_details)
 	{
 	std::cout << "SixTrack Scattering Configuration" << std::endl;
@@ -989,6 +988,7 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 		bool interacted;	//Interacted on this step or not - true/false?
 		double t=0.0;		//Momentum transfer
 		double delta_s = -lambda_tot * log (RandomNG::uniform (0, 1));
+		//~ std::cout << "MeanFreePath = " << delta_s << endl;
 		double step_size;
 
 		interacted = ( x > delta_s );
@@ -1024,6 +1024,7 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 		*
 		*/
 		double theta0 = 13.6*MeV * sqrt (thick) * (1.0 + 0.038 * log (thick)) / Eav;	// small-angle Coulomb scattering
+		//~ std::cout << "theta0 = " << theta0 << endl;
 		//double theta0 = 13.6*MeV * sqrt (thick) * (1.0 ) / Eav;	// small-angle Coulomb scattering
 
 		pair < double, double > s = CoulombScatter (step_size, theta0);
@@ -1057,9 +1058,10 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 		//Point process interaction
 		if (interacted)
 		{
+			//~ std::cout << "sig_tot = " << (sigma_pN_total + sigma_Rutherford) << endl;
 			E1 = E0 * (1 + p.dp());
 			double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);
-
+			//~ std::cout << "r = " << r << endl;
 			//Choose which scattering process to do
 			/*
 			*

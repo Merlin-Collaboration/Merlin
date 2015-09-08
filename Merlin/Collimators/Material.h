@@ -17,7 +17,13 @@ public:
 	*/
 
 	/*
-	* Start with paramter calculation functions
+	* Overloaded constructor
+	*/
+	Material(){};
+	Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0);
+
+	/*
+	* Parameter calculation functions
 	*/
 	virtual double CalculateElectronDensity();
 	virtual double CalculatePlasmaEnergy();
@@ -43,6 +49,7 @@ public:
 	virtual void SetPlasmaEnergy(double);
 
 	virtual void SetSixtrackTotalNucleusCrossSection(double);
+	virtual void SetSixtrackElasticNucleusCrossSection(double);
 	virtual void SetSixtrackInelasticNucleusCrossSection(double);
 	virtual void SetSixtrackRutherfordCrossSection(double);
 	virtual void SetSixtrackdEdx(double);
@@ -66,6 +73,7 @@ public:
 
 	virtual double GetSixtrackTotalNucleusCrossSection() const;
 	virtual double GetSixtrackInelasticNucleusCrossSection() const;
+	virtual double GetSixtrackElasticNucleusCrossSection() const;
 	virtual double GetSixtrackRutherfordCrossSection() const;
 	virtual double GetSixtrackdEdx() const;
 	virtual double GetSixtrackNuclearSlope() const;
@@ -106,6 +114,7 @@ protected:
 
 	//Sixtrack parameters
 	double sigma_pN_total;		//proton nucleus total cross section =sigma_el_pn + sigma_el_pN + sigma_SD_pn + sigma_inel_pN
+	double sigma_pN_elastic;	//proton nucleus elastic cross section
 	double sigma_pN_inelastic;	//proton nucleus inelastic cross section (sigma_inel_pN)
 	double sigma_Rutherford;	//Rutherford scattering cross section (sigma_R)
 	double dEdx;			// "dpodx"

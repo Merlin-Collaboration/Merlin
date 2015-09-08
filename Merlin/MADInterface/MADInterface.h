@@ -19,9 +19,8 @@
 #include <fstream>
 #include <string>
 #include <set>
-// AcceleratorModel
+
 #include "AcceleratorModel/AcceleratorModel.h"
-//#include "AcceleratorModel/Components.h"
 
 class AcceleratorModelConstructor;
 class MADKeyMap;
