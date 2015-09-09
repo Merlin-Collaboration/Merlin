@@ -124,7 +124,7 @@ void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0
 	double beta = sqrt(1 - ( 1 / (gamma*gamma)));
 	double I = mat->GetMeanExcitationEnergy()/eV;
 	
-	double land = RandomNG::landau();
+	double land = RandomNG::landau();	
 	
 	double tmax = (2*ElectronMassMeV * beta * beta * gamma * gamma ) / (1 + (2 * gamma * (ElectronMassMeV/ProtonMassMeV)) + pow((ElectronMassMeV/ProtonMassMeV),2))*MeV;
 	
@@ -228,43 +228,45 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, 
  }
 
 
-bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E0){ 
+bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E){ 
 	//~ std::cout << "\nScatteringModel::ParticleScatter" << std::endl;
 		
-	CrossSections* CrossSec = CS_iterator->second;
-	double sigma_pN_total = CrossSec->Get_sig_pN_tot();
-	double sigma_Rutherford = CrossSec->Get_sig_R();	
+	//~ CrossSections* CrossSec = CS_iterator->second;
+	//~ double sigma_pN_total = CrossSec->Get_sig_pN_tot();
+	//~ double sigma_Rutherford = CrossSec->Get_sig_R();	
 	
 	//~ std::cout << "ScatteringModel::ParticleScatter: total cross section = " << (sigma_pN_total + sigma_Rutherford) << std::endl;
 
-
-	double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);	
+	//~ double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);		
+	//~ vector<ScatteringProcess*>::iterator spit;
+	//~ for(spit = Processes.begin(); spit != Processes.end(); spit++){
+		//~ std::cout << "ScatteringModel::ParticleScatter r = " << r << "\tsigma = " << (*spit)->sigma << std::endl;
+		//~ r -= (*spit)->sigma;
+		//~ std::cout << "ScatteringModel::ParticleScatter r-sigma = " << r << "\tsigma = " << (*spit)->sigma << std::endl;
+		//~ if( (r<0) || (spit == Processes.end()) )
+	    //~ {
+			//~ //std::cout << "ScatteringModel::ParticleScatter: SCATTERED" << std::endl;
+	        //~ return (*spit)->Scatter(p, E0);
+	    //~ }
+	//~ }
 	
-	vector<ScatteringProcess*>::iterator spit;
-	for(spit = Processes.begin(); spit != Processes.end(); spit++){
-		//~ std::cout << "ScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << (*spit)->sigma << std::endl;
-		r -= (*spit)->sigma;
-		//~ if(r<0)
-		if( (r<0) || (spit == Processes.end()) )
+	double r = RandomNG::uniform(0,1);
+	for(int i = 0; i<fraction.size(); i++)  
+	{ 
+		//std::cout << "ScatteringModel::ParticleScatter: p.x() = " << p.x()<< std::endl;
+		//std::cout << "ScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << fraction[i] << std::endl;
+	    r -= fraction[i]; 
+	    if(r<0)
 	    {
-			//~ std::cout << "ScatteringModel::ParticleScatter: SCATTERED" << std::endl;
-	        return (*spit)->Scatter(p, E0);
+	        return Processes[i]->Scatter(p, E);
 	    }
 	}
 	
-	//~ double r = RandomNG::uniform(0,1);
-	//~ for(int i = 0; i<fraction.size(); i++)  
-	//~ { 
-		//~ std::cout << "ScatteringModel::ParticleScatter: p.x() = " << p.x()<< std::endl;
-		//~ std::cout << "ScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << fraction[i] << std::endl;
-	    //~ r -= fraction[i]; 
-	    //~ if(r<0)
-	    //~ {
-	        //~ return Processes[i]->Scatter(p, E0);
-	    //~ }
-	//~ }
-	cout << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0" << endl;
-	return Processes[0]->Scatter(p, E0);
+	cout << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = " << r << endl;
+	//~ cout << "\n(sigma_pN_total + sigma_Rutherford) = " << (sigma_pN_total + sigma_Rutherford) << endl;
+	
+	//~ return (*spit)->Scatter(p, E0);
+	exit(EXIT_FAILURE);
 }
 
 void ScatteringModel::DeathReport(PSvector& p, double x, double position, vector<double>& lost){

@@ -66,11 +66,11 @@ int main(int argc, char* argv[])
 	**	GENERAL SETTINGS
 	*********************************************************************/
 	//Loss_Map or Merged Collimation
-    bool Loss_Map 				= 0;
+    bool Loss_Map 				= 1;
 		if(Loss_Map){std::cout << "LOSSMAP Collimation (ProtonBunch)" << std::endl;}
 		else{std::cout << "MERGED Collimation (based on HEL code)" << std::endl;}
     bool output_initial_bunch 	= 0;
-    bool output_final_bunch 	= 0;
+    bool output_final_bunch 	= 1;
 	
 	//Beam energy (GeV) 7000,3500,450 etc
 	//double beam_energy = 7000.0;

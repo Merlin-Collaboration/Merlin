@@ -39,14 +39,10 @@ public:
 	double PathLength(Material* mat, double E0);
 
 	// Function performs scattering and returns true if inelastic scatter
-	bool ParticleScatter(PSvector& p, Material* mat, double E0);
-	//~ bool ParticleScatter(PSvector& p, Material* mat, double E0, double sigpNtot, double sigR);
+	bool ParticleScatter(PSvector& p, Material* mat, double E);
 
 	// Used for output
 	void DeathReport(PSvector& p, double x, double position, vector<double>& lost);
-
-	//void Straggle(PSvector& p, double x, MaterialProperties* prop, double E0);
-	//void EnergyLoss(PSvector& p, double x, MaterialProperties* prop, double E0);
 	
 	// Energy loss via ionisation
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0, double E1);
@@ -59,7 +55,7 @@ public:
 
 	// vector holding all scattering processes
 	vector <Collimation::ScatteringProcess*> Processes;
-	// vector wil fractions of the total scattering cross section assigned to each ScatteringProcess
+	// vector with fractions of the total scattering cross section assigned to each ScatteringProcess
 	vector <double> fraction;
 	
 	//Store calculated CrossSections data to save time

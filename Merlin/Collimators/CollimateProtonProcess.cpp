@@ -78,7 +78,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	
 	double lengthtogo = GetMaxAllowedStepSize();
 	double z = 0;
-	
+		
 	//set scattering model
 	if (scattermodel == NULL){
 		std::cout << "\nCollimateProtonProcess::SoScatter::WARNING: no ScatteringModel set." << std::endl;
@@ -93,44 +93,50 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	while(lengthtogo>0){
 		double E1 = E0 * (1 + p.dp());
 		//Note that pathlength should be calculated with E0
+		
 		double xlen = scattermodel->PathLength(C->p, E0);
-		
+		//~ double minLength = min(xlen, lengthtogo);	
+				
 		double E2 = 0;
-		double minLength = min(xlen, lengthtogo);		
+				
+		bool interacted = ( lengthtogo > xlen );
+		double step_size = interacted ? xlen : lengthtogo;
 		
-		double zstep = minLength * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
-		p.x() += minLength * p.xp();
-		p.y() += minLength * p.yp();
+		double zstep = step_size * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
+		p.x() += step_size * p.xp();
+		p.y() += step_size * p.yp();
 
 //Energy Loss		
 		if(smode == 1 || smode == 4){
 			//Advanced
-			scattermodel->EnergyLoss(p, minLength, C->p, E0);
-			E2 = E0 * (1 + p.dp());
+			scattermodel->EnergyLoss(p, step_size, C->p, E0);
 		}
 		else{
 			//Simple
-			scattermodel->EnergyLoss(p, minLength, C->p, E0, E1);
-			E2 = E0 * (1 + p.dp());
+			scattermodel->EnergyLoss(p, step_size, C->p, E0, E1);			
 		}
-		if(p.dp() < ((1/E0) - 1)){
-		//~ if(E2 <=1.0){
-			scattermodel->DeathReport(p, minLength, currentComponent->GetComponentLatticePosition(), lostparticles);
-			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
+		
+		E2 = E0 * (1 + p.dp());
+		
+		//~ if(p.dp() < ((1/E0) - 1)){
+		if(E2 <=1.0){
 			p.ct() = z;
+			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
+			if(dustset){outputdustbin->Dispose(*currentComponent, step_size, p);}
 			return true;
 		}	
 //MCS
-		scattermodel->Straggle(p, minLength, C->p, E1, E2);
+		scattermodel->Straggle(p, step_size, C->p, E1, E2);
 		
-		//~ if( (E2 < (E0 / 100.0)) ) {
-			//~ return false;					
-		//~ }	
+		if( (E2 < (E0 / 100.0)) ) {
+			return false;					
+		}	
 
 
 //Check if (returned to aperture) OR (travelled through length) 
 		z+=zstep;
-		if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) ) {
+		//~ if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) ) {
+		if( (colap->PointInside( (p.x()), (p.y()), z)) ) {
 			p.x() += p.xp()*lengthtogo;
 			p.y() += p.yp()*lengthtogo;
 			return false;					
@@ -138,22 +144,25 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		
 
 //Scattering - use E2
-		if(!scattermodel->ParticleScatter(p, C->p, E2)){		
-			scattermodel->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
-			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
-			p.ct() = z;
-			return true;
+		if(interacted){
+			if(!scattermodel->ParticleScatter(p, C->p, E2)){		
+				p.ct() = z;
+				scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
+				if(dustset){outputdustbin->Dispose(*currentComponent, step_size, p);}
+				return true;
+			}
 		}
 		
 		//if E < 350 GeV || E < 0 || E < 0.1 GeV
-		if( (p.dp() < -0.95) || (p.dp() < -1) || (p.dp() < ((0.1/E0) - 1)) ){
-			scattermodel->DeathReport(p, xlen, currentComponent->GetComponentLatticePosition(), lostparticles);
-			if(dustset){outputdustbin->Dispose(*currentComponent, xlen, p);}
+		//~ if( (p.dp() < -0.95) || (p.dp() < -1) || (p.dp() < ((0.1/E0) - 1)) ){
+		if( (p.dp() < -0.95) || (p.dp() < -1) ){
 			p.ct() = z;
+			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
+			if(dustset){outputdustbin->Dispose(*currentComponent, step_size, p);}
 			return true;
 		}
 		
-		lengthtogo -= minLength;		
+		lengthtogo -= step_size;		
 	}
 }
 

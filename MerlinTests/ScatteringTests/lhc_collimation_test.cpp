@@ -89,11 +89,13 @@ int FindElementLatticePosition(string RequestedElement, AcceleratorModel* model)
 int main(int argc, char* argv[])
 {
 	int seed = (int)time(NULL);
-	int npart = 1000;
+	int npart = 10000;
+	//~ int npart = 100000;
 	int nturns = 200;
 	
 	//Loss_Map or Merged Collimation
     bool Loss_Map 				= 0;
+    bool st_scatter				= 1;
 
 	if (argc >=2)
 	{
@@ -288,9 +290,11 @@ int main(int argc, char* argv[])
 
 	myBunch->SetMacroParticleCharge(mybeam.charge);
 	
-	if(Loss_Map){
-		//~ myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
+	if(Loss_Map && st_scatter){
 		myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
+	}
+	else if(Loss_Map && !st_scatter){
+		myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
 	}
 	
 	//	PARTICLE TRACKER
@@ -302,8 +306,18 @@ int main(int argc, char* argv[])
 	
 	//Output stream for collimator losses
 	ostringstream col_output_file;
-	col_output_file << result_dir << "/Loss.txt";
-	
+	if(Loss_Map && st_scatter){		
+		col_output_file << "Bunch/LHC_Plotting/lm_st/Loss.txt";
+	}
+	else if(Loss_Map && !st_scatter){		
+		col_output_file << "Bunch/LHC_Plotting/lm_m/Loss.txt";
+	}
+	else if (!Loss_Map && st_scatter){
+		col_output_file << "Bunch/LHC_Plotting/m_m/Loss.txt";
+	}
+	else{
+		col_output_file << "Bunch/LHC_Plotting/m_st/Loss.txt";
+	}
 	if (1){ // disable tracking
 		ofstream* col_output = new ofstream(col_output_file.str().c_str());
 	if(!col_output->good())
@@ -329,8 +343,12 @@ int main(int argc, char* argv[])
 		myCollimateProcess->ScatterAtCollimator(true);
 		
 		ScatteringModel* myScatter = new ScatteringModel;
-		//~ myScatter->SetScatterType(4);
+		if(st_scatter){
 		myScatter->SetScatterType(0);
+		}
+		else{
+		myScatter->SetScatterType(4);
+		}
 
 		myCollimateProcess->SetScatteringModel(myScatter);
 
@@ -448,18 +466,18 @@ int main(int argc, char* argv[])
 	
 	bool bad = 0;
 	double tol = 1.3;
-	cout << endl << "Bins out by more than";
-	for(int j=1; j<ns+1; j++){
-		cout << endl << "    "<< j <<" sigma: "<< over_ns[j] << " ("<< (double)over_ns[j]/(nbins+1)*100  << " %)";
-		if ((double)over_ns[j]/(nbins+1) > (1-tails[j])*tol) {cout << "** bad **"; bad=1;}
-	}
-	cout << endl << endl;
-
-	cout << "Total losses " << sum_x1 << "  expected " << sum_x2 << endl;
-	double sum_dev = fabs(sum_x1-sum_x2) / sqrt(sum_x2);
-	cout << sum_dev <<  " sig deviation";
-	if (sum_dev > 2) {bad += 1; cout << " ** bad **";}
-	cout << endl;
+	//~ cout << endl << "Bins out by more than";
+	//~ for(int j=1; j<ns+1; j++){
+		//~ cout << endl << "    "<< j <<" sigma: "<< over_ns[j] << " ("<< (double)over_ns[j]/(nbins+1)*100  << " %)";
+		//~ if ((double)over_ns[j]/(nbins+1) > (1-tails[j])*tol) {cout << "** bad **"; bad=1;}
+	//~ }
+	//~ cout << endl << endl;
+//~ 
+	//~ cout << "Total losses " << sum_x1 << "  expected " << sum_x2 << endl;
+	//~ double sum_dev = fabs(sum_x1-sum_x2) / sqrt(sum_x2);
+	//~ cout << sum_dev <<  " sig deviation";
+	//~ if (sum_dev > 2) {bad += 1; cout << " ** bad **";}
+	//~ cout << endl;
 	
 
 	return bad;

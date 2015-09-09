@@ -188,7 +188,7 @@ namespace Collimation {
 		
 		void ConfigureCrossSections(double E0){		
 			if (scat_type == 4){ //Merlin
-				Set_com_sqd((2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0) + 2 * pow( (PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV),2));
+				Set_com_sqd( (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0) + (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV) );
 				std::cout << "\n\nScatteringProcess::Configure: com_sqd = " << Get_com_sqd() << endl;
 			}
 			else { //SixTrack
@@ -220,9 +220,10 @@ namespace Collimation {
 			//SixTrack with Advanced Single Diffractive Scattering			
 			if((Get_scat_type() == 3) || (Get_scat_type() == 4))
 			{
-				double sLHC = pow(114.6192348986088,2);
+				//~ double sLHC = pow(114.6192348986088,2);
 				double Mproton = 0.938272013;                            
 				double Mpion = 0.1349766;
+				double sLHC = (2*pow(Mproton,2)+2*Mproton*E0);
 				double Mmin2 = pow(Mproton+Mpion,2);      
 				double xi_th = Mmin2/sLHC; // (M_p + M_pion)^2/s 
 				DiffractiveScatter = new ParticleTracking::ppDiffractiveScatter();			
@@ -336,7 +337,7 @@ namespace Collimation {
 			//SixTrack + Advanced Elastic
 			else if (Get_scat_type() == 2){
 				Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_sig_R()+ Get_elastic_diff()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
-				//~ std::cout << "\n\tCrossSections::GetTotalMeanFreePath: ST + Adv. El config, lambda = " << Get_lambda_tot() << endl;
+				// std::cout << "\n\tCrossSections::GetTotalMeanFreePath: ST + Adv. El config, lambda = " << Get_lambda_tot() << endl;
 				return Get_lambda_tot();
 			}
 			//Sixtrack

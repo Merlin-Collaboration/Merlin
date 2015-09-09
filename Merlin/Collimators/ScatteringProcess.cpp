@@ -67,13 +67,14 @@ void Rutherford::Configure(Material* matin, CrossSections* CSin){
 bool Rutherford::Scatter(PSvector& p, double E){
 	double TargetMass = AtomicMassUnit*mat->GetAtomicMass();
 	
-	ScatterStuff(p, t, TargetMass, E);	
+	ScatterStuff(p, t, TargetMass, E0);	
 	p.type() = 3;
 		
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
 	else{return true;}
 }
+
 // ST Rutherford
 void SixTrackRutherford::Configure(Material* matin, CrossSections* CSin){ 
 	ScatteringProcess::Configure(matin, CSin);
@@ -85,7 +86,7 @@ void SixTrackRutherford::Configure(Material* matin, CrossSections* CSin){
 
 bool SixTrackRutherford::Scatter(PSvector& p, double E){	
 	
-	ScatterStuff(p, t, E);	
+	ScatterStuff(p, t, E0);	
 	p.type() = 3;
 	
 	double E3 = (1 + p.dp()) * E0;
@@ -102,13 +103,14 @@ void Elasticpn::Configure(Material* matin, CrossSections* CSin){
 bool Elasticpn::Scatter(PSvector& p, double E){
 	t = cs->ElasticScatter->SelectT();
 	
-	ScatterStuff(p, t, AtomicMassUnit, E);
+	ScatterStuff(p, t, AtomicMassUnit, E0);
 	p.type() = 1;
 	
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
 	else{return true;}
 }
+
 // ST Elasticpn
 void SixTrackElasticpn::Configure(Material* matin, CrossSections* CSin){
 	ScatteringProcess::Configure(matin, CSin);	
@@ -120,7 +122,7 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E){
 	b_pp = 8.5 + 1.086 * log(sqrt(com_sqd)) ; // slope given on GeV units
 	t = -log(RandomNG::uniform(0,1))/b_pp;
 	
-	ScatterStuff(p, t, E);
+	ScatterStuff(p, t, E0);
 	p.type() = 1;
 	
 	double E3 = (1 + p.dp()) * E0;
@@ -140,7 +142,7 @@ void ElasticpN::Configure(Material* matin, CrossSections* CSin){
 bool ElasticpN::Scatter(PSvector& p, double E){	
 	double TargetMass = AtomicMassUnit*mat->GetAtomicMass();
 	
-	ScatterStuff(p, t, TargetMass, E);	
+	ScatterStuff(p, t, TargetMass, E0);	
 	p.type() = 1;	
 	
 	double E3 = (1 + p.dp()) * E0;
@@ -159,7 +161,7 @@ void SixTrackElasticpN::Configure(Material* matin, CrossSections* CSin){
 }	
 bool SixTrackElasticpN::Scatter(PSvector& p, double E){
 	
-	ScatterStuff(p, t, E);	
+	ScatterStuff(p, t, E0);	
 	p.type() = 1;	
 	
 	double E3 = (1 + p.dp()) * E0;
@@ -177,10 +179,10 @@ bool SingleDiffractive::Scatter(PSvector& p, double E){
 	std::pair<double,double>TM = cs->DiffractiveScatter->Select();
 	t = TM.first;
 	m_rec = TM.second;
-	double com_sqd = (2 * ProtonMassMeV * MeV * E) + 2 * pow( (ProtonMassMeV * MeV),2);
+	double com_sqd = (2 * ProtonMassMeV * MeV * E0) + (2 * ProtonMassMeV * MeV * ProtonMassMeV * MeV);
 	double dp = m_rec * m_rec * E / com_sqd;
 	
-	ScatterStuff(dp, p, t, E);	
+	ScatterStuff(dp, p, t, E0);	
 	p.type() = 2;
 	p.sd() = 1;
 	
@@ -196,7 +198,7 @@ void SixTrackSingleDiffractive::Configure(Material* matin, CrossSections* CSin){
 	E0 = cs->Get_E0();
 }	
 bool SixTrackSingleDiffractive::Scatter(PSvector& p, double E){		
-	double com_sqd = 2 * ProtonMassMeV * MeV * E;	//ecmsq in SixTrack
+	double com_sqd = 2 * ProtonMassMeV * MeV * E0;	//ecmsq in SixTrack
 	double b_pp = 8.5 + 1.086 * log(sqrt(com_sqd)) ; // slope given on GeV units
 	double xm2 = exp(RandomNG::uniform(0,1)*log(0.15*com_sqd));
 	double b = 0.0;
@@ -215,7 +217,7 @@ bool SixTrackSingleDiffractive::Scatter(PSvector& p, double E){
 	t =-log(RandomNG::uniform(0,1))/b;
 	dp = xm2*E/com_sqd;
 	
-	ScatterStuff(dp, p, t, E);	
+	ScatterStuff(dp, p, t, E0);	
 	p.type() = 2;
 	p.sd() = 1;
 	
@@ -232,5 +234,5 @@ void Inelastic::Configure(Material* matin, CrossSections* CSin){
 }
 
 bool Inelastic::Scatter(PSvector& p, double E){		
-		return false;
-	} // Particle is lost
+	return false;
+} // Particle is lost
