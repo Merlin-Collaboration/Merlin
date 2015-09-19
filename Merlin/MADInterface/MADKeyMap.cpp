@@ -56,7 +56,7 @@ MADKeyMap::MADKeyMap (const std::string& hstr): has_type(false), has_apertype(fa
 #ifndef NDEBUG
 	cout << n << " column headings identified" << endl;
 #endif
-
+cout << n << " column headings identified" << endl;
 	vals = vector<double>(n,0.0);
 }
 
@@ -70,6 +70,7 @@ double MADKeyMap::GetParameter (const std::string& key, bool warn)
 
 	else
 	{
+		std::cout << "MADInterface: Warning: Element key " << key << " not in optics listing, defaulted to zero" << endl;
 		if(warn)
 		{
 			#ifndef NDEBUG
@@ -104,6 +105,7 @@ void MADKeyMap::ReadRow (std::istream& is)
 		//Are we dealing with the aperture column in the input file?
 		if(i == apertype_column && has_apertype==true)
 		{
+			//~ cout << "MADKeyMap ReadRow() entering has apertype conditional = " << vals[i] << endl;
 			is >> buf;
 			if(buf == "\"CIRCLE\"")
 			{

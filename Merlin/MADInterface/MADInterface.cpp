@@ -61,14 +61,15 @@ void Log(const string& tag, int depth, ostream& os)
 
 void StripHeader(istream& is)
 {
-	char buffer[1024];
+	char buffer[5000];
 	char c;
 	while(true && is)
 	{
 		is.get(c);
 		if(c=='*'||c=='$'||c=='@')
 		{
-			is.getline(buffer,1024);
+			is.getline(buffer,5000);
+			//~ is.getline(buffer,10240,char('\n'));
 		}
 		else
 		{
@@ -357,16 +358,12 @@ AcceleratorModel* MADInterface::ConstructModel()
 	}
 
 	ctor = new AcceleratorModelConstructor();
-	//double z=0.0;
 	ctor->NewModel();
 
 	// reset the stream pointer
-	// ifs.seekg(0);
+	//~ (*ifs).seekg(0);
 	StripHeader((*ifs));
-
-
-	//cout << "Name\tType\tS" << endl;
-
+	//~ (*ifs).seekg(0);
 	//Main component read in loop
 	while((*ifs).good())
 	{
@@ -482,6 +479,8 @@ double MADInterface::ReadComponent ()
 {
 #define  _READ(value) if(!((*ifs)>>value)) return 0;
 
+	//~ cout << "MADInterface::ReadComponent() started" << endl;
+
 	string name,type,aptype,parent,aperture;
 	double len,ks,angle,e1,e2,k1,k2,k3,h,tilt;
 	_READ(name);
@@ -490,9 +489,11 @@ double MADInterface::ReadComponent ()
 	prmMap->ReadRow((*ifs));
 
 	name=StripQuotes(name);
+	//~ cout << "MADInterface::ReadComponent() : name = " << name << endl;
 	type=StripQuotes(type);
+	//~ cout << "MADInterface::ReadComponent() : type = " << type << endl;
 
-	//cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
+	//~ cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
 
 	AcceleratorComponent *component = NULL;
 	double brho = energy/eV/SpeedOfLight;
@@ -757,7 +758,7 @@ double MADInterface::ReadComponent ()
 		}
 		*/
 
-
+		cout << "MADInterface: Found Collimator " << name << " with length " << len << " m" << endl;
 		Collimator* aCollimator = new Collimator(name,len);
 
 		//Add the component to the accelerator
@@ -772,7 +773,7 @@ double MADInterface::ReadComponent ()
 		Quadrupole* quad = new Quadrupole(name,len,brho*k1/len);
 		ctor->AppendComponent(*quad);
 		component=quad;
-	}
+		}
         else if(type=="SKEWQUAD")
         {
 		k1=prmMap->GetParameter("K1L");
@@ -792,11 +793,16 @@ double MADInterface::ReadComponent ()
 	//Dipole Bending Magnets
         else if(type=="SBEND")
         {
-		angle=prmMap->GetParameter("K0L");
+		// K0L depreciated, replaced with ANGLE. HR 17.09.15
+		//~ angle=prmMap->GetParameter("K0L");
+		angle=prmMap->GetParameter("ANGLE");
+		//~ cout << "\nMADInterface: SBEND: K0L = " << prmMap->GetParameter("K0L") << ", ANGLE = " << prmMap->GetParameter("ANGLE") << endl;
+
 		k1   =prmMap->GetParameter("K1L");
 		h = angle/len;
 		SectorBend* bend = new SectorBend(name,len,h,brho*h);
-
+		
+	
 		if(k1!=0)  // mixed function dipole
 		{
 			bend->SetB1(brho*k1/len);
@@ -836,6 +842,32 @@ double MADInterface::ReadComponent ()
 		ctor->AppendComponent(*bend);
 		component=bend;
 	} //End SBEND
+	
+	//HR not tested (HiLumi fudge) - SBEND with no pole faces
+	else if(type=="RBEND")
+        {
+		angle=prmMap->GetParameter("ANGLE");
+		k1   =prmMap->GetParameter("K1L");
+		h = angle/len;
+		SectorBend* bend = new SectorBend(name,len,h,brho*h);
+
+		if(k1!=0)  // mixed function dipole
+		{
+			bend->SetB1(brho*k1/len);
+		}
+
+		if(tilt!=0)
+		(*bend).GetGeometry().SetTilt(tilt);
+
+		// check for synchrotron radiation
+		if(inc_sr)
+		{
+			energy -= SRdE(h,len,energy);
+		}
+
+		ctor->AppendComponent(*bend);
+		component=bend;
+	} //End RBEND
 	
 	else if(type=="HEL")
 	{

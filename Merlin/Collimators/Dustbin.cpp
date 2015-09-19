@@ -38,7 +38,7 @@ LossMapDustbin::LossMapDustbin(OutputType ot)
 void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle)
 {
 
-	//cout << "\nLossMapDustbin called" << endl;
+	//~ cout << "\nLossMapDustbin called" << endl;
 
 	if (currentComponent != &currcomponent)
 	{	
@@ -52,14 +52,14 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 	temp.position = (pos + temp.s);
 	temp.length = currentComponent->GetLength();
 	temp.lost = 1;
-	
+		
 	//calculate 10cm interval - move to 10cm binning?
 	double inter = 0.0;
 	bool fin = 0;
 
 	do
 	{
-		if ( (pos > inter) && (pos < (inter+0.1)) )
+		if ( (pos >= inter) && (pos < (inter+0.1)) )
 		{
 			temp.interval = inter;
 			fin = 1;
@@ -96,7 +96,6 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 	else {temp.temperature = 1;}	
 
 	temp.p = particle;
-
 	//pushback vector
 	DeadParticles.push_back(temp);
 

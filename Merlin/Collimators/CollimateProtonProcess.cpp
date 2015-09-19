@@ -8,7 +8,7 @@
 //
 // Created:		2010	 RJB
 // Modified:	07.09.15 Haroon Rafique		
-// Last Edited: 07.09.15 HR
+// Last Edited: 17.10.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 
@@ -63,7 +63,8 @@ void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i
 namespace ParticleTracking {
 
 CollimateProtonProcess::CollimateProtonProcess (int priority, int mode, std::ostream* osp)
-        : CollimateParticleProcess(priority, mode, osp), dustset(0), scattermodel(NULL)
+        //~ : CollimateParticleProcess(priority, mode, osp), dustset(0), scattermodel(NULL)
+        : CollimateParticleProcess(priority, mode, osp), scattermodel(NULL)
 { 
 	
 }

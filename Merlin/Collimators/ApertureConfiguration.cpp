@@ -13,10 +13,16 @@
 
 using namespace std;
 
-ApertureConfiguration::ApertureConfiguration(string input_file) : logFlag(false)
+ApertureConfiguration::ApertureConfiguration(string input_file) : logFlag(false), allRectEllipse(0)
 {
 	LoadApertureConfiguration(input_file);
 }
+
+ApertureConfiguration::ApertureConfiguration(string input_file, bool are) : logFlag(false), allRectEllipse(are)
+{
+	LoadApertureConfiguration(input_file);
+}
+
 
 void ApertureConfiguration::LoadApertureConfiguration(string input_file)
 {
@@ -45,10 +51,13 @@ void ApertureConfiguration::LoadApertureConfiguration(string input_file)
 
 	while(input->good())
 	{
+		if(!allRectEllipse){
 	//				* KEYWORD	NAME	PARENT	S	L	APER_1	APER_2	APER_3	APER_4
-		(*input) >> 	key >> 		name >>	parent >>s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4 >> aptype;
-		//cout << ap1 << "\t" << ap2 << "\t" << name << endl;
-//		if( ( ap1 !=0) && (ap2 !=0) && (ap3 != 0) && (ap4 !=0) )
+		(*input) >> 	key >> 		name >>	parent >> s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4 >> aptype;
+		}
+		else{
+		(*input) >> 	key >> 		name >>	parent >> s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4;	
+		}
 		if( ( ap1 !=0) || (ap2 !=0) || (ap3 != 0) || (ap4 !=0) )
 		{
 			ApertureEntry.s = s;
@@ -56,12 +65,14 @@ void ApertureConfiguration::LoadApertureConfiguration(string input_file)
 			ApertureEntry.ap2 = ap2;
 			ApertureEntry.ap3 = ap3;
 			ApertureEntry.ap4 = ap4;
-			if(aptype == "\"CIRCLE\"")
-			{
-				//cout << "CIRCLE FIX" << endl;
-				ApertureEntry.ap2 = ap1;
-				ApertureEntry.ap3 = ap1;
-				ApertureEntry.ap4 = ap1;
+			if(!allRectEllipse){
+				if(aptype == "\"CIRCLE\"")
+				{
+					//cout << "CIRCLE FIX" << endl;
+					ApertureEntry.ap2 = ap1;
+					ApertureEntry.ap3 = ap1;
+					ApertureEntry.ap4 = ap1;
+				}
 			}
 			ApertureList.push_back(ApertureEntry);
 //			cout << ApertureEntry.s << "\t" << ApertureEntry.ap1 << "\t" << ApertureEntry.ap2 << "\t" << ApertureEntry.ap3 << "\t" << ApertureEntry.ap4 << endl;
@@ -168,7 +179,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 						cout << (*itr).ap4 << endl;
 						//cout << itr->s << "\t"<< itr->ap2 <<  endl;
 						ThisElementAperture.push_back(*itr);
-						cout << "Something is broken in the aperture loading" << endl;
+						cout << "ApertureConfiguration: Failed to obtain interpolation from final element to first" << endl;
 						abort();
 					}
 					else

@@ -2,9 +2,13 @@
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
 //  
-// Class library version 3 (2004)
+// Class library version 5.01 (2015)
 // 
 // Copyright: see Merlin/copyright.txt
+//
+// Created:		
+// Modified:	07.09.15 Haroon Rafique		
+// Last Edited: 17.10.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +61,7 @@ namespace ParticleTracking {
 
 CollimateParticleProcess::CollimateParticleProcess (int priority, int mode, std::ostream* osp)
         : ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
-        createLossFiles(false),file_prefix(""),lossThreshold(1),nstart(0),pindex(0),scatter(false),bin_size(0.1*PhysicalUnits::meter),Imperfections(false)
+        createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false), dustset(0)
 {}
 
 CollimateParticleProcess::~CollimateParticleProcess ()
@@ -297,6 +301,8 @@ void CollimateParticleProcess::DoCollimation ()
 				}
 
 				lost.push_back(*p);
+				//~ if(dustset){outputdustbin->Dispose(*currentComponent, 1E-5, (*p));}
+				if(dustset){outputdustbin->Dispose(*currentComponent, 0, (*p));}
 				/* This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster */
 				//p=currentBunch->erase(p);
 				p++;

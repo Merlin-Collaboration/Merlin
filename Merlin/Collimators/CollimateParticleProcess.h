@@ -2,13 +2,13 @@
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
 //  
-// Class library version 3 (2004)
+// Class library version 5.01 (2015)
 // 
 // Copyright: see Merlin/copyright.txt
 //
-// Last CVS revision:
-// $Date: 2005/01/12 12:08:51 $
-// $Revision: 1.8 $
+// Created:		
+// Modified:	07.09.15 Haroon Rafique		
+// Last Edited: 17.10.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +25,8 @@
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
 
 #include "BeamModel/PSTypes.h"
+
+#include "Collimators/Dustbin.h"
 
 #include "Exception/MerlinException.h"
 
@@ -116,6 +118,10 @@ public:
 
     virtual double GetOutputBinSize() const;
     virtual void SetOutputBinSize(double);
+    
+    virtual void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
+    
+    Dustbin* outputdustbin;
 
 protected:
     
@@ -145,6 +151,9 @@ protected:
     size_t nlost;
 
 	vector<double> lostparticles;
+	
+	// 0 when no dustbin is set
+    bool dustset;
 
 private:
 
