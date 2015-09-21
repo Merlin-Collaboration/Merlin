@@ -224,6 +224,8 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 						if( RequestedImpactFactor!=1 && (CollData[i].name == PrimaryCollimator) )
 						{
 							ImpactSigma = ((CollData[i].sigma_x*sigma_entrance + RequestedImpactFactor)/sigma_entrance);
+								cout << "CollimatorDatabase::ConfigureCollimators : Beta_x = " << beta_x << " Sigma_x = " << sqrt(beta_x*emittance_x) << endl;
+								cout << "CollimatorDatabase::ConfigureCollimators : Beta_y = " << beta_y << " Sigma_y = " << sqrt(beta_y*emittance_y) << endl;
 						}
 
 						Material* collimator_material = CollData[i].JawMaterial;

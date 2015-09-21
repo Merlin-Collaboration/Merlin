@@ -97,7 +97,8 @@ public:
 
     //	Output a bunch-model dependent representation to the
     //	specified stream.
-    virtual void Output (std::ostream& os) const;
+    virtual void Output (std::ostream& os) const;    
+    virtual void OutputIndexParticle (std::ostream& os, int index) const;
     virtual void Input (double Q, std::istream& is);
 
     //	Add a (macro-)particle to the bunch.

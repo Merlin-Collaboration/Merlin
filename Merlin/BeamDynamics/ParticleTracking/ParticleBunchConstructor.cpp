@@ -305,6 +305,76 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               }
 	           }
 	break;
+	case tuneTestDistribution:
+		{
+		// from m to n sigma
+		rx = sqrt(beamdat.emit_x);
+		ry = sqrt(beamdat.emit_y);
+		//Nominal LHC		
+		//~ double sigx = 267.067E-6; //TCP.C6L7		
+		//~ double sigx =  0.0002966510271229613; //HEL
+		
+		//HEL (HL)
+		//~ double sigx = 0.000258007;	//HEL
+		double sigx = 0.000266382;	//TCP.C6L7
+		
+		// with M.apply (TCP)
+		//~ double first = 1.1E-4; //5.2 sigma
+		//~ double last = 1.3E-4; //6 sigma
+		//~ double first = 0.7E-5; //~1 sigma
+		//~ double last = 1.3E-4; //~6 sigma
+		
+		//without M.apply			
+		double first = 7*sigx; 
+		double last = 9*sigx; 	
+		//~ double first = 1*sigx; 
+		//~ double last = 10*sigx; 	
+			
+		double partsi = np-2;
+		double steps = (last-first)/partsi;
+		double intpart;
+			
+		for(i=1; i<np;) {
+			u = RandomNG::uniform(-1,1);
+
+			//~ double test = rx*u;	
+			p.x()	= (first + ((i-1) * steps));
+			p.xp() = 0;			
+						
+			//~ p.x()	= rx*u;			
+			//~ double fracpart = modf((p.x()/rx), &intpart);
+			//~ fracpart = sqrt(pow(fracpart,2));
+			//~ p.xp() = rx *  sin( acos(fracpart) );
+			
+			//~ p.xp() = rx *  sin( acos(p.x()/sqrt(rx)) );
+			//~ p.xp() = -2.4E-5;
+			//~ p.xp() = -p.x()*0.016;
+
+			//~ cout << "\n\t\t\tParticleBunchConstructor: x = " << p.x() << " xp = " << p.xp() << endl; 
+		
+			//~ p.xp()	= rx *  sin( sqrt((p.x()/rx)*(p.x()/rx)) *pi);
+			//~ p.xp()	= rx *  (cos(  sqrt(pow(p.x(),2) / pow(rx, 2)) * 0.5 *pi ));
+			//~ p.xp()	= sqrt( pow(p.x(),2) + pow(rx, 2));
+			//~ p.xp() = rx-p.x();
+			//~ u = RandomNG::uniform(-1,1);
+			//~ if (u>=0){
+				//~ p.xp() *= -1;
+			//~ }
+		
+			p.y()	= 0.0;
+			p.yp()	= 0.0;
+			p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+			p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);	               
+			//~ M.Apply(p);
+			p+=pbunch.front(); // add centroid
+
+			if(itsFilter==0 || itsFilter->Apply(p))  {
+				pbunch.push_back(p);
+				i++;
+			}
+		}
+	}
+	break;
     };
 
     //return new ParticleBunch(beamdat.p0,beamdat.charge,pbunch);

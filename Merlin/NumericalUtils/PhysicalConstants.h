@@ -59,6 +59,11 @@ extern const double MuonLifetime;
 extern const double FineStructureConstant;
 
 extern const double PionZeroMassMeV;
+
+extern double LorentzBeta (double gamma);
+
+extern double LorentzGamma (double beta);
+extern double LorentzGamma (double momentum, double mass);
 }
 
 // Class Utility PhysicalConstants

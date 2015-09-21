@@ -254,6 +254,22 @@ void ParticleBunch::Output (std::ostream& os) const
     os.flags(oflg);
 }
 
+void ParticleBunch::OutputIndexParticle (std::ostream& os, int index) const
+{
+	//cout << "outputting index " << index << " particle" << endl;
+	int oldp = os.precision(16);
+    ios_base::fmtflags oflg = os.setf(ios::scientific,ios::floatfield);
+
+ 	PSvectorArray::const_iterator p = begin()+ index;	
+			
+    for(size_t k=0; k<6; k++){
+		os << std::setw(35) << (*p)[k];		
+	}
+	os << endl;	
+    os.precision(oldp);
+    os.flags(oflg);
+}
+
 void ParticleBunch::Input (double Q, std::istream& is)
 {
     double reftime, refmom;
