@@ -457,13 +457,13 @@ END_INTG_SET
 			m21  = -(1.0 - 1.0/d0)*(sinphi/rt2 + 1.0/cosphi/rt8)*sinalpha/len;
 			m22  = (cosalpha + rt2*cosphi*sinalpha)/d0;
 
-			cout<<std::setw(14)<<len;
-			cout<<std::setw(14)<<d0-1;
-			cout<<std::setw(14)<<alpha;
-			cout<<std::setw(14)<<m11;
-			cout<<std::setw(14)<<m12;
-			cout<<std::setw(14)<<m21;
-			cout<<std::setw(14)<<m22<<endl;
+			//~ cout<<std::setw(14)<<len;
+			//~ cout<<std::setw(14)<<d0-1;
+			//~ cout<<std::setw(14)<<alpha;
+			//~ cout<<std::setw(14)<<m11;
+			//~ cout<<std::setw(14)<<m12;
+			//~ cout<<std::setw(14)<<m21;
+			//~ cout<<std::setw(14)<<m22<<endl;
 
 		};
 		void operator()(PSvector& v) const {

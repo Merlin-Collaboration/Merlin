@@ -310,13 +310,16 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 		// from m to n sigma
 		rx = sqrt(beamdat.emit_x);
 		ry = sqrt(beamdat.emit_y);
+		//IP1 beta_x = 0.55m
+		double sigx = 4.0521303E-8;
+		
 		//Nominal LHC		
 		//~ double sigx = 267.067E-6; //TCP.C6L7		
 		//~ double sigx =  0.0002966510271229613; //HEL
 		
 		//HEL (HL)
 		//~ double sigx = 0.000258007;	//HEL
-		double sigx = 0.000266382;	//TCP.C6L7
+		//~ double sigx = 0.000266382;	//TCP.C6L7
 		
 		// with M.apply (TCP)
 		//~ double first = 1.1E-4; //5.2 sigma
@@ -325,10 +328,12 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 		//~ double last = 1.3E-4; //~6 sigma
 		
 		//without M.apply			
-		double first = 7*sigx; 
-		double last = 9*sigx; 	
-		//~ double first = 1*sigx; 
-		//~ double last = 10*sigx; 	
+		//~ double first = 7*sigx; 
+		//~ double last = 9*sigx; 	
+		//~ double first = 4*sigx; 
+		//~ double last = 8*sigx; 	
+		double first = 4*sigx; 
+		double last = 8*sigx; 	
 			
 		double partsi = np-2;
 		double steps = (last-first)/partsi;

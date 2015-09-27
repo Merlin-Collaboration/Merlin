@@ -808,8 +808,8 @@ double MADInterface::ReadComponent ()
 			bend->SetB1(brho*k1/len);
 		}
 
-		e1   =prmMap->GetParameter("E1");
-		e2   =prmMap->GetParameter("E2");
+		e1 = prmMap->GetParameter("E1");
+		e2 = prmMap->GetParameter("E2");
 
 		if(e1!=0 || e2!=0)
 		{
@@ -855,7 +855,17 @@ double MADInterface::ReadComponent ()
 		{
 			bend->SetB1(brho*k1/len);
 		}
+		
+		e1 = prmMap->GetParameter("E1");
+		e2 = prmMap->GetParameter("E2");
 
+		if(e1!=0 || e2!=0)
+		{
+			SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
+			SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
+			bend->SetPoleFaceInfo(pf1,pf2);
+		}
+		
 		if(tilt!=0)
 		(*bend).GetGeometry().SetTilt(tilt);
 
@@ -911,7 +921,7 @@ double MADInterface::ReadComponent ()
 		component=xc;
 	}
 
-        else if(type=="RFCAVITY")
+    else if(type=="RFCAVITY")
         {
 		cout << "Found RF cavity\t";
 		// Here we assume an SW cavity
@@ -925,7 +935,7 @@ double MADInterface::ReadComponent ()
 		int ncells = Round(len/lambdaOver2);
 		double len1 = ncells*lambdaOver2;
 
-		cout << "f: " << freq << "\tV: " << volts << "\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << "\tLength: " << len1 << endl;
+		//~ cout << "f: " << freq << "\tV: " << volts << "\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << "\tLength: " << len1 << endl;
 
 		// adjust phase for cosine-like field
 		phase = twoPi*(phase-0.25);
@@ -940,16 +950,25 @@ double MADInterface::ReadComponent ()
 		ctor->AppendComponent(*rfsctruct);
 		component=rfsctruct;
 	}//End RFCAVITY
+	
+	else if(type=="CRABMARKER"){
+		double mux=prmMap->GetParameter("MUX");
+		double muy=prmMap->GetParameter("MUY");
+		
+		CrabMarker* crabm = new CrabMarker(name, len, mux, muy);
+		ctor->AppendComponent(*crabm);
+		component=crabm;
+	}
+	
+    else if(type=="CRABRF")
+		{
+			TransverseRFStructure* crabcav = new TransverseRFStructure(name,len,0,0);
+			ctor->AppendComponent(*crabcav);
+			component=crabcav;
+    }
 
-        else if(type=="CRABRF")
-	{
-		TransverseRFStructure* crabcav = new TransverseRFStructure(name,len,0,0);
-		ctor->AppendComponent(*crabcav);
-		component=crabcav;
-        }
-
-        else if(type=="MONITOR")
-        {
+	else if(type=="MONITOR")
+    {
 		if(name.substr(0,4)=="BPM_")
 		{
 			BPM* bpm = new BPM("BPM"+name.substr(4),len);
@@ -972,7 +991,7 @@ double MADInterface::ReadComponent ()
 			component=bpm;
 		}
 	}
-        else if(type=="LINE")
+    else if(type=="LINE")
         {
 		if(!flatLattice)
 		{

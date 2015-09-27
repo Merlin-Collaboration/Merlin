@@ -201,6 +201,12 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 					//if not constant check for circle
 					//if not circle -> rectellipse
 					bool ap1=true,ap2=true,ap3=true,ap4=true,circle=true;
+					
+					if(!allRectEllipse)
+						circle=true;
+					else
+						circle = false;
+						
 					double ap1p=0,ap2p=0,ap3p=0,ap4p=0;
 					//for(vector<ap>::iterator itap = ThisElementAperture.begin(); itap!=ThisElementAperture.end(); itap++)
 					for(unsigned int itap = 0; itap < ThisElementAperture.size(); itap++)

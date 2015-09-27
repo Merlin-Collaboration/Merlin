@@ -50,4 +50,7 @@
 #include "AcceleratorModel/StdComponent/Collimator.h"
 // HollowElectronLens
 #include "AcceleratorModel/StdComponent/HollowElectronLens.h"
+// CrabMarker
+#include "AcceleratorModel/StdComponent/CrabMarker.h"
+
 #endif
