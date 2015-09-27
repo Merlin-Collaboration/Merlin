@@ -25,9 +25,12 @@ class TransferMatrix
 {
 public:
     TransferMatrix(AcceleratorModel* aModel, double refMomentum);
-    void FindTM(RealMatrix& M, PSvector& orbit);
-    void FindClosedOrbitTM(RealMatrix& M, PSvector& orbit);
+    
     void FindTM(RealMatrix& M);
+    void FindTM(RealMatrix& M, PSvector& orbit);
+    void FindTM(RealMatrix& M, PSvector& orbit, int n1, int n2);
+    
+    void FindClosedOrbitTM(RealMatrix& M, PSvector& orbit);
     void Radiation(bool flag);
     void SetRadStepSize(double rad_stepsize);
     void SetRadNumSteps(int rad_numsteps);

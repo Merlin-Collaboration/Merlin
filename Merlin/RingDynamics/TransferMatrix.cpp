@@ -129,3 +129,45 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit)
 //    	MatrixForm(M,cout,OPFormat().precision(6).fixed());
 //    	cout<<endl;
 }
+
+
+void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit, int n1, int n2)
+{
+    ParticleBunch bunch(p0,1.0);
+    int k=0;
+    for(k=0; k<7; k++)	{
+        Particle p = orbit;
+        if(k>0)
+            p[k-1] += delta;
+        bunch.push_back(p);
+    }
+    
+    ParticleTracker tracker(theModel->GetBeamline(n1,n2),&bunch,false);
+
+    if(radiation) {
+        SynchRadParticleProcess* srproc = new SynchRadParticleProcess(1);
+
+        if(radstepsize == 0)
+            srproc->SetNumComponentSteps(radnumsteps);
+        else
+            srproc->SetMaxComponentStepSize(radstepsize);
+
+        srproc->AdjustBunchReferenceEnergy(false);
+        tracker.AddProcess(srproc);
+    }
+
+    if(bendscale!=0) {
+        RingDeltaTProcess* ringdt = new RingDeltaTProcess(2);
+        ringdt->SetBendScale(bendscale);
+        tracker.AddProcess(ringdt);
+    }
+
+    tracker.Run();
+
+    ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
+    const Particle& pref = *ip++;
+
+    for(k=0; k<6; k++,ip++)
+        for(int m=0; m<6; m++)
+            M(m,k) = ((*ip)[m] - pref[m]) / delta;
+}
