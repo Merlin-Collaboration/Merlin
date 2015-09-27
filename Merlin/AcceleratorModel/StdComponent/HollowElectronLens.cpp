@@ -15,7 +15,6 @@
 #include "AcceleratorModel/StdComponent/HollowElectronLens.h"
 #include "AcceleratorModel/TrackingInterface/ComponentTracker.h"
 
-// Class Collimator
 const int HollowElectronLens::ID = UniqueIndex();
 
 HollowElectronLens::HollowElectronLens (const string& id, double len)

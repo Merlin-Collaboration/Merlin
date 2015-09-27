@@ -15,6 +15,7 @@
 #include <iomanip>
 #include <iterator>
 #include <cassert>
+#include <string>
 #include "stdext/algorithm.h"
 
 // ComponentFrame
@@ -257,4 +258,28 @@ size_t AcceleratorModel::GetAcceleratorSupports(AcceleratorSupportList& supports
 	ExtractAcceleratorSupports eas(supports);
 	globalFrame->Traverse(eas);
 	return eas.nFound;
+}
+
+static bool SortComponent(const AcceleratorComponent* first, const AcceleratorComponent* last){
+    return (first->GetComponentLatticePosition() < last->GetComponentLatticePosition());
+}
+
+static vector<AcceleratorComponent*> SortAcceleratorModel(AcceleratorModel* model){
+    vector<AcceleratorComponent*> elements;
+
+    model->ExtractTypedElements(elements,"*");
+
+    sort(elements.begin(), elements.end(), SortComponent);
+    return elements;
+}
+
+int AcceleratorModel::FindElementLatticePosition(string RequestedElement){
+    vector<AcceleratorComponent*> elements = SortAcceleratorModel(this);
+    size_t nelm = elements.size();
+    for(size_t n=0; n<nelm; n++){
+        if(elements[n]->GetName() == RequestedElement){
+            return n;
+        }
+    }
+    return 0;
 }

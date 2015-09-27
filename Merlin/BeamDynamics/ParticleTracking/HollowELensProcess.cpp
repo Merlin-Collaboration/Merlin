@@ -115,6 +115,7 @@ void HollowELensProcess::SetTurnskip (int skip)
 void HollowELensProcess::DoProcess (double ds)
 {
 	double theta = 0;
+	double Gamma_p = 0;
 	//cout << "Entered Hollow Electron Lens Process" << endl;
 
 	ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
@@ -122,7 +123,7 @@ void HollowELensProcess::DoProcess (double ds)
 	newbunch->swap(*currentBunch);
 
 	if(ProtonBeta == 0){
-		double Gamma_p = LorentzGamma(currentBunch->GetReferenceMomentum(), ProtonMass);
+		Gamma_p = LorentzGamma(currentBunch->GetReferenceMomentum(), ProtonMass);
 		ProtonBeta = LorentzBeta(Gamma_p);
 	}	
 	
@@ -146,6 +147,20 @@ void HollowELensProcess::DoProcess (double ds)
 				//~ cout << "\n\tRadius = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2))/ sqrt(pow(293.031E-6,2) + pow(287.801E-6,2))<< " sigma" << endl;
 				
 				if(theta!=0){
+        
+					cout << " x = " << (*p).x() << endl;
+					cout << " y = " << (*p).y() << endl;
+					cout << " xp = " << (*p).xp() << endl;
+					cout << " yp = " << (*p).yp() << endl;
+					cout << " R = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2)) << endl;
+					cout << " Rmin = " << Rmin << endl;
+					cout << " Rmax = " << Rmax << endl;
+					cout << " L = " << EffectiveLength << endl;
+					cout << " max_kick = " << CalcThetaMax(R) << endl;
+					cout << " Current = " << Current << endl;
+					cout << " Brho = " << Rigidity << endl;
+					cout << " Gamma_p = " << Gamma_p << endl;
+					
 					//~ // Particle phase space angle and amplitude (radius)
 					(*p).xp() -= theta * cos(ParticleAngle);			
 					(*p).yp() -= theta * sin(ParticleAngle);
@@ -250,6 +265,7 @@ void HollowELensProcess::DoProcess (double ds)
 	currentBunch->swap(*newbunch);
 
 }
+
 double HollowELensProcess::GetMaxAllowedStepSize () const
 {
 	return currentComponent->GetLength();   

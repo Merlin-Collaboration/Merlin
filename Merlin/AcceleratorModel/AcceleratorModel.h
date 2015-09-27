@@ -301,6 +301,11 @@ public:
 
     // Access to AcceleratorSupport objects
 	size_t GetAcceleratorSupports(AcceleratorSupportList& supports);
+	
+	// Find lattice position of given element and required sorting algorithms
+	int FindElementLatticePosition(string RequestedElement);
+	//~ bool SortComponent(const AcceleratorComponent* first, const AcceleratorComponent* last);
+	//~ vector<AcceleratorComponent*> SortAcceleratorModel(AcceleratorModel* model);
 
 private:
 
