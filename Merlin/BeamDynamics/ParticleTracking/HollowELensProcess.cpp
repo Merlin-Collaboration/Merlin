@@ -148,18 +148,22 @@ void HollowELensProcess::DoProcess (double ds)
 				
 				if(theta!=0){
         
-					cout << " x = " << (*p).x() << endl;
-					cout << " y = " << (*p).y() << endl;
-					cout << " xp = " << (*p).xp() << endl;
-					cout << " yp = " << (*p).yp() << endl;
-					cout << " R = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2)) << endl;
-					cout << " Rmin = " << Rmin << endl;
-					cout << " Rmax = " << Rmax << endl;
-					cout << " L = " << EffectiveLength << endl;
-					cout << " max_kick = " << CalcThetaMax(R) << endl;
-					cout << " Current = " << Current << endl;
-					cout << " Brho = " << Rigidity << endl;
-					cout << " Gamma_p = " << Gamma_p << endl;
+					//~ cout << " x = " << (*p).x() << endl;
+					//~ cout << " y = " << (*p).y() << endl;
+					//~ cout << " xp = " << (*p).xp() << endl;
+					//~ cout << " yp = " << (*p).yp() << endl;
+					//~ cout << " ParticleAngle = " << ParticleAngle << endl;
+					//~ cout << " R = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2)) << endl;
+					//~ cout << " Rmin = " << Rmin << endl;
+					//~ cout << " Rmax = " << Rmax << endl;
+					//~ cout << " L = " << EffectiveLength << endl;
+					//~ cout << " max_kick = " << CalcThetaMax(R) << endl;
+					//~ cout << " Current = " << Current << endl;
+					//~ cout << " Brho = " << Rigidity << endl;
+					//~ cout << " Gamma_p = " << Gamma_p << endl;
+					//~ cout << " theta = " << theta << endl;
+					//~ cout << "\n" << endl;
+					
 					
 					//~ // Particle phase space angle and amplitude (radius)
 					(*p).xp() -= theta * cos(ParticleAngle);			
@@ -318,14 +322,14 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 		thet = ((pow(R,2) - pow(Rmin,2))/(pow(Rmax,2) - pow(Rmin,2))) * CalcThetaMax(R);     
 		//thet = ((R - Rmin)/(Rmax - Rmin)) * CalcThetaMax(R);     
 		//cout << "\nR < Rmax, theta = " << thet << " thetamax = " << CalcThetaMax(R) << "angle = " << ParticleAngle << endl;
-		return thet;
+		return -1* thet;
 
 	}
 	else if (R >= Rmax)
 	{   
 		thet = CalcThetaMax(R);            
 		//cout << "\nR > Rmax, theta = " << thet << " thetamax = " << CalcThetaMax(Rmax) << "angle = " << ParticleAngle << endl;
-		return thet;		  
+		return -1* thet;		  
 	}
 	return 0;
 
@@ -344,11 +348,12 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 	//~ cout << "\n\tHEL Length = " << Length << endl;	
 
 	// Centre of HEL
-	//~ x = p.x();
-	//~ y = p.y();
-	x = p.x() + p.xp()*(Length/2);
-	y = p.y() + p.yp()*(Length/2);
-	R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
+	x = p.x();
+	y = p.y();
+	//~ x = p.x() + p.xp()*(Length/2);
+	//~ y = p.y() + p.yp()*(Length/2);
+	//~ R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
+	R = sqrt( pow((x),2) + pow((y),2) );
 	
 	// Adapted from V. Previtali's SixTrack elense implementation 
 	
@@ -402,7 +407,7 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
                 f = 1;                 
     } 
 	
-	thet = CalcThetaMax(R) * f;
+	thet = -1* CalcThetaMax(R) * f;
 	//cout << "\nR < Rmax, theta = " << thet << " thetamax = " << CalcThetaMax(R) << "angle = " << ParticleAngle << endl;
 	return thet;
 }

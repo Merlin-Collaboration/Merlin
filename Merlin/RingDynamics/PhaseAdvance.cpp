@@ -29,7 +29,14 @@
 using namespace ParticleTracking;
 
 PhaseAdvance::PhaseAdvance(AcceleratorModel* aModel, LatticeFunctionTable* aTwiss, double refMomentum)
-        : theModel(aModel), theTwiss(aTwiss), p0(refMomentum), delta(1.0E-8), bendscale(1E-16) {}
+        : theModel(aModel), theTwiss(aTwiss), p0(refMomentum), delta(1.0E-8), bendscale(1E-16)
+{
+				//~ std::cout << "\n\tPhaseAdvance Class created" << std::endl;
+				//~ std::cout << "please note that the following functions must be added to your LatticeFunctionTable: (0,0,1), (0,0,2), (0,0,3), using the following function:" << std::endl;
+				//~ std::cout << "\n\t\t myLatticeFunctionTable->AddFunction(0,0,1);" << std::endl;
+				//~ std::cout << "\n\t\t myLatticeFunctionTable->AddFunction(0,0,2);" << std::endl;
+				//~ std::cout << "\n\t\t myLatticeFunctionTable->AddFunction(0,0,3);" << std::endl;				
+}
 
 void PhaseAdvance::SetDelta(double new_delta)
 {
@@ -131,13 +138,15 @@ pair<double,double> PhaseAdvance::CalcIntegerPart(int n){
 	for (int i = 1; i<n; ++i){
 		if( (theTwiss->Value(0,0,1,i) == last_mux) || (theTwiss->Value(0,0,1,i) <= 0.)){}		
 		else if( (theTwiss->Value(0,0,1,i) < last_mux) ){
-			if( (theTwiss->Value(0,0,1,i)/last_mux) < 0.9999999999){ //to stop iteration for small fluctuations
+			//~ if( (theTwiss->Value(0,0,1,i)/last_mux) < 0.9999999999){ //to stop iteration for small fluctuations
+			if( (theTwiss->Value(0,0,1,i)/last_mux) < 0.9999){ //to stop iteration for small fluctuations
 				++intmux;
 			}
 		}
 		if( theTwiss->Value(0,0,2,i) == last_muy || (theTwiss->Value(0,0,2,i) <= 0.)){}		
 		else if( theTwiss->Value(0,0,2,i) < last_muy){
-			if( (theTwiss->Value(0,0,2,i)/last_muy) < 0.9999999999){ //to stop iteration for small fluctuations
+			//~ if( (theTwiss->Value(0,0,2,i)/last_muy) < 0.9999999999){ //to stop iteration for small fluctuations
+			if( (theTwiss->Value(0,0,2,i)/last_muy) < 0.9999){ //to stop iteration for small fluctuations
 				++intmuy;
 			}
 		}

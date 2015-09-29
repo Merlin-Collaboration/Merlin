@@ -281,7 +281,7 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	               }
 	           }
 	break;
-        case verticalHaloDistribution2:
+    case verticalHaloDistribution2:
 	           rx = sqrt(beamdat.emit_x);
 	           ry = sqrt(beamdat.emit_y);
 	           for(i=1; i<np;) {
@@ -310,8 +310,12 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 		// from m to n sigma
 		rx = sqrt(beamdat.emit_x);
 		ry = sqrt(beamdat.emit_y);
-		//IP1 beta_x = 0.55m
-		double sigx = 4.0521303E-8;
+		
+		//IP1 beta_x = 0.15m (HL v1.2)
+		//~ double sigx = sqrt(beamdat.emit_x * 0.15);
+		//IP1 beta_x = 0.55m (HL v1.2)
+		//~ double sigx = 4.0521303E-8;
+		double sigx = sqrt(beamdat.emit_x * 0.55);
 		
 		//Nominal LHC		
 		//~ double sigx = 267.067E-6; //TCP.C6L7		
@@ -321,55 +325,29 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 		//~ double sigx = 0.000258007;	//HEL
 		//~ double sigx = 0.000266382;	//TCP.C6L7
 		
-		// with M.apply (TCP)
-		//~ double first = 1.1E-4; //5.2 sigma
-		//~ double last = 1.3E-4; //6 sigma
-		//~ double first = 0.7E-5; //~1 sigma
-		//~ double last = 1.3E-4; //~6 sigma
-		
 		//without M.apply			
 		//~ double first = 7*sigx; 
 		//~ double last = 9*sigx; 	
 		//~ double first = 4*sigx; 
 		//~ double last = 8*sigx; 	
-		double first = 4*sigx; 
-		double last = 8*sigx; 	
+		double first = 1*sigx; 
+		double last = 10*sigx; 	
 			
 		double partsi = np-2;
-		double steps = (last-first)/partsi;
-		double intpart;
-			
+		double steps = (last-first)/partsi; 
+		
 		for(i=1; i<np;) {
 			u = RandomNG::uniform(-1,1);
 
 			//~ double test = rx*u;	
 			p.x()	= (first + ((i-1) * steps));
-			p.xp() = 0;			
-						
-			//~ p.x()	= rx*u;			
-			//~ double fracpart = modf((p.x()/rx), &intpart);
-			//~ fracpart = sqrt(pow(fracpart,2));
-			//~ p.xp() = rx *  sin( acos(fracpart) );
-			
-			//~ p.xp() = rx *  sin( acos(p.x()/sqrt(rx)) );
-			//~ p.xp() = -2.4E-5;
-			//~ p.xp() = -p.x()*0.016;
-
-			//~ cout << "\n\t\t\tParticleBunchConstructor: x = " << p.x() << " xp = " << p.xp() << endl; 
-		
-			//~ p.xp()	= rx *  sin( sqrt((p.x()/rx)*(p.x()/rx)) *pi);
-			//~ p.xp()	= rx *  (cos(  sqrt(pow(p.x(),2) / pow(rx, 2)) * 0.5 *pi ));
-			//~ p.xp()	= sqrt( pow(p.x(),2) + pow(rx, 2));
-			//~ p.xp() = rx-p.x();
-			//~ u = RandomNG::uniform(-1,1);
-			//~ if (u>=0){
-				//~ p.xp() *= -1;
-			//~ }
-		
+			p.xp() = 0.0;			
 			p.y()	= 0.0;
 			p.yp()	= 0.0;
-			p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-			p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);	               
+			p.dp()	= 0.0;
+			p.ct()	= 0.0;               
+			//~ p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
+			//~ p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);	               
 			//~ M.Apply(p);
 			p+=pbunch.front(); // add centroid
 
@@ -379,6 +357,39 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 			}
 		}
 	}
+	break;
+	case CCDistn:
+	           rx = sqrt(beamdat.emit_x);
+	           ry = sqrt(beamdat.emit_y);
+	           for(i=1; i<np;) {
+
+	              	
+	              //WORKING FUDGED               
+	               //~ p.x()	= RandomGauss(1E-5, 5E-3);	
+	               //~ p.xp()	= 0;		               
+	               //~ p.y()	= RandomGauss(1E-5, 5E-3);
+	               //~ p.yp()	= 0;
+	               //~ p.dp()	= 0;
+	               //~ p.ct()	= RandomGauss(0.1, 1);
+	               
+	               p.x()	= RandomGauss(1E-5, 5E-3);	
+	               p.xp()	= 0;		               
+	               p.y()	= RandomGauss(1E-10, 50);
+	               p.yp()	= 0;
+	               p.dp()	= 0;
+	               p.ct()	= RandomGauss(1E-2, 15);
+	               
+	               //~ M.Apply(p);
+	               p+=pbunch.front(); // add centroid
+	               p.type() = -1.0;
+	               p.location() = -1.0;
+	               p.sd() = 0.0;
+	               p.id() = i;
+	               if(itsFilter==0 || itsFilter->Apply(p)) {
+	                   pbunch.push_back(p);
+	                   i++;
+	               }
+	           }
 	break;
     };
 

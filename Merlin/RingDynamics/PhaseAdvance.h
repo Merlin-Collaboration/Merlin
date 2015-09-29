@@ -64,10 +64,8 @@ private:
     AcceleratorModel* theModel;
     LatticeFunctionTable* theTwiss;
     double p0;
-
     double delta;
     double bendscale;
-    
     double phase_advance;
 };
 
