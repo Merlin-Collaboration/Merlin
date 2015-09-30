@@ -422,16 +422,17 @@ void HollowELensProcess::SetRadii (double rmin, double rmax)
 
 void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
 {
+	
+	//How many HELs in lattice?
+	int Hel_no = 0;
+	//Element no of last HEL
+	int Hel_ID = 0;
+	
 	bool find_HEL_no = 1;
 	if (find_HEL_no){
 		vector<AcceleratorComponent*> Elements;
 		size_t n_collimators = model->ExtractTypedElements(Elements,"*");
 		size_t nelm = Elements.size();
-		
-		//How many HELs in lattice?
-		int Hel_no = 0;
-		//Element no of last HEL
-		int Hel_ID = 0;
 		
 		for (size_t n = 0; n < nelm; n++){
 			if(Elements[n]->GetType() == "HollowElectronLens"){			
@@ -467,6 +468,9 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 		
 		for(int j = 0; j <= twiss->NumberOfRows(); j++){
 			if((*it)->GetComponentLatticePosition() == twiss->Value(0,0,0,j)){
+				cout << " S_HEL = " << (*it)->GetComponentLatticePosition() << "m" << endl;
+				cout << " S_twiss = " << twiss->Value(0,0,0,j) << "m" << endl;
+				
 				cout << "HollowELensProcess::SetRadiiSigma : j value = " << j << endl;
 				
 				//Note that this is currently only a horizontal HEL
@@ -475,7 +479,8 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 				
 				XOffset = twiss->Value(1,0,0,j);
 				YOffset = twiss->Value(3,0,0,j);	
-				twiss->PrintTable(std::cout,j,j+1);
+				twiss->PrintTable(std::cout,j-1,j);
+				twiss->PrintTable(std::cout,j+1,j+2);
 				
 				//~ double sigma_y = sqrt(beta_y * emittance_y);
 				sigma_x = sqrt(beta_x * emittance_x);	

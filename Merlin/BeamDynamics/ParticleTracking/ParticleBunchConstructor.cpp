@@ -11,14 +11,14 @@
 // $Revision: 1.9 $
 //
 /////////////////////////////////////////////////////////////////////////
+#include <memory>
+
+#include "Random/RandomNG.h"
+
+#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 
 #include "BasicTransport/NormalTransform.h"
-#include <memory>
-// RandomNG
-#include "Random/RandomNG.h"
-// ParticleBunchConstructor
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-// Include for pi constant.
+
 #include "NumericalUtils/NumericalConstants.h"
 
 namespace ParticleTracking {
@@ -405,11 +405,6 @@ Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
 void ParticleBunchConstructor::ForceCentroid (bool fc)
 {
     force_c = fc;
-}
-
-ParticleBunchFilter::~ParticleBunchFilter ()
-{
-    // Nothing to do
 }
 
 } //end namespace ParticleTracking

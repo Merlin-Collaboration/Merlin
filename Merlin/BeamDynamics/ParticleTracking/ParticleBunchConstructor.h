@@ -25,20 +25,10 @@
 // ParticleBunch
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
+#include "BeamDynamics/ParticleTracking/BunchFilter.h"
 #include <typeinfo>
 
 namespace ParticleTracking {
-
-class ParticleBunchFilter
-{
-public:
-
-    virtual ~ParticleBunchFilter ();
-
-    //	Used by a ParticleBunchConstructor object to select
-    //	vectors for inclusion in a ParticleBunch.
-    virtual bool Apply (const PSvector& v) const = 0;
-};
 
 typedef enum {normalDistribution,flatDistribution,ringDistribution,skewHaloDistribution,\
 		horizontalHaloDistribution1,verticalHaloDistribution1,horizontalHaloDistribution2,\
