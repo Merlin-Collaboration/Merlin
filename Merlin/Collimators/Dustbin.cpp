@@ -106,14 +106,17 @@ void LossMapDustbin::Finalise()
 	//First sort DeadParticles according to s
 	sort(DeadParticles.begin(), DeadParticles.end(), Compare_LossData); 	
 
-	int outit = 0;
+	cout << "DUSTBIN:: DeadParticles.size() = " <<  DeadParticles.size() << endl;
 
+	int outit = 0;
+	int total = 0;
 
 	switch(otype) 
 	{
 	case nearestelement:
 		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
+			++total;
 			// Start at s = min and push back the first LossData
 			if (OutputLosses.size() == 0)
 			{
@@ -135,6 +138,7 @@ void LossMapDustbin::Finalise()
 	case precise:
 		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
+			++total;
 			// Start at s = min and push back the first LossData
 			if (OutputLosses.size() == 0)
 			{
@@ -156,6 +160,8 @@ void LossMapDustbin::Finalise()
 	case tencm:
 		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
+			++total;
+			//if no losses are yet stored
 			if (OutputLosses.size() == 0)
 			{
 				OutputLosses.push_back(*it); 
@@ -165,15 +171,18 @@ void LossMapDustbin::Finalise()
 			{
 				OutputLosses[outit].lost +=1;
 			}
-			// If new element outit.push_back
+			// If new element outit.push_back and set loss to 1
 			else
 			{
 				OutputLosses.push_back(*it);	
 				outit++;				
+				OutputLosses[outit].lost =1;
 			}
 		}
 	break;
 	};
+	cout << "DUSTBIN:: OutputLosses.size() = " << OutputLosses.size() << endl;
+	cout << "DUSTBIN:: Total losses = " << total << endl;
 }
 
 void LossMapDustbin::Output(std::ostream* os)

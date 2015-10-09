@@ -92,11 +92,11 @@ struct LossData{
 
 // Comparison function used to sort losses in order of s position
 inline bool Compare_LossData (const LossData &a, const LossData &b){
-	return (a.s + a.position) < (b.s + b.position);
+	return (a.s + a.position + a.interval) < (b.s + b.position + a.interval);
 }
 
 inline bool Merge_LossData(const LossData &a, const LossData &b){
-	if ((a.s + a.position) == (b.s + b.position)){return true;}
+	if ((a.s + a.position + a.interval) == (b.s + b.position + a.interval)){return true;}
 }
 
 // Possible output types for each class
@@ -147,7 +147,7 @@ class LossMapDustbin : public Dustbin
 
 public:
 
-	LossMapDustbin(OutputType otype = nearestelement);
+	LossMapDustbin(OutputType otype = tencm);
 	~LossMapDustbin();
 
 	virtual void Finalise();

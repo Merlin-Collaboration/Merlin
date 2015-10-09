@@ -123,7 +123,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		if(E2 <=1.0){
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-			if(dustset){outputdustbin->Dispose(*currentComponent, step_size, p);}
+			if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
 			return true;
 		}	
 //MCS
@@ -149,7 +149,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			if(!scattermodel->ParticleScatter(p, C->p, E2)){		
 				p.ct() = z;
 				scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-				if(dustset){outputdustbin->Dispose(*currentComponent, step_size, p);}
+				if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
 				return true;
 			}
 		}
@@ -159,7 +159,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		if( (p.dp() < -0.95) || (p.dp() < -1) ){
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-			if(dustset){outputdustbin->Dispose(*currentComponent, step_size, p);}
+			if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
 			return true;
 		}
 		

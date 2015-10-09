@@ -301,8 +301,12 @@ void CollimateParticleProcess::DoCollimation ()
 				}
 
 				lost.push_back(*p);
+				
 				//~ if(dustset){outputdustbin->Dispose(*currentComponent, 1E-5, (*p));}
-				if(dustset){outputdustbin->Dispose(*currentComponent, 0, (*p));}
+				if(!is_collimator){
+					if(dustset){outputdustbin->Dispose(*currentComponent, 0, (*p));}
+				}
+				
 				/* This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster */
 				//p=currentBunch->erase(p);
 				p++;
