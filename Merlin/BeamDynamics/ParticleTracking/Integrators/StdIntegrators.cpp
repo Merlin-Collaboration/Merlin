@@ -149,7 +149,10 @@ void DriftCI::TrackStep (double ds)
 
 void KickerCI::TrackStep (double ds)
 {
+	cout << "THIN_LENS::KickerCI::Trackstep" << endl;
+	cout << "CurrentComponent = " << currentComponent->GetName() << endl;
 	double len = currentComponent->GetLength();
+	cout << "\tlen = " << len << endl;
 	if(ds == len)
 	{
 		ApplyDrift(currentBunch->GetParticles(),ds/2);

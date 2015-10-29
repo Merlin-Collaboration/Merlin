@@ -173,7 +173,7 @@ void HollowELensProcess::DoProcess (double ds)
 		}
 		break;
 		case AC:{
-			cout << "\n\tAC Mode, Rmin = " << Rmin << " Rmax = " << Rmax << endl;
+			//~ cout << "\n\tAC Mode, Rmin = " << Rmin << " Rmax = " << Rmax << endl;
 			// Resonant HEL kick - Adapted from V. Previtali's SixTrack elense
 			if(ACSet){
 				for(PSvectorArray::iterator p = newbunch->begin(); p!=newbunch->end(); p++) 
@@ -206,7 +206,7 @@ void HollowELensProcess::DoProcess (double ds)
 		break;
 		case Diffusive:
 		{
-			cout << "\n\tDiffusive Mode, Rmin = " << Rmin << " Rmax = " << Rmax << endl;
+			//~ cout << "\n\tDiffusive Mode, Rmin = " << Rmin << " Rmax = " << Rmax << endl;
 			// HEL randomly switched on/off on a turn by turn basis
 			double rando = RandomNG::uniform(-1,1);
 			
@@ -272,7 +272,7 @@ void HollowELensProcess::DoProcess (double ds)
 
 double HollowELensProcess::GetMaxAllowedStepSize () const
 {
-	return currentComponent->GetLength();   
+	return currentComponent->GetLength();  
 }
 
 double HollowELensProcess::CalcThetaMax (double r)
