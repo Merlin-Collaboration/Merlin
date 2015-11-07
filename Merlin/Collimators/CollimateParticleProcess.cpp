@@ -111,8 +111,10 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 		else
 		{
 			//at_entr = at_cent = false; // currently scatter only at exit
-			at_cent = false; // currently scatter only at exit
-			at_exit = at_entr = true;
+			//~ at_cent = false; // currently scatter only at exit
+			//~ at_exit = at_entr = true;
+			at_cent = at_entr = false; // currently scatter only at exit
+			at_exit = true;
 			SetNextS();
 			//Xr = aCollimator->GetMaterialRadiationLength();
 			currentBunch->SetScatterConfigured(false);
@@ -141,11 +143,18 @@ void CollimateParticleProcess::DoProcess (double ds)
     s+=ds;
 
     if(fequal(s,next_s))
+    //~ if(s<=len)
     {
 	//This lets the scattering routine know how far down the collimator we are for aperture checking inside the scattering step.
+	//~ cout << "ColPARTICLEProcess: s = " << s << endl;
 	currentBunch->SetIntS(s-ds);
+	//~ cout << "ColPARTICLEProcess: ds = " << ds << endl;	
+	//~ cout << "ColPARTICLEProcess: s-ds = " << s-ds << endl;	
+	//~ cout << "ColPARTICLEProcess: IntS = s-ds = " << currentBunch->int_s << endl;	
+	//~ cout << "ColPARTICLEProcess: next_s = " << next_s << endl;	
         DoCollimation();
-        SetNextS();
+        SetNextS();	
+	//~ cout << "ColPARTICLEProcess: SETnext_s = " << next_s << endl;	
     }
 
     // If we are finished, GetNextS() will have set the process inactive.
@@ -198,8 +207,6 @@ void CollimateParticleProcess::SetLossThreshold (double losspc)
 
 void CollimateParticleProcess::DoCollimation ()
 {
-	//std::cout << "Call DoCollimation " << std::endl;
-//	cout << "CurrentBunch size: " << currentBunch->size() << endl;
 	//The apture of this element
 	const Aperture *ap = currentComponent->GetAperture();
 
@@ -236,30 +243,11 @@ void CollimateParticleProcess::DoCollimation ()
 
 	list<size_t>::iterator ip;
 	if(pindex!=0)
-	ip=pindex->begin();
+	ip=pindex->begin(); 
 
 	//For copying surviving particles to, which is faster than deleting the individual lost particles
 	ParticleBunch* NewBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
 	NewBunch->reserve(currentBunch->size());
-
-/*
-	//For precision tracking of lost particles in non-collimators
-	PSvectorArray InputArray;				//The input array
-	std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
-
-	//make a copy of the input array if we are a magnet.
-	if(!is_collimator)
-	{
-		InputArray = currentBunch->GetParticles();
-	}
-*/
-
-/*	cout << currentComponent->GetQualifiedName() << "\t" << currentComponent->GetLength() << "\t" << s << endl;
-	if(currentComponent->GetQualifiedName() != "collimator.TCP.C6L7.B1")
-	{
-		abort();
-	}
-*/
 
 	size_t particle_number=0;
 
@@ -284,14 +272,11 @@ void CollimateParticleProcess::DoCollimation ()
 //			(*p).y() -= bin_size * (*p).yp();
 //		}
 
-//		if(!ap->PointInside(( *p).x(), (*p).y(), s + (*p).ct() ))
 		if(particle_number >= first_loss && !ap->PointInside( (*p).x(), (*p).y(), s) )
 		{
-			//~ cout << "\nCollimateParticleProcess: p.x() = " << (*p).x() << std::endl;
 			// If the 'aperture' is a collimator, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
 			// If not a collimator, then do not scatter and directly remove the particle.
-			//~ std::cout << "\n\tCollimateParticleProcess:: Calling DoScatter" << endl;
 			if(!is_collimator || DoScatter(*p))
 			{	
 //				cout << "Lost Particle at: " << s + (*p).ct() << endl;
@@ -301,14 +286,8 @@ void CollimateParticleProcess::DoCollimation ()
 				}
 
 				lost.push_back(*p);
-				
-				//~ if(dustset){outputdustbin->Dispose(*currentComponent, 1E-5, (*p));}
-				if(!is_collimator){
-					if(dustset){outputdustbin->Dispose(*currentComponent, 0, (*p));}
-				}
-				
-				/* This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster */
-				//p=currentBunch->erase(p);
+				if(dustset){outputdustbin->Dispose(*currentComponent, 0, (*p));}
+				// This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster
 				p++;
 				if(pindex!=0)
 				{
@@ -526,7 +505,12 @@ void CollimateParticleProcess::SetNextS ()
 	if(is_collimator)
 	{
 		active = true;
-		next_s = s + bin_size;
+		if((s+bin_size) > currentComponent->GetLength()){
+			next_s = currentComponent->GetLength();
+		}
+		else{
+			next_s = s + bin_size;
+		}
 	}
 }
 
@@ -713,78 +697,3 @@ void CollimateParticleProcess::EnableImperfections(bool enable)
 	Imperfections = enable;
 }
 } // end namespace ParticleTracking
-
-
-
-//cout << "LostBunch:\t" << LostBunch->size() << endl;
-//					cout << "not lost at: " << s+(*p).ct() << endl;
-//				cout << (*p).x() << "\t" << (*p).y() << "\t" << s << "\t" << LostParticleTracker->GetRemainingLength() << "\t" << LostBunch->size() << endl;
-//				cout << "delete: " << LostBunch->size() << endl;
-//				cout << "lost at: " << s+(*p).ct() << endl;
-//cout << "END: " << currentComponent->GetQualifiedName() << endl;
-
-//cout << endl <<"START: " << currentComponent->GetQualifiedName() << endl;
-//cout << "Input size:\t" << InputArray.size() << endl;
-//cout << "Lost size:\t" << LostParticlePositions.size() << endl;
-//cout << "Lost!: " << currentComponent->GetQualifiedName() << "\t" << currentComponent->GetLength() << "\t" << currentComponent->GetComponentLatticePosition() << endl;
-//cout << "Lost!: " << currentComponent->GetQualifiedName() << "\t" << foo->GetIntegratedLength() << endl;
-//cout << currentComponent->GetQualifiedName() << endl;
-//cout << "LOSTBUNCH SIZE: " << LostBunch->size() << endl;
-//	cout << "New Tracker" << endl;
-//ParticleBunchProcess::InitialiseProcess(bunch);
-//	cout << "prep Tracker" << endl;
-//	cout << LostParticleTracker->GetState() << endl;
-//	cout << "check loss " << LostParticleTracker->GetRemainingLength() << endl;
-//		cout << "Using step size: " << StepSize << endl;
-//		cout << "TrackStep " << endl;
-//cout << "LOSTBUNCH SIZE: " << LostBunch->size() << endl;
-
-/*void CollimateParticleProcess::bin_lost_output(const PSvectorArray& lostb)
-{
-
-	double leng = currentComponent->GetLength();
-	int n = leng / 0.1;
-
-
-	bool overflow = false;
-	if ((leng/(double)n) != 0.0)
-	{
-		n++;
-		overflow = true;
-	}
-
-
-	//Create the array
-	double** lostp = new double*[n];
-	for(int i = 0; i<n; ++i)
-	{
-		lostp[i] = new double[3];
-	}
-	//fill the aray
-	for(int j = 0; j<n; j++)
-	{
-		lostp[j][0] = 0.1*j;	//Start position
-		lostp[j][1] = 0.1;	//Length
-		lostp[j][2] = 0.0;	//Entries
-	}
-	//deal with the last bin
-	if(overflow)
-	{
-		lostp[n-1][0] = 0.1*(n-1);
-		lostp[n-1][1] = leng - (0.1*(n-1));
-		lostp[n-1][2] = 0.0;
-	}
-
-
-	for(size_t l = 0; l < lostb.size(); l++)
-	{
-		int x = lostb[l].ct()/0.1;
-		lostp[x][2]++;
-	}
-
-	for(int j = 0; j<n; j++)
-	{
-		cout << lostp[j][0] << "\t" << lostp[j][1] << "\t" << lostp[j][2] << endl;
-	}
-}
-*/

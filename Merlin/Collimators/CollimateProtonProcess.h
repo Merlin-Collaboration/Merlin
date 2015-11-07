@@ -7,8 +7,8 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created:		2010	 RJB
-// Modified:	07.09.15 Haroon Rafique		
-// Last Edited: 17.10.15 HR
+// Modified:	07.09.15 Haroon Rafique			
+// Last Edited: 03.11.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 #ifndef CollimateProtonProcess_h
@@ -35,25 +35,18 @@ public:
     //	be a logical OR combination of the collimation modes. A
     //	null pointer for osp (default) suppresses output.
     CollimateProtonProcess (int priority, int mode, std::ostream* osp = 0);
-
-	//~ void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
-	
+    	
 	void SetScatter(Collimation::ScatteringModel* sm);
 	
 	void SetScatteringModel(Collimation::ScatteringModel* s);
 	
-	// Dustbin object to hold output data
-	//~ Dustbin* outputdustbin;
 	Collimation::ScatteringModel* scattermodel;	
-
+	
 private:
 
     bool DoScatter(Particle&);    
     
     bool scatterset;
-    
-    //~ // 0 when no dustbin is set
-    //~ bool dustset;
 };
 
 }; // end namespace ParticleTracking

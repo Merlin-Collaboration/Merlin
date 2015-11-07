@@ -8,11 +8,12 @@
 //
 // Created:		2010	 RJB
 // Modified:	07.09.15 Haroon Rafique		
-// Last Edited: 17.10.15 HR
+// Last Edited: 03.11.15 HR
 // 
 /////////////////////////////////////////////////////////////////////////
 
 #include <iterator>
+#include <string>
 #include <iomanip>
 #include <typeinfo>
 #include <fstream>
@@ -71,14 +72,33 @@ CollimateProtonProcess::CollimateProtonProcess (int priority, int mode, std::ost
 
 bool CollimateProtonProcess::DoScatter(Particle& p)
 {  // returns true if particle survives, false if it dies
+	
 	double P0 = currentBunch->GetReferenceMomentum();	
 	double E0 = sqrt(P0*P0 + pow(PhysicalConstants::ProtonMassMeV*PhysicalUnits::MeV,2));
 	
-	Collimator* C = static_cast<Collimator*> (currentComponent); 
-	const Aperture *colap = C->GetAperture();
+	bool scatter_plot = 0;
+	bool jaw_impact = 0;
 	
-	double lengthtogo = GetMaxAllowedStepSize();
-	double z = 0;
+	// Length of the collimator
+	double coll_length = currentComponent->GetLength();
+
+	double z = currentBunch->int_s;
+	double lengthtogo = s-z;		
+	
+	Collimator* C = static_cast<Collimator*> (currentComponent); 
+	
+	string ColName = currentComponent->GetName();
+	
+	if( (scattermodel->ScatterPlot_on) && (scattermodel->ScatterPlotName == ColName) ){
+		scatter_plot = 1;
+		//~ cout << "ColProPro: ScatterPlot ON: ColName = " << ColName << ", ScatterPlotName = " << scattermodel->ScatterPlotName << endl;
+	}
+	if( (scattermodel->JawImpact_on) && (scattermodel->JawImpactName == ColName) ){
+		jaw_impact = 1;
+		//~ cout << "ColProPro: JawImpact ON: ColName = " << ColName << ", JawImpactName = " << scattermodel->JawImpactName << endl;
+	}
+	
+	const Aperture *colap = C->GetAperture();
 		
 	//set scattering model
 	if (scattermodel == NULL){
@@ -96,7 +116,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		//Note that pathlength should be calculated with E0
 		
 		double xlen = scattermodel->PathLength(C->p, E0);
-		//~ double minLength = min(xlen, lengthtogo);	
 				
 		double E2 = 0;
 				
@@ -106,7 +125,18 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		double zstep = step_size * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
 		p.x() += step_size * p.xp();
 		p.y() += step_size * p.yp();
-
+		
+//Jaw Impact
+		if(jaw_impact && z == 0){
+				scattermodel->JawImpact(p);
+		}
+		
+//Scatter Plot
+		if(scatter_plot && z == 0){
+		//~ if(scatter_plot){
+				scattermodel->ScatterPlot(p, z);
+		}
+		
 //Energy Loss		
 		if(smode == 1 || smode == 4){
 			//Advanced
@@ -136,13 +166,14 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 //Check if (returned to aperture) OR (travelled through length) 
 		z+=zstep;
-		//~ if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) ) {
-		if( (colap->PointInside( (p.x()), (p.y()), z)) ) {
-			p.x() += p.xp()*lengthtogo;
-			p.y() += p.yp()*lengthtogo;
-			return false;					
-		}				
+		if(scatter_plot){scattermodel->ScatterPlot(p, z);}
 		
+		if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) ) {
+			//disabling agrees with assmann test case for 0.1m bins
+			//~ p.x() += p.xp()*lengthtogo;
+			//~ p.y() += p.yp()*lengthtogo;			
+			return false;					
+		}						
 
 //Scattering - use E2
 		if(interacted){
@@ -154,16 +185,20 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			}
 		}
 		
-		//if E < 350 GeV || E < 0 || E < 0.1 GeV
-		//~ if( (p.dp() < -0.95) || (p.dp() < -1) || (p.dp() < ((0.1/E0) - 1)) ){
 		if( (p.dp() < -0.95) || (p.dp() < -1) ){
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
+			//~ if(scatter_plot){scattermodel->ScatterPlot(p, z);}
 			if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
 			return true;
 		}
 		
-		lengthtogo -= step_size;		
+		lengthtogo -= step_size;
+
+//Scatter Plot
+		//~ if(scatter_plot){
+				//~ scattermodel->ScatterPlot(p, z);
+		//~ }		
 	}
 }
 

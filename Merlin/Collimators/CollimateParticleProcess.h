@@ -154,6 +154,8 @@ protected:
 	
 	// 0 when no dustbin is set
     bool dustset;
+    
+    const double GetBinSize(){return bin_size;}
 
 private:
 
@@ -163,7 +165,8 @@ private:
     void bin_lost_output(const PSvectorArray& lostb); 
 
     bool scatter;
-    double bin_size;
+    double bin_size;		// size of bins
+    double step_size;		// step size to handle when the collimator cannot be split equally into bins
     bool Imperfections;
 
     double Xr; // radiation length    
