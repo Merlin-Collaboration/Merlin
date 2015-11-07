@@ -25,11 +25,17 @@
 
 #include "Random/RandomNG.h"
 
+using namespace ParticleTracking;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
 
-ScatteringModel::ScatteringModel(){}
+ScatteringModel::ScatteringModel()
+{
+	//~ ScatteringModelTurn = 1;	
+	ScatterPlot_on = 0;
+	JawImpact_on = 0;
+}
 
 double ScatteringModel::PathLength(Material* mat, double E0){ 
 	
@@ -101,12 +107,9 @@ double ScatteringModel::PathLength(Material* mat, double E0){
 		 		
 	}
 	
-	//~ std::cout << "\nScatteringModel::PathLength: calculating lambda " << endl;	
 	//Calculate mean free path
-	//~ lambda=(mat->GetAtomicNumber())/(sigma*mat->GetDensity()*(1.E-22*Avogadro));
 	lambda = CurrentCS->GetTotalMeanFreePath();
 	//~ std::cout << "ScatteringModel::PathLength: lambda = " << lambda << endl;
-	//~ std::cout << "ScatteringModel::PathLength: returning mean free path " << endl;
 	return -(lambda)*log(RandomNG::uniform(0,1));
 }             
 
@@ -223,38 +226,15 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, 
 	p.xp () += theta_plane_x; 
 	p.y ()  += y_plane;
 	p.yp () += theta_plane_y; 
-	//~ std::cout << "ScatteringModel::Straggle: p.x() = " << p.x() << std::endl;
 	
  }
 
 
 bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E){ 
-	//~ std::cout << "\nScatteringModel::ParticleScatter" << std::endl;
-		
-	//~ CrossSections* CrossSec = CS_iterator->second;
-	//~ double sigma_pN_total = CrossSec->Get_sig_pN_tot();
-	//~ double sigma_Rutherford = CrossSec->Get_sig_R();	
-	
-	//~ std::cout << "ScatteringModel::ParticleScatter: total cross section = " << (sigma_pN_total + sigma_Rutherford) << std::endl;
 
-	//~ double r = RandomNG::uniform(0,1) * (sigma_pN_total + sigma_Rutherford);		
-	//~ vector<ScatteringProcess*>::iterator spit;
-	//~ for(spit = Processes.begin(); spit != Processes.end(); spit++){
-		//~ std::cout << "ScatteringModel::ParticleScatter r = " << r << "\tsigma = " << (*spit)->sigma << std::endl;
-		//~ r -= (*spit)->sigma;
-		//~ std::cout << "ScatteringModel::ParticleScatter r-sigma = " << r << "\tsigma = " << (*spit)->sigma << std::endl;
-		//~ if( (r<0) || (spit == Processes.end()) )
-	    //~ {
-			//~ //std::cout << "ScatteringModel::ParticleScatter: SCATTERED" << std::endl;
-	        //~ return (*spit)->Scatter(p, E0);
-	    //~ }
-	//~ }
-	
 	double r = RandomNG::uniform(0,1);
 	for(int i = 0; i<fraction.size(); i++)  
 	{ 
-		//std::cout << "ScatteringModel::ParticleScatter: p.x() = " << p.x()<< std::endl;
-		//std::cout << "ScatteringModel::ParticleScatter r = " << r << " fraction[i] = " << fraction[i] << std::endl;
 	    r -= fraction[i]; 
 	    if(r<0)
 	    {
@@ -263,15 +243,11 @@ bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E){
 	}
 	
 	cout << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = " << r << endl;
-	//~ cout << "\n(sigma_pN_total + sigma_Rutherford) = " << (sigma_pN_total + sigma_Rutherford) << endl;
-	
-	//~ return (*spit)->Scatter(p, E0);
+
 	exit(EXIT_FAILURE);
 }
 
 void ScatteringModel::DeathReport(PSvector& p, double x, double position, vector<double>& lost){
-    //cout << " particle absorbed\n";
-    //~ std::cout << "\nScatteringModel::DeathReport" << std::endl;
 	double pos = x + position;
 	lost.push_back(pos);
 }
@@ -279,4 +255,83 @@ void ScatteringModel::DeathReport(PSvector& p, double x, double position, vector
 void ScatteringModel::SetScatterType(int st){	
 	ScatteringPhysicsModel = st;	
 }
+
+void ScatteringModel::ScatterPlot(Particle& p, double z){
 	
+	ScatterPlotData* temp = new ScatterPlotData;
+	(*temp).ID = p.id();
+	(*temp).x = p.x();
+	(*temp).xp = p.xp();
+	(*temp).y = p.y();
+	(*temp).yp = p.yp();
+	(*temp).z = z;
+	
+	StoredScatterPlotData.push_back(temp);
+}
+
+void ScatteringModel::JawImpact(Particle& p){
+	
+	JawImpactData* temp = new JawImpactData;
+	(*temp).ID = p.id();
+	(*temp).x = p.x();
+	(*temp).xp = p.xp();
+	(*temp).y = p.y();
+	(*temp).yp = p.yp();
+	(*temp).ct = p.ct();
+	(*temp).dp = p.dp();
+	
+	StoredJawImpactData.push_back(temp);
+}
+	
+	
+void ScatteringModel::SetScatterPlot(string name, bool single_turn){
+	ScatterPlotName = name;
+	ScatterPlot_on = 1;
+}
+
+void ScatteringModel::SetJawImpact(string name, bool single_turn){
+	JawImpactName = name;
+	JawImpact_on = 1;
+}
+
+void ScatteringModel::OutputScatterPlot(std::ostream* os){
+	
+	for(vector <ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its != StoredScatterPlotData.end(); ++its)
+	{
+		(*os) << setw(10) << setprecision(20) << left << (*its)->ID;
+		(*os) << setw(30) << setprecision(20) << left << (*its)->z;
+		(*os) << setw(30) << setprecision(20) << left << (*its)->y;
+		//~ (*os) << setw(16) << left << (*its).Turn;
+		//~ (*os) << setw(16) << left << (*its)->ID;
+		//~ (*os) << setw(16) << left << (*its)->x;
+		//~ (*os) << setw(16) << left << (*its)->xp;
+		//~ (*os) << setw(16) << left << (*its)->y;
+		//~ (*os) << setw(16) << left << (*its)->yp;
+		//~ (*os) << setw(16) << left << (*its)->z;
+		(*os) << endl;
+	}	
+	
+	// CLEAR STORED SCATTERPLOT DATA - this allows a new data set each turn in user code
+	StoredScatterPlotData.clear();
+
+}
+
+void ScatteringModel::OutputJawImpact(std::ostream* os){
+	
+	for(vector <JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end(); ++its)
+	{
+		//~ (*os) << setw(16) << left << (*its).Turn;
+		(*os) << setw(16) << left << (*its)->ID;
+		(*os) << setw(16) << left << (*its)->x;
+		(*os) << setw(16) << left << (*its)->xp;
+		(*os) << setw(16) << left << (*its)->y;
+		(*os) << setw(16) << left << (*its)->yp;
+		(*os) << setw(16) << left << (*its)->ct;
+		(*os) << setw(16) << left << (*its)->dp;
+		(*os) << endl;
+	}	
+		
+	// CLEAR STORED JAWIMPACT DATA - this allows a new data set each turn in user code
+	StoredJawImpactData.clear();
+	
+}

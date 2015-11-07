@@ -3,7 +3,8 @@
 
 #include <map>
 #include <string>
-//#include <vector>
+#include <vector>
+
 #include "Collimators/Material.h"
 
 using namespace std;

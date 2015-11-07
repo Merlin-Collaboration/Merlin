@@ -1,12 +1,14 @@
-#include "Collimators/MaterialDatabase.h"
-#include "Collimators/Material.h"
-#include "Collimators/MaterialMixture.h"
-#include "NumericalUtils/PhysicalUnits.h"
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <map>
 #include <algorithm>
+
+#include "Collimators/MaterialDatabase.h"
+#include "Collimators/MaterialMixture.h"
+#include "Collimators/CompositeMaterial.h"
+
+#include "NumericalUtils/PhysicalUnits.h"
 
 using namespace std;
 using namespace PhysicalUnits;
@@ -21,7 +23,7 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 //ALL CROSS SECTIONS IN BARNS!
 
 	//new Material(Name, A, AN, SE, SI, SR, dE, X, rho, sig);
-	//Beryllium
+	//Beryllium - using constructor rather than addinf each variable
 	Material* Be = new Material("Beryllium", "Be", 9.012182, 4, 0.069, 0.199, 0.000035, 0.55, 651900, 1848, 3.08E7);	
 	Be->SetSixtrackTotalNucleusCrossSection(0.268);
 	Be->SetSixtrackNuclearSlope(74.7);
@@ -81,7 +83,8 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 	O->SetSymbol("O");
 	O->SetSixtrackTotalNucleusCrossSection(O->CalculateSixtrackTotalNucleusCrossSection());
 	O->SetSixtrackInelasticNucleusCrossSection(O->CalculateSixtrackInelasticNucleusCrossSection());
-	O->SetSixtrackRutherfordCrossSection(O->CalculateSixtrackRutherfordCrossSection());
+	//~ O->SetSixtrackRutherfordCrossSection(O->CalculateSixtrackRutherfordCrossSection());
+	O->SetSixtrackRutherfordCrossSection(0.0133766);
 	O->SetSixtrackdEdx(O->CalculateSixtrackdEdx());
 	O->SetConductivity(1);	//See here
 	O->SetRadiationLength(O->CalculateRadiationLength());
@@ -186,7 +189,8 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 	Mo->SetSymbol("Mo");
 	Mo->SetSixtrackTotalNucleusCrossSection(Mo->CalculateSixtrackTotalNucleusCrossSection());
 	Mo->SetSixtrackInelasticNucleusCrossSection(Mo->CalculateSixtrackInelasticNucleusCrossSection());
-	Mo->SetSixtrackRutherfordCrossSection(Mo->CalculateSixtrackRutherfordCrossSection());
+	//~ Mo->SetSixtrackRutherfordCrossSection(Mo->CalculateSixtrackRutherfordCrossSection());
+	Mo->SetSixtrackRutherfordCrossSection(0.264483);
 	Mo->SetSixtrackdEdx(Mo->CalculateSixtrackdEdx());
 //	Mo->rho=10.2;
 	Mo->SetConductivity(1.87E7);
@@ -302,7 +306,8 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 	* Copper + Aluminium Oxide powder 
 	* Glidcop - 99.72% Copper + 0.28% Aluminium Oxide for Glidcop-15 by mass
 	*/
-	MaterialMixture* Glidcop = new MaterialMixture();
+	//~ MaterialMixture* Glidcop = new MaterialMixture();
+	CompositeMaterial* Glidcop = new CompositeMaterial();
 	Glidcop->SetName("Glidcop");
 	Glidcop->SetSymbol("GCOP");
 	double Al_M = 0.4 * Al->GetAtomicNumber();
@@ -310,15 +315,30 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 	Glidcop->AddMaterialByMassFraction(Cu,0.9972);
 	Glidcop->AddMaterialByMassFraction(Al,0.0028 * Al_M / (Al_M + O_M));
 	Glidcop->AddMaterialByMassFraction(O,0.0028 * O_M / (Al_M + O_M));
+
+	Glidcop->SetDensity(8930);
+	Glidcop->SetConductivity(5.38E7);	//CERN-ATS-2011-224
+	
 	Glidcop->Assemble();
 
-	Glidcop->SetDensity(8900);
-	Glidcop->SetConductivity(5.38E7);	//CERN-ATS-2011-224
-	Glidcop->SetMeanExcitationEnergy(Glidcop->CalculateMeanExcitationEnergy());
-	Glidcop->SetRadiationLength(Glidcop->CalculateRadiationLength());
-	Glidcop->SetElectronDensity(Glidcop->CalculateElectronDensity());
-	Glidcop->SetPlasmaEnergy(Glidcop->CalculatePlasmaEnergy());
-	Glidcop->SetSixtrackdEdx(Glidcop->CalculateSixtrackdEdx());
+	//~ Glidcop->VerifyMaterial();
+
+// not needed for composite
+	//~ Glidcop->SetMeanExcitationEnergy(Glidcop->CalculateMeanExcitationEnergy());
+	//~ Glidcop->SetRadiationLength(Glidcop->CalculateRadiationLength());
+	//~ Glidcop->SetElectronDensity(Glidcop->CalculateElectronDensity());
+	//~ Glidcop->SetPlasmaEnergy(Glidcop->CalculatePlasmaEnergy());
+	//~ Glidcop->SetSixtrackdEdx(Glidcop->CalculateSixtrackdEdx());
+	
+	// Test Mixture function
+	vector< pair<string,double> > els = Glidcop->GetConstituentElements();
+	vector< pair<string,double> >::iterator el_it;
+	for(el_it = els.begin(); el_it != els.end(); ++el_it){
+		std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
+	}
+	
+	DumpMaterialProperties();
+	
 	db.insert(pair<string,Material*>(Glidcop->GetSymbol(),Glidcop));
 }
 

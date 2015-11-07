@@ -1,8 +1,10 @@
-#include "Collimators/Material.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
 #include <cmath>
 #include <iostream>
+
+#include "Collimators/Material.h"
+
+#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalUtils/PhysicalConstants.h"
 
 using namespace std;
 using namespace PhysicalConstants;
@@ -121,11 +123,13 @@ double Material::CalculateSixtrackRutherfordCrossSection()
 	double expC = -0.856e-3 * pow(R,2);
 	const double C = pow(PlanckConstantBar*SpeedOfLight / (ElectronCharge*1e9 * 0.001 * 1e-28),2);
 	const double PiAlpha = 4*pi*pow(FineStructureConstant,2);
-	return 1;
+	return 0;
 }
 
-double Material::CalculateSixtrackdEdx()
+double Material::CalculateSixtrackdEdx(double E)
 {
+	
+	
 	//Since the numbers in sixtrack make no sense, what can be done here?
 	return 1;
 }

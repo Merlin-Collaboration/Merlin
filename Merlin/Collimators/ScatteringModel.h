@@ -9,6 +9,8 @@
 
 #include "BeamModel/PSvector.h"
 
+#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
+
 #include "Collimators/Material.h"
 #include "Collimators/ScatteringProcess.h"
 
@@ -17,8 +19,30 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include "NumericalUtils/NumericalConstants.h"
 
-
 namespace Collimation {
+	
+struct JawImpactData{
+	//~ int Turn;
+	int ID;
+	double x;
+	double xp;
+	double y;
+	double yp;
+	double ct;
+	double dp;	
+};
+
+struct ScatterPlotData{
+	//~ int Turn;
+	int ID;
+	double x;
+	double xp;
+	double y;
+	double yp;
+	double z;
+	//~ double ct;
+	//~ double dp;		
+};
 
 class ScatteringModel
 {
@@ -28,21 +52,12 @@ public:
 	// Constructor
 	ScatteringModel();
 
-	// Add ScatteringProcesses
-	void AddProcess(Collimation::ScatteringProcess* S){ Processes.push_back(S); fraction.push_back(0); }
-	void ClearProcesses(){Processes.clear();}
-	
+// Collimation Functions	
 	// Set ScatterType
 	void SetScatterType(int st);
 	
 	// Calculate the particle path length in given material using scattering processes
 	double PathLength(Material* mat, double E0);
-
-	// Function performs scattering and returns true if inelastic scatter
-	bool ParticleScatter(PSvector& p, Material* mat, double E);
-
-	// Used for output
-	void DeathReport(PSvector& p, double x, double position, vector<double>& lost);
 	
 	// Energy loss via ionisation
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0, double E1);
@@ -52,6 +67,34 @@ public:
 
 	// Multiple Coulomb scattering
 	void Straggle(PSvector& p, double x, Material* mat, double E1, double E2);
+	
+	// Function performs scattering and returns true if inelastic scatter
+	bool ParticleScatter(PSvector& p, Material* mat, double E);
+
+	// Used for output
+	void DeathReport(PSvector& p, double x, double position, vector<double>& lost);
+
+// Other Functions
+
+	// Add/clear ScatteringProcesses
+	void AddProcess(Collimation::ScatteringProcess* S){ Processes.push_back(S); fraction.push_back(0); }
+	void ClearProcesses(){Processes.clear();}
+
+	// Scatter plot
+	void ScatterPlot(ParticleTracking::Particle& p, double z);
+	void SetScatterPlot(string name, bool single_turn = 1);
+	void OutputScatterPlot(std::ostream* os);
+	string ScatterPlotName;
+	bool ScatterPlot_on;
+	vector <ScatterPlotData*> StoredScatterPlotData;
+	
+	// Jaw impact
+	void JawImpact(ParticleTracking::Particle& p);
+	void SetJawImpact(string name, bool single_turn = 1);
+	void OutputJawImpact(std::ostream* os);
+	string JawImpactName;
+	bool JawImpact_on;
+	vector <JawImpactData*> StoredJawImpactData;
 
 	// vector holding all scattering processes
 	vector <Collimation::ScatteringProcess*> Processes;
@@ -70,7 +113,6 @@ private:
 
 	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN	
     int ScatteringPhysicsModel;
-
 };
 
 } //end namespace Collimation

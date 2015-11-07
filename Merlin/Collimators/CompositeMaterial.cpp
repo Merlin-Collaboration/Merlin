@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-#include "Collimators/MaterialMixture.h"
+#include "Collimators/CompositeMaterial.h"
 
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
@@ -18,7 +18,7 @@ using namespace PhysicalUnits;
 * This function adds materials by mass fraction
 * i.e. if 5% of the material by mass is element x, the double here is 0.05, etc.
 */
-bool MaterialMixture::AddMaterialByMassFraction(Material* m ,double f)
+bool CompositeMaterial::AddMaterialByMassFraction(Material* m ,double f)
 {
 	if(AssembledByNumber)
 	{
@@ -43,7 +43,7 @@ bool MaterialMixture::AddMaterialByMassFraction(Material* m ,double f)
 * This function adds materials by number density fraction
 * i.e. if 5% of the component atoms are element m, the double here is 0.05, etc.
 */
-bool MaterialMixture::AddMaterialByNumberFraction(Material* m,double f)
+bool CompositeMaterial::AddMaterialByNumberFraction(Material* m,double f)
 {
 	if(AssembledByMass)
 	{
@@ -60,7 +60,7 @@ bool MaterialMixture::AddMaterialByNumberFraction(Material* m,double f)
 	return test.second;
 }
 
-double MaterialMixture::CalculateElectronDensity()
+double CompositeMaterial::CalculateElectronDensity()
 {
 	/*
 	* 1: Get weighted mean of the AtomicNumber
@@ -81,12 +81,12 @@ double MaterialMixture::CalculateElectronDensity()
 }
 
 //returns the Plasma energy in GeV
-double MaterialMixture::CalculatePlasmaEnergy()
+double CompositeMaterial::CalculatePlasmaEnergy()
 {
 	return (PlanckConstantBar * sqrt((ElectronDensity * pow(ElectronCharge,2)) / (ElectronMass * FreeSpacePermittivity)))/ElectronCharge*eV;
 }
 
-double MaterialMixture::CalculateMeanExcitationEnergy()
+double CompositeMaterial::CalculateMeanExcitationEnergy()
 {
 	/*
 	* Here we follow the form given in:
@@ -121,7 +121,7 @@ double MaterialMixture::CalculateMeanExcitationEnergy()
 	return exp(ISum/ZA);
 }
 
-double MaterialMixture::CalculateSixtrackdEdx()
+double CompositeMaterial::CalculateSixtrackdEdx()
 {
 	/*
 	* pdg states for a mixture the following is an appoximation:
@@ -141,7 +141,7 @@ double MaterialMixture::CalculateSixtrackdEdx()
 	return dEdx;
 }
 
-double MaterialMixture::CalculateRadiationLength()
+double CompositeMaterial::CalculateRadiationLength()
 {
 /*
 * pdg states for a mixture the following is an appoximation:
@@ -164,52 +164,52 @@ double MaterialMixture::CalculateRadiationLength()
 /*
 * Set parameters
 */
-void MaterialMixture::SetName(string p)
+void CompositeMaterial::SetName(string p)
 {
 	Name = p;
 }
 
-void MaterialMixture::SetSymbol(string p)
+void CompositeMaterial::SetSymbol(string p)
 {
 	Symbol = p;
 }
 
-void MaterialMixture::SetConductivity(double p)
+void CompositeMaterial::SetConductivity(double p)
 {
 	Conductivity = p;
 }
 
-void MaterialMixture::SetRadiationLength(double p)
+void CompositeMaterial::SetRadiationLength(double p)
 {
 	X0 = p;
 }
 
-void MaterialMixture::SetDensity(double p)
+void CompositeMaterial::SetDensity(double p)
 {
 	Density = p;
 }
 
-void MaterialMixture::SetElectronDensity(double p)
+void CompositeMaterial::SetElectronDensity(double p)
 {
 	ElectronDensity = p;
 }
 /*
-void MaterialMixture::SetElectronCriticalEnergy(double p)
+void CompositeMaterial::SetElectronCriticalEnergy(double p)
 {
 	ElectronCriticalEnergy = p;
 }
 */
-void MaterialMixture::SetMeanExcitationEnergy(double p)
+void CompositeMaterial::SetMeanExcitationEnergy(double p)
 {
 	MeanExcitationEnergy = p;
 }
 
-void MaterialMixture::SetPlasmaEnergy(double p)
+void CompositeMaterial::SetPlasmaEnergy(double p)
 {
 	PlasmaEnergy = p;
 }
 
-void MaterialMixture::SetSixtrackdEdx(double p)
+void CompositeMaterial::SetSixtrackdEdx(double p)
 {
 	dEdx = p;
 }
@@ -217,95 +217,101 @@ void MaterialMixture::SetSixtrackdEdx(double p)
 /*
 * Accessors
 */
-string MaterialMixture::GetName() const
+string CompositeMaterial::GetName() const
 {
 	return Name;
 }
 
-string MaterialMixture::GetSymbol() const
+string CompositeMaterial::GetSymbol() const
 {
 	return Symbol;
 }
 
-double MaterialMixture::GetConductivity() const
+double CompositeMaterial::GetConductivity() const
 {
 	return Conductivity;
 }
 
-double MaterialMixture::GetRadiationLength() const
+double CompositeMaterial::GetRadiationLength() const
 {
 	return X0;
 }
 
-double MaterialMixture::GetRadiationLengthInM() const
+double CompositeMaterial::GetRadiationLengthInM() const
 {
 	return X0*0.001/Density;
 }
 
-double MaterialMixture::GetDensity() const
+double CompositeMaterial::GetDensity() const
 {
 	return Density;
 }
 
-double MaterialMixture::GetElectronDensity() const
+double CompositeMaterial::GetElectronDensity() const
 {
 	return ElectronDensity;
 }
 /*
-double MaterialMixture::GetElectronCriticalEnergy() const
+double CompositeMaterial::GetElectronCriticalEnergy() const
 {
 	return ElectronCriticalEnergy;
 }
 */
-double MaterialMixture::GetMeanExcitationEnergy() const
+double CompositeMaterial::GetMeanExcitationEnergy() const
 {
 	return MeanExcitationEnergy;
 }
 
-double MaterialMixture::GetPlasmaEnergy() const
+double CompositeMaterial::GetPlasmaEnergy() const
 {
 	return PlasmaEnergy;
 }
 
-double MaterialMixture::GetSixtrackdEdx() const
+double CompositeMaterial::GetSixtrackdEdx() const
 {
 	return dEdx;
 }
 
 //Random element
-double MaterialMixture::GetAtomicNumber() const
+double CompositeMaterial::GetAtomicNumber() const
 {
-	return CurrentMaterial->GetAtomicNumber();
+	//~ return CurrentMaterial->GetAtomicNumber();
+	return AtomicNumber;
 }
 
 //Random element
-double MaterialMixture::GetAtomicMass() const
+double CompositeMaterial::GetAtomicMass() const
 {
-	return CurrentMaterial->GetAtomicMass();
+	//~ return CurrentMaterial->GetAtomicMass();
+	return AtomicMass;
 }
 
 //Random element
-double MaterialMixture::GetSixtrackTotalNucleusCrossSection() const
+double CompositeMaterial::GetSixtrackTotalNucleusCrossSection() const
 {
-	return CurrentMaterial->GetSixtrackTotalNucleusCrossSection();
+	//~ return CurrentMaterial->GetSixtrackTotalNucleusCrossSection();
+	return sigma_pN_total;
 }
 
 //Random element
-double MaterialMixture::GetSixtrackInelasticNucleusCrossSection() const
+double CompositeMaterial::GetSixtrackInelasticNucleusCrossSection() const
 {
-	return CurrentMaterial->GetSixtrackInelasticNucleusCrossSection();
+	//~ return CurrentMaterial->GetSixtrackInelasticNucleusCrossSection();
+	return sigma_pN_inelastic;
 }
 
 //Random element
-double MaterialMixture::GetSixtrackRutherfordCrossSection() const
+double CompositeMaterial::GetSixtrackRutherfordCrossSection() const
 {
-	return CurrentMaterial->GetSixtrackRutherfordCrossSection();
+	//~ return CurrentMaterial->GetSixtrackRutherfordCrossSection();
+	return sigma_Rutherford;
 }
 
 //Random element
-double MaterialMixture::GetSixtrackNuclearSlope() const
+double CompositeMaterial::GetSixtrackNuclearSlope() const
 {
-	return CurrentMaterial->GetSixtrackNuclearSlope();
+	//~ return CurrentMaterial->GetSixtrackNuclearSlope();
+	return b_N;
 }
 
 /*
@@ -313,7 +319,7 @@ double MaterialMixture::GetSixtrackNuclearSlope() const
  * returns true if the material is good.
  * returns false if the material is bad.
  */
-bool MaterialMixture::VerifyMaterial() const
+bool CompositeMaterial::VerifyMaterial() const
 {
         bool verification = true;
 
@@ -360,7 +366,7 @@ bool MaterialMixture::VerifyMaterial() const
         return verification;
 }
 
-bool MaterialMixture::Assemble()
+bool CompositeMaterial::Assemble()
 {
     std::map<Material*,std::pair<double,double> >::iterator MaterialIt;
     MaterialIt = MixtureMap.begin();
@@ -385,20 +391,21 @@ bool MaterialMixture::Assemble()
 		//Needs 2 passes
         	while(MaterialIt != MixtureMap.end())
 	        {
-			CurrentFraction = MaterialIt->second.second / MaterialIt->first->GetAtomicNumber();
-			Total += CurrentFraction;
-			FractionVector.push_back(CurrentFraction);
-	                MaterialIt++;
+				CurrentFraction = MaterialIt->second.second / MaterialIt->first->GetAtomicNumber();
+				Total += CurrentFraction;
+				FractionVector.push_back(CurrentFraction);
+	            MaterialIt++;
 	        }
 
 		MaterialIt = MixtureMap.begin();
 		FractionVectorIt = FractionVector.begin();
         	while(MaterialIt != MixtureMap.end())
 	        {
-			MaterialIt->second.first = *FractionVectorIt / Total;
-	                MaterialIt++;
-	                FractionVectorIt++;
+				MaterialIt->second.first = *FractionVectorIt / Total;
+	            MaterialIt++;
+	            FractionVectorIt++;
 	        }
+	    CalculateAllWeightedVariables();
 		return true;
 	}
 	else if(AssembledByNumber)
@@ -410,6 +417,7 @@ bool MaterialMixture::Assemble()
 	        {
 	        	        MaterialIt++;
 	        }
+	    CalculateAllWeightedVariables();
 		return true;
 	}
 	else
@@ -419,7 +427,7 @@ bool MaterialMixture::Assemble()
 	}
 }
 
-Material* MaterialMixture::SelectRandomMaterial()
+Material* CompositeMaterial::SelectRandomMaterial()
 {
 	double x = RandomNG::uniform(0,1);
 	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
@@ -435,27 +443,65 @@ Material* MaterialMixture::SelectRandomMaterial()
 	return CurrentMaterial;
 }
 
-Material* MaterialMixture::GetCurrentMaterial()
+Material* CompositeMaterial::GetCurrentMaterial()
 {
 	return CurrentMaterial;
 }
 
-bool MaterialMixture::IsMixture() const
+bool CompositeMaterial::IsMixture() const
 {
 	return true;
 }
 
-vector< pair<string,double> > MaterialMixture::GetConstituentElements()
+vector< pair<string,double> > CompositeMaterial::GetConstituentElements()
 {
 	std::map< Material*,std::pair<double,double> >::const_iterator MaterialIt;
-	MaterialIt = MixtureMap.begin();
+	
 	vector< pair<string,double> > elements;
 	std::pair<string,double> test;
 	
-	for(MaterialIt; MaterialIt != MixtureMap.end(); ++MaterialIt){		
+	for(MaterialIt = MixtureMap.begin(); MaterialIt != MixtureMap.end(); ++MaterialIt){		
 		test = make_pair(MaterialIt->first->GetSymbol(), MaterialIt->second.second);
 		elements.push_back(test);
 	}
 	
 	return elements;	
+}
+
+void CompositeMaterial::CalculateAllWeightedVariables()
+{
+	// already done
+	SetElectronDensity(CalculateElectronDensity());
+	SetPlasmaEnergy(CalculatePlasmaEnergy());
+	SetMeanExcitationEnergy(CalculateMeanExcitationEnergy());
+	SetRadiationLength(CalculateRadiationLength());
+	SetSixtrackdEdx(CalculateSixtrackdEdx());
+	
+	double wb_n, wsig_R, wsig_tot, wsig_E, wsig_I, wA, wZ = 0.0;
+	
+	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
+	while(MaterialIt != MixtureMap.end())
+	{
+		//value += mass_fraction (MaterialIt->second.second) * element_value
+		//~ value += (MaterialIt->second.second * MaterialIt->first->GetValue());
+		wA += (MaterialIt->second.second * MaterialIt->first->GetAtomicMass());
+		wZ += (MaterialIt->second.second * MaterialIt->first->GetAtomicNumber());
+		wb_n += (MaterialIt->second.second * MaterialIt->first->GetSixtrackNuclearSlope());
+		wsig_R += (MaterialIt->second.second * MaterialIt->first->GetSixtrackRutherfordCrossSection());
+		wsig_tot += (MaterialIt->second.second * MaterialIt->first->GetSixtrackTotalNucleusCrossSection());
+		wsig_E += (MaterialIt->second.second * MaterialIt->first->GetSixtrackElasticNucleusCrossSection());
+		wsig_I += (MaterialIt->second.second * MaterialIt->first->GetSixtrackInelasticNucleusCrossSection());
+				
+		MaterialIt++;
+	}
+		
+	// Set weighted values
+	SetSixtrackNuclearSlope(wb_n);
+	SetSixtrackRutherfordCrossSection(wsig_R);
+	SetSixtrackTotalNucleusCrossSection(wsig_tot);
+	SetSixtrackInelasticNucleusCrossSection(wsig_I);
+	SetSixtrackElasticNucleusCrossSection(wsig_E);
+	SetAtomicMass(wA);
+	SetAtomicNumber(wZ);		
 }

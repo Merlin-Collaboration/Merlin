@@ -1,5 +1,5 @@
-#ifndef _MaterialMixture_h_
-#define _MaterialMixture_h_
+#ifndef _CompositeMaterial_h_
+#define _CompositeMaterial_h_
 
 #include <string>
 #include <map>
@@ -9,18 +9,21 @@
 
 using namespace std;
 
-/*
-* A material mixture is a mixture of assorted materials, e.g. a metal alloy
-* It contains a map with the component materials.
-* Since it inherits from the base Material class, the same functions can be used in scattering, etc.
-* Some properties will be the weighted mean of the component properties.
-* Some will be discrete values where a material selection must be made at random.
-* To support this the Material functions are virtual, and are overridden here.
-*/
-class MaterialMixture : public Material
+// A CompositeMaterial is a composite of assorted materials
+// and contains a map of constituent materials.
+// It is similar to a MaterialMixture however it uses bulk material
+// properties as well as mass fraction weighted values for atomic mass,
+// number, etc, and all cross sections.
+// This makes the CompositeMaterial compatible with CrossSections.
+// Note that scattering will be performed from imaginary composite 
+// nuclei rather than the constituent nuclei of the composite, unless
+// this is taken into account by creating CrossSections for each 
+// constituent and using the SelectRandomMaterial() function.
+
+class CompositeMaterial : public Material
 {
 public:
-	MaterialMixture() : Material(),Assembled(false),AssembledByNumber(false),AssembledByMass(false) {};
+	CompositeMaterial() : Material(),Assembled(false),AssembledByNumber(false),AssembledByMass(false) {};
 
 	double CalculateElectronDensity();
 	double CalculatePlasmaEnergy();
@@ -28,6 +31,14 @@ public:
 
 	double CalculateRadiationLength();
 	double CalculateSixtrackdEdx();
+	
+	//This calculates and sets all variables using mass fraction weighting
+	void CalculateAllWeightedVariables();
+	
+	//New weighed calculate functions
+	double CalculateWeightedA();
+	double CalculateWeightedZ();
+	double CalculateSixTrackElasticNucleusCrossSection();
 
 	void SetName(std::string);
 	void SetSymbol(std::string);

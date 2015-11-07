@@ -30,11 +30,11 @@ public:
 	virtual double CalculateMeanExcitationEnergy();
 	virtual double CalculateRadiationLength();
 
-	double CalculateSixtrackNuclearSlope();
-	double CalculateSixtrackTotalNucleusCrossSection();
-	double CalculateSixtrackInelasticNucleusCrossSection();
-	double CalculateSixtrackRutherfordCrossSection();
-	double CalculateSixtrackdEdx();
+	virtual double CalculateSixtrackNuclearSlope();
+	virtual double CalculateSixtrackTotalNucleusCrossSection();
+	virtual double CalculateSixtrackInelasticNucleusCrossSection();
+	virtual double CalculateSixtrackRutherfordCrossSection();
+	virtual double CalculateSixtrackdEdx(double E = 7E12);
 
 	virtual void SetAtomicNumber(double);
 	virtual void SetName(std::string);
@@ -99,7 +99,8 @@ public:
 protected:
 
 	//selected Sixtrack variable names in quotes
-	size_t AtomicNumber;		//Atomic number (Z)
+	//~ size_t AtomicNumber;		//Atomic number (Z) //allow doubles for CompositeMaterials
+	double AtomicNumber;		//Atomic number (Z)
 	double AtomicMass;		//Atomic mass (A)
 	string Name;			//Element/compound name
 	string Symbol;			//Elemental symbol: what input file will check for
