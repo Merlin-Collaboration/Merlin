@@ -61,7 +61,7 @@ namespace ParticleTracking {
 
 CollimateParticleProcess::CollimateParticleProcess (int priority, int mode, std::ostream* osp)
         : ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
-        createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false), dustset(0)
+        createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false), dustset(0), ColParProTurn(0), FirstElementSet(0)
 {}
 
 CollimateParticleProcess::~CollimateParticleProcess ()
@@ -87,6 +87,18 @@ void CollimateParticleProcess::InitialiseProcess (Bunch& bunch)
 
 void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
+	if(!FirstElementSet){
+		FirstElementName = component.GetName();
+		FirstElementS = component.GetComponentLatticePosition();
+		FirstElementSet = 1;
+		ColParProTurn = 1;
+		//~ cout << "ColParPro:: First Element: " << FirstElementName << ", at s = " << FirstElementS << endl;
+	}
+	else if(component.GetName() == FirstElementName && component.GetComponentLatticePosition() == FirstElementS){
+		++ColParProTurn;
+		//~ cout << "ColParPro:: Turn incrememented, number = " << ColParProTurn << endl;
+	}
+	
 	active = (currentBunch!=0) && (component.GetAperture()!=0);
 	if(active)
 	{
@@ -285,8 +297,14 @@ void CollimateParticleProcess::DoCollimation ()
 					(*p).ct() += (s-bin_size);
 				}
 
-				lost.push_back(*p);
-				if(dustset){outputdustbin->Dispose(*currentComponent, 0, (*p));}
+				lost.push_back(*p);				
+				if(dustset && !is_collimator){
+					
+					for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator){					
+						(*DustbinIterator)->Dispose(*currentComponent, 0, (*p), ColParProTurn);
+					}
+					
+				}
 				// This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster
 				p++;
 				if(pindex!=0)

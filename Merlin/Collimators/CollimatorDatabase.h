@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "AcceleratorModel/AcceleratorModel.h"
 #include "AcceleratorModel/StdComponent/Collimator.h"
@@ -38,18 +39,35 @@ struct CollimatorData
 	double j2_tilt;			//Collimator jaw 2 tilt
 	double length;			//Collimator length (m)
 	Material* JawMaterial;	//Collimator material
-	double sigma_x;			//Jaw x opening in number of sigmas
-	double sigma_y;			//Jaw y opening in number of sigmas
+	double sigma_x;			//Jaw x opening in number of sigmas - note that this is not sigma_x it is the sigma in the collimation plane
+	double sigma_y;			//Jaw y opening in number of sigmas - note that this is not sigma_y it is the sigma in the plane orthogonal to the collimation plane
 	double beta_x;			//Calculated x beta function at the collimator entrance
 	double beta_y;			//Calculated y beta function at the collimator entrance
 	double position;		//Length along the lattice, used to calculate the beta functions
 };
 
+//Struct for holding FLUKA data created by A. Valloni + HR
+struct FlukaData
+{
+	int id_coll;			//Collimator ID
+	string name;			//Collimator name
+	double position;		//Length along the lattice, used to calculate the beta functions
+	double angle;			//Collimator angle = tilt [rad]
+	double beta_x;			//Calculated x beta function at the collimator entrance [m]
+	double beta_y;			//Calculated y beta function at the collimator entrance [m]
+	double half_gap;		//Collimator half gap [m]
+	string material;		//Collimator material symbol
+	double length;			//Collimator length [m]	
+	double sig_x;			//Beam sigma_x value [m]
+	double sig_y;			//Beam sigma_y value [m]
+	double j1_tilt;			//Collimator jaw 1 tilt [rad]
+	double j2_tilt;			//Collimator jaw 2 tilt [rad]
+	double n_sig;			//Collimator halfgap in sigma
+};
+
 	CollimatorData* CollData;
 	size_t number_collimators;
 	bool use_sigma;
-
-
 
 	double ConfigureCollimators(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
 	void ConfigureCollimators(AcceleratorModel* model);
@@ -92,6 +110,10 @@ struct CollimatorData
 	//Set jaw position angle sigma.
 	void SetJawAngleError(double);
 	
+	//Vector to store FlukaData
+	vector<FlukaData*> StoredFlukaData;
+	//Function to output FlukaDatabase file
+	void OutputFlukaDatabase(std::ostream* os);
 	
 protected:
 

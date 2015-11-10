@@ -82,6 +82,10 @@ public:
 
     //	Unique index for an Accelerator component.
     static const int ID;
+    
+    // Collimator ID for Fluka output
+	virtual void SetCollID (int n){Coll_ID = n;}
+	virtual int GetCollID(){return Coll_ID;}
 
 	bool scatter_at_this_collimator;
 
@@ -95,7 +99,6 @@ public:
 
 
 private:
-
     double Xr;
 };
 

@@ -119,9 +119,13 @@ public:
     virtual double GetOutputBinSize() const;
     virtual void SetOutputBinSize(double);
     
-    virtual void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
+    //~ virtual void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
+    virtual void SetDustbin (Dustbin* odb){DustbinVector.push_back(odb); dustset=1;}
     
-    Dustbin* outputdustbin;
+    vector<Dustbin*> DustbinVector;
+    vector<Dustbin*>::iterator DustbinIterator;
+    
+    //~ Dustbin* outputdustbin;
 
 protected:
     
@@ -156,6 +160,11 @@ protected:
     bool dustset;
     
     const double GetBinSize(){return bin_size;}
+            
+    int ColParProTurn;
+    string FirstElementName;
+    double FirstElementS;
+    bool FirstElementSet;
 
 private:
 

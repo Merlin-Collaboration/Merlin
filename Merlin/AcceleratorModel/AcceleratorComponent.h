@@ -101,6 +101,12 @@ public:
 
     //Get the distance from the start of the lattice to the START of the element    
     double GetComponentLatticePosition() const;
+    
+    //	Collimator ID for FLUKA output AV+HR 09.11.15
+	//	N.B. These values can only be set or got in Collimator
+	void SetCollID (int n){Coll_ID = n;}
+	int GetCollID(){return Coll_ID;}
+	
 protected:
 
     //	Protected constructors used by derived classes.
@@ -123,6 +129,11 @@ protected:
     double position;
 	// beamline index associated with this component
 	size_t blI; 
+	
+	//	Collimator ID for FLUKA output AV+HR 09.11.15
+	//	N.B. These values can only be set or got in Collimator
+	int Coll_ID;
+	
 private:
 
     //Copy protection

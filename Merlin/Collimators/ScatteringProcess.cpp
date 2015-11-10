@@ -68,7 +68,7 @@ bool Rutherford::Scatter(PSvector& p, double E){
 	double TargetMass = AtomicMassUnit*mat->GetAtomicMass();
 	
 	ScatterStuff(p, t, TargetMass, E0);	
-	p.type() = 3;
+	p.type() = 6;
 		
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
@@ -87,7 +87,7 @@ void SixTrackRutherford::Configure(Material* matin, CrossSections* CSin){
 bool SixTrackRutherford::Scatter(PSvector& p, double E){	
 	
 	ScatterStuff(p, t, E0);	
-	p.type() = 3;
+	p.type() = 6;
 	
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
@@ -104,7 +104,7 @@ bool Elasticpn::Scatter(PSvector& p, double E){
 	t = cs->ElasticScatter->SelectT();
 	
 	ScatterStuff(p, t, AtomicMassUnit, E0);
-	p.type() = 1;
+	p.type() = 3;
 	
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
@@ -123,7 +123,7 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E){
 	t = -log(RandomNG::uniform(0,1))/b_pp;
 	
 	ScatterStuff(p, t, E0);
-	p.type() = 1;
+	p.type() = 3;
 	
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
@@ -143,7 +143,7 @@ bool ElasticpN::Scatter(PSvector& p, double E){
 	double TargetMass = AtomicMassUnit*mat->GetAtomicMass();
 	
 	ScatterStuff(p, t, TargetMass, E0);	
-	p.type() = 1;	
+	p.type() = 2;	
 	
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
@@ -162,7 +162,7 @@ void SixTrackElasticpN::Configure(Material* matin, CrossSections* CSin){
 bool SixTrackElasticpN::Scatter(PSvector& p, double E){
 	
 	ScatterStuff(p, t, E0);	
-	p.type() = 1;	
+	p.type() = 2;	
 	
 	double E3 = (1 + p.dp()) * E0;
 	if (E3 <= 0.1){return false;}
@@ -183,7 +183,7 @@ bool SingleDiffractive::Scatter(PSvector& p, double E){
 	double dp = m_rec * m_rec * E / com_sqd;
 	
 	ScatterStuff(dp, p, t, E0);	
-	p.type() = 2;
+	p.type() = 4;
 	p.sd() = 1;
 	
 	double E3 = (1 + p.dp()) * E0;
@@ -218,7 +218,7 @@ bool SixTrackSingleDiffractive::Scatter(PSvector& p, double E){
 	dp = xm2*E/com_sqd;
 	
 	ScatterStuff(dp, p, t, E0);	
-	p.type() = 2;
+	p.type() = 4;
 	p.sd() = 1;
 	
 	double E3 = (1 + p.dp()) * E0;
@@ -233,6 +233,7 @@ void Inelastic::Configure(Material* matin, CrossSections* CSin){
 	E0 = cs->Get_E0();
 }
 
-bool Inelastic::Scatter(PSvector& p, double E){		
+bool Inelastic::Scatter(PSvector& p, double E){	
+	p.type() = 1;	
 	return false;
 } // Particle is lost

@@ -42,10 +42,13 @@ struct LossData{
 	double length;
 	double lost;
 	int temperature;
+	int turn;
+	int coll_id;
+	double angle;
 	
-	LossData() : ElementName(), p(), s(), interval(), position(), length(), lost(), temperature() {}
+	LossData() : ElementName(), p(), s(), interval(), position(), length(), lost(), temperature(), turn(), coll_id(), angle() {}
 
-	void reset(){ElementName="_"; s=0; interval=0; position=0; length =0; lost=0; temperature=4;}
+	void reset(){ElementName="_"; s=0; interval=0; position=0; length=0; lost=0; temperature=4; turn=0; coll_id=0; angle=0;}
 	
 	bool operator<(LossData other) const
 	{
@@ -120,7 +123,7 @@ public:
 	virtual void Output(std::ostream* os){}
 
 	// Called from CollimateProtonProcess::DeathReport to add a particle to the dustbin
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle){}
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0){}
 
 	// Output type switch
 	OutputType otype;
@@ -152,7 +155,25 @@ public:
 
 	virtual void Finalise();
 	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle);
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
+	
+protected:
+
+private:
+
+};
+
+class FlukaDustbin : public Dustbin
+{
+
+public:
+
+	FlukaDustbin(OutputType otype = tencm);
+	~FlukaDustbin();
+
+	virtual void Finalise();
+	virtual void Output(std::ostream* os);
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
 	
 protected:
 

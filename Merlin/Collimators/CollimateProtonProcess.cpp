@@ -76,6 +76,8 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	double P0 = currentBunch->GetReferenceMomentum();	
 	double E0 = sqrt(P0*P0 + pow(PhysicalConstants::ProtonMassMeV*PhysicalUnits::MeV,2));
 	
+	//~ cout << "ColProPro: Turn = " << ColParProTurn << endl;
+	
 	bool scatter_plot = 0;
 	bool jaw_impact = 0;
 	
@@ -84,6 +86,10 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 	double z = currentBunch->int_s;
 	double lengthtogo = s-z;		
+	
+	//~ cout << "\n\t\tColPROPro z = " << z << endl;
+	//~ cout << "\t\tColPROPro s = " << s << endl;
+	//~ cout << "\t\tColPROPro lengthtogo = " << lengthtogo << endl;
 	
 	Collimator* C = static_cast<Collimator*> (currentComponent); 
 	
@@ -123,6 +129,11 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		double step_size = interacted ? xlen : lengthtogo;
 		
 		double zstep = step_size * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
+		
+		//~ cout << "\t\tColPROPro step_size = " << step_size << endl;
+		//~ cout << "\t\tColPROPro z+step_size = " << z+step_size << endl;
+		
+		
 		p.x() += step_size * p.xp();
 		p.y() += step_size * p.yp();
 		
@@ -153,7 +164,12 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		if(E2 <=1.0){
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-			if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
+			//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}
+			if(dustset){				
+				for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator){					
+						(*DustbinIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
+				}			
+			}
 			return true;
 		}	
 //MCS
@@ -180,7 +196,12 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			if(!scattermodel->ParticleScatter(p, C->p, E2)){		
 				p.ct() = z;
 				scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-				if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
+				//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}
+				if(dustset){					
+					for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator){					
+						(*DustbinIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
+					}					
+				}
 				return true;
 			}
 		}
@@ -189,7 +210,12 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
 			//~ if(scatter_plot){scattermodel->ScatterPlot(p, z);}
-			if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p);}
+			//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}if(dustset){					
+			if(dustset){					
+				for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator){					
+					(*DustbinIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
+				}					
+			}
 			return true;
 		}
 		
