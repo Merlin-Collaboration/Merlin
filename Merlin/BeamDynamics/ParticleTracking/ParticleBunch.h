@@ -146,6 +146,7 @@ public:
     size_t ScatteringPhysicsModel;
     double int_s;
     void SetIntS(double);
+    double GetIntS(){return int_s;};
 
     //Checks if the particle type is stable or not, returns true if the particle is considered stable.
     virtual bool IsStable() const;
