@@ -16,12 +16,7 @@
 #define BetatronTunes_h 1
 
 #include "AcceleratorModel/AcceleratorModel.h"
-
-#include "BeamDynamics/ParticleTracking/HollowELensProcess.h"
-
 #include "BeamModel/PSTypes.h"
-
-using namespace ParticleTracking;
 
 class BetatronTunes
 {
@@ -35,14 +30,10 @@ public:
 	double GetQy(){return Qy;}
 	double GetdQy(){return dQy;}
 
-	HollowELensProcess* myHELProcess = NULL;	
-	void SetHELProcess(HollowELensProcess* HELP){myHELProcess = HELP;}
-	
-    double FindTune(vector<double>& data);
-	
 private:
     AcceleratorModel* theModel;
     double p0;
+    double FindTune(vector<double>& data);
     void FFT(vector<double>& data);
     double amp(double a, double b, double c);
 };

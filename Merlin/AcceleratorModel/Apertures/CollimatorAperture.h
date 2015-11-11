@@ -34,7 +34,7 @@ double sinalpha;
 
 
 public:
-
+//~ double alpha;
 CollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
 
 //void SetJawLength(double);

@@ -15,7 +15,8 @@ cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 # Set the project name and options
 PROJECT(MERLIN)
 
-OPTION(ENABLE_EXAMPLES "Build the example programs. Default OFF" OFF)
+OPTION(ENABLE_EXAMPLES "Build the example gslprograms. Default OFF" OFF)
+OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" OFF)
 OPTION(ENABLE_TESTS "Build the library test programs. Default OFF" OFF)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(BUILD_DYNAMIC "Build Merlin as a dynamic library. Default ON" ON)
@@ -152,6 +153,12 @@ if(ENABLE_EXAMPLES)
 	add_subdirectory(MerlinExamples)
 endif()
 
+#Enable building of user created code in UserSim folder
+if(ENABLE_USER_RUNS)
+	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
+	add_subdirectory(UserSim)
+endif()
+
 #Enable to build the MerlinTests folder
 if(ENABLE_TESTS)
 	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
@@ -170,7 +177,7 @@ if(BUILD_STATIC)
 endif()
 
 #link to libgsl.
-target_link_libraries(merlin gsl)
+target_link_libraries(merlin gsl gslcblas)
 
 #We want to link to the mpi libraries if this is an MPI build.
 if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)

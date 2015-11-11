@@ -19,18 +19,14 @@
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
 #include "Collimators/CollimateParticleProcess.h"
 #include "NumericalUtils/NumericalConstants.h"
-#include "BeamDynamics/ParticleTracking/Integrators/SymplecticIntegrators.h"
 
 #include "BetatronTunes.h"
 
 using namespace std;
 using namespace ParticleTracking;
 
-//~ BetatronTunes::BetatronTunes(AcceleratorModel* aModel, double refMomentum)
-        //~ : theModel(aModel), p0(refMomentum) {}
-
 BetatronTunes::BetatronTunes(AcceleratorModel* aModel, double refMomentum)
-        : theModel(aModel), p0(refMomentum), myHELProcess(NULL) {}
+        : theModel(aModel), p0(refMomentum) {}
 
 void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 {
@@ -46,28 +42,14 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
     vector<double> yData2;
     yData2.reserve(ntrack * 2);
 
-    //~ ParticleBunch bunch(p0,1.0);
-    //~ bunch.push_back(particle);
-    ParticleBunch* bunch = new ParticleBunch(p0,1.0);
-    bunch->push_back(particle);
+    ParticleBunch bunch(p0,1.0);
+    bunch.push_back(particle);
 
-    //~ ParticleTracker tracker(theModel->GetBeamline(), &bunch, false);
-    ParticleTracker* tracker = new ParticleTracker(theModel->GetBeamline(), bunch, false);
-    tracker->SetIntegratorSet(new ParticleTracking::TRANSPORT::StdISet());
-    //~ tracker->SetIntegratorSet(new ParticleTracking::THIN_LENS::StdISet());
-    //~ tracker->SetIntegratorSet(new ParticleTracking::SYMPLECTIC::StdISet());
+    ParticleTracker tracker(theModel->GetBeamline(), &bunch, false);
 
-	//~ CollimateParticleProcess collimate(1,COLL_AT_EXIT);
-	//~ collimate.SetLossThreshold(200);
-	//~ collimate.ScatterAtCollimator(false);
-	//~ tracker.AddProcess(&collimate);
-		
-	if(myHELProcess != NULL){	
-		//~ cout << "HEL" << endl;
-		//~ tracker.AddProcess(myHELProcess);	
-		tracker->AddProcess(myHELProcess);	
-		//~ cout << "HEL end" << endl;
-	}
+	CollimateParticleProcess collimate(1,COLL_AT_EXIT);
+	collimate.SetLossThreshold(200);
+//	tracker.AddProcess(&collimate);
 
     vector<double>* xData = &xData1;
     vector<double>* yData = &yData1;
@@ -77,22 +59,16 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
     for(int nturn=0; nturn<trackn; nturn++)
     {
 	//~ cout << "Tune turn: " << nturn << endl;
-        //~ if(nturn==0)
-            //~ tracker.Run();
-        //~ else
-            //~ tracker.Continue();            
-        //~ ParticleBunch& tracked_bunch = tracker.GetTrackedBunch();
-        
-        tracker->Track(bunch);
-        //~ cout << "tracked" << endl;
-        
-		//~ if(tracked_bunch.size()==0){
-		if(bunch->size()==0){
+        if(nturn==0)
+            tracker.Run();
+        else
+            tracker.Continue();
+        ParticleBunch& tracked_bunch = tracker.GetTrackedBunch();
+		if(tracked_bunch.size()==0){
 			stable = false;
 			break;
 		}
-        //~ ParticleBunch::iterator pp = tracked_bunch.begin();
-        ParticleBunch::iterator pp = bunch->begin();
+        ParticleBunch::iterator pp = tracked_bunch.begin();
         Particle& p1 = *pp;
 #ifdef _MSV_VER
         if( _isnan(p1.x()) || _isnan(p1.y()) )
@@ -101,7 +77,6 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 #endif
         {
             stable = false;
-            cout << "BetatronTunes::ERROR : unstable particle" <<endl;
             break;
         }
 
@@ -128,13 +103,13 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 
     dQx = Qx2 - Qx;
     dQy = Qy2 - Qy;
-    
-    delete tracker;
-    delete bunch;
+
+//    tracker.RemoveProcess(&collimate);
 }
 
 double BetatronTunes::FindTune(vector<double>& data)
 {
+	//~ cout << "In FindTune" << endl;
     vector<double> spectrum;
     int nvals = data.size()/2;
     spectrum.reserve(nvals);
