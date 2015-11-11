@@ -869,7 +869,7 @@ double MADInterface::ReadComponent ()
 			rfsctruct->SetComponentLatticePosition(z);
 			rf_drift->SetComponentLatticePosition(z+rfcav_len);
 			
-			if(incApertures && type!="COLLIMATOR")
+			if(incApertures)
 			{
 				rfsctruct->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
 				rf_drift->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
