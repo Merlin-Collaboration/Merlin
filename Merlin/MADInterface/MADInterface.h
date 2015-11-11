@@ -56,6 +56,11 @@ public:
 
     //   Turns logging off.
     void SetLoggingOff ();
+    
+    //   If true, all RFCavities will be forced to a length of 
+    //   wavelength/2 + a Drift of remaining length (LHC MAD tfs table
+	//	 bugfix).
+	void SetSingleCellRF(bool scrf){single_cell_rf = scrf;}
 
     //   If true, all LINE constructs in the MAD optics output
     //   are constructed in the model. If false, only those
@@ -101,6 +106,7 @@ protected:
     bool honMadStructs;
     bool incApertures;
     bool inc_sr;
+    bool single_cell_rf;
 
     std::set<std::string> zeroLengths;
     std::set<std::string> driftTypes;

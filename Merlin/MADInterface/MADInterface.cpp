@@ -210,7 +210,7 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 MADInterface::MADInterface (const std::string& madFileName, double P0)
         : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0)
+        incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(1)
 {
 	if(ifs)
 	{
@@ -380,6 +380,8 @@ AcceleratorModel* MADInterface::ConstructModel()
 			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
 		}
 	}
+	
+	cout << "MADInterface:: ARC distance from MAD file: " << z <<" m"<< endl;
 
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
@@ -558,8 +560,13 @@ double MADInterface::ReadComponent ()
 */
 	else if(type =="RFCAVITY")
 	{
-		//type="DRIFT";
-		type="RFCAVITY";
+		double volts=prmMap->GetParameter("VOLT");
+		if(volts == 0){
+			type="DRIFT";
+		}
+		else{
+			type="RFCAVITY";
+		}	
 	}
 	else if(type=="LCAV")
 	{
@@ -645,120 +652,7 @@ double MADInterface::ReadComponent ()
 	}
 	else if(type=="COLLIMATOR")
 	{
-		/*
-		//Check we have collimator info
-		if(collimator_db == NULL)
-		{
-			std::cerr << "Collimator settings not found. Exiting." << std::endl;
-			exit(EXIT_FAILURE);
-		}
-
-		//Also check that we are not using a zero length collimator
-		if(len == 0.0)
-		{
-			cout << "Rejecting " << name << " due to zero length" << endl;
-			return 0;
-		}
-
-		//Lets set up some variables for collimator settings
-		double collimator_aperture_width;
-		double collimator_aperture_height;
-		double collimator_aperture_tilt;
-		material* collimator_material;
-		
-		//We now need to find the collimator configuration
-		bool have_collimator = false;
-
-		for(unsigned int i=1; i < collimator_db->number_collimators; i++)
-		{
-			//Time to search for the collimator we are currently using
-			if(collimator_db->Collimator[i].name == name)
-			{
-				#ifndef NDEBUG
-				cout << "Found the collimator: " << collimator_db->Collimator[i].name << endl;
-				#endif
-				have_collimator = true;
-
-				//This is the collimator we are using. Input file should have half gaps.
-				//Factor of 2 turns it into full-gaps which the rest of the code expects for now.
-
-				if(!collimator_db->use_sigma)
-				{
-					collimator_aperture_width = collimator_db->Collimator[i].x_gap*2.0;
-					collimator_aperture_height = collimator_db->Collimator[i].y_gap*2.0;
-					collimator_aperture_tilt = collimator_db->Collimator[i].tilt;
-					collimator_material = collimator_db->Collimator[i].Material;
-				}
-				else if(collimator_db->use_sigma)
-				{
-					//Just want to set the distance for lookup after the lattice is completed and then calculate the twiss params
-					//The aperture gap will then be calculated.
-					collimator_db->Collimator[i].position = z;
-				}
-				
-				//Create a new collimator
-				Collimator* aCollimator = new Collimator(name,len);
-
-				//Enable scattering
-				aCollimator->scatter_at_this_collimator = true;
-
-				//Will calculate the collimator jaw aperture later; same with any collimator related wakes
-				//Use Collimator_Database::Configure_collimators() to do so.
-				if(!collimator_db->use_sigma)
-				{
-					//Create an aperture for the collimator jaws
-					CollimatorAperture* app=new CollimatorAperture(collimator_aperture_width,collimator_aperture_height,collimator_aperture_tilt,collimator_material);
-		
-					//Set the aperture for collimation
-					aCollimator->SetAperture(app);
-				}
-
-				//Add the component to the accelerator
-				ctor->AppendComponent(*aCollimator);
-				component=aCollimator;
-
-				//Again, only if we have already specified the aperture
-				if(!collimator_db->use_sigma)
-				{
-					double conductivity = collimator_material->sigma;
-					double aperture_size = collimator_aperture_width;
-
-					//Collimation only will take place on one axis
-					if (collimator_aperture_height < collimator_aperture_width)
-					{
-						aperture_size = collimator_aperture_height;
-					} //set to smallest out of height or width
-				
-					//Define the resistive wake for the collimator jaws.
-					ResistivePotential* resWake =  new ResistivePotential(1,conductivity,0.5*aperture_size,len*meter,"Data/table");
-
-					//Set the Wake potentials for this collimator
-					aCollimator->SetWakePotentials(resWake);
-				}
-			}
-
-			//We did not find the settings for the collimator in question
-		}
-
-		//If we don't have the collimator settings, and hence have left the collimator wide open, then don't enable the wakefields.
-		if(have_collimator == false)
-		{
-			
-			//Exit or just default to wide open?
-			//Default to wide open.
-			#ifndef NDEBUG
-			std::cerr << "Collimator " << name << " settings not found in collimator database." << std::endl;
-			#endif
-			
-			//There is no point in wasting cpu time on aperture checks/wakefields with a wide open collimator
-			//Lets just treat the element as a drift instead.
-			Drift* aDrift = new Drift(name,len);
-			ctor->AppendComponent(*aDrift);
-			component=aDrift;
-		}
-		*/
-
-		cout << "MADInterface: Found Collimator " << name << " with length " << len << " m" << endl;
+		//~ cout << "MADInterface: Found Collimator " << name << " with length " << len << " m" << endl;
 		Collimator* aCollimator = new Collimator(name,len);
 
 		//Add the component to the accelerator
@@ -934,21 +828,67 @@ double MADInterface::ReadComponent ()
 		double lambdaOver2 = SpeedOfLight/freq/2;
 		int ncells = Round(len/lambdaOver2);
 		double len1 = ncells*lambdaOver2;
-
-		//~ cout << "f: " << freq << "\tV: " << volts << "\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << "\tLength: " << len1 << endl;
-
+		
 		// adjust phase for cosine-like field
 		phase = twoPi*(phase-0.25);
 
-		if((len1/len-1) > 0.001)
-		{
-			MerlinIO::error() << "SW cavity length not valid ";
-			MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+		// LHC TFS Table fix HR 11.11.15
+		if(single_cell_rf){			
+			cout << "\n\t MADInterface::RFCAVITY: Freq = " << freq << " Hz\tV: " << volts << " V\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << " m\tLength: " << len1 << " m"<< endl;
+			
+			double drift_len = len - lambdaOver2;
+			double rfcav_len = lambdaOver2;
+			
+			cout << "\t MADInterface::RFCAVITY: Length > wavelength/2, setting length = wavelength/2 = " << rfcav_len << " m" << endl;
+			
+			ncells = Round(rfcav_len/lambdaOver2);
+			
+			cout << "\t RFCAVITY set to "<< ncells <<" cell of L = wavelength/2, plus DRIFT of L = " <<  drift_len << " m" << endl;
+			
+			if((rfcav_len/len-1) > 0.001)
+			{
+				MerlinIO::error() << "SW cavity length not valid ";
+				MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+			}
+			
+			SWRFStructure* rfsctruct = new SWRFStructure(name, ncells, freq, volts*MV/rfcav_len, phase);
+			ctor->AppendComponent(*rfsctruct);
+			component=rfsctruct;
+			
+			
+			
+			string drift_name = "Drift_"+name;			
+			Drift* rf_drift = new Drift(drift_name, drift_len);
+			ctor->AppendComponent(*rf_drift);
+			
+			// As we are appending 2 components we have to:
+			// 1. Set the lattice position for each component
+			// 2. Set the apertures of each component (if doing so in MADInterface)
+			// 3. Return the total length so that all other elements have the correct position
+						
+			rfsctruct->SetComponentLatticePosition(z);
+			rf_drift->SetComponentLatticePosition(z+rfcav_len);
+			
+			if(incApertures && type!="COLLIMATOR")
+			{
+				rfsctruct->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
+				rf_drift->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
+			}
+			
+			return(len);			
 		}
-
-		SWRFStructure* rfsctruct = new SWRFStructure(name,ncells,freq,volts*MV/len,phase);
-		ctor->AppendComponent(*rfsctruct);
-		component=rfsctruct;
+		else{
+			
+			if((len1/len-1) > 0.001)
+			{
+				MerlinIO::error() << "SW cavity length not valid ";
+				MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+			}
+			
+			SWRFStructure* rfsctruct = new SWRFStructure(name, ncells, freq, volts*MV/len, phase);
+			ctor->AppendComponent(*rfsctruct);
+			component=rfsctruct;
+		}
 	}//End RFCAVITY
 	
 	else if(type=="CRABMARKER"){
