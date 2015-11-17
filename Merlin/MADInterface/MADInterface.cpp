@@ -583,7 +583,8 @@ double MADInterface::ReadComponent ()
 
         if(type=="RBEND")
         {
-		  if((prmMap->GetParameter("K0L"))!=0.0) type="SBEND";
+		  if((prmMap->GetParameter("K0L"))!=0.0){ type="SBEND";}
+		 //~ type="SBEND";	//HR 14.11.15 test for symplectic not working
 	}
 
 	if(type=="MULTIPOLE")
@@ -856,7 +857,6 @@ double MADInterface::ReadComponent ()
 			component=rfsctruct;
 			
 			
-			
 			string drift_name = "Drift_"+name;			
 			Drift* rf_drift = new Drift(drift_name, drift_len);
 			ctor->AppendComponent(*rf_drift);
@@ -869,7 +869,7 @@ double MADInterface::ReadComponent ()
 			rfsctruct->SetComponentLatticePosition(z);
 			rf_drift->SetComponentLatticePosition(z+rfcav_len);
 			
-			if(incApertures)
+			if(incApertures && type!="COLLIMATOR")
 			{
 				rfsctruct->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
 				rf_drift->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));

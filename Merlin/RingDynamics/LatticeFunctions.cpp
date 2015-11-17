@@ -479,7 +479,7 @@ public:
             : row(r), os(&_os) {};
 
     void operator()(LatticeFunction* lfn) {
-        (*os)<<std::setw(24)<<lfn->GetValue(row);
+        (*os)<<std::setw(30)<<std::setprecision(10)<<lfn->GetValue(row);
     };
 
 };

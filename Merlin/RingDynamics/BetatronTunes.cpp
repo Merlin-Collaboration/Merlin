@@ -64,7 +64,6 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 		
 	if(myHELProcess != NULL){	
 		//~ cout << "HEL" << endl;
-		//~ tracker.AddProcess(myHELProcess);	
 		tracker->AddProcess(myHELProcess);	
 		//~ cout << "HEL end" << endl;
 	}

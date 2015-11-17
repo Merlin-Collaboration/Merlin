@@ -16,6 +16,7 @@
 #define Dispersion_h 1
 
 #include <fstream>
+#include <iostream>
 #include "AcceleratorModel/AcceleratorModel.h"
 
 class Dispersion

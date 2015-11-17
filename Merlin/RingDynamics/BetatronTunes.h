@@ -35,7 +35,7 @@ public:
 	double GetQy(){return Qy;}
 	double GetdQy(){return dQy;}
 
-	HollowELensProcess* myHELProcess = NULL;	
+	HollowELensProcess* myHELProcess;	
 	void SetHELProcess(HollowELensProcess* HELP){myHELProcess = HELP;}
 	
     double FindTune(vector<double>& data);
