@@ -95,15 +95,24 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	
 	string ColName = currentComponent->GetName();
 	
-	if( (scattermodel->ScatterPlot_on) && (scattermodel->ScatterPlotName == ColName) ){
-		scatter_plot = 1;
-		//~ cout << "ColProPro: ScatterPlot ON: ColName = " << ColName << ", ScatterPlotName = " << scattermodel->ScatterPlotName << endl;
+	if(scattermodel->ScatterPlot_on){		
+		for(vector<string>::iterator its = scattermodel->ScatterPlotNames.begin(); its != scattermodel->ScatterPlotNames.end(); ++its){
+			if(ColName == *its){
+				scatter_plot = 1;
+				//~ cout << "ColProPro: ScatterPlot ON: ColName = " << ColName << ", ScatterPlotName = " << *its << endl;
+			}
+		}
 	}
-	if( (scattermodel->JawImpact_on) && (scattermodel->JawImpactName == ColName) ){
-		jaw_impact = 1;
-		//~ cout << "ColProPro: JawImpact ON: ColName = " << ColName << ", JawImpactName = " << scattermodel->JawImpactName << endl;
+
+	if(scattermodel->JawImpact_on){
+		for(vector<string>::iterator its = scattermodel->JawImpactNames.begin(); its != scattermodel->JawImpactNames.end(); ++its){
+			if(ColName == *its){
+				jaw_impact = 1;
+				//~ cout << "ColProPro: JawImpact ON: ColName = " << ColName << ", JawImpactName = " << *its << endl;
+			}
+		}
 	}
-	
+		
 	const Aperture *colap = C->GetAperture();
 		
 	//set scattering model
@@ -139,13 +148,13 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		
 //Jaw Impact
 		if(jaw_impact && z == 0){
-				scattermodel->JawImpact(p);
+				scattermodel->JawImpact(p, ColParProTurn, ColName);
 		}
 		
 //Scatter Plot
 		if(scatter_plot && z == 0){
 		//~ if(scatter_plot){
-				scattermodel->ScatterPlot(p, z);
+				scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
 		}
 		
 //Energy Loss		
@@ -182,7 +191,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 //Check if (returned to aperture) OR (travelled through length) 
 		z+=zstep;
-		if(scatter_plot){scattermodel->ScatterPlot(p, z);}
+		if(scatter_plot){scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);}
 		
 		if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) ) {
 			//disabling agrees with assmann test case for 0.1m bins
@@ -209,7 +218,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		if( (p.dp() < -0.95) || (p.dp() < -1) ){
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-			//~ if(scatter_plot){scattermodel->ScatterPlot(p, z);}
+			//~ if(scatter_plot){scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);}
 			//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}if(dustset){					
 			if(dustset){					
 				for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator){					
@@ -223,7 +232,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 //Scatter Plot
 		//~ if(scatter_plot){
-				//~ scattermodel->ScatterPlot(p, z);
+				//~ scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
 		//~ }		
 	}
 }

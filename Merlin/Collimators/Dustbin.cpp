@@ -240,9 +240,12 @@ void LossMapDustbin::Finalise()
 			if (OutputLosses.size() == 0)
 			{
 				OutputLosses.push_back(*it); 
+				//~ // We set this to zero as it will be incremented in the next if
+				//~ OutputLosses[outit].lost = 0;
+				OutputLosses[outit].lost = 1;
 			}	
 			// If in the same bin ++loss
-			if ((it->ElementName == OutputLosses[outit].ElementName) && (it->interval == OutputLosses[outit].interval))
+			else if ((it->ElementName == OutputLosses[outit].ElementName) && (it->interval == OutputLosses[outit].interval))
 			{
 				OutputLosses[outit].lost +=1;
 			}

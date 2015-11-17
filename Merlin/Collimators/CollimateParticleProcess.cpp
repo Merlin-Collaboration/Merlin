@@ -355,124 +355,124 @@ void CollimateParticleProcess::DoCollimation ()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Only copy the output if we are not a collimator and there are lost particles
-if(LostParticlePositions.size() != 0 && !is_collimator)
-{
-//cout << currentComponent->GetQualifiedName() << "\tLostParticlePositions: " << LostParticlePositions.size() << endl;
-	//make a new particle bunch to track the lost particles
-	ParticleBunch* LostBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
-	double length = currentComponent->GetLength();
-	//If we are dealing with a non-zero length element, we must do tracking
-	if(length != 0)
-	{
-		//Clear out the old lost particles, these will all be at the end of the element which we do not want for a magnet.
-		lost.clear();
+//~ //Only copy the output if we are not a collimator and there are lost particles
+//~ if(LostParticlePositions.size() != 0 && !is_collimator)
+//~ {
+//~ //cout << currentComponent->GetQualifiedName() << "\tLostParticlePositions: " << LostParticlePositions.size() << endl;
+	//~ //make a new particle bunch to track the lost particles
+	//~ ParticleBunch* LostBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
+	//~ double length = currentComponent->GetLength();
+	//~ //If we are dealing with a non-zero length element, we must do tracking
+	//~ if(length != 0)
+	//~ {
+		//~ //Clear out the old lost particles, these will all be at the end of the element which we do not want for a magnet.
+		//~ lost.clear();
 
-		//Grab the lost particles from the copied input particle array and add them to the new particle bunch
-		for(vector<unsigned int>::iterator p = LostParticlePositions.begin(); p!=LostParticlePositions.end(); p++)
-//		for(int i =0; i < InputArray.size(); i++)
-		{
-			LostBunch->AddParticle(InputArray[*p]);
-//			LostBunch->AddParticle(InputArray[i]);
-		}
-//		cout << "LostBunch size: " << LostBunch->size() << "\tLost size: " << lost.size() << endl;
-		//Create a new tracker
-		ParticleComponentTracker* LostParticleTracker = new ParticleComponentTracker();
+		//~ //Grab the lost particles from the copied input particle array and add them to the new particle bunch
+		//~ for(vector<unsigned int>::iterator p = LostParticlePositions.begin(); p!=LostParticlePositions.end(); p++)
+//~ //		for(int i =0; i < InputArray.size(); i++)
+		//~ {
+			//~ LostBunch->AddParticle(InputArray[*p]);
+//~ //			LostBunch->AddParticle(InputArray[i]);
+		//~ }
+//~ //		cout << "LostBunch size: " << LostBunch->size() << "\tLost size: " << lost.size() << endl;
+		//~ //Create a new tracker
+		//~ ParticleComponentTracker* LostParticleTracker = new ParticleComponentTracker();
 
-		//Tell the new tracker to use the particle bunch of lost particles that has been made
-		LostParticleTracker->SetBunch(*LostBunch);
+		//~ //Tell the new tracker to use the particle bunch of lost particles that has been made
+		//~ LostParticleTracker->SetBunch(*LostBunch);
 
-		//Prepare the tracker to use the current accelerator component
-		currentComponent->PrepareTracker(*LostParticleTracker);
-//		cout << LostBunch->size() << endl;
-		//While we are still inside the component
-		while((LostParticleTracker->GetRemainingLength() ) >= 0 && LostBunch->size() != 0)
-		{
-			double StepSize = bin_size;
-			//If the remaining length of component is less than the step size, set the step size to this value
-			if((LostParticleTracker->GetRemainingLength() - StepSize) < 0)
-			{
-				StepSize = LostParticleTracker->GetRemainingLength();
-			}
+		//~ //Prepare the tracker to use the current accelerator component
+		//~ currentComponent->PrepareTracker(*LostParticleTracker);
+//~ //		cout << LostBunch->size() << endl;
+		//~ //While we are still inside the component
+		//~ while((LostParticleTracker->GetRemainingLength() ) >= 0 && LostBunch->size() != 0)
+		//~ {
+			//~ double StepSize = bin_size;
+			//~ //If the remaining length of component is less than the step size, set the step size to this value
+			//~ if((LostParticleTracker->GetRemainingLength() - StepSize) < 0)
+			//~ {
+				//~ StepSize = LostParticleTracker->GetRemainingLength();
+			//~ }
 
-			//Track the appropriate step length
-			/*cout << "Tracking: " << currentComponent->GetQualifiedName() << "\tStepsize: " << StepSize << "\tPreStep: " << LostParticleTracker->GetIntegratedLength() << \
-				"\tPostStep: " << LostParticleTracker->GetIntegratedLength() + StepSize << "\tLength: " << currentComponent->GetLength() << endl;*/
+			//~ //Track the appropriate step length
+			//~ /*cout << "Tracking: " << currentComponent->GetQualifiedName() << "\tStepsize: " << StepSize << "\tPreStep: " << LostParticleTracker->GetIntegratedLength() << \
+				//~ "\tPostStep: " << LostParticleTracker->GetIntegratedLength() + StepSize << "\tLength: " << currentComponent->GetLength() << endl;*/
 
 
-			double IntegratedLength = LostParticleTracker->GetIntegratedLength();
-			//Now loop over each particle in turn
-			for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end();)
-			{
-				//Check if the particle is outside the aperture
-				//s, is where the integrator will start
-				//LostParticleTracker->GetIntegratedLength() will give the position integrated past this point
-				//(*p).ct() will give the offset for this specific particle
+			//~ double IntegratedLength = LostParticleTracker->GetIntegratedLength();
+			//~ //Now loop over each particle in turn
+			//~ for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end();)
+			//~ {
+				//~ //Check if the particle is outside the aperture
+				//~ //s, is where the integrator will start
+				//~ //LostParticleTracker->GetIntegratedLength() will give the position integrated past this point
+				//~ //(*p).ct() will give the offset for this specific particle
 
-//				if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength + (*p).ct() ))
-				if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength ))
-				{
-//					cout << "Lost Particle at: " << IntegratedLength  << endl;
-					//if not, delete the particle, and add the coordintes to the lost bunch list (PSvectorArray lost)
-					/*cout <<	"Lost at: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
-					LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;*/
+//~ //				if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength + (*p).ct() ))
+				//~ if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength ))
+				//~ {
+//~ //					cout << "Lost Particle at: " << IntegratedLength  << endl;
+					//~ //if not, delete the particle, and add the coordintes to the lost bunch list (PSvectorArray lost)
+					//~ /*cout <<	"Lost at: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
+					//~ LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;*/
 
-					//Also set p.ct() as the length along the element!
-					(*p).ct() += IntegratedLength;
-					if((*p).ct() < 0)
-					{
-						(*p).ct() = 0;
-					}
-					if((*p).ct() > length)
-					{
+					//~ //Also set p.ct() as the length along the element!
+					//~ (*p).ct() += IntegratedLength;
+					//~ if((*p).ct() < 0)
+					//~ {
+						//~ (*p).ct() = 0;
+					//~ }
+					//~ if((*p).ct() > length)
+					//~ {
 
-						(*p).ct() = length;
-					}
+						//~ (*p).ct() = length;
+					//~ }
 
-					lost.push_back(*p);
-					p=LostBunch->erase(p);
-				}
-				//else, the particle is inside and can be kept for this step
-				else
-				{
-					p++;
-				}
-			}
+					//~ lost.push_back(*p);
+					//~ p=LostBunch->erase(p);
+				//~ }
+				//~ //else, the particle is inside and can be kept for this step
+				//~ else
+				//~ {
+					//~ p++;
+				//~ }
+			//~ }
 
-			//Now move forward...
-			if((LostParticleTracker->GetRemainingLength() ) > 0)
-			{
-				LostParticleTracker->TrackStep(StepSize);			
-			}
-			if (LostParticleTracker->GetRemainingLength() == 0) break;
-		}
-//		cout << "LostBunch size: " << LostBunch->size() << "\tLost size: " << lost.size() << endl;
+			//~ //Now move forward...
+			//~ if((LostParticleTracker->GetRemainingLength() ) > 0)
+			//~ {
+				//~ LostParticleTracker->TrackStep(StepSize);			
+			//~ }
+			//~ if (LostParticleTracker->GetRemainingLength() == 0) break;
+		//~ }
+//~ //		cout << "LostBunch size: " << LostBunch->size() << "\tLost size: " << lost.size() << endl;
 
-		//If there is anything left - possible bug.
-		if(LostBunch->size() != 0)
-		{
-//			abort();
-			cout <<	"POSSIBLE BUG: Leftovers: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
-			LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;
-			for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end(); p++)
-			{
-				(*p).ct() += LostParticleTracker->GetIntegratedLength();
-				if((*p).ct() > length)
-				{
-					(*p).ct() = length;
-				}
-				lost.push_back(*p);
-			}
-		}
+		//~ //If there is anything left - possible bug.
+		//~ if(LostBunch->size() != 0)
+		//~ {
+//~ //			abort();
+			//~ cout <<	"POSSIBLE BUG: Leftovers: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
+			//~ LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;
+			//~ for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end(); p++)
+			//~ {
+				//~ (*p).ct() += LostParticleTracker->GetIntegratedLength();
+				//~ if((*p).ct() > length)
+				//~ {
+					//~ (*p).ct() = length;
+				//~ }
+				//~ lost.push_back(*p);
+			//~ }
+		//~ }
 
-		//clean up the tracker
-		delete LostParticleTracker;
-		//and the "lost particle bunch"
-		delete LostBunch;
-	}
-	//if the element has zero length nothing needs to be done since all the losses will have occured at the same point anyway.
-	//So PSvectorArray loss will contain the correct information
-}
+		//~ //clean up the tracker
+		//~ delete LostParticleTracker;
+		//~ //and the "lost particle bunch"
+		//~ delete LostBunch;
+	//~ }
+	//~ //if the element has zero length nothing needs to be done since all the losses will have occured at the same point anyway.
+	//~ //So PSvectorArray loss will contain the correct information
+//~ }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -483,7 +483,7 @@ if(LostParticlePositions.size() != 0 && !is_collimator)
 	nlost+=lost.size();
 	//cout << currentComponent->GetQualifiedName() << "\t" << nlost << "\t" << nstart << "\t" << currentBunch->size() << endl;
 	//cout << "The number of particles lost is: " << nlost << endl;
-	DoOutput(lost,lost_i);
+	//~ DoOutput(lost,lost_i);
 
 	//make sure to clear up
 	InputArray.clear();				//The input array

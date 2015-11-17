@@ -12,7 +12,11 @@
 // 
 /////////////////////////////////////////////////////////////////////////
 #include <iostream>
+#include <fstream>
 #include <iomanip>
+#include <string>
+#include <sstream>
+#include <cstring>
 
 #include "Collimators/ScatteringModel.h"
 #include "Collimators/DiffractiveScatter.h"
@@ -29,6 +33,7 @@ using namespace ParticleTracking;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
+using namespace std;
 
 ScatteringModel::ScatteringModel()
 {
@@ -256,7 +261,7 @@ void ScatteringModel::SetScatterType(int st){
 	ScatteringPhysicsModel = st;	
 }
 
-void ScatteringModel::ScatterPlot(Particle& p, double z){
+void ScatteringModel::ScatterPlot(Particle& p, double z, int turn, string name){
 	
 	ScatterPlotData* temp = new ScatterPlotData;
 	(*temp).ID = p.id();
@@ -265,11 +270,13 @@ void ScatteringModel::ScatterPlot(Particle& p, double z){
 	(*temp).y = p.y();
 	(*temp).yp = p.yp();
 	(*temp).z = z;
+	(*temp).turn = turn;	
+	(*temp).name = name;
 	
 	StoredScatterPlotData.push_back(temp);
 }
 
-void ScatteringModel::JawImpact(Particle& p){
+void ScatteringModel::JawImpact(Particle& p, int turn, string name){
 	
 	JawImpactData* temp = new JawImpactData;
 	(*temp).ID = p.id();
@@ -279,59 +286,90 @@ void ScatteringModel::JawImpact(Particle& p){
 	(*temp).yp = p.yp();
 	(*temp).ct = p.ct();
 	(*temp).dp = p.dp();
+	(*temp).turn = turn;	
+	(*temp).name = name;
 	
 	StoredJawImpactData.push_back(temp);
 }
 	
 	
-void ScatteringModel::SetScatterPlot(string name, bool single_turn){
-	ScatterPlotName = name;
+void ScatteringModel::SetScatterPlot(string name, int single_turn){
+	ScatterPlotNames.push_back(name);
 	ScatterPlot_on = 1;
 }
 
-void ScatteringModel::SetJawImpact(string name, bool single_turn){
-	JawImpactName = name;
+void ScatteringModel::SetJawImpact(string name, int single_turn){
+	JawImpactNames.push_back(name);
 	JawImpact_on = 1;
 }
 
-void ScatteringModel::OutputScatterPlot(std::ostream* os){
+//~ void ScatteringModel::OutputScatterPlot(std::ostream* os){
+void ScatteringModel::OutputScatterPlot(string directory, int seed){
 	
-	for(vector <ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its != StoredScatterPlotData.end(); ++its)
-	{
-		(*os) << setw(10) << setprecision(20) << left << (*its)->ID;
-		(*os) << setw(30) << setprecision(20) << left << (*its)->z;
-		(*os) << setw(30) << setprecision(20) << left << (*its)->y;
-		//~ (*os) << setw(16) << left << (*its).Turn;
-		//~ (*os) << setw(16) << left << (*its)->ID;
-		//~ (*os) << setw(16) << left << (*its)->x;
-		//~ (*os) << setw(16) << left << (*its)->xp;
-		//~ (*os) << setw(16) << left << (*its)->y;
-		//~ (*os) << setw(16) << left << (*its)->yp;
-		//~ (*os) << setw(16) << left << (*its)->z;
-		(*os) << endl;
-	}	
+	for(vector<string>::iterator name = ScatterPlotNames.begin(); name != ScatterPlotNames.end(); ++name){
+		
+		std::ostringstream scatter_plot_file;
+		scatter_plot_file << directory << "scatter_plot_" << (*name) << "_" << seed << ".txt";
+		//~ std::ostringstream scatter_plot_file = directory + "Scatter.txt";
+		std::ofstream* os = new std::ofstream(scatter_plot_file.str().c_str());	
+		if(!os->good())    {
+			std::cerr << "ScatteringModel::OutputJawImpact: Could not open ScatterPlot file for collimator " << (*name) << std::endl;
+			exit(EXIT_FAILURE);
+		} 
+		
+		//~ (*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << endl;
+		(*os) << "#\tparticle_id\tz\ty\tturn" << endl;
 	
-	// CLEAR STORED SCATTERPLOT DATA - this allows a new data set each turn in user code
+		for(vector <ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its != StoredScatterPlotData.end(); ++its)
+		{
+			if( (*its)->name == (*name) ){
+				(*os) << setw(10) << setprecision(10) << left << (*its)->ID;
+				(*os) << setw(30) << setprecision(20) << left << (*its)->z;
+				(*os) << setw(30) << setprecision(20) << left << (*its)->y;
+				//~ (*os) << setw(10)<< setprecision(20) << left << (*its)->ID;
+				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->x;
+				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->xp;
+				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->y;
+				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->yp;
+				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->z;
+				(*os) << setw(10)<< setprecision(10) << left << (*its)->turn;
+				(*os) << endl;
+			}	
+		}
+	}
+	
 	StoredScatterPlotData.clear();
-
 }
 
-void ScatteringModel::OutputJawImpact(std::ostream* os){
+//~ void ScatteringModel::OutputJawImpact(std::ostream* os){
+void ScatteringModel::OutputJawImpact(string directory, int seed){
 	
-	for(vector <JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end(); ++its)
-	{
-		//~ (*os) << setw(16) << left << (*its).Turn;
-		(*os) << setw(16) << left << (*its)->ID;
-		(*os) << setw(16) << left << (*its)->x;
-		(*os) << setw(16) << left << (*its)->xp;
-		(*os) << setw(16) << left << (*its)->y;
-		(*os) << setw(16) << left << (*its)->yp;
-		(*os) << setw(16) << left << (*its)->ct;
-		(*os) << setw(16) << left << (*its)->dp;
-		(*os) << endl;
+	for(vector<string>::iterator name = JawImpactNames.begin(); name != JawImpactNames.end(); ++name){
+		std::ostringstream jaw_impact_file;
+		jaw_impact_file << directory << "jaw_impact_" << (*name) << "_" << seed << ".txt";
+		ofstream* os = new ofstream(jaw_impact_file.str().c_str());	
+		if(!os->good())    {
+			std::cerr << "ScatteringModel::OutputJawImpact: Could not open JawImpact file for collimator " << (*name) << std::endl;
+			exit(EXIT_FAILURE);
+		} 
+		
+		(*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << endl;
+	
+		for(vector <JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end(); ++its)
+		{
+			if( (*its)->name == (*name) ){
+				(*os) << setw(10) << left << setprecision(10) <<  (*its)->ID;
+				(*os) << setw(30) << left << setprecision(20) << (*its)->x;
+				(*os) << setw(30) << left << setprecision(20) <<  (*its)->xp;
+				(*os) << setw(30) << left << setprecision(20) <<  (*its)->y;
+				(*os) << setw(30) << left << setprecision(20) <<  (*its)->yp;
+				(*os) << setw(30) << left << setprecision(20) << (*its)->ct;
+				(*os) << setw(30) << left << setprecision(20) << (*its)->dp;
+				(*os) << setw(10) << left << setprecision(10) <<  (*its)->turn;
+				(*os) << endl;
+			}
+		}
 	}	
 		
-	// CLEAR STORED JAWIMPACT DATA - this allows a new data set each turn in user code
-	StoredJawImpactData.clear();
-	
+	StoredJawImpactData.clear();	
 }

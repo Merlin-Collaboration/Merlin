@@ -333,11 +333,11 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 	// Test Mixture function
 	vector< pair<string,double> > els = Glidcop->GetConstituentElements();
 	vector< pair<string,double> >::iterator el_it;
-	for(el_it = els.begin(); el_it != els.end(); ++el_it){
-		std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
-	}
+	//~ for(el_it = els.begin(); el_it != els.end(); ++el_it){
+		//~ std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
+	//~ }
 	
-	DumpMaterialProperties();
+	//~ DumpMaterialProperties();
 	
 	db.insert(pair<string,Material*>(Glidcop->GetSymbol(),Glidcop));
 }

@@ -22,7 +22,7 @@
 namespace Collimation {
 	
 struct JawImpactData{
-	//~ int Turn;
+	int turn;
 	int ID;
 	double x;
 	double xp;
@@ -30,16 +30,18 @@ struct JawImpactData{
 	double yp;
 	double ct;
 	double dp;	
+	string name;
 };
 
 struct ScatterPlotData{
-	//~ int Turn;
+	int turn;
 	int ID;
 	double x;
 	double xp;
 	double y;
 	double yp;
 	double z;
+	string name;
 	//~ double ct;
 	//~ double dp;		
 };
@@ -81,18 +83,22 @@ public:
 	void ClearProcesses(){Processes.clear();}
 
 	// Scatter plot
-	void ScatterPlot(ParticleTracking::Particle& p, double z);
-	void SetScatterPlot(string name, bool single_turn = 1);
-	void OutputScatterPlot(std::ostream* os);
-	string ScatterPlotName;
+	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, string name);
+	void SetScatterPlot(string name, int single_turn = 0);
+	//~ void OutputScatterPlot(std::ostream* os);
+	void OutputScatterPlot(string directory, int seed = 0);
+	//~ string ScatterPlotName;
+	vector<string> ScatterPlotNames;
 	bool ScatterPlot_on;
 	vector <ScatterPlotData*> StoredScatterPlotData;
 	
 	// Jaw impact
-	void JawImpact(ParticleTracking::Particle& p);
-	void SetJawImpact(string name, bool single_turn = 1);
-	void OutputJawImpact(std::ostream* os);
-	string JawImpactName;
+	void JawImpact(ParticleTracking::Particle& p, int turn, string name);
+	void SetJawImpact(string name, int single_turn = 0);
+	//~ void OutputJawImpact(std::ostream* os);
+	void OutputJawImpact(string directory, int seed = 0);
+	//~ string JawImpactName;
+	vector<string> JawImpactNames;
 	bool JawImpact_on;
 	vector <JawImpactData*> StoredJawImpactData;
 

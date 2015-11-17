@@ -45,13 +45,26 @@ inline bool CollimatorAperture::PointInside(double x,double y,double z) const
 
 	double x_off = (z * ( x_offset_entry - x_offset_exit ) / CollimatorLength) - x_offset_entry;
 	double y_off = (z * ( y_offset_entry - y_offset_exit ) / CollimatorLength) - y_offset_entry;
+	
 
 	//These will give the jaw width and heights to be used. * 0.5 to convert to half width.
 	double x_jaw = (z * ( w_exit - GetFullWidth() )  / CollimatorLength) + GetFullWidth();
 	double y_jaw = (z * ( h_exit - GetFullHeight() ) / CollimatorLength) + GetFullHeight();
-
+	
 	double x1 = ((x+x_off) * cosalpha) - ((y+y_off) * sinalpha);
 	double y1 = ((x+x_off) * sinalpha) + ((y+y_off) * cosalpha);
+	
+	//output everything
+	//~ if(! (fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2)) ){
+		//~ cout << "\nCollAp: z = " << z << "\t\t CollimatorLength = " << CollimatorLength << endl;
+		//~ cout << "x_off = " << x_off << "\t\t x_offset_entry = " << x_offset_entry << "\t\t x_offset_entry " << x_offset_entry << endl; 
+		//~ //cout << "y_off = " << y_off << "\t\t y_offset_entry = " << y_offset_entry << "\t\t y_offset_entry " << y_offset_entry << endl; 
+		//~ cout << "x_jaw = " << x_jaw << z << "\t\t w_exit = " << w_exit << "\t\t Full Width = " << GetFullWidth() << endl;	
+		//~ //cout << "y_jaw = " << y_jaw << z << "\t\t h_exit = " << h_exit << "\t\t GetFullHeight() " << GetFullHeight() << endl; 
+		//~ cout << "x = " << x << "\t\t x_off = " << x_off << "\t\t cosalpha = " << cosalpha << endl; 
+		//~ cout << "x1 = " << x1 << "\t\t x_jaw/2 = " << x_jaw/2 << endl;		
+	//~ }
+	
 	return fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2);
 /*	ofstream outf;
 	outf.precision(18);
