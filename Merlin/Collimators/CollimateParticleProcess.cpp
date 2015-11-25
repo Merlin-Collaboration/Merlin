@@ -235,7 +235,8 @@ void CollimateParticleProcess::DoCollimation ()
 				break;
 			}
 		}
-	}else{
+	}
+	else{
 		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();p++)
 		{
 			if (!ap->PointInside( (*p).x(), (*p).y(), s) ){
