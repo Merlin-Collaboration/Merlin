@@ -95,7 +95,7 @@ namespace {
 		f->RotateY(y);
 		f->RotateZ(z);
 	}
-};
+}
 
 AcceleratorWithErrors::AcceleratorWithErrors(const std::string& name, AcceleratorModel* mdl, BeamData* beam0)
 :Accelerator(name,mdl,beam0)

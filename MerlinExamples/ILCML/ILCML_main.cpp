@@ -175,7 +175,7 @@ void AdjustLattice(AcceleratorModel& linacModel)
 	string s;
 	getline(ifs,s); // ignore first line
 
-	AcceleratorModel::Beamline linac = linacModel.GetBeamline();
+//	AcceleratorModel::Beamline linac = linacModel.GetBeamline();
 
 	vector<ComponentFrame*> frames;
 	linacModel.ExtractComponents("TWRFStructure.*|Quadrupole.*|BPM.*",frames);

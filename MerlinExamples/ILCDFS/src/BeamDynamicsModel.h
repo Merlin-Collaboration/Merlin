@@ -26,7 +26,7 @@ class SimulationOutput;
 class BeamDynamicsModel {
 public:
 
-	BeamDynamicsModel(const std::string& aName) : itsName(aName),output(0) {}
+	BeamDynamicsModel(const std::string& aName) : output(0),itsName(aName) {}
 
 	virtual ~BeamDynamicsModel() {};
 

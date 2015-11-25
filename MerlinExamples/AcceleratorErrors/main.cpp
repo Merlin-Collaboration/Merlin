@@ -137,7 +137,7 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname) {
 	beam0->sig_z  = 300.0e-06;
 	
 	return mb;
-};
+}
 
 // calculate emittances and print
 void Print(string tag, SMPBunch* bunch){
@@ -153,4 +153,4 @@ void Print(string tag, SMPBunch* bunch){
         cout<<tag<<" gamma*emittance_x "<<emitx*gam<<endl;
         cout<<tag<<" gamma*emittance_y "<<emity*gam<<endl;
                          
-};
+}

@@ -48,4 +48,4 @@ const RealMatrix& ResponseMatrixGenerator::Generate(size_t ns)
 	}
 
 	return M;
-};
+}

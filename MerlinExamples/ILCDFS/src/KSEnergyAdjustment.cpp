@@ -69,7 +69,7 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 		}
 		dfs_trace(dfs_trace::level_2)<<"beam = "<<dEbeam<<" GeV"<<endl;
 	}
-};
+}
 
 void KSEnergyAdjustment::SetEnergyState(size_t nes)
 {
