@@ -5,10 +5,13 @@ using namespace std;
 using namespace ParticleTracking;
 
 TrackingOutputAV::TrackingOutputAV(const std::string& filename):
-SimulationOutput(),turn_number(1), suppress_factor(1), current_s(0), current_s_set(0)
+SimulationOutput(), turn_number(0), suppress_factor(1), current_s(0), current_s_set(0), single_turn(1), turn_range_set(0), s_range_set(0)
 {
 	output_file = new std::ofstream(filename.c_str());
 	(*output_file) << "#id turn S x xp y yp dp type" << std::endl;
+			
+	// This sets a flag used in the TrackingSimulation class
+	output_all = 1;
 }
 
 TrackingOutputAV::~TrackingOutputAV(){
@@ -17,15 +20,26 @@ TrackingOutputAV::~TrackingOutputAV(){
 }
 
 void TrackingOutputAV::Record(const ComponentFrame* frame, const Bunch* bunch){
-	if(current_s_set != 1){current_s = frame->GetPosition(); current_s_set = 1; cout << "Setting S = " << current_s << endl; }
-	if(frame->GetPosition() < current_s){ turn_number++; cout << "Incrementing turn number = " << turn_number << endl;}
+	
+	// if no starting s value is set we store it
+	if(current_s_set != 1){ current_s = frame->GetPosition(); turn_number = 1; current_s_set = 1; cout << "\n\nSetting S = " << current_s << endl; }
+	
+	// if the position of the element is less than the stored s position we increment the turn, and continue to store s
+	if(frame->GetPosition() < current_s){ turn_number++; cout << "Incrementing turn number = " << turn_number << endl; }
 	current_s = frame->GetPosition(); 
 	
-    //~ if(!frame->IsComponent()) {
-    if( !frame->IsComponent() || (turn_number != turn) || (frame->GetPosition() >= end_s || frame->GetPosition() <= start_s) ) {
-    //~ if( !frame->IsComponent() || (turn_number != turn) ) {
-		return;
-	}
+	// if the current frame is not a component we exit
+	if( !frame->IsComponent() ){return;}
+	
+	// check if we are using a single turn & on the specified turn (default is single turn, with turn = 1)
+	//~ if( single_turn && (turn_number != turn) ){return;}
+	
+	// check if we are using a turn range & we are within the range
+	if( turn_range_set && (turn_number > end_turn || turn_number < start_turn) ){return;}
+	
+	// check if we are using an s range & we are within the range
+    if( s_range_set && (frame->GetPosition() < start_s || frame->GetPosition() > end_s) ){return;}
+	
 	string id = (*frame).GetComponent().GetQualifiedName();
 	double zComponent=frame->GetPosition() + frame->GetGeometryLength()/2;
 
