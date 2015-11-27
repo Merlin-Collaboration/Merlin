@@ -325,9 +325,9 @@ void ScatteringModel::OutputScatterPlot(string directory, int seed){
 			if( (*its)->name == (*name) ){
 				(*os) << setw(10) << setprecision(10) << left << (*its)->ID;
 				(*os) << setw(30) << setprecision(20) << left << (*its)->z;
+				(*os) << setw(30)<< setprecision(20) << left << (*its)->x;
 				(*os) << setw(30) << setprecision(20) << left << (*its)->y;
 				//~ (*os) << setw(10)<< setprecision(20) << left << (*its)->ID;
-				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->x;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->xp;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->y;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->yp;

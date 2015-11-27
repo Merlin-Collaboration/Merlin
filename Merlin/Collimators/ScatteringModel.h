@@ -44,6 +44,24 @@ struct ScatterPlotData{
 	string name;
 	//~ double ct;
 	//~ double dp;		
+	
+	inline bool operator==(const ScatterPlotData& rhs){
+		if( (this->z != rhs.z) )
+		{ return 0;}
+		else {return 1;}
+	}
+	
+	inline bool operator>(const ScatterPlotData& rhs){
+		if( (this->z > rhs.z) )
+		{ return 0;}
+		else {return 1;}
+	}
+	
+	inline bool operator<(const ScatterPlotData& rhs){
+		if( (this->z < rhs.z) )
+		{ return 0;}
+		else {return 1;}
+	}
 };
 
 class ScatteringModel
@@ -85,9 +103,7 @@ public:
 	// Scatter plot
 	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, string name);
 	void SetScatterPlot(string name, int single_turn = 0);
-	//~ void OutputScatterPlot(std::ostream* os);
 	void OutputScatterPlot(string directory, int seed = 0);
-	//~ string ScatterPlotName;
 	vector<string> ScatterPlotNames;
 	bool ScatterPlot_on;
 	vector <ScatterPlotData*> StoredScatterPlotData;
@@ -95,9 +111,7 @@ public:
 	// Jaw impact
 	void JawImpact(ParticleTracking::Particle& p, int turn, string name);
 	void SetJawImpact(string name, int single_turn = 0);
-	//~ void OutputJawImpact(std::ostream* os);
 	void OutputJawImpact(string directory, int seed = 0);
-	//~ string JawImpactName;
 	vector<string> JawImpactNames;
 	bool JawImpact_on;
 	vector <JawImpactData*> StoredJawImpactData;

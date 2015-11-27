@@ -23,7 +23,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, double
         std::cerr << "Could not open ApertureSurvey file" << std::endl;
         exit(EXIT_FAILURE);
     }   
-	(*output_file) << "#name\ttype\ts_end\tap_px\tap_mx\tap_py\tap_my" << endl;
+	(*output_file) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 	
 	//~ DoApertureSurvey();
 	double s = 0;
@@ -85,7 +85,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, double
 	points = points_per_element;
 	AccMod = model;
 	
-	(*os) << "#name\ttype\ts_end\tap_px\tap_mx\tap_py\tap_my" << endl;
+	(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 	
 	//~ DoApertureSurvey();
 	double s = 0;

@@ -24,6 +24,7 @@ DEF_INTG_SET(ParticleComponentTracker,StdISet)
 ADD_INTG(DriftCI)
 ADD_INTG(TWRFStructureCI)
 ADD_INTG(SWRFStructureCI)
+//~ ADD_INTG(THIN_LENS::SWRFStructureCI)
 ADD_INTG(RectMultipoleCI)
 ADD_INTG(SectorBendCI)
 // from StdIntegrators

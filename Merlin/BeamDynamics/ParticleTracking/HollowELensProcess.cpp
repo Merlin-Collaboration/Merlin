@@ -304,12 +304,13 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 	else{Length = EffectiveLength;}
 	//~ cout << "\n\tHEL Length = " << Length << endl;	
 
-	// Centre of HEL
-	//~ x = p.x();
-	//~ y = p.y();
-	x = p.x() + p.xp()*(Length/2);
-	y = p.y() + p.yp()*(Length/2);
+	// Start of HEL
+	x = p.x();
+	y = p.y();	
+	
+	// Calculate particle transverse vector ('radius' in xy space)
 	R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
+	//~ R = sqrt( pow((x),2) + pow((y),2) );
 	
 	//~ cout << "\n\n\t\tHELProcess :: R = " << R << " Rmin = " << Rmin << endl; 
 
@@ -347,13 +348,13 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 	else{Length = EffectiveLength;}
 	//~ cout << "\n\tHEL Length = " << Length << endl;	
 
-	// Centre of HEL
+	// Start of HEL
 	x = p.x();
-	y = p.y();
-	//~ x = p.x() + p.xp()*(Length/2);
-	//~ y = p.y() + p.yp()*(Length/2);
-	//~ R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
-	R = sqrt( pow((x),2) + pow((y),2) );
+	y = p.y();	
+	
+	// Calculate particle transverse vector ('radius' in xy space)
+	R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
+	//~ R = sqrt( pow((x),2) + pow((y),2) );
 	
 	// Adapted from V. Previtali's SixTrack elense implementation 
 	
