@@ -17,9 +17,11 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include "NumericalUtils/NumericalConstants.h"
 
-namespace Collimation {
+namespace Collimation
+{
 	
-class CrossSections{
+class CrossSections
+{
 public:
 
 	//default constructor
@@ -28,10 +30,16 @@ public:
 	//overloaded constructor
 	CrossSections(Material* mat, double E, int scattertype);
 	
-	inline bool operator==(const CrossSections& rhs){
-		if( (this->sig_pN_tot_ref != rhs.sig_pN_tot_ref)	|| (this->scat_type != rhs.scat_type) || (this->lambda_tot != rhs.lambda_tot ))
-		{ return 0;}
-		else {return 1;}
+	inline bool operator==(const CrossSections& rhs)
+	{
+		if( (this->sig_pN_tot_ref != rhs.sig_pN_tot_ref) || (this->scat_type != rhs.scat_type) || (this->lambda_tot != rhs.lambda_tot ))
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}	
 	
 	void ConfigureCrossSections(double E0);
@@ -41,64 +49,64 @@ public:
 	ParticleTracking::ppDiffractiveScatter* DiffractiveScatter;
 	
 	void Set_E0(double a){E0 = a;}
-	const double Get_E0(){return E0;}
+	double Get_E0() const {return E0;}
 	
 	void Set_sig_pN_tot_ref(double a){sig_pN_tot_ref = a;}
-	const double Get_sig_pN_tot_ref(){return sig_pN_tot_ref;}
+	double Get_sig_pN_tot_ref() const {return sig_pN_tot_ref;}
 	
 	void Set_sig_pN_inel_ref(double a){ sig_pN_inel_ref = a;}
-	const double Get_sig_pN_inel_ref(){return sig_pN_inel_ref;}
+	double Get_sig_pN_inel_ref() const {return sig_pN_inel_ref;}
 	
 	void Set_sig_R_ref(double a){sig_R_ref = a;}
-	const double Get_sig_R_ref(){return sig_R_ref;}
+	double Get_sig_R_ref() const {return sig_R_ref;}
 	
 	void Set_sig_R(double a){sig_R = a;}
-	const double Get_sig_R(){return sig_R;}
+	double Get_sig_R() const {return sig_R;}
 	
 	void Set_sig_pp_tot(double a){sig_pp_tot = a;}
-	const double Get_sig_pp_tot(){return sig_pp_tot;}
+	double Get_sig_pp_tot() const {return sig_pp_tot;}
 	
 	void Set_sig_pp_el(double a){sig_pp_el = a;}
-	const double Get_sig_pp_el(){return sig_pp_el;}
+	double Get_sig_pp_el() const {return sig_pp_el;}
 	
 	void Set_sig_pn_el(double a){sig_pn_el = a;}
-	const double Get_sig_pn_el(){return sig_pn_el;}
+	double Get_sig_pn_el() const {return sig_pn_el;}
 	
 	void Set_sig_pp_sd(double a){sig_pp_sd = a;}
-	const double Get_sig_pp_sd(){return sig_pp_sd;}
+	double Get_sig_pp_sd() const {return sig_pp_sd;}
 	
 	void Set_sig_pn_sd(double a){sig_pn_sd = a;}
-	const double Get_sig_pn_sd(){return sig_pn_sd;}
+	double Get_sig_pn_sd() const {return sig_pn_sd;}
 	
 	void Set_sig_pN_tot(double a){sig_pN_tot = a;}
-	const double Get_sig_pN_tot(){return sig_pN_tot;}
+	double Get_sig_pN_tot() const {return sig_pN_tot;}
 	
 	void Set_sig_pN_inel(double a){sig_pN_inel = a;}
-	const double Get_sig_pN_inel(){return sig_pN_inel;}
+	double Get_sig_pN_inel() const {return sig_pN_inel;}
 	
 	void Set_sig_pN_el(double a){sig_pN_el = a;}
-	const double Get_sig_pN_el(){return sig_pN_el;}
+	double Get_sig_pN_el() const {return sig_pN_el;}
 	
 	void Set_lambda_tot(double a){lambda_tot = a;}
-	const double Get_lambda_tot(){return lambda_tot;}
+	double Get_lambda_tot() const {return lambda_tot;}
 	
 	void Set_elastic_diff(double a){elastic_diff = a;}
-	const double Get_elastic_diff(){return elastic_diff;}
+	double Get_elastic_diff() const {return elastic_diff;}
 	
 	void Set_com_sqd(double a){com_sqd = a;}
-	const double Get_com_sqd(){return com_sqd;}
+	double Get_com_sqd() const {return com_sqd;}
 	
 	void Set_density(double a){density = a;}
-	const double Get_density(){return density;}
+	double Get_density() const {return density;}
 	
 	void Set_atomic_mass(double a){atomic_mass = a;}
-	const double Get_atomic_mass(){return atomic_mass;}
+	double Get_atomic_mass() const {return atomic_mass;}
 	
 	void Set_atomic_no(double a){atomic_no = a;}
-	const double Get_atomic_no(){return atomic_no;}
+	double Get_atomic_no() const {return atomic_no;}
 	
 	void Set_scat_type(int a){scat_type = a;}
-	const int Get_scat_type(){return scat_type;}
+	int Get_scat_type() const {return scat_type;}
 		
 private:
 	double E0;
