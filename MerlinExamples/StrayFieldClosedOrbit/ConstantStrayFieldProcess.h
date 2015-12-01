@@ -48,6 +48,6 @@ namespace ParticleTracking {
 		void ApplyKick();
 	};
 	
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif // _h_ConstantStrayFieldProcess

@@ -20,7 +20,7 @@ namespace {
     ParticleBunch* STRUCT_Bunch(const BeamData& bdat, double nx1,
         double nx2, double ny1, double ny2, double dpp,
         int npart);
-}; // end anonymous namespace
+} // end anonymous namespace
 
 HaloTracker::HaloTracker(AcceleratorModel::Beamline beamline, const BeamData& beamdat)
 : collimate_halo(true),dump_particles(true),use_struct_dist(false),
@@ -180,4 +180,4 @@ namespace {
         return bunch;
     }
     
-}; 
+}

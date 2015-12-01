@@ -22,6 +22,6 @@ namespace ParticleTracking {
         void TrackStep(double ds);
     };
     
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif

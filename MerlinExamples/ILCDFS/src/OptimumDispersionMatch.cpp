@@ -28,7 +28,7 @@ namespace {
 		return sqrt(s33*s44-s34*s34);
 	}
 
-};
+}
 
 void OptimumDispersionMatch(AcceleratorModel* accmdl, BeamData beam0)
 {
@@ -66,4 +66,4 @@ void OptimumDispersionMatch(AcceleratorModel* accmdl, BeamData beam0)
 
 			delete bunch;
 //	}
-};
+}
