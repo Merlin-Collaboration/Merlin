@@ -562,10 +562,16 @@ END_INTG_SET
 
 	inline void ApplySectorBendMap(ParticleBunch* bunch, double h, double ds) {
 		if(ds!=0)
+		{
 			if(h==0)
+			{
 				for_each(bunch->begin(),bunch->end(),DriftMap(ds));
+			}
 			else
+			{
 				for_each(bunch->begin(),bunch->end(),SectorBendMap(h, ds));
+			}
+		}
 	}
 
 	inline void ApplyCombinedFunctionSectorBendMap(ParticleBunch* bunch, double h, double k1, double ds) {
