@@ -39,8 +39,13 @@ OS<<"done: real time: "<<int(difftime(time(0),start_t))<<" seconds"<<endl;}
 // ----------------------------
 
 // Error function
+#ifdef __APPLE__
+double erfc(double x);
+inline double erf(double x) { return 1-erfc(x); }
+#else
 double erfc(double x) throw();
 inline double erf(double x) throw () { return 1-erfc(x); }
+#endif
 double NormalBin(double x1, double x2);
 
 // Modified Bessel function
