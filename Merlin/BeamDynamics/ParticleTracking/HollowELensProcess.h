@@ -37,6 +37,7 @@ public:
     HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity);
     HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e);
     HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
+
     //	Initialise this process with the specified Bunch. If
     //	bunch is not a ParticleBunch object, the process becomes
     //	inactive.
@@ -88,9 +89,9 @@ public:
 
 private:
     // Data Members for Class Attributes
-	double Rigidity;
 	double Current;
 	double ElectronBeta;
+	double Rigidity;
 	double ProtonBeta;
 	double EffectiveLength;
 	
@@ -99,7 +100,10 @@ private:
 	double R;
 	double Rmin;
 	double Rmax;
-	
+
+	bool ACSet;
+	bool SimpleProfile;
+	bool AlignedToOrbit;
 	double XOffset;
 	double YOffset;
 
@@ -118,14 +122,10 @@ private:
 	double MinTune;
 	double MaxTune;
 
-	bool ACSet;
-	bool SimpleProfile;
-	bool AlignedToOrbit;
-
 	OperationMode OMode;
 
 };
 
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif
