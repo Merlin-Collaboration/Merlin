@@ -847,5 +847,5 @@ void CCFailureProcess::ApplyPostCCKick(PSvector &p, double V, double M12, bool h
 }
 
 
-}; //End namespace ParticleTracking
+} //End namespace ParticleTracking
 
