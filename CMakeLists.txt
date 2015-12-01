@@ -145,7 +145,7 @@ AUX_SOURCE_DIRECTORY(Merlin/TLAS sources)
 AUX_SOURCE_DIRECTORY(Merlin/utility sources)
 
 #Additional Compiler flags
-ADD_DEFINITIONS("-Wall -ansi -pedantic")
+ADD_DEFINITIONS("-Wall -Wextra -ansi -pedantic")
 
 #Enable to build the MerlinExamples folder
 if(ENABLE_EXAMPLES)
