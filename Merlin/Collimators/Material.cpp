@@ -14,7 +14,8 @@ using namespace PhysicalUnits;
 Basic constructor taking the following arguments: 
 Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
 */
-Material::Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0){
+Material::Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
+{
 	Name = name0;
 	Symbol = sym0;
 	AtomicMass = A0;
@@ -26,7 +27,7 @@ Material::Material(string name0, string sym0, double A0, int AtomicNumber0, doub
 	X0 = X00;
 	Density = Density0;
 	Conductivity = Conductivity0;
-};
+}
 
 
 double Material::CalculateElectronDensity()
