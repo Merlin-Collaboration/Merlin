@@ -23,36 +23,42 @@
 // AcceleratorComponent
 #include "AcceleratorModel/AcceleratorComponent.h"
 
-#include <iostream>
-
 const int AcceleratorComponent::ID = UniqueIndex();
 
 AcceleratorComponent::~AcceleratorComponent ()
 {
-    if(itsGeometry) delete itsGeometry;
-    if(itsField) delete itsField;
+	if(itsGeometry)
+	{
+		delete itsGeometry;
+	}
+
+	if(itsField)
+	{
+		delete itsField;
+	}
 }
 
 int AcceleratorComponent::GetIndex () const
 {
-    return ID;
+	return ID;
 }
 
 double AcceleratorComponent::GetLength () const
 {
-    return itsGeometry ? itsGeometry->GetGeometryLength() : 0;
+	return itsGeometry ? itsGeometry->GetGeometryLength() : 0;
 }
 
 void AcceleratorComponent::PrepareTracker (ComponentTracker& aTracker)
 {
-    if(!aTracker.SelectIntegrator(AcceleratorComponent::ID,*this))
-        std::cerr << "AcceleratorComponent::PrepareTracker(): could not select integrator for " << GetType()<< std::endl;
-        throw ComponentTracker::UnknownComponent();
+	if(!aTracker.SelectIntegrator(AcceleratorComponent::ID,*this))
+	{
+		throw ComponentTracker::UnknownComponent();
+	}
 }
 
 int AcceleratorComponent::UniqueIndex ()
 {
-    static int ID_count = 0;
-    return ID_count++;
+	static int ID_count = 0;
+	return ID_count++;
 }
 
