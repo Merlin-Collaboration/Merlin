@@ -37,8 +37,8 @@ public:
 private:
 
 	Accelerator* acc;
-	RWChannelArray& cors;
 	const ROChannelArray& bpms;
+	RWChannelArray& cors;
 	double eps;
 
 	RealVector data0;

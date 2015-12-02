@@ -26,7 +26,7 @@ class BeamData;
 namespace SMPTracking {
 	class SMPBunch;
 	class WakeFieldProcess;
-};
+}
 
 class SMPTrackingModel : public BeamDynamicsModel {	
 public:

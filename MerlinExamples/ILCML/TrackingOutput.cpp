@@ -23,7 +23,7 @@ namespace {
 	}
 
 #define WRITE_FOS(w,p,data) (*fosptr)<<scientific<<setw(w)<<setprecision(p)<<(data)
-};
+}
 
 
 void TrackingOutput::Record(const ComponentFrame* frame, const Bunch* bunch)
@@ -71,6 +71,4 @@ bool TrackingOutput::NewFile(const std::string& fname)
 	fosptr = new ofstream(fname.c_str());
 	return *fosptr;
 }
-
-
 

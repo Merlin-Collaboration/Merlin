@@ -100,7 +100,7 @@ DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
 	theSimulationModel->GetCorrectorChannels(xy,correctors);
 	cData.redim(nstates*nbpms);
 	cCorr.redim(ncors);
-};
+}
 
 void DFSCorrection::Initialise()
 {

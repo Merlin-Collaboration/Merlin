@@ -23,7 +23,7 @@ namespace {
 		return sqrt(s33*s44-s34*s34);
 	}
 
-};
+}
 
 #define WRITE_FOS(w,p,data) (*fos)<<scientific<<setw(w)<<setprecision(p)<<(data)
 

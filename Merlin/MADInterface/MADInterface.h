@@ -98,6 +98,7 @@ public:
 
 protected:
     double energy;
+    std::string filename;
     ifstream *ifs;
     ostream* log;
 
