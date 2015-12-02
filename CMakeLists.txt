@@ -145,7 +145,7 @@ AUX_SOURCE_DIRECTORY(Merlin/TLAS sources)
 AUX_SOURCE_DIRECTORY(Merlin/utility sources)
 
 #Additional Compiler flags
-ADD_DEFINITIONS("-Wall -ansi -pedantic")
+ADD_DEFINITIONS("-Wall -Wextra -ansi -pedantic")
 
 #Enable to build the MerlinExamples folder
 if(ENABLE_EXAMPLES)
@@ -175,9 +175,6 @@ endif()
 if(BUILD_STATIC)
 	add_library(merlin STATIC ${sources})
 endif()
-
-#link to libgsl.
-target_link_libraries(merlin gsl gslcblas)
 
 #We want to link to the mpi libraries if this is an MPI build.
 if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)

@@ -117,11 +117,6 @@ private:
 	int IP5_up_count;
 	int IP5_down_count;
 	
-	//Failure variables
-	int fail_turns;
-	int non_fail_turns;
-	bool failure_on;
-	
 	
 	//Store upstream voltages
 	double Atlas_Upstream_V1[4];
@@ -138,10 +133,15 @@ private:
 	
 	double Gamma_p;
 	double Beta_p;
-	double theta;		//half crossing angle
 	double omega;		//crab cavity frequency
+	double theta;		//half crossing angle
 	double phi_s;		//crab phase
 	double EnergyCC;	//Beam energy
+
+	//Failure variables
+	int non_fail_turns;
+	int fail_turns;
+	bool failure_on;
 	
 	int Turn;
 	int n;			//number of crabs pre/post IP
@@ -149,5 +149,5 @@ private:
 };
 
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 #endif

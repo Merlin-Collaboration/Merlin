@@ -27,7 +27,7 @@ class TrackingOutputAV : public SimulationOutput {
 		std::ofstream* output_file;
 
 		int suppress_factor;
-		int turn;
+		unsigned int turn;
 		double start_s;
 		double end_s;
 		double current_s;
@@ -37,9 +37,9 @@ class TrackingOutputAV : public SimulationOutput {
 		bool turn_range_set;
 		bool s_range_set;
 		
-		int turn_number;
-		int start_turn;
-		int end_turn;
+		unsigned int turn_number;
+		unsigned int start_turn;
+		unsigned int end_turn;
 	
 };
 

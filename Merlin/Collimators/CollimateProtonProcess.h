@@ -49,6 +49,6 @@ private:
     bool scatterset;
 };
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 
 #endif

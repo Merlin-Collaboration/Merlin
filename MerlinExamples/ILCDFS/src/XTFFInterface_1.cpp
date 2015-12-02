@@ -48,11 +48,11 @@ namespace {
 
 typedef XTFFInterface_1::XTFF_Data Data;
 
-double energy;		// current energy
-double beamload;	// energy loss due to beamloading
+double energy;      // current energy
+double beamload;        // energy loss due to beamloading
 
-double z_total;		// current total length
-double Qt;			// charge for beamloading
+double z_total; // current total length
+double Qt;      // charge for beamloading
 
 // skip n input lines
 void SkipLines(istream& is, int n)
@@ -72,7 +72,7 @@ double RealValue(const string& dat, int c1, int c2)
 string StringValue(const string& dat, int c1, int c2)
 {
     string rv = dat.substr(c1-1,c2-c1+1);
-    unsigned int n = rv.find_first_of(' ');
+    size_t n = rv.find_first_of(' ');
     return n==string::npos ? rv : rv.substr(0,n);
 }
 
@@ -145,7 +145,7 @@ SectorBend* ConstructSectorBend(const Data& data)
     double len   = data[L];
     double angle = data[ANGLE];
     double k1    = data[K1];
-    //double k2    = data[K2];
+    double k2    = data[K2];
     double e1    = data[E1];
     double e2    = data[E2];
     double tilt  = data[TILT];
@@ -174,7 +174,7 @@ SectorBend* ConstructRectBend(const Data& data)
     double len   = data[L];
     double angle = data[ANGLE];
     double k1    = data[K1];
-    //double k2    = data[K2];
+    double k2    = data[K2];
     double e1    = angle/2;
     double e2    = angle/2;
     double tilt  = data[TILT];
@@ -218,7 +218,7 @@ SkewQuadrupole* ConstructSkewQuadrupole(const Data& data)
 {
     double len   = data[L];
     double k1    = data[K1];
-    //double tilt  = data[TILT];
+    double tilt  = data[TILT];
     double brho  = energy/eV/SpeedOfLight;
     return new SkewQuadrupole(data.label,len,brho*k1);
 }
@@ -237,7 +237,7 @@ SkewSextupole* ConstructSkewSextupole(const Data& data)
 {
     double len   = data[L];
     double k2    = data[K2];
-    //double tilt  = data[TILT];
+    double tilt  = data[TILT];
     double brho  = energy/eV/SpeedOfLight;
     return new SkewSextupole(data.label,len,brho*k2);
 }
@@ -343,7 +343,7 @@ inline bool is_skewsext(double tilt) { return fabs(tilt/SKS_TILT-1.0)<1e-03;}
 
 #define TYPEIS(kw) (dat.keywrd == #kw)
 
-} // end namespace
+}; // end namespace
 
 void XTFFInterface_1::ConstructComponent(XTFF_Data& dat)
 {

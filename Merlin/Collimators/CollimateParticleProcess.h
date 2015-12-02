@@ -159,7 +159,7 @@ protected:
 	// 0 when no dustbin is set
     bool dustset;
     
-    const double GetBinSize(){return bin_size;}
+    double GetBinSize() const {return bin_size;}
             
     int ColParProTurn;
     string FirstElementName;

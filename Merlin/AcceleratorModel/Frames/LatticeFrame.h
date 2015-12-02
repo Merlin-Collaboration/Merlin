@@ -402,8 +402,6 @@ inline LatticeFrame* LatticeFrame::SetSuperFrame (LatticeFrame* aFrame)
 
 inline bool LatticeFrame::ReplaceSubFrame (LatticeFrame* subFrame, LatticeFrame* newSubFrame)
 {
-	cout << "LatticeFrame.h - ReplaceSubFrame - FIXME" << endl;
-	newSubFrame = subFrame;
     return false;
 }
 

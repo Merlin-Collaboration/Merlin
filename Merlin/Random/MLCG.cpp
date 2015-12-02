@@ -97,6 +97,6 @@ _G_uint32_t MLCG::asLong()
     if (z < 1) {
         z += 2147483562;
     }
-    return( (unsigned long) z);
+    return( static_cast<unsigned long>(z) );
 }
 

@@ -8,7 +8,7 @@ namespace SMPTracking {
 
 typedef TTrackSim<SMPComponentTracker> SMPTracker;
 
-};
+}
 
 #endif
 

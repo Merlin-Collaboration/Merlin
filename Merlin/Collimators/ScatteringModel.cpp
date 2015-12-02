@@ -85,7 +85,8 @@ double ScatteringModel::PathLength(Material* mat, double E0){
 			++i;
 		}
 
-		for(int j=0;j<fraction.size();j++){
+		for(unsigned int j=0;j<fraction.size();j++)
+		{
 			cout << " Process " << j << " total sigma " << setw(10) << setprecision(4) << sigma << "barns";
 			fraction[j] /= sigma;
 			cout << " fraction " << setw(10) << setprecision(4) << fraction[j] << endl;
@@ -238,7 +239,7 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, 
 bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E){ 
 
 	double r = RandomNG::uniform(0,1);
-	for(int i = 0; i<fraction.size(); i++)  
+	for(unsigned int i = 0; i<fraction.size(); i++)
 	{ 
 	    r -= fraction[i]; 
 	    if(r<0)
