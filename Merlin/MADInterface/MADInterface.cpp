@@ -984,7 +984,7 @@ double MADInterface::ReadComponent ()
 
 	}//End of try block
 
-	catch(MADKeyMap::bad_key)
+	catch(MADKeyMap::bad_key&)
 	{
 		MerlinIO::error()<<"L not present in table"<<endl;
 		abort();
