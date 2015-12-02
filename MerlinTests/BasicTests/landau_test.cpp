@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 		istringstream liness(line);
 		liness >> dist_bin >> dist_val;
 		//cout << "@" << dist_bin << " " << dist_val << endl;
-		if (dist_bin<0 or dist_bin >= (nbins+2)){
+		if (dist_bin >= (nbins+2)){
 			cout << "Invalid bin ("<< dist_bin<<") in landau_test_dist.dat";
 			exit(1);
 		}

@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 		if (line[0] == '#')continue;
 		istringstream liness(line);
 		liness >> dist_bin >> dist_val_x >> dist_val_xp >> dist_val_dp;
-		if (dist_bin<0 or dist_bin >= (nbins+2)){
+		if (dist_bin >= (nbins+2)){
 			cout << "Invalid bin ("<< dist_bin<<") in cu50_merlin_hist.dat";
 			exit(1);
 		}
