@@ -796,14 +796,16 @@ private:
 
 
 template<class T>
-class Matrix /* : public TMTRX_BASE<T> */ {
-
+class Matrix /* : public TMTRX_BASE<T> */
+{
+public:
     typedef T value_type;
     typedef std::valarray<T> array_type;
     typedef std::slice slice_type;
     typedef std::gslice gslice_type;
     typedef std::valarray<size_t> index_array_type;
 
+private:
     // private function to calculate index
     Subscript index(Subscript i, Subscript j) const {
         in_range(i,nr);
@@ -1175,7 +1177,8 @@ Vector<T> operator*(const Matrix<T>& M, const Vector<T> V)
 }
 
 template<class T>
-ostream& operator<<(ostream& os, const Matrix<T>& M){
+ostream& operator<<(ostream& os, const Matrix<T>& M)
+{
 	for(size_t i=0; i<M.ncols(); i++){
 		for(size_t j=0; j<M.nrows(); j++){
 			os << M(i,j) << " ";

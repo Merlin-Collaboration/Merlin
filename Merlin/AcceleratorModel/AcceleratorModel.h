@@ -87,7 +87,7 @@ public:
         {}
 
         Beamline ()
-                : first(0),last(0),first_i(0),last_i(0)
+                : first(),last(),first_i(),last_i()
         {}
 
         //	Returns true if the beamline is reversed.
