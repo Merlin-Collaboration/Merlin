@@ -105,7 +105,7 @@ public:
 	/**
 	* Primary tracking interface. Prepares the specified
 	* Tracker object for tracking this component.
-	* @param[out] aTracker The tracker to prepare.
+	* @param[in,out] aTracker The tracker to prepare.
 	*/
 	virtual void PrepareTracker(ComponentTracker& aTracker);
 
@@ -153,9 +153,9 @@ public:
 	*/
 	double GetComponentLatticePosition() const;
 
-	/*
+	/**
 	* Collimator ID for FLUKA output AV+HR 09.11.15
-	* N.B. These values can only be set or got in Collimator
+	* N.B. These values can only be set or got in Collimator.
 	* @param[in] n The value of the Collimator ID to set.
 	*/
 	void SetCollID(int n)
@@ -163,8 +163,8 @@ public:
 		Coll_ID = n;
 	}
 
-	/*
-	* Get the Collimator ID;
+	/**
+	* Get the Collimator ID.
 	* @return An integer containing the Collimator ID.
 	*/
 	int GetCollID() const
@@ -229,7 +229,7 @@ protected:
 	*/
 	size_t blI;
 
-	/*
+	/**
 	* Collimator ID for FLUKA output AV+HR 09.11.15
 	* N.B. These values can only be set or got in Collimator
 	*/
