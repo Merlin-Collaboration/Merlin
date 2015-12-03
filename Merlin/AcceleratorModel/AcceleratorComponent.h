@@ -48,74 +48,81 @@ using std::string;
 class AcceleratorComponent : public ModelElement
 {
 public:
-	virtual ~AcceleratorComponent ();
+
+	virtual ~AcceleratorComponent();
 
 	/**
 	* Returns the unique index for this class of accelerator
 	* components.
+	* @return An integer containing the unique index for this AcceleratorComponent type.
 	*/
-	virtual int GetIndex () const;
+	virtual int GetIndex() const;
 
 	/**
 	* Returns the geometry length of the component.
+	* @return A double containing the length of this component.
 	*/
-	double GetLength () const;
+	double GetLength() const;
 
 	/**
 	* Returns a pointer to the this components geometry.
-	* Returns NULL if no geometry is associated with this
-	* component.
+	* Returns NULL if no geometry is associated with this component.
+	* @return The AcceleratorGeometry associated with this element.
 	*/
-	const AcceleratorGeometry* GetGeometry () const;
+	const AcceleratorGeometry* GetGeometry() const;
 
 	/**
 	* Returns a pointer to this components field. A NULL
 	* pointer is returned if the component has no field.
+	* @return The EMField associated with this element.
 	*/
-	const EMField* GetEMField () const;
+	const EMField* GetEMField() const;
 
 	/**
-	* Returns a pointer to the aperture of this element
+	* Returns a pointer to the aperture of this element.
+	* @return The Aperture associated with this element.
 	*/
-	Aperture* GetAperture () const;
+	Aperture* GetAperture() const;
 
 	/**
 	* Sets the aperture of this element
-	* @param ap A pointer to an aperture class to associate with this component
+	* @param[in] ap A pointer to an Aperture class to associate with this component
 	*/
-	void SetAperture (Aperture* ap);
+	void SetAperture(Aperture* ap);
 
 	/**
-	* Returns the wake potentials associated with this cavity.
+	* Returns the wake potentials associated with this element.
+	* @return The WakePotentials associated with this element.
 	*/
-	WakePotentials* GetWakePotentials () const;
+	WakePotentials* GetWakePotentials() const;
 
 	/**
 	* Sets the wake potentials associated with this cavity.
-	* @param wp A pointer to a wakepotential class to associate with this component
+	* @param[in] wp A pointer to a WakePotentials class to associate with this component
 	*/
-	void SetWakePotentials (WakePotentials* wp);
+	void SetWakePotentials(WakePotentials* wp);
 
 	/**
 	* Primary tracking interface. Prepares the specified
 	* Tracker object for tracking this component.
-	* @param aTracker The tracker to prepare
+	* @param[out] aTracker The tracker to prepare.
 	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
 	* Rotates the component 180 degrees about its local Y axis.
 	*/
-	virtual void RotateY180 () = 0;
+	virtual void RotateY180() = 0;
 
 	/**
-	* Set the uniques beamline index for this frame
-	* @param n The beamline index
+	* Set the uniques beamline index for this frame.
+	* @param[in] n The beamline index.
 	*/
 	void SetBeamlineIndex(size_t n);
 
 	/**
-	* Get the uniques beamline index for this frame
+	* Get the unique beamline index for this frame.
+	* @return A size_t containing the unique beamline index.
 	*/
 	size_t GetBeamlineIndex() const;
 
@@ -124,6 +131,7 @@ public:
 	/**
 	* Returns the total number of distinct component types in
 	* the system.
+	* @return An integer containing the total number of types of element types that exist.
 	*/
 	static int TotalComponentNumber ();
 
@@ -134,32 +142,52 @@ public:
 	static const int ID;
 
 	/**
-	* Set the distance from the start of the lattice to the START of the element
-	* @param position The position of the start of the lattice element
+	* Set the distance from the start of the lattice to the START of the element.
+	* @param[in] position The position of the start of the lattice element.
 	*/
 	void SetComponentLatticePosition(double position);
 
 	/**
-	* Get the distance from the start of the lattice to the START of the element
+	* Get the distance from the start of the lattice to the START of the element.
+	* @return A double containing the position of the start of the lattice element.
 	*/
 	double GetComponentLatticePosition() const;
 
 	/*
 	* Collimator ID for FLUKA output AV+HR 09.11.15
 	* N.B. These values can only be set or got in Collimator
+	* @param[in] n The value of the Collimator ID to set.
 	*/
-	void SetCollID (int n){Coll_ID = n;}
-	int GetCollID() const {return Coll_ID;}
+	void SetCollID(int n)
+	{
+		Coll_ID = n;
+	}
+
+	/*
+	* Get the Collimator ID;
+	* @return An integer containing the Collimator ID.
+	*/
+	int GetCollID() const
+	{
+		return Coll_ID;
+	}
 
 
 protected:
 
 	/**
 	* Protected constructors used by derived classes.
+	* @param[in] aName The name of the AcceleratorComponent
 	*/
-	explicit AcceleratorComponent (const string& aName = string());
+	explicit AcceleratorComponent(const string& aName = string());
 
-	AcceleratorComponent (const string& aName, AcceleratorGeometry* aGeom, EMField* aField);
+	/**
+	* Protected constructors used by derived classes.
+	* @param[in] aName The name of the AcceleratorComponent
+	* @param[in] aGeom The AcceleratorGeometry of the AcceleratorComponent
+	* @param[in] aField The EMField of the AcceleratorComponent
+	*/
+	AcceleratorComponent(const string& aName, AcceleratorGeometry* aGeom, EMField* aField);
 
 	/**
 	* Used by derived classes to generate a unique index. All
@@ -168,7 +196,7 @@ protected:
 	*
 	* IndexType component::ID = UniqueIndex();
 	*/
-	static int UniqueIndex ();
+	static int UniqueIndex();
 
 	/**
 	* A pointer to the Electromagnetic field for this component
@@ -176,7 +204,7 @@ protected:
 	EMField* itsField;
 
 	/**
-	* A pointer to the geometry field for this component
+	* A pointer to the geometry for this component
 	*/
 	AcceleratorGeometry* itsGeometry;
 
@@ -192,14 +220,14 @@ protected:
 
 	/**
 	* The position of this element relative to a user defined location
-	* (the start of the user generated lattice)
+	* (the start of the user generated lattice).
 	*/
 	double position;
 
 	/**
 	* beamline index associated with this component
 	*/
-	size_t blI; 
+	size_t blI;
 
 	/*
 	* Collimator ID for FLUKA output AV+HR 09.11.15
@@ -214,7 +242,6 @@ private:
 	//AcceleratorComponent(const AcceleratorComponent& rhs);
 	//AcceleratorComponent& operator=(const AcceleratorComponent& rhs);
 };
-
 
 inline AcceleratorComponent::AcceleratorComponent (const string& aName)
 		: ModelElement(aName),itsField(0),itsGeometry(0),itsAperture(0),itsWakes(0),blI(0)
@@ -280,9 +307,9 @@ inline void AcceleratorComponent::SetComponentLatticePosition(double distance)
 	position = distance;
 }
 
-
 inline double AcceleratorComponent::GetComponentLatticePosition() const
 {
 	return position;
 }
+
 #endif
