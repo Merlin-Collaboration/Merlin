@@ -19,80 +19,110 @@
 #include <string>
 #include <vector>
 
-//	Root class for all elements/components which are used to
-//	construct an AcceleratorModel. All ModelElement objects
-//	are characterised by a type string and an identifier
-//	(name). The type string identifies the type of element
-//	(class), while the name is specific to an instance of
-//	that element type.
-
+/**
+* Root class for all elements/components which are used to
+* construct an AcceleratorModel. All ModelElement objects
+* are characterised by a type string and an identifier
+* (name). The type string identifies the type of element
+* (class), while the name is specific to an instance of
+* that element type.
+*/
 class ModelElement
 {
 public:
-    //	Constructor taking the name of the element.
-	explicit ModelElement (const std::string& aName ="<UNNAMED>");
 
-    virtual ~ModelElement ();
+	/**
+	* Constructor taking the name of the element.
+	* @param[in] aName A string containing the name of the element
+	*/
+	explicit ModelElement(const std::string& aName ="<UNNAMED>");
 
-    //	Return the name of the element.
-	virtual const std::string& GetName () const;
+	virtual ~ModelElement();
 
-    //	Return the type string for the element.
-	virtual const std::string& GetType () const = 0;
+	/**
+	* Return the name of the element.
+	* @return A string containing the name of the element.
+	*/
+	virtual const std::string& GetName() const;
 
-    //	Return the qualified name of the component. The
-    //	qualified name has the form typestr.namestr.
-	std::string GetQualifiedName () const;
+	/**
+	* Return the type string for the element.
+	* @return A string containing the type of the element.
+	*/
+	virtual const std::string& GetType() const = 0;
 
-    //	Virtual constructor.
-    virtual ModelElement* Copy () const = 0;
+	/**
+	* Return the qualified name of the component. The
+	* qualified name has the form typestr.namestr.
+	* @return A string containing the qualified name of the element.
+	*/
+	std::string GetQualifiedName() const;
 
-    //	Set the name of the component.
+	/**
+	* Virtual constructor.
+	*/
+	virtual ModelElement* Copy() const = 0;
+
+	/**
+	* Set the name of the component.
+	* @param[in] name A string containing the element name.
+	*/
 	void SetName (const std::string& name);
 
-	// Returns in ivec an ordered list of beamline indecies
-	// associated with this ModelElement. Returns the length
-	// of ivec.
+	/**
+	* Returns in ivec an ordered list of beamline indecies
+	* associated with this ModelElement. Returns the length
+	* of ivec.
+	* @param[out] ivec The ordered list of beamline indecies associated with this ModelElement.
+	* @return The size of ivec
+	*/
 	size_t GetBeamlineIndecies(std::vector<size_t>& ivec) const;
+
 	virtual void AppendBeamlineIndecies(std::vector<size_t>& ivec) const =0;
 
 protected:
 
-    //	Initialise the ModelElement with the specified name.
-	void Init (const std::string& aName);
+	/**
+	* Initialise the ModelElement with the specified name.
+	* @param[in] aName A string containing the element name.
+	*/
+	void Init(const std::string& aName);
+
+	/**
+	* The name of the element.
+	*/
 	std::string id;
-};
 
-// Class ModelElement
+};// Class ModelElement
 
-inline ModelElement::ModelElement (const std::string& aName)
-        : id(aName)
+inline ModelElement::ModelElement(const std::string& aName)
+	: id(aName)
 {
 }
 
-inline ModelElement::~ModelElement ()
+inline ModelElement::~ModelElement()
 {
-    // nothing to do
+// nothing to do
 }
 
-inline const std::string& ModelElement::GetName () const
+inline const std::string& ModelElement::GetName() const
 {
-    return id;
+	return id;
 }
 
-inline std::string ModelElement::GetQualifiedName () const
+inline std::string ModelElement::GetQualifiedName() const
 {
-    return GetType()+'.'+GetName();
+	return GetType()+'.'+GetName();
 }
 
-inline void ModelElement::SetName (const std::string& name)
+inline void ModelElement::SetName(const std::string& name)
 {
-    id=name;
+	id=name;
 }
 
-inline void ModelElement::Init (const std::string& aName)
+inline void ModelElement::Init(const std::string& aName)
 {
-    id=aName;
+	id=aName;
 }
 
 inline size_t ModelElement::GetBeamlineIndecies(std::vector<size_t>& ivec) const
