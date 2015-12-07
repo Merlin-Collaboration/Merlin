@@ -7,7 +7,9 @@ class TrackingOutputAV : public SimulationOutput {
 	public: 
 		TrackingOutputAV(const std::string& filename);
 		~TrackingOutputAV();
-		void SuppressUnscattered(const int factor);
+		
+		// This allows us to refrain from outputting non scattered particles
+		void SuppressUnscattered(const bool s);
 		
 		// This chooses the s coordinate range in which we want to output particle tracks
 		void SetSRange(double start, double end){start_s = start; end_s = end; s_range_set = 1;}
@@ -26,12 +28,12 @@ class TrackingOutputAV : public SimulationOutput {
 	private:
 		std::ofstream* output_file;
 
-		int suppress_factor;
 		int turn;
 		double start_s;
 		double end_s;
 		double current_s;
 		
+		bool suppress_unscattered;
 		bool current_s_set;
 		bool single_turn;
 		bool turn_range_set;

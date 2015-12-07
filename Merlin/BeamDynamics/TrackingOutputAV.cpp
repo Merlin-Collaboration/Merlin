@@ -5,7 +5,7 @@ using namespace std;
 using namespace ParticleTracking;
 
 TrackingOutputAV::TrackingOutputAV(const std::string& filename):
-SimulationOutput(), turn_number(0), suppress_factor(1), current_s(0), current_s_set(0), single_turn(1), turn_range_set(0), s_range_set(0)
+SimulationOutput(), turn_number(0), current_s(0), current_s_set(0), single_turn(1), turn_range_set(0), s_range_set(0), suppress_unscattered(1)
 {
 	output_file = new std::ofstream(filename.c_str());
 	(*output_file) << "#id turn S x xp y yp dp type" << std::endl;
@@ -45,7 +45,8 @@ void TrackingOutputAV::Record(const ComponentFrame* frame, const Bunch* bunch){
 
 	const ParticleBunch* PB = static_cast<const ParticleBunch*>(bunch);
 	for(ParticleBunch::const_iterator pb = PB->begin(); pb!= PB->end(); pb++){
-		if(pb->type() != -1){
+		//~ if(pb->type() != -1){
+		if((suppress_unscattered && pb->type() != -1) || (!suppress_unscattered)){
 			(*output_file) 	<< int(pb->id()) << " "
 							<< turn_number << " "
 							<< std::fixed 
@@ -59,14 +60,16 @@ void TrackingOutputAV::Record(const ComponentFrame* frame, const Bunch* bunch){
 							<< pb->dp()  << " "
 							<< std::fixed
 							<< int(pb->type()) <<  " "
-							<< int(pb->id())  << endl;
+							//~ << int(pb->id())  << endl;
+							<< endl;
 		}
 	}
 
 }
+
 void TrackingOutputAV::RecordInitialBunch(const Bunch* bunch){}
 void TrackingOutputAV::RecordFinalBunch(const Bunch* bunch){}
 
-void TrackingOutputAV::SuppressUnscattered(const int factor){
-	suppress_factor = factor;
+void TrackingOutputAV::SuppressUnscattered(const bool s){
+	suppress_unscattered = s;
 }
