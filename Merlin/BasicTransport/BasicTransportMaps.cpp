@@ -27,6 +27,7 @@ RTMap* SectorBendTM(double s, double h)
     // -----------------------------
     double beta = 1.0;
     double gamma = 7460.5230711490913;
+    //~ double gamma = 6929.637527;
 /*
     rtMap(1,1) = cos(h*s);
     rtMap(1,2) = a5;

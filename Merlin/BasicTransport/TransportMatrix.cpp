@@ -76,7 +76,7 @@ void SBR(double length, double h, double Kx, RealMatrix& R)
         R(1,0) = k*sinhPhi;
     }
 
-    // vectircal plane
+    // vertical plane
 
     if(Ky==0)
         // simply horizontal drift space
@@ -102,7 +102,7 @@ void SBR(double length, double h, double Kx, RealMatrix& R)
         R(3,2) = k*sinhPhi;
     }
 
-    // dispesions terms (only included if matrix is 6D)
+    // dispersion terms (only included if matrix is 6D)
     if(R.nrows()==6) {
         if(h && Kx)
             if(Kx>0) {
