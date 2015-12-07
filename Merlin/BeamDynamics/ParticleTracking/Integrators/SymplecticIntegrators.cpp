@@ -1,22 +1,23 @@
+#include <iostream>
+
 #include "AcceleratorModel/TrackingInterface/ComponentTracker.h"
 #include "AcceleratorModel/StdField/TWRFfield.h"
 #include "AcceleratorModel/StdField/SWRFfield.h"
+
+#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
+#include "BeamDynamics/ParticleTracking/Integrators/StdIntegrators.h"
+
 #include "BasicTransport/BasicTransportMaps.h"
 #include "BasicTransport/MatrixMaps.h"
 #include "BasicTransport/TransportMatrix.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
+
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
 
 #include "SymplecticIntegrators.h"
-#include "AcceleratorModel/TrackingInterface/ComponentTracker.h"
-#include "BeamDynamics/ParticleTracking/Integrators/StdIntegrators.h"
 
-#include <iostream>
 
 namespace ParticleTracking{
-
-
 
 namespace SYMPLECTIC {
 
@@ -31,6 +32,8 @@ ADD_INTG(ParticleTracking::MarkerCI)
 ADD_INTG(ParticleTracking::MonitorCI)
 ADD_INTG(ParticleTracking::SolenoidCI)
 END_INTG_SET
+
+#define CHK_ZERO(s) if(s==0) return;
 
 //template<> MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::SYMPLECTIC::StdISet)
 
@@ -342,15 +345,15 @@ END_INTG_SET
 		}
 	};
 
-	// Thin Rectangular Multipole Map
+	// Thin Rectangular Multipole Map: Modified HR 07.12.15
 	struct MultipoleKick {
 	private:
 		const MultipoleField& field;
 		Complex scale;
 		
 	public:
-		MultipoleKick(const MultipoleField& f, double ds, double P0, double phi=0) : field(f) {
-			scale = ds*eV*SpeedOfLight/P0*Complex(cos(phi),sin(phi));
+		MultipoleKick(const MultipoleField& f, double ds, double P0, double q, double phi=0) : field(f) {
+			scale = q*ds*eV*SpeedOfLight/P0*Complex(cos(phi),sin(phi));
 		}
 		
 		void operator()(PSvector& v) {
@@ -553,7 +556,7 @@ END_INTG_SET
 
 	inline void ApplyMultipoleKick(ParticleBunch* bunch, MultipoleField& field, double ds, double P0, double q) {
 		if(ds!=0)
-			for_each(bunch->begin(),bunch->end(),MultipoleKick(field, ds, P0));
+			for_each(bunch->begin(),bunch->end(),MultipoleKick(field, ds, P0, q));
 	}
 
 	inline void ApplyPoleFaceRotation(ParticleBunch* bunch, double h, const SectorBend::PoleFace& pf) {
@@ -698,6 +701,7 @@ END_INTG_SET
 		}
 	}
 
+	// 07.12.15 HR: Added thin multipole and MultipoleKick fixes
 	void RectMultipoleCI::TrackStep (double ds)
 	{
 
@@ -706,13 +710,21 @@ END_INTG_SET
 		// including any dipole term.
 		using namespace TLAS;
 
-		if(ds==0) return;
+		//if(ds==0) return;
 
 		double P0 = currentBunch->GetReferenceMomentum();
 		double q = currentBunch->GetChargeSign();
 		double brho = P0/eV/SpeedOfLight;
 
-		MultipoleField& field = currentComponent->GetField();
+		MultipoleField& field = currentComponent->GetField();		
+				
+		// Thin lens kicks (for thin lens corrector dipoles) HR 06.12.15
+		if(currentComponent->GetLength()==0 && ds == 0 && !field.IsNullField()){
+			// Using a ds = 1.0 for thin correctors
+			for_each( currentBunch->begin(), currentBunch->end(), MultipoleKick(field, 1.0, P0, q) );
+			return;
+		}
+		CHK_ZERO(ds);
 
 		const Complex cK1 = q*field.GetKn(1,brho);
 		bool splitMagnet = field.GetCoefficient(0)!=0.0 || field.HighestMultipole()>1;
@@ -735,6 +747,21 @@ END_INTG_SET
 			}
 
 			M.Apply(currentBunch->GetParticles());
+			
+			if(splitMagnet) {
+				Complex b1 = field.GetCoefficient(1);
+				field.SetCoefficient(1,Complex(0));
+				if(cK1!=0.0) {
+					double phi = arg(cK1)/2;
+					for_each(currentBunch->begin(),currentBunch->end(),MultipoleKick(field,ds,P0,q,-phi));
+				}
+				else{
+					for_each(currentBunch->begin(),currentBunch->end(),MultipoleKick(field,ds,P0,q));
+				}
+				M.Apply(currentBunch->GetParticles());
+				field.SetCoefficient(1,b1);
+			}
+		
 		}
 		else
 			ApplyDriftMap(currentBunch,len);
@@ -743,13 +770,10 @@ END_INTG_SET
 			Complex b1 = field.GetCoefficient(1);
 			field.SetCoefficient(1,Complex(0));
 			for_each(currentBunch->begin(),currentBunch->end(),MultipoleKick(field,ds,P0,q));
-			if(b1!=0.0)
-				M.Apply(currentBunch->GetParticles());
-			else
-				ApplyDriftMap(currentBunch,len);
+			ApplyDriftMap(currentBunch,len);
 			field.SetCoefficient(1,b1);
 		}
-	}	
+	}		
 
 	void TWRFStructureCI::TrackStep (double ds) {
 		const TWRFfield& field = dynamic_cast<TWRFfield&>(currentComponent->GetField());
