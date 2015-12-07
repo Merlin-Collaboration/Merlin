@@ -18,10 +18,6 @@
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
-#ifndef  _MSC_VER
-#define _MIN std::min
-#endif
-
 namespace ParticleTracking {
 	
 	
@@ -74,4 +70,4 @@ namespace ParticleTracking {
 	}
 		
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking

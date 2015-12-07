@@ -37,10 +37,10 @@ namespace {
 		return i1<i2;
 	}
 
-}; // end of anonymous namespace
+} // end of anonymous namespace
 
 Accelerator::Accelerator(const std::string& name, AcceleratorModel* aModel, BeamData* ibeamdat)
-: itsName(name),itsAccModel(aModel),itsTracker(0),beam0(ibeamdat),cachedBunches(),
+: itsAccModel(aModel),itsName(name),itsTracker(0),beam0(ibeamdat),cachedBunches(),
 currentSegment(0,0),allowIncrTracking(false)
 {}
 

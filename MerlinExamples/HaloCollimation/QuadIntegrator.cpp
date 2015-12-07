@@ -31,6 +31,6 @@ namespace ParticleTracking {
             TransportMatrix::QuadrupoleR(ds,k1,Rm.R);
             Rm.Apply(*p);
         }
-    };
+    }
     
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking

@@ -519,4 +519,4 @@ double HollowELensProcess::CalcSigma (double emittance_x, double emittance_y, La
 	return 0;
 }
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking

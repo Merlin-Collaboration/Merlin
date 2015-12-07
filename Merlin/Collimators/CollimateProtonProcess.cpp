@@ -235,6 +235,9 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 				//~ scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
 		//~ }		
 	}
+
+	//If we reached here the particle hits the end of the collimator, and thus survives
+	return true;
 }
 
 void CollimateProtonProcess::SetScatter(ScatteringModel* sm){
@@ -281,10 +284,11 @@ void CollimateProtonProcess::SetScatter(ScatteringModel* sm){
 
 }
 
-void CollimateProtonProcess::SetScatteringModel(Collimation::ScatteringModel* s){
+void CollimateProtonProcess::SetScatteringModel(Collimation::ScatteringModel* s)
+{
 	scattermodel = s;
 	SetScatter(scattermodel);
-};
+}
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
 

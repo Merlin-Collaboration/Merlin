@@ -72,7 +72,7 @@ double RealValue(const string& dat, int c1, int c2)
 string StringValue(const string& dat, int c1, int c2)
 {
     string rv = dat.substr(c1-1,c2-c1+1);
-    int n = rv.find_first_of(' ');
+    size_t n = rv.find_first_of(' ');
     return n==string::npos ? rv : rv.substr(0,n);
 }
 

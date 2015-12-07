@@ -187,15 +187,16 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 
 
 
-void check_column_heading(istream& is, const string& hd)
+bool check_column_heading(istream& is, const string& hd)
 {
 	string s;
 	is>>s;
 	if(s!=hd)
 	{
 		MerlinIO::error() << "Bad file format: expected " << hd << " found " << s << endl;
-		abort();
+		return false;
 	}
+	return true;
 }
 
 } // Namespace end
@@ -208,7 +209,7 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
         incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL),z(0)
 */
 MADInterface::MADInterface (const std::string& madFileName, double P0)
-        : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
+        : energy(P0),filename(madFileName),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
         log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
         incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(1)
 {
@@ -272,8 +273,11 @@ void MADInterface::Initialise()
 		c = (*ifs).get();
 		if(c=='*')
 		{
-			check_column_heading((*ifs),"NAME");
-			check_column_heading((*ifs),"KEYWORD");
+			if(!(check_column_heading((*ifs),"NAME") &&
+			   check_column_heading((*ifs),"KEYWORD"))){
+				cout << "ERROR: Reading keywords: " << filename << endl;
+				abort();
+			}
 			tfs = 1;
 			getline((*ifs),s);
 			break;
@@ -282,7 +286,7 @@ void MADInterface::Initialise()
 
 	if(tfs == 0)
 	{
-		cout << "No Suitable TFS file headers found" << endl;
+		cout << "No Suitable TFS file headers found: " << filename << endl;
 		abort();
 	}
 
@@ -291,6 +295,7 @@ void MADInterface::Initialise()
 
 void MADInterface::AppendModel (const string& fname, double Pref)
 {
+	filename = fname;
 	if(ifs)
 	{
 		delete ifs;
@@ -984,7 +989,7 @@ double MADInterface::ReadComponent ()
 
 	}//End of try block
 
-	catch(MADKeyMap::bad_key)
+	catch(MADKeyMap::bad_key&)
 	{
 		MerlinIO::error()<<"L not present in table"<<endl;
 		abort();

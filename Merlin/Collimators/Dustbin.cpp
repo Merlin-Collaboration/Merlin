@@ -310,4 +310,4 @@ void LossMapDustbin::Output(std::ostream* os)
 
 }
 
-}; // End namespace ParticleTracking
+} // End namespace ParticleTracking

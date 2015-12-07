@@ -81,12 +81,18 @@ private:
 template<class T, int N>
 bool TCovMtrx<T,N>::operator==(const TCovMtrx<T,N>& rhs) const
 {
-    const T* lp = data;
-    const T* rp = rhs.data;
-    for(;lp<data+(N*(N+1))/2;lp++,rp++)
-        if((*lp)!=(*rp))
-            return false;
-    return;
+	const T* lp = data;
+	const T* rp = rhs.data;
+
+	for(;lp<data+(N*(N+1))/2;lp++,rp++)
+	{
+		if((*lp)!=(*rp))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 #endif
