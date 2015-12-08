@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
 // 
 // Copyright: see Merlin/copyright.txt
@@ -17,47 +17,81 @@
 
 #include <string>
 
-//	Root class for all Merlin exceptions.
-
+/**
+* Root class for all Merlin exceptions.
+*/
 class MerlinException 
 {
-  public:
+	public:
 
-      virtual ~MerlinException() {};
-      explicit MerlinException (const std::string& s);
-      MerlinException ();
-      const char* Msg () const;
+	/**
+	* Constructor: Builds the MerlinException and sets the exception message.
+	* @param[in] s The exception message.
+	*/
+	explicit MerlinException(const std::string& s);
 
-  protected:
+	/**
+	* Constructor: Builds the MerlinException.
+	*/
+	MerlinException();
 
-      void SetMsg (const std::string& s);
-      void AppendMsg (const std::string& s);
+	/**
+	* Virtual destructor.
+	*/
+	virtual ~MerlinException() {};
 
-  private:
-      std::string msg;
+	/**
+	* Gets the exception message.
+	* @return The current exception message.
+	*/
+	const char* Msg() const;
+
+	protected:
+
+	/**
+	* Sets the exception message.
+	* @see AppendMsg
+	* @param[in] s The exception message.
+	*/
+	void SetMsg(const std::string& s);
+
+	/**
+	* Appends a string to the exception message.
+	* @see SetMsg
+	* @param[in] s The string to append to the exception message.
+	*/
+	void AppendMsg(const std::string& s);
+
+private:
+
+	/**
+	* String storage containing the exception message.
+	*/
+	std::string msg;
 };
 
-inline MerlinException::MerlinException (const std::string& s)
-  : msg(s)
+inline MerlinException::MerlinException(const std::string& s)
+	: msg(s)
 {}
 
-inline MerlinException::MerlinException ()
-  : msg()
+inline MerlinException::MerlinException()
+	: msg()
 {}
 
-inline const char* MerlinException::Msg () const
+inline const char* MerlinException::Msg() const
 {
 	return msg.c_str();
 }
 
-inline void MerlinException::SetMsg (const std::string& s)
+inline void MerlinException::SetMsg(const std::string& s)
 {
 	msg=s;
 }
 
-inline void MerlinException::AppendMsg (const std::string& s)
+inline void MerlinException::AppendMsg(const std::string& s)
 {
 	msg+=s;
 }
 
 #endif
+
