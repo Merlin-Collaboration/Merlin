@@ -16,13 +16,13 @@
 
 EMField::~EMField ()
 {
-    // Nothing to do
+// Nothing to do
 }
 
 Vector3D EMField::GetForceAt (const Point3D& x, const Vector3D& v, double q, double t) const
 {
-    Vector3D B = GetBFieldAt(x,t);
-    Vector3D E = GetEFieldAt(x,t);
-    return q*(E+cross(v,B));
+	Vector3D B = GetBFieldAt(x,t);
+	Vector3D E = GetEFieldAt(x,t);
+	return q*(E+cross(v,B));
 }
 

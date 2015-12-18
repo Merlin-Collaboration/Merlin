@@ -16,7 +16,7 @@
 
 Transform3D AcceleratorGeometry::GetTotalGeometryTransform () const
 {
-    Extent extnt = GetGeometryExtent();
-    return GetGeometryTransform(extnt.first,extnt.second);
+	Extent extnt = GetGeometryExtent();
+	return GetGeometryTransform(extnt.first,extnt.second);
 }
 

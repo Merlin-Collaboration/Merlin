@@ -24,7 +24,7 @@ using namespace ParticleTracking;
 
 ClosedOrbit::ClosedOrbit(AcceleratorModel* aModel, double refMomentum)
         : theModel(aModel), p0(refMomentum), transverseOnly(false), radiation(false), useFullAcc(false),
-        delta(1.0e-7), tol(1.0e-26), max_iter(20), bendscale(0), theTracker(new ParticleTracker)
+        delta(1.0e-9), tol(1.0e-26), max_iter(20), bendscale(0), theTracker(new ParticleTracker)
 {}
 
 ClosedOrbit::~ClosedOrbit()
