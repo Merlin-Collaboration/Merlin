@@ -17,7 +17,7 @@
 
 #include "Random/RandomNG.h"
 
-#include "BeamDynamics/ParticleTracking/HollowELensProcess.h"
+#include "BeamDynamics/ParticleTracking/SymplecticHollowELensProcess.h"
 
 #include "RingDynamics/LatticeFunctions.h"
 
@@ -32,7 +32,7 @@ using namespace std;
 namespace ParticleTracking {
 
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity)
+SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity)
 	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
 {
 	if (mode == 0){OMode = DC;}
@@ -42,7 +42,7 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 	else { cout << "\tHEL operation mode invalid. Please choose between: \n\t int 0 = DC \n\t int 1 = AC \n\t int 2 = Diffusive \n\t int 3 = Turnskip" << endl;}
 }
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
+SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
 	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
 {
 	if (mode == 0){OMode = DC;}
@@ -53,7 +53,7 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 	
 }
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
+SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
 	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
 {
 	if (mode == 0){OMode = DC;}
@@ -64,7 +64,7 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 	SetRadiiSigma(rmin, rmax, model, emittance_x, emittance_y, twiss);
 }
 
-void HollowELensProcess::InitialiseProcess (Bunch& bunch)
+void SymplecticHollowELensProcess::InitialiseProcess (Bunch& bunch)
 	{
 		ParticleBunchProcess::InitialiseProcess(bunch);
 		if(!currentBunch)
@@ -73,7 +73,7 @@ void HollowELensProcess::InitialiseProcess (Bunch& bunch)
 		}
 	}
 
-void HollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
+void SymplecticHollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 	HollowElectronLens* aHollowELens = dynamic_cast<HollowElectronLens*>(&component);	
 	active = (currentBunch!=0) && (aHollowELens);
@@ -90,7 +90,7 @@ void HollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
 		}
 }
 
-void HollowELensProcess::SetAC (double tune, double deltatune, double tunevarperstep, double turnsperstep, double multi) 
+void SymplecticHollowELensProcess::SetAC (double tune, double deltatune, double tunevarperstep, double turnsperstep, double multi) 
 {
 	Tune = tune;
 	DeltaTune = deltatune;
@@ -106,13 +106,13 @@ void HollowELensProcess::SetAC (double tune, double deltatune, double tunevarper
 	
 }
 
-void HollowELensProcess::SetTurnskip (int skip)
+void SymplecticHollowELensProcess::SetTurnskip (int skip)
 {
 	SkipTurn = skip;
 	OMode = Turnskip;
 }
 
-void HollowELensProcess::DoProcess (double ds)
+void SymplecticHollowELensProcess::DoProcess (double ds)
 {
 	double theta = 0;
 	double Gamma_p = 0;
@@ -164,10 +164,25 @@ void HollowELensProcess::DoProcess (double ds)
 					//~ cout << " theta = " << theta << endl;
 					//~ cout << "\n" << endl;
 					
+					// Transform to symplectic co-ordinates
+					//~ double d1  = 1.0 + (*p).dp();
+					//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+					double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
 					
-					//~ // Particle phase space angle and amplitude (radius)
-					(*p).xp() -= theta * cos(ParticleAngle);			
-					(*p).yp() -= theta * sin(ParticleAngle);
+					// Long winded kick
+					//~ double old_xp = asin((*p).xp()/k); 
+					//~ double old_yp = asin((*p).yp()/k); 					
+					
+					//~ double new_xp = old_xp - theta * cos(ParticleAngle);		
+					//~ double new_yp = old_yp - theta * sin(ParticleAngle);
+					
+					//~ (*p).xp() = k*new_xp;
+					//~ (*p).yp() = k*new_yp;
+					
+					// Direct kick
+					(*p).xp() -= k * theta * cos(ParticleAngle);
+					(*p).yp() -= k * theta * sin(ParticleAngle);
+										
 				}
 			}
 		}
@@ -195,9 +210,24 @@ void HollowELensProcess::DoProcess (double ds)
 										
 						ParticleAngle = atan2((*p).y(), (*p).x());
 						
-						// Particle phase space angle and amplitude (radius)
-						(*p).xp() -= theta * cos(ParticleAngle);			
-						(*p).yp() -= theta * sin(ParticleAngle);
+						// Transform to symplectic co-ordinates
+						//~ double d1  = 1.0 + (*p).dp();
+						//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+						double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+						
+						// Long winded kick
+						//~ double old_xp = asin((*p).xp()/k); 
+						//~ double old_yp = asin((*p).yp()/k); 					
+						
+						//~ double new_xp = old_xp - theta * cos(ParticleAngle);		
+						//~ double new_yp = old_yp - theta * sin(ParticleAngle);
+						
+						//~ (*p).xp() = k*new_xp;
+						//~ (*p).yp() = k*new_yp;
+						
+						// Direct kick
+						(*p).xp() -= k * theta * cos(ParticleAngle);
+						(*p).yp() -= k * theta * sin(ParticleAngle);
 					}	
 				}
 			}
@@ -216,17 +246,27 @@ void HollowELensProcess::DoProcess (double ds)
 					if(SimpleProfile){theta = CalcKickSimple(*p);}
 					else{theta = CalcKickRadial(*p);}
 												
-				
-					//~ if ((*p).x() < 0){	ParticleAngle = pi + atan2((*p).y(), (*p).x());	}
-					//~ else{				ParticleAngle = atan2((*p).y(), (*p).x());		}		
-					//~ if ((*p).x() < 0){	ParticleAngle = 2*pi + atan2((*p).y(), (*p).x());	}
-					//~ else{				ParticleAngle = atan2((*p).y(), (*p).x());		}	
 					ParticleAngle = atan2((*p).y(), (*p).x());	
 						
 					if(theta!=0){
-						// Particle phase space angle and amplitude (radius)
-						(*p).xp() -= theta * cos(ParticleAngle);			
-						(*p).yp() -= theta * sin(ParticleAngle);
+						// Transform to symplectic co-ordinates
+						//~ double d1  = 1.0 + (*p).dp();
+						//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+						double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+						
+						// Long winded kick
+						//~ double old_xp = asin((*p).xp()/k); 
+						//~ double old_yp = asin((*p).yp()/k); 					
+						
+						//~ double new_xp = old_xp - theta * cos(ParticleAngle);		
+						//~ double new_yp = old_yp - theta * sin(ParticleAngle);
+						
+						//~ (*p).xp() = k*new_xp;
+						//~ (*p).yp() = k*new_yp;
+						
+						// Direct kick
+						(*p).xp() -= k * theta * cos(ParticleAngle);
+						(*p).yp() -= k * theta * sin(ParticleAngle);
 					}			
 
 				}
@@ -244,18 +284,27 @@ void HollowELensProcess::DoProcess (double ds)
 					if(SimpleProfile){theta = CalcKickSimple(*p);}
 					else{theta = CalcKickRadial(*p);}
 												
-			
-					//~ if ((*p).x() < 0){	ParticleAngle = 2*pi + atan2((*p).y(), (*p).x());	}
-					//~ else{				ParticleAngle = atan2((*p).y(), (*p).x());		}		
-					//~ if ((*p).x() < 0){	ParticleAngle = pi + atan2((*p).y(), (*p).x());	}
-					//~ else{				ParticleAngle = atan2((*p).y(), (*p).x());		}
 					ParticleAngle = atan2((*p).y(), (*p).x());		
-	
-					
+						
 					if(theta!=0){
-						// Particle phase space angle and amplitude (radius)
-						(*p).xp() -= theta * cos(ParticleAngle);			
-						(*p).yp() -= theta * sin(ParticleAngle);
+						// Transform to symplectic co-ordinates
+						//~ double d1  = 1.0 + (*p).dp();
+						//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+						double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
+						
+						// Long winded kick
+						//~ double old_xp = asin((*p).xp()/k); 
+						//~ double old_yp = asin((*p).yp()/k); 					
+						
+						//~ double new_xp = old_xp - theta * cos(ParticleAngle);		
+						//~ double new_yp = old_yp - theta * sin(ParticleAngle);
+						
+						//~ (*p).xp() = k*new_xp;
+						//~ (*p).yp() = k*new_yp;
+						
+						// Direct kick
+						(*p).xp() -= k * theta * cos(ParticleAngle);
+						(*p).yp() -= k * theta * sin(ParticleAngle);
 					}	
 
 				}
@@ -270,12 +319,12 @@ void HollowELensProcess::DoProcess (double ds)
 
 }
 
-double HollowELensProcess::GetMaxAllowedStepSize () const
+double SymplecticHollowELensProcess::GetMaxAllowedStepSize () const
 {
 	return currentComponent->GetLength();  
 }
 
-double HollowELensProcess::CalcThetaMax (double r)
+double SymplecticHollowELensProcess::CalcThetaMax (double r)
 {	
 	if (r == 0){return 0;}
 
@@ -293,7 +342,7 @@ double HollowELensProcess::CalcThetaMax (double r)
 	return ThetaMax;
 }
 
-double HollowELensProcess::CalcKickSimple (Particle &p)
+double SymplecticHollowELensProcess::CalcKickSimple (Particle &p)
 {
 	double thet = 0;
 	double Length = 0;
@@ -336,7 +385,7 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 
 }
 
-double HollowELensProcess::CalcKickRadial (Particle &p)
+double SymplecticHollowELensProcess::CalcKickRadial (Particle &p)
 {
 	double f = 0;
 	double thet = 0;
@@ -350,7 +399,7 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 
 	// Start of HEL
 	x = p.x();
-	y = p.y();	
+	y = p.y();
 	
 	// Calculate particle transverse vector ('radius' in xy space)
 	R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
@@ -414,14 +463,14 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 }
 
 
-void HollowELensProcess::SetRadii (double rmin, double rmax)
+void SymplecticHollowELensProcess::SetRadii (double rmin, double rmax)
 {
 	cout << "\n\tHEL warning: HEL radii not set using beam envelope, and not aligned to beam orbit" << endl;
 	Rmin = rmin;
 	Rmax = rmax;
 }
 
-void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
+void SymplecticHollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
 {
 	
 	//How many HELs in lattice?
@@ -442,15 +491,15 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 			}
 		}
 		
-		if(Hel_no == 0){ cout << "Error: No HEL found in HollowELensProcess::SetRadiiSigma " << endl;}
-		else if(Hel_no == 1){ cout << "HollowELensProcess::SetRadiiSigma : 1 HEL found at element No " << Hel_ID <<  endl; }
-		else if (Hel_no > 1){ cout << "HollowELensProcess::SetRadiiSigma : More than 1 HELs found, last at element No " << Hel_ID <<  endl;}
+		if(Hel_no == 0){ cout << "Error: No HEL found in SymplecticHollowELensProcess::SetRadiiSigma " << endl;}
+		else if(Hel_no == 1){ cout << "SymplecticHollowELensProcess::SetRadiiSigma : 1 HEL found at element No " << Hel_ID <<  endl; }
+		else if (Hel_no > 1){ cout << "SymplecticHollowELensProcess::SetRadiiSigma : More than 1 HELs found, last at element No " << Hel_ID <<  endl;}
 	}
 	
 	vector<HollowElectronLens*> HELs;
 	size_t n_Hels = model->ExtractTypedElements(HELs,"*");
 	
-	cout << " HollowELensProcess::SetRadiiSigma : find_HEL : found " << HELs.size() << " HELs" << endl;		
+	cout << " SymplecticHollowELensProcess::SetRadiiSigma : find_HEL : found " << HELs.size() << " HELs" << endl;		
 	//Calculate sigma to adjust radii as required
 	
 	double sigma_x = 0;
@@ -472,7 +521,7 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 				cout << " S_HEL = " << (*it)->GetComponentLatticePosition() << "m" << endl;
 				cout << " S_twiss = " << twiss->Value(0,0,0,j) << "m" << endl;
 				
-				cout << "HollowELensProcess::SetRadiiSigma : j value = " << j << endl;
+				cout << "SymplecticHollowELensProcess::SetRadiiSigma : j value = " << j << endl;
 				
 				//Note that this is currently only a horizontal HEL
 				beta_x = twiss->Value(1,1,1,j);		//Beta x
@@ -500,23 +549,17 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 		}				
 	}
 	
-	cout << "HollowELensProcess::SetRadiiSigma : Beta_x = " << beta_x << " Sigma_x = " << sigma_x << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Alpha_x = " << alpha_x << " Sigma_xp = " << sigma_xp << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Beta_y = " << beta_y << " Sigma_y = " << sigma_y << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Alpha_y = " << alpha_y << " Sigma_yp = " << sigma_yp << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Offset_x = " << XOffset << " Offset_y = " << YOffset << endl;
+	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Beta_x = " << beta_x << " Sigma_x = " << sigma_x << endl;
+	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Alpha_x = " << alpha_x << " Sigma_xp = " << sigma_xp << endl;
+	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Beta_y = " << beta_y << " Sigma_y = " << sigma_y << endl;
+	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Alpha_y = " << alpha_y << " Sigma_yp = " << sigma_yp << endl;
+	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Offset_x = " << XOffset << " Offset_y = " << YOffset << endl;
 	
 	Rmin = rmin * sigma_x;
 	Rmax = rmax * sigma_x;
 	
-	cout << "HollowELensProcess::SetRadiiSigma : RMax = " << Rmax << " RMin= " << Rmin << endl;
+	cout << "SymplecticHollowELensProcess::SetRadiiSigma : RMax = " << Rmax << " RMin= " << Rmin << endl;
 	
 }
 
-double HollowELensProcess::CalcSigma (double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
-{
-	//TODO necessary?
-	return 0;
-}
-
-} // end namespace ParticleTracking
+}; // end namespace ParticleTracking

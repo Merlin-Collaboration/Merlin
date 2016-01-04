@@ -12,7 +12,11 @@ public:
 	// Constructor
 	ApertureSurvey(AcceleratorModel* model, string directory, double step_size=0.1, size_t points_per_element=0);
 	// Overloaded Constructor
+	ApertureSurvey(AcceleratorModel* model, string directory, bool exact_s, double step_size=0.1);
+	// Overloaded Constructor
 	ApertureSurvey(AcceleratorModel* model, std::ostream* os, double step_size=0.1, size_t points_per_element=0);
+	// Overloaded Constructor
+	ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double step_size=0.1);
 	
 private:
 	void CheckAperture(Aperture* ap, double s, double *lims);
