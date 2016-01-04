@@ -9,25 +9,25 @@
 
 using namespace std;
 
-class MaterialDatabase 
+class MaterialDatabase
 {
 
 public:
 //Constructor
-MaterialDatabase();
+	MaterialDatabase();
 
 //Storage for pointers to material types.
-std::map<string,Material*> db;
+	std::map<string,Material*> db;
 
 //Find the material we are interested in
-Material* FindMaterial(string symbol);
+	Material* FindMaterial(string symbol);
 
-/*
-* Check all the materials in the database are doing something sensible
-*/
-bool VerifyMaterials();
+	/*
+	* Check all the materials in the database are doing something sensible
+	*/
+	bool VerifyMaterials();
 
-void DumpMaterialProperties();
+	void DumpMaterialProperties();
 
 private:
 

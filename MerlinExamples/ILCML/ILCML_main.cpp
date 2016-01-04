@@ -4,7 +4,7 @@
 //
 // This example is based on a code benchmarking exercise.
 //
-// The two exercises performed here are 
+// The two exercises performed here are
 //
 // 1. track a betatron oscillation along the supplied linac
 //    (lattice/tesla_linac.xtff) with an initial vertical
@@ -32,7 +32,7 @@
 
 #include "merlin_config.h"
 
-#include <iostream> 
+#include <iostream>
 #include <fstream>
 
 #include "NumericalUtils/NumericalConstants.h"
@@ -61,7 +61,7 @@ using namespace SMPTracking;
 // Tracks the sliced macroparticle bunch through the linac, with or
 // without wakefields (transvers and longitudinal).
 void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac,
-					 SMPBunch* bunch, bool inc_wf, SimulationOutput* simout=0);
+                     SMPBunch* bunch, bool inc_wf, SimulationOutput* simout=0);
 
 // Inputs the standard misalignment data and corrector settings
 // and adjusts the lattice accordingly (exercise 2)
@@ -77,7 +77,7 @@ int main()
 	RandomNG::init(1234);
 
 	// Construct model
-	pair<AcceleratorModel*,BeamData*> mb = ConstructModel("lattice/tesla_linac.xtff");  
+	pair<AcceleratorModel*,BeamData*> mb = ConstructModel("lattice/tesla_linac.xtff");
 	AcceleratorModel* model = mb.first;
 	BeamData* beam0 = mb.second;
 
@@ -86,7 +86,7 @@ int main()
 	BeamData beam;
 
 	// First task is to output the reference energy and quadrupole
-	// fields in the lattice. 
+	// fields in the lattice.
 	// --------------------------------------------------
 	cout<<"Calculating quadrupole reference energy..."<<flush;
 	QuadReferenceOutput* quadRefOutput = new QuadReferenceOutput("quad-reference.data",5.0,1.40e+13);
@@ -133,15 +133,18 @@ int main()
 	return 0;
 }
 
-void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac, SMPBunch* bunch, 
-					 bool inc_wf, SimulationOutput* simout)
+void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac, SMPBunch* bunch,
+                     bool inc_wf, SimulationOutput* simout)
 {
 	SMPTracking::SMPTracker tracker(linac);
 
 	SimulationOutput* sout=0;
 	if(simout)
+	{
 		sout=simout;
-	else {
+	}
+	else
+	{
 		TrackingOutput* trackOut = new TrackingOutput(fname);
 		trackOut->AddIdentifier("BPM.*");
 		trackOut->output_final = true;
@@ -152,7 +155,8 @@ void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac, SMP
 
 	tracker.SetOutput(sout);
 
-	if(inc_wf) {
+	if(inc_wf)
+	{
 		WakeFieldProcess* wf = new WakeFieldProcess(1);
 		wf->ApplyImpulseAt(WakeFieldProcess::atCentre);
 		tracker.AddProcess(wf);
@@ -168,7 +172,8 @@ void AdjustLattice(AcceleratorModel& linacModel)
 {
 	// Read in misalignment file
 	ifstream ifs("lattice/nick23p4_misxy_1.txt");
-	if(!ifs) {
+	if(!ifs)
+	{
 		cerr<<"problems openning file lattice/nick23p4_misxy_1.txt"<<endl;
 		abort();
 	}
@@ -181,19 +186,22 @@ void AdjustLattice(AcceleratorModel& linacModel)
 	linacModel.ExtractComponents("TWRFStructure.*|Quadrupole.*|BPM.*",frames);
 	cout<<"\n"<<frames.size()<<" components found"<<endl;
 
-	for(size_t n=0; n<frames.size(); n++) {
+	for(size_t n=0; n<frames.size(); n++)
+	{
 		double z,x,y,xa,ya,tilt;
 		ifs>>z>>x>>y>>xa>>ya>>tilt;
 		ifs>>s;  // class
 		ifs>>s;  // name
 
-		if(!ifs) {
+		if(!ifs)
+		{
 			cerr<<"Error reading file lattice/nick23p4_misxy_1.txt"<<endl;
 			abort();
 		}
 
 		// check name
-		if((*frames[n]).GetComponent().GetName()!=s) {
+		if((*frames[n]).GetComponent().GetName()!=s)
+		{
 			cerr<<"name mismatch: ";
 			cerr<<s<<" != "<<(*frames[n]).GetComponent().GetName()<<endl;
 			abort();
@@ -208,7 +216,8 @@ void AdjustLattice(AcceleratorModel& linacModel)
 
 	// YCOR settings (assumed units are tesla.meter)
 	ifstream ifs1("lattice/nick23p4_misxy_ycor_1.txt");
-	if(!ifs1) {
+	if(!ifs1)
+	{
 		cerr<<"problems openning file lattice/nick23p4_misxy_ycor_1.txt"<<endl;
 		abort();
 	}
@@ -217,10 +226,12 @@ void AdjustLattice(AcceleratorModel& linacModel)
 	linacModel.ExtractTypedComponents(ycors);
 	cout<<"\n"<<ycors.size()<<" correctors found"<<endl;
 
-	for(size_t n=0; n<ycors.size(); n++) {
+	for(size_t n=0; n<ycors.size(); n++)
+	{
 		double yc,z;
 		ifs1>>z>>yc;
-		if(!ifs1) {
+		if(!ifs1)
+		{
 			cerr<<"error reading file lattice/nick23p4_misxy_ycor_1.txt"<<endl;
 			abort();
 		}
@@ -230,6 +241,6 @@ void AdjustLattice(AcceleratorModel& linacModel)
 		ycor.SetFieldStrength(yc);
 	}
 }
-		
-		
+
+
 

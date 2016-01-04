@@ -3,9 +3,9 @@
 
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (1999)
-* 
+*
 * file Merlin\BeamDynamics\ParticleTracking\SynchRadParticleProcess.cpp
 * last modified 09/06/01 01:50:54 PM
 */
@@ -14,10 +14,10 @@
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 * Copyright (c) 2001 by The Merlin Collaboration.
-* - ALL RIGHTS RESERVED - 
+* - ALL RIGHTS RESERVED -
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -53,48 +53,57 @@
 //#define PHOTCONST1 3*PlanckConstant*eV/2/twoPi/ProtonMass
 //#define PHOTCONST2 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/ProtonMass/PlanckConstant
 
-namespace {
+namespace
+{
 
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 
-struct ApplySR {
+struct ApplySR
+{
 
-    typedef double (*spec_gen)(double);
+	typedef double (*spec_gen)(double);
 
-    const MultipoleField& Bf;
-    double dL;
-    double P0;
-    bool symp;
-    spec_gen photgen;
+	const MultipoleField& Bf;
+	double dL;
+	double P0;
+	bool symp;
+	spec_gen photgen;
 
-    double meanU;
-    size_t n;
+	double meanU;
+	size_t n;
 
-    double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
+	double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
 
-    ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2, const double MassMeV, spec_gen sg =0)
-            : Bf(field),dL(dl),P0(p0),symp(sV),photgen(sg),meanU(0),n(0),PHOTCONST1(PCONST1),PHOTCONST2(PCONST2),ParticleMassMeV(MassMeV) {};
+	ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2, const double MassMeV, spec_gen sg =0)
+		: Bf(field),dL(dl),P0(p0),symp(sV),photgen(sg),meanU(0),n(0),PHOTCONST1(PCONST1),PHOTCONST2(PCONST2),ParticleMassMeV(MassMeV) {};
 
-    double MeanEnergyLoss() const { return meanU/n; }
+	double MeanEnergyLoss() const
+	{
+		return meanU/n;
+	}
 
-    void operator()(PSvector& v)
-    {
-        double B  = abs(Bf.GetField2D(v.x(),v.y()));
-        double g  = P0 * (1 + v.dp())/ParticleMassMeV;
-        double uc = PHOTCONST1 * B * g * g;
-        double u  = 0;
+	void operator()(PSvector& v)
+	{
+		double B  = abs(Bf.GetField2D(v.x(),v.y()));
+		double g  = P0 * (1 + v.dp())/ParticleMassMeV;
+		double uc = PHOTCONST1 * B * g * g;
+		double u  = 0;
 
-        if(photgen)
-        {
-            int nphot = static_cast<int>(RandomNG::poisson( (PHOTCONST2*15.*sqrt(3.)/8.) * B * dL));
-            for(int n=0; n<nphot; n++)
-                u += photgen(uc);
-        }
-        else
-            u = PHOTCONST2 * B * dL * uc;
+		if(photgen)
+		{
+			int nphot = static_cast<int>(RandomNG::poisson( (PHOTCONST2*15.*sqrt(3.)/8.) * B * dL));
+			for(int n=0; n<nphot; n++)
+			{
+				u += photgen(uc);
+			}
+		}
+		else
+		{
+			u = PHOTCONST2 * B * dL * uc;
+		}
 
-        meanU += u;
+		meanU += u;
 
 		double& px = v.xp();
 		double& py = v.yp();
@@ -121,8 +130,8 @@ struct ApplySR {
 			px /= (1.0 + u/P0);
 			py /= (1.0 + u/P0);
 		};
-        n++;
-    }
+		n++;
+	}
 
 };
 } // end of anonymous namespace
@@ -130,7 +139,8 @@ struct ApplySR {
 
 // Class SynchRadParticleProcess
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 
 SynchRadParticleProcess::PhotonGenerator SynchRadParticleProcess::pgen = HBSpectrumGen;
@@ -139,11 +149,11 @@ bool SynchRadParticleProcess::sympVars = false;
 
 SynchRadParticleProcess::SynchRadParticleProcess (int prio, bool q)
 
-        : ParticleBunchProcess("SYNCHROTRON RADIATION",prio),ns(1),incQ(false),adjustEref(true),dsMax(0)
+	: ParticleBunchProcess("SYNCHROTRON RADIATION",prio),ns(1),incQ(false),adjustEref(true),dsMax(0)
 
 {
 
-    GeneratePhotons(q);
+	GeneratePhotons(q);
 
 }
 
@@ -166,19 +176,19 @@ void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& compone
 
 	else if(incQ && (rmult = dynamic_cast<RectMultipole*>(&component)))
 	{
-	        currentField = &(rmult->GetField());
+		currentField = &(rmult->GetField());
 	}
 	else
 	{
-	        currentField = 0;
+		currentField = 0;
 	}
 
-    int ns1 = (ns==0) ? 1 + component.GetLength()/dsMax : ns;
-    dL = component.GetLength()/ns1;
-    nk1=0;
-    intS=0;
+	int ns1 = (ns==0) ? 1 + component.GetLength()/dsMax : ns;
+	dL = component.GetLength()/ns1;
+	nk1=0;
+	intS=0;
 
-    active = currentField && currentBunch;
+	active = currentField && currentBunch;
 
 }
 
@@ -186,22 +196,24 @@ void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& compone
 void SynchRadParticleProcess::DoProcess (double ds)
 {
 
-    if(fequal(intS+=ds,(nk1+1)*dL))
-    {
-        double E0 = currentBunch->GetReferenceMomentum();
-        double meanU = for_each(
-                           currentBunch->begin(),
-                           currentBunch->end(),
-                           ApplySR(*currentField,dL,E0,sympVars,PHOTCONST1,PHOTCONST2,ParticleMassMeV,quantum)).MeanEnergyLoss();
+	if(fequal(intS+=ds,(nk1+1)*dL))
+	{
+		double E0 = currentBunch->GetReferenceMomentum();
+		double meanU = for_each(
+		                   currentBunch->begin(),
+		                   currentBunch->end(),
+		                   ApplySR(*currentField,dL,E0,sympVars,PHOTCONST1,PHOTCONST2,ParticleMassMeV,quantum)).MeanEnergyLoss();
 
-        // Finally we adjust the reference of the
-        // bunch to reflect the mean energy loss
-        // of all the particles
-        if(adjustEref)
-            currentBunch->AdjustRefMomentum(-meanU/E0);
-        nk1++;
-    }
-    active = nk1!=ns;
+		// Finally we adjust the reference of the
+		// bunch to reflect the mean energy loss
+		// of all the particles
+		if(adjustEref)
+		{
+			currentBunch->AdjustRefMomentum(-meanU/E0);
+		}
+		nk1++;
+	}
+	active = nk1!=ns;
 
 }
 
@@ -209,7 +221,7 @@ void SynchRadParticleProcess::DoProcess (double ds)
 double SynchRadParticleProcess::GetMaxAllowedStepSize () const
 {
 
-    return (nk1+1)*dL-intS;
+	return (nk1+1)*dL-intS;
 
 }
 
@@ -217,7 +229,7 @@ double SynchRadParticleProcess::GetMaxAllowedStepSize () const
 void SynchRadParticleProcess::IncludeQuadRadiation (bool quadsr)
 {
 
-    incQ = quadsr;
+	incQ = quadsr;
 
 }
 
@@ -225,16 +237,16 @@ void SynchRadParticleProcess::IncludeQuadRadiation (bool quadsr)
 void SynchRadParticleProcess::SetNumComponentSteps (int n)
 {
 
-    ns = n;
-    dsMax = 0;
+	ns = n;
+	dsMax = 0;
 
 }
 
 void SynchRadParticleProcess::SetMaxComponentStepSize (double ds_max)
 {
 
-    ns = 0;
-    dsMax = ds_max;
+	ns = 0;
+	dsMax = ds_max;
 
 }
 
@@ -242,7 +254,7 @@ void SynchRadParticleProcess::SetMaxComponentStepSize (double ds_max)
 void SynchRadParticleProcess::GeneratePhotons (bool gp)
 {
 
-    quantum = gp ? pgen : 0;
+	quantum = gp ? pgen : 0;
 
 }
 } // end namespace ParticleTracking

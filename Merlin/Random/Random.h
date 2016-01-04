@@ -23,38 +23,39 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include <cmath>
 #include "RNG.h"
 
-class Random {
+class Random
+{
 protected:
-    RNG *pGenerator;
+	RNG *pGenerator;
 
 public:
-    virtual ~Random(){};
-    Random(RNG *generator);
-    virtual double operator()() = 0;
+	virtual ~Random() {};
+	Random(RNG *generator);
+	virtual double operator()() = 0;
 
-    RNG *generator();
-    void generator(RNG *p);
+	RNG *generator();
+	void generator(RNG *p);
 
 private:
-    //Copy protection
-    Random(const Random& rhs);
-    Random& operator=(const Random& rhs);
+	//Copy protection
+	Random(const Random& rhs);
+	Random& operator=(const Random& rhs);
 };
 
 
 inline Random::Random(RNG *gen)
 {
-    pGenerator = gen;
+	pGenerator = gen;
 }
 
 inline RNG *Random::generator()
 {
-    return(pGenerator);
+	return(pGenerator);
 }
 
 inline void Random::generator(RNG *p)
 {
-    pGenerator = p;
+	pGenerator = p;
 }
 
 #endif

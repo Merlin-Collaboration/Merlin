@@ -1,18 +1,18 @@
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (1999)
-* 
+*
 * file Merlin\BeamDynamics\SliceMPTracking\StdIntegrators.h
 * last modified 11/12/01 15:32:02
 *
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 * Copyright (c) 2001 by The Merlin Collaboration.
-* - ALL RIGHTS RESERVED - 
+* - ALL RIGHTS RESERVED -
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -54,56 +54,68 @@
 #include "AcceleratorModel/StdComponent/Solenoid.h"
 
 
-namespace SMPTracking {
+namespace SMPTracking
+{
 
-class DriftCI : public SMPComponentTracker::Integrator<Drift> {
+class DriftCI : public SMPComponentTracker::Integrator<Drift>
+{
 protected:
-    void TrackStep (double ds);
+	void TrackStep (double ds);
 };
 
-class TWRFStructureCI : public SMPComponentTracker::Integrator<TWRFStructure> {
+class TWRFStructureCI : public SMPComponentTracker::Integrator<TWRFStructure>
+{
 protected:
-    void TrackStep (double ds);
-    void TrackEntrance();
-    void TrackExit();
+	void TrackStep (double ds);
+	void TrackEntrance();
+	void TrackExit();
 private:
-    void ApplyEndField(double);
+	void ApplyEndField(double);
 };
 
-class SectorBendCI : public SMPComponentTracker::Integrator<SectorBend> {
+class SectorBendCI : public SMPComponentTracker::Integrator<SectorBend>
+{
 protected:
-    void TrackStep (double ds);
-    void TrackEntrance();
-    void TrackExit();
+	void TrackStep (double ds);
+	void TrackEntrance();
+	void TrackExit();
 
-    //	Used to apply a linear pole face rotation to the current
-    //	bunch.
-    void ApplyPoleFaceRotation (double h, const SectorBend::PoleFace& pf);
+	//	Used to apply a linear pole face rotation to the current
+	//	bunch.
+	void ApplyPoleFaceRotation (double h, const SectorBend::PoleFace& pf);
 };
 
-class RectMultipoleCI : public SMPComponentTracker::Integrator<RectMultipole> {
+class RectMultipoleCI : public SMPComponentTracker::Integrator<RectMultipole>
+{
 protected:
-    void TrackStep (double ds);
+	void TrackStep (double ds);
 };
 
-class MonitorCI : public SMPComponentTracker::Integrator<Monitor>  {
+class MonitorCI : public SMPComponentTracker::Integrator<Monitor>
+{
 protected:
-    void TrackStep (double ds);
+	void TrackStep (double ds);
 };
 
-class SWRFStructureCI : public SMPComponentTracker::Integrator<SWRFStructure> {
+class SWRFStructureCI : public SMPComponentTracker::Integrator<SWRFStructure>
+{
 protected:
-    void TrackStep (double ds);
+	void TrackStep (double ds);
 };
 
-class SolenoidCI : public SMPComponentTracker::Integrator<Solenoid> {
+class SolenoidCI : public SMPComponentTracker::Integrator<Solenoid>
+{
 protected:
-    void TrackStep (double ds);
+	void TrackStep (double ds);
 };
 
-class MarkerCI : public SMPComponentTracker::Integrator<Marker> {
+class MarkerCI : public SMPComponentTracker::Integrator<Marker>
+{
 protected:
-    void TrackStep (double ds) { return; }
+	void TrackStep (double ds)
+	{
+		return;
+	}
 };
 }
 

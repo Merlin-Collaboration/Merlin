@@ -22,33 +22,52 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "Random/Random.h"
 
-class Binomial: public Random {
+class Binomial: public Random
+{
 protected:
-    int pN;
-    double pU;
+	int pN;
+	double pU;
 public:
-    Binomial(int n, double u, RNG *gen);
+	Binomial(int n, double u, RNG *gen);
 
-    int n();
-    int n(int xn);
+	int n();
+	int n(int xn);
 
-    double u();
-    double u(double xu);
+	double u();
+	double u(double xu);
 
-    virtual double operator()();
+	virtual double operator()();
 
 };
 
 
 inline Binomial::Binomial(int n, double u, RNG *gen)
-        : Random(gen){
-    pN = n; pU = u;
+	: Random(gen)
+{
+	pN = n;
+	pU = u;
 }
 
-inline int Binomial::n() { return pN; }
-inline int Binomial::n(int xn) { int tmp = pN; pN = xn; return tmp; }
+inline int Binomial::n()
+{
+	return pN;
+}
+inline int Binomial::n(int xn)
+{
+	int tmp = pN;
+	pN = xn;
+	return tmp;
+}
 
-inline double Binomial::u() { return pU; }
-inline double Binomial::u(double xu) { double tmp = pU; pU = xu; return tmp; }
+inline double Binomial::u()
+{
+	return pU;
+}
+inline double Binomial::u(double xu)
+{
+	double tmp = pU;
+	pU = xu;
+	return tmp;
+}
 
 #endif

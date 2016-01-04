@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/04/29 21:34:40 $
 // $Revision: 1.4 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_LinearAlgebra
@@ -18,7 +18,8 @@
 #include "TLAS/TLAS.h"
 #include "NumericalUtils/Complex.h"
 
-namespace TLAS {
+namespace TLAS
+{
 
 //explicite instantiation for doubles
 template class Vector<double>;

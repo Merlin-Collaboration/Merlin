@@ -15,9 +15,9 @@ using namespace std;
 // properties as well as mass fraction weighted values for atomic mass,
 // number, etc, and all cross sections.
 // This makes the CompositeMaterial compatible with CrossSections.
-// Note that scattering will be performed from imaginary composite 
+// Note that scattering will be performed from imaginary composite
 // nuclei rather than the constituent nuclei of the composite, unless
-// this is taken into account by creating CrossSections for each 
+// this is taken into account by creating CrossSections for each
 // constituent and using the SelectRandomMaterial() function.
 
 class CompositeMaterial : public Material
@@ -31,10 +31,10 @@ public:
 
 	double CalculateRadiationLength();
 	double CalculateSixtrackdEdx();
-	
+
 	//This calculates and sets all variables using mass fraction weighting
 	void CalculateAllWeightedVariables();
-	
+
 	//New weighed calculate functions
 	double CalculateWeightedA();
 	double CalculateWeightedZ();
@@ -58,8 +58,8 @@ public:
 	//~ void SetSixtrackInelasticNucleusCrossSection(double);
 	//~ void SetSixtrackRutherfordCrossSection(double);
 	//~ void SetSixtrackNuclearSlope(double);
-    
-    // Define accessors    
+
+	// Define accessors
 	double GetAtomicNumber() const;
 	string GetName() const;
 	string GetSymbol() const;
@@ -79,7 +79,7 @@ public:
 	double GetSixtrackdEdx() const;
 	double GetSixtrackNuclearSlope() const;
 
-	
+
 	// Check that the material properties make some sort of sense
 	bool VerifyMaterial() const;
 
@@ -93,32 +93,32 @@ public:
 
 	// Returns a random element and sets CurrentElement to this element also.
 	Material* SelectRandomMaterial();
-	
+
 	// Returns CurrentElement.
 	Material* GetCurrentMaterial();
-	
+
 	// Assembles the material
 	bool Assemble();
-	
+
 	// Is this material ready to be used?
 	bool IsAssembled();
-	
+
 	// Is this a compound material?
 	// true for compounds, false for elements
 	virtual bool IsMixture() const;
-	
+
 	// Return list of constitutent element symbols as strings
 	vector< pair<string,double> > GetConstituentElements();
 
 private:
-	
+
 	// A map of number density fractions in the material, along with the material pointer.
 	// In the double pair:
 	// first = number fraction
 	// second = mass fraction
 	std::map<Material*,std::pair<double,double> > MixtureMap;
 
-	
+
 	// Current element selected
 	Material* CurrentMaterial;
 

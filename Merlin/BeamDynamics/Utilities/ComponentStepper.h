@@ -6,9 +6,9 @@
 //## begin module%3D2067E9003E.cm preserve=no
 /*
  * Merlin C++ Class Library for Charged Particle Accelerator Simulations
- * 
+ *
  * Class library version 2.0 (1999)
- * 
+ *
  * file Merlin\BeamDynamics\Utilities\ComponentStepper.h
  * last modified 01/07/02 16:36:22
  */
@@ -19,10 +19,10 @@
  * This file is derived from software bearing the following
  * restrictions:
  *
- * MERLIN C++ class library for 
+ * MERLIN C++ class library for
  * Charge Particle Accelerator Simulations
  * Copyright (c) 2001 by The Merlin Collaboration.
- * - ALL RIGHTS RESERVED - 
+ * - ALL RIGHTS RESERVED -
  *
  * Permission to use, copy, modify, distribute and sell this
  * software and its documentation for any purpose is hereby
@@ -68,26 +68,26 @@ class AcceleratorComponent;
 
 //## Uses: <unnamed>%3D2068A801B6;AcceleratorComponent { -> F}
 
-class ComponentStepper 
+class ComponentStepper
 {
-  public:
+public:
 
-    //## Other Operations (specified)
-      //## Operation: SetComponent%3D205B5500FD
-      virtual void SetComponent (AcceleratorComponent& cmp) = 0;
+	//## Other Operations (specified)
+	//## Operation: SetComponent%3D205B5500FD
+	virtual void SetComponent (AcceleratorComponent& cmp) = 0;
 
-      //## Operation: Increment%3D205B730092
-      //	Increments the step distance and returns true if on a
-      //	step boundary, otherwise false.
-      virtual bool Increment (double ds) = 0;
+	//## Operation: Increment%3D205B730092
+	//	Increments the step distance and returns true if on a
+	//	step boundary, otherwise false.
+	virtual bool Increment (double ds) = 0;
 
-      //## Operation: DistanceToStepBoundary%3D205EE8004E
-      //	Returns the distance to the next step boundary.
-      virtual double DistanceToStepBoundary () const = 0;
+	//## Operation: DistanceToStepBoundary%3D205EE8004E
+	//	Returns the distance to the next step boundary.
+	virtual double DistanceToStepBoundary () const = 0;
 
-  protected:
-  private:
-  private: //## implementation
+protected:
+private:
+private: //## implementation
 };
 
 //## Class: ComponentDivider%3D205F5500F5
@@ -102,70 +102,70 @@ class ComponentStepper
 
 class ComponentDivider : public ComponentStepper  //## Inherits: <unnamed>%3D205FC8037B
 {
-  public:
-    //## Constructors (specified)
-      //## Operation: ComponentDivider%3D20632A03C7
-      //	Constructor taking the number of steps to take per
-      //	component, together with the minimum step distance
-      //	(default 0). If for a given component, the calculate
-      //	step length is less than min_step, then the step number
-      //	is adjusted to give the closest number of integral steps
-      //	to match min_step.
-      ComponentDivider (int ns, double min_step = 0);
+public:
+	//## Constructors (specified)
+	//## Operation: ComponentDivider%3D20632A03C7
+	//	Constructor taking the number of steps to take per
+	//	component, together with the minimum step distance
+	//	(default 0). If for a given component, the calculate
+	//	step length is less than min_step, then the step number
+	//	is adjusted to give the closest number of integral steps
+	//	to match min_step.
+	ComponentDivider (int ns, double min_step = 0);
 
 
-    //## Other Operations (specified)
-      //## Operation: SetComponent%3D20634C03E4
-      virtual void SetComponent (AcceleratorComponent& cmp);
+	//## Other Operations (specified)
+	//## Operation: SetComponent%3D20634C03E4
+	virtual void SetComponent (AcceleratorComponent& cmp);
 
-      //## Operation: Increment%3D20634D0006
-      //	Increments the step distance and returns true if on a
-      //	step boundary, otherwise false.
-      virtual bool Increment (double ds);
+	//## Operation: Increment%3D20634D0006
+	//	Increments the step distance and returns true if on a
+	//	step boundary, otherwise false.
+	virtual bool Increment (double ds);
 
-      //## Operation: DistanceToStepBoundary%3D20634D0010
-      //	Returns the distance to the next step boundary.
-      virtual double DistanceToStepBoundary () const;
+	//## Operation: DistanceToStepBoundary%3D20634D0010
+	//	Returns the distance to the next step boundary.
+	virtual double DistanceToStepBoundary () const;
 
-  protected:
-  private:
-    // Data Members for Class Attributes
+protected:
+private:
+	// Data Members for Class Attributes
 
-      //## Attribute: s%3D20639200AF
-      //	Current component length
-      //## begin ComponentDivider::s%3D20639200AF.attr preserve=no  private: double {UA} 
-      double s;
-      //## end ComponentDivider::s%3D20639200AF.attr
+	//## Attribute: s%3D20639200AF
+	//	Current component length
+	//## begin ComponentDivider::s%3D20639200AF.attr preserve=no  private: double {UA}
+	double s;
+	//## end ComponentDivider::s%3D20639200AF.attr
 
-      //## Attribute: next_s%3D206397002A
-      //	Integrated length
-      //## begin ComponentDivider::next_s%3D206397002A.attr preserve=no  private: double {UA} 
-      double next_s;
-      //## end ComponentDivider::next_s%3D206397002A.attr
+	//## Attribute: next_s%3D206397002A
+	//	Integrated length
+	//## begin ComponentDivider::next_s%3D206397002A.attr preserve=no  private: double {UA}
+	double next_s;
+	//## end ComponentDivider::next_s%3D206397002A.attr
 
-      //## Attribute: delta_s%3D2063CD03D5
-      //## begin ComponentDivider::delta_s%3D2063CD03D5.attr preserve=no  private: double {UA} 
-      double delta_s;
-      //## end ComponentDivider::delta_s%3D2063CD03D5.attr
+	//## Attribute: delta_s%3D2063CD03D5
+	//## begin ComponentDivider::delta_s%3D2063CD03D5.attr preserve=no  private: double {UA}
+	double delta_s;
+	//## end ComponentDivider::delta_s%3D2063CD03D5.attr
 
-      //## Attribute: minStep%3D20641902B2
-      //## begin ComponentDivider::minStep%3D20641902B2.attr preserve=no  private: double {UA} 
-      double minStep;
-      //## end ComponentDivider::minStep%3D20641902B2.attr
+	//## Attribute: minStep%3D20641902B2
+	//## begin ComponentDivider::minStep%3D20641902B2.attr preserve=no  private: double {UA}
+	double minStep;
+	//## end ComponentDivider::minStep%3D20641902B2.attr
 
-      //## Attribute: nstep%3D2064240272
-      //## begin ComponentDivider::nstep%3D2064240272.attr preserve=no  private: int {UA} 
-      int nstep;
-      //## end ComponentDivider::nstep%3D2064240272.attr
+	//## Attribute: nstep%3D2064240272
+	//## begin ComponentDivider::nstep%3D2064240272.attr preserve=no  private: int {UA}
+	int nstep;
+	//## end ComponentDivider::nstep%3D2064240272.attr
 
-  private: //## implementation
+private: //## implementation
 };
 
-// Class ComponentStepper 
+// Class ComponentStepper
 
-// Class ComponentDivider 
+// Class ComponentDivider
 
-// Class ComponentStepper 
+// Class ComponentStepper
 
 //## begin module%3D2067E9003E.epilog preserve=yes
 //## end module%3D2067E9003E.epilog

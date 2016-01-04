@@ -17,7 +17,7 @@ public:
 		double ap3;
 		double ap4;
 	};
-	InterpolatedAperture(){};
+	InterpolatedAperture() {};
 	InterpolatedAperture(std::vector<ap> ApertureListInput) : ApertureList(ApertureListInput) {};
 
 	std::vector<ap> GetApertureList() const
@@ -68,7 +68,7 @@ public:
 
 	//Returns true if the point (x,y,z) is within the aperture.
 	virtual bool PointInside (double x, double y, double z) const;
-    
+
 	//TODO
 	//Returns true if the point p is within the aperture.
 	//bool PointInside (const Point3D& p) const;
@@ -84,18 +84,18 @@ public:
 	bool Print;
 	virtual void printout(std::ostream& out) const;
 
-/*
-	void SetRectHalfWidth(double);
-	void SetRectHalfHeight(double);
-	void SetEllipseHalfHorizontal(double);
-	void SetEllipseHalfVertical(double);
+	/*
+		void SetRectHalfWidth(double);
+		void SetRectHalfHeight(double);
+		void SetEllipseHalfHorizontal(double);
+		void SetEllipseHalfVertical(double);
 
-//private:
-	double rect_half_width;
-	double rect_half_height;
-	double ellipse_half_horizontal;
-	double ellipse_half_vertical;
-*/
+	//private:
+		double rect_half_width;
+		double rect_half_height;
+		double ellipse_half_horizontal;
+		double ellipse_half_vertical;
+	*/
 };
 
 inline string InterpolatedRectEllipseAperture::GetApertureType() const

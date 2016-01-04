@@ -1,18 +1,20 @@
 #include "BeamDynamics/ParticleTracking/BunchFilter.h"
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 
 ParticleBunchFilter::~ParticleBunchFilter ()
 {
-    // Nothing to do
+	// Nothing to do
 }
 
 bool HorizontalHaloParticleBunchFilter::Apply(const PSvector& v) const
 {
 	if(v.x() > (orbit+limit) || v.x() < (orbit-limit) )
 	{
-		if (v.x() != 0.0 && v.xp() != 0.0){
+		if (v.x() != 0.0 && v.xp() != 0.0)
+		{
 			//cout << v.x() << "\t" << limit << endl;
 			return true;
 		}

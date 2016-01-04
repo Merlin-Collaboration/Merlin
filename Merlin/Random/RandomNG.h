@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef RandomNG_h
@@ -96,8 +96,8 @@ private:
 
 	void ResetGenerators ();
 
-RandGenerator(const RandGenerator& rand);
-RandGenerator& operator=(const RandGenerator& rand);
+	RandGenerator(const RandGenerator& rand);
+	RandGenerator& operator=(const RandGenerator& rand);
 
 };
 
@@ -224,7 +224,9 @@ inline double RandomNG::landau ()
 inline void RandomNG::init (unsigned iseed)
 {
 	if(generator)
+	{
 		delete generator;
+	}
 	generator = new RandGenerator(iseed);
 }
 

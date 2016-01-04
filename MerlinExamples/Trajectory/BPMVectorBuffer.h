@@ -7,11 +7,13 @@ public:
 
 	vector<BPM::Data> BPMReading;
 
-	void Record (const BPM& aBPM, const BPM::Data& data) {
+	void Record (const BPM& aBPM, const BPM::Data& data)
+	{
 		BPMReading.push_back(data);
 	};
 
-	void Clear () {
+	void Clear ()
+	{
 		BPMReading.clear();
 	};
 };

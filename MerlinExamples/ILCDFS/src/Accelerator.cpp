@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////
 // Class Accelerator implementation
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -9,10 +9,10 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
-// Merlinlib 
+// Merlinlib
 #include "Channels/Channels.h"
 #include "AcceleratorModel/AcceleratorModel.h"
 #include "BeamModel/Bunch.h"
@@ -23,35 +23,42 @@
 #include "BeamDynamicsModel.h"
 #include "ILCDFS_IO.h"
 
-namespace {
+namespace
+{
 
-	// Function used for sorting the klystron array
-	bool KlystronSort(const Klystron* k1, const Klystron* k2)
-	{
-		vector<size_t> i;
-		k1->GetBeamlineIndecies(i);
-		size_t i1 = i.front();
-		i.clear();
-		k2->GetBeamlineIndecies(i);
-		size_t i2 = i.front();
-		return i1<i2;
-	}
+// Function used for sorting the klystron array
+bool KlystronSort(const Klystron* k1, const Klystron* k2)
+{
+	vector<size_t> i;
+	k1->GetBeamlineIndecies(i);
+	size_t i1 = i.front();
+	i.clear();
+	k2->GetBeamlineIndecies(i);
+	size_t i2 = i.front();
+	return i1<i2;
+}
 
 } // end of anonymous namespace
 
 Accelerator::Accelerator(const std::string& name, AcceleratorModel* aModel, BeamData* ibeamdat)
-: itsAccModel(aModel),itsName(name),itsTracker(0),beam0(ibeamdat),cachedBunches(),
-currentSegment(0,0),allowIncrTracking(false)
+	: itsAccModel(aModel),itsName(name),itsTracker(0),beam0(ibeamdat),cachedBunches(),
+	  currentSegment(0,0),allowIncrTracking(false)
 {}
 
 Accelerator::~Accelerator()
 {
 	if(itsAccModel)
+	{
 		delete itsAccModel;
+	}
 	if(itsTracker)
+	{
 		delete itsTracker;
+	}
 	if(beam0)
+	{
 		delete beam0;
+	}
 }
 
 const std::string& Accelerator::GetName() const
@@ -70,9 +77,13 @@ void Accelerator::AllowIncrementalTracking(bool flg)
 {
 	dfs_trace(dfs_trace::level_1)<<itsName<<" using incremental tracking = ";
 	if(flg)
+	{
 		dfs_trace(dfs_trace::level_1)<<"YES"<<endl;
+	}
 	else
+	{
 		dfs_trace(dfs_trace::level_1)<<"NO"<<endl;
+	}
 
 
 	allowIncrTracking = flg;
@@ -101,12 +112,14 @@ void Accelerator::TrackBeam(size_t nstate)
 
 	CachedBunch& cb = cachedBunches[nstate];
 
-	if(allowIncrTracking) {
+	if(allowIncrTracking)
+	{
 		dfs_trace(dfs_trace::level_3)<<" using incremental tracking";
-		// check to see if this bunch is already at the 
+		// check to see if this bunch is already at the
 		// entrance to the current segment. Exception when we are at the beginning
 		// of the beamline.
-		if(currentSegment.first!=0 && cb.location+1!=currentSegment.first) {
+		if(currentSegment.first!=0 && cb.location+1!=currentSegment.first)
+		{
 			// Calculate indecies (not location==0 is a special case)
 			size_t n1 = cb.location == 0 ? 0 : cb.location+1;
 			size_t n2 = currentSegment.first-1;
@@ -135,16 +148,20 @@ void Accelerator::TrackBeam(size_t nstate)
 
 size_t Accelerator::GetMonitorChannels(Plane p, ROChannelArray& bpmChannels)
 {
-	AcceleratorModel::Beamline bline = 
-		itsAccModel->GetBeamline(currentSegment.first,currentSegment.second);
+	AcceleratorModel::Beamline bline =
+	    itsAccModel->GetBeamline(currentSegment.first,currentSegment.second);
 
 	std::vector<ROChannel*> bc;
 
 	if(p==x_only || p==x_and_y)
+	{
 		itsAccModel->GetROChannels(bline,"BPM.*.X",bc);
+	}
 
 	if(p==y_only || p==x_and_y)
+	{
 		itsAccModel->GetROChannels(bline,"BPM.*.Y",bc);
+	}
 
 	bpmChannels.SetChannels(bc);
 	return bpmChannels.Size();
@@ -152,16 +169,20 @@ size_t Accelerator::GetMonitorChannels(Plane p, ROChannelArray& bpmChannels)
 
 size_t Accelerator::GetCorrectorChannels(Plane p, RWChannelArray& corrChannels)
 {
-	AcceleratorModel::Beamline bline = 
-		itsAccModel->GetBeamline(currentSegment.first,currentSegment.second);
+	AcceleratorModel::Beamline bline =
+	    itsAccModel->GetBeamline(currentSegment.first,currentSegment.second);
 
 	std::vector<RWChannel*> cc;
 
 	if(p==x_only || p==x_and_y)
+	{
 		itsAccModel->GetRWChannels(bline,"XCor.*.B0",cc);
+	}
 
 	if(p==y_only || p==x_and_y)
+	{
 		itsAccModel->GetRWChannels(bline,"YCor.*.B0",cc);
+	}
 
 	corrChannels.SetChannels(cc);
 	return corrChannels.Size();
@@ -183,7 +204,8 @@ void Accelerator::InitialiseTracking(size_t nstates, ReferenceParticleArray& ref
 	cachedBunches.reserve(nstates);
 	refplist.reserve(nstates);
 
-	while((nstates--)>0) {
+	while((nstates--)>0)
+	{
 		Bunch* b = itsTracker->CreateBunch(*beam0);
 		refplist.push_back(b);
 		cachedBunches.push_back(CachedBunch(b));

@@ -21,7 +21,8 @@ using namespace std;
 // Wxy            - Sum (up+downstream) of coupler wakefield
 // CouplerRFKick  - Sum        "        of coupler RF kicks
 
-class CombinedWakeRF : public WakePotentials {
+class CombinedWakeRF : public WakePotentials
+{
 public:
 
 	CombinedWakeRF() {};
@@ -29,8 +30,8 @@ public:
 	//
 	// we need x,y since this is not just a transverse (dipole) wake field
 	//
-	// sum of upstream + downstream coupler 
-	virtual Vector2D Wxy(double x, double y) const = 0; // kV/nC 
+	// sum of upstream + downstream coupler
+	virtual Vector2D Wxy(double x, double y) const = 0; // kV/nC
 
 	// coupler RF kicks
 	//

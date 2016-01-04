@@ -20,105 +20,115 @@ template <class T, class tag>
 class TVec2D
 {
 public:
-    //	Default constructor. Data is not initialised.
-    TVec2D ()
-            : x(0.0),y(0.0) //set default to 0.0 - JM
-    {
-    }
+	//	Default constructor. Data is not initialised.
+	TVec2D ()
+		: x(0.0),y(0.0) //set default to 0.0 - JM
+	{
+	}
 
-    //	Copy constructor.
-    TVec2D (const TVec2D& v)
-            : x(v.x),y(v.y)
-    {
-    }
+	//	Copy constructor.
+	TVec2D (const TVec2D& v)
+		: x(v.x),y(v.y)
+	{
+	}
 
-    //	Explicit constructor from the three vector components.
-    TVec2D (const T& x1, const T& y1)
-            : x(x1),y(y1)
-    {
-    }
+	//	Explicit constructor from the three vector components.
+	TVec2D (const T& x1, const T& y1)
+		: x(x1),y(y1)
+	{
+	}
 
 
-    //	Copy assignment
-    const TVec2D& operator = (const TVec2D& v)
-    {
-        x=v.x;y=v.y;return *this;
-    }
+	//	Copy assignment
+	const TVec2D& operator = (const TVec2D& v)
+	{
+		x=v.x;
+		y=v.y;
+		return *this;
+	}
 
-    //	Arithmetic assignment.
-    const TVec2D& operator += (const TVec2D& v)
-    {
-        x+=v.x;y+=v.y;return *this;
-    }
+	//	Arithmetic assignment.
+	const TVec2D& operator += (const TVec2D& v)
+	{
+		x+=v.x;
+		y+=v.y;
+		return *this;
+	}
 
-    const TVec2D& operator -= (const TVec2D& v)
-    {
-        x-=v.x;y-=v.y;return *this;
-    }
+	const TVec2D& operator -= (const TVec2D& v)
+	{
+		x-=v.x;
+		y-=v.y;
+		return *this;
+	}
 
-    const TVec2D& operator *= (const T& s)
-    {
-        x*=s;y*=s;return *this;
-    }
+	const TVec2D& operator *= (const T& s)
+	{
+		x*=s;
+		y*=s;
+		return *this;
+	}
 
-    const TVec2D& operator /= (const T& s)
-    {
-        x/=s;y/=s;return *this;
-    }
+	const TVec2D& operator /= (const T& s)
+	{
+		x/=s;
+		y/=s;
+		return *this;
+	}
 
-    TVec2D operator - () const
-    {
-        return TVec2D(-x,-y);
-    }
+	TVec2D operator - () const
+	{
+		return TVec2D(-x,-y);
+	}
 
-    TVec2D operator - (const TVec2D& v) const
-    {
-        return TVec2D(x-v.x,y-v.y);
-    }
+	TVec2D operator - (const TVec2D& v) const
+	{
+		return TVec2D(x-v.x,y-v.y);
+	}
 
-    //	Dot (inner) product.
-    T dot (const TVec2D& v) const
-    {
-        return x*v.x+y*v.y;
-    }
+	//	Dot (inner) product.
+	T dot (const TVec2D& v) const
+	{
+		return x*v.x+y*v.y;
+	}
 
-    //	Return true if all components are zero.
-    bool isZero () const
-    {
-        //return x==0&&y==0;
-	return fequal(x,0.0)&&fequal(y,0,0);
-    }
+	//	Return true if all components are zero.
+	bool isZero () const
+	{
+		//return x==0&&y==0;
+		return fequal(x,0.0)&&fequal(y,0,0);
+	}
 
-    TVec2D operator + (const TVec2D& v) const
-    {
-        return TVec2D(x+v.x,y+v.y);
-    }
+	TVec2D operator + (const TVec2D& v) const
+	{
+		return TVec2D(x+v.x,y+v.y);
+	}
 
-    TVec2D operator * (T s) const
-    {
-        return TVec2D(s*x,s*y);
-    }
+	TVec2D operator * (T s) const
+	{
+		return TVec2D(s*x,s*y);
+	}
 
-    friend TVec2D operator * (T s, const TVec2D& v)
-    {
-        return TVec2D(s*v.x,s*v.y);
-    }
+	friend TVec2D operator * (T s, const TVec2D& v)
+	{
+		return TVec2D(s*v.x,s*v.y);
+	}
 
-    TVec2D operator / (T s) const
-    {
-        return TVec2D(x/s,y/s);
-    }
+	TVec2D operator / (T s) const
+	{
+		return TVec2D(x/s,y/s);
+	}
 
-    //	dot product.
-    T operator * (const TVec2D& v) const
-    {
-        return dot(v);
-    }
+	//	dot product.
+	T operator * (const TVec2D& v) const
+	{
+		return dot(v);
+	}
 
-    // Data Members for Class Attributes
+	// Data Members for Class Attributes
 
-    T x;
-    T y;
+	T x;
+	T y;
 
 protected:
 private:

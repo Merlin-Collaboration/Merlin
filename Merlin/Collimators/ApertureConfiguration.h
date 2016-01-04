@@ -31,14 +31,17 @@ public:
 	ApertureConfiguration(string, bool);
 	void LoadApertureConfiguration(string);
 	void ConfigureElementApertures(AcceleratorModel*);
-	
-	void SetAllRectEllipse(){allRectEllipse=1;}
+
+	void SetAllRectEllipse()
+	{
+		allRectEllipse=1;
+	}
 
 	string ApertureType;
 	//Output log
 	ostream* log;
 	bool logFlag;
-	
+
 	bool allRectEllipse;
 
 	//Set the stream for the collimator settings log.

@@ -4,17 +4,18 @@
 //#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamModel/PSvector.h"
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 class ParticleBunchFilter
 {
 public:
 
-    virtual ~ParticleBunchFilter ();
+	virtual ~ParticleBunchFilter ();
 
-    //	Used by a ParticleBunchConstructor object to select
-    //	vectors for inclusion in a ParticleBunch.
-    virtual bool Apply (const PSvector& v) const = 0;
+	//	Used by a ParticleBunchConstructor object to select
+	//	vectors for inclusion in a ParticleBunch.
+	virtual bool Apply (const PSvector& v) const = 0;
 };
 
 class HorizontalHaloParticleBunchFilter : public ParticleBunchFilter
@@ -23,15 +24,15 @@ public:
 
 //    ~ParticleBunchFilter ();
 
-    //	Used by a ParticleBunchConstructor object to select
-    //	vectors for inclusion in a ParticleBunch.
-    bool Apply (const PSvector& v) const;
+	//	Used by a ParticleBunchConstructor object to select
+	//	vectors for inclusion in a ParticleBunch.
+	bool Apply (const PSvector& v) const;
 
-    void SetHorizontalLimit(double);
-    void SetHorizontalOrbit(double);
+	void SetHorizontalLimit(double);
+	void SetHorizontalOrbit(double);
 
-    double limit;
-    double orbit;
+	double limit;
+	double orbit;
 };
 
 
@@ -39,15 +40,15 @@ class VerticalHaloParticleBunchFilter : public ParticleBunchFilter
 {
 public:
 
-  //  ~ParticleBunchFilter ();
+	//  ~ParticleBunchFilter ();
 
-    //	Used by a ParticleBunchConstructor object to select
-    //	vectors for inclusion in a ParticleBunch.
-    bool Apply (const PSvector& v) const;
-    
-    void SetVerticalLimit(double);
-    
-    double limit;
+	//	Used by a ParticleBunchConstructor object to select
+	//	vectors for inclusion in a ParticleBunch.
+	bool Apply (const PSvector& v) const;
+
+	void SetVerticalLimit(double);
+
+	double limit;
 };
 
 

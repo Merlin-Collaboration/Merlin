@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////
 // class ConstantGradientAdjustment implementation
 //
-// ILCDFS Application Code 
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -9,7 +9,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "ConstantGradientAdjustment.h"
@@ -23,7 +23,8 @@ void ConstantGradientAdjustment::Initialise()
 
 	dfs_trace(dfs_trace::level_1)<<"\n\nInitialising initial beam energy states\n"<<endl;
 
-	for(size_t n=0; n<estates.size(); n++) {
+	for(size_t n=0; n<estates.size(); n++)
+	{
 		double p0 = beamrefs[n]->GetReferenceMomentum();
 		double p=p0*(1+estates[n].dEbeam);
 		beamrefs[n]->SetReferenceMomentum(p);
@@ -44,18 +45,22 @@ void ConstantGradientAdjustment::SetEnergyState(size_t nes)
 	// have already been set during the call to Initialise().
 	// Here we only need deal with the klystron states.
 	dfs_trace(dfs_trace::level_2)<<"State "<<nes<<": adjusting klystrons by "<<es.dEkly<<endl;
-	if(es.dEkly!=0) {
-		for(size_t k=0; k<theKlystrons.size(); k++) {
+	if(es.dEkly!=0)
+	{
+		for(size_t k=0; k<theKlystrons.size(); k++)
+		{
 			Complex v = defkvals[k]*(1.0+es.dEkly);
 			theKlystrons[k]->SetVoltagePhasor(v);
 		}
 	}
 	else
-		RestoreKlystrons(); // nominal gradient state
+	{
+		RestoreKlystrons();    // nominal gradient state
+	}
 }
 
 ConstantGradientAdjustment::ConstantGradientAdjustment()
-: EnergyAdjustmentPolicy(), estates()
+	: EnergyAdjustmentPolicy(), estates()
 {
 	estates.reserve(4);
 	// Nominal state is always state 0

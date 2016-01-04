@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/03/20 13:42:54 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef CorrectorWinding_h
@@ -28,21 +28,21 @@
 class CorrectorWinding : public ModelElement
 {
 public:
-    CorrectorWinding (RectMultipole& aMagnet);
+	CorrectorWinding (RectMultipole& aMagnet);
 
-    void SetBx (double value);
-    void SetBy (double value);
-    double GetBx () const;
-    double GetBy () const;
+	void SetBx (double value);
+	void SetBy (double value);
+	double GetBx () const;
+	double GetBy () const;
 
-    //	Return the name of the element.
-    virtual const string& GetName () const;
+	//	Return the name of the element.
+	virtual const string& GetName () const;
 
-    //	Return the type string for the element.
-    virtual const string& GetType () const;
+	//	Return the type string for the element.
+	virtual const string& GetType () const;
 
-    //	Virtual constructor.
-    virtual ModelElement* Copy () const;
+	//	Virtual constructor.
+	virtual ModelElement* Copy () const;
 
 	//  Get the uniques beamline index for this frame
 	size_t GetBeamlineIndex() const;
@@ -50,12 +50,12 @@ public:
 
 private:
 
-    RectMultipole* magnet;
+	RectMultipole* magnet;
 };
 
 inline const string& CorrectorWinding::GetName () const
 {
-    return magnet->GetName();
+	return magnet->GetName();
 }
 
 inline size_t CorrectorWinding::GetBeamlineIndex() const

@@ -37,38 +37,38 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname);
 
 int main()
 {
-    // Initialise the random number generated FIRST!
-    RandomNG::init();
+	// Initialise the random number generated FIRST!
+	RandomNG::init();
 
-    // Construct the BDS beamline model
-    pair<AcceleratorModel*,BeamData*> mb = ConstructModel("../lattices/tesla_bds_v8.05.optics");
+	// Construct the BDS beamline model
+	pair<AcceleratorModel*,BeamData*> mb = ConstructModel("../lattices/tesla_bds_v8.05.optics");
 
-    AcceleratorModel* model = mb.first;
-    BeamData* beam = mb.second;
-               
-    // Construct the halo tracking object.
-    HaloTracker ht(model->GetBeamline(),*beam);
+	AcceleratorModel* model = mb.first;
+	BeamData* beam = mb.second;
 
-    // set halo limits to ±5 sigma and ±5% in dp/p
-    ht.SetHaloLimitsN(5,5,5,5,0.05);
+	// Construct the halo tracking object.
+	HaloTracker ht(model->GetBeamline(),*beam);
 
-    // We want to hard collimate the halo at apertures,
-    ht.collimate_halo = true;
+	// set halo limits to ±5 sigma and ±5% in dp/p
+	ht.SetHaloLimitsN(5,5,5,5,0.05);
 
-    // Once tracking is complete, dump out
-    // the surviving particles (data/particles.out.dat)
-    ht.dump_particles = true;
+	// We want to hard collimate the halo at apertures,
+	ht.collimate_halo = true;
+
+	// Once tracking is complete, dump out
+	// the surviving particles (data/particles.out.dat)
+	ht.dump_particles = true;
 
 	// Turn scattering on/off at Collimator elements
 	ht.scatter_at_collimator = false;
 
-    // Track halo with 1e4 particles
-    ht.Run(10000);
-    
-    // clean up
-    delete model;
-    delete beam;
+	// Track halo with 1e4 particles
+	ht.Run(10000);
 
-    return 0;
+	// clean up
+	delete model;
+	delete beam;
+
+	return 0;
 }
 

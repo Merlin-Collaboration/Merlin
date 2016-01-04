@@ -28,7 +28,8 @@ int main()
 	ParticleBunch* theBunch = new ParticleBunch(BEAMENERGY);
 
 	PSvector p(0);
-	for(int xi=1; xi<=20; xi++) {
+	for(int xi=1; xi<=20; xi++)
+	{
 		p.x() = xi * 0.003;
 		theBunch->AddParticle(p);
 	}
@@ -41,11 +42,16 @@ int main()
 	// Do the tracking, writing the phase-space co-ordinates
 	// of each particle in the bunch to a file after each turn
 	ofstream trackingLog("Tracking.dat");
-	for(int turn=0; turn<200; turn++) {
-	        if(turn==0)
-		   tracker.Run();
-	        else
-	           tracker.Continue();
+	for(int turn=0; turn<200; turn++)
+	{
+		if(turn==0)
+		{
+			tracker.Run();
+		}
+		else
+		{
+			tracker.Continue();
+		}
 		ParticleBunch& tracked = tracker.GetTrackedBunch();
 		tracked.Output(trackingLog);
 	}

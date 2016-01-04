@@ -3,9 +3,9 @@
 
 /*
  * Merlin C++ Class Library for Charged Particle Accelerator Simulations
- * 
+ *
  * Class library version 2.0 (1999)
- * 
+ *
  * file Merlin\AcceleratorModel\StdComponent\SimpleSolenoid.h
  * last modified 10/12/01 14:23:49
  */
@@ -14,10 +14,10 @@
  * This file is derived from software bearing the following
  * restrictions:
  *
- * MERLIN C++ class library for 
+ * MERLIN C++ class library for
  * Charge Particle Accelerator Simulations
  * Copyright (c) 2001 by The Merlin Collaboration.
- * - ALL RIGHTS RESERVED - 
+ * - ALL RIGHTS RESERVED -
  *
  * Permission to use, copy, modify, distribute and sell this
  * software and its documentation for any purpose is hereby

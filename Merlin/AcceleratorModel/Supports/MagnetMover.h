@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:52 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef MagnetMover_h
@@ -38,85 +38,85 @@ class MagnetMover : public SequenceFrame
 {
 public:
 
-    //	Constructor taking the name of the mover, and the Lattice
-    //	Frame which the mover adjusts.
-    explicit MagnetMover (const string& id);
+	//	Constructor taking the name of the mover, and the Lattice
+	//	Frame which the mover adjusts.
+	explicit MagnetMover (const string& id);
 
-    //	Returns the horizontal displacement in meters.
-    double GetX () const;
+	//	Returns the horizontal displacement in meters.
+	double GetX () const;
 
-    //	Returns the vertical displacement in meters.
-    double GetY () const;
+	//	Returns the vertical displacement in meters.
+	double GetY () const;
 
-    //	Returns the roll angle about the local entrance z-axis
-    //	in radians.
-    double GetRoll () const;
+	//	Returns the roll angle about the local entrance z-axis
+	//	in radians.
+	double GetRoll () const;
 
-    //	Sets the horizontal offset in meters.
-    void SetX (double x);
+	//	Sets the horizontal offset in meters.
+	void SetX (double x);
 
-    //	Sets the vertical offset in meters.
-    void SetY (double y);
+	//	Sets the vertical offset in meters.
+	void SetY (double y);
 
-    //	Sets the roll angle in radians.
-    void SetRoll (double roll);
+	//	Sets the roll angle in radians.
+	void SetRoll (double roll);
 
-    //	Resets the mover to zero.
-    void Reset ();
+	//	Resets the mover to zero.
+	void Reset ();
 
-    //	Returns "MagnetMover".
-    virtual const string& GetType () const;
+	//	Returns "MagnetMover".
+	virtual const string& GetType () const;
 
-    //	Virtual constructor.
-    virtual ModelElement* Copy () const;
+	//	Virtual constructor.
+	virtual ModelElement* Copy () const;
 
-    //	Returns the total frame transformation, i.e. the
-    //	combined transformation of the local frame transforms
-    //	and the x, y and roll  mover adjustments.
-    virtual Transform3D GetLocalFrameTransform () const;
+	//	Returns the total frame transformation, i.e. the
+	//	combined transformation of the local frame transforms
+	//	and the x, y and roll  mover adjustments.
+	virtual Transform3D GetLocalFrameTransform () const;
 
 private:
 
-    Transform2D t;
+	Transform2D t;
 };
 
 inline MagnetMover::MagnetMover (const string& id)
-        : SequenceFrame(id)
+	: SequenceFrame(id)
 {}
 
 inline double MagnetMover::GetX () const
 {
-    return t.translation().x;
+	return t.translation().x;
 }
 
 inline double MagnetMover::GetY () const
 {
-    return t.translation().y;
+	return t.translation().y;
 }
 
 inline double MagnetMover::GetRoll () const
 {
-    return t.rotationAngle();
+	return t.rotationAngle();
 }
 
 inline void MagnetMover::SetX (double x)
 {
-    t.setTranslationX(x);
+	t.setTranslationX(x);
 }
 
 inline void MagnetMover::SetY (double y)
 {
-    t.setTranslationY(y);
+	t.setTranslationY(y);
 }
 
 inline void MagnetMover::SetRoll (double roll)
 {
-    t.setRotation(roll);
+	t.setRotation(roll);
 }
 
 inline void MagnetMover::Reset ()
 {
-    t=Transform2D();
+	t=Transform2D();
 }
 
 #endif

@@ -40,23 +40,24 @@ using namespace ParticleTracking;
 
 namespace
 {
-	inline double powd (double x, int y)
+inline double powd (double x, int y)
+{
+	double product (1);
+	for (int i=1; i<=y; i++)
 	{
-		double product (1);
-		for (int i=1; i<=y; i++)
-		{
-			product *= x;
-		}
-		return product;
+		product *= x;
 	}
+	return product;
+}
 }
 
-namespace ParticleTracking{
+namespace ParticleTracking
+{
 
 // Constructor
 
 CollimatorWakeProcess::CollimatorWakeProcess(int modes, int prio, size_t nb, double ns)
-  : WakeFieldProcess (prio, nb, ns)
+	: WakeFieldProcess (prio, nb, ns)
 {
 	// cout<<" CollimatorWakeProcess "<<modes<<endl;
 	nmodes = modes;
@@ -66,7 +67,7 @@ CollimatorWakeProcess::CollimatorWakeProcess(int modes, int prio, size_t nb, dou
 	wake_st=new double*[modes+1];
 	wake_cl=new double*[modes+1];
 	wake_sl=new double*[modes+1];
-	for (int i=0;i<=nmodes;i++)
+	for (int i=0; i<=nmodes; i++)
 	{
 		Cm[i]=new double[1000];
 		Sm[i]=new double[1000];
@@ -81,7 +82,7 @@ CollimatorWakeProcess::CollimatorWakeProcess(int modes, int prio, size_t nb, dou
 
 CollimatorWakeProcess:: ~CollimatorWakeProcess()
 {
-	for (int i=0;i<nmodes;i++)
+	for (int i=0; i<nmodes; i++)
 	{
 		delete[] Cm[i];
 		delete[] Sm[i];
@@ -98,11 +99,11 @@ CollimatorWakeProcess:: ~CollimatorWakeProcess()
 	delete[] wake_cl;
 	delete[] wake_sl;
 }
-  
 
-// Calculates the moments Cm for each slice 
+
+// Calculates the moments Cm for each slice
 double CollimatorWakeProcess::CalculateCm(int mode, int slice)
-{	
+{
 	// cout<<"Cm  mode and slice "<<mode<<" "<<slice<<endl;
 	double x=0;
 	for(ParticleBunch::iterator p=bunchSlices[slice]; p!=bunchSlices[slice+1]; p++)
@@ -116,7 +117,7 @@ double CollimatorWakeProcess::CalculateCm(int mode, int slice)
 }
 
 
-// Calculates  the moments Sm for each slice 
+// Calculates  the moments Sm for each slice
 double CollimatorWakeProcess::CalculateSm(int mode, int slice)
 {
 	double x=0;
@@ -131,7 +132,7 @@ double CollimatorWakeProcess::CalculateSm(int mode, int slice)
 	return x;
 }
 
-// Calculate the transverse wake with modes 
+// Calculate the transverse wake with modes
 void CollimatorWakeProcess::CalculateWakeT(double dz, int currmode)
 {
 	vector <double> w(nbins);
@@ -151,7 +152,7 @@ void CollimatorWakeProcess::CalculateWakeT(double dz, int currmode)
 		for(size_t j=slice; j<bunchSlices.size()-1; j++)
 		{
 			wake_ct[currmode][i] += w[j-i]*Cm[currmode][j];
-		        wake_st[currmode][i] += w[j-i]*Sm[currmode][j];
+			wake_st[currmode][i] += w[j-i]*Sm[currmode][j];
 		}
 	}
 }
@@ -189,11 +190,11 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 	//ofstream *bunchafterfile = new ofstream("Output/wakefield.dat");
 	//currentBunch->Output(*bunchafterfile);
 	//delete bunchafterfile;
-	
+
 	collimator_wake=(CollimatorWakePotentials*) currentWake;
-	for(int m=1;m<=nmodes;m++)
+	for(int m=1; m<=nmodes; m++)
 	{
-		for (size_t  n=0;n<nbins;n++)
+		for (size_t  n=0; n<nbins; n++)
 		{
 			Cm[m][n]=CalculateCm(m,n);
 			Sm[m][n]=CalculateSm(m,n);
@@ -206,10 +207,13 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 	a0 /= 4*pi*FreeSpacePermittivity;
 	double p0 = currentBunch->GetReferenceMomentum();
 
-	if(recalc) Init();
+	if(recalc)
+	{
+		Init();
+	}
 	double bload=0;
 
-	#define WAKE_GRADIENT(wake) ((wake[currmode][nslice+1]-wake[currmode][nslice])/dz);
+#define WAKE_GRADIENT(wake) ((wake[currmode][nslice+1]-wake[currmode][nslice])/dz);
 
 	for(int currmode=1; currmode<=nmodes; currmode++)
 	{
@@ -241,7 +245,7 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 				wake_y = currmode*powd(r,currmode-1)*(wys-wyc);
 				wake_x*=a0;
 				wake_y*=a0;
-		//	*logfile<<currmode<<"\t"<<r<< "\t" << theta << "\t" << wake_ct[currmode][nslice] <<"\t"<<wake_st[currmode][nslice]<<"\t" << wxc << "\t" << wxs << "\t" << wyc << "\t" << wys << endl;    //<<p->x()<<"\t"<<p->y()<<endl;
+				//	*logfile<<currmode<<"\t"<<r<< "\t" << theta << "\t" << wake_ct[currmode][nslice] <<"\t"<<wake_st[currmode][nslice]<<"\t" << wxc << "\t" << wxs << "\t" << wyc << "\t" << wys << endl;    //<<p->x()<<"\t"<<p->y()<<endl;
 				double wzc = cos(currmode*theta)*(wake_cl[currmode][nslice]+g_cl*zz);
 				double wzs = sin(currmode*theta)*(wake_sl[currmode][nslice]+g_sl*zz);
 				wake_z = powd(r,currmode)*(wzc-wzs);
@@ -254,17 +258,17 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 				p->xp() = (p->xp()+dxp)/(1+ddp);
 				double oldpy=p->yp();
 				p->yp() = (p->yp()+dyp)/(1+ddp);
-			// *logfile <<" new... slice "<<nslice<<" particle "<<(++iparticle)<< "\tangles "<< p->xp()<<"\t"<< p->yp()<<"\t"<<dxp<<"\t"<<dyp<<endl;
+				// *logfile <<" new... slice "<<nslice<<" particle "<<(++iparticle)<< "\tangles "<< p->xp()<<"\t"<< p->yp()<<"\t"<<dxp<<"\t"<<dyp<<endl;
 			}
-			//*logfile << "slice number: " << nslice << "\tslice size: " << number_particles << endl;			
+			//*logfile << "slice number: " << nslice << "\tslice size: " << number_particles << endl;
 			z+=dz;
 
-		//	ostringstream bunchsave;
-		//	bunchsave << "Output/bunch_" << nslice << ".bunch";
-		//        ofstream *bunchsavefile = new ofstream(bunchsave.str().c_str());
-		 //       currentBunch->Output(*bunchsavefile);
-		//	bunchsavefile->close();
-		//        delete bunchsavefile;
+			//	ostringstream bunchsave;
+			//	bunchsave << "Output/bunch_" << nslice << ".bunch";
+			//        ofstream *bunchsavefile = new ofstream(bunchsave.str().c_str());
+			//       currentBunch->Output(*bunchsavefile);
+			//	bunchsavefile->close();
+			//        delete bunchsavefile;
 		}
 	}
 //	ofstream *bunchafterfile1 = new ofstream("Output/wakefield1.dat");

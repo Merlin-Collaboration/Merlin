@@ -3,7 +3,7 @@
 // Produces an arbitrary number of energy states by uniformly adjusting
 // the entire gradient of the machine.
 //
-// ILCDFS Application Code 
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -11,7 +11,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_ConstantGradientAdjustment
@@ -20,22 +20,26 @@
 #include <vector>
 #include "EnergyAdjustmentPolicy.h"
 
-class ConstantGradientAdjustment : public EnergyAdjustmentPolicy {	
+class ConstantGradientAdjustment : public EnergyAdjustmentPolicy
+{
 public:
 
-	ConstantGradientAdjustment();	
-	~ConstantGradientAdjustment();	
+	ConstantGradientAdjustment();
+	~ConstantGradientAdjustment();
 
-	size_t GetNumEnergyStates() {
+	size_t GetNumEnergyStates()
+	{
 		return estates.size();
 	}
 
 	void Initialise();
-	void SetEnergyState(size_t nes);	
-	void SetActiveBeamlineSegment(DFS_Segment &seg) {
+	void SetEnergyState(size_t nes);
+	void SetActiveBeamlineSegment(DFS_Segment &seg)
+	{
 		// noting to do;
 	}
-	bool SupportsIncrementalTracking() { 
+	bool SupportsIncrementalTracking()
+	{
 		return true;
 	}
 
@@ -50,10 +54,11 @@ public:
 
 private:
 
-	struct EnergyState {
+	struct EnergyState
+	{
 		double dEkly;
 		double dEbeam;
-		EnergyState(double dEk, double dEb) 
+		EnergyState(double dEk, double dEb)
 			: dEkly(dEk),dEbeam(dEb) {}
 	};
 

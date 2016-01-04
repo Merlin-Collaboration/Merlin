@@ -20,7 +20,8 @@
 
 
 
-class TeslaWakePotentials : public WakePotentials {
+class TeslaWakePotentials : public WakePotentials
+{
 
 public:
 

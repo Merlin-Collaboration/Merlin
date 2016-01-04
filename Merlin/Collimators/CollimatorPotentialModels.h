@@ -1,9 +1,9 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3.2 (2008)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Created: DK 25.2.2008
@@ -18,9 +18,9 @@
 
 /**
 * The geometric wake potential:
-* Steeply tapered collimator moving from aperture b to aperture a 
+* Steeply tapered collimator moving from aperture b to aperture a
 * Ref.:
-* B.W.Zotter and S.A.Kheifets, Impedances and Wakes in High-Energy Particle Accelerators, 
+* B.W.Zotter and S.A.Kheifets, Impedances and Wakes in High-Energy Particle Accelerators,
 * World Scientific (1998)
 */
 class TaperedCollimatorPotentials: public CollimatorWakePotentials
@@ -30,11 +30,17 @@ public:
 	~TaperedCollimatorPotentials();
 	virtual double Wlong (double z, int m) const;
 	virtual double Wtrans (double z, int m) const;
-	double Wlong (double z) const {return 0;}
-	double Wtrans (double z) const {return 0;}
+	double Wlong (double z) const
+	{
+		return 0;
+	}
+	double Wtrans (double z) const
+	{
+		return 0;
+	}
 private:
 	double* coeff;
-	double a, b; 
+	double a, b;
 };
 
 /**

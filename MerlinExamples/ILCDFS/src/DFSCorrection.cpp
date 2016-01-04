@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////
 // Class DFSCorrection implementation
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -9,7 +9,7 @@
 // Last CVS revision:
 // $Date: 2006/06/19 10:19:06 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "DFSCorrection.h"
@@ -27,17 +27,24 @@ double DFSCorrection::w_abs = 1;
 double DFSCorrection::w_diff =1;
 
 DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
-: itsSegment(aSegment), itsBPMdataFilter(0), bpms(), correctors(),svd(0),refdata()
+	: itsSegment(aSegment), itsBPMdataFilter(0), bpms(), correctors(),svd(0),refdata()
 {
-	// First we use theReferenceModel to calculate the design 
+	// First we use theReferenceModel to calculate the design
 	// response model matrix which will be used to calculate
 	// future corrections on simulated data using theSimulationModel.
 	dfs_trace(dfs_trace::level_1)<<"constructing DFS correction for segment "<<itsSegment<<' ';
 
-	switch(xy) {
-		case Accelerator::x_only: dfs_trace(dfs_trace::level_1)<<"X plane only"; break;
-		case Accelerator::y_only: dfs_trace(dfs_trace::level_1)<<"Y plane only"; break;
-		case Accelerator::x_and_y: dfs_trace(dfs_trace::level_1)<<"X and Y planes"; break;
+	switch(xy)
+	{
+	case Accelerator::x_only:
+		dfs_trace(dfs_trace::level_1)<<"X plane only";
+		break;
+	case Accelerator::y_only:
+		dfs_trace(dfs_trace::level_1)<<"Y plane only";
+		break;
+	case Accelerator::x_and_y:
+		dfs_trace(dfs_trace::level_1)<<"X and Y planes";
+		break;
 	}
 	dfs_trace(dfs_trace::level_1)<<endl;
 
@@ -52,7 +59,7 @@ DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
 
 	size_t nstates = theEnergyAdjustmentPolicy->GetNumEnergyStates();
 	dfs_trace(dfs_trace::level_2)<<nstates<<"energy states"<<endl;
-	
+
 	RealMatrix M0(nbpms,ncors,0.0);
 	RealMatrix Mi(nbpms,ncors,0.0);
 	RealMatrix M(nstates*nbpms,ncors,0.0);
@@ -62,20 +69,23 @@ DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
 
 	ResponseMatrixGenerator rmg(theReferenceModel,bpms,correctors);
 
-	for(size_t nes=0; nes<nstates; nes++) {
+	for(size_t nes=0; nes<nstates; nes++)
+	{
 
 		dfs_trace(dfs_trace::level_2)<<"Constructing response matrix for state "<<nes<<endl;
-		SubMatrix<double> m = M(Range(nes*nbpms,(nes+1)*nbpms-1),Range(0,ncors-1));		
+		SubMatrix<double> m = M(Range(nes*nbpms,(nes+1)*nbpms-1),Range(0,ncors-1));
 		theEnergyAdjustmentPolicy->SetEnergyState(nes);
 
 		rmg.Generate(nes);
 		refdata.push_back(rmg.GetReference());
 
-		if(nes==0){
+		if(nes==0)
+		{
 			m = M0 = rmg.GetMatrix(); // constraint on absolute orbit
 		}
-		else {
-			// For the off-energy states we take the 
+		else
+		{
+			// For the off-energy states we take the
 			// difference matrix
 			m = rmg.GetMatrix() - M0;
 			refdata[nes] -= refdata[0]; // for off-energy states we need the difference orbit
@@ -93,7 +103,7 @@ DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
 	svd = new TLAS::SVDMatrix<double>(M,w);
 	dfs_trace(dfs_trace::level_2)<<"succesful"<<endl;
 
-	// Finally we set set up the necessary channels 
+	// Finally we set set up the necessary channels
 	// for the actual simulated correction
 	theSimulationModel->SetActiveBeamlineSegment(itsSegment);
 	theSimulationModel->GetMonitorChannels(xy,bpms);
@@ -117,21 +127,26 @@ void DFSCorrection::RecordTrajectories()
 	// Simulated data acquisition
 	size_t nstates = theEnergyAdjustmentPolicy->GetNumEnergyStates();
 	RealVector xy0(bpms.Size());
-	for(size_t nes=0; nes<nstates; nes++) {
+	for(size_t nes=0; nes<nstates; nes++)
+	{
 		theEnergyAdjustmentPolicy->SetEnergyState(nes);
 		theSimulationModel->TrackBeam(nes);
-		if(nes==0) {
+		if(nes==0)
+		{
 			xy0 = bpms;
 			// difference to design absolute orbit
-			cData(Range(0,nbpms-1)) = xy0-refdata[0]; 
+			cData(Range(0,nbpms-1)) = xy0-refdata[0];
 		}
 		else
 			// difference from design 'difference orbit' for off-energy state
+		{
 			cData(Range(nes*nbpms,(nes+1)*nbpms-1)) = (static_cast<RealVector>(bpms)-xy0)-refdata[nes];
+		}
 	}
 	theEnergyAdjustmentPolicy->Restore();
 
-	if(dfs_trace::verbosity>=dfs_trace::level_3) {
+	if(dfs_trace::verbosity>=dfs_trace::level_3)
+	{
 		double rms = sqrt(cData*cData);
 		dfs_trace(dfs_trace::level_3)<<"segment data rms = "<<rms<<endl;
 	}
@@ -147,7 +162,8 @@ void DFSCorrection::ApplyCorrection(double g)
 	dfs_trace(dfs_trace::level_2)<<"Applying "<<100.0*g<<"% of correction"<<endl;
 	RealVector x = -g*cCorr;
 	correctors.IncrementAll(x);
-	if(dfs_trace::verbosity>=dfs_trace::level_3) {
+	if(dfs_trace::verbosity>=dfs_trace::level_3)
+	{
 		RecordTrajectories();
 	}
 

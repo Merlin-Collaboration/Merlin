@@ -16,21 +16,23 @@
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 
-namespace ParticleTracking {
-    
-    void QuadIntegrator::TrackStep(double ds)
-    {
-        double dBdx = currentComponent->GetFieldStrength();
-        double p0 = currentBunch->GetReferenceMomentum();
-        double brho = p0/eV/SpeedOfLight;
-        
-        RMtrx Rm(2);
+namespace ParticleTracking
+{
 
-        for(ParticleBunch::iterator p = currentBunch->begin(); p!= currentBunch->end(); p++) {
-            double k1 = dBdx/(brho*(1+(*p).dp()));
-            TransportMatrix::QuadrupoleR(ds,k1,Rm.R);
-            Rm.Apply(*p);
-        }
-    }
-    
+void QuadIntegrator::TrackStep(double ds)
+{
+	double dBdx = currentComponent->GetFieldStrength();
+	double p0 = currentBunch->GetReferenceMomentum();
+	double brho = p0/eV/SpeedOfLight;
+
+	RMtrx Rm(2);
+
+	for(ParticleBunch::iterator p = currentBunch->begin(); p!= currentBunch->end(); p++)
+	{
+		double k1 = dBdx/(brho*(1+(*p).dp()));
+		TransportMatrix::QuadrupoleR(ds,k1,Rm.R);
+		Rm.Apply(*p);
+	}
+}
+
 } // end namespace ParticleTracking

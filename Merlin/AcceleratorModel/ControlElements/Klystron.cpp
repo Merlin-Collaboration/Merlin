@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/06/12 13:55:32 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
@@ -19,36 +19,43 @@
 
 using namespace std;
 
-namespace {
+namespace
+{
 
-	struct accumulate_vector_sum {
-		accumulate_vector_sum() :z(0) {}
-		void operator()(const RFStructure* cav) {
-			z+= cav->GetVoltagePhasor();
-		}
-		Complex z;
-	};
+struct accumulate_vector_sum
+{
+	accumulate_vector_sum() :z(0) {}
+	void operator()(const RFStructure* cav)
+	{
+		z+= cav->GetVoltagePhasor();
+	}
+	Complex z;
+};
 
-	struct set_cavity {
-		set_cavity(double v, double phi) : v0(v), phi0(phi) {}
+struct set_cavity
+{
+	set_cavity(double v, double phi) : v0(v), phi0(phi) {}
 
-		void operator()(RFStructure* cav) {
-			cav->SetVoltage(v0);
-			cav->SetPhase(phi0);
-		}
+	void operator()(RFStructure* cav)
+	{
+		cav->SetVoltage(v0);
+		cav->SetPhase(phi0);
+	}
 
-		const double v0;
-		const double phi0;
-	};
+	const double v0;
+	const double phi0;
+};
 
-	struct scale_cavity {
-		scale_cavity(const Complex& cs) : zs(cs) {}
-		void operator()(RFStructure* cav) {
-			Complex z = cav->GetVoltagePhasor();
-			cav->SetVoltagePhasor(zs*z);
-		}
-		const Complex zs;
-	};
+struct scale_cavity
+{
+	scale_cavity(const Complex& cs) : zs(cs) {}
+	void operator()(RFStructure* cav)
+	{
+		Complex z = cav->GetVoltagePhasor();
+		cav->SetVoltagePhasor(zs*z);
+	}
+	const Complex zs;
+};
 
 } // end anonumous namespace
 
@@ -60,7 +67,8 @@ Klystron::Klystron (const string& aName, const vector<RFStructure*>& cavs, Mode 
 	Complex z0 = for_each(rf_cavs.begin(),rf_cavs.end(),accumulate_vector_sum()).z;
 	V_k = abs(z0);
 	phi_k =arg(z0);
-	if(kmode==balanced) {
+	if(kmode==balanced)
+	{
 		const double v = V_k/rf_cavs.size();
 		for_each(rf_cavs.begin(),rf_cavs.end(),set_cavity(v,phi_k));
 	}
@@ -87,13 +95,14 @@ void Klystron::SetVoltagePhasor(const Complex& z)
 
 void Klystron::AdjustCavities()
 {
-	switch(kmode) {
-		case balanced:
-			for_each(rf_cavs.begin(),rf_cavs.end(),set_cavity(V_k/rf_cavs.size(),phi_k));
-			break;
-		case vector_sum:
-			AdjustVectorSum(V_k,phi_k);
-			break;
+	switch(kmode)
+	{
+	case balanced:
+		for_each(rf_cavs.begin(),rf_cavs.end(),set_cavity(V_k/rf_cavs.size(),phi_k));
+		break;
+	case vector_sum:
+		AdjustVectorSum(V_k,phi_k);
+		break;
 	}
 }
 
@@ -112,7 +121,9 @@ Klystron* Klystron::Copy () const
 void Klystron::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
 {
 	for(vector<RFStructure*>::const_iterator c = rf_cavs.begin(); c!=rf_cavs.end(); c++)
+	{
 		ivec.push_back((*c)->GetBeamlineIndex());
+	}
 }
 
 void Klystron::AdjustVectorSum(double v, double phi)

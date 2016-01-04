@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:52 $
 // $Revision: 1.6 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <cmath>
@@ -18,7 +18,8 @@
 #include "NumericalUtils/utils.h"
 #include "BasicTransport/TransportMatrix.h"
 
-namespace {
+namespace
+{
 
 /*
 * Utility functions for matrix calculations
@@ -206,7 +207,10 @@ RealMatrix TransportMatrix::Drift (double length, RealMatrix& R)
 {
 	InitR(R);
 	R(0,1)=length;
-	if(R.nrows()>2) R(2,3)=length;
+	if(R.nrows()>2)
+	{
+		R(2,3)=length;
+	}
 	return R;
 }
 
@@ -222,7 +226,9 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 	InitR(T);
 
 	if(l==0 || (K1==0 && h==0))
+	{
 		return T;
+	}
 
 	double h2 = h*h;
 	double Kx = h2+K1;
@@ -233,7 +239,8 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 	double ky = Ky>0 ? sqrt(Ky) : sqrt(-Ky);
 
 	// Horizontal plane
-	if(Kx==0) {
+	if(Kx==0)
+	{
 		double l2=l*l;
 		double l3=l*l2;
 		T(0,0) = hk*l2/2.0;
@@ -241,7 +248,8 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 		T(1,0) = hk*l;
 		T(1,1) = T(0,0);
 	}
-	else if(Kx>0) { // focusing
+	else if(Kx>0)   // focusing
+	{
 		double phix = l*kx;
 		double cosphix = cos(phix);
 		double sinphix = sin(phix);
@@ -249,7 +257,8 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 		T(0,1)=-hk*(phix*cosphix-sinphix)/(2*kx*kx*kx);
 		T(1,0)=hk*(phix*cosphix+sinphix)/kx/2;
 	}
-	else { //defocusing
+	else   //defocusing
+	{
 		double phix = l*kx;
 		double coshphix = cos(phix);
 		double sinhphix = sin(phix);
@@ -259,7 +268,8 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 	}
 
 	// Vertical plane (as for QuadrupoleT)
-	if(Ky>0) {// focusing
+	if(Ky>0)  // focusing
+	{
 		double phiy = l*ky;
 		double cosphiy = cos(phiy);
 		double sinphiy = sin(phiy);
@@ -267,7 +277,8 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 		T(2,3) = (sinphiy/ky-l*cosphiy)/2;
 		T(3,2) = ky*(phiy*cosphiy+sinphiy)/2;
 	}
-	else if(Ky<0) {// defocusing
+	else if(Ky<0)  // defocusing
+	{
 		double phiy = l*ky;
 		double coshphiy = cosh(phiy);
 		double sinhphiy = sinh(phiy);
@@ -277,13 +288,16 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 	}
 
 	// Dispersion/time terms
-	if(Kx==0) {
+	if(Kx==0)
+	{
 		double phi = h*l;
 		double phi2=phi*phi;
 		T(0,5) = phi*l*(phi2-12.0)/24.0;
 		T(1,5) = phi*(phi2/6.0-1.0);
 		T(4,5) = -phi2*phi*(phi2-40.0)/120.0;
-	} else if(Kx>0) {
+	}
+	else if(Kx>0)
+	{
 		double phi = l*kx;
 		double sinphi = sin(phi);
 		double cosphi = cos(phi);
@@ -291,7 +305,9 @@ RealMatrix& TransportMatrix::SectorBendT (double l, double h, double K1, RealMat
 		T(0,5) = -h*(2*h2*(cosphi-1)+hk*phi*sinphi)/(2*Kx2);
 		T(1,5) = -h*(hk*phi*cosphi+K1*sinphi)/(2*pow(kx,3));
 		T(4,5) =  h2*(2*K1*phi-hk*phi*cosphi+(2*h2-K1)*sinphi)/(2*pow(kx,5));
-	} else {
+	}
+	else
+	{
 		double phi = l*kx;
 		double sinhphi = sinh(phi);
 		double coshphi = cosh(phi);
@@ -315,7 +331,9 @@ RealMatrix& TransportMatrix::QuadrupoleT (double length, double Kx, RealMatrix& 
 	InitR(T);
 
 	if(length==0 || Kx==0)
+	{
 		return T;
+	}
 
 	double k = Kx>0 ? sqrt(Kx) : sqrt(-Kx);
 	double phi = length*k;
@@ -333,7 +351,8 @@ RealMatrix& TransportMatrix::QuadrupoleT (double length, double Kx, RealMatrix& 
 	T(2,3) = (sinhphi/k-length*coshphi)/2;
 	T(3,2) = -k*(phi*coshphi+sinhphi)/2;
 
-	if(Kx<0) { // defocusing
+	if(Kx<0)   // defocusing
+	{
 		swap(T(0,0),T(2,2));
 		swap(T(0,1),T(2,3));
 		swap(T(1,0),T(3,2));
@@ -403,7 +422,7 @@ RealMatrix& TransportMatrix::Solenoid (double length, double K0, double K1, bool
 }
 
 RealMatrix& TransportMatrix::TWRFCavity (double length, double g, double f, double phi,
-		double E0, bool inc_end_fields, RealMatrix& R)
+        double E0, bool inc_end_fields, RealMatrix& R)
 {
 	using namespace PhysicalConstants;
 
@@ -419,30 +438,36 @@ RealMatrix& TransportMatrix::TWRFCavity (double length, double g, double f, doub
 	// Condition for zero acceleration modified by A.Wolski, 5 November 2003
 	// Loss of numerical accuracy can lead to dEcosPhi of order 1e-20
 	// in which case the transport matrix can have large erroneous terms.
-	if(fabs(dEcosPhi)<1.0e-16) {
+	if(fabs(dEcosPhi)<1.0e-16)
+	{
 		R(0,1)=length;
 	}
-	else {
-		if(!inc_end_fields) {
+	else
+	{
+		if(!inc_end_fields)
+		{
 			R(0,0) = 1-0.5*logEr;
 			R(0,1) = E0*length*logEr/dEcosPhi;
 			R(1,0) = -dEcosPhi*logEr/(4*E1*length);
 			R(1,1) = (1+0.5*logEr)/Er;
 		}
-		else {
+		else
+		{
 			R(0,1) = length*E0*logEr/dEcosPhi;
 			R(1,1) = Er;
 		}
 	}
 
-	if(R.nrows()>2) {
+	if(R.nrows()>2)
+	{
 		R(2,2)=R(0,0);
 		R(2,3)=R(0,1);
 		R(3,2)=R(1,0);
 		R(3,3)=R(1,1);
 	}
 
-	if(R.nrows()==6) {
+	if(R.nrows()==6)
+	{
 		const double k = twoPi*f/SpeedOfLight;
 		R(5,4)=k*dE*sin(phi)/E1;
 		R(5,5)=1/Er;
@@ -475,7 +500,8 @@ RealMatrix& TransportMatrix::SWRFCavity (int ncells, double g, double f, double 
 	R(1,0) = -g*(2+cos(2*phi))*sinAlpha/E1/root8;
 	R(1,1) = E0*(cosAlpha+root2*cosPhi*sinAlpha)/E1;
 
-	if(R.nrows()==4) {
+	if(R.nrows()==4)
+	{
 		R(2,2)=R(0,0);
 		R(2,3)=R(0,1);
 		R(3,2)=R(1,0);

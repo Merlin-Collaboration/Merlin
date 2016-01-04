@@ -18,48 +18,60 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef _Normal_h
 #ifdef __GNUG__
 #endif
-#define _Normal_h 
+#define _Normal_h
 
 #include "Random.h"
 
-class Normal: public Random {
-    char haveCachedNormal;
-    double cachedNormal;
+class Normal: public Random
+{
+	char haveCachedNormal;
+	double cachedNormal;
 
 protected:
-    double pMean;
-    double pVariance;
-    double pStdDev;
+	double pMean;
+	double pVariance;
+	double pStdDev;
 
 public:
-    Normal(double xmean, double xvariance, RNG *gen);
-    double mean();
-    double mean(double x);
-    double variance();
-    double variance(double x);
-    virtual double operator()();
+	Normal(double xmean, double xvariance, RNG *gen);
+	double mean();
+	double mean(double x);
+	double variance();
+	double variance(double x);
+	virtual double operator()();
 };
 
 
 inline Normal::Normal(double xmean, double xvariance, RNG *gen)
-        : Random(gen) {
-    pMean = xmean;
-    pVariance = xvariance;
-    pStdDev = sqrt(pVariance);
-    haveCachedNormal = 0;
+	: Random(gen)
+{
+	pMean = xmean;
+	pVariance = xvariance;
+	pStdDev = sqrt(pVariance);
+	haveCachedNormal = 0;
 }
 
-inline double Normal::mean() { return pMean; }
-inline double Normal::mean(double x) {
-    double t=pMean; pMean = x;
-    return t;
+inline double Normal::mean()
+{
+	return pMean;
+}
+inline double Normal::mean(double x)
+{
+	double t=pMean;
+	pMean = x;
+	return t;
 }
 
-inline double Normal::variance() { return pVariance; }
-inline double Normal::variance(double x) {
-    double t=pVariance; pVariance = x;
-    pStdDev = sqrt(pVariance);
-    return t;
+inline double Normal::variance()
+{
+	return pVariance;
+}
+inline double Normal::variance(double x)
+{
+	double t=pVariance;
+	pVariance = x;
+	pStdDev = sqrt(pVariance);
+	return t;
 }
 
 #endif

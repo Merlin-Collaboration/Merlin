@@ -22,8 +22,8 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 double Geometric::operator()()
 {
-    int samples;
-    for (samples = 1; pGenerator -> asDouble() < pMean; samples++);
-    return((double) samples);
+	int samples;
+	for (samples = 1; pGenerator -> asDouble() < pMean; samples++);
+	return((double) samples);
 }
 

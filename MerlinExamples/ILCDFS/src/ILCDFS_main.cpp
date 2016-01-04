@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////
 // ILCDFS_main
 // Main programme for ILC DFS simulation appliction
-// 
+//
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -9,7 +9,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "Random/RandomNG.h"
@@ -56,7 +56,7 @@ int main()
 	const bool constructCurvedLinac = true;
 
 	pair<AcceleratorModel*,BeamData*> mb;
-	mb = ConstructModel(modelFile,constructCurvedLinac);  
+	mb = ConstructModel(modelFile,constructCurvedLinac);
 	theDFSapp.SetReferenceModel(mb.first,mb.second);
 	mb = ConstructModel(modelFile,constructCurvedLinac);
 	theDFSapp.SetSimulationModel(mb.first,mb.second);
@@ -71,7 +71,7 @@ int main()
 	// during DFS application (no wakefields);
 	theDFSapp.SetSimulationModelBeamDynamicsForDFS(new ParticleTrackingModel(1));
 
-	// Simulation model uses SMPTracking for emittance estimation after 
+	// Simulation model uses SMPTracking for emittance estimation after
 	// DFS application.
 	// 31 slices with 11 macro-particles per slice.
 	SMPTrackingModel* smpTracker = new SMPTrackingModel(31,11);
@@ -118,13 +118,16 @@ int main()
 	// the reference model before using it to calculate the reference trajectories
 	// and response matrices
 	if(constructCurvedLinac)
+	{
 		OneToOneCorrection(theDFSapp.GetReferenceModel(),Accelerator::y_only);
+	}
 
 	theDFSapp.Initialise(); // one-time initialisation for all seeds.
 	theDFSapp.SetOutput(&dfso);
 	dfs_trace(dfs_trace::level_1)<<"\n\n\n\nBeginning simulations with "<<nseed<<" seeds"<<endl;
 
-	for(size_t ns = 0; ns<nseed; ns++) {
+	for(size_t ns = 0; ns<nseed; ns++)
+	{
 		dfs_trace(dfs_trace::level_1)<<"\nRunning seed #"<<ns;
 		ostringstream oss;
 		oss<<filePrefix<<'.'<<ns<<".dat";

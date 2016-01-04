@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef LinearFBSystem_h
@@ -45,40 +45,40 @@ class LinearFBSystem
 {
 public:
 
-    LinearFBSystem (std::vector<ROChannel*>& sigs, std::vector<RWChannel*>& acts, const RealMatrix& M);
-    LinearFBSystem (ROChannelArray& sigs, RWChannelArray& acts, const RealMatrix& M);
+	LinearFBSystem (std::vector<ROChannel*>& sigs, std::vector<RWChannel*>& acts, const RealMatrix& M);
+	LinearFBSystem (ROChannelArray& sigs, RWChannelArray& acts, const RealMatrix& M);
 
-    ~LinearFBSystem ();
+	~LinearFBSystem ();
 
-    void SignalsToSetpoints ();
-    void StoreActuators () const;
-    void RestoreActuators ();
-    void SetResponseMatrix (const RealMatrix& M);
-    void SetGain (double g);
-    double GetGain () const;
-    void Apply ();
-    void SetSetpoints (const RealVector& S0);
-    double GetActuatorRMS () const;
-    double GetSignalRMS () const;
-    int GetNumSignals () const;
-    int GetNumActuators () const;
-    void SetPulseDelay(int n);
+	void SignalsToSetpoints ();
+	void StoreActuators () const;
+	void RestoreActuators ();
+	void SetResponseMatrix (const RealMatrix& M);
+	void SetGain (double g);
+	double GetGain () const;
+	void Apply ();
+	void SetSetpoints (const RealVector& S0);
+	double GetActuatorRMS () const;
+	double GetSignalRMS () const;
+	int GetNumSignals () const;
+	int GetNumActuators () const;
+	void SetPulseDelay(int n);
 
 private:
 
-    double gain;
-    ROChannelArray signals;
-    RWChannelArray actuators;
-    RealVector setpoints;
+	double gain;
+	ROChannelArray signals;
+	RWChannelArray actuators;
+	RealVector setpoints;
 
-    LinearFBSystem(const LinearFBSystem &right);
-    const LinearFBSystem & operator=(const LinearFBSystem &right);
+	LinearFBSystem(const LinearFBSystem &right);
+	const LinearFBSystem & operator=(const LinearFBSystem &right);
 
-    mutable RealVector* cached_actuators;
+	mutable RealVector* cached_actuators;
 
-    SVDMatrix< double >* Mi;
-    // to allow for possible actuator pulse delays, we use a queue
-    mutable std::queue<RealVector>* actuatorQueue;
+	SVDMatrix< double >* Mi;
+	// to allow for possible actuator pulse delays, we use a queue
+	mutable std::queue<RealVector>* actuatorQueue;
 };
 
 #endif

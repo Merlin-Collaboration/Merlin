@@ -11,7 +11,7 @@ using namespace std;
 class Material
 {
 public:
-	/*	
+	/*
 	* Some of these can be overridden by child classes, e.g. mixtures.
 	* In some cases that doesn't make sense.
 	*/
@@ -19,7 +19,7 @@ public:
 	/*
 	* Overloaded constructor
 	*/
-	Material(){};
+	Material() {};
 	Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0);
 
 	/*
@@ -95,7 +95,7 @@ public:
 	* Select a random material for mixtures
 	*/
 	virtual Material* SelectRandomMaterial();
-	
+
 protected:
 
 	//selected Sixtrack variable names in quotes

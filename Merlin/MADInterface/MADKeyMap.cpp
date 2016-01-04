@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <sstream>
@@ -56,7 +56,7 @@ MADKeyMap::MADKeyMap (const std::string& hstr): has_type(false), has_apertype(fa
 #ifndef NDEBUG
 	cout << n << " column headings identified" << endl;
 #endif
-cout << n << " column headings identified" << endl;
+	cout << n << " column headings identified" << endl;
 	vals = vector<double>(n,0.0);
 }
 
@@ -73,9 +73,9 @@ double MADKeyMap::GetParameter (const std::string& key, bool warn)
 		std::cout << "MADInterface: Warning: Element key " << key << " not in optics listing, defaulted to zero" << endl;
 		if(warn)
 		{
-			#ifndef NDEBUG
+#ifndef NDEBUG
 			MerlinIO::warning() << key << " not in optics listing. Defaulted to zero" << endl;
-			#endif
+#endif
 		}
 		return 0;
 	}
@@ -101,7 +101,7 @@ void MADKeyMap::ReadRow (std::istream& is)
 	string buf;
 	for(size_t i=0; i<vals.size(); i++)
 	{
-	
+
 		//Are we dealing with the aperture column in the input file?
 		if(i == apertype_column && has_apertype==true)
 		{

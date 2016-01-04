@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.4 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef StableOrbits_h
@@ -25,16 +25,16 @@ using namespace ParticleTracking;
 class StableOrbits
 {
 public:
-    StableOrbits(AcceleratorModel* aModel);
-    void SelectStable(ParticleBunch& aBunch, list<size_t>* index);
+	StableOrbits(AcceleratorModel* aModel);
+	void SelectStable(ParticleBunch& aBunch, list<size_t>* index);
 
-    int SetTurns(int turns);
-    int SetObservationPoint(int n);
+	int SetTurns(int turns);
+	int SetObservationPoint(int n);
 
 private:
-    AcceleratorModel* theModel;
-    int nturns;
-    int obspnt;
+	AcceleratorModel* theModel;
+	int nturns;
+	int obspnt;
 };
 
 #endif

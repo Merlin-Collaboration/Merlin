@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/03/29 08:29:37 $
 // $Revision: 1.4 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef LatticeFrame_h
@@ -31,10 +31,11 @@
 
 class LatticeFrame;
 
-class FrameTraverser {
+class FrameTraverser
+{
 public:
-    virtual ~FrameTraverser() {}
-    virtual void ActOn(LatticeFrame* frame) =0;
+	virtual ~FrameTraverser() {}
+	virtual void ActOn(LatticeFrame* frame) =0;
 };
 
 //	A LatticeFrame is a ModelElement that provides a
@@ -91,197 +92,197 @@ class LatticeFrame : public ModelElement, public Transformable
 {
 public:
 
-    typedef AcceleratorGeometry::BoundaryPlane BoundaryPlane;
+	typedef AcceleratorGeometry::BoundaryPlane BoundaryPlane;
 
-    //	Constructor
-    explicit LatticeFrame (const string& id = "");
+	//	Constructor
+	explicit LatticeFrame (const string& id = "");
 
-    //	Copy constructor.
-    LatticeFrame (const LatticeFrame& rhs);
+	//	Copy constructor.
+	LatticeFrame (const LatticeFrame& rhs);
 
-    virtual ~LatticeFrame ();
+	virtual ~LatticeFrame ();
 
-    //	Frame Transformations.
-    //
-    //	Returns the frame transformation from the specified
-    //	super-frame to this frame.
-    virtual Transform3D GetFrameTransform (const LatticeFrame* sframe = GLOBAL_FRAME) const;
+	//	Frame Transformations.
+	//
+	//	Returns the frame transformation from the specified
+	//	super-frame to this frame.
+	virtual Transform3D GetFrameTransform (const LatticeFrame* sframe = GLOBAL_FRAME) const;
 
-    //	Returns the frame transformation from the immediate
-    //	super-frame, i.e. the result of all transformations
-    //	applied to this frame.
-    virtual Transform3D GetLocalFrameTransform () const;
+	//	Returns the frame transformation from the immediate
+	//	super-frame, i.e. the result of all transformations
+	//	applied to this frame.
+	virtual Transform3D GetLocalFrameTransform () const;
 
-    //	Physical Transformations.
-    //
-    //	Returns the physical transformation from the specified
-    //	super-frame to this frame.
-    Transform3D GetPhysicalTransform (const LatticeFrame* sframe = GLOBAL_FRAME) const;
+	//	Physical Transformations.
+	//
+	//	Returns the physical transformation from the specified
+	//	super-frame to this frame.
+	Transform3D GetPhysicalTransform (const LatticeFrame* sframe = GLOBAL_FRAME) const;
 
-    //	Returns the physical transformation from the immediate
-    //	super-frame.
-    Transform3D GetLocalPhysicalTransform () const;
+	//	Returns the physical transformation from the immediate
+	//	super-frame.
+	Transform3D GetLocalPhysicalTransform () const;
 
-    //	AcceleratorGeometry related operations.
-    //
-    //	Return the associated AcceleratorGeometry.
-    const AcceleratorGeometry* GetGeometry () const;
+	//	AcceleratorGeometry related operations.
+	//
+	//	Return the associated AcceleratorGeometry.
+	const AcceleratorGeometry* GetGeometry () const;
 
-    //	Returns the position of this frame's origin in the
-    //	specified super-frames s-frame.
-    double GetPosition (const LatticeFrame* sframe = GLOBAL_FRAME) const;
+	//	Returns the position of this frame's origin in the
+	//	specified super-frames s-frame.
+	double GetPosition (const LatticeFrame* sframe = GLOBAL_FRAME) const;
 
-    //	Returns the position of this frame's origin in the
-    //	immediate super-frames s-frame.
-    double GetLocalPosition () const;
+	//	Returns the position of this frame's origin in the
+	//	immediate super-frames s-frame.
+	double GetLocalPosition () const;
 
-    //	Returns the AcceleratorGeometry transformation from s0
-    //	to s (local s-frame).
-    Transform3D GetGeometryTransform (double s0, double s) const throw (AcceleratorGeometry::BeyondExtent);
+	//	Returns the AcceleratorGeometry transformation from s0
+	//	to s (local s-frame).
+	Transform3D GetGeometryTransform (double s0, double s) const throw (AcceleratorGeometry::BeyondExtent);
 
-    //	Returns the AcceleratorGeometry transformation from the
-    //	local origin to s (local s-frame).
-    Transform3D GetGeometryTransform (double s) const throw (AcceleratorGeometry::BeyondExtent);
+	//	Returns the AcceleratorGeometry transformation from the
+	//	local origin to s (local s-frame).
+	Transform3D GetGeometryTransform (double s) const throw (AcceleratorGeometry::BeyondExtent);
 
-    //	Returns the transformation from the origin to the
-    //	specified boundary plane.
-    Transform3D GetGeometryTransform (BoundaryPlane p) const;
+	//	Returns the transformation from the origin to the
+	//	specified boundary plane.
+	Transform3D GetGeometryTransform (BoundaryPlane p) const;
 
-    //	Returns the transformation from the entrance plane frame
-    //	to the exit plane frame.
-    Transform3D GetTotalGeometryTransform () const;
+	//	Returns the transformation from the entrance plane frame
+	//	to the exit plane frame.
+	Transform3D GetTotalGeometryTransform () const;
 
-    //	Returns the extent of this frame's geometry in the
-    //	s-frame of the specified super-frame.
-    AcceleratorGeometry::Extent GetGeometryExtent (const LatticeFrame* sframe = GLOBAL_FRAME) const;
+	//	Returns the extent of this frame's geometry in the
+	//	s-frame of the specified super-frame.
+	AcceleratorGeometry::Extent GetGeometryExtent (const LatticeFrame* sframe = GLOBAL_FRAME) const;
 
-    //	Returns the local extent of this frame's geometry, i.e.
-    //	the extent in the local s-frame.
-    AcceleratorGeometry::Extent GetLocalGeometryExtent () const;
+	//	Returns the local extent of this frame's geometry, i.e.
+	//	the extent in the local s-frame.
+	AcceleratorGeometry::Extent GetLocalGeometryExtent () const;
 
-    //	Returns the total arc-length of the associated geometry.
-    double GetGeometryLength () const;
+	//	Returns the total arc-length of the associated geometry.
+	double GetGeometryLength () const;
 
-    //	Returns transformation to the specified boundary plane
-    //	reference frame. The transformation includes all effects
-    //	of nested boundary planes which occur at the plane.
-    virtual Transform3D GetBoundaryPlaneTransform (BoundaryPlane p) const;
+	//	Returns transformation to the specified boundary plane
+	//	reference frame. The transformation includes all effects
+	//	of nested boundary planes which occur at the plane.
+	virtual Transform3D GetBoundaryPlaneTransform (BoundaryPlane p) const;
 
-    //	Used during tracking. Returns the required
-    //	transformation to the local entrance plane coordinate
-    //	frame. Includes the effects of all nested frame
-    //	boundaries which occur at this location.
-    Transform3D GetEntrancePlaneTransform () const;
+	//	Used during tracking. Returns the required
+	//	transformation to the local entrance plane coordinate
+	//	frame. Includes the effects of all nested frame
+	//	boundaries which occur at this location.
+	Transform3D GetEntrancePlaneTransform () const;
 
-    //	Used during tracking. Returns the required
-    //	transformation from the local exit plane coordinate
-    //	frame. Includes the effects of all nested frame
-    //	boundaries which occur at this location.
-    Transform3D GetExitPlaneTransform () const;
-/*
-    //	Returns true if this frame has been locally transformed.
-    bool IsTransformed () const;
+	//	Used during tracking. Returns the required
+	//	transformation from the local exit plane coordinate
+	//	frame. Includes the effects of all nested frame
+	//	boundaries which occur at this location.
+	Transform3D GetExitPlaneTransform () const;
+	/*
+	    //	Returns true if this frame has been locally transformed.
+	    bool IsTransformed () const;
 
-    //	Translates the frame by the relative vector (dx,dy,dz).
-    void Translate (double dx, double dy, double dz);
+	    //	Translates the frame by the relative vector (dx,dy,dz).
+	    void Translate (double dx, double dy, double dz);
 
-    //	Translates the frame by the relative vector X.
-    void Translate (const Vector3D& X);
+	    //	Translates the frame by the relative vector X.
+	    void Translate (const Vector3D& X);
 
-    //	Translates the frame along the current x-axis by dx.
-    void TranslateX (double dx);
+	    //	Translates the frame along the current x-axis by dx.
+	    void TranslateX (double dx);
 
-    //	Translates the frame along the current y-axis by dy.
-    void TranslateY (double dy);
+	    //	Translates the frame along the current y-axis by dy.
+	    void TranslateY (double dy);
 
-    //	Translates the frame along the current z-axis by dz.
-    void TranslateZ (double dz);
+	    //	Translates the frame along the current z-axis by dz.
+	    void TranslateZ (double dz);
 
-    //	Rotates the frame about the current x-axis by angle.
-    void RotateX (double angle);
+	    //	Rotates the frame about the current x-axis by angle.
+	    void RotateX (double angle);
 
-    //	Rotates the frame about the current y-axis by angle.
-    void RotateY (double angle);
+	    //	Rotates the frame about the current y-axis by angle.
+	    void RotateY (double angle);
 
-    //	Rotates the frame about the current z-axis by angle.
-    void RotateZ (double angle);
-*/
-    //	Transform the frame (with respect to the current axes)
-    //	by the transformation t.
-    void ApplyLocalFrameTransform (const Transform3D& t1);
+	    //	Rotates the frame about the current z-axis by angle.
+	    void RotateZ (double angle);
+	*/
+	//	Transform the frame (with respect to the current axes)
+	//	by the transformation t.
+	void ApplyLocalFrameTransform (const Transform3D& t1);
 
-    //	Set the local  frame transformation for this object.
-    void SetLocalFrameTransform (const Transform3D& t);
+	//	Set the local  frame transformation for this object.
+	void SetLocalFrameTransform (const Transform3D& t);
 
-    //	Clear the local frame transformation.
-    void ClearLocalFrameTransform ();
+	//	Clear the local frame transformation.
+	void ClearLocalFrameTransform ();
 
-    //	Function called after construction of the Accelerator
-    //	Model is complete. Allows the nested frame hierachy to
-    //	perform certain state checks and updates, which are only
-    //	possible once the entire model is complete.
-    virtual void ConsolidateConstruction ();
+	//	Function called after construction of the Accelerator
+	//	Model is complete. Allows the nested frame hierachy to
+	//	perform certain state checks and updates, which are only
+	//	possible once the entire model is complete.
+	virtual void ConsolidateConstruction ();
 
-    //	Sets the position of the LatticeFrame on the immediate
-    //	super-frame's geometry.
-    void SetLocalPosition (double s);
+	//	Sets the position of the LatticeFrame on the immediate
+	//	super-frame's geometry.
+	void SetLocalPosition (double s);
 
-    //	Set the super frame of this LatticeFrame object. Returns
-    //	the old super frame.
-    LatticeFrame* SetSuperFrame (LatticeFrame* aFrame);
+	//	Set the super frame of this LatticeFrame object. Returns
+	//	the old super frame.
+	LatticeFrame* SetSuperFrame (LatticeFrame* aFrame);
 
-    //	Replace subFrame with newSubFrame. Returns true if
-    //	successful (i.e. subFrame is a sub-frame of this Lattice
-    //	Frame).
-    virtual bool ReplaceSubFrame (LatticeFrame* subFrame, LatticeFrame* newSubFrame);
+	//	Replace subFrame with newSubFrame. Returns true if
+	//	successful (i.e. subFrame is a sub-frame of this Lattice
+	//	Frame).
+	virtual bool ReplaceSubFrame (LatticeFrame* subFrame, LatticeFrame* newSubFrame);
 
-    //	Returns true if this frame is the top-level frame of the
-    //	hierachy.
-    bool IsGlobalFrame () const;
+	//	Returns true if this frame is the top-level frame of the
+	//	hierachy.
+	bool IsGlobalFrame () const;
 
-    //	Returns the top-level (global)  frame of the hieracy.
-    LatticeFrame* GetGlobalFrame () const;
+	//	Returns the top-level (global)  frame of the hieracy.
+	LatticeFrame* GetGlobalFrame () const;
 
-    // Iterate a FrameTraverese object over the underlying
-    // frame hierachy.
-    virtual void Traverse(FrameTraverser& ft);
+	// Iterate a FrameTraverese object over the underlying
+	// frame hierachy.
+	virtual void Traverse(FrameTraverser& ft);
 
 private:
 
-    //	The s-position of this frame's origin on the super-frame
-    //	s-frame.
-    double s_0;
+	//	The s-position of this frame's origin on the super-frame
+	//	s-frame.
+	double s_0;
 
 protected:
 
-    //	Protected function called by concrete LatticeFrame
-    //	classes during construction.
-    void SetGeometry (const AcceleratorGeometry* geom);
+	//	Protected function called by concrete LatticeFrame
+	//	classes during construction.
+	void SetGeometry (const AcceleratorGeometry* geom);
 
-    LatticeFrame* superFrame;
+	LatticeFrame* superFrame;
 
 private:
 
-    //	The geometry associated with this frame.
-    const AcceleratorGeometry *itsGeometry;
+	//	The geometry associated with this frame.
+	const AcceleratorGeometry *itsGeometry;
 
-    //	Returns true if aSubFrame is the first (entrance)
-    //	sub-frame of this frame.
-    virtual bool IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFrame) const = 0;
-    Transform3D LocalBoundaryPlaneTransform (BoundaryPlane p) const;
+	//	Returns true if aSubFrame is the first (entrance)
+	//	sub-frame of this frame.
+	virtual bool IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFrame) const = 0;
+	Transform3D LocalBoundaryPlaneTransform (BoundaryPlane p) const;
 
-LatticeFrame& operator=(const LatticeFrame& rhs);
+	LatticeFrame& operator=(const LatticeFrame& rhs);
 
 };
 
 // Class LatticeFrame
 
 inline LatticeFrame::LatticeFrame (const string& id)
-        : ModelElement(id),Transformable(), s_0(0),superFrame(NULL),itsGeometry(NULL)
+	: ModelElement(id),Transformable(), s_0(0),superFrame(NULL),itsGeometry(NULL)
 {}
 
 inline LatticeFrame::LatticeFrame (const LatticeFrame& rhs)
-        : ModelElement(rhs),Transformable(rhs),s_0(0),superFrame(NULL),itsGeometry(NULL)
+	: ModelElement(rhs),Transformable(rhs),s_0(0),superFrame(NULL),itsGeometry(NULL)
 {}
 
 inline LatticeFrame::~LatticeFrame ()
@@ -289,72 +290,84 @@ inline LatticeFrame::~LatticeFrame ()
 
 inline Transform3D LatticeFrame::GetLocalFrameTransform () const
 {
-    return local_T!=0 ? *local_T : Transform3D();
+	return local_T!=0 ? *local_T : Transform3D();
 }
 
 inline Transform3D LatticeFrame::GetLocalPhysicalTransform () const
 {
-    return GetPhysicalTransform(superFrame);
+	return GetPhysicalTransform(superFrame);
 }
 
 inline const AcceleratorGeometry* LatticeFrame::GetGeometry () const
 {
-    return itsGeometry;
+	return itsGeometry;
 }
 
 inline double LatticeFrame::GetLocalPosition () const
 {
-    return s_0;
+	return s_0;
 }
 
 inline Transform3D LatticeFrame::GetGeometryTransform (double s0, double s) const throw (AcceleratorGeometry::BeyondExtent)
 {
-    if(itsGeometry!=0)
-        return  itsGeometry->GetGeometryTransform(s0,s);
-    else if(s0==s)
-        return Transform3D();
-    else
-        throw AcceleratorGeometry::BeyondExtent();
+	if(itsGeometry!=0)
+	{
+		return  itsGeometry->GetGeometryTransform(s0,s);
+	}
+	else if(s0==s)
+	{
+		return Transform3D();
+	}
+	else
+	{
+		throw AcceleratorGeometry::BeyondExtent();
+	}
 }
 
 inline Transform3D LatticeFrame::GetGeometryTransform (double s) const throw (AcceleratorGeometry::BeyondExtent)
 {
-    if(itsGeometry!=0)
-        return  itsGeometry->GetGeometryTransform(s);
-    else if(s==0)
-        return Transform3D();
-    else
-        throw AcceleratorGeometry::BeyondExtent();
+	if(itsGeometry!=0)
+	{
+		return  itsGeometry->GetGeometryTransform(s);
+	}
+	else if(s==0)
+	{
+		return Transform3D();
+	}
+	else
+	{
+		throw AcceleratorGeometry::BeyondExtent();
+	}
 }
 
 inline Transform3D LatticeFrame::GetGeometryTransform (BoundaryPlane p) const
 {
-    return (itsGeometry!=0)? itsGeometry->GetGeometryTransform(p) : Transform3D();
+	return (itsGeometry!=0)? itsGeometry->GetGeometryTransform(p) : Transform3D();
 }
 
 inline Transform3D LatticeFrame::GetTotalGeometryTransform () const
 {
-    return (itsGeometry!=0)? itsGeometry->GetTotalGeometryTransform() : Transform3D();
+	return (itsGeometry!=0)? itsGeometry->GetTotalGeometryTransform() : Transform3D();
 }
 
 inline AcceleratorGeometry::Extent LatticeFrame::GetLocalGeometryExtent () const
 {
-    return (itsGeometry!=0)? itsGeometry->GetGeometryExtent() : AcceleratorGeometry::Extent(0,0);
+	return (itsGeometry!=0)? itsGeometry->GetGeometryExtent() : AcceleratorGeometry::Extent(0,0);
 }
 
 inline double LatticeFrame::GetGeometryLength () const
 {
-    return (itsGeometry!=0) ? itsGeometry->GetGeometryLength() : 0;
+	return (itsGeometry!=0) ? itsGeometry->GetGeometryLength() : 0;
 }
 
 inline Transform3D LatticeFrame::GetEntrancePlaneTransform () const
 {
-    return GetBoundaryPlaneTransform(AcceleratorGeometry::entrance);
+	return GetBoundaryPlaneTransform(AcceleratorGeometry::entrance);
 }
 
 inline Transform3D LatticeFrame::GetExitPlaneTransform () const
 {
-    return GetBoundaryPlaneTransform(AcceleratorGeometry::exit).inv();
+	return GetBoundaryPlaneTransform(AcceleratorGeometry::exit).inv();
 }
 /***
 inline bool LatticeFrame::IsTransformed () const
@@ -390,29 +403,29 @@ inline void LatticeFrame::ConsolidateConstruction ()
 
 inline void LatticeFrame::SetLocalPosition (double s)
 {
-    s_0=s;
+	s_0=s;
 }
 
 inline LatticeFrame* LatticeFrame::SetSuperFrame (LatticeFrame* aFrame)
 {
-    LatticeFrame* tmp=superFrame;
-    superFrame = aFrame;
-    return tmp;
+	LatticeFrame* tmp=superFrame;
+	superFrame = aFrame;
+	return tmp;
 }
 
 inline bool LatticeFrame::ReplaceSubFrame (LatticeFrame* subFrame, LatticeFrame* newSubFrame)
 {
-    return false;
+	return false;
 }
 
 inline bool LatticeFrame::IsGlobalFrame () const
 {
-    return superFrame==0;
+	return superFrame==0;
 }
 
 inline void LatticeFrame::SetGeometry (const AcceleratorGeometry* geom)
 {
-    itsGeometry=geom;
+	itsGeometry=geom;
 }
 
 #endif

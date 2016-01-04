@@ -18,33 +18,40 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef _Geometric_h
 #ifdef __GNUG__
 #endif
-#define _Geometric_h 
+#define _Geometric_h
 
 #include "Random/Random.h"
 
-class Geometric: public Random {
+class Geometric: public Random
+{
 protected:
-    double pMean;
+	double pMean;
 public:
-    Geometric(double mean, RNG *gen);
+	Geometric(double mean, RNG *gen);
 
-    double mean();
-    double mean(double x);
+	double mean();
+	double mean(double x);
 
-    virtual double operator()();
+	virtual double operator()();
 
 };
 
 
 inline Geometric::Geometric(double mean, RNG *gen) : Random(gen)
 {
-    pMean = mean;
+	pMean = mean;
 }
 
 
-inline double Geometric::mean() { return pMean; }
-inline double Geometric::mean(double x) {
-    double tmp = pMean; pMean = x; return tmp;
+inline double Geometric::mean()
+{
+	return pMean;
+}
+inline double Geometric::mean(double x)
+{
+	double tmp = pMean;
+	pMean = x;
+	return tmp;
 }
 
 

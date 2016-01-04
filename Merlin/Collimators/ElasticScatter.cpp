@@ -54,8 +54,8 @@ namespace ParticleTracking
 /**
 * Form factor^2 fit to experimental data
 */
-double Q[3]={0.26,0.56,0.18};
-double q[3]={8.38,3.78,1.36};
+double Q[3]= {0.26,0.56,0.18};
+double q[3]= {8.38,3.78,1.36};
 
 /**
 * trajectory slope parameters.
@@ -166,7 +166,7 @@ void ppElasticScatter::GenerateTDistribution(double energy)
 
 //ppElasticScatter::~ppElasticScatter()
 //{
-	//delete LinearInterpolation;
+//delete LinearInterpolation;
 //}
 
 /**
@@ -235,7 +235,7 @@ void ppElasticScatter::GenerateDsigDt(double energy)
 			DSig.push_back(PomeronScatter(Uniformt[n],sqrts,true));
 			DSigN.push_back(PomeronScatter(Uniformt[n],sqrts,false));
 			(*dSigDebug) << Uniformt[n] << "\t" << DSig[n] << std::endl;
-			
+
 		}
 	}
 }
@@ -316,7 +316,9 @@ void ppElasticScatter::IntegrateDsigDt()
 	Sig.push_back(t_min);
 
 	if(Debug)
-	(*SigmaDistributionFile) << 0.0 << "\t" << t_min << std::endl;
+	{
+		(*SigmaDistributionFile) << 0.0 << "\t" << t_min << std::endl;
+	}
 
 	double sig_gen = 0;
 
@@ -335,7 +337,9 @@ void ppElasticScatter::IntegrateDsigDt()
 		}
 
 		if(Debug)
-		(*SigmaDistributionFile) << target << "\t" << sig_gen << std::endl;
+		{
+			(*SigmaDistributionFile) << target << "\t" << sig_gen << std::endl;
+		}
 
 		Sig.push_back(sig_gen);
 	}
@@ -348,7 +352,9 @@ void ppElasticScatter::IntegrateDsigDt()
 	Sig.push_back(t_max);
 
 	if(Debug)
-	(*SigmaDistributionFile) << 1.0 << "\t" << t_max << std::endl;
+	{
+		(*SigmaDistributionFile) << 1.0 << "\t" << t_max << std::endl;
+	}
 
 	LinearInterpolation = new Interpolation(Sig, 0, (1.0/nSteps));    // Interpolation of equally spaced data points
 
@@ -373,13 +379,13 @@ double ppElasticScatter::SelectT()
 {
 	double SigValue = RandomNG::uniform (0, 1.0);
 	double t = (*LinearInterpolation)(SigValue);
-/*
-	if(Debug)
-	{
-		std::ofstream *out = new std::ofstream("GeneratedTValues",std::ios_base::app);
-		(*out) << SigValue << "\t" << t << std::endl;
-	}
-*/
+	/*
+		if(Debug)
+		{
+			std::ofstream *out = new std::ofstream("GeneratedTValues",std::ios_base::app);
+			(*out) << SigValue << "\t" << t << std::endl;
+		}
+	*/
 	return t;
 }
 
@@ -401,7 +407,10 @@ double ppElasticScatter::PomeronScatter(double tt, double sqrt_s, bool em)
 
 	//Em coupling ~ 1/137
 	double alpha = 0.0072973525376;
-	if(!em){alpha=0;}
+	if(!em)
+	{
+		alpha=0;
+	}
 
 	//Euler constant
 	double gamma = 0.577215664901532861;
@@ -434,7 +443,7 @@ double ppElasticScatter::PomeronScatter(double tt, double sqrt_s, bool em)
 double ppElasticScatter::F1(double tt)
 {
 	double S=0;
-	for(int i=0;i<3;i++)
+	for(int i=0; i<3; i++)
 	{
 		S += Q[i] * exp(-q[i]*tt);
 	}
@@ -517,29 +526,29 @@ std::complex<double> ppElasticScatter::twopom(double tnu, double tt, double *par
 {
 	int i,j, u,v;
 	double T;
-	double X[4]={par[4],par[5],par[6],par[7]};
-	double apr[4]={apr0,apr1,apr2,apr3};
-	double e[4]={par[0],par[1],par[2],par[3]};
+	double X[4]= {par[4],par[5],par[6],par[7]};
+	double apr[4]= {apr0,apr1,apr2,apr3};
+	double e[4]= {par[0],par[1],par[2],par[3]};
 
 	std::complex<double> D[4][3],L[4],LL[4];
 	std::complex<double> S(0,0),U,V,W,Z;
 
-	for(u=0;u<4;u++)
+	for(u=0; u<4; u++)
 	{
 		L[u]=std::complex<double>(apr[u]*log(apr[u]*tnu),-0.5*apr[u]*pi);
 		LL[u]=((1.0+e[u])/apr[u])*L[u];
-		for(i=0;i<3;i++)
+		for(i=0; i<3; i++)
 		{
 			D[u][i]=q[i]+L[u];
 		}
 	}
-	for(u=0;u<4;u++)
+	for(u=0; u<4; u++)
 	{
-		for(v=0;v<4;v++)
+		for(v=0; v<4; v++)
 		{
-			for(i=0;i<3;i++)
+			for(i=0; i<3; i++)
 			{
-				for(j=0;j<3;j++)
+				for(j=0; j<3; j++)
 				{
 					U=D[u][i]*D[v][j];
 					V=D[u][i]+D[v][j];
@@ -575,29 +584,29 @@ std::complex<double> ppElasticScatter::twopombar(double tnu, double tt, double *
 {
 	int i,j, u,v;
 	double T;
-	double X[4]={par[4],par[5],par[6],-par[7]};
-	double apr[4]={apr0,apr1,apr2,apr3};
-	double e[4]={par[0],par[1],par[2],par[3]};
+	double X[4]= {par[4],par[5],par[6],-par[7]};
+	double apr[4]= {apr0,apr1,apr2,apr3};
+	double e[4]= {par[0],par[1],par[2],par[3]};
 
 	std::complex<double> D[4][3],L[4],LL[4];
 	std::complex<double> S(0,0),U,V,W,Z;
 
-	for(u=0;u<4;u++)
+	for(u=0; u<4; u++)
 	{
 		L[u]=std::complex<double>(apr[u]*log(apr[u]*tnu),-0.5*apr[u]*pi);
 		LL[u]=((1.0+e[u])/apr[u])*L[u];
-		for(i=0;i<3;i++)
+		for(i=0; i<3; i++)
 		{
 			D[u][i]=q[i]+L[u];
 		}
 	}
-	for(u=0;u<4;u++)
+	for(u=0; u<4; u++)
 	{
-		for(v=0;v<4;v++)
+		for(v=0; v<4; v++)
 		{
-			for(i=0;i<3;i++)
+			for(i=0; i<3; i++)
 			{
-				for(j=0;j<3;j++)
+				for(j=0; j<3; j++)
 				{
 					U=D[u][i]*D[v][j];
 					V=D[u][i]+D[v][j];
@@ -676,9 +685,9 @@ double ppElasticScatter::ggg(double tt, double *par)
 // complex.c
 std::complex<double> RCdiv(double x, std::complex<double> a)
 {
-        double den=(a.real())*(a.real())+(a.imag())*(a.imag());
-        std::complex<double> c(x*(a.real())/den,-x*(a.imag())/den);
-        return c;
+	double den=(a.real())*(a.real())+(a.imag())*(a.imag());
+	std::complex<double> c(x*(a.real())/den,-x*(a.imag())/den);
+	return c;
 }
 
 /* (C) Copr. 1986-92 Numerical Recipes Software 06,. */

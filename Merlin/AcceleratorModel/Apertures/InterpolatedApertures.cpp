@@ -45,10 +45,10 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 			break;
 		}
 	}
-	
+
 	//We now have the aperture before and after the particle.
 	//It must now be calculated at the point where the particle is currently.
-	
+
 	//y = mx + c
 	//m = (y1 - y0) / (x1 - x0)
 	double delta_s = apFront.s - apBack.s;
@@ -72,13 +72,13 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 	//aper_2 = half heigth rectangle
 	//aper_3 = half horizontal axis ellipse (or radius if circle)
 	//aper_4 = half vertical axis ellipse
-	
+
 	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
 	{
 		//Particle is NOT inside the eliptical aperture component
 //		if(Print == true)
 
-//		cout << "Not in ellipse: " << x*x << "\t" << ellipse_half_horizontal*ellipse_half_horizontal << "\t" << y*y << "\t" << (ellipse_half_vertical*ellipse_half_vertical); 
+//		cout << "Not in ellipse: " << x*x << "\t" << ellipse_half_horizontal*ellipse_half_horizontal << "\t" << y*y << "\t" << (ellipse_half_vertical*ellipse_half_vertical);
 //		cout << "\t" << ((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) << endl;
 
 //		MerlinProfile::EndProcessTimer("APERTURE");
@@ -117,12 +117,16 @@ void InterpolatedRectEllipseAperture::EnablePrint()
 
 void InterpolatedRectEllipseAperture::printout(std::ostream& out) const
 {
-    out << GetApertureType() << "(";
-	for(size_t n=0; n < ApertureList.size(); n++){
+	out << GetApertureType() << "(";
+	for(size_t n=0; n < ApertureList.size(); n++)
+	{
 		out << ApertureList[n].s << " [";
 		out << ApertureList[n].ap1<< ", " << ApertureList[n].ap2<< ", "<< ApertureList[n].ap3<< ", "<< ApertureList[n].ap4;
 		out << "]";
-		if (n < ApertureList.size()-1) out << ", ";
+		if (n < ApertureList.size()-1)
+		{
+			out << ", ";
+		}
 	}
 	out << ")";
 }
@@ -187,7 +191,7 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 
 	//We now have the aperture before and after the particle.
 	//It must now be calculated at the point where the particle is currently.
-	
+
 	//y = mx + c
 	//m = (y1 - y0) / (x1 - x0)
 	double delta_s = apFront.s - apBack.s;
@@ -198,12 +202,12 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 
 	//aper_3 = half horizontal axis ellipse (or radius if circle)
 	double r2 = pow((g * z) + c,2);
-if((x*x+y*y<r2) == 0)
-{
-	//cout << "Interpolated Circular aperture: " << (x*x) + (y*y) << "\tR: " << r2 << "\t" << apFront.ap3 << "\t" << apBack.ap3 << endl;
-	return false;
-}
-    return x*x+y*y<r2;
+	if((x*x+y*y<r2) == 0)
+	{
+		//cout << "Interpolated Circular aperture: " << (x*x) + (y*y) << "\tR: " << r2 << "\t" << apFront.ap3 << "\t" << apBack.ap3 << endl;
+		return false;
+	}
+	return x*x+y*y<r2;
 }
 
 double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
@@ -236,7 +240,7 @@ double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
 
 	//We now have the aperture before and after the particle.
 	//It must now be calculated at the point where the particle is currently.
-	
+
 	//y = mx + c
 	//m = (y1 - y0) / (x1 - x0)
 	double delta_s = apFront.s - apBack.s;
@@ -259,12 +263,16 @@ double InterpolatedCircularAperture::GetRadius () const
 
 void InterpolatedCircularAperture::printout(std::ostream& out) const
 {
-    out << GetApertureType() << "(";
-	for(size_t n=0; n < ApertureList.size(); n++){
+	out << GetApertureType() << "(";
+	for(size_t n=0; n < ApertureList.size(); n++)
+	{
 		out << ApertureList[n].s << " [";
 		out << ApertureList[n].ap3;
 		out << "]";
-		if (n < ApertureList.size()-1) out << ", ";
+		if (n < ApertureList.size()-1)
+		{
+			out << ", ";
+		}
 	}
 	out << ")";
 }

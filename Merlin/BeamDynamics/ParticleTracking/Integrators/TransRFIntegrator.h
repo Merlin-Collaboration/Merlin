@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/03/29 08:19:43 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_TransRFIntegrator
@@ -18,18 +18,20 @@
 #include "AcceleratorModel/StdComponent/TransverseRFStructure.h"
 #include "BeamDynamics/ParticleTracking/ParticleComponentTracker.h"
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
-class TransRFIntegrator : public ParticleComponentTracker::Integrator<TransverseRFStructure> {
+class TransRFIntegrator : public ParticleComponentTracker::Integrator<TransverseRFStructure>
+{
 protected:
 
-    void TrackStep(double);
-    void TrackEntrance();
-    void TrackExit();
+	void TrackStep(double);
+	void TrackEntrance();
+	void TrackExit();
 
 private:
 
-    void ApplyEndField(double gsgn);
+	void ApplyEndField(double gsgn);
 };
 
 } // end namespace ParticleTracking

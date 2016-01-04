@@ -23,21 +23,22 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	unsigned int seed = 0;
-	
+
 	if (argc >=2)
 	{
 		seed = atoi(argv[1]);
 	}
 	cerr << "Random Seed: " << seed << endl;
-	//RandomNG::init(seed);	
+	//RandomNG::init(seed);
 	//RandomNG* rng = new RandomNG(seed);
-	
+
 	ACG rng(seed, 100);
 
-	while(1){
-	int x = rng.asLong();
-	cout.write((char*)&x, sizeof(x));
+	while(1)
+	{
+		int x = rng.asLong();
+		cout.write((char*)&x, sizeof(x));
 	}
-	
+
 
 }

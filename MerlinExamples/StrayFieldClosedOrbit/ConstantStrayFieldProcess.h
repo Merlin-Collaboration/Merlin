@@ -11,7 +11,7 @@
 // The effect of the field is modelled as a kick which is applied at the
 // exit of every element or every distance maxStep (depending which is shorter).
 //
-// Note this is rather artificial example, but it does illustrate some 
+// Note this is rather artificial example, but it does illustrate some
 // important concepts.
 //-------------------------------------------------------------------------
 
@@ -20,34 +20,36 @@
 
 #include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
 
-namespace ParticleTracking {
-	
-	class ConstantStrayFieldProcess : public ParticleBunchProcess {
-	public:
-		
-		// construction
-		ConstantStrayFieldProcess(double maxStep, double By);
-		
-		// Virtual function override 
-		virtual void SetCurrentComponent (AcceleratorComponent& component);
+namespace ParticleTracking
+{
 
-		// The following pure virtual function overrides must be provided.
-		virtual void DoProcess (double ds);
-		virtual double GetMaxAllowedStepSize () const;
-		
-	private:
-		
-		double By;
-		double maxStep;
+class ConstantStrayFieldProcess : public ParticleBunchProcess
+{
+public:
 
-		// implementation 
-		double kick_ds;
-		double s_int;
-		double cL;
+	// construction
+	ConstantStrayFieldProcess(double maxStep, double By);
 
-		void ApplyKick();
-	};
-	
+	// Virtual function override
+	virtual void SetCurrentComponent (AcceleratorComponent& component);
+
+	// The following pure virtual function overrides must be provided.
+	virtual void DoProcess (double ds);
+	virtual double GetMaxAllowedStepSize () const;
+
+private:
+
+	double By;
+	double maxStep;
+
+	// implementation
+	double kick_ds;
+	double s_int;
+	double cL;
+
+	void ApplyKick();
+};
+
 } // end namespace ParticleTracking
 
 #endif // _h_ConstantStrayFieldProcess

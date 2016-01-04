@@ -68,10 +68,10 @@ double MaterialMixture::CalculateElectronDensity()
 	*/
 	double Z = 0.0;
 	double A = 0.0;
-	
-        std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
-        MaterialIt = MixtureMap.begin();
-        while(MaterialIt != MixtureMap.end())
+
+	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
+	while(MaterialIt != MixtureMap.end())
 	{
 		Z += MaterialIt->second.first * MaterialIt->first->GetAtomicNumber();
 		A += MaterialIt->second.first * MaterialIt->first->GetAtomicMass();
@@ -105,15 +105,15 @@ double MaterialMixture::CalculateMeanExcitationEnergy()
 	double ISum = 0.0;
 	double ZA = 0.0;
 
-        std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
-        MaterialIt = MixtureMap.begin();
-        while(MaterialIt != MixtureMap.end())
+	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
+	while(MaterialIt != MixtureMap.end())
 	{
 		double A = MaterialIt->first->GetAtomicMass();
 		double Z = MaterialIt->first->GetAtomicNumber();
 		double I_el = 1.13 * MaterialIt->first->GetMeanExcitationEnergy();
 		double w = MaterialIt->second.second;
-		ZA += w * Z/A; 
+		ZA += w * Z/A;
 		ISum += w * (Z/A) * log(I_el);
 
 		MaterialIt++;
@@ -130,10 +130,10 @@ double MaterialMixture::CalculateSixtrackdEdx()
 	*/
 
 	double dEdx = 0.0;
-	
-        std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
-        MaterialIt = MixtureMap.begin();
-        while(MaterialIt != MixtureMap.end())
+
+	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
+	while(MaterialIt != MixtureMap.end())
 	{
 		dEdx += (MaterialIt->second.second * MaterialIt->first->GetSixtrackdEdx());
 		MaterialIt++;
@@ -143,17 +143,17 @@ double MaterialMixture::CalculateSixtrackdEdx()
 
 double MaterialMixture::CalculateRadiationLength()
 {
-/*
-* pdg states for a mixture the following is an appoximation:
-* 1/X_0 = \sum (w_i / X_i)
-* where w_i is the mass fraction
-*/
+	/*
+	* pdg states for a mixture the following is an appoximation:
+	* 1/X_0 = \sum (w_i / X_i)
+	* where w_i is the mass fraction
+	*/
 
 	double X0 = 0.0;
-	
-        std::map<Material*, std::pair<double,double> >::const_iterator MaterialIt;
-        MaterialIt = MixtureMap.begin();
-        while(MaterialIt != MixtureMap.end())
+
+	std::map<Material*, std::pair<double,double> >::const_iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
+	while(MaterialIt != MixtureMap.end())
 	{
 		X0 += (MaterialIt->second.second / MaterialIt->first->GetRadiationLength());
 		MaterialIt++;
@@ -315,55 +315,93 @@ double MaterialMixture::GetSixtrackNuclearSlope() const
  */
 bool MaterialMixture::VerifyMaterial() const
 {
-        bool verification = true;
+	bool verification = true;
 
 	//Check the mixture related bits
-	if(GetName().size() <1){return false;}
-	if(GetSymbol().size() <1){return false;}
+	if(GetName().size() <1)
+	{
+		return false;
+	}
+	if(GetSymbol().size() <1)
+	{
+		return false;
+	}
 
 	//Then check the component materials
 	//Here we need to loop over the component materials
 	double MassFraction = 0;
 	double NumberFraction = 0;
 
-        std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
-        MaterialIt = MixtureMap.begin();
-        while(MaterialIt != MixtureMap.end())
-        {
+	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
+	while(MaterialIt != MixtureMap.end())
+	{
 		//Pull the number and mass fractions
 		NumberFraction+=MaterialIt->second.first;
 		MassFraction+=MaterialIt->second.second;
 
-                bool test = MaterialIt->first->VerifyMaterial();
-                if(test == false)
-                {
-                        verification = false;
-                        std::cerr << "Material " << GetName() << " subcomponent: "  << MaterialIt->first->GetName() << " failed to verify." << std::endl;
-                }
-                MaterialIt++;
-        }
+		bool test = MaterialIt->first->VerifyMaterial();
+		if(test == false)
+		{
+			verification = false;
+			std::cerr << "Material " << GetName() << " subcomponent: "  << MaterialIt->first->GetName() << " failed to verify." << std::endl;
+		}
+		MaterialIt++;
+	}
 
-	if(GetConductivity() <=0){std::cerr << "Failed to verify Conductivity for " << GetName() << ": " << GetConductivity() << std::endl; verification = false;}
-	if(GetRadiationLength() <=0){std::cerr << "Failed to verify RadiationLength for " << GetName() << ": " << GetRadiationLength() << std::endl; verification = false;}
-	if(GetDensity() <=0){std::cerr << "Failed to verify Density for " << GetName() << ": " << GetDensity() << std::endl; verification = false;}
-	if(GetElectronDensity() <=0){std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl; verification = false;}
+	if(GetConductivity() <=0)
+	{
+		std::cerr << "Failed to verify Conductivity for " << GetName() << ": " << GetConductivity() << std::endl;
+		verification = false;
+	}
+	if(GetRadiationLength() <=0)
+	{
+		std::cerr << "Failed to verify RadiationLength for " << GetName() << ": " << GetRadiationLength() << std::endl;
+		verification = false;
+	}
+	if(GetDensity() <=0)
+	{
+		std::cerr << "Failed to verify Density for " << GetName() << ": " << GetDensity() << std::endl;
+		verification = false;
+	}
+	if(GetElectronDensity() <=0)
+	{
+		std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl;
+		verification = false;
+	}
 	//if(GetElectronCriticalEnergy() <=0){std::cerr << "Failed to verify ElectronCriticalEnergy for " << GetName() << ": " << GetElectronCriticalEnergy() << std::endl; verification = false;}
-	if(GetMeanExcitationEnergy() <=0){std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy() << std::endl; verification = false;}
-	if(GetPlasmaEnergy() <=0){std::cerr << "Failed to verify PlasmaEnergy for " << GetName() << ": " << GetPlasmaEnergy() << std::endl; verification = false;}
+	if(GetMeanExcitationEnergy() <=0)
+	{
+		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy() << std::endl;
+		verification = false;
+	}
+	if(GetPlasmaEnergy() <=0)
+	{
+		std::cerr << "Failed to verify PlasmaEnergy for " << GetName() << ": " << GetPlasmaEnergy() << std::endl;
+		verification = false;
+	}
 
 	//Verify that the mass and number fraction components sum to 1
 	unsigned int oldprec = cerr.precision(16);
 	double tol = 1e-12;
-	if(std::fabs(MassFraction - 1.0) > tol){std::cerr << "Invalid mass fraction sum for: " << GetName() << " - " << MassFraction << endl; verification = false;}
-	if(std::fabs(NumberFraction - 1.0) > tol){std::cerr << "Invalid number fraction sum for: " << GetName() << " - " << NumberFraction << endl; verification = false;}
+	if(std::fabs(MassFraction - 1.0) > tol)
+	{
+		std::cerr << "Invalid mass fraction sum for: " << GetName() << " - " << MassFraction << endl;
+		verification = false;
+	}
+	if(std::fabs(NumberFraction - 1.0) > tol)
+	{
+		std::cerr << "Invalid number fraction sum for: " << GetName() << " - " << NumberFraction << endl;
+		verification = false;
+	}
 	cerr.precision(oldprec);
-        return verification;
+	return verification;
 }
 
 bool MaterialMixture::Assemble()
 {
-    std::map<Material*,std::pair<double,double> >::iterator MaterialIt;
-    MaterialIt = MixtureMap.begin();
+	std::map<Material*,std::pair<double,double> >::iterator MaterialIt;
+	MaterialIt = MixtureMap.begin();
 	unsigned int count = MixtureMap.size();
 
 	std::vector<double>::iterator FractionVectorIt;
@@ -383,22 +421,22 @@ bool MaterialMixture::Assemble()
 
 		//Want the number fraction here
 		//Needs 2 passes
-        	while(MaterialIt != MixtureMap.end())
-	        {
+		while(MaterialIt != MixtureMap.end())
+		{
 			CurrentFraction = MaterialIt->second.second / MaterialIt->first->GetAtomicNumber();
 			Total += CurrentFraction;
 			FractionVector.push_back(CurrentFraction);
-	                MaterialIt++;
-	        }
+			MaterialIt++;
+		}
 
 		MaterialIt = MixtureMap.begin();
 		FractionVectorIt = FractionVector.begin();
-        	while(MaterialIt != MixtureMap.end())
-	        {
+		while(MaterialIt != MixtureMap.end())
+		{
 			MaterialIt->second.first = *FractionVectorIt / Total;
-	                MaterialIt++;
-	                FractionVectorIt++;
-	        }
+			MaterialIt++;
+			FractionVectorIt++;
+		}
 		return true;
 	}
 	else if(AssembledByNumber)
@@ -406,10 +444,10 @@ bool MaterialMixture::Assemble()
 		//Set CurrentMaterial with the first element listed
 		CurrentMaterial = MaterialIt->first;
 
-	        while(MaterialIt != MixtureMap.end())
-	        {
-	        	        MaterialIt++;
-	        }
+		while(MaterialIt != MixtureMap.end())
+		{
+			MaterialIt++;
+		}
 		return true;
 	}
 	else
@@ -428,7 +466,9 @@ Material* MaterialMixture::SelectRandomMaterial()
 	{
 		x-= MaterialIt->second.first;
 		if(x > 0)
-		MaterialIt++;
+		{
+			MaterialIt++;
+		}
 	}
 	//std::cout << "x = " << x << "\t material first =" << MaterialIt->first->GetName() << "\t material second =" << MaterialIt->second.first << std::endl;
 	CurrentMaterial = MaterialIt->first;
@@ -451,11 +491,12 @@ vector< pair<string,double> > MaterialMixture::GetConstituentElements()
 	MaterialIt = MixtureMap.begin();
 	vector< pair<string,double> > elements;
 	std::pair<string,double> test;
-	
-	for(MaterialIt; MaterialIt != MixtureMap.end(); ++MaterialIt){		
+
+	for(MaterialIt; MaterialIt != MixtureMap.end(); ++MaterialIt)
+	{
 		test = make_pair(MaterialIt->first->GetSymbol(), MaterialIt->second.second);
 		elements.push_back(test);
 	}
-	
-	return elements;	
+
+	return elements;
 }

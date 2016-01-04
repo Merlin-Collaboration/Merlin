@@ -16,16 +16,16 @@
 class CollimatorAperture: public RectangularAperture
 {
 protected:
-double alpha;
-double CollimatorLength;
-double jaw_length;
-double x_offset_entry,y_offset_entry;
+	double alpha;
+	double CollimatorLength;
+	double jaw_length;
+	double x_offset_entry,y_offset_entry;
 
 //Add jaw parameters at exit as well
-double x_offset_exit,y_offset_exit;
-double w_exit,h_exit;
-double cosalpha;
-double sinalpha;
+	double x_offset_exit,y_offset_exit;
+	double w_exit,h_exit;
+	double cosalpha;
+	double sinalpha;
 //bool errors;
 //double e1,e2,e3,e4,e5,e6;
 //double aperture_error;
@@ -35,33 +35,33 @@ double sinalpha;
 
 public:
 //~ double alpha;
-CollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
+	CollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
 
 //void SetJawLength(double);
 
-void SetExitWidth(double);	//Horizontal
-void SetExitHeight(double);	//Vertical
-void SetExitXOffset(double);	//Horizontal
-void SetExitYOffset(double);	//Vertical
+	void SetExitWidth(double);	//Horizontal
+	void SetExitHeight(double);	//Vertical
+	void SetExitXOffset(double);	//Horizontal
+	void SetExitYOffset(double);	//Vertical
 
-double GetFullEntranceHeight() const;
-double GetFullEntranceWidth() const;
+	double GetFullEntranceHeight() const;
+	double GetFullEntranceWidth() const;
 
-double GetFullExitHeight() const;
-double GetFullExitWidth() const;
+	double GetFullExitHeight() const;
+	double GetFullExitWidth() const;
 
-double GetEntranceXOffset() const;
-double GetEntranceYOffset() const;
+	double GetEntranceXOffset() const;
+	double GetEntranceYOffset() const;
 
-double GetExitXOffset() const;
-double GetExitYOffset() const;
+	double GetExitXOffset() const;
+	double GetExitYOffset() const;
 
-double GetCollimatorTilt() const;
+	double GetCollimatorTilt() const;
 
 //Also need to know the collimator length for interpolation
 //void SetCollimatorLength(double);
 
-virtual bool PointInside(double x,double y,double z) const;
+	virtual bool PointInside(double x,double y,double z) const;
 };
 
 
@@ -74,17 +74,17 @@ virtual bool PointInside(double x,double y,double z) const;
 
 class UnalignedCollimatorAperture: public CollimatorAperture
 {
-/*
-protected:
-double alpha;
-double CollimatorLength;
-double jaw_length;
-double x_offset,y_offset;
-*/
+	/*
+	protected:
+	double alpha;
+	double CollimatorLength;
+	double jaw_length;
+	double x_offset,y_offset;
+	*/
 public:
-UnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
+	UnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
 
-bool PointInside(double x,double y,double z) const;
+	bool PointInside(double x,double y,double z) const;
 };
 
 /**********************************************************************
@@ -123,19 +123,19 @@ class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 
 class OneSidedUnalignedCollimatorAperture: public CollimatorAperture
 {
-/*
-protected:
-double alpha;
-double CollimatorLength;
-double jaw_length;
-double x_offset,y_offset;
-*/
+	/*
+	protected:
+	double alpha;
+	double CollimatorLength;
+	double jaw_length;
+	double x_offset,y_offset;
+	*/
 public:
-OneSidedUnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
+	OneSidedUnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
 
-bool PointInside(double x,double y,double z) const;
-bool PositiveSide;
-void SetJawSide(bool);
+	bool PointInside(double x,double y,double z) const;
+	bool PositiveSide;
+	void SetJawSide(bool);
 };
 
 #endif

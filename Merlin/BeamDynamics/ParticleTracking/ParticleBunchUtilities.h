@@ -1,8 +1,8 @@
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (2000)
-* 
+*
 * file Merlin\BeamDynamics\ParticleTracking\ParticleBunchUtilities.h
 * last modified 30/04/01 12:28:48
 */
@@ -11,11 +11,11 @@
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 *
-* Copyright (c) 2000 by The Merlin Collaboration.  
-* ALL RIGHTS RESERVED. 
+* Copyright (c) 2000 by The Merlin Collaboration.
+* ALL RIGHTS RESERVED.
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -35,7 +35,8 @@
 
 #include <vector>
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 // Sort the bunch in ascending z (ct) order, and return
 // a vector of iterators which point to the equal-spaced

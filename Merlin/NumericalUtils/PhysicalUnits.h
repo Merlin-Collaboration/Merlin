@@ -3,7 +3,8 @@
 
 // Merlin common units
 
-namespace PhysicalUnits {
+namespace PhysicalUnits
+{
 
 //Area
 extern const double barn;

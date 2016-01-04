@@ -19,9 +19,11 @@
 #include "NumericalUtils/PhysicalConstants.h"
 #include "NumericalUtils/NumericalConstants.h"
 
-namespace Collimation {
-	
-struct JawImpactData{
+namespace Collimation
+{
+
+struct JawImpactData
+{
 	int turn;
 	int ID;
 	double x;
@@ -29,11 +31,12 @@ struct JawImpactData{
 	double y;
 	double yp;
 	double ct;
-	double dp;	
+	double dp;
 	string name;
 };
 
-struct ScatterPlotData{
+struct ScatterPlotData
+{
 	int turn;
 	int ID;
 	double x;
@@ -43,51 +46,69 @@ struct ScatterPlotData{
 	double z;
 	string name;
 	//~ double ct;
-	//~ double dp;		
-	
-	inline bool operator==(const ScatterPlotData& rhs){
+	//~ double dp;
+
+	inline bool operator==(const ScatterPlotData& rhs)
+	{
 		if( (this->z != rhs.z) )
-		{ return 0;}
-		else {return 1;}
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}
-	
-	inline bool operator>(const ScatterPlotData& rhs){
+
+	inline bool operator>(const ScatterPlotData& rhs)
+	{
 		if( (this->z > rhs.z) )
-		{ return 0;}
-		else {return 1;}
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}
-	
-	inline bool operator<(const ScatterPlotData& rhs){
+
+	inline bool operator<(const ScatterPlotData& rhs)
+	{
 		if( (this->z < rhs.z) )
-		{ return 0;}
-		else {return 1;}
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}
 };
 
 class ScatteringModel
 {
-	
+
 public:
 
 	// Constructor
 	ScatteringModel();
 
-// Collimation Functions	
+// Collimation Functions
 	// Set ScatterType
 	void SetScatterType(int st);
-	
+
 	// Calculate the particle path length in given material using scattering processes
 	double PathLength(Material* mat, double E0);
-	
+
 	// Energy loss via ionisation
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0, double E1);
-	
+
 	// Advanced energy loss via ionisation
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0);
 
 	// Multiple Coulomb scattering
 	void Straggle(PSvector& p, double x, Material* mat, double E1, double E2);
-	
+
 	// Function performs scattering and returns true if inelastic scatter
 	bool ParticleScatter(PSvector& p, Material* mat, double E);
 
@@ -97,8 +118,15 @@ public:
 // Other Functions
 
 	// Add/clear ScatteringProcesses
-	void AddProcess(Collimation::ScatteringProcess* S){ Processes.push_back(S); fraction.push_back(0); }
-	void ClearProcesses(){Processes.clear();}
+	void AddProcess(Collimation::ScatteringProcess* S)
+	{
+		Processes.push_back(S);
+		fraction.push_back(0);
+	}
+	void ClearProcesses()
+	{
+		Processes.clear();
+	}
 
 	// Scatter plot
 	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, string name);
@@ -107,7 +135,7 @@ public:
 	vector<string> ScatterPlotNames;
 	bool ScatterPlot_on;
 	vector <ScatterPlotData*> StoredScatterPlotData;
-	
+
 	// Jaw impact
 	void JawImpact(ParticleTracking::Particle& p, int turn, string name);
 	void SetJawImpact(string name, int single_turn = 0);
@@ -120,19 +148,22 @@ public:
 	vector <Collimation::ScatteringProcess*> Processes;
 	// vector with fractions of the total scattering cross section assigned to each ScatteringProcess
 	vector <double> fraction;
-	
+
 	//Store calculated CrossSections data to save time
 	std::map< string, Collimation::CrossSections* > stored_cross_sections;
-	std::map< string, Collimation::CrossSections* >::iterator CS_iterator;	
-	
-	int GetScatteringPhysicsModel(){return ScatteringPhysicsModel;}
-		
+	std::map< string, Collimation::CrossSections* >::iterator CS_iterator;
+
+	int GetScatteringPhysicsModel()
+	{
+		return ScatteringPhysicsModel;
+	}
+
 protected:
 
 private:
 
-	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN	
-    int ScatteringPhysicsModel;
+	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN
+	int ScatteringPhysicsModel;
 };
 
 } //end namespace Collimation

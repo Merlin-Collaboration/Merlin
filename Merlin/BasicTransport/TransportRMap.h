@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:52 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef TransportRMap_h
@@ -18,7 +18,8 @@
 #include "merlin_config.h"
 #include "BasicTransport/RMap.h"
 
-namespace TransportRMap {
+namespace TransportRMap
+{
 
 void Drift (double length, RMap& R);
 void SectorBend (double length, double h, double Kx, RMap& R);
@@ -32,8 +33,9 @@ void TWRFCavity (double length, double g, double f, double phi,
                  double E0, bool entr_field, bool exit_field, RMap& R);
 void SWRFCavity (int ncells, double g, double f, double phi, double E0, RMap& R);
 
-inline void Srot (double phi, RMap& R) {
-    Srot(cos(phi),sin(phi),R);
+inline void Srot (double phi, RMap& R)
+{
+	Srot(cos(phi),sin(phi),R);
 }
 
 // functions returning R2Map objects

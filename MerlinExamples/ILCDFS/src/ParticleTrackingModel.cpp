@@ -5,8 +5,8 @@
 
 using namespace ParticleTracking;
 
-ParticleTrackingModel::ParticleTrackingModel(size_t npart) 
-: BeamDynamicsModel("PARTICLE TRACKING"),np(npart),cBunch0(0)
+ParticleTrackingModel::ParticleTrackingModel(size_t npart)
+	: BeamDynamicsModel("PARTICLE TRACKING"),np(npart),cBunch0(0)
 {
 	dfs_trace(dfs_trace::level_1)<<"PARTICLE TRACKING initialised with "<<npart<<" particles"<<endl;
 	tracker = new ParticleTracker();
@@ -15,7 +15,9 @@ ParticleTrackingModel::ParticleTrackingModel(size_t npart)
 ParticleTrackingModel::~ParticleTrackingModel()
 {
 	if(tracker)
+	{
 		delete tracker;
+	}
 }
 
 void ParticleTrackingModel::SetBeamline(const AcceleratorModel::Beamline& bl)

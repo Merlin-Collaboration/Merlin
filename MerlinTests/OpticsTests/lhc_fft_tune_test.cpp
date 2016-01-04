@@ -32,11 +32,13 @@ int main(int argc, char* argv[])
 	MADInterface* myMADinterface;
 	string paths[] = {"../data/twiss.7.0tev.b1_new.tfs", "data/twiss.7.0tev.b1_new.tfs", "MerlinTests/data/twiss.7.0tev.b1_new.tfs"};
 
-	string lattice_path;	
-	for (size_t i=0; i<3; i++){
+	string lattice_path;
+	for (size_t i=0; i<3; i++)
+	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
-		if (test_file){
+		if (test_file)
+		{
 			lattice_path = paths[i];
 			break;
 		}
@@ -57,7 +59,7 @@ int main(int argc, char* argv[])
 	co.SetDelta(delta);
 	co.ScaleBendPathLength(cscale);
 	co.FindClosedOrbit(p2);
-	
+
 	// find transfer matrix
 	RealMatrix M(6);
 	TransferMatrix tm(model, beam_energy);
@@ -79,7 +81,7 @@ int main(int argc, char* argv[])
 	const double fft_qx = tune->Qx, fft_qy = tune->Qy;
 
 	// compare
-	cout << "From TM" << endl;	
+	cout << "From TM" << endl;
 	cout << tm_qx << " " << tm_qy << endl;
 	cout << "From FFT" << endl;
 	cout << fft_qx << " " << fft_qy << endl;

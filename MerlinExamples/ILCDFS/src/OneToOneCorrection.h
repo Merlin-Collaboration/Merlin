@@ -9,8 +9,8 @@
 // the calcualtion of the response matrices and the estimate of the correction.
 //
 // The routine will attempt to use incremental tracking if possible.
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -18,7 +18,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_OneToOneCorrection

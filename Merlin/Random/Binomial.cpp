@@ -22,12 +22,14 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 double Binomial::operator()()
 {
-    int s = 0;
-    for (int i = 0; i < pN; i++) {
-        if (pGenerator -> asDouble() < pU) {
-            s++;
-        }
-    }
-    return(double(s));
+	int s = 0;
+	for (int i = 0; i < pN; i++)
+	{
+		if (pGenerator -> asDouble() < pU)
+		{
+			s++;
+		}
+	}
+	return(double(s));
 }
 

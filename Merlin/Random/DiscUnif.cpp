@@ -22,7 +22,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 double DiscreteUniform::operator()()
 {
-    long tmp = long(floor(delta * pGenerator -> asDouble()));
-    return( double(pLow + tmp) );
+	long tmp = long(floor(delta * pGenerator -> asDouble()));
+	return( double(pLow + tmp) );
 }
 

@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef MerlinException_h
@@ -19,30 +19,30 @@
 
 //	Root class for all Merlin exceptions.
 
-class MerlinException 
+class MerlinException
 {
-  public:
+public:
 
-      virtual ~MerlinException() {};
-      explicit MerlinException (const std::string& s);
-      MerlinException ();
-      const char* Msg () const;
+	virtual ~MerlinException() {};
+	explicit MerlinException (const std::string& s);
+	MerlinException ();
+	const char* Msg () const;
 
-  protected:
+protected:
 
-      void SetMsg (const std::string& s);
-      void AppendMsg (const std::string& s);
+	void SetMsg (const std::string& s);
+	void AppendMsg (const std::string& s);
 
-  private:
-      std::string msg;
+private:
+	std::string msg;
 };
 
 inline MerlinException::MerlinException (const std::string& s)
-  : msg(s)
+	: msg(s)
 {}
 
 inline MerlinException::MerlinException ()
-  : msg()
+	: msg()
 {}
 
 inline const char* MerlinException::Msg () const

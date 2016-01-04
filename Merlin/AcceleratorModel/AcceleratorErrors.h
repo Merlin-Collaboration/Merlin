@@ -35,7 +35,7 @@ public:
 	* Constructor
 	*/
 	AcceleratorErrors()
-	: vx(0),vy(0),vz(0),mx(0),my(0),mz(0),clear(0),log(NULL)
+		: vx(0),vy(0),vz(0),mx(0),my(0),mz(0),clear(0),log(NULL)
 	{};
 
 	/**
@@ -50,7 +50,7 @@ public:
 	* @param[in] meanz The root mean square value for z errors.
 	*/
 	void SetErrors(double xrms=0, double yrms=0, double zrms=0,
-				double meanx=0, double meany=0, double meanz=0)
+	               double meanx=0, double meany=0, double meanz=0)
 	{
 		vx=xrms*xrms;
 		vy=yrms*yrms;
@@ -74,7 +74,7 @@ public:
 	* @param[in] meanz The root mean square value for z errors.
 	*/
 	void AddErrors(double  xrms=0, double yrms=0, double zrms=0,
-				double meanx=0, double meany=0, double meanz=0)
+	               double meanx=0, double meany=0, double meanz=0)
 	{
 		vx=xrms*xrms;
 		vy=yrms*yrms;

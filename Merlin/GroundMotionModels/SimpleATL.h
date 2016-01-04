@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef SimpleATL_h
@@ -40,56 +40,56 @@ class RandGenerator;
 class SimpleATL
 {
 public:
-    //	Constructor taking the A constant and the list of
-    //	support structures.
-    SimpleATL (double anA, const AcceleratorSupportList& supports, double vrms=0);
+	//	Constructor taking the A constant and the list of
+	//	support structures.
+	SimpleATL (double anA, const AcceleratorSupportList& supports, double vrms=0);
 
-    ~SimpleATL ();
+	~SimpleATL ();
 
-    //	Reset the ground motion to zero Note this resets the
-    //	offset of all the AcceleratorSupports, and resets the
-    //	internal clock to zero.
-    void Reset ();
+	//	Reset the ground motion to zero Note this resets the
+	//	offset of all the AcceleratorSupports, and resets the
+	//	internal clock to zero.
+	void Reset ();
 
-    //	Perform a single step of dt seconds. Returns the current
-    //	simulated time.
-    double DoStep (double dt);
+	//	Perform a single step of dt seconds. Returns the current
+	//	simulated time.
+	double DoStep (double dt);
 
-    //	Record the (x,y,z) offset of all the supports to the
-    //	specified stream.
-    void RecordOffsets (std::ostream& os) const;
+	//	Record the (x,y,z) offset of all the supports to the
+	//	specified stream.
+	void RecordOffsets (std::ostream& os) const;
 
-    //	Returns the current simulated time (in seconds).
-    double GetTime () const;
+	//	Returns the current simulated time (in seconds).
+	double GetTime () const;
 
-    //	Sets the random seed to nseed.
-    void SetRandomSeed (unsigned int nseed);
+	//	Sets the random seed to nseed.
+	void SetRandomSeed (unsigned int nseed);
 
-    //	Returns the current random seed
-    unsigned int GetRandomSeed () const;
+	//	Returns the current random seed
+	unsigned int GetRandomSeed () const;
 
-    //	Resets the random generator with the current random seed.
-    void ResetRandomSeed ();
+	//	Resets the random generator with the current random seed.
+	void ResetRandomSeed ();
 
 private:
 
-    double t;
-    double A;
-    unsigned seed;
+	double t;
+	double A;
+	unsigned seed;
 
-    // Uncorrelated white-noise vibration variance
-    double vv;
+	// Uncorrelated white-noise vibration variance
+	double vv;
 
-    // vector to store ATL ground motion
-    std::vector<double> atlgm;
+	// vector to store ATL ground motion
+	std::vector<double> atlgm;
 
-    AcceleratorSupportList theSupports;
+	AcceleratorSupportList theSupports;
 
-    RandGenerator* rg;
+	RandGenerator* rg;
 
-    //Copy protection
-    SimpleATL(const SimpleATL& rhs);
-    SimpleATL& operator=(const SimpleATL& rhs);
+	//Copy protection
+	SimpleATL(const SimpleATL& rhs);
+	SimpleATL& operator=(const SimpleATL& rhs);
 
 };
 

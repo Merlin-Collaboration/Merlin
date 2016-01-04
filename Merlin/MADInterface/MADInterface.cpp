@@ -39,7 +39,8 @@ using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
-namespace {
+namespace
+{
 // stack used to match MAD LINE pairs
 // Note: we need this because we no longer preserve the complete MAD beamline structure.
 stack<string> frameStack;
@@ -55,7 +56,10 @@ inline double SRdE(double h, double len, double E)
 void Log(const string& tag, int depth, ostream& os)
 {
 	static const char* tab = "----|";
-	while(depth--) os<<tab;
+	while(depth--)
+	{
+		os<<tab;
+	}
 	os<<' '<<tag<<endl;
 }
 
@@ -113,7 +117,7 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 	aper_1 and xtol = horizontal displacement of radial part
 	aper_2 and ytol = vertical displacement of radial part
 	aper_3 and rtol = radius
-	aper_4 = not used 
+	aper_4 = not used
 	*/
 
 
@@ -209,9 +213,9 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
         incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL),z(0)
 */
 MADInterface::MADInterface (const std::string& madFileName, double P0)
-        : energy(P0),filename(madFileName),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
-        log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(1)
+	: energy(P0),filename(madFileName),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
+	  log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
+	  incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(1)
 {
 	if(ifs)
 	{
@@ -228,22 +232,29 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
-	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)	
-	
+	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)
+
 	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
 	//TreatTypeAsDrift("RFCAVITY");	// merlin bug! - Fix tracking with zero cavity voltage.
 
 	IgnoreZeroLengthType("RCOLLIMATOR");
 }
 
-MADInterface::~MADInterface(){
+MADInterface::~MADInterface()
+{
 	if(ctor)
+	{
 		delete ctor;
+	}
 	if(prmMap)
+	{
 		delete prmMap;
+	}
 	if(ifs)
+	{
 		ifs->close();
-		delete ifs;
+	}
+	delete ifs;
 }
 
 void MADInterface::Initialise()
@@ -265,7 +276,7 @@ void MADInterface::Initialise()
 	//Is MAD8 different?
 
 	//check_column_heading((*ifs),"@");
-	//check_column_heading((*ifs),"NAME");	
+	//check_column_heading((*ifs),"NAME");
 	//Fixed - JM:
 
 	while((*ifs).good())
@@ -274,7 +285,8 @@ void MADInterface::Initialise()
 		if(c=='*')
 		{
 			if(!(check_column_heading((*ifs),"NAME") &&
-			   check_column_heading((*ifs),"KEYWORD"))){
+			        check_column_heading((*ifs),"KEYWORD")))
+			{
 				cout << "ERROR: Reading keywords: " << filename << endl;
 				abort();
 			}
@@ -385,7 +397,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
 		}
 	}
-	
+
 	cout << "MADInterface:: ARC distance from MAD file: " << z <<" m"<< endl;
 
 	AcceleratorModel* theModel = ctor->GetModel();
@@ -423,27 +435,27 @@ void MADInterface::ConstructNewFrame (const string& name)
 	{
 		switch( name[0] )
 		{
-			case 'F':
-				newFrame = new SequenceFrame(name.substr(2));
-				break;
+		case 'F':
+			newFrame = new SequenceFrame(name.substr(2));
+			break;
 
-			case 'S':
-				newFrame = new SimpleMount(name.substr(2));
-				break;
+		case 'S':
+			newFrame = new SimpleMount(name.substr(2));
+			break;
 
-			case 'G':
-				//newFrame = new SimpleMount(name.substr(2));
-				newFrame = new GirderMount(name.substr(2));
-				break;
+		case 'G':
+			//newFrame = new SimpleMount(name.substr(2));
+			newFrame = new GirderMount(name.substr(2));
+			break;
 
-			case 'M':
-				newFrame = new MagnetMover(name.substr(2));
-				break;
+		case 'M':
+			newFrame = new MagnetMover(name.substr(2));
+			break;
 
-		        default:
-				MERLIN_ERR << "Unknown frame character: " << name << endl;
-				abort();
-				break;
+		default:
+			MERLIN_ERR << "Unknown frame character: " << name << endl;
+			abort();
+			break;
 		}
 	}
 	ctor->NewFrame(newFrame);
@@ -522,470 +534,500 @@ double MADInterface::ReadComponent ()
 	try
 	{
 
-	if(driftTypes.find(type)!=driftTypes.end())
-	{
-		#ifndef NDEBUG
-		MerlinIO::warning() << "Treating " << type << " as Drift" << endl;
-		#endif
+		if(driftTypes.find(type)!=driftTypes.end())
+		{
+#ifndef NDEBUG
+			MerlinIO::warning() << "Treating " << type << " as Drift" << endl;
+#endif
 
-		type="DRIFT";
-	}
+			type="DRIFT";
+		}
 
-        // get the 'standard' parameters
-        len = prmMap->GetParameter("L");
-        tilt = prmMap->GetParameter("TILT",false);
+		// get the 'standard' parameters
+		len = prmMap->GetParameter("L");
+		tilt = prmMap->GetParameter("TILT",false);
 
-        if(len==0 && zeroLengths.find(type)!=zeroLengths.end())
-        {
-		MerlinIO::warning() << "Ignoring zero length " << type << ": " << name << endl;
-		return 0;
-        }
-	else if(type =="KICKER")
-	{
-		type="DRIFT";
-	}
-	else if(type =="TKICKER")
-	{
-		type="DRIFT";
-	}
-/*	else if(type=="VKICKER")
-	{
-		if (prmMap->GetParameter("VKICK") == 0)
+		if(len==0 && zeroLengths.find(type)!=zeroLengths.end())
+		{
+			MerlinIO::warning() << "Ignoring zero length " << type << ": " << name << endl;
+			return 0;
+		}
+		else if(type =="KICKER")
 		{
 			type="DRIFT";
 		}
-	}
-	else if(type=="HKICKER")
-	{
-		if (prmMap->GetParameter("HKICK") == 0)
+		else if(type =="TKICKER")
 		{
 			type="DRIFT";
 		}
-	}
-*/
-	else if(type =="RFCAVITY")
-	{
-		double volts=prmMap->GetParameter("VOLT");
-		if(volts == 0){
-			type="DRIFT";
-		}
-		else{
-			type="RFCAVITY";
-		}	
-	}
-	else if(type=="LCAV")
-	{
-		type="RFCAVITY";
-	}
-	else if(type=="RCOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
-	{
-		type="COLLIMATOR";
-	}
-	else if(type=="ECOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
-	{
-		type="COLLIMATOR";
-	}
-
-        if(type=="RBEND")
-        {
-		  if((prmMap->GetParameter("K0L"))!=0.0){ type="SBEND";}
-		 //~ type="SBEND";	//HR 14.11.15 test for symplectic not working
-	}
-
-	if(type=="MULTIPOLE")
-	{
-		if((prmMap->GetParameter("K0L"))!=0.0) type="SBEND";
-		else if((prmMap->GetParameter("K1L"))!=0.0) type="QUADRUPOLE";
-		else if((prmMap->GetParameter("K2L"))!=0.0) type="SEXTUPOLE";
-		else if((prmMap->GetParameter("K3L"))!=0.0) type="OCTUPOLE";
-		else if((prmMap->GetParameter("K4L"))!=0.0) type="DECAPOLE";
-		else type="DRIFT";
-	}
-
-	if(type=="DRIFT")
-	{
-		if(len !=0)
-		{
-		Drift* aDrift = new Drift(name,len);
-		ctor->AppendComponent(*aDrift);
-		component=aDrift;
-		}
-		else
-		{
-			component = 0;
-		}
-        }
-	else if(type=="VKICKER")
-	{
-		double scale;
-		if(len > 0)
-		{
-			scale = brho/len;
-		}
-		else	//treat as an integrated length
-		{
-			scale = brho;
-		}
-
-		double kick = prmMap->GetParameter("VKICK");
-		//X,Y,tilt
-	//	cout << "VKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
-		YCor* aKicker = new YCor(name,len,scale*kick);
-//		if(tilt!=0)
-//		(*aKicker).GetGeometry().SetTilt(tilt);
-		ctor->AppendComponent(*aKicker);
-		component=aKicker;
-	}
-	else if(type=="HKICKER")
-	{
-		double scale;
-		if(len > 0)
-		{
-			scale = brho/len;
-		}
-		else	//treat as an integrated length
-		{
-			scale = brho;
-		}
-		double kick = prmMap->GetParameter("HKICK");
-		//X,Y,tilt
-	//	cout << "HKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
-		XCor* aKicker = new XCor(name,len,-scale*kick);
-//		if(tilt!=0)
-//		(*aKicker).GetGeometry().SetTilt(tilt);
-		ctor->AppendComponent(*aKicker);
-		component=aKicker;
-	}
-	else if(type=="COLLIMATOR")
-	{
-		//~ cout << "MADInterface: Found Collimator " << name << " with length " << len << " m" << endl;
-		Collimator* aCollimator = new Collimator(name,len);
-
-		//Add the component to the accelerator
-		ctor->AppendComponent(*aCollimator);
-		component=aCollimator;
-	}//End of Collimators
-
-	//Magnets
-        else if(type=="QUADRUPOLE")
-        {
-		k1=prmMap->GetParameter("K1L");
-		Quadrupole* quad = new Quadrupole(name,len,brho*k1/len);
-		ctor->AppendComponent(*quad);
-		component=quad;
-		}
-        else if(type=="SKEWQUAD")
-        {
-		k1=prmMap->GetParameter("K1L");
-		SkewQuadrupole* quad = new SkewQuadrupole(name,len,brho*k1/len);
-		ctor->AppendComponent(*quad);
-		component=quad;
-        }
-	else if(type=="SOLENOID")
-	{
-		ks=prmMap->GetParameter("KS");
-		Solenoid* aSolenoid = new Solenoid(name,len,brho*ks/len);
-		ctor->AppendComponent(*aSolenoid);
-		component=aSolenoid;
-	}
-
-
-	//Dipole Bending Magnets
-        else if(type=="SBEND")
-        {
-		// K0L depreciated, replaced with ANGLE. HR 17.09.15
-		//~ angle=prmMap->GetParameter("K0L");
-		angle=prmMap->GetParameter("ANGLE");
-		//~ cout << "\nMADInterface: SBEND: K0L = " << prmMap->GetParameter("K0L") << ", ANGLE = " << prmMap->GetParameter("ANGLE") << endl;
-
-		k1   =prmMap->GetParameter("K1L");
-		h = angle/len;
-		SectorBend* bend = new SectorBend(name,len,h,brho*h);
-		
-	
-		if(k1!=0)  // mixed function dipole
-		{
-			bend->SetB1(brho*k1/len);
-		}
-
-		e1 = prmMap->GetParameter("E1");
-		e2 = prmMap->GetParameter("E2");
-
-		if(e1!=0 || e2!=0)
-		{
-/*			if(e1==e2)
+		/*	else if(type=="VKICKER")
 			{
-				bend->SetPoleFaceInfo(new SectorBend::PoleFace(e1));
+				if (prmMap->GetParameter("VKICK") == 0)
+				{
+					type="DRIFT";
+				}
+			}
+			else if(type=="HKICKER")
+			{
+				if (prmMap->GetParameter("HKICK") == 0)
+				{
+					type="DRIFT";
+				}
+			}
+		*/
+		else if(type =="RFCAVITY")
+		{
+			double volts=prmMap->GetParameter("VOLT");
+			if(volts == 0)
+			{
+				type="DRIFT";
+			}
+			else
+			{
+				type="RFCAVITY";
+			}
+		}
+		else if(type=="LCAV")
+		{
+			type="RFCAVITY";
+		}
+		else if(type=="RCOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
+		{
+			type="COLLIMATOR";
+		}
+		else if(type=="ECOLLIMATOR")    // added by Adriana Bungau, 26 October 2006
+		{
+			type="COLLIMATOR";
+		}
+
+		if(type=="RBEND")
+		{
+			if((prmMap->GetParameter("K0L"))!=0.0)
+			{
+				type="SBEND";
+			}
+			//~ type="SBEND";	//HR 14.11.15 test for symplectic not working
+		}
+
+		if(type=="MULTIPOLE")
+		{
+			if((prmMap->GetParameter("K0L"))!=0.0)
+			{
+				type="SBEND";
+			}
+			else if((prmMap->GetParameter("K1L"))!=0.0)
+			{
+				type="QUADRUPOLE";
+			}
+			else if((prmMap->GetParameter("K2L"))!=0.0)
+			{
+				type="SEXTUPOLE";
+			}
+			else if((prmMap->GetParameter("K3L"))!=0.0)
+			{
+				type="OCTUPOLE";
+			}
+			else if((prmMap->GetParameter("K4L"))!=0.0)
+			{
+				type="DECAPOLE";
+			}
+			else
+			{
+				type="DRIFT";
+			}
+		}
+
+		if(type=="DRIFT")
+		{
+			if(len !=0)
+			{
+				Drift* aDrift = new Drift(name,len);
+				ctor->AppendComponent(*aDrift);
+				component=aDrift;
+			}
+			else
+			{
+				component = 0;
+			}
+		}
+		else if(type=="VKICKER")
+		{
+			double scale;
+			if(len > 0)
+			{
+				scale = brho/len;
+			}
+			else	//treat as an integrated length
+			{
+				scale = brho;
 			}
 
-			else
+			double kick = prmMap->GetParameter("VKICK");
+			//X,Y,tilt
+			//	cout << "VKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
+			YCor* aKicker = new YCor(name,len,scale*kick);
+//		if(tilt!=0)
+//		(*aKicker).GetGeometry().SetTilt(tilt);
+			ctor->AppendComponent(*aKicker);
+			component=aKicker;
+		}
+		else if(type=="HKICKER")
+		{
+			double scale;
+			if(len > 0)
+			{
+				scale = brho/len;
+			}
+			else	//treat as an integrated length
+			{
+				scale = brho;
+			}
+			double kick = prmMap->GetParameter("HKICK");
+			//X,Y,tilt
+			//	cout << "HKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
+			XCor* aKicker = new XCor(name,len,-scale*kick);
+//		if(tilt!=0)
+//		(*aKicker).GetGeometry().SetTilt(tilt);
+			ctor->AppendComponent(*aKicker);
+			component=aKicker;
+		}
+		else if(type=="COLLIMATOR")
+		{
+			//~ cout << "MADInterface: Found Collimator " << name << " with length " << len << " m" << endl;
+			Collimator* aCollimator = new Collimator(name,len);
+
+			//Add the component to the accelerator
+			ctor->AppendComponent(*aCollimator);
+			component=aCollimator;
+		}//End of Collimators
+
+		//Magnets
+		else if(type=="QUADRUPOLE")
+		{
+			k1=prmMap->GetParameter("K1L");
+			Quadrupole* quad = new Quadrupole(name,len,brho*k1/len);
+			ctor->AppendComponent(*quad);
+			component=quad;
+		}
+		else if(type=="SKEWQUAD")
+		{
+			k1=prmMap->GetParameter("K1L");
+			SkewQuadrupole* quad = new SkewQuadrupole(name,len,brho*k1/len);
+			ctor->AppendComponent(*quad);
+			component=quad;
+		}
+		else if(type=="SOLENOID")
+		{
+			ks=prmMap->GetParameter("KS");
+			Solenoid* aSolenoid = new Solenoid(name,len,brho*ks/len);
+			ctor->AppendComponent(*aSolenoid);
+			component=aSolenoid;
+		}
+
+
+		//Dipole Bending Magnets
+		else if(type=="SBEND")
+		{
+			// K0L depreciated, replaced with ANGLE. HR 17.09.15
+			//~ angle=prmMap->GetParameter("K0L");
+			angle=prmMap->GetParameter("ANGLE");
+			//~ cout << "\nMADInterface: SBEND: K0L = " << prmMap->GetParameter("K0L") << ", ANGLE = " << prmMap->GetParameter("ANGLE") << endl;
+
+			k1   =prmMap->GetParameter("K1L");
+			h = angle/len;
+			SectorBend* bend = new SectorBend(name,len,h,brho*h);
+
+
+			if(k1!=0)  // mixed function dipole
+			{
+				bend->SetB1(brho*k1/len);
+			}
+
+			e1 = prmMap->GetParameter("E1");
+			e2 = prmMap->GetParameter("E2");
+
+			if(e1!=0 || e2!=0)
+			{
+				/*			if(e1==e2)
+							{
+								bend->SetPoleFaceInfo(new SectorBend::PoleFace(e1));
+							}
+
+							else
+							{
+								SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
+								SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
+								bend->SetPoleFaceInfo(pf1,pf2);
+							}
+				*/
+				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
+				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
+				bend->SetPoleFaceInfo(pf1,pf2);
+			}
+
+			if(tilt!=0)
+			{
+				(*bend).GetGeometry().SetTilt(tilt);
+			}
+
+			// check for synchrotron radiation
+			if(inc_sr)
+			{
+				energy -= SRdE(h,len,energy);
+			}
+
+			ctor->AppendComponent(*bend);
+			component=bend;
+		} //End SBEND
+
+		//HR not tested (HiLumi fudge) - SBEND with no pole faces
+		else if(type=="RBEND")
+		{
+			angle=prmMap->GetParameter("ANGLE");
+			k1   =prmMap->GetParameter("K1L");
+			h = angle/len;
+			SectorBend* bend = new SectorBend(name,len,h,brho*h);
+
+			if(k1!=0)  // mixed function dipole
+			{
+				bend->SetB1(brho*k1/len);
+			}
+
+			e1 = prmMap->GetParameter("E1");
+			e2 = prmMap->GetParameter("E2");
+
+			if(e1!=0 || e2!=0)
 			{
 				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
 				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
 				bend->SetPoleFaceInfo(pf1,pf2);
 			}
-*/
-			SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
-			SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
-			bend->SetPoleFaceInfo(pf1,pf2);
-		}
 
-		if(tilt!=0)
-		(*bend).GetGeometry().SetTilt(tilt);
-
-		// check for synchrotron radiation
-		if(inc_sr)
-		{
-			energy -= SRdE(h,len,energy);
-		}
-
-		ctor->AppendComponent(*bend);
-		component=bend;
-	} //End SBEND
-	
-	//HR not tested (HiLumi fudge) - SBEND with no pole faces
-	else if(type=="RBEND")
-        {
-		angle=prmMap->GetParameter("ANGLE");
-		k1   =prmMap->GetParameter("K1L");
-		h = angle/len;
-		SectorBend* bend = new SectorBend(name,len,h,brho*h);
-
-		if(k1!=0)  // mixed function dipole
-		{
-			bend->SetB1(brho*k1/len);
-		}
-		
-		e1 = prmMap->GetParameter("E1");
-		e2 = prmMap->GetParameter("E2");
-
-		if(e1!=0 || e2!=0)
-		{
-			SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
-			SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
-			bend->SetPoleFaceInfo(pf1,pf2);
-		}
-		
-		if(tilt!=0)
-		(*bend).GetGeometry().SetTilt(tilt);
-
-		// check for synchrotron radiation
-		if(inc_sr)
-		{
-			energy -= SRdE(h,len,energy);
-		}
-
-		ctor->AppendComponent(*bend);
-		component=bend;
-	} //End RBEND
-	
-	else if(type=="HEL")
-	{
-		HollowElectronLens* hel = new HollowElectronLens(name, len);
-		ctor->AppendComponent(*hel);
-		component=hel;
-	}
-
-	else if(type=="SEXTUPOLE")
-	{
-
-		k2=prmMap->GetParameter("K2L");
-		Sextupole* sx = new Sextupole(name,len,brho*k2/len);
-		ctor->AppendComponent(*sx);
-		component=sx;
-        }
-        else if(type=="OCTUPOLE")
-        {
-		k3=prmMap->GetParameter("K3L");
-		Octupole* oct = new Octupole(name,len,brho*k3/len);
-		ctor->AppendComponent(*oct);
-		component=oct;
-        }
-	else if(type=="SKEWSEXT")
-	{
-		k2=prmMap->GetParameter("K2L");
-		SkewSextupole* sx = new SkewSextupole(name,len,brho*k2/len);
-		ctor->AppendComponent(*sx);
-		component=sx;
-        }
-        else if(type=="YCOR")
-	{
-		YCor* yc = new YCor(name,len);
-		ctor->AppendComponent(*yc);
-		component=yc;
-        }
-	else if(type=="XCOR")
-	{
-		XCor* xc = new XCor(name,len);
-		ctor->AppendComponent(*xc);
-		component=xc;
-	}
-
-    else if(type=="RFCAVITY")
-        {
-		cout << "Found RF cavity\t";
-		// Here we assume an SW cavity
-		double freq=prmMap->GetParameter("FREQ");
-		double phase=prmMap->GetParameter("LAG");
-		double volts=prmMap->GetParameter("VOLT");
-
-		// standing wave cavities need an exact integer of half-wavelengths
-		freq*=MHz;
-		double lambdaOver2 = SpeedOfLight/freq/2;
-		int ncells = Round(len/lambdaOver2);
-		double len1 = ncells*lambdaOver2;
-		
-		// adjust phase for cosine-like field
-		phase = twoPi*(phase-0.25);
-
-		// LHC TFS Table fix HR 11.11.15
-		if(single_cell_rf){			
-			cout << "\n\t MADInterface::RFCAVITY: Freq = " << freq << " Hz\tV: " << volts << " V\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << " m\tLength: " << len1 << " m"<< endl;
-			
-			double drift_len = len - lambdaOver2;
-			double rfcav_len = lambdaOver2;
-			
-			cout << "\t MADInterface::RFCAVITY: Length > wavelength/2, setting length = wavelength/2 = " << rfcav_len << " m" << endl;
-			
-			ncells = Round(rfcav_len/lambdaOver2);
-			
-			cout << "\t RFCAVITY set to "<< ncells <<" cell of L = wavelength/2, plus DRIFT of L = " <<  drift_len << " m" << endl;
-			
-			if((rfcav_len/len-1) > 0.001)
+			if(tilt!=0)
 			{
-				MerlinIO::error() << "SW cavity length not valid ";
-				MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+				(*bend).GetGeometry().SetTilt(tilt);
 			}
-			
-			SWRFStructure* rfsctruct = new SWRFStructure(name, ncells, freq, volts*MV/rfcav_len, phase);
-			ctor->AppendComponent(*rfsctruct);
-			component=rfsctruct;
-			
-			
-			string drift_name = "Drift_"+name;			
-			Drift* rf_drift = new Drift(drift_name, drift_len);
-			ctor->AppendComponent(*rf_drift);
-			
-			// As we are appending 2 components we have to:
-			// 1. Set the lattice position for each component
-			// 2. Set the apertures of each component (if doing so in MADInterface)
-			// 3. Return the total length so that all other elements have the correct position
-						
-			rfsctruct->SetComponentLatticePosition(z);
-			rf_drift->SetComponentLatticePosition(z+rfcav_len);
-			
-			if(incApertures && type!="COLLIMATOR")
+
+			// check for synchrotron radiation
+			if(inc_sr)
 			{
-				rfsctruct->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
-				rf_drift->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
+				energy -= SRdE(h,len,energy);
 			}
-			
-			return(len);			
+
+			ctor->AppendComponent(*bend);
+			component=bend;
+		} //End RBEND
+
+		else if(type=="HEL")
+		{
+			HollowElectronLens* hel = new HollowElectronLens(name, len);
+			ctor->AppendComponent(*hel);
+			component=hel;
 		}
-		else{
-			
-			if((len1/len-1) > 0.001)
+
+		else if(type=="SEXTUPOLE")
+		{
+
+			k2=prmMap->GetParameter("K2L");
+			Sextupole* sx = new Sextupole(name,len,brho*k2/len);
+			ctor->AppendComponent(*sx);
+			component=sx;
+		}
+		else if(type=="OCTUPOLE")
+		{
+			k3=prmMap->GetParameter("K3L");
+			Octupole* oct = new Octupole(name,len,brho*k3/len);
+			ctor->AppendComponent(*oct);
+			component=oct;
+		}
+		else if(type=="SKEWSEXT")
+		{
+			k2=prmMap->GetParameter("K2L");
+			SkewSextupole* sx = new SkewSextupole(name,len,brho*k2/len);
+			ctor->AppendComponent(*sx);
+			component=sx;
+		}
+		else if(type=="YCOR")
+		{
+			YCor* yc = new YCor(name,len);
+			ctor->AppendComponent(*yc);
+			component=yc;
+		}
+		else if(type=="XCOR")
+		{
+			XCor* xc = new XCor(name,len);
+			ctor->AppendComponent(*xc);
+			component=xc;
+		}
+
+		else if(type=="RFCAVITY")
+		{
+			cout << "Found RF cavity\t";
+			// Here we assume an SW cavity
+			double freq=prmMap->GetParameter("FREQ");
+			double phase=prmMap->GetParameter("LAG");
+			double volts=prmMap->GetParameter("VOLT");
+
+			// standing wave cavities need an exact integer of half-wavelengths
+			freq*=MHz;
+			double lambdaOver2 = SpeedOfLight/freq/2;
+			int ncells = Round(len/lambdaOver2);
+			double len1 = ncells*lambdaOver2;
+
+			// adjust phase for cosine-like field
+			phase = twoPi*(phase-0.25);
+
+			// LHC TFS Table fix HR 11.11.15
+			if(single_cell_rf)
 			{
-				MerlinIO::error() << "SW cavity length not valid ";
-				MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+				cout << "\n\t MADInterface::RFCAVITY: Freq = " << freq << " Hz\tV: " << volts << " V\tncells: " << ncells << "\tWavelength/2: " << lambdaOver2 << " m\tLength: " << len1 << " m"<< endl;
+
+				double drift_len = len - lambdaOver2;
+				double rfcav_len = lambdaOver2;
+
+				cout << "\t MADInterface::RFCAVITY: Length > wavelength/2, setting length = wavelength/2 = " << rfcav_len << " m" << endl;
+
+				ncells = Round(rfcav_len/lambdaOver2);
+
+				cout << "\t RFCAVITY set to "<< ncells <<" cell of L = wavelength/2, plus DRIFT of L = " <<  drift_len << " m" << endl;
+
+				if((rfcav_len/len-1) > 0.001)
+				{
+					MerlinIO::error() << "SW cavity length not valid ";
+					MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+				}
+
+				SWRFStructure* rfsctruct = new SWRFStructure(name, ncells, freq, volts*MV/rfcav_len, phase);
+				ctor->AppendComponent(*rfsctruct);
+				component=rfsctruct;
+
+
+				string drift_name = "Drift_"+name;
+				Drift* rf_drift = new Drift(drift_name, drift_len);
+				ctor->AppendComponent(*rf_drift);
+
+				// As we are appending 2 components we have to:
+				// 1. Set the lattice position for each component
+				// 2. Set the apertures of each component (if doing so in MADInterface)
+				// 3. Return the total length so that all other elements have the correct position
+
+				rfsctruct->SetComponentLatticePosition(z);
+				rf_drift->SetComponentLatticePosition(z+rfcav_len);
+
+				if(incApertures && type!="COLLIMATOR")
+				{
+					rfsctruct->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
+					rf_drift->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
+				}
+
+				return(len);
 			}
-			
-			SWRFStructure* rfsctruct = new SWRFStructure(name, ncells, freq, volts*MV/len, phase);
-			ctor->AppendComponent(*rfsctruct);
-			component=rfsctruct;
+			else
+			{
+
+				if((len1/len-1) > 0.001)
+				{
+					MerlinIO::error() << "SW cavity length not valid ";
+					MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
+				}
+
+				SWRFStructure* rfsctruct = new SWRFStructure(name, ncells, freq, volts*MV/len, phase);
+				ctor->AppendComponent(*rfsctruct);
+				component=rfsctruct;
+			}
+		}//End RFCAVITY
+
+		else if(type=="CRABMARKER")
+		{
+			double mux=prmMap->GetParameter("MUX");
+			double muy=prmMap->GetParameter("MUY");
+
+			CrabMarker* crabm = new CrabMarker(name, len, mux, muy);
+			ctor->AppendComponent(*crabm);
+			component=crabm;
 		}
-	}//End RFCAVITY
-	
-	else if(type=="CRABMARKER"){
-		double mux=prmMap->GetParameter("MUX");
-		double muy=prmMap->GetParameter("MUY");
-		
-		CrabMarker* crabm = new CrabMarker(name, len, mux, muy);
-		ctor->AppendComponent(*crabm);
-		component=crabm;
-	}
-	
-    else if(type=="CRABRF")
+
+		else if(type=="CRABRF")
 		{
 			TransverseRFStructure* crabcav = new TransverseRFStructure(name,len,0,0);
 			ctor->AppendComponent(*crabcav);
 			component=crabcav;
-    }
-
-	else if(type=="MONITOR")
-    {
-		if(name.substr(0,4)=="BPM_")
-		{
-			BPM* bpm = new BPM("BPM"+name.substr(4),len);
-			ctor->AppendComponent(*bpm);
-			component=bpm;
 		}
-		else if(name.substr(0,3)=="WS_")
+
+		else if(type=="MONITOR")
 		{
-			RMSProfileMonitor* ws = new RMSProfileMonitor("WS"+name.substr(3),len);
-			ctor->AppendComponent(*ws);
-			component=ws;
+			if(name.substr(0,4)=="BPM_")
+			{
+				BPM* bpm = new BPM("BPM"+name.substr(4),len);
+				ctor->AppendComponent(*bpm);
+				component=bpm;
+			}
+			else if(name.substr(0,3)=="WS_")
+			{
+				RMSProfileMonitor* ws = new RMSProfileMonitor("WS"+name.substr(3),len);
+				ctor->AppendComponent(*ws);
+				component=ws;
+			}
+			else
+			{
+#ifndef NDEBUG
+				MERLIN_WARN << "Unknown monitor type: "<<name<<" defaulting to BPM" << endl;
+#endif
+				BPM* bpm = new BPM(name,len);
+				ctor->AppendComponent(*bpm);
+				component=bpm;
+			}
+		}
+		else if(type=="LINE")
+		{
+			if(!flatLattice)
+			{
+				if(!frameStack.empty() && name == frameStack.top())
+				{
+					frameStack.pop();
+					EndFrame(name);
+				}
+
+				else
+				{
+					frameStack.push(name);
+					ConstructNewFrame(name);
+				}
+			}
+			component=0;
+		}
+
+		else if(type=="MATRIX") // just ignore for now.
+		{
+			component=0;
+		}
+
+		else if(type=="SROT")
+		{
+			ctor->AppendComponentFrame(ConstructSrot(prmMap->GetParameter("L"),name));
+			component=0;
+		}
+		else if(type=="MARKER")
+		{
+			Marker* aMarker = new Marker(name);
+			ctor->AppendComponent(*aMarker);
+			component=aMarker;
 		}
 		else
 		{
-			#ifndef NDEBUG
-			MERLIN_WARN << "Unknown monitor type: "<<name<<" defaulting to BPM" << endl;
-			#endif
-			BPM* bpm = new BPM(name,len);
-			ctor->AppendComponent(*bpm);
-			component=bpm;
+			MERLIN_ERR<<"ERROR: undefined type: "<<type<<endl;
+			abort();
 		}
-	}
-    else if(type=="LINE")
-        {
-		if(!flatLattice)
+
+		if(component && log)
 		{
-			if(!frameStack.empty() && name == frameStack.top())
-			{
-				frameStack.pop();
-				EndFrame(name);
-			}
-
-			else
-			{
-				frameStack.push(name);
-				ConstructNewFrame(name);
-			}
+			Log(component->GetQualifiedName(),ctor->GetCurrentFrameDepth(),*log);
 		}
-		component=0;
-	}
 
-	else if(type=="MATRIX") // just ignore for now.
-	{
-		component=0;
-	}
-
-	else if(type=="SROT")
-	{
-		ctor->AppendComponentFrame(ConstructSrot(prmMap->GetParameter("L"),name));
-		component=0;
-	}
-	else if(type=="MARKER")
-	{
-		Marker* aMarker = new Marker(name);
-		ctor->AppendComponent(*aMarker);
-		component=aMarker;
-	}
-        else
-	{
-		MERLIN_ERR<<"ERROR: undefined type: "<<type<<endl;
-		abort();
-	}
-
-	if(component && log)
-	{
-		Log(component->GetQualifiedName(),ctor->GetCurrentFrameDepth(),*log);
-	}
-
-	if(component && incApertures && type!="COLLIMATOR")
-	{
-		component->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
-	}
+		if(component && incApertures && type!="COLLIMATOR")
+		{
+			component->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
+		}
 
 	}//End of try block
 

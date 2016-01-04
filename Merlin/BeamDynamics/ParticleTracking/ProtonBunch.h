@@ -30,13 +30,19 @@ public:
 	* particles is empty.
 	*/
 	//ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles) {rng();};
-	ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles), GotElastic(false),GotDiffractive(false) {SetUpProfiling();};
+	ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles), GotElastic(false),GotDiffractive(false)
+	{
+		SetUpProfiling();
+	};
 
 	/**
 	* Read phase space vectors from specified input stream.
 	*/
 	//ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is) {rng();};
-	ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is),GotElastic(false),GotDiffractive(false) {SetUpProfiling();};
+	ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is),GotElastic(false),GotDiffractive(false)
+	{
+		SetUpProfiling();
+	};
 
 	/**
 	* Constructs an empty ProtonBunch with the specified
@@ -44,11 +50,14 @@ public:
 	* 	+1).
 	*/
 	//ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm) {rng();};
-	ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm),GotElastic(false),GotDiffractive(false) {SetUpProfiling();};
+	ProtonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm),GotElastic(false),GotDiffractive(false)
+	{
+		SetUpProfiling();
+	};
 
 	// Proton Bunch Destructor
 	//~ProtonBunch(){delete ElasticScatter; delete DiffractiveScatter;};
-	
+
 	virtual bool IsStable() const;
 	virtual double GetParticleMass() const;
 	virtual double GetParticleMassMeV() const;
@@ -71,11 +80,11 @@ public:
 		rnd = gsl_rng_alloc (T);
 	}
 	*/
-	
+
 
 	void set()
 	{
-		for(int i=0;i<ntally;tally[i++]=0);
+		for(int i=0; i<ntally; tally[i++]=0);
 	}
 
 	void report()
@@ -84,19 +93,19 @@ public:
 		for(int i=0; i<ntally; cout << tally[i++] << " ");
 		cout<<endl;
 	}
-/*
-	// set table of t against sigma for calculating b
-	void ConfigureScatter_pp_table(const char*);
-	double get_ft(double t);
-	vector<double> t_sigma_table;
-	double t_sigma_table_step;
+	/*
+		// set table of t against sigma for calculating b
+		void ConfigureScatter_pp_table(const char*);
+		double get_ft(double t);
+		vector<double> t_sigma_table;
+		double t_sigma_table_step;
 
-	// set table of xi against sigma for calculating b
-	void ConfigureScatter_xi_table(const char*);
-	double get_fxi(double xi);
-	vector<double> xi_sigma_table;
-	double xi_sigma_table_step;
-*/
+		// set table of xi against sigma for calculating b
+		void ConfigureScatter_xi_table(const char*);
+		double get_fxi(double xi);
+		vector<double> xi_sigma_table;
+		double xi_sigma_table_step;
+	*/
 
 	//Scattering physics variables
 	double A,Z,E0,X0,rho;
@@ -119,7 +128,7 @@ public:
 	* Select the Scattering physics mode
 	*/
 	enum scatMode { SixTrack , SixTrackIoniz , SixTrackElastic , SixTrackSD , Merlin };
-	
+
 	void EnableScatteringPhysics(scatMode);
 	//void EnableSixtrackPhysics(bool);
 
@@ -128,7 +137,7 @@ public:
 	int ScatterSixtrackAdvancedElastic(PSvector& pi, double x, const Aperture* ap);
 	int ScatterSixtrackAdvancedSingleDiffraction(PSvector& pi, double x, const Aperture* ap);
 	int ScatterMerlin(PSvector& pi, double x, const Aperture* ap);
-	
+
 	void ConfigureScatter(const Aperture* ap);
 	void ConfigureScatterMerlin(const Aperture* ap);
 	void ConfigureScatterSixtrack(const Aperture* ap);
@@ -144,7 +153,7 @@ public:
 	bool GotDiffractive;
 	ppDiffractiveScatter* DiffractiveScatter;
 
-	private:
+private:
 	void SetUpProfiling() const;
 }; // end ProtonBunch class
 

@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 5.01 (2015)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
-// Created:		
-// Modified:	07.12.15 Haroon Rafique		
+// Created:
+// Modified:	07.12.15 Haroon Rafique
 // Last Edited: 07.12.15 HR
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <iterator>
@@ -37,80 +37,91 @@ using namespace std;
 //extern void ScatterParticle(PSvector& p, double X0, double x, double E0);
 //extern void ScatterProton(PSvector& p, double x, double E0, const TiltedAperture* tap);
 
-namespace {
+namespace
+{
 
 using namespace ParticleTracking;
 
 void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i, ostream& os)
 {
-    PSvectorArray::const_iterator p = lost_p.begin();
-    list<size_t>::const_iterator ip = lost_i.begin();
+	PSvectorArray::const_iterator p = lost_p.begin();
+	list<size_t>::const_iterator ip = lost_i.begin();
 
-    while(p!=lost_p.end())
-    {
-        os<<std::setw(12)<<right<<*ip;
-        os<<*p;
-        ++p;
-        ++ip;
-    }
+	while(p!=lost_p.end())
+	{
+		os<<std::setw(12)<<right<<*ip;
+		os<<*p;
+		++p;
+		++ip;
+	}
 }
 
 } // end anonymous namespace
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 CollimateParticleProcess::CollimateParticleProcess (int priority, int mode, std::ostream* osp)
-        : ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
-        createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false), dustset(0), ColParProTurn(0), FirstElementSet(0)
+	: ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
+	  createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false), dustset(0), ColParProTurn(0), FirstElementSet(0)
 {}
 
 CollimateParticleProcess::~CollimateParticleProcess ()
 {
-    if(pindex!=0)
-        delete pindex;
+	if(pindex!=0)
+	{
+		delete pindex;
+	}
 }
 
 void CollimateParticleProcess::InitialiseProcess (Bunch& bunch)
 {
-    ParticleBunchProcess::InitialiseProcess(bunch);
-    idtbl.clear();
-    if(currentBunch) {
-        nstart = currentBunch->size();
-        nlost = 0;
-        if(pindex!=0) {
-            pindex->clear();
-            for(size_t n=0; n<nstart; n++)
-                pindex->push_back(n);
-        }
-    }
+	ParticleBunchProcess::InitialiseProcess(bunch);
+	idtbl.clear();
+	if(currentBunch)
+	{
+		nstart = currentBunch->size();
+		nlost = 0;
+		if(pindex!=0)
+		{
+			pindex->clear();
+			for(size_t n=0; n<nstart; n++)
+			{
+				pindex->push_back(n);
+			}
+		}
+	}
 }
 
 void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
-	if(!FirstElementSet){
+	if(!FirstElementSet)
+	{
 		FirstElementName = component.GetName();
 		FirstElementS = component.GetComponentLatticePosition();
 		FirstElementSet = 1;
 		ColParProTurn = 1;
 		//~ cout << "ColParPro:: First Element: " << FirstElementName << ", at s = " << FirstElementS << endl;
 	}
-	else if(component.GetName() == FirstElementName && component.GetComponentLatticePosition() == FirstElementS){
+	else if(component.GetName() == FirstElementName && component.GetComponentLatticePosition() == FirstElementS)
+	{
 		++ColParProTurn;
 		//~ cout << "ColParPro:: Turn incrememented, number = " << ColParProTurn << endl;
 	}
-	
+
 	active = (currentBunch!=0) && (component.GetAperture()!=0);
 	if(active)
 	{
 		currentComponent = &component;
 		s=0;
 		Collimator* aCollimator = dynamic_cast<Collimator*>(&component);
-		
+
 		const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (currentComponent->GetAperture());
 		is_collimator = scatter && tap;
 
 		if(!is_collimator)
-		{ // not a collimatorso set up for normal hard-edge collimation
+		{
+			// not a collimatorso set up for normal hard-edge collimation
 			at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
 			at_cent = (COLL_AT_CENTER & cmode)!=0;
 			at_exit = (COLL_AT_EXIT & cmode)!=0;
@@ -123,7 +134,7 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 			SetNextS();
 			currentBunch->SetScatterConfigured(false);
 			len = aCollimator->GetLength();
-		//	CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(aCollimator->GetAperture());
+			//	CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(aCollimator->GetAperture());
 		}
 
 		//For precision tracking of lost particles in non-collimators
@@ -143,20 +154,22 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 
 void CollimateParticleProcess::DoProcess (double ds)
 {
-    s+=ds;
+	s+=ds;
 
-    if(fequal(s,next_s))
-    {
-	//This lets the scattering routine know how far down the collimator we are for aperture checking inside the scattering step.
-	currentBunch->SetIntS(s-ds);
-        DoCollimation();
-        SetNextS();	
-    }
+	if(fequal(s,next_s))
+	{
+		//This lets the scattering routine know how far down the collimator we are for aperture checking inside the scattering step.
+		currentBunch->SetIntS(s-ds);
+		DoCollimation();
+		SetNextS();
+	}
 
-    // If we are finished, GetNextS() will have set the process inactive.
-    // In that case we can update s_total with the component length.
-    if(!active)
-        s_total += currentComponent->GetLength();
+	// If we are finished, GetNextS() will have set the process inactive.
+	// In that case we can update s_total with the component length.
+	if(!active)
+	{
+		s_total += currentComponent->GetLength();
+	}
 }
 
 double CollimateParticleProcess::GetMaxAllowedStepSize () const
@@ -186,10 +199,12 @@ void CollimateParticleProcess::IndexParticles (bool index)
 
 void CollimateParticleProcess::IndexParticles (list<size_t>& anIndex)
 {
-    if(!pindex)
-        delete pindex;
+	if(!pindex)
+	{
+		delete pindex;
+	}
 
-    pindex=&anIndex;
+	pindex=&anIndex;
 }
 
 
@@ -207,28 +222,35 @@ void CollimateParticleProcess::DoCollimation ()
 	// process of copying all the particles to a new bunch. So check first
 	bool any_loss = false;
 	size_t first_loss = 0;
-	if (is_collimator){
-		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();p++)
+	if (is_collimator)
+	{
+		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
 		{
-			if (!ap->PointInside( (*p).x()-bin_size*(*p).xp(), (*p).y()-bin_size*(*p).yp(), s) ){
+			if (!ap->PointInside( (*p).x()-bin_size*(*p).xp(), (*p).y()-bin_size*(*p).yp(), s) )
+			{
 				any_loss = true;
 				first_loss = p-currentBunch->begin();
 				break;
 			}
 		}
 	}
-	else{
-		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();p++)
+	else
+	{
+		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
 		{
-			if (!ap->PointInside( (*p).x(), (*p).y(), s) ){
+			if (!ap->PointInside( (*p).x(), (*p).y(), s) )
+			{
 				any_loss = true;
 				first_loss = p-currentBunch->begin();
 				break;
 			}
 		}
 	}
-	
-	if (!any_loss) return;
+
+	if (!any_loss)
+	{
+		return;
+	}
 
 
 	//The array of lost particles
@@ -237,7 +259,9 @@ void CollimateParticleProcess::DoCollimation ()
 
 	list<size_t>::iterator ip;
 	if(pindex!=0)
-	ip=pindex->begin(); 
+	{
+		ip=pindex->begin();
+	}
 
 	//For copying surviving particles to, which is faster than deleting the individual lost particles
 	ParticleBunch* NewBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
@@ -245,7 +269,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 	size_t particle_number=0;
 
-	if(is_collimator) 
+	if(is_collimator)
 	{
 		for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end();)
 		{
@@ -260,7 +284,7 @@ void CollimateParticleProcess::DoCollimation ()
 		// If we are collimating at the end of the element, track back a drift
 		// Do not do this at the start of the element.
 
-//		if(is_collimator) 
+//		if(is_collimator)
 //		{
 //			(*p).x() -= bin_size * (*p).xp();
 //			(*p).y() -= bin_size * (*p).yp();
@@ -272,14 +296,14 @@ void CollimateParticleProcess::DoCollimation ()
 			// if the DoScatter(*p) returns true (energy cut)
 			// If not a collimator, then do not scatter and directly remove the particle.
 			if(!is_collimator || DoScatter(*p))
-			{	
+			{
 				if(is_collimator)
 				{
 					(*p).ct() += (s-bin_size);
 				}
 
-				lost.push_back(*p);								
-			
+				lost.push_back(*p);
+
 				// This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster
 				p++;
 				if(pindex!=0)
@@ -305,7 +329,7 @@ void CollimateParticleProcess::DoCollimation ()
 		}
 		else
 		{
-			if(is_collimator) 
+			if(is_collimator)
 			{
 				(*p).x() += bin_size * (*p).xp();
 				(*p).y() += bin_size * (*p).yp();
@@ -331,117 +355,122 @@ void CollimateParticleProcess::DoCollimation ()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Only copy the output if we are not a collimator and there are lost particles
-if(LostParticlePositions.size() != 0 && !is_collimator)
-{
-	//make a new particle bunch to track the lost particles
-	ParticleBunch* LostBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
-	double length = currentComponent->GetLength();
-	//If we are dealing with a non-zero length element, we must do tracking
-	if(length != 0)
+	if(LostParticlePositions.size() != 0 && !is_collimator)
 	{
-		//Clear out the old lost particles, these will all be at the end of the element which we do not want for a magnet.
-		lost.clear();
-
-		//Grab the lost particles from the copied input particle array and add them to the new particle bunch
-		for(vector<unsigned int>::iterator p = LostParticlePositions.begin(); p!=LostParticlePositions.end(); p++)
+		//make a new particle bunch to track the lost particles
+		ParticleBunch* LostBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
+		double length = currentComponent->GetLength();
+		//If we are dealing with a non-zero length element, we must do tracking
+		if(length != 0)
 		{
-			LostBunch->AddParticle(InputArray[*p]);
-		}
-		//Create a new tracker
-		ParticleComponentTracker* LostParticleTracker = new ParticleComponentTracker();
+			//Clear out the old lost particles, these will all be at the end of the element which we do not want for a magnet.
+			lost.clear();
 
-		//Tell the new tracker to use the particle bunch of lost particles that has been made
-		LostParticleTracker->SetBunch(*LostBunch);
-
-		//Prepare the tracker to use the current accelerator component
-		currentComponent->PrepareTracker(*LostParticleTracker);
-
-		//While we are still inside the component
-		while((LostParticleTracker->GetRemainingLength() ) >= 0 && LostBunch->size() != 0)
-		{
-			double StepSize = bin_size;
-			//If the remaining length of component is less than the step size, set the step size to this value
-			if((LostParticleTracker->GetRemainingLength() - StepSize) < 0)
+			//Grab the lost particles from the copied input particle array and add them to the new particle bunch
+			for(vector<unsigned int>::iterator p = LostParticlePositions.begin(); p!=LostParticlePositions.end(); p++)
 			{
-				StepSize = LostParticleTracker->GetRemainingLength();
+				LostBunch->AddParticle(InputArray[*p]);
+			}
+			//Create a new tracker
+			ParticleComponentTracker* LostParticleTracker = new ParticleComponentTracker();
+
+			//Tell the new tracker to use the particle bunch of lost particles that has been made
+			LostParticleTracker->SetBunch(*LostBunch);
+
+			//Prepare the tracker to use the current accelerator component
+			currentComponent->PrepareTracker(*LostParticleTracker);
+
+			//While we are still inside the component
+			while((LostParticleTracker->GetRemainingLength() ) >= 0 && LostBunch->size() != 0)
+			{
+				double StepSize = bin_size;
+				//If the remaining length of component is less than the step size, set the step size to this value
+				if((LostParticleTracker->GetRemainingLength() - StepSize) < 0)
+				{
+					StepSize = LostParticleTracker->GetRemainingLength();
+				}
+
+				//Track the appropriate step length
+
+				double IntegratedLength = LostParticleTracker->GetIntegratedLength();
+				//Now loop over each particle in turn
+				for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end();)
+				{
+					//Check if the particle is outside the aperture
+					//s, is where the integrator will start
+					//LostParticleTracker->GetIntegratedLength() will give the position integrated past this point
+					//(*p).ct() will give the offset for this specific particle
+
+					if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength ))
+					{
+						//if not, delete the particle, and add the coordintes to the lost bunch list (PSvectorArray lost)
+
+						//Also set p.ct() as the length along the element!
+						(*p).ct() += IntegratedLength;
+						if((*p).ct() < 0)
+						{
+							(*p).ct() = 0;
+						}
+						if((*p).ct() > length)
+						{
+
+							(*p).ct() = length;
+						}
+
+						lost.push_back(*p);
+
+						//Dustbin loss
+						if(dustset && !is_collimator)
+						{
+							for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator)
+							{
+								(*DustbinIterator)->Dispose(*currentComponent, IntegratedLength, (*p), ColParProTurn);
+							}
+						}
+						p=LostBunch->erase(p);
+					}
+					//else, the particle is inside and can be kept for this step
+					else
+					{
+						p++;
+					}
+				}
+
+				//Now move forward...
+				if((LostParticleTracker->GetRemainingLength() ) > 0)
+				{
+					LostParticleTracker->TrackStep(StepSize);
+				}
+				if (LostParticleTracker->GetRemainingLength() == 0)
+				{
+					break;
+				}
 			}
 
-			//Track the appropriate step length
-
-			double IntegratedLength = LostParticleTracker->GetIntegratedLength();
-			//Now loop over each particle in turn
-			for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end();)
+			//If there is anything left - possible bug.
+			if(LostBunch->size() != 0)
 			{
-				//Check if the particle is outside the aperture
-				//s, is where the integrator will start
-				//LostParticleTracker->GetIntegratedLength() will give the position integrated past this point
-				//(*p).ct() will give the offset for this specific particle
-
-				if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength ))
+				cout <<	"POSSIBLE BUG: Leftovers: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
+				     LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;
+				for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end(); p++)
 				{
-					//if not, delete the particle, and add the coordintes to the lost bunch list (PSvectorArray lost)
-
-					//Also set p.ct() as the length along the element!
-					(*p).ct() += IntegratedLength;
-					if((*p).ct() < 0)
-					{
-						(*p).ct() = 0;
-					}
+					(*p).ct() += LostParticleTracker->GetIntegratedLength();
 					if((*p).ct() > length)
 					{
-
 						(*p).ct() = length;
 					}
-
 					lost.push_back(*p);
-					
-					//Dustbin loss
-					if(dustset && !is_collimator){				
-						for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator){					
-							(*DustbinIterator)->Dispose(*currentComponent, IntegratedLength, (*p), ColParProTurn);
-						}					
-					}
-					p=LostBunch->erase(p);
-				}
-				//else, the particle is inside and can be kept for this step
-				else
-				{
-					p++;
 				}
 			}
 
-			//Now move forward...
-			if((LostParticleTracker->GetRemainingLength() ) > 0)
-			{
-				LostParticleTracker->TrackStep(StepSize);			
-			}
-			if (LostParticleTracker->GetRemainingLength() == 0) break;
+			//clean up the tracker
+			delete LostParticleTracker;
+			//and the "lost particle bunch"
+			delete LostBunch;
 		}
-
-		//If there is anything left - possible bug.
-		if(LostBunch->size() != 0)
-		{
-			cout <<	"POSSIBLE BUG: Leftovers: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
-			LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;
-			for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end(); p++)
-			{
-				(*p).ct() += LostParticleTracker->GetIntegratedLength();
-				if((*p).ct() > length)
-				{
-					(*p).ct() = length;
-				}
-				lost.push_back(*p);
-			}
-		}
-
-		//clean up the tracker
-		delete LostParticleTracker;
-		//and the "lost particle bunch"
-		delete LostBunch;
+		//if the element has zero length nothing needs to be done since all the losses will have occured at the same point anyway.
+		//So PSvectorArray loss will contain the correct information
 	}
-	//if the element has zero length nothing needs to be done since all the losses will have occured at the same point anyway.
-	//So PSvectorArray loss will contain the correct information
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -489,10 +518,12 @@ void CollimateParticleProcess::SetNextS ()
 	if(is_collimator)
 	{
 		active = true;
-		if((s+bin_size) > currentComponent->GetLength()){
+		if((s+bin_size) > currentComponent->GetLength())
+		{
 			next_s = currentComponent->GetLength();
 		}
-		else{
+		else
+		{
 			next_s = s + bin_size;
 		}
 	}
@@ -500,13 +531,13 @@ void CollimateParticleProcess::SetNextS ()
 
 void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<size_t>& lost_i)
 {
-       
+
 	// Create a file and dump the lost particles
 	// (if there are any)
 	if(!lostb.empty())
 	{
 //	PSvectorArray lostp = bin_lost_output(lostb);
-        	if(os!=0)
+		if(os!=0)
 		{
 			double length = currentComponent->GetLength();
 			double** lostp;
@@ -585,7 +616,7 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 					(*os) << endl;
 				}
 			}
-			delete [] lostp;	
+			delete [] lostp;
 		}
 		if(createLossFiles)
 		{
@@ -602,7 +633,11 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 			fname << "_" << currentComponent->GetComponentLatticePosition() << "_";
 			fname << id << '.' << n << ".loss";
 			ofstream file(fname.str().c_str());
-			if (!file) {cerr << "CollimateParticleProcess::DoOutput(): Failed to open " << fname.str() << endl; exit(1);}
+			if (!file)
+			{
+				cerr << "CollimateParticleProcess::DoOutput(): Failed to open " << fname.str() << endl;
+				exit(1);
+			}
 
 			if(pindex==0)
 			{
@@ -634,7 +669,7 @@ bool CollimateParticleProcess::DoScatter (Particle& p)
 }
 
 ExcessiveParticleLoss::ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart)
-        : MerlinException()
+	: MerlinException()
 {
 	ostringstream buffer;
 	buffer << "CollimateParticleProcess Exception\n";

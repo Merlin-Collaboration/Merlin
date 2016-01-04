@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef Measurement_h
@@ -20,17 +20,17 @@
 
 struct Measurement
 {
-    Measurement (double v, double err);
-    Measurement ();
+	Measurement (double v, double err);
+	Measurement ();
 
-    double value;
-    double error;
+	double value;
+	double error;
 };
 
 // Class Measurement
 
 inline Measurement::Measurement (double v, double err)
-        : value(v),error(err)
+	: value(v),error(err)
 {}
 
 inline Measurement::Measurement ()

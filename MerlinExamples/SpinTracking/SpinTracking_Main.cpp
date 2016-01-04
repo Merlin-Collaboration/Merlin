@@ -42,14 +42,24 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData&, const SpinVector&
 // Output class declaration
 // Here we define a class which we will use to output information that we need
 
-class SpinTrackingOutput : public SimulationOutput {
+class SpinTrackingOutput : public SimulationOutput
+{
 public:
 	SpinTrackingOutput(const std::string& fname);
-	std::ostream& os() { return fos; }
+	std::ostream& os()
+	{
+		return fos;
+	}
 protected:
 	void Record(const ComponentFrame* frame, const Bunch* bunch);
-	void RecordInitialBunch(const Bunch* bunch) { Output("INITIAL",*bunch);}
-	void RecordFinalBunch(const Bunch* bunch)   { Output("FINAL",*bunch); }
+	void RecordInitialBunch(const Bunch* bunch)
+	{
+		Output("INITIAL",*bunch);
+	}
+	void RecordFinalBunch(const Bunch* bunch)
+	{
+		Output("FINAL",*bunch);
+	}
 
 private:
 	void Output(const std::string& label, const Bunch& bunch);
@@ -68,7 +78,8 @@ int main()
 	// Simulation flags
 	const bool inc_synch_rad = false;
 
-	try {
+	try
+	{
 		// Construct the AcceleratorModel
 		// from a lattice file produced by MAD
 		MADInterface madi("../lattices/SpinRotator.lattice.txt", BEAMENERGY);
@@ -103,7 +114,8 @@ int main()
 		ParticleTracker tracker(theModel->GetBeamline());
 		tracker.AddProcess(new SpinParticleProcess(1));
 
-		if(inc_synch_rad){
+		if(inc_synch_rad)
+		{
 			SynchRadParticleProcess* srp = new SynchRadParticleProcess(2,true);
 			srp->IncludeQuadRadiation(false); // only model SR in dipoles
 			srp->SetNumComponentSteps(1);     // make one step though elements
@@ -125,7 +137,7 @@ int main()
 		// Write the phase space co-ordinates
 		// of each particle in the bunch to a file
 		// output format is (1 parlicle/line)
-		// ct0 E0 x x' y y' dct dE/E px py pz 
+		// ct0 E0 x x' y y' dct dE/E px py pz
 //		ofstream trackingLog("SpinTracking.dat");
 //		spinBunch->Output(trackingLog);
 
@@ -137,7 +149,7 @@ int main()
 		// Having set up the tracker and the output, we will now
 		// see how the vertical motion of the quadrupoles affect
 		// the results.
-		
+
 		// Again we use a SpinTrackingOuput object, but this
 		// time we only want to have the final result per quadrupole
 		// moved.
@@ -153,12 +165,13 @@ int main()
 
 		const double dy = 1.0*micrometer;
 
-		for(size_t i = 0; i<quads.size(); i++) {
+		for(size_t i = 0; i<quads.size(); i++)
+		{
 			string quadID = (quads[i]->GetComponent()).GetQualifiedName();
 			cout<<"  adjusting "<<quadID<<"..."<<flush;
-			
+
 			(spOut->os())<<setw(20)<<left<<quadID;
-			
+
 			quads[i]->TranslateY(dy);
 			spinBunch = new SpinParticleBunch(*spinBunch0);
 			tracker.Track(spinBunch);
@@ -171,8 +184,10 @@ int main()
 		// Clean up and quit
 		delete theModel;
 		cout<<"Finished!"<<endl;
-	
-	} catch(MerlinException& error) {
+
+	}
+	catch(MerlinException& error)
+	{
 		cerr<<error.Msg()<<endl;
 		return -99;
 	}
@@ -187,7 +202,8 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData& beam, const SpinVe
 	ParticleBunch* aBunch = pbc.ConstructParticleBunch();
 	SpinParticleBunch* spinBunch = new SpinParticleBunch(BEAMENERGY);
 
-	for(PSvectorArray::iterator it = aBunch->begin(); it!=aBunch->end(); it++) {
+	for(PSvectorArray::iterator it = aBunch->begin(); it!=aBunch->end(); it++)
+	{
 		PSvector p=*it;
 		spinBunch->AddParticle(p,spin);
 	}
@@ -199,10 +215,12 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData& beam, const SpinVe
 // class SpinTrackingOutput definitions
 
 SpinTrackingOutput::SpinTrackingOutput(const std::string& fname)
-:fos(fname.c_str())
+	:fos(fname.c_str())
 {
 	if(!fos)
+	{
 		throw MerlinException(string("Probem openning output file: ")+fname);
+	}
 }
 
 void SpinTrackingOutput::Record(const ComponentFrame* frame, const Bunch* bunch)
@@ -231,11 +249,12 @@ void SpinTrackingOutput::Output(const std::string& label, const Bunch& bunch)
 	double gey = gamma*ProjectedEmittance(S,ps_Y,ps_YP);
 	double z = spinBunch.GetReferenceTime();
 
-	// Remove the <ydp> and <y'dp> correlations and 
+	// Remove the <ydp> and <y'dp> correlations and
 	// re-calculate the emittance if the energy
 	// spread is not zero.
 	double geyc = gey;
-	if(S.var(ps_DP) != 0) {
+	if(S.var(ps_DP) != 0)
+	{
 		double s36 = S(ps_Y,ps_DP);
 		double s46 = S(ps_YP,ps_DP);
 		double dp2 = S.var(ps_DP);
@@ -252,7 +271,7 @@ void SpinTrackingOutput::Output(const std::string& label, const Bunch& bunch)
 	WRITE_OS(fos,12,3,z);				// beamline location (m)
 	WRITE_OS(fos,12,3,p0);				// mean momentum (GeV/c)
 	WRITE_OS(fos,12,3,gey);				// normalised vertical emittance (m)
-	WRITE_OS(fos,12,3,geyc);			//      "        "         "      "  dispersion-corrected 
+	WRITE_OS(fos,12,3,geyc);			//      "        "         "      "  dispersion-corrected
 	WRITE_OS(fos,12,3,gex);				// normalised horizontal emittance (m)
 	WRITE_OS(fos,12,3,S.mean(ps_Y));    // vertical beam centroid displacement (m)
 	WRITE_OS(fos,12,3,S.std(ps_Y));     // vertical RMS beam size (m)

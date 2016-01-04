@@ -1,21 +1,22 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/03/07 09:14:12 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "BeamDynamics/SMPTracking/SMPComponentTracker.h"
 #include "BeamDynamics/SMPTracking/SMPStdIntegrators.h"
 
-namespace SMPTracking {
+namespace SMPTracking
+{
 
 DEF_INTG_SET(SMPComponentTracker,StdISet)
 ADD_INTG(DriftCI)
