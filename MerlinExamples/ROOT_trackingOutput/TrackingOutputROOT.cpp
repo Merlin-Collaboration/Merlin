@@ -40,7 +40,7 @@ double DispersionCorrectedEmittance(const PSmoments& S,size_t a,size_t ap)	{
 		double s34 = S(a,ap)-s36*s46/dp2;
 		double s44 = S.var(ap)-s46*s46/dp2;
 		return sqrt(s33*s44-s34*s34);
-};
+}
 
 }
 void TrackingOutputROOT::Record(const ComponentFrame* frame, const Bunch* bunch)
@@ -219,7 +219,7 @@ bool TrackingOutputROOT::NewTree(const std::string& tname) {
 	}
 	                                               
         return false;
-};
+}
 
 namespace {
 void SigmaMatrixToBeamData0(const PSmoments& S0, BeamData& t) {
@@ -281,7 +281,7 @@ void TrackingOutputROOT::AddIdentifierAllMags(){
 	AddIdentifier("Decapole.*");
 	AddIdentifier("Solenoid.*");
 
-};
+}
 
 // bunch utillities
 void TrackingOutputROOT::DumpBunchAt(const Bunch* bunch,const string& id){
@@ -304,7 +304,7 @@ int TrackingOutputROOT::BunchSize(const Bunch* bunch){
 		const ParticleBunch* PB = static_cast<const ParticleBunch*>(bunch);
 		return PB->size();
 	}
-};
+}
 // write bunch tree as - can also be called externally
 void TrackingOutputROOT::DumpBunch(const Bunch* bunch,const string& btreename){
 	if(bunch==0) return;
@@ -344,4 +344,4 @@ void TrackingOutputROOT::DumpBunch(const Bunch* bunch,const string& btreename){
             	}
             	tree.Write();
        }
-};
+}
