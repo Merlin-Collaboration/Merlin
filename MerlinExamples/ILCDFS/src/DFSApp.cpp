@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // Class DFSApp implementation
 // Root control class for applying DFS to a beamline
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -10,7 +10,7 @@
 // Last CVS revision:
 // $Date: 2006/06/19 10:19:06 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "DFSApp.h"
@@ -95,7 +95,7 @@ void DFSApp::Initialise()
 
 	refacc->InitialiseTracking(engyPolicy->GetNumEnergyStates(),refpArray);
 	refacc->GetKlystrons(klysArray);
-	
+
 	engyPolicy->SetKlystrons(klysArray);
 	engyPolicy->SetReferenceParticles(refpArray);
 	engyPolicy->Initialise();
@@ -109,14 +109,17 @@ void DFSApp::Initialise()
 	refacc->GetBeamlineIndecies("BPM.*",ibpm);
 
 	dfs_trace(dfs_trace::level_1)<<ibpm.size()<<" BPMs in accelerator"<<endl;
-	
-	for(size_t n=0; n<ibpm.size(); n+=nbs-nbo) {
+
+	for(size_t n=0; n<ibpm.size(); n+=nbs-nbo)
+	{
 		DFS_Segment sn;
 		sn.first = n==0 ? s.first : ibpm[n]+1;
 		sn.second = n+nbs<ibpm.size() ? ibpm[n+nbs] : s.second;
 		cachedDFS.push_back(new DFSCorrection(sn,pxy));
 		if(sn.second == s.second)
+		{
 			break;
+		}
 	}
 	dfs_trace(dfs_trace::level_1)<<cachedDFS.size()<<" segments initialised"<<endl;
 }
@@ -133,16 +136,18 @@ void DFSApp::Apply()
 
 	simacc->InitialiseTracking(engyPolicy->GetNumEnergyStates(),refpArray);
 	simacc->GetKlystrons(klysArray);
-	
+
 	engyPolicy->SetKlystrons(klysArray);
 	engyPolicy->SetReferenceParticles(refpArray);
 	engyPolicy->Initialise();
 
 	simacc->AllowIncrementalTracking(sim_useIT && engyPolicy->SupportsIncrementalTracking());
 
-	for(list<DFSCorrection*>::iterator dfsi = cachedDFS.begin(); dfsi!=cachedDFS.end(); dfsi++) {
+	for(list<DFSCorrection*>::iterator dfsi = cachedDFS.begin(); dfsi!=cachedDFS.end(); dfsi++)
+	{
 		(*dfsi)->Initialise();
-		for(size_t n = 0; n<nit; n++) {
+		for(size_t n = 0; n<nit; n++)
+		{
 			dfs_trace(dfs_trace::level_2)<<"iteration "<<(n+1)<<'/'<<nit<<endl;
 			(*dfsi)->RecordTrajectories();
 			(*dfsi)->CalculateCorrection();
@@ -158,7 +163,9 @@ void DFSApp::Apply()
 void DFSApp::ClearCachedDFS()
 {
 	for(list<DFSCorrection*>::iterator i = cachedDFS.begin(); i!=cachedDFS.end(); i++)
+	{
 		delete *i;
+	}
 	cachedDFS.clear();
 }
 

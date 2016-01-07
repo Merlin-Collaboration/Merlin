@@ -12,21 +12,21 @@
 class RectEllipseAperture : public Aperture
 {
 public:
-        //Constructor
-        RectEllipseAperture (double rhw, double rhh, double ehh, double ehv)
-        : Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),
-		EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),
-		EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)){};
-        //: Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
+	//Constructor
+	RectEllipseAperture (double rhw, double rhh, double ehh, double ehv)
+		: Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),
+		  EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),
+		  EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
+	//: Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
 
-        //Returns true if the point (x,y,z) is within the
-        //aperture. The z coordinate is ignored.
-        bool PointInside (double x, double y, double z) const;
+	//Returns true if the point (x,y,z) is within the
+	//aperture. The z coordinate is ignored.
+	bool PointInside (double x, double y, double z) const;
 
-        //Returns the radius to the aperture at location z and angle phi.
-        double GetRadiusAt (double phi, double z) const;
-        std::string GetApertureType() const;
-		virtual void printout(std::ostream& out) const;
+	//Returns the radius to the aperture at location z and angle phi.
+	double GetRadiusAt (double phi, double z) const;
+	std::string GetApertureType() const;
+	virtual void printout(std::ostream& out) const;
 
 protected:
 	const double RectHalfWidth;

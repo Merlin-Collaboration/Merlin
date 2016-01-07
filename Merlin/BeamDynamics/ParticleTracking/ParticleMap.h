@@ -3,9 +3,9 @@
 
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (1999)
-* 
+*
 * file Merlin\BeamDynamics\ParticleTracking\ParticleMap.h
 * last modified 08/10/01 02:14:16 PM
 */
@@ -14,9 +14,9 @@
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
-* Copyright (c) 1999 by N.J.Walker.  ALL RIGHTS RESERVED. 
+* Copyright (c) 1999 by N.J.Walker.  ALL RIGHTS RESERVED.
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -35,7 +35,8 @@
 #include "merlin_config.h"
 
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 class ParticleBunch;
 
@@ -57,16 +58,16 @@ class ParticleMap
 public:
 
 
-    virtual ~ParticleMap ();
+	virtual ~ParticleMap ();
 
 
 
 
-    //	Applies the map to the specified ParticleBunch.
-    virtual ParticleBunch& Apply (ParticleBunch& bunch) const = 0;
+	//	Applies the map to the specified ParticleBunch.
+	virtual ParticleBunch& Apply (ParticleBunch& bunch) const = 0;
 
 
-    virtual void Invert () = 0;
+	virtual void Invert () = 0;
 
 protected:
 private:

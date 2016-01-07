@@ -4,7 +4,8 @@
 #include "BeamDynamics/TTrackSim.h"
 #include "BeamDynamics/SMPTracking/SMPComponentTracker.h"
 
-namespace SMPTracking {
+namespace SMPTracking
+{
 
 typedef TTrackSim<SMPComponentTracker> SMPTracker;
 

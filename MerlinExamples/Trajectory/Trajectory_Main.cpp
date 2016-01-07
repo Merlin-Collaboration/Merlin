@@ -55,7 +55,8 @@ int main()
 	// Write the tracking results to a file.
 	ofstream bpmLog("Trajectory.dat");
 	vector<BPM::Data>& theBPMBuffer = bpmVecBuffer->BPMReading;
-	for(vector<BPM::Data>::iterator bpm_iter=theBPMBuffer.begin(); bpm_iter!=theBPMBuffer.end(); bpm_iter++) {
+	for(vector<BPM::Data>::iterator bpm_iter=theBPMBuffer.begin(); bpm_iter!=theBPMBuffer.end(); bpm_iter++)
+	{
 		bpmLog<<std::setw(14)<<(bpm_iter->x).value;
 		bpmLog<<std::setw(14)<<(bpm_iter->x).error;
 		bpmLog<<std::setw(14)<<(bpm_iter->y).value;
@@ -66,7 +67,7 @@ int main()
 
 	BPM::SetDefaultBuffer(0);
 	delete bpmVecBuffer;
-	
+
 	delete theBunch;
 	delete theModel;
 

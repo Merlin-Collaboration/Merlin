@@ -197,8 +197,8 @@ void ppDiffractiveScatter::GenerateDistribution(double energy)
 
 ppDiffractiveScatter::~ppDiffractiveScatter()
 {
-} 
- 
+}
+
 
 /**
 * Generates the elastic differential cross section
@@ -262,23 +262,23 @@ void  __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveSca
 //	std::cout << "PomeronScatter(-2,0.0003,s) " << PomeronScatter(2,0.0003,s) << std::endl;
 //	std::cout << "PomeronScatter(-0.0001,0.002,s) " << PomeronScatter(0.0001,0.002,s) << std::endl;
 //	std::cout << "PomeronScatter(-2,0.005,s) " << PomeronScatter(2,0.005,s) << std::endl;
-	
-	
+
+
 	//std::cout << "dumping file" << std::endl;
 	//std::ofstream *outfd = new std::ofstream("SD_Lookup_Table.dat");
 	//(*outfd) << "#i" << "\t" << "xi" << "\t" << "t" <<  std::endl;
-	
-		
-	
-	
+
+
+
+
 	//typedef std::pair <double, double> DoublePair;
 	//std::vector <DoublePair> pairs;
 	//double mrec=sqrt(s*x);
-	for(int i=0;i<NN;i++)
+	for(int i=0; i<NN; i++)
 	{
 		const double t=t_min + i * t_step;
 		//std::cout << "t " << t << std::endl;
-		for(int j=0;j<NN;j++)
+		for(int j=0; j<NN; j++)
 		{
 			const double x=xi_min + j*xi_step;
 			const double ds=PomeronScatter(t,x,s);
@@ -291,7 +291,7 @@ void  __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveSca
 			//std::cout << pairs[i] << "\t" <<  std::endl;
 			//std::cout << t << "\t" << x << "\t" <<  ds << "\ttdist\t" << tdist[i] << "\txdist\t" << xdist[j]  << std::endl;
 			//std::cout << "sum =" << sum << std::endl;
-			 //if(j == NN-1)std::cout << "t" << t << "\tx" << x << "\tds " << ds << "\tsum " << sum << std::endl;
+			//if(j == NN-1)std::cout << "t" << t << "\tx" << x << "\tds " << ds << "\tsum " << sum << std::endl;
 		}
 		//if(i == NN-1) std::cout << "t" << t << "\tsum =" << sum << std::endl;
 	}
@@ -300,77 +300,77 @@ void  __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveSca
 //		std::cout << "tdist\t" << tdist[i] << "\txdist\t" << xdist[i] << std::endl;
 //		std::cout << pairs[i].first << "\t" << pairs[i].second << std::endl;
 //	}
-	
-	
-	
+
+
+
 	//outfd->close();
 	//delete outfd;
 	//std::cout << pairs[0].first << "\t" << pairs[0].second << std::endl;
-	
+
 	//for(int i=0;i<NN;i++)
 //	{
 //	std::cout << "tdist\t" << tdist[i] << "\txdist\t" << xdist[i] << std::endl;
 //	}
 	//sigma= 0.001*sum*xstep*tstep*1.6*pow(prop->A,0.33); // convert mbarn to barn
 	//std::cout << "xi_step =" << xi_step << "\t" << "t_step" << t_step << std::endl;
-	SigDiffractive= 0.001*sum * xi_step * t_step; // convert mbarn to barn  
-	
+	SigDiffractive= 0.001*sum * xi_step * t_step; // convert mbarn to barn
+
 	// convert histograms to normalised cumulants
 	// Running total
-	for(int i=1;i<NN;i++)
+	for(int i=1; i<NN; i++)
 	{
 		xdist[i]+=xdist[i-1];
 		tdist[i]+=tdist[i-1];
 	}
-	
-/*
-	std::cout << "cumulant" << std::endl;
-	for(int i=0;i<NN;i++)
-	{
-		std::cout << "tdist\t" << tdist[i] << "\txdist\t" << xdist[i] << std::endl;
-	}
-*/
+
+	/*
+		std::cout << "cumulant" << std::endl;
+		for(int i=0;i<NN;i++)
+		{
+			std::cout << "tdist\t" << tdist[i] << "\txdist\t" << xdist[i] << std::endl;
+		}
+	*/
 
 	//Normalized
-	for(int i=0;i<NN;i++)
+	for(int i=0; i<NN; i++)
 	{
 		xdist[i]/=xdist[NN-1];
 		tdist[i]/=tdist[NN-1];
 	}
 
-/*
-	std::cout << "normalized" << std::endl;
-	for(int i=0;i<NN;i++)
-	{
-	std::cout << "tdist\t" << tdist[i] << "\txdist\t" << xdist[i] << std::endl;
-	}
-*/
+	/*
+		std::cout << "normalized" << std::endl;
+		for(int i=0;i<NN;i++)
+		{
+		std::cout << "tdist\t" << tdist[i] << "\txdist\t" << xdist[i] << std::endl;
+		}
+	*/
 	//Dump file
-/*
-	std::cout << "dumping file" << std::endl;
-	std::ofstream *outfd = new std::ofstream("DiffractiveFile");
-	std::ofstream *outfd1 = new std::ofstream("DiffractiveFile_lookup");
-	(*outfd) << "#i" << "\t" << "xi" << "\t" << "t" <<  std::endl;
-	for(int i=0;i<NN;i++)
-	{
-		(*outfd) << i << "\t" << xdist[i] << "\t" << tdist[i] << std::endl;;
-	}
-	outfd->close();
-	delete outfd;
-*/
+	/*
+		std::cout << "dumping file" << std::endl;
+		std::ofstream *outfd = new std::ofstream("DiffractiveFile");
+		std::ofstream *outfd1 = new std::ofstream("DiffractiveFile_lookup");
+		(*outfd) << "#i" << "\t" << "xi" << "\t" << "t" <<  std::endl;
+		for(int i=0;i<NN;i++)
+		{
+			(*outfd) << i << "\t" << xdist[i] << "\t" << tdist[i] << std::endl;;
+		}
+		outfd->close();
+		delete outfd;
+	*/
 	// convert to lookup tables
 	int iseekt=0, iseekx=0;
 	xarray[0]=tarray[0]=0;
 	//int foo = std::cout.precision(10);
 	//std::cout.precision(foo);
-		
+
 ////	std::cout << "i\ttdist\ttdist+1\ttarray\tiseekt\tleftover\ttarget\tNN" << std::endl;
-	for(int i=1;i<N;i++)
+	for(int i=1; i<N; i++)
 	{
 		double target=double(i)/N;
 
 		while(xdist[iseekx+1] < target)
-		//while(xdist[iseekx] < target)
+			//while(xdist[iseekx] < target)
 		{
 			//std::cout << "xdist : " << xdist[iseekx] << "\t" << target << std::endl;
 			iseekx++;
@@ -381,7 +381,7 @@ void  __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveSca
 		while(tdist[iseekt+1] < target)
 		{
 			//std::cout << "tdist : " << tdist[iseekt] << "\t" << target << std::endl;
-			iseekt++; 
+			iseekt++;
 		}
 ////		std::cout << iseekt << "\t" << tdist[iseekt+1] << "\t" << target << "\t" <<leftover/(tdist[iseekt+1]-tdist[iseekt]) << std::endl;
 		leftover = target - tdist[iseekt];
@@ -411,7 +411,7 @@ void  __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveSca
 	std::cout << "Nucleon Diffractive total cross section total "  << SigDiffractive * 1000.0 <<" mb" << std::endl;
 	std::cout << "Sixtrack Diffractive total cross section total " << 0.00068*log(0.15*s) * 1000.0 <<" mb" << std::endl;
 //	std::cout << "sum " << sum << " SigDiffractive " << SigDiffractive << std::endl;
-	
+
 
 }//End
 
@@ -449,11 +449,11 @@ void ppDiffractiveScatter::IntegrateDsigDtDxi()
 	}
 
 	InversionInterpolation = new Interpolation(IntSig, UniformT);
-	
+
 	for(unsigned int n=1; n <nSteps; n++)
 	{
 		double target = (static_cast<double>(n) / nSteps);
-		
+
 		try
 		{
 			sig_gen = (*InversionInterpolation)(target);
@@ -496,7 +496,7 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 {
 
 	//static double fudge=1.0;
-	
+
 	//unsigned int count = 0;
 	double xx,tt;
 	static bool kilroy=false;
@@ -511,11 +511,11 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 	//{
 	//	std::cout << "Select   i:  " << i << "\ttarray\t" << tarray[i] << "\txarray\t" << xarray[i] << "\tDtarray \t" << tarray[i+1]-tarray[i] << "\tDxarray \t" << xarray[i+1]-xarray[i] << std::endl;
 	//}
-	retry:
+retry:
 	//count++;
 
 	double rt = N*RandomNG::uniform(0,1);
-	int it=int(rt); 
+	int it=int(rt);
 	double extra=rt-it;
 	double deltat=0.0;
 	if(it<(N-1))
@@ -523,7 +523,10 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 		deltat=tarray[it+1]-tarray[it];
 		//std::cout << "\tdeltat : " << deltat << std::endl;
 	}
-	else deltat=1-tarray[it];
+	else
+	{
+		deltat=1-tarray[it];
+	}
 	tt=tarray[it] + extra * deltat;
 	tt=t_min + tt *(t_max-t_min);
 	//std::cout << "t = " << tt << "\t deltat = " << deltat << std::endl;
@@ -534,20 +537,23 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 	}
 
 	double rx = N*RandomNG::uniform(0,1);
-	int ix=int(rx); 
+	int ix=int(rx);
 	extra=rx-ix;
 	double deltax=0.0;
 	if(ix<(N-1))
 	{
 		deltax=xarray[ix+1]-xarray[ix];
 	}
-	else deltax=1-xarray[ix];
+	else
+	{
+		deltax=1-xarray[ix];
+	}
 	xx=xarray[ix]+extra*deltax;
 	xx=xi_min+xx*(xi_max-xi_min);
 	//std::cout << "xx = " << xx << "\t deltax = " << deltax << std::endl;
-	
-	
-	
+
+
+
 	//double ds=PomeronScatter(tt,xx,s);
 	//double sum = 77740400;
 	//double sum = 101460;
@@ -556,34 +562,37 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 	double ds=PomeronScatter(tt,xx,ss)*0.001;
 	//if(RandomNG::uniform(0,1)*sum > ds)
 	//{
-		//std::cout << "ds = " << ds  << std::endl;
+	//std::cout << "ds = " << ds  << std::endl;
 	//	goto retry;
 	//}
 	//std::cout << "ds = " << ds <<std::endl;
 	double ds2=SigDiffractive/(N*N*deltax*(xi_max-xi_min)*deltat*(t_max-t_min));
 	//if(ds2<0)
 	// std::cout << "Problem ds2 negative " << ds2 << "\tdeltax : " << deltax << "\tdeltat : " << deltat << std::endl;
-	
+
 	//
 	//std::cout << "tt: " << tt << "/t xi : " << xx << "\tds: " << ds << "\tds2: " << ds2   << std::endl;
 	//double P=ds/ds2;
 	//if(P<RandomNG::uniform(0,1)) goto retry;
-	
+
 	static double fudge=1;
 	double rat=fudge*ds/ds2;
 	//double rat=fudge*ds2/ds;
 	//std::cout << "rat :" << rat << std::endl;
-	if(rat>1) fudge/=rat;//rat=fudge/rat;
+	if(rat>1)
+	{
+		fudge/=rat;    //rat=fudge/rat;
+	}
 	if(RandomNG::uniform(0,1)>rat)
 	{
-	//	std::cout <<"increase cut ratio by " << rat << "\tFudge: " << fudge << "\tds: " << ds << "\tds2: " << ds2 << std::endl;
-	//	std::cout <<"SigDiffractive: " << SigDiffractive << "\tdeltax: " << deltax << "\tdeltat: " << deltat << "\tN: " << N << std::endl;
-	//	std::cout << "rat: " << rat << "\t - " << ds << "\t - " << ds2 << "\t - " << fudge << std::endl;
-	//	int foo = std::cout.precision(16);
-	//	std::cout<< tarray[it-2] << "\t" << tarray[it-1] << "\t"  << tarray[it] << "\t" << tarray[it+1] << "\t" << "\t" << tarray[it+2] << it << std::endl;
-	//	std::cout.precision(foo);
+		//	std::cout <<"increase cut ratio by " << rat << "\tFudge: " << fudge << "\tds: " << ds << "\tds2: " << ds2 << std::endl;
+		//	std::cout <<"SigDiffractive: " << SigDiffractive << "\tdeltax: " << deltax << "\tdeltat: " << deltat << "\tN: " << N << std::endl;
+		//	std::cout << "rat: " << rat << "\t - " << ds << "\t - " << ds2 << "\t - " << fudge << std::endl;
+		//	int foo = std::cout.precision(16);
+		//	std::cout<< tarray[it-2] << "\t" << tarray[it-1] << "\t"  << tarray[it] << "\t" << tarray[it+1] << "\t" << "\t" << tarray[it+2] << it << std::endl;
+		//	std::cout.precision(foo);
 		//rat = fudge/rat;
-		//fudge/=rat; //this is the original 
+		//fudge/=rat; //this is the original
 		//std::cout << "rejected : t = " << tt << "\tx = " << xx << "\tfudge = " <<  fudge << "\trat  " << rat << "\tds  " <<ds << "\tds2  " << ds2 << std::endl;
 		goto retry;
 	}
@@ -591,15 +600,15 @@ std::pair<double,double> ppDiffractiveScatter::Select()
 	//std::cout << "cycle : rat: " << rat << "\t  " << ds << "\t - " << ds2 << "\t - " << fudge << std::endl;
 	//if (rat<RandomNG::uniform(0,1))
 	//{
-	 //std::cout << "t  " << tt << "\tx  " << xx << "\tds  " << ds << "\tds2  " << ds2 << std::endl;
-	 //goto retry;
+	//std::cout << "t  " << tt << "\tx  " << xx << "\tds  " << ds << "\tds2  " << ds2 << std::endl;
+	//goto retry;
 	//}
 	//std::cout << "accepted : t = " << tt << "\tx = " << xx << "\t" << "ds  " <<ds << "\tds2: " << ds2 << std::endl;
-	
+
 	//if (rat * RandomNG::uniform(0,1)> 1) goto retry;
 
 	//std::cout << "rat: " << rat << "\t - " << ds << "\t - " << ds2 << "\t - " << fudge << std::endl;
-	
+
 
 
 	//double tt = std::make_pair( t, sqrt(s*x)).first;
@@ -626,9 +635,9 @@ double ppDiffractiveScatter::PomeronScatter2(double tt, double x, double s)
 	double gaust = exp(-pow(tt,2)/(2*sigma_t));
 	//std::cout << gausx << "\t " << gaust << std::endl;
 	return pow(x,2);
-	
+
 }
-// 
+//
 inline double  __attribute__((optimize("O3,unsafe-math-optimizations"))) __attribute__ ((hot)) ppDiffractiveScatter::PomeronScatter(const double tt, const double x, const double s)   const
 {
 	//std::cout << "Call PomeronScatter SD " << std::endl;
@@ -639,43 +648,46 @@ inline double  __attribute__((optimize("O3,unsafe-math-optimizations"))) __attri
 	const double Mpion = 0.1349766;
 	const double Mmin2 = pow(Mproton+Mpion,2);
 	const double ml01 = 1.44;  //mass of the resonance P11 D13 G15 F17
-        const double ml02 = 1.52;
-        const double ml03 = 1.68;
+	const double ml02 = 1.52;
+	const double ml03 = 1.68;
 	const double ml04 = 2.19;
 	const double GammaL1 = 0.325; // width of the resonance
 	const double GammaL2 = 0.13;
 	const double GammaL3 = 0.14;
 	const double GammaL4 = 0.45;
 	const double cl01 = 3.07;   // coupling coefficient from the data fit
-        const double cl02 = 0.4149; 
+	const double cl02 = 0.4149;
 	const double cl03 = 1.108  ;
 	const double cl04 = 0.9515;
 	const double Mcut = 3; // this is chosen from the fit on the crosss section data
 	const double xi_c = pow(Mcut,2)/s;
 	const double xi_th = Mmin2/s; // (M_p + M_pion)^2/s
 	const double Mmin2bar = pow(Mproton-Mpion,2);
-	if(x <= xi_th){return 0;}
+	if(x <= xi_th)
+	{
+		return 0;
+	}
 
 	double cc[4][3];
-/*	cc[0][0] = 0.881148;	//A
-	cc[0][1] = 3.94056;	//B
-	cc[0][2] = 0.0220505;		//C
+	/*	cc[0][0] = 0.881148;	//A
+		cc[0][1] = 3.94056;	//B
+		cc[0][2] = 0.0220505;		//C
 
-	//ppr
-	cc[1][0] = 2.42997;
-	cc[1][1] = 3.11514;
-	cc[1][2] = 0.104746;
-	
-	//rrp
-	cc[2][0] = 6.28648;
-	cc[2][1] = 4.05376;
-	cc[2][2] = 8.63609;
+		//ppr
+		cc[1][0] = 2.42997;
+		cc[1][1] = 3.11514;
+		cc[1][2] = 0.104746;
 
-	//rrr
-	cc[3][0] = 167.618;
-	cc[3][1] = 11.5978;
-	cc[3][2] = 54.256849;
-*/
+		//rrp
+		cc[2][0] = 6.28648;
+		cc[2][1] = 4.05376;
+		cc[2][2] = 8.63609;
+
+		//rrr
+		cc[3][0] = 167.618;
+		cc[3][1] = 11.5978;
+		cc[3][2] = 54.256849;
+	*/
 	cc[0][0] = 0.624529;	//A
 	cc[0][1] = 2.5835;	//B
 	cc[0][2] = 0;		//C
@@ -684,7 +696,7 @@ inline double  __attribute__((optimize("O3,unsafe-math-optimizations"))) __attri
 	cc[1][0] = 3.09088;
 	cc[1][1] = 4.51487;
 	cc[1][2] = 0.186211;
-	
+
 	//rrp
 	cc[2][0] = 4.0;
 	cc[2][1] = 3.03392;
@@ -708,161 +720,163 @@ inline double  __attribute__((optimize("O3,unsafe-math-optimizations"))) __attri
 	const double gammaL03 = GammaL3*pow(q/ql3,7)*pow(((1 + 5*ql3)/(1 + 5*q)),3);
 	const double gammaL04 = GammaL4*pow(q/ql4,9)*pow(((1 + 5*ql4)/(1 + 5*q)),4);
 
-	const double R = ( (cl01/x) * (ml01*gammaL01) / ( pow( (x*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2)) 
-		    +(cl02/x) * (ml02*gammaL02) / ( pow( (x*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
-		    +(cl03/x) * (ml03*gammaL03) / ( pow( (x*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
-		    +(cl04/x) * (ml04*gammaL04) / ( pow( (x*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) ) 
-		    *exp(13.5*(t + 0.05));// Normalization factors Sandy's note 
-		     //* sqrt(565/s)*exp(13.5*(t + 0.05));// Normalization factors Sandy's note 
+	const double R = ( (cl01/x) * (ml01*gammaL01) / ( pow( (x*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2))
+	                   +(cl02/x) * (ml02*gammaL02) / ( pow( (x*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
+	                   +(cl03/x) * (ml03*gammaL03) / ( pow( (x*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
+	                   +(cl04/x) * (ml04*gammaL04) / ( pow( (x*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) )
+	                 *exp(13.5*(t + 0.05));// Normalization factors Sandy's note
+	//* sqrt(565/s)*exp(13.5*(t + 0.05));// Normalization factors Sandy's note
 //	double BRMatch = - 588.20982975 *exp(13.5*(t + 0.05))*(x - xi_th)/(xi_c - xi_th);
 	const double BRMatch = -  ( (cl01/xi_c) * (ml01*gammaL01) / ( pow( (xi_c*s - pow(ml01,2) ),2) + pow(ml01*gammaL01,2))
-		    +(cl02/xi_c) * (ml02*gammaL02) / ( pow( (xi_c*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
-		    +(cl03/xi_c) * (ml03*gammaL03) / ( pow( (xi_c*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
-		    +(cl04/xi_c) * (ml04*gammaL04) / ( pow( (xi_c*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) )
-		    *exp(13.5*(t + 0.05)) *(x - xi_th)/(xi_c - xi_th);
+	                            +(cl02/xi_c) * (ml02*gammaL02) / ( pow( (xi_c*s - pow(ml02,2) ),2) + pow(ml02*gammaL02,2))
+	                            +(cl03/xi_c) * (ml03*gammaL03) / ( pow( (xi_c*s - pow(ml03,2) ),2) + pow(ml03*gammaL03,2))
+	                            +(cl04/xi_c) * (ml04*gammaL04) / ( pow( (xi_c*s - pow(ml04,2) ),2) + pow(ml04*gammaL04,2)) )
+	                       *exp(13.5*(t + 0.05)) *(x - xi_th)/(xi_c - xi_th);
 
 
 //			   *sqrt(565/s)*exp(13.5*(t + 0.05))*(x - xi_th)/(xi_c - xi_th);
 
-	//std::cout << "t = " << t << std::endl;	
+	//std::cout << "t = " << t << std::endl;
 	if(t > -0.25)
 	{
 		//std::cout << "t less than 1.15" << std::endl;
 		if(x > xi_th && x <= xi_c)
 		{
 			const double Axi_c = (0.4+0.5*t)*pow(s,0.08) * pow(xi_c,-1.08 -0.5*t)	//ppp
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))	//pion
-			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
-		
-						
+			                     +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
+			                     +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
+			                     +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
+			                     +1.14591559 * pow(3.52142 - 2.79*t,2) * pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))	//pion
+			                     * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
+
+
 			const double Aprimexi_c =(0.4+0.5*t)*pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t)	//ppp
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2) 
-			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
-			+ (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
-	 	
+			                         +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
+			                         +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
+			                         +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
+			                         +1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2)
+			                         * ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
+			                            + (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
+
 			const double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
 			const double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
-			
+
 			const double B = d * pow(x - xi_th,2) + e * (x - xi_th);
 			//return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  B << "\t" << R << "\t" << B+R+BRMatch <<std::endl;
-			return B + R + BRMatch; 
+			return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  BTot << std::endl;
 			//return BTot;
-			
+
 		}
 		else
 		{
 			return (0.4+0.5*t)*pow(s,0.08) * pow(x,-1.08 -0.5*t)	//ppp
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(x,-1.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) 	* pow(x,-0.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(x,-0.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * pow(x,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*x,-0.4525) + 13.63 *pow(s*x,0.0808))	//pion
-			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
+			       +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(x,-1.6125 -0.5*t)	//ppr
+			       +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) 	* pow(x,-0.015 - 1.86*t)	//rrp
+			       +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(x,-0.5475 - 1.86*t)	//rrr
+			       +1.14591559 * pow(3.52142 - 2.79*t,2) * pow(x,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*x,-0.4525) + 13.63 *pow(s*x,0.0808))	//pion
+			       * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
 			//std::cout << "t" << "\t" << "x" << "\t" <<  "A" << std::endl;
 			//std::cout << t << "\t" << x << "\t" <<  A << std::endl;
 			//return A;
 		}
-	
-	}else if(t > -1.15)
+
+	}
+	else if(t > -1.15)
 	{
 		//std::cout << "t less than 1.15" << std::endl;
 		if(x > xi_th && x <= xi_c)
 		{
 			const double Axi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(xi_c,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))	//pion
-			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
-		
-						
+			                     +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
+			                     +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
+			                     +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
+			                     +1.14591559 * pow(3.52142 - 2.79*t,2) * pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))	//pion
+			                     * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
+
+
 			const double Aprimexi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t) * (t/(t - 0.05))	//ppp
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2)
-			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
-			+ (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
-	 	
+			                          +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
+			                          +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
+			                          +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
+			                          +1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2)
+			                          * ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
+			                             + (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
+
 			const double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
 			const double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
-			
+
 			const double B = d * pow(x - xi_th,2) + e * (x - xi_th);
 			//return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  B << "\t" << R << "\t" << B+R+BRMatch <<std::endl;
-			return B + R + BRMatch; 
+			return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  BTot << std::endl;
 			//return BTot;
-			
+
 		}
 		else
 		{
 			return (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(x,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(x,-1.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) 	* pow(x,-0.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(x,-0.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * pow(x,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*x,-0.4525) + 13.63 *pow(s*x,0.0808))	//pion
-			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
+			       +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(x,-1.6125 -0.5*t)	//ppr
+			       +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) 	* pow(x,-0.015 - 1.86*t)	//rrp
+			       +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(x,-0.5475 - 1.86*t)	//rrr
+			       +1.14591559 * pow(3.52142 - 2.79*t,2) * pow(x,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*x,-0.4525) + 13.63 *pow(s*x,0.0808))	//pion
+			       * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
 			//std::cout << "t" << "\t" << "x" << "\t" <<  "A" << std::endl;
 			//std::cout << t << "\t" << x << "\t" <<  A << std::endl;
 			//return A;
 		}
-	
+
 	}
 	else
-	{	//std::cout << "t bigger or equal than 1.15" << std::endl;
+	{
+		//std::cout << "t bigger or equal than 1.15" << std::endl;
 		if(x > xi_th && x <= xi_c)
 		{
 			const double Axi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(xi_c,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
-			*(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))	//pion
-			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
-		
-						
+			                     *(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
+			                     +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(xi_c,-1.6125 -0.5*t)	//ppr
+			                     +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * pow(xi_c,-0.015 - 1.86*t)	//rrp
+			                     +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(xi_c,-0.5475 - 1.86*t)	//rrr
+			                     +1.14591559 * pow(3.52142 - 2.79*t,2) * pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))	//pion
+			                     * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
+
+
 			const double Aprimexi_c = (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * (-1.08 - 0.5*t) *pow(xi_c,-2.08 - 0.5*t) * (t/(t - 0.05))	//ppp
-			*(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2) 
-			* ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808)) 
-			+ (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
-	 	
+			                          *(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
+			                          +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * (-1.6125 - 0.5*t) *pow(xi_c,-2.6125 -0.5*t)	//ppr
+			                          +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) * (-0.015 - 1.86*t) *pow(xi_c,-1.015 - 1.86*t)	//rrp
+			                          +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * (-0.5475 - 1.86*t) * pow(xi_c,-1.5475 - 1.86*t)	//rrr
+			                          +1.14591559 * pow(3.52142 - 2.79*t,2) * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2)
+			                          * ((1 - 1.86 * (-0.0182185 + t)) *pow(xi_c,-1.86 * (-0.0182185 + t)) * (31.79*pow(s*xi_c,-0.4525) + 13.63 *pow(s*xi_c,0.0808))
+			                             + (pow(xi_c,1 - 1.86 * (-0.0182185 + t)) * (31.79*(-0.4525)*pow(s*xi_c,-1.4525)+13.63*0.0808*pow(s*xi_c,0.0808-1))));	//form factor
+
 			const double d = ((xi_c-xi_th)*Aprimexi_c-Axi_c)/pow(xi_c-xi_th,2);
 			const double e = Aprimexi_c -2*((xi_c-xi_th)*Aprimexi_c-Axi_c)/(xi_c-xi_th);
-			
+
 			const double B = d * pow(x - xi_th,2) + e * (x - xi_th);
 			//return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  B << "\t" << R << "\t" << B+R+BRMatch <<std::endl;
-			return B + R + BRMatch; 
+			return B + R + BRMatch;
 			//std::cout << t << "\t" << x << "\t" <<  BTot << std::endl;
 			//return BTot;
-			
+
 		}
 		else
 		{
 			return (cc[0][0]*exp(cc[0][1]*t) + cc[0][2]) * pow(s,0.08) * pow(x,-1.08 - 0.5*t) * (t/(t - 0.05))	//ppp
-			*(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
-			+(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(x,-1.6125 -0.5*t)	//ppr
-			+(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) 	* pow(x,-0.015 - 1.86*t)	//rrp
-			+(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(x,-0.5475 - 1.86*t)	//rrr
-			+1.14591559 * pow(3.52142 - 2.79*t,2) * pow(x,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*x,-0.4525) + 13.63 *pow(s*x,0.0808))	//pion
-			* fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
+			       *(1 + 0.4597*(fabs(t)-1.15) + 5.7575 * pow((fabs(t)-1.15),2))
+			       +(cc[1][0]*exp(cc[1][1]*t) + cc[1][2]) * pow(s,-0.4525) * pow(x,-1.6125 -0.5*t)	//ppr
+			       +(cc[2][0]*exp(cc[2][1]*t) + cc[2][2]) * pow(s,0.08) 	* pow(x,-0.015 - 1.86*t)	//rrp
+			       +(cc[3][0]*exp(cc[3][1]*t) + cc[3][2]) * pow(s,-0.4525) * pow(x,-0.5475 - 1.86*t)	//rrr
+			       +1.14591559 * pow(3.52142 - 2.79*t,2) * pow(x,1 - 1.86 * (-0.0182185 + t)) * (31.79*pow(s*x,-0.4525) + 13.63 *pow(s*x,0.0808))	//pion
+			       * fabs(t) * pow(1 - 1.40845*t,-4) * pow(3.52142 -t,-2) * pow(-0.0182185 + t,-2);	//form factor
 			//std::cout << "t" << "\t" << "x" << "\t" <<  "A" << std::endl;
 			//std::cout << t << "\t" << x << "\t" <<  A << std::endl;
 			//return A;
 		}
-		
+
 	}
 }
 }//End namespace ParticleTracking

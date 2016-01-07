@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/10/24 19:15:24 $
 // $Revision: 1.10 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <iomanip>
@@ -36,7 +36,8 @@
 
 using namespace std;
 
-namespace {
+namespace
+{
 
 struct MatchName
 {
@@ -61,7 +62,7 @@ struct ModelStats
 class ExtractAcceleratorSupports : public FrameTraverser
 {
 public:
-	explicit ExtractAcceleratorSupports(AcceleratorSupportList& asList) 
+	explicit ExtractAcceleratorSupports(AcceleratorSupportList& asList)
 		: asl(asList), nFound(0) {}
 	void ActOn(LatticeFrame* frame);
 private:
@@ -154,7 +155,9 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, co
 	}
 
 	if(i1==lattice.end() || i2==lattice.end())
-	throw BadRange();
+	{
+		throw BadRange();
+	}
 
 	return Beamline(i1,i2,ni1,ni2);
 }
@@ -223,7 +226,9 @@ size_t AcceleratorModel::GetRWChannels (AcceleratorModel::Beamline& aBeamline, c
 void AcceleratorModel::AddModelElement (ModelElement* element)
 {
 	if(element!=0)
-	theElements->Add(element);
+	{
+		theElements->Add(element);
+	}
 }
 
 void AcceleratorModel::ReportModelStatistics (std::ostream& os) const

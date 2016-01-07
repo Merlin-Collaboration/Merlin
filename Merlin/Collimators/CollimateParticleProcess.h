@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 5.01 (2015)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
-// Created:		
-// Modified:	07.09.15 Haroon Rafique		
+// Created:
+// Modified:	07.09.15 Haroon Rafique
 // Last Edited: 17.10.15 HR
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef CollimateParticleProcess_h
@@ -34,12 +34,13 @@
 #define COLL_AT_CENTER 2
 #define COLL_AT_EXIT 4
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 class ExcessiveParticleLoss : public MerlinException
 {
 public:
-    ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart);
+	ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart);
 };
 
 //	A process which effectively collimates the particle
@@ -55,154 +56,161 @@ class CollimateParticleProcess : public ParticleBunchProcess
 {
 public:
 
-    //	Used to generate unique filenames for particle loss data
-    //	files.
-    typedef map<string,int> IDTBL;
+	//	Used to generate unique filenames for particle loss data
+	//	files.
+	typedef map<string,int> IDTBL;
 
-    //	Constructor taking the collimation mode, and the output
-    //	stream pointer to which to print the results. mode can
-    //	be a logical OR combination of the collimation modes. A
-    //	null pointer for osp (default) suppresses output.
-    CollimateParticleProcess (int priority, int mode, std::ostream* osp = 0);
-    ~CollimateParticleProcess ();
+	//	Constructor taking the collimation mode, and the output
+	//	stream pointer to which to print the results. mode can
+	//	be a logical OR combination of the collimation modes. A
+	//	null pointer for osp (default) suppresses output.
+	CollimateParticleProcess (int priority, int mode, std::ostream* osp = 0);
+	~CollimateParticleProcess ();
 
-    //	Initialise this process with the specified Bunch. If
-    //	bunch is not a ParticleBunch object, the process becomes
-    //	inactive.
-    virtual void InitialiseProcess (Bunch& bunch);
+	//	Initialise this process with the specified Bunch. If
+	//	bunch is not a ParticleBunch object, the process becomes
+	//	inactive.
+	virtual void InitialiseProcess (Bunch& bunch);
 
-    //	Sets the current accelerator component.
-    virtual void SetCurrentComponent (AcceleratorComponent& component);
+	//	Sets the current accelerator component.
+	virtual void SetCurrentComponent (AcceleratorComponent& component);
 
-    //	Preform the process for the specified step ds.
-    virtual void DoProcess (double ds);
+	//	Preform the process for the specified step ds.
+	virtual void DoProcess (double ds);
 
-    //	Returns the current maximum step length for this process.
-    virtual double GetMaxAllowedStepSize () const;
+	//	Returns the current maximum step length for this process.
+	virtual double GetMaxAllowedStepSize () const;
 
-    // If set to true, the process scatters the particles in
-    // energy and angle at a Collimator element, if the particle is
-    // outside the aperture.
-    void ScatterAtCollimator(bool tf);
+	// If set to true, the process scatters the particles in
+	// energy and angle at a Collimator element, if the particle is
+	// outside the aperture.
+	void ScatterAtCollimator(bool tf);
 
-    //	If flg is true, then files are generated containing the
-    //	lost (collimated) particles. The file names have the
-    //	form {fprefix.}type.id.n.loss, where the string fprefix
-    //	is optional, type.id is the qualified name of the
-    //	element where the particle loss occurs, and n is an
-    //	occurrence count for like-named elements (starting with
-    //	n=1).
-    void CreateParticleLossFiles (bool flg, string fprefix = "");
+	//	If flg is true, then files are generated containing the
+	//	lost (collimated) particles. The file names have the
+	//	form {fprefix.}type.id.n.loss, where the string fprefix
+	//	is optional, type.id is the qualified name of the
+	//	element where the particle loss occurs, and n is an
+	//	occurrence count for like-named elements (starting with
+	//	n=1).
+	void CreateParticleLossFiles (bool flg, string fprefix = "");
 
-    //	If index is true, then the initial  particles are
-    //	sequential indexed (1..n). These index values for each
-    //	particle are then maintained, and output during any
-    //	particle output operation (as the first column). The
-    //	indexing allows particles to be traced back to the
-    //	original cooridinates.
-    void IndexParticles (bool index);
-    void IndexParticles (std::list<size_t>& anIndex);
-    const std::list<size_t>& GetIndecies() const;
+	//	If index is true, then the initial  particles are
+	//	sequential indexed (1..n). These index values for each
+	//	particle are then maintained, and output during any
+	//	particle output operation (as the first column). The
+	//	indexing allows particles to be traced back to the
+	//	original cooridinates.
+	void IndexParticles (bool index);
+	void IndexParticles (std::list<size_t>& anIndex);
+	const std::list<size_t>& GetIndecies() const;
 
-    //	Sets the threshold for particle loss before the process
-    //	throws ParticleLossThreshold exception. The value is in
-    //	% of the initial particle number (default = 100%).
-    void SetLossThreshold (double losspc);
+	//	Sets the threshold for particle loss before the process
+	//	throws ParticleLossThreshold exception. The value is in
+	//	% of the initial particle number (default = 100%).
+	void SetLossThreshold (double losspc);
 
-    // Set the log stream for the process. A NULL pointer
-    // turns logging off.
-    void SetLogStream(std::ostream* anOs);
+	// Set the log stream for the process. A NULL pointer
+	// turns logging off.
+	void SetLogStream(std::ostream* anOs);
 
-    //Enable collimator jaw imperfections
-    void EnableImperfections(bool);
+	//Enable collimator jaw imperfections
+	void EnableImperfections(bool);
 
-    virtual double GetOutputBinSize() const;
-    virtual void SetOutputBinSize(double);
-    
-    //~ virtual void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
-    virtual void SetDustbin (Dustbin* odb){DustbinVector.push_back(odb); dustset=1;}
-    
-    vector<Dustbin*> DustbinVector;
-    vector<Dustbin*>::iterator DustbinIterator;
-    
-    //~ Dustbin* outputdustbin;
+	virtual double GetOutputBinSize() const;
+	virtual void SetOutputBinSize(double);
+
+	//~ virtual void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
+	virtual void SetDustbin (Dustbin* odb)
+	{
+		DustbinVector.push_back(odb);
+		dustset=1;
+	}
+
+	vector<Dustbin*> DustbinVector;
+	vector<Dustbin*>::iterator DustbinIterator;
+
+	//~ Dustbin* outputdustbin;
 
 protected:
-    
 
-    int cmode;
-    std::ostream* os;
+
+	int cmode;
+	std::ostream* os;
 	bool createLossFiles;
-    string file_prefix;
-    double lossThreshold;
-    size_t nstart;
-    std::list< size_t >* pindex;
+	string file_prefix;
+	double lossThreshold;
+	size_t nstart;
+	std::list< size_t >* pindex;
 
-    IDTBL idtbl;
-    PSvectorArray InputArray;	//The input array
+	IDTBL idtbl;
+	PSvectorArray InputArray;	//The input array
 
 	double s_total;
-    double s;
-    double next_s;
-	double len; // physical length     
+	double s;
+	double next_s;
+	double len; // physical length
 
 
 	bool is_collimator;
-    bool at_entr;
-    bool at_cent;
-    bool at_exit;
+	bool at_entr;
+	bool at_cent;
+	bool at_exit;
 
-    size_t nlost;
+	size_t nlost;
 
 	vector<double> lostparticles;
-	
+
 	// 0 when no dustbin is set
-    bool dustset;
-    
-    double GetBinSize() const {return bin_size;}
-            
-    int ColParProTurn;
-    string FirstElementName;
-    double FirstElementS;
-    bool FirstElementSet;
+	bool dustset;
+
+	double GetBinSize() const
+	{
+		return bin_size;
+	}
+
+	int ColParProTurn;
+	string FirstElementName;
+	double FirstElementS;
+	bool FirstElementSet;
 
 private:
 
-    virtual void DoCollimation ();
-    void SetNextS ();
-    virtual void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
-    void bin_lost_output(const PSvectorArray& lostb); 
+	virtual void DoCollimation ();
+	void SetNextS ();
+	virtual void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
+	void bin_lost_output(const PSvectorArray& lostb);
 
-    bool scatter;
-    double bin_size;		// size of bins
-    double step_size;		// step size to handle when the collimator cannot be split equally into bins
-    bool Imperfections;
+	bool scatter;
+	double bin_size;		// size of bins
+	double step_size;		// step size to handle when the collimator cannot be split equally into bins
+	bool Imperfections;
 
-    double Xr; // radiation length    
-    virtual bool DoScatter(Particle&);
-    
-    std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
+	double Xr; // radiation length
+	virtual bool DoScatter(Particle&);
+
+	std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
 };
 
 inline void CollimateParticleProcess::CreateParticleLossFiles (bool flg, string fprefix)
 {
-    createLossFiles = flg;
-    file_prefix = fprefix;
+	createLossFiles = flg;
+	file_prefix = fprefix;
 }
 
 inline void CollimateParticleProcess::SetLogStream(std::ostream* anOs)
 {
-    os=anOs;
+	os=anOs;
 }
 
 inline const std::list<size_t>& CollimateParticleProcess::GetIndecies() const
 {
-    return *pindex;
+	return *pindex;
 }
 
 inline void CollimateParticleProcess::ScatterAtCollimator(bool tf)
 {
-    scatter=tf;
+	scatter=tf;
 }
 
 } // end namespace ParticleTracking

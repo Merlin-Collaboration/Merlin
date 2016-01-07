@@ -17,7 +17,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	
+
 	// Test some PointInside() functions
 	cout << "RectangularAperture ";
 	cout.flush();
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 	cout << "OK" << endl;
 	delete collapp;
 
-	
+
 	cout << "CollimatorAperture with tilt ";
 	collapp = new CollimatorAperture(24, 20, M_PI/4, NULL, 1, 0, 0);
 	collapp->SetExitWidth(collapp->GetFullEntranceWidth());
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 	assert(!collapp->PointInside(-1.9,1.9,1));
 	assert(collapp->PointInside(1.9,-1.9,0));
 	assert(!collapp->PointInside(1.9,-1.9,1));
-	
+
 	assert(collapp->PointInside(1.4,1.4,0.5));
 	assert(!collapp->PointInside(1.6,1.6,0.5));
 	assert(collapp->PointInside(-1.4,1.4,0.5));

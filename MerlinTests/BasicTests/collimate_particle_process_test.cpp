@@ -20,7 +20,7 @@ using namespace PhysicalUnits;
 
 int main(int argc, char* argv[])
 {
-	
+
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
 
@@ -35,7 +35,8 @@ int main(int argc, char* argv[])
 	double beam_energy = 7000.0;
 	ProtonBunch* myBunch = new ProtonBunch(beam_energy,1);
 
-	double coords[][4] = {
+	double coords[][4] =
+	{
 		{0,0,0,0},
 		{10,0,10,0},
 		{-20,0,20,0},
@@ -47,9 +48,10 @@ int main(int argc, char* argv[])
 	};
 	size_t npart = sizeof(coords) / sizeof(coords[0]);
 	cout << "npart " << npart << endl;
-	
+
 	vector<Particle> pcoords;
-	for(size_t i=0; i<npart; i++){
+	for(size_t i=0; i<npart; i++)
+	{
 		Particle p(0);
 		p.x() = coords[i][0]*millimeter;
 		p.xp() = coords[i][1];
@@ -61,15 +63,15 @@ int main(int argc, char* argv[])
 
 	AcceleratorModel::RingIterator ring = theModel->GetRing();
 	ParticleTracker* tracker = new ParticleTracker(ring,myBunch);
-	
-	        //#define COLL_AT_ENTRANCE 1
-	        //#define COLL_AT_CENTER 2
-	        //#define COLL_AT_EXIT 4
+
+	//#define COLL_AT_ENTRANCE 1
+	//#define COLL_AT_CENTER 2
+	//#define COLL_AT_EXIT 4
 	CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2,4);
 	tracker->AddProcess(myCollimateProcess);
-	
 
-	
+
+
 	drift->SetAperture(rect_app);
 
 

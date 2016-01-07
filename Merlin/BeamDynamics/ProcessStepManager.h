@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:52 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef ProcessStepManager_h
@@ -33,47 +33,47 @@ class ProcessStepManager
 {
 public:
 
-    //	Construction/destruction.
-    ProcessStepManager ();
-    ~ProcessStepManager ();
+	//	Construction/destruction.
+	ProcessStepManager ();
+	~ProcessStepManager ();
 
-    //	Initialise the step manager with the specified (initial)
-    //	bunch.
-    void Initialise (Bunch& bunch);
+	//	Initialise the step manager with the specified (initial)
+	//	bunch.
+	void Initialise (Bunch& bunch);
 
-    //	Track the specified component. The current bunch object
-    //	is updated accordingly.
-    void Track (AcceleratorComponent& component);
+	//	Track the specified component. The current bunch object
+	//	is updated accordingly.
+	void Track (AcceleratorComponent& component);
 
-    //	Returns the total length integrated since the last call
-    //	to Initialise(Bunch&).
-    double GetIntegratedLength ();
+	//	Returns the total length integrated since the last call
+	//	to Initialise(Bunch&).
+	double GetIntegratedLength ();
 
-    //	Add a process.
-    void AddProcess (BunchProcess* aProcess);
+	//	Add a process.
+	void AddProcess (BunchProcess* aProcess);
 
-    //	Remove aProcess from the current process table. Returns
-    //	true if aProcess was present, otherwise false.
-    bool RemoveProcess (BunchProcess* aProcess);
+	//	Remove aProcess from the current process table. Returns
+	//	true if aProcess was present, otherwise false.
+	bool RemoveProcess (BunchProcess* aProcess);
 
-    //	Remove and destroys all processes in the current process
-    //	table.
-    void ClearProcesses ();
+	//	Remove and destroys all processes in the current process
+	//	table.
+	void ClearProcesses ();
 
-    void SetLogStream (std::ostream* os);
+	void SetLogStream (std::ostream* os);
 
 private:
 
-    //	The current intgrated length.
-    double total_s;
-    std::ostream* log;
-    //	list of processes in order of priority.
-    //	ordered
-    std::list<BunchProcess*> processTable;
+	//	The current intgrated length.
+	double total_s;
+	std::ostream* log;
+	//	list of processes in order of priority.
+	//	ordered
+	std::list<BunchProcess*> processTable;
 
-    //Copy protection
-    ProcessStepManager(const ProcessStepManager& rhs);
-    ProcessStepManager& operator=(const ProcessStepManager& rhs);
+	//Copy protection
+	ProcessStepManager(const ProcessStepManager& rhs);
+	ProcessStepManager& operator=(const ProcessStepManager& rhs);
 };
 
 #endif

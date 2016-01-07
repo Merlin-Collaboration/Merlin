@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:55 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_TLAS
@@ -20,7 +20,8 @@
 
 #include "TLAS/TMatrixLib.h"
 
-namespace TLAS {
+namespace TLAS
+{
 
 // Linear algebra classes.
 
@@ -52,10 +53,12 @@ class NonSquareMatrix {};
 
 template<class T> Matrix<T> Transpose(const Matrix<T>& M)
 {
-    Matrix<T> Mt(M.ncols(),M.nrows());
-    for(Subscript i=0; i<M.nrows(); i++)
-        Mt.column(i)=M.row(i);
-    return Mt;
+	Matrix<T> Mt(M.ncols(),M.nrows());
+	for(Subscript i=0; i<M.nrows(); i++)
+	{
+		Mt.column(i)=M.row(i);
+	}
+	return Mt;
 }
 
 }  // end namespace TLAS

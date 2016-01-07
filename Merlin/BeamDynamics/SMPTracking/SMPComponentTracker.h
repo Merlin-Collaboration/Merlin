@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:53 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef SMPComponentTracker_h
@@ -23,7 +23,8 @@
 //	A ComponentTracker class which tracks a
 //  SliceMacroParticle (SMP) object.
 
-namespace SMPTracking {
+namespace SMPTracking
+{
 
 typedef TBunchCMPTracker<SMPBunch> SMPComponentTracker;
 

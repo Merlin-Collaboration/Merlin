@@ -244,11 +244,11 @@ private:
 };
 
 inline AcceleratorComponent::AcceleratorComponent (const string& aName)
-		: ModelElement(aName),itsField(0),itsGeometry(0),itsAperture(0),itsWakes(0),blI(0)
+	: ModelElement(aName),itsField(0),itsGeometry(0),itsAperture(0),itsWakes(0),blI(0)
 {}
 
 inline AcceleratorComponent::AcceleratorComponent (const string& aName, AcceleratorGeometry* aGeom, EMField* aField)
-		: ModelElement(aName),itsField(aField),itsGeometry(aGeom),itsAperture(0),itsWakes(0),blI(0)
+	: ModelElement(aName),itsField(aField),itsGeometry(aGeom),itsAperture(0),itsWakes(0),blI(0)
 {}
 
 inline const AcceleratorGeometry* AcceleratorComponent::GetGeometry () const

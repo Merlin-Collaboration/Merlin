@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 		seed = atoi(argv[1]);
 	}
 	cout << "Random Seed: " << seed << endl;
-	
+
 	//Initialise Random number generator
 	RandomNG::init(seed);
 
@@ -59,9 +59,9 @@ int main(int argc, char* argv[])
 
 	//Create a beam
 	BeamData mybeam;
-	
+
 	//Default values are 0.0
-	
+
 	//The charge of the particles in the beam.
 	//  <0 for electrons, >0 for positrons/protons.
 	mybeam.charge = 1.11e11;
@@ -74,24 +74,24 @@ int main(int argc, char* argv[])
 	mybeam.alpha_y = +1.797781918e-7*meter;
 	mybeam.emit_x = 5.026457122e-10*meter;
 	mybeam.emit_y = 5.026457122e-10*meter;
-	
+
 	//Beam length.
 	mybeam.sig_z = 75.5*millimeter;
-	
+
 	//Relative energy spread of beam.
 	mybeam.sig_dp = 0.000113;
 
 	//Beam centroid
 	mybeam.x0=0;
 	mybeam.xp0=0;
-	mybeam.y0=0;	
+	mybeam.y0=0;
 	mybeam.yp0=0;
 	mybeam.ct0=0.0;
-	
-	//Beam energy (momentum).	
+
+	//Beam energy (momentum).
 	mybeam.p0 = 7000*GeV;
 	//cout << "Energy = " << mybeam.p0 <<endl;
-	
+
 	//X-Y coupling
 	mybeam.c_xy=0.0;
 	mybeam.c_xyp=0.0;
@@ -148,7 +148,7 @@ int main(int argc, char* argv[])
 	//Set MADInterface log file
 	ofstream MADLog("Output/MADlog.txt");
 	myMADinterface->SetLogFile(MADLog);
-	
+
 	//Enable Logging
 	myMADinterface->SetLoggingOn();
 
@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
 	//Output the accelerator model component statistics
 	ofstream myoutfile("Output/model.txt");
 	model->ReportModelStatistics(myoutfile);
-	
+
 	/*********************************************************************
 	**
 	**
@@ -190,25 +190,25 @@ int main(int argc, char* argv[])
 		std::cerr << "Could not open collimation loss file" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	
+
 	//New Collimation process
 	CollimateParticleProcess* myCollimateProcess=new CollimateParticleProcess(2,7,myout);
-	
+
 	//Enable scattering
 	myCollimateProcess->ScatterAtCollimator(true);
-	
+
 	//Create individual loss files
 	myCollimateProcess->CreateParticleLossFiles(true, "lostlist");
-	
+
 	// Sets maximum allowed loss percentage at a single collimator.
 	myCollimateProcess->SetLossThreshold(101.0);
-	
+
 	//Output stream for collimator process log
 	ofstream* myCollimationLog = new ofstream("Output/collimator_log.txt");
-	
+
 	//sets process log stream, NULL to disable.
 	myCollimateProcess->SetLogStream(NULL);
-	
+
 	//Add Collimation process to the tracker.
 	tracker->AddProcess(myCollimateProcess);
 
@@ -224,32 +224,32 @@ int main(int argc, char* argv[])
 	// apply the resistive wakefields
 	// modes, priority, nbins, nsigma
 	CollimatorWakeProcess* myWakeProcess = new CollimatorWakeProcess(modes, 1, 10, 3);
-	
+
 	//Enable the Wakefield process
 	tracker ->AddProcess(myWakeProcess);
- 
- 	/*********************************************************************
+
+	/*********************************************************************
 	**
 	**
 	**	SYNCHROTRON RADIATION SETTINGS
 	**
 	**
 	*********************************************************************/
- 
+
 	//SynchRadParticleProcess* mySynchRadParticleProcess = new SynchRadParticleProcess(10, 1);
 
 	//Include radiation effects in Quadrupoles and Skew Quadrupoles. Bool switch.
 	//mySynchRadParticleProcess->IncludeQuadRadiation (1);
-	
+
 	//Set photon generation type HBSpectrumGen or AWSpectrumGen
 	//mySynchRadParticleProcess->SetPhotonGenerator(HBSpectrumGen);
-	
+
 	//Set number of steps though each component, default = 1
 	//mySynchRadParticleProcess->SetNumComponentSteps(1);
-	
+
 	//Enable Process - currently will segfault
 	//tracker ->AddProcess(mySynchRadParticleProcess);
- 
+
 	// Do the loop for nlaps times
 	for (int iii=1; iii<=nlaps; iii++)
 	{
@@ -270,12 +270,12 @@ int main(int argc, char* argv[])
 }
 
 
-	//mybeam.beta_x = 0.5495121695*meter;
-	//mybeam.beta_y = 0.5498820579*meter;
-	//mybeam.emit_x = 33.640*5.026457122e-10*meter;
-	//mybeam.emit_y = 33.64*5.026457122e-10*meter;
-	//mybeam.alpha_x = -0.0001721885021*meter;
-	//mybeam.alpha_y = -0.0004654580947*meter;
+//mybeam.beta_x = 0.5495121695*meter;
+//mybeam.beta_y = 0.5498820579*meter;
+//mybeam.emit_x = 33.640*5.026457122e-10*meter;
+//mybeam.emit_y = 33.64*5.026457122e-10*meter;
+//mybeam.alpha_x = -0.0001721885021*meter;
+//mybeam.alpha_y = -0.0004654580947*meter;
 
 /*	double benergy;
 	ofstream energy_out("Output/Energy.txt");
@@ -287,17 +287,17 @@ int main(int argc, char* argv[])
 //		energy_out << iii << "\t" << benergy << endl;
 
 
-	//Cleaning up
-	//delete myWakeProcess;
-	//delete myCollimateProcess;
-	//delete mySynchRadParticleProcess;
-	
-	//delete myMADinterface;
-	
-	//delete myCollimationLog;
-	
-	//Does not like this being deleted
-	//delete tracker;
+//Cleaning up
+//delete myWakeProcess;
+//delete myCollimateProcess;
+//delete mySynchRadParticleProcess;
 
-	//delete zero_particle;
-	//delete myout;
+//delete myMADinterface;
+
+//delete myCollimationLog;
+
+//Does not like this being deleted
+//delete tracker;
+
+//delete zero_particle;
+//delete myout;

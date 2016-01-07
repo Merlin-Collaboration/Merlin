@@ -45,7 +45,7 @@ int main()
 	// Note the default is to find the closed orbit first,
 	// and use the transfer matrix around the closed orbit.
 	// Default functions are the closed orbit co-ordinates
-	// and the coupled-lattice equivalents of the 
+	// and the coupled-lattice equivalents of the
 	// Twiss alpha and beta functions.
 	LatticeFunctionTable latticeFunctions(theModel,BEAMENERGY);
 
@@ -66,7 +66,7 @@ int main()
 	// First column is the s position in the beamline.
 	ofstream latticeFunctionLog("LatticeFunctions.dat");
 	latticeFunctions.PrintTable(latticeFunctionLog);
-	
+
 	delete theModel;
 
 	cout<<"Finished!"<<endl;

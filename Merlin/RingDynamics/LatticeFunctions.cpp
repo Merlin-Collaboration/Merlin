@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/08/17 08:21:59 $
 // $Revision: 1.7 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <fstream>
@@ -33,242 +33,274 @@ LatticeFunction::LatticeFunction(int _i, int _j, int _k) : i(_i), j(_j), k(_k)
 
 LatticeFunction::~LatticeFunction()
 {
-    value.clear();
+	value.clear();
 }
 
 void LatticeFunction::GetIndices(int& _i, int& _j, int& _k)
 {
-    _i = i;
-    _j = j;
-    _k = k;
+	_i = i;
+	_j = j;
+	_k = k;
 }
 
 void LatticeFunction::AppendValue(double v)
 {
-    value.push_back(v);
+	value.push_back(v);
 }
 
 void LatticeFunction::ClearValues()
 {
-    value.clear();
+	value.clear();
 }
 
 double LatticeFunction::GetValue(int n)
 {
-    return value[n];
+	return value[n];
 }
 
 vector<double>::iterator LatticeFunction::begin()
 {
-    return value.begin();
+	return value.begin();
 }
 
 vector<double>::iterator LatticeFunction::end()
 {
-    return value.end();
+	return value.end();
 }
 
 int LatticeFunction::size()
 {
-    return value.size();
+	return value.size();
 }
 
 void LatticeFunction::Derivative(LatticeFunction* lfnM, LatticeFunction* lfnP, double dp)
 {
-    int i, j, k;
-    lfnM->GetIndices(i, j, k);
-    bool isPathLength = (i==0 && j==0 && k==0) ? true : false;
+	int i, j, k;
+	lfnM->GetIndices(i, j, k);
+	bool isPathLength = (i==0 && j==0 && k==0) ? true : false;
 
-    vector<double>::iterator lfnMit = lfnM->begin();
-    vector<double>::iterator lfnPit = lfnP->begin();
+	vector<double>::iterator lfnMit = lfnM->begin();
+	vector<double>::iterator lfnPit = lfnP->begin();
 
-    double dv;
-    for(;lfnPit!=lfnP->end();lfnPit++) {
+	double dv;
+	for(; lfnPit!=lfnP->end(); lfnPit++)
+	{
 
-        if(isPathLength)
-            dv = *lfnMit;
-        else
-            dv = (*lfnPit - *lfnMit)/dp;
+		if(isPathLength)
+		{
+			dv = *lfnMit;
+		}
+		else
+		{
+			dv = (*lfnPit - *lfnMit)/dp;
+		}
 
-        value.push_back( dv );
-        lfnMit++;
-    };
+		value.push_back( dv );
+		lfnMit++;
+	};
 }
 
 LatticeFunctionTable::LatticeFunctionTable(AcceleratorModel* aModel, double refMomentum)
-        : theModel(aModel), p0(refMomentum), delta(1.0e-8), bendscale(1.0e-16), symplectify(false), orbitonly(true)
+	: theModel(aModel), p0(refMomentum), delta(1.0e-8), bendscale(1.0e-16), symplectify(false), orbitonly(true)
 {
-    UseDefaultFunctions();
+	UseDefaultFunctions();
 }
 
 struct DeleteLatticeFunction
 {
 public:
-    DeleteLatticeFunction() {};
-    void operator()(LatticeFunction* lfn) { delete lfn; };
+	DeleteLatticeFunction() {};
+	void operator()(LatticeFunction* lfn)
+	{
+		delete lfn;
+	};
 };
 
 LatticeFunctionTable::~LatticeFunctionTable()
 {
-    for_each(lfnlist.begin(),lfnlist.end(),DeleteLatticeFunction());
-    lfnlist.clear();
+	for_each(lfnlist.begin(),lfnlist.end(),DeleteLatticeFunction());
+	lfnlist.clear();
 }
 
 void LatticeFunctionTable::SetDelta(double new_delta)
 {
-    delta = new_delta;
+	delta = new_delta;
 }
 
 void LatticeFunctionTable::ScaleBendPathLength(double scale)
 {
-    bendscale = scale;
+	bendscale = scale;
 }
 
 void LatticeFunctionTable::MakeTMSymplectic(bool flag)
 {
-    symplectify = flag;
+	symplectify = flag;
 }
 
 void LatticeFunctionTable::AddFunction(int i, int j, int k)
 {
-    LatticeFunction* lfn = new LatticeFunction(i, j, k);
-    lfnlist.push_back(lfn);
-    if(k!=0)
-        orbitonly = false;
+	LatticeFunction* lfn = new LatticeFunction(i, j, k);
+	lfnlist.push_back(lfn);
+	if(k!=0)
+	{
+		orbitonly = false;
+	}
 }
 
 void LatticeFunctionTable::UseDefaultFunctions()
 {
-    RemoveAllFunctions();
-    AddFunction(1,0,0); // closed orbit: x
-    AddFunction(2,0,0); // closed orbit: px
-    AddFunction(3,0,0); // closed orbit: y
-    AddFunction(4,0,0); // closed orbit: py
-    AddFunction(5,0,0); // closed orbit: ct
-    AddFunction(6,0,0); // closed orbit: dp
-    AddFunction(1,1,1); // beta_x
-    AddFunction(1,2,1); // -alfa_x
-    AddFunction(3,3,2); // beta_y
-    AddFunction(3,4,2); // -alfa_y
+	RemoveAllFunctions();
+	AddFunction(1,0,0); // closed orbit: x
+	AddFunction(2,0,0); // closed orbit: px
+	AddFunction(3,0,0); // closed orbit: y
+	AddFunction(4,0,0); // closed orbit: py
+	AddFunction(5,0,0); // closed orbit: ct
+	AddFunction(6,0,0); // closed orbit: dp
+	AddFunction(1,1,1); // beta_x
+	AddFunction(1,2,1); // -alfa_x
+	AddFunction(3,3,2); // beta_y
+	AddFunction(3,4,2); // -alfa_y
 }
 
 void LatticeFunctionTable::UseOrbitFunctions()
 {
-    RemoveAllFunctions();
-    AddFunction(1,0,0); // closed orbit: x
-    AddFunction(2,0,0); // closed orbit: px
-    AddFunction(3,0,0); // closed orbit: y
-    AddFunction(4,0,0); // closed orbit: py
+	RemoveAllFunctions();
+	AddFunction(1,0,0); // closed orbit: x
+	AddFunction(2,0,0); // closed orbit: px
+	AddFunction(3,0,0); // closed orbit: y
+	AddFunction(4,0,0); // closed orbit: py
 }
 
 void LatticeFunctionTable::Size(int& rows, int& cols)
 {
-    rows = NumberOfRows();
-    cols = lfnlist.size();
+	rows = NumberOfRows();
+	cols = lfnlist.size();
 }
 
 void LatticeFunctionTable::RemoveAllFunctions()
 {
-    for_each(lfnlist.begin(),lfnlist.end(),DeleteLatticeFunction());
-    lfnlist.clear();
-    AddFunction(0,0,0);
-    orbitonly = true;
+	for_each(lfnlist.begin(),lfnlist.end(),DeleteLatticeFunction());
+	lfnlist.clear();
+	AddFunction(0,0,0);
+	orbitonly = true;
 }
 
 struct ClearLatticeFunction
 {
 public:
-    ClearLatticeFunction() {};
-    void operator()(LatticeFunction* lfn) { lfn->ClearValues(); };
+	ClearLatticeFunction() {};
+	void operator()(LatticeFunction* lfn)
+	{
+		lfn->ClearValues();
+	};
 };
 
 struct CalculateLatticeFunction
 {
 private:
-    double s;
-    const Particle* p;
-    RealMatrix* N;
+	double s;
+	const Particle* p;
+	RealMatrix* N;
 
 public:
-    CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N)
-            : s(_s), p(&_p), N(&_N) {};
+	CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N)
+		: s(_s), p(&_p), N(&_N) {};
 
-    void operator()(LatticeFunction* lfn) {
-        int i, j, k;
-        double v = 0;
+	void operator()(LatticeFunction* lfn)
+	{
+		int i, j, k;
+		double v = 0;
 
-        lfn->GetIndices(i, j, k);
+		lfn->GetIndices(i, j, k);
 
-		if(i==0 && j==0 && k>0) {
+		if(i==0 && j==0 && k>0)
+		{
 			v = atan2( (*N)(2*k-2,2*k-1) , (*N)(2*k-2,2*k-2) )/twoPi;
 			if(k!=3 && v<-1.0e-9)
+			{
 				v += 1.0;
+			}
 		}
 
-        if(i==0 && j==0 && k==0)
-            v = s;
+		if(i==0 && j==0 && k==0)
+		{
+			v = s;
+		}
 
-        if(i>0 && j==0 && k==0)
-            v = (*p)[i-1];
+		if(i>0 && j==0 && k==0)
+		{
+			v = (*p)[i-1];
+		}
 
-        if(i>0 && j>0 && k>0)
-            v = (*N)(i-1,2*k-2)*(*N)(j-1,2*k-2) + (*N)(i-1,2*k-1)*(*N)(j-1,2*k-1);
+		if(i>0 && j>0 && k>0)
+		{
+			v = (*N)(i-1,2*k-2)*(*N)(j-1,2*k-2) + (*N)(i-1,2*k-1)*(*N)(j-1,2*k-1);
+		}
 
-        lfn->AppendValue(v);
-    };
+		lfn->AppendValue(v);
+	};
 };
 
 void LatticeFunctionTable::Calculate(PSvector* p, RealMatrix* M)
 {
-    if(orbitonly)
-        DoCalculateOrbitOnly(bendscale, p);
-    else
-        DoCalculate(bendscale, p, M);
+	if(orbitonly)
+	{
+		DoCalculateOrbitOnly(bendscale, p);
+	}
+	else
+	{
+		DoCalculate(bendscale, p, M);
+	}
 }
 
 struct CopyLatticeFunction
 {
 private:
-    vectorlfn* lfncopy;
+	vectorlfn* lfncopy;
 public:
-    CopyLatticeFunction(vectorlfn& copy) : lfncopy(&copy) {};
+	CopyLatticeFunction(vectorlfn& copy) : lfncopy(&copy) {};
 
-    void operator()(LatticeFunction* lfn){
-        LatticeFunction* newlfn = new LatticeFunction(*lfn);
-        lfncopy->push_back(newlfn);
-    };
+	void operator()(LatticeFunction* lfn)
+	{
+		LatticeFunction* newlfn = new LatticeFunction(*lfn);
+		lfncopy->push_back(newlfn);
+	};
 };
 
 void LatticeFunctionTable::CalculateEnergyDerivative()
 {
-    double dpP = orbitonly ? DoCalculateOrbitOnly( bendscale) : DoCalculate( bendscale);
-    vectorlfn lfnP;
-    for_each(lfnlist.begin(),lfnlist.end(),CopyLatticeFunction(lfnP));
+	double dpP = orbitonly ? DoCalculateOrbitOnly( bendscale) : DoCalculate( bendscale);
+	vectorlfn lfnP;
+	for_each(lfnlist.begin(),lfnlist.end(),CopyLatticeFunction(lfnP));
 
-    double dpM = orbitonly ? DoCalculateOrbitOnly(-bendscale) : DoCalculate(-bendscale);
-    vectorlfn lfnM;
-    for_each(lfnlist.begin(),lfnlist.end(),CopyLatticeFunction(lfnM));
+	double dpM = orbitonly ? DoCalculateOrbitOnly(-bendscale) : DoCalculate(-bendscale);
+	vectorlfn lfnM;
+	for_each(lfnlist.begin(),lfnlist.end(),CopyLatticeFunction(lfnM));
 
-    for_each(lfnlist.begin(),lfnlist.end(),ClearLatticeFunction());
+	for_each(lfnlist.begin(),lfnlist.end(),ClearLatticeFunction());
 
-    double dp = dpP - dpM;
-    vectorlfn::iterator lfnitP = lfnP.begin();
-    vectorlfn::iterator lfnitM = lfnM.begin();
+	double dp = dpP - dpM;
+	vectorlfn::iterator lfnitP = lfnP.begin();
+	vectorlfn::iterator lfnitM = lfnM.begin();
 
-    for(vectorlfn::iterator lfnit=lfnlist.begin(); lfnit!=lfnlist.end(); lfnit++,lfnitP++,lfnitM++) {
-        (*lfnit)->Derivative(*lfnitM, *lfnitP, dp);
-    };
+	for(vectorlfn::iterator lfnit=lfnlist.begin(); lfnit!=lfnlist.end(); lfnit++,lfnitP++,lfnitM++)
+	{
+		(*lfnit)->Derivative(*lfnitM, *lfnitP, dp);
+	};
 
 }
 
 double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMatrix* MInit)
 {
-    for_each(lfnlist.begin(),lfnlist.end(),ClearLatticeFunction());
+	for_each(lfnlist.begin(),lfnlist.end(),ClearLatticeFunction());
 
-    PSvector p(0);
-	if(pInit) {
+	PSvector p(0);
+	if(pInit)
+	{
 		p = *pInit;
-	} else {
+	}
+	else
+	{
 		ClosedOrbit co(theModel, p0);
 		co.SetDelta(delta);
 		co.TransverseOnly(true);
@@ -278,21 +310,26 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 
 //cout << p << endl;
 
-    RealMatrix M(6);
-	if(MInit) {
+	RealMatrix M(6);
+	if(MInit)
+	{
 		M = *MInit;
-	} else {
+	}
+	else
+	{
 		TransferMatrix tm(theModel, p0);
 		tm.SetDelta(delta);
 		tm.ScaleBendPathLength(cscale);
 		tm.FindTM(M,p);
 	}
 //	cout << "Matrix 00 " << M(0,0) << endl;
-    ComplexVector eigenvalues(3);
-    ComplexMatrix eigenvectors(3,6);
+	ComplexVector eigenvalues(3);
+	ComplexMatrix eigenvectors(3,6);
 	if(symplectify)
+	{
 		Symplectify(M);
-    EigenSystem(M, eigenvalues, eigenvectors);
+	}
+	EigenSystem(M, eigenvalues, eigenvectors);
 
 	int row, col;
 //cout << "eigenvalues" << endl;
@@ -301,24 +338,26 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 //cout << eigenvalues(2) << endl;
 //cout << endl;
 
-    RealMatrix N(6);
-    RealMatrix R(6);
-    for(row=0; row<6; row++) {
-        for(col=0; col<3; col++)
+	RealMatrix N(6);
+	RealMatrix R(6);
+	for(row=0; row<6; row++)
 	{
-		//cout << sqrt(2.)*eigenvectors(col,row).real() << endl;
-		//cout << sqrt(2.)*eigenvectors(col,row).imag() << endl;
+		for(col=0; col<3; col++)
+		{
+			//cout << sqrt(2.)*eigenvectors(col,row).real() << endl;
+			//cout << sqrt(2.)*eigenvectors(col,row).imag() << endl;
 
-            N(row,2*col)   = sqrt(2.)*eigenvectors(col,row).real();
-            N(row,2*col+1) = sqrt(2.)*eigenvectors(col,row).imag();
+			N(row,2*col)   = sqrt(2.)*eigenvectors(col,row).real();
+			N(row,2*col+1) = sqrt(2.)*eigenvectors(col,row).imag();
 			R(row,2*col)   = 0.0;
 			R(row,2*col+1) = 0.0;
-        }
-    }
+		}
+	}
 	ofstream nfile("DataFiles/NormMatrix.dat");
 	MatrixForm(N,nfile,OPFormat().precision(6).fixed());
 
-	for(row=0; row<3; row++) {
+	for(row=0; row<3; row++)
+	{
 		int i = 2*row;
 		int j = 2*row + 1;
 		double theta =-atan2(N(i,j),N(i,i));
@@ -336,37 +375,40 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 
 
 
-    ParticleBunch* particle = new ParticleBunch(p0, 1.0);
-    particle->push_back(p);
-    particle->push_back(p);
+	ParticleBunch* particle = new ParticleBunch(p0, 1.0);
+	particle->push_back(p);
+	particle->push_back(p);
 
-    for(row=0; row<6; row++) {
-        Particle q = p;
-        q[row] += delta;
-        particle->push_back(q);
-    };
+	for(row=0; row<6; row++)
+	{
+		Particle q = p;
+		q[row] += delta;
+		particle->push_back(q);
+	};
 
-    ParticleTracker tracker(theModel->GetBeamline(),particle);
+	ParticleTracker tracker(theModel->GetBeamline(),particle);
 
-    if(cscale) {
-        RingDeltaTProcess* ringdt = new RingDeltaTProcess(2);
-        ringdt->SetBendScale(cscale);
-        tracker.AddProcess(ringdt);
-    }
+	if(cscale)
+	{
+		RingDeltaTProcess* ringdt = new RingDeltaTProcess(2);
+		ringdt->SetBendScale(cscale);
+		tracker.AddProcess(ringdt);
+	}
 
-    bool loop = true;
+	bool loop = true;
 	bool isMore = true;
-    tracker.InitStepper();
+	tracker.InitStepper();
 
-    RealMatrix M1 = IdentityMatrix(6);
+	RealMatrix M1 = IdentityMatrix(6);
 	RealMatrix M2(6);
 	RealMatrix M21(6);
 
 	double e0 = particle->GetReferenceMomentum();
 	double e1 = e0;
-    double s  = 0;
+	double s  = 0;
 
-	do {
+	do
+	{
 
 		ParticleBunch::iterator ip = tracker.GetTrackedBunch().begin();
 		Particle pref1 = *ip++;
@@ -378,17 +420,23 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 //			for(int row=0; row<3; row++)
 //				pref2[2*row+1] *= e1/e0;
 			for(int row=0; row<6; row++)
+			{
 				pref2[row] *= sqrt(e1/e0);
-			
-		for(int col=0; col<6; col++,ip++) {
+			}
+
+		for(int col=0; col<6; col++,ip++)
+		{
 
 			if(e1!=e0)
 //				for(int row=0; row<3; row++)
 //					(*ip)[2*row+1] *= e1/e0;
 				for(int row=0; row<6; row++)
+				{
 					(*ip)[row] *= sqrt(e1/e0);
+				}
 
-			for(int row=0; row<6; row++) {
+			for(int row=0; row<6; row++)
+			{
 				M2(row,col) = ((*ip)[row] - pref2[row]) / delta;
 			}
 		}
@@ -400,184 +448,218 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		Invert(M1);
 
 		if(symplectify)
+		{
 			Symplectify(M21);
+		}
 
 		N  = M21*N;
 
 		for_each(lfnlist.begin(),lfnlist.end(),CalculateLatticeFunction(s,pref1,N));
-		if(isMore){
+		if(isMore)
+		{
 			s += tracker.GetCurrentComponent().GetLength();
 			isMore = tracker.StepComponent();
 			//cout << tracker.GetCurrentComponent().GetQualifiedName() << endl;
 			//MatrixForm(N,std::cout,OPFormat().precision(6).fixed());
 			//cout << endl;
-		}else
+		}
+		else
+		{
 			loop = false;
+		}
 
-    } while(loop);
+	}
+	while(loop);
 
 	ofstream mfile("TransferMatrix.dat");
 	MatrixForm(M2,mfile,OPFormat().precision(6).fixed());
 
-    return p.dp();
+	return p.dp();
 }
 
 double LatticeFunctionTable::DoCalculateOrbitOnly(double cscale, PSvector* pInit)
 {
-    for_each(lfnlist.begin(),lfnlist.end(),ClearLatticeFunction());
+	for_each(lfnlist.begin(),lfnlist.end(),ClearLatticeFunction());
 
-    PSvector p(0);
-	if(pInit) {
+	PSvector p(0);
+	if(pInit)
+	{
 		p = *pInit;
-	} else {
+	}
+	else
+	{
 		ClosedOrbit co(theModel, p0);
 		co.SetDelta(delta);
 		co.ScaleBendPathLength(cscale);
 		co.FindClosedOrbit(p);
 	}
 
-    ParticleBunch* particle = new ParticleBunch(p0, 1.0);
-    particle->push_back(p);
+	ParticleBunch* particle = new ParticleBunch(p0, 1.0);
+	particle->push_back(p);
 
-    ParticleTracker tracker(theModel->GetBeamline(),particle);
+	ParticleTracker tracker(theModel->GetBeamline(),particle);
 
-    if(cscale) {
-        RingDeltaTProcess* ringdt = new RingDeltaTProcess(2);
-        ringdt->SetBendScale(cscale);
-        tracker.AddProcess(ringdt);
-    }
+	if(cscale)
+	{
+		RingDeltaTProcess* ringdt = new RingDeltaTProcess(2);
+		ringdt->SetBendScale(cscale);
+		tracker.AddProcess(ringdt);
+	}
 
-    bool loop = true;
-    tracker.InitStepper();
+	bool loop = true;
+	tracker.InitStepper();
 
-    double s = 0;
-    RealMatrix N1(6);
+	double s = 0;
+	RealMatrix N1(6);
 
-    do {
+	do
+	{
 
-        ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
-        const Particle& pref = *ip++;
+		ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
+		const Particle& pref = *ip++;
 
-        for_each(lfnlist.begin(),lfnlist.end(),CalculateLatticeFunction(s,pref,N1));
-        s += tracker.GetCurrentComponent().GetLength();
-        loop = tracker.StepComponent();
+		for_each(lfnlist.begin(),lfnlist.end(),CalculateLatticeFunction(s,pref,N1));
+		s += tracker.GetCurrentComponent().GetLength();
+		loop = tracker.StepComponent();
 
-    } while(loop);
+	}
+	while(loop);
 
-    return p.dp();
+	return p.dp();
 }
 
 struct PrintLatticeFunction
 {
 private:
-    int row;
-    ostream* os;
+	int row;
+	ostream* os;
 
 
 public:
-    PrintLatticeFunction(int r, ostream& _os)
-            : row(r), os(&_os) {};
+	PrintLatticeFunction(int r, ostream& _os)
+		: row(r), os(&_os) {};
 
-    void operator()(LatticeFunction* lfn) {
-        (*os)<<std::setw(30)<<std::setprecision(10)<<lfn->GetValue(row);
-    };
+	void operator()(LatticeFunction* lfn)
+	{
+		(*os)<<std::setw(30)<<std::setprecision(10)<<lfn->GetValue(row);
+	};
 
 };
 
 int LatticeFunctionTable::NumberOfRows()
 {
-    return (*(lfnlist.begin()))->size();
+	return (*(lfnlist.begin()))->size();
 }
 
 void LatticeFunctionTable::PrintTable(ostream& os, int n1, int n2)
 {
-    if(n1<0)
-        n1 = 0;
+	if(n1<0)
+	{
+		n1 = 0;
+	}
 
-    int nrows = NumberOfRows();
-    if(n2>=nrows || n2<n1)
-        n2 = nrows-1;
+	int nrows = NumberOfRows();
+	if(n2>=nrows || n2<n1)
+	{
+		n2 = nrows-1;
+	}
 
-    for(int row=n1; row<=n2; row++) {
-        for_each(lfnlist.begin(), lfnlist.end(), PrintLatticeFunction(row,os));
-        os<<endl;
-    };
+	for(int row=n1; row<=n2; row++)
+	{
+		for_each(lfnlist.begin(), lfnlist.end(), PrintLatticeFunction(row,os));
+		os<<endl;
+	};
 }
 
 int LatticeFunctionTable::GetSPosIndex(double s)
 {
-    int n;
+	int n;
 
-    for(n=0; n<NumberOfRows(); n++)
-        if(lfnlist[0]->GetValue(n)>=s)
-            return n;
+	for(n=0; n<NumberOfRows(); n++)
+		if(lfnlist[0]->GetValue(n)>=s)
+		{
+			return n;
+		}
 
-    return -1;
+	return -1;
 }
 
 double LatticeFunctionTable::Value(int i, int j, int k, int ncpt)
 {
-    vectorlfn::iterator lfnit = GetColumn(i, j, k);
-    return (*lfnit)->GetValue(ncpt);
+	vectorlfn::iterator lfnit = GetColumn(i, j, k);
+	return (*lfnit)->GetValue(ncpt);
 }
 
 vectorlfn::iterator LatticeFunctionTable::GetColumn(int i, int j, int k)
 {
-    vectorlfn::iterator lfnit = lfnlist.begin();
-    int _i, _j, _k;
+	vectorlfn::iterator lfnit = lfnlist.begin();
+	int _i, _j, _k;
 
-    for(;lfnit!=lfnlist.end();lfnit++) {
-        (*lfnit)->GetIndices(_i,_j,_k);
-        if(i==_i && j==_j && k==_k)
-            return lfnit;
-    };
+	for(; lfnit!=lfnlist.end(); lfnit++)
+	{
+		(*lfnit)->GetIndices(_i,_j,_k);
+		if(i==_i && j==_j && k==_k)
+		{
+			return lfnit;
+		}
+	};
 
-    return lfnit;
+	return lfnit;
 }
 
 double LatticeFunctionTable::Mean(int i, int j, int k, int n1, int n2)
 {
-    vectorlfn::iterator lfnit = GetColumn(i,j,k);
+	vectorlfn::iterator lfnit = GetColumn(i,j,k);
 
-    if(n1<0)
-        n1 = 0;
+	if(n1<0)
+	{
+		n1 = 0;
+	}
 
-    int nrows = NumberOfRows();
-    if(n2>=nrows || n2<n1)
-        n2 = nrows-1;
+	int nrows = NumberOfRows();
+	if(n2>=nrows || n2<n1)
+	{
+		n2 = nrows-1;
+	}
 
-    double sums = 0;
-    double sumv = 0;
-    for(int row=n1; row<n2; row++) {
-        double ds = lfnlist[0]->GetValue(row+1) - lfnlist[0]->GetValue(row);
-        double mv = (*lfnit)->GetValue(row+1) + (*lfnit)->GetValue(row);
-        sums += ds;
-        sumv += 0.5*ds*mv;
-    };
+	double sums = 0;
+	double sumv = 0;
+	for(int row=n1; row<n2; row++)
+	{
+		double ds = lfnlist[0]->GetValue(row+1) - lfnlist[0]->GetValue(row);
+		double mv = (*lfnit)->GetValue(row+1) + (*lfnit)->GetValue(row);
+		sums += ds;
+		sumv += 0.5*ds*mv;
+	};
 
-    return sumv/sums;
+	return sumv/sums;
 }
 
 double LatticeFunctionTable::RMS(int i, int j, int k, int n1, int n2)
 {
-    vectorlfn::iterator lfnit = GetColumn(i,j,k);
+	vectorlfn::iterator lfnit = GetColumn(i,j,k);
 
-    if(n1<0)
-        n1 = 0;
+	if(n1<0)
+	{
+		n1 = 0;
+	}
 
-    int nrows = NumberOfRows();
-    if(n2>=nrows || n2<n1)
-        n2 = nrows-1;
+	int nrows = NumberOfRows();
+	if(n2>=nrows || n2<n1)
+	{
+		n2 = nrows-1;
+	}
 
-    double sums = 0;
-    double sumv = 0;
-    for(int row=n1; row<n2; row++) {
-        double ds = lfnlist[0]->GetValue(row+1) - lfnlist[0]->GetValue(row);
-        double mv1 = (*lfnit)->GetValue(row+1);
-        double mv0 = (*lfnit)->GetValue(row);
-        sums += ds;
-        sumv += 0.5*ds*(mv0*mv0 + mv1*mv1);
-    };
+	double sums = 0;
+	double sumv = 0;
+	for(int row=n1; row<n2; row++)
+	{
+		double ds = lfnlist[0]->GetValue(row+1) - lfnlist[0]->GetValue(row);
+		double mv1 = (*lfnit)->GetValue(row+1);
+		double mv0 = (*lfnit)->GetValue(row);
+		sums += ds;
+		sumv += 0.5*ds*(mv0*mv0 + mv1*mv1);
+	};
 
-    return sqrt(sumv/sums);
+	return sqrt(sumv/sums);
 }

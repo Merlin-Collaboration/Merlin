@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // Class AcceleratorWithErrors
 // Represents the physical accelerator with errors.
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -10,7 +10,7 @@
 // Last CVS revision:
 // $Date: 2006/06/13 11:46:56 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_AcceleratorWithErrors
@@ -21,7 +21,8 @@
 
 class AlignmentError;
 
-class AcceleratorWithErrors : public Accelerator {
+class AcceleratorWithErrors : public Accelerator
+{
 public:
 
 	AcceleratorWithErrors(const std::string& name, AcceleratorModel*, BeamData*);

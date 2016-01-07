@@ -3,13 +3,13 @@
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
 //
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:54 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef MerlinException_h
@@ -20,9 +20,9 @@
 /**
 * Root class for all Merlin exceptions.
 */
-class MerlinException 
+class MerlinException
 {
-	public:
+public:
 
 	/**
 	* Constructor: Builds the MerlinException and sets the exception message.
@@ -46,7 +46,7 @@ class MerlinException
 	*/
 	const char* Msg() const;
 
-	protected:
+protected:
 
 	/**
 	* Sets the exception message.

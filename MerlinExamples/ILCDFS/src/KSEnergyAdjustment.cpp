@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////
 // class KSEnergyAdjustment implementation
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -9,7 +9,7 @@
 // Last CVS revision:
 // $Date: 2006/06/19 10:19:06 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "KSEnergyAdjustment.h"
@@ -17,8 +17,8 @@
 
 using namespace std;
 
-KSEnergyAdjustment::KSEnergyAdjustment(double dEr) 
-: EnergyAdjustmentPolicy(), delta(dEr)
+KSEnergyAdjustment::KSEnergyAdjustment(double dEr)
+	: EnergyAdjustmentPolicy(), delta(dEr)
 {}
 
 void KSEnergyAdjustment::Initialise()
@@ -33,10 +33,12 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 	// Identify last klystron upstream of segment
 	double energy = energy0;
 	size_t nk1,nk2;
-	for(size_t i=0; i<theKlystrons.size(); i++) {
+	for(size_t i=0; i<theKlystrons.size(); i++)
+	{
 		std::vector<size_t> ki;
 		theKlystrons[i]->GetBeamlineIndecies(ki);
-		if(ki.back() >= seg.first) {
+		if(ki.back() >= seg.first)
+		{
 			nk2 = i==0 ? 0 : i-1;
 			break;
 		}
@@ -46,8 +48,10 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 	// Indentify klystron range to modify
 	double v = delta*energy;
 	nk1=nk2+1;
-	if(nk2!=0) {
-		while(v>0 && nk1>0) {
+	if(nk2!=0)
+	{
+		while(v>0 && nk1>0)
+		{
 			nk1--;
 			v-=(*theKlystrons[nk1]).GetVoltagePhasor().real();
 		}
@@ -55,15 +59,20 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 		cKlysRange.first = nk1;
 		cKlysRange.second = nk2;
 	}
-	else { // special case: no klystrons can be used
+	else   // special case: no klystrons can be used
+	{
 		dEbeam = -v;
 		cKlysRange.first = 0;
 		cKlysRange.second = 0;
 	}
-	if(dfs_trace::verbosity>=dfs_trace::level_2) {
+	if(dfs_trace::verbosity>=dfs_trace::level_2)
+	{
 		if(nk2==0)
+		{
 			dfs_trace(dfs_trace::level_2)<<"zero klystrons modified; ";
-		else {
+		}
+		else
+		{
 			dfs_trace(dfs_trace::level_2)<<nk2-nk1+1<<" klystrons ("<<nk1<<'-'<<nk2<<") ";
 			dfs_trace(dfs_trace::level_2)<<delta*energy-v<<" GeV; ";
 		}
@@ -73,13 +82,17 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 
 void KSEnergyAdjustment::SetEnergyState(size_t nes)
 {
-	if(nes==0) {
+	if(nes==0)
+	{
 		beamrefs[1]->SetReferenceMomentum(energy0);
 		RestoreKlystrons();
 	}
-	else {
-		if(cKlysRange.first!=0) {
-			for(size_t k=cKlysRange.first; k<=cKlysRange.second; k++) {
+	else
+	{
+		if(cKlysRange.first!=0)
+		{
+			for(size_t k=cKlysRange.first; k<=cKlysRange.second; k++)
+			{
 				theKlystrons[k]->SetVoltage(0.0);
 			}
 		}

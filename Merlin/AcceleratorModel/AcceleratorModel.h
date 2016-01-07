@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/10/24 19:15:24 $
 // $Revision: 1.8 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef AcceleratorModel_h
@@ -92,11 +92,11 @@ public:
 
 	public:
 		Beamline (BeamlineIterator fst, BeamlineIterator lst, Index fst_i, Index lst_i)
-		: first(fst),last(lst),first_i(fst_i),last_i(lst_i)
+			: first(fst),last(lst),first_i(fst_i),last_i(lst_i)
 		{}
 
 		Beamline ()
-		: first(),last(),first_i(),last_i()
+			: first(),last(),first_i(),last_i()
 		{}
 
 		/**
@@ -203,13 +203,19 @@ public:
 		* Gets the index of the first element in the Beamline.
 		* @return The index of the first element in the Beamline.
 		*/
-		Index first_index() const { return first_i; }
+		Index first_index() const
+		{
+			return first_i;
+		}
 
 		/**
 		* Gets the index of the last element in the Beamline.
 		* @return The index of the last element in the Beamline.
 		*/
-		Index last_index() const { return last_i; }
+		Index last_index() const
+		{
+			return last_i;
+		}
 
 	private:
 		// Data Members for Class Attributes

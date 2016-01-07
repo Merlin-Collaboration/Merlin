@@ -28,5 +28,5 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 double Weibull::operator()()
 {
-    return( pow(pBeta * ( - log(1 - pGenerator -> asDouble()) ), pInvAlpha) );
+	return( pow(pBeta * ( - log(1 - pGenerator -> asDouble()) ), pInvAlpha) );
 }

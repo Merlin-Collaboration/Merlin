@@ -18,56 +18,66 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef _Weibull_h
 #ifdef __GNUG__
 #endif
-#define _Weibull_h 
+#define _Weibull_h
 
 #include "Random/Random.h"
 
-class Weibull: public Random {
+class Weibull: public Random
+{
 protected:
-    double pAlpha;
-    double pInvAlpha;
-    double pBeta;
+	double pAlpha;
+	double pInvAlpha;
+	double pBeta;
 
-    void setState();
+	void setState();
 
 public:
-    Weibull(double alpha, double beta, RNG *gen);
+	Weibull(double alpha, double beta, RNG *gen);
 
-    double alpha();
-    double alpha(double x);
+	double alpha();
+	double alpha(double x);
 
-    double beta();
-    double beta(double x);
+	double beta();
+	double beta(double x);
 
-    virtual double operator()();
+	virtual double operator()();
 };
 
 
-inline void Weibull::setState() {
-    pInvAlpha = 1.0 / pAlpha;
+inline void Weibull::setState()
+{
+	pInvAlpha = 1.0 / pAlpha;
 }
 
 inline Weibull::Weibull(double alpha, double beta,  RNG *gen) : Random(gen)
 {
-    pAlpha = alpha;
-    pBeta = beta;
-    setState();
+	pAlpha = alpha;
+	pBeta = beta;
+	setState();
 }
 
-inline double Weibull::alpha() { return pAlpha; }
-
-inline double Weibull::alpha(double x) {
-    double tmp = pAlpha;
-    pAlpha = x;
-    setState();
-    return tmp;
+inline double Weibull::alpha()
+{
+	return pAlpha;
 }
 
-inline double Weibull::beta() { return pBeta; }
-inline double Weibull::beta(double x) {
-    double tmp = pBeta;
-    pBeta = x;
-    return tmp;
+inline double Weibull::alpha(double x)
+{
+	double tmp = pAlpha;
+	pAlpha = x;
+	setState();
+	return tmp;
+}
+
+inline double Weibull::beta()
+{
+	return pBeta;
+}
+inline double Weibull::beta(double x)
+{
+	double tmp = pBeta;
+	pBeta = x;
+	return tmp;
 }
 
 #endif

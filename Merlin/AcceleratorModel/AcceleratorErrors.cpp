@@ -6,16 +6,17 @@
 #include "NumericalUtils/utils.h"
 
 using namespace std;
-namespace {
+namespace
+{
 
 class Errors
 {
 public:
 
-	Errors( double  vvx, double  vvy, double  vvz, double meanx, double meany, double meanz, 
-			const string& p, bool clear, bool trans, ostream* l)
-			: vx(vvx), vy(vvy), vz(vvz), mx(meanx), my(meany), mz(meanz), c(clear),
-			t(trans),pat("*."+p), log(l) {};
+	Errors( double  vvx, double  vvy, double  vvz, double meanx, double meany, double meanz,
+	        const string& p, bool clear, bool trans, ostream* l)
+		: vx(vvx), vy(vvy), vz(vvz), mx(meanx), my(meany), mz(meanz), c(clear),
+		  t(trans),pat("*."+p), log(l) {};
 
 	void operator()(LatticeFrame* frame) const
 	{

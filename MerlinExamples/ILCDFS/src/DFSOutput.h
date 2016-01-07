@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // Class DFSOutput
 // Used to define output for final (emittance) tracking.
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -10,7 +10,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 18:32:23 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_DFSOutput
@@ -20,7 +20,8 @@
 #include <string>
 #include <fstream>
 
-class DFSOutput : public SimulationOutput {
+class DFSOutput : public SimulationOutput
+{
 public:
 
 	DFSOutput() : fos(0) {}
@@ -32,7 +33,7 @@ public:
 protected:
 
 	virtual void Record(const ComponentFrame* frame, const Bunch* bunch);
-    virtual void RecordInitialBunch(const Bunch* bunch);
+	virtual void RecordInitialBunch(const Bunch* bunch);
 	virtual void RecordFinalBunch(const Bunch* bunch);
 
 private:

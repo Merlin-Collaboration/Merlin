@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // Class DFSApp
 // Root control class for applying DFS to a beamline
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -10,7 +10,7 @@
 // Last CVS revision:
 // $Date: 2008/01/14 21:08:22 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 #ifndef _h_DFSApp
 #define _h_DFSApp 1
@@ -21,7 +21,8 @@
 class AcceleratorWithErrors;
 class SimulationOutput;
 
-class DFSApp {
+class DFSApp
+{
 public:
 
 	DFSApp();

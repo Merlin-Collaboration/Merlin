@@ -22,10 +22,11 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 double Erlang::operator()()
 {
-    double prod = 1.0;
+	double prod = 1.0;
 
-    for (int i = 0; i < k; i++) {
-        prod *= pGenerator -> asDouble();
-    }
-    return(-log(prod)/a);
+	for (int i = 0; i < k; i++)
+	{
+		prod *= pGenerator -> asDouble();
+	}
+	return(-log(prod)/a);
 }

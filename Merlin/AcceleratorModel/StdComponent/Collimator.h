@@ -48,58 +48,69 @@ public:
 
 	// Overloaded constructor
 	Collimator (const string& id, double len);
-    Collimator (const string& id, double len, double radLength);
+	Collimator (const string& id, double len, double radLength);
 	Collimator (const string& id, double len, Material* pp, double P0);
 	//~ Collimator (const string& id, double len, Material* pp, Collimation::ScatteringModel* s, double P0);
 
-    // Returns the length of the collimator in units of its
-    // radiation length
-    double GetNumRadLengths() const {
-        return GetLength()/Xr;
-    }
+	// Returns the length of the collimator in units of its
+	// radiation length
+	double GetNumRadLengths() const
+	{
+		return GetLength()/Xr;
+	}
 
 	// Returns the material radiation length (meter)
-	double GetMaterialRadiationLength() const {
+	double GetMaterialRadiationLength() const
+	{
 		return Xr;
 	}
 
-    //	Returns the type string for this component.
-    virtual const string& GetType () const;
+	//	Returns the type string for this component.
+	virtual const string& GetType () const;
 
-    //	Returns the unique index for this class of accelerator
-    //	components.
-    virtual int GetIndex () const;
+	//	Returns the unique index for this class of accelerator
+	//	components.
+	virtual int GetIndex () const;
 
-    //	Primary tracking interface. Prepares the specified
-    //	Tracker object for tracking this component.
-    virtual void PrepareTracker (ComponentTracker& aTracker);
+	//	Primary tracking interface. Prepares the specified
+	//	Tracker object for tracking this component.
+	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-    //	Rotates the component 180 degrees about its local Y axis.
-    virtual void RotateY180 ();
+	//	Rotates the component 180 degrees about its local Y axis.
+	virtual void RotateY180 ();
 
-    //	Virtual constructor.
-    virtual ModelElement* Copy () const;
+	//	Virtual constructor.
+	virtual ModelElement* Copy () const;
 
-    //	Unique index for an Accelerator component.
-    static const int ID;
-    
-    // Collimator ID for Fluka output
-	virtual void SetCollID (int n){Coll_ID = n;}
-	virtual int GetCollID(){return Coll_ID;}
+	//	Unique index for an Accelerator component.
+	static const int ID;
+
+	// Collimator ID for Fluka output
+	virtual void SetCollID (int n)
+	{
+		Coll_ID = n;
+	}
+	virtual int GetCollID()
+	{
+		return Coll_ID;
+	}
 
 	bool scatter_at_this_collimator;
 
 	// Collimator material
-    Material* p;
-	virtual void SetMaterial(Material* pp){p = pp;};
-	
+	Material* p;
+	virtual void SetMaterial(Material* pp)
+	{
+		p = pp;
+	};
+
 	// ScatteringModel contains the relevent ScatteringProcess to use when performing scattering
-    //~ Collimation::ScatteringModel* scatter;
+	//~ Collimation::ScatteringModel* scatter;
 	//~ virtual void SetScatteringModel(Collimation::ScatteringModel* s);
 
 
 private:
-    double Xr;
+	double Xr;
 };
 
 #endif

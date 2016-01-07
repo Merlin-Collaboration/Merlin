@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:51 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef BPMChannel_h
@@ -25,25 +25,25 @@ class BPMChannel : public ROChannel
 {
 public:
 
-    //	Constructor taking the BPMDataBuffer, and the type of
-    //	channel ('X' or 'Y').
-    BPMChannel (char XorY, BPMDataBuffer* dataBuff);
+	//	Constructor taking the BPMDataBuffer, and the type of
+	//	channel ('X' or 'Y').
+	BPMChannel (char XorY, BPMDataBuffer* dataBuff);
 
 
-    //	Returns the ID of the channel (parameter).
-    virtual std::string GetID () const;
+	//	Returns the ID of the channel (parameter).
+	virtual std::string GetID () const;
 
-    //	Returns the current value of the parameter/attribute
-    //	associated with the channel.
-    virtual double Read () const;
+	//	Returns the current value of the parameter/attribute
+	//	associated with the channel.
+	virtual double Read () const;
 
-    // Special function for setting arbitrary offset
-    void SetBPMOffset(double v);
+	// Special function for setting arbitrary offset
+	void SetBPMOffset(double v);
 
 private:
 
-    char xy;
-    BPMDataBuffer* itsData;
+	char xy;
+	BPMDataBuffer* itsData;
 };
 
 #endif

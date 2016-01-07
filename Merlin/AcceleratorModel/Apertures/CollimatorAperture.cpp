@@ -10,7 +10,7 @@
 *
 **********************************************************************/
 CollimatorAperture::CollimatorAperture(double w,double h, double t, Material* m, double length, double x_off, double y_off)
-:RectangularAperture(w,h), alpha(t), CollimatorLength(length), x_offset_entry(x_off), y_offset_entry(y_off),cosalpha(cos(-t)),sinalpha(sin(-t))
+	:RectangularAperture(w,h), alpha(t), CollimatorLength(length), x_offset_entry(x_off), y_offset_entry(y_off),cosalpha(cos(-t)),sinalpha(sin(-t))
 {
 	SetMaterial(m);
 	x_offset_exit = 0;
@@ -23,20 +23,20 @@ CollimatorAperture::CollimatorAperture(double w,double h, double t, Material* m,
 //Checks if particle is in or outside a defined aperture
 inline bool CollimatorAperture::PointInside(double x,double y,double z) const
 {
-/*
-	if(errors)
-	{
-		//Should use/adjust GetFullWidth
-		x += aperture_error * ((pow(z,2)/jaw_length)-z);
-		y += aperture_error * ((pow(z,2)/jaw_length)-z);
-	}
-*/
+	/*
+		if(errors)
+		{
+			//Should use/adjust GetFullWidth
+			x += aperture_error * ((pow(z,2)/jaw_length)-z);
+			y += aperture_error * ((pow(z,2)/jaw_length)-z);
+		}
+	*/
 
 	/*
 	We need to calculate several variables:
 	1: The x,y offsets at the z position of the particle.
 	2: The width and hight of the jaw at the z position of the particle.
-	
+
 	Lets start with the x and y offsets;
 	*/
 
@@ -45,33 +45,33 @@ inline bool CollimatorAperture::PointInside(double x,double y,double z) const
 
 	double x_off = (z * ( x_offset_entry - x_offset_exit ) / CollimatorLength) - x_offset_entry;
 	double y_off = (z * ( y_offset_entry - y_offset_exit ) / CollimatorLength) - y_offset_entry;
-	
+
 
 	//These will give the jaw width and heights to be used. * 0.5 to convert to half width.
 	double x_jaw = (z * ( w_exit - GetFullWidth() )  / CollimatorLength) + GetFullWidth();
 	double y_jaw = (z * ( h_exit - GetFullHeight() ) / CollimatorLength) + GetFullHeight();
-	
+
 	double x1 = ((x+x_off) * cosalpha) - ((y+y_off) * sinalpha);
 	double y1 = ((x+x_off) * sinalpha) + ((y+y_off) * cosalpha);
-	
+
 	//output everything
 	//~ if(! (fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2)) ){
-		//~ cout << "\nCollAp: z = " << z << "\t\t CollimatorLength = " << CollimatorLength << endl;
-		//~ cout << "x_off = " << x_off << "\t\t x_offset_entry = " << x_offset_entry << "\t\t x_offset_entry " << x_offset_entry << endl; 
-		//~ //cout << "y_off = " << y_off << "\t\t y_offset_entry = " << y_offset_entry << "\t\t y_offset_entry " << y_offset_entry << endl; 
-		//~ cout << "x_jaw = " << x_jaw << z << "\t\t w_exit = " << w_exit << "\t\t Full Width = " << GetFullWidth() << endl;	
-		//~ //cout << "y_jaw = " << y_jaw << z << "\t\t h_exit = " << h_exit << "\t\t GetFullHeight() " << GetFullHeight() << endl; 
-		//~ cout << "x = " << x << "\t\t x_off = " << x_off << "\t\t cosalpha = " << cosalpha << endl; 
-		//~ cout << "x1 = " << x1 << "\t\t x_jaw/2 = " << x_jaw/2 << endl;		
+	//~ cout << "\nCollAp: z = " << z << "\t\t CollimatorLength = " << CollimatorLength << endl;
+	//~ cout << "x_off = " << x_off << "\t\t x_offset_entry = " << x_offset_entry << "\t\t x_offset_entry " << x_offset_entry << endl;
+	//~ //cout << "y_off = " << y_off << "\t\t y_offset_entry = " << y_offset_entry << "\t\t y_offset_entry " << y_offset_entry << endl;
+	//~ cout << "x_jaw = " << x_jaw << z << "\t\t w_exit = " << w_exit << "\t\t Full Width = " << GetFullWidth() << endl;
+	//~ //cout << "y_jaw = " << y_jaw << z << "\t\t h_exit = " << h_exit << "\t\t GetFullHeight() " << GetFullHeight() << endl;
+	//~ cout << "x = " << x << "\t\t x_off = " << x_off << "\t\t cosalpha = " << cosalpha << endl;
+	//~ cout << "x1 = " << x1 << "\t\t x_jaw/2 = " << x_jaw/2 << endl;
 	//~ }
-	
+
 	return fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2);
-/*	ofstream outf;
-	outf.precision(18);
-	outf.open("/samdata2/serlucam/Output/jaw.dat",fstream::app);
-	outf <<  z << "\t" <<  x_off << "\t"  <<  y_off << "\t" <<  x_jaw << "\t" << y_jaw << "\t" << alpha << "\t" << x1 << endl; 
-	outf.close();
-*/
+	/*	ofstream outf;
+		outf.precision(18);
+		outf.open("/samdata2/serlucam/Output/jaw.dat",fstream::app);
+		outf <<  z << "\t" <<  x_off << "\t"  <<  y_off << "\t" <<  x_jaw << "\t" << y_jaw << "\t" << alpha << "\t" << x1 << endl;
+		outf.close();
+	*/
 }
 
 
@@ -167,7 +167,7 @@ double CollimatorAperture::GetCollimatorTilt() const
 *
 **********************************************************************/
 UnalignedCollimatorAperture::UnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_off, double y_off)
-:CollimatorAperture(w,h,t,m,length,x_off,y_off)
+	:CollimatorAperture(w,h,t,m,length,x_off,y_off)
 //:RectangularAperture(w,h), alpha(t), CollimatorLength(length), x_offset(x_off), y_offset(y_off)
 {
 	SetMaterial(m);
@@ -181,7 +181,7 @@ inline bool UnalignedCollimatorAperture::PointInside(double x,double y,double z)
 
 	if(fabs(x1) < GetFullWidth()/2)
 	{
-	//	cout << "passed x: " << x1 << "\t" << GetFullWidth()/2 << endl;
+		//	cout << "passed x: " << x1 << "\t" << GetFullWidth()/2 << endl;
 	}
 	else
 	{
@@ -189,7 +189,7 @@ inline bool UnalignedCollimatorAperture::PointInside(double x,double y,double z)
 	}
 	if(fabs(y1) < GetFullHeight()/2)
 	{
-	//	cout << "passed y: " << y1 << "\t" << GetFullHeight()/2 << endl;
+		//	cout << "passed y: " << y1 << "\t" << GetFullHeight()/2 << endl;
 	}
 	else
 	{
@@ -253,7 +253,7 @@ inline bool UnalignedCollimatorApertureWithErrors::PointInside(double x,double y
 *
 **********************************************************************/
 OneSidedUnalignedCollimatorAperture::OneSidedUnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_off, double y_off)
-:CollimatorAperture(w,h,t,m,length,x_off,y_off),PositiveSide(true)
+	:CollimatorAperture(w,h,t,m,length,x_off,y_off),PositiveSide(true)
 //:RectangularAperture(w,h), alpha(t), CollimatorLength(length), x_offset(x_off), y_offset(y_off)
 {
 	SetMaterial(m);

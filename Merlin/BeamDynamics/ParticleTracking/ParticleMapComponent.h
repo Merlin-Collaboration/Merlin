@@ -3,9 +3,9 @@
 
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (1999)
-* 
+*
 * file Merlin\BeamDynamics\ParticleTracking\ParticleMapComponent.h
 * last modified 26/09/02 15:18:13
 */
@@ -14,10 +14,10 @@
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 * Copyright (c) 2001 by The Merlin Collaboration.
-* - ALL RIGHTS RESERVED - 
+* - ALL RIGHTS RESERVED -
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -41,7 +41,8 @@
 // ParticleMap
 #include "BeamDynamics/ParticleTracking/ParticleMap.h"
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 class ParticleBunch;
 
@@ -53,53 +54,53 @@ class ParticleMapComponent : public AcceleratorComponent
 {
 public:
 
-    ParticleMapComponent (const std::string& id, ParticleMap* pmap, double intB2ds = 0);
+	ParticleMapComponent (const std::string& id, ParticleMap* pmap, double intB2ds = 0);
 
-    //	Return the type string for the element.
-    virtual const string& GetType () const;
+	//	Return the type string for the element.
+	virtual const string& GetType () const;
 
-    //	Virtual constructor.
-    virtual ModelElement* Copy () const;
+	//	Virtual constructor.
+	virtual ModelElement* Copy () const;
 
-    //	Returns the unique index for this class of accelerator
-    //	components.
-    virtual int GetIndex () const;
+	//	Returns the unique index for this class of accelerator
+	//	components.
+	virtual int GetIndex () const;
 
-    //	Rotates the component 180 degrees about its local Y axis.
-    virtual void RotateY180 ();
+	//	Rotates the component 180 degrees about its local Y axis.
+	virtual void RotateY180 ();
 
-    ParticleBunch& Apply (ParticleBunch& bunch) const;
+	ParticleBunch& Apply (ParticleBunch& bunch) const;
 
-    //	Primary tracking interface. Prepares the specified
-    //	Tracker object for tracking this component.
-    virtual void PrepareTracker (ComponentTracker& aTracker);
+	//	Primary tracking interface. Prepares the specified
+	//	Tracker object for tracking this component.
+	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-    //	Returns the integral of B^2 for synchrotron radiation
-    //	applications
-    double GetIntB2ds () const;
+	//	Returns the integral of B^2 for synchrotron radiation
+	//	applications
+	double GetIntB2ds () const;
 
-    // Data Members for Class Attributes
+	// Data Members for Class Attributes
 
-    //	Unique index for an Accelerator component.
-    static const int ID;
+	//	Unique index for an Accelerator component.
+	static const int ID;
 
 private:
-    // Data Members for Associations
-    ParticleMap* itsMap;
+	// Data Members for Associations
+	ParticleMap* itsMap;
 
-    // Data Members for Class Attributes
-    double ib2;
+	// Data Members for Class Attributes
+	double ib2;
 
 };// Class ParticleMapComponent
 
 inline ParticleBunch& ParticleMapComponent::Apply (ParticleBunch& bunch) const
 {
-    return itsMap->Apply(bunch);
+	return itsMap->Apply(bunch);
 }
 
 inline double ParticleMapComponent::GetIntB2ds () const
 {
-    return ib2;
+	return ib2;
 }
 
 } //end namespace ParticleTracking

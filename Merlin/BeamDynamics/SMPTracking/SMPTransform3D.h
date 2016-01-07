@@ -1,19 +1,19 @@
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (2000)
-* 
+*
 * file Merlin\BasicTransport\PSvectorTransform3D.h
 * last modified 04/04/01 14:41:34
 *
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 *
-* Copyright (c) 2000 by The Merlin Collaboration.  
-* ALL RIGHTS RESERVED. 
+* Copyright (c) 2000 by The Merlin Collaboration.
+* ALL RIGHTS RESERVED.
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -33,25 +33,28 @@
 #include "BeamDynamics/SMPTracking/SliceMacroParticle.h"
 #include "BasicTransport/RMap.h"
 
-namespace SMPTracking {
+namespace SMPTracking
+{
 
-class SMPTransform3D {
+class SMPTransform3D
+{
 public:
 
-    SMPTransform3D(const Transform3D& tfrm);
+	SMPTransform3D(const Transform3D& tfrm);
 
-    // Apply (approximate) transformation
-    SliceMacroParticle& Apply (SliceMacroParticle& p) const;
-    SliceMacroParticle& operator () (SliceMacroParticle& p) const{
-        return Apply(p);
-    }
+	// Apply (approximate) transformation
+	SliceMacroParticle& Apply (SliceMacroParticle& p) const;
+	SliceMacroParticle& operator () (SliceMacroParticle& p) const
+	{
+		return Apply(p);
+	}
 
 private:
 
-    R2Map R;
-    double delta_x,delta_y,theta_x,theta_y;
-    bool bNoRot;
-    bool nullRotation;
+	R2Map R;
+	double delta_x,delta_y,theta_x,theta_y;
+	bool bNoRot;
+	bool nullRotation;
 };
 
 } // end namespace SMPTracking

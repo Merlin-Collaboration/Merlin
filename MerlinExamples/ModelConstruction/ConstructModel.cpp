@@ -12,11 +12,11 @@
 // model. The source file for the lattice is generated from MAD using the
 // MAD OPTICS command. The format of the command is as follows:
 //
-// SELECT, OPTICS, CLEAR 
-// SELECT, OPTICS, #S/#E 
-// OPTICS, COLUMNS= NAME, KEYWORD, S, L, K0L, E1, E2, & 
-//         K1L, K2L, K3L, TILT, TYPE, & 
-//         FILENAME= "output_fname" 
+// SELECT, OPTICS, CLEAR
+// SELECT, OPTICS, #S/#E
+// OPTICS, COLUMNS= NAME, KEYWORD, S, L, K0L, E1, E2, &
+//         K1L, K2L, K3L, TILT, TYPE, &
+//         FILENAME= "output_fname"
 //
 // Note that MAD elements that are not supported by Merlin 3.0 are treated
 // as drifts by default (a warning message is printed to cout when one is
@@ -49,7 +49,7 @@ AcceleratorModel* ConstructModel(const string& fname, double energyInGeV, const 
 	//    M     MechanicalMover object
 	//    S     SimpleMount
 	//    G     GirderMount
-    // Note the X_ prefix is stripped from the label.
+	// Note the X_ prefix is stripped from the label.
 
 	madi.IgnoreZeroLengthType ("MARKER");
 	// In this example we will ignore zero-length MARKER elements

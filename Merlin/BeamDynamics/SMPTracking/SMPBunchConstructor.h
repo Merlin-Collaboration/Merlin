@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:53 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef SMPBunchConstructor_h
@@ -23,28 +23,30 @@
 // SMPBunch
 #include "BeamDynamics/SMPTracking/SMPBunch.h"
 
-namespace SMPTracking {
+namespace SMPTracking
+{
 
-class SMPBunchConstructor : public BunchConstructor {
+class SMPBunchConstructor : public BunchConstructor
+{
 public:
 
-    // Constructor taking the beam definition, the number of z slices
-    // (ns) and the number of SMPs per slice. Total number of SMPs
-    // generated will be nsm*ns
-    SMPBunchConstructor (const BeamData& beam, size_t ns, size_t nsm);
+	// Constructor taking the beam definition, the number of z slices
+	// (ns) and the number of SMPs per slice. Total number of SMPs
+	// generated will be nsm*ns
+	SMPBunchConstructor (const BeamData& beam, size_t ns, size_t nsm);
 
-    ~SMPBunchConstructor ();
+	~SMPBunchConstructor ();
 
-    virtual Bunch* ConstructBunch (int bunchIndex =0) const;
+	virtual Bunch* ConstructBunch (int bunchIndex =0) const;
 
-    //	Returns typed particle bunch.
-    SMPBunch* ConstructSMPBunch () const;
+	//	Returns typed particle bunch.
+	SMPBunch* ConstructSMPBunch () const;
 
 private:
 
-    size_t ns,np;
-    BeamData beamdat;
-    double nSigZ,nSigDP;
+	size_t ns,np;
+	BeamData beamdat;
+	double nSigZ,nSigDP;
 };
 
 } // end namespace SMPTracking

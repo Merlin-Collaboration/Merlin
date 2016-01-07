@@ -20,7 +20,7 @@ using namespace PhysicalUnits;
 //Read in file into some sensible structure
 
 
-CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, bool sigma) : 
+CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, bool sigma) :
 	number_collimators(0),use_sigma(sigma),logFlag(false),ErrorLogFlag(false),EnableMatchBeamEnvelope(true),EnableMatchReferenceOrbit(true),JawFlattnessErrors(false),JawAlignmentErrors(false),EnableResistiveCollimatorWakes(false),AngleError(0),PositionError(0)
 {
 
@@ -42,7 +42,9 @@ CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, 
 		{
 			//name	x_gap	y_gap	tilt	x_offset	y_offset	j1_tilt	j2_tilt	length	material
 			if((*input) >> buf >> buf >> buf >> buf >> buf >> buf >> buf >> buf >> buf >> buf)
-			number_collimators++;
+			{
+				number_collimators++;
+			}
 		}
 	}
 	else if(use_sigma)
@@ -51,11 +53,13 @@ CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, 
 		{
 			//name	x_sig	y_sig	tilt	material
 			if((*input) >> buf >> buf >> buf >> buf >> buf)
-			number_collimators++;
+			{
+				number_collimators++;
+			}
 		}
 	}
 
-	std::cout << "found " << number_collimators << " collimators in input file." << std::endl; 
+	std::cout << "found " << number_collimators << " collimators in input file." << std::endl;
 
 	//Make an appropriately sized array of collimator info
 	CollData = new CollimatorData[number_collimators];
@@ -69,10 +73,10 @@ CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, 
 	{
 		if(!use_sigma)
 		{
-		//Load up the array of items, put the material name into a string.
-		(*input) >> CollData[i].name >> CollData[i].x_gap >> CollData[i].y_gap >> CollData[i].tilt \
-			>> CollData[i].x_offset >> CollData[i].y_offset >> CollData[i].j1_tilt >> CollData[i].j2_tilt \
-			>> CollData[i].length >> buf;
+			//Load up the array of items, put the material name into a string.
+			(*input) >> CollData[i].name >> CollData[i].x_gap >> CollData[i].y_gap >> CollData[i].tilt \
+			         >> CollData[i].x_offset >> CollData[i].y_offset >> CollData[i].j1_tilt >> CollData[i].j2_tilt \
+			         >> CollData[i].length >> buf;
 		}
 		else if(use_sigma)
 		{
@@ -101,7 +105,7 @@ void CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model)
 		//*log << "Configuring Collimators" << endl;
 		*log << "#Got " << n_collimators << " Collimators" << endl;
 		*log << "#" << std::setw(20) << "name" << std::setw(7) << "row" << std::setw(14) << std::setw(15)<<"Distance"  <<std::setw(15)<< "beta x "\
-		<<  std::setw(15)<< "beta y" << std::setw(15) <<"cent x" << std::setw(15)<<"cent y" << std::setw(15)<<"x half gap" <<  std::setw(15)<<"y half gap" << endl;
+		     <<  std::setw(15)<< "beta y" << std::setw(15) <<"cent x" << std::setw(15)<<"cent y" << std::setw(15)<<"x half gap" <<  std::setw(15)<<"y half gap" << endl;
 	}
 	map<string,Collimator*> CollimatorMap;
 	map<string,Collimator*>::iterator CMapit;
@@ -146,7 +150,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 		//*log << "Configuring Collimators" << endl;
 		*log << "#Got " << n_collimators << " Collimators" << endl;
 		*log << "#" << std::setw(20) << "name" << std::setw(7) << "row" << std::setw(14) << std::setw(15)<<"Distance"  <<std::setw(15)<< "beta x "\
-		<<  std::setw(15)<< "beta y" << std::setw(15) <<"cent x" << std::setw(15)<<"cent y" << std::setw(15)<<"x half gap" <<  std::setw(15)<<"y half gap" << endl;
+		     <<  std::setw(15)<< "beta y" << std::setw(15) <<"cent x" << std::setw(15)<<"cent y" << std::setw(15)<<"x half gap" <<  std::setw(15)<<"y half gap" << endl;
 	}
 	map<string,Collimator*> CollimatorMap;
 	map<string,Collimator*>::iterator CMapit;
@@ -159,64 +163,70 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 	//std::cout << "point4" << std::endl;
 	//for(vector<Collimator*>::iterator c = collimators.begin(); c!=collimators.end(); c++)
 	//{
-		//cout <<(*c)->GetName() << "\t" << (*c)->GetLength() << endl;
-		for(size_t i=0; i < number_collimators; i++)
+	//cout <<(*c)->GetName() << "\t" << (*c)->GetLength() << endl;
+	for(size_t i=0; i < number_collimators; i++)
+	{
+		//Time to search for the collimator we are currently using
+		//if(CollData[i].name == (*c)->GetName())
+		//{
+		CMapit = CollimatorMap.find(CollData[i].name);
+		if(CMapit != CollimatorMap.end())
 		{
-			//Time to search for the collimator we are currently using
-			//if(CollData[i].name == (*c)->GetName())
-			//{
-			CMapit = CollimatorMap.find(CollData[i].name);
-			if(CMapit != CollimatorMap.end())
+			for(int j = 0; j <= twiss->NumberOfRows(); j++)
 			{
-				for(int j = 0; j <= twiss->NumberOfRows(); j++)
-				{
 //					if(CollData[i].position == twiss->Value(0,0,0,j))
-					//std::cout << "point5 - " << twiss->NumberOfRows() << std::endl;
-					//std::cout << (CMapit->second)->GetComponentLatticePosition() << "\t-\t" << twiss->Value(0,0,0,j) << std::endl;
-					if((CMapit->second)->GetComponentLatticePosition() == twiss->Value(0,0,0,j))
+				//std::cout << "point5 - " << twiss->NumberOfRows() << std::endl;
+				//std::cout << (CMapit->second)->GetComponentLatticePosition() << "\t-\t" << twiss->Value(0,0,0,j) << std::endl;
+				if((CMapit->second)->GetComponentLatticePosition() == twiss->Value(0,0,0,j))
+				{
+					if(logFlag)
 					{
-						if(logFlag)
 						*log << std::setw(20) << (CMapit->second)->GetName() << std::setw(7) << j << std::setw(14) << twiss->Value(0,0,0,j);
-						//*log << "Found " << std::setw(25) << (*c)->GetName() << " at twiss row " << std::setw(6) << j << " Distance: " << std::setw(7) << twiss->Value(0,0,0,j);
-						//std::setw(20) << (CMapit->second)->GetName() << std::setw(7) << j << std::setw(14) << twiss->Value(0,0,0,j);
-						//*log << "Found " << std::setw(25) << (*c)->GetName() << " at twiss row " << std::setw(6) << j << " Distance: " << std::setw(7) << twiss->Value(0,0,0,j);
-						if(ErrorLogFlag)
+					}
+					//*log << "Found " << std::setw(25) << (*c)->GetName() << " at twiss row " << std::setw(6) << j << " Distance: " << std::setw(7) << twiss->Value(0,0,0,j);
+					//std::setw(20) << (CMapit->second)->GetName() << std::setw(7) << j << std::setw(14) << twiss->Value(0,0,0,j);
+					//*log << "Found " << std::setw(25) << (*c)->GetName() << " at twiss row " << std::setw(6) << j << " Distance: " << std::setw(7) << twiss->Value(0,0,0,j);
+					if(ErrorLogFlag)
+					{
 						*ErrorLog << std::setw(20) << (CMapit->second)->GetName() << std::setw(7) << j;
+					}
 
-						
-						double beta_x = twiss->Value(1,1,1,j);		//Beta x
-						double beta_y = twiss->Value(3,3,2,j);		//Beta y
-						//std::cout << "beta_x" << beta_x << std::endl; 
-						//Added x and y orbit parameters to center collimators on where the beam actually goes.
-						double x_orbit = twiss->Value(1,0,0,j);
-						double y_orbit = twiss->Value(3,0,0,j);
-						double collimator_aperture_tilt = CollData[i].tilt;
-						
-						//~ cout << "CollDB: TILT = " << CollData[i].tilt << endl;
-						//~ cout << "CollDB: TILT = " << collimator_aperture_tilt << endl;
-						
-						//New - we also want to align the collimator to the reference orbit and the beta function
-						double beta_x_exit = twiss->Value(1,1,1,j+1);		//Beta x
-						double beta_y_exit = twiss->Value(3,3,2,j+1);		//Beta y
-						
-						//Added x and y orbit parameters to center collimators on where the beam actually goes.
-						double x_orbit_exit = twiss->Value(1,0,0,j+1);
-						double y_orbit_exit = twiss->Value(3,0,0,j+1);
-						//std::cout << "x_orbit_exit" << x_orbit_exit << std::endl;
-						if(logFlag)
+
+					double beta_x = twiss->Value(1,1,1,j);		//Beta x
+					double beta_y = twiss->Value(3,3,2,j);		//Beta y
+					//std::cout << "beta_x" << beta_x << std::endl;
+					//Added x and y orbit parameters to center collimators on where the beam actually goes.
+					double x_orbit = twiss->Value(1,0,0,j);
+					double y_orbit = twiss->Value(3,0,0,j);
+					double collimator_aperture_tilt = CollData[i].tilt;
+
+					//~ cout << "CollDB: TILT = " << CollData[i].tilt << endl;
+					//~ cout << "CollDB: TILT = " << collimator_aperture_tilt << endl;
+
+					//New - we also want to align the collimator to the reference orbit and the beta function
+					double beta_x_exit = twiss->Value(1,1,1,j+1);		//Beta x
+					double beta_y_exit = twiss->Value(3,3,2,j+1);		//Beta y
+
+					//Added x and y orbit parameters to center collimators on where the beam actually goes.
+					double x_orbit_exit = twiss->Value(1,0,0,j+1);
+					double y_orbit_exit = twiss->Value(3,0,0,j+1);
+					//std::cout << "x_orbit_exit" << x_orbit_exit << std::endl;
+					if(logFlag)
+					{
 						*log << std::setw(15) << beta_x << std::setw(15)<< beta_y << std::setw(15)<< x_orbit << std::setw(15) << y_orbit;
-						//std:: cout << std::setw(15) << beta_x << std::setw(15)<< beta_y << std::setw(15)<< x_orbit << std::setw(15) << y_orbit;
+					}
+					//std:: cout << std::setw(15) << beta_x << std::setw(15)<< beta_y << std::setw(15)<< x_orbit << std::setw(15) << y_orbit;
 					if( !(beta_x == 0 || beta_y == 0) )
 					{
 						double sigma_entrance = sqrt( ( beta_x * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
-				 				      (beta_y * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
+						                              (beta_y * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
 
 						double collimator_aperture_width_entrance  = CollData[i].sigma_x*sigma_entrance*2;
 						double collimator_aperture_height_entrance = CollData[i].sigma_y*sigma_entrance*2;
 
 						//And the exit parameters
 						double sigma_exit = sqrt( ( beta_x_exit * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
-				 				      (beta_y_exit * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
+						                          (beta_y_exit * emittance_y * sin(collimator_aperture_tilt) * sin(collimator_aperture_tilt)) );
 
 						double collimator_aperture_width_exit  = CollData[i].sigma_x*sigma_exit*2;
 						double collimator_aperture_height_exit = CollData[i].sigma_y*sigma_exit*2;
@@ -227,43 +237,45 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 						if( RequestedImpactFactor!=1 && (CollData[i].name == PrimaryCollimator) )
 						{
 							ImpactSigma = ((CollData[i].sigma_x*sigma_entrance + RequestedImpactFactor)/sigma_entrance);
-								cout << "CollimatorDatabase::ConfigureCollimators : Beta_x = " << beta_x << " Sigma_x = " << sqrt(beta_x*emittance_x) << endl;
-								cout << "CollimatorDatabase::ConfigureCollimators : Beta_y = " << beta_y << " Sigma_y = " << sqrt(beta_y*emittance_y) << endl;
-								cout << "CollimatorDatabase::ConfigureCollimators : orbit_x = " << x_orbit << " orbit_y = " << y_orbit << endl;
-	
+							cout << "CollimatorDatabase::ConfigureCollimators : Beta_x = " << beta_x << " Sigma_x = " << sqrt(beta_x*emittance_x) << endl;
+							cout << "CollimatorDatabase::ConfigureCollimators : Beta_y = " << beta_y << " Sigma_y = " << sqrt(beta_y*emittance_y) << endl;
+							cout << "CollimatorDatabase::ConfigureCollimators : orbit_x = " << x_orbit << " orbit_y = " << y_orbit << endl;
+
 						}
 
 						Material* collimator_material = CollData[i].JawMaterial;
-						
+
 						(CMapit->second)->SetCollID(i+1);
-						
-						FlukaData* fluka_data = new FlukaData;						
-							fluka_data->id_coll 	= (CMapit->second)->GetCollID();
-							fluka_data->name 		= CollData[i].name;
-							fluka_data->position 	= (CMapit->second)->GetComponentLatticePosition();
-							fluka_data->angle 		= CollData[i].tilt;
-							fluka_data->beta_x 		= beta_x;
-							fluka_data->beta_y 		= beta_y;
-							fluka_data->half_gap 	= CollData[i].sigma_x*sigma_entrance;
-							fluka_data->material 	= collimator_material->GetSymbol();
-							fluka_data->length 		= length;
-							fluka_data->sig_x 		= sqrt(emittance_x * beta_x);
-							fluka_data->sig_y 		= sqrt(emittance_y * beta_y);
-							fluka_data->j1_tilt 	= 0.;
-							fluka_data->j2_tilt 	= 0.;						
-							fluka_data->n_sig 		= CollData[i].sigma_x;
-						
+
+						FlukaData* fluka_data = new FlukaData;
+						fluka_data->id_coll 	= (CMapit->second)->GetCollID();
+						fluka_data->name 		= CollData[i].name;
+						fluka_data->position 	= (CMapit->second)->GetComponentLatticePosition();
+						fluka_data->angle 		= CollData[i].tilt;
+						fluka_data->beta_x 		= beta_x;
+						fluka_data->beta_y 		= beta_y;
+						fluka_data->half_gap 	= CollData[i].sigma_x*sigma_entrance;
+						fluka_data->material 	= collimator_material->GetSymbol();
+						fluka_data->length 		= length;
+						fluka_data->sig_x 		= sqrt(emittance_x * beta_x);
+						fluka_data->sig_y 		= sqrt(emittance_y * beta_y);
+						fluka_data->j1_tilt 	= 0.;
+						fluka_data->j2_tilt 	= 0.;
+						fluka_data->n_sig 		= CollData[i].sigma_x;
+
 						StoredFlukaData.push_back(fluka_data);
-						
+
 						//std::cout << "EnableMatchBeamEnvelope - " << EnableMatchBeamEnvelope << "\t" << JawFlattnessErrors << std::endl;
 						//Create an aperture for the collimator jaws
 						if(EnableMatchBeamEnvelope  && !JawFlattnessErrors && !JawAlignmentErrors)
 						{
 							if(logFlag)
-							*log << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
+							{
+								*log << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
+							}
 
 							CollimatorAperture* app=new CollimatorAperture(collimator_aperture_width_entrance,collimator_aperture_height_entrance,\
-							collimator_aperture_tilt,collimator_material,length, x_orbit, y_orbit);
+							        collimator_aperture_tilt,collimator_material,length, x_orbit, y_orbit);
 
 							app->SetExitWidth(collimator_aperture_width_exit);	//Horizontal
 							app->SetExitHeight(collimator_aperture_height_exit);	//Vertical
@@ -323,60 +335,62 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 							double x_pos = (xj1 + xj2)/2;
 							double y_pos = (yj1 + yj2)/2;
 
-							
+
 							//cout << (CMapit->second)->GetName() << "\t" << x_size <<"\t" <<  y_size << "\t" <<x_pos << "\t" << y_pos<< endl;
 							//Left jaw, right jaw?
-							
+
 							//*log << std::setw(15) << xj1 << std::setw(15)<< xj2 <<std::setw(15)<< x_pos << endl;
 							if(CollData[i].name == "TCDQA.A4R6.B1")
 							{
-							OneSidedUnalignedCollimatorAperture* app=new OneSidedUnalignedCollimatorAperture(x_size,y_size,\
-							collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
+								OneSidedUnalignedCollimatorAperture* app=new OneSidedUnalignedCollimatorAperture(x_size,y_size,\
+								        collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
 
-							//Set the aperture for collimation
-							(CMapit->second)->SetAperture(app);
-							(CMapit->second)->SetMaterial(collimator_material);
-							//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
+								//Set the aperture for collimation
+								(CMapit->second)->SetAperture(app);
+								(CMapit->second)->SetMaterial(collimator_material);
+								//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							else if(CollData[i].name == "TCDQA.B4R6.B1")
 							{
-							OneSidedUnalignedCollimatorAperture* app=new OneSidedUnalignedCollimatorAperture(x_size,y_size,\
-							collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
+								OneSidedUnalignedCollimatorAperture* app=new OneSidedUnalignedCollimatorAperture(x_size,y_size,\
+								        collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
 
-							//Set the aperture for collimation
-							(CMapit->second)->SetAperture(app);
-							(CMapit->second)->SetMaterial(collimator_material);
-							//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
+								//Set the aperture for collimation
+								(CMapit->second)->SetAperture(app);
+								(CMapit->second)->SetMaterial(collimator_material);
+								//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							else if(CollData[i].name == "TCDQA.C4R6.B1")
 							{
-							OneSidedUnalignedCollimatorAperture* app=new OneSidedUnalignedCollimatorAperture(x_size,y_size,\
-							collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
+								OneSidedUnalignedCollimatorAperture* app=new OneSidedUnalignedCollimatorAperture(x_size,y_size,\
+								        collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
 
-							//Set the aperture for collimation
-							(CMapit->second)->SetAperture(app);
-							(CMapit->second)->SetMaterial(collimator_material);
-							//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
+								//Set the aperture for collimation
+								(CMapit->second)->SetAperture(app);
+								(CMapit->second)->SetMaterial(collimator_material);
+								//cout << "collimator: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							else
 							{
-							UnalignedCollimatorAperture* app=new UnalignedCollimatorAperture(x_size,y_size,\
-							collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
+								UnalignedCollimatorAperture* app=new UnalignedCollimatorAperture(x_size,y_size,\
+								        collimator_aperture_tilt,collimator_material,length,x_pos,y_pos);
 
-							//Set the aperture for collimation
-							(CMapit->second)->SetAperture(app);
-							(CMapit->second)->SetMaterial(collimator_material);
-							//cout << "COLLIMATOR: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
+								//Set the aperture for collimation
+								(CMapit->second)->SetAperture(app);
+								(CMapit->second)->SetMaterial(collimator_material);
+								//cout << "COLLIMATOR: " << CollData[i].name << "has aperture" << Collimators[i]->GetName() << endl;
 							}
 							if(logFlag)
-							*log << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
+							{
+								*log << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
+							}
 							//std::cout << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
 						}
 						else if(!EnableMatchBeamEnvelope  && !JawFlattnessErrors && JawAlignmentErrors)
 						{
-						
+
 							//std::cout << "point6" << std::endl;
-							#ifdef ENABLE_MPI
+#ifdef ENABLE_MPI
 							//Lets start with Jaw 1
 							//Random x,y
 							int MPI_RANK = MPI::COMM_WORLD.Get_rank();
@@ -394,7 +408,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							if(MPI_RANK == 0)
 							{
-								
+
 								xOffsetError1 =  RandomNG::normal(0,PositionError,3);
 								yOffsetError1 = 0;//RandomNG::uniform(-PositionError,PositionError);
 
@@ -406,8 +420,8 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 								//Random x,y
 								xOffsetError2 =  RandomNG::normal(0,PositionError,3);
 								yOffsetError2 = 0;//RandomNG::uniform(-PositionError,PositionError);
-								
-								
+
+
 								//Random theta1, theta2 - small angle approx
 								xAngleError2 = length *RandomNG::normal(0,AngleError,3);
 								yAngleError2 = 0;//length * RandomNG::uniform(-AngleError,AngleError);
@@ -447,9 +461,9 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 								xAngleError2 = ErrorArray[6];
 								yAngleError2 = ErrorArray[7];
 							}
-							#endif
+#endif
 
-							#ifndef ENABLE_MPI
+#ifndef ENABLE_MPI
 							double wholeOffsetError;
 							double xOffsetError1 = RandomNG::normal(0,PositionError,3);
 							double yOffsetError1 = 0;//RandomNG::uniform(-PositionError,PositionError);
@@ -463,13 +477,13 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 							double xOffsetError2 = RandomNG::normal(0,PositionError,3);
 							double yOffsetError2 = 0;//RandomNG::uniform(-PositionError,PositionError);
 							//cout << "xOffsetError1" << "\t" << xOffsetError1 << "\t" << "xOffsetError2" << "\t" << xOffsetError2 << endl;
-							
+
 							//Random theta1, theta2 - small angle approx
 							double xAngleError2 = length * RandomNG::normal(0,AngleError,3);
-							double yAngleError2 = 0;//length * RandomNG::uniform(-AngleError,AngleError);							
-							#endif
-									
-							//ENTRANCE		
+							double yAngleError2 = 0;//length * RandomNG::uniform(-AngleError,AngleError);
+#endif
+
+							//ENTRANCE
 							//We will want to calculate the position of the left and right jaws
 							//First
 							double gap_x_entrance = collimator_aperture_width_entrance/2;
@@ -479,12 +493,12 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 							cout << "wholeOffsetError" << "\t" << wholeOffsetError << endl;
 							double x1 = x_rot + gap_x_entrance + xOffsetError1 + wholeOffsetError;
 							double x2 = x_rot - gap_x_entrance + xOffsetError2  + wholeOffsetError;
-							
+
 							//Second
 							double gap_y_entrance = collimator_aperture_height_entrance/2;
 							double y_rot = (x_orbit * sin(-collimator_aperture_tilt)) + (y_orbit * cos(-collimator_aperture_tilt));
 							y_rot = y_orbit;
-							
+
 							double y1 = y_rot + gap_y_entrance + yOffsetError1;
 							double y2 = y_rot - gap_y_entrance + yOffsetError2;
 
@@ -494,14 +508,14 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 							double gap_x_exit = collimator_aperture_width_entrance/2;
 							double x_rot_exit = (x_orbit_exit * cos(-collimator_aperture_tilt)) - (y_orbit_exit * sin(-collimator_aperture_tilt));
 							x_rot_exit = x_orbit_exit;
-							
+
 							//double xx1 = x_rot_exit + gap_x_exit + xOffsetError1 + xAngleError1;
 							//double xx2 = x_rot_exit - gap_x_exit + xOffsetError2 + xAngleError2;
 							//cout << "xx1" << "\t" << xx1 << "\t" << "xx2" << "\t" << xx2  << endl;
-								
+
 							double xx1 = x_rot_exit + gap_x_exit + xOffsetError1 + xAngleError1  + wholeOffsetError;
 							double xx2 = x_rot_exit - gap_x_exit + xOffsetError2 + xAngleError2  + wholeOffsetError;
-						
+
 							//Second
 							double gap_y_exit = collimator_aperture_height_exit/2;
 							double y_rot_exit = (x_orbit_exit * sin(-collimator_aperture_tilt)) + (y_orbit_exit * cos(-collimator_aperture_tilt));
@@ -538,24 +552,26 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							double x_pos_exit = (xx1 + xx2)/2;
 							double y_pos_exit = (yy1 + yy2)/2;
-							
+
 							//cout << "point star-" <<  (CMapit->second)->GetName() << endl;
 							//Left jaw, right jaw?
 							if(logFlag)
-							*log << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
+							{
+								*log << std::setw(15) << collimator_aperture_width_entrance/2.0 << std::setw(15)<< collimator_aperture_height_entrance/2.0 << endl;
+							}
 							//*log << std::setw(15) << xj1 << std::setw(15)<< xj2 <<std::setw(15)<< x_pos << endl;
 
 							if(ErrorLogFlag)
-							*ErrorLog << std::setw(15) << xOffsetError1/micrometer << std::setw(15)<< yOffsetError1/micrometer << std::setw(15)<< xAngleError1/microradian << std::setw(15)<< yAngleError1/microradian << 
-								     std::setw(15) << xOffsetError2/micrometer << std::setw(15)<< yOffsetError2/micrometer << std::setw(15)<< xAngleError2/microradian << std::setw(15)<< yAngleError2/microradian << endl;
+								*ErrorLog << std::setw(15) << xOffsetError1/micrometer << std::setw(15)<< yOffsetError1/micrometer << std::setw(15)<< xAngleError1/microradian << std::setw(15)<< yAngleError1/microradian <<
+								          std::setw(15) << xOffsetError2/micrometer << std::setw(15)<< yOffsetError2/micrometer << std::setw(15)<< xAngleError2/microradian << std::setw(15)<< yAngleError2/microradian << endl;
 
 							//UnalignedCollimatorAperture* app=new UnalignedCollimatorAperture(collimator_aperture_width_entrance,collimator_aperture_height_entrance,
-							
+
 							//x_size += xOffsetError1;
 							//y_size += yOffsetError1;
 
 							CollimatorAperture* app=new CollimatorAperture(x_size_entrance,y_size_entrance,\
-							collimator_aperture_tilt,collimator_material,length,x_pos_entrance,y_pos_entrance);
+							        collimator_aperture_tilt,collimator_material,length,x_pos_entrance,y_pos_entrance);
 
 							app->SetExitXOffset(x_pos_exit);	//Horizontal
 							app->SetExitYOffset(y_pos_exit);	//Vertical
@@ -573,7 +589,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 							exit(1);
 						}
 
-							//std::cout << "point7" << std::endl;
+						//std::cout << "point7" << std::endl;
 						//Now to set up the resistive wakes
 						double conductivity = collimator_material->GetConductivity();
 						double aperture_size = collimator_aperture_width_entrance;
@@ -591,28 +607,32 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model,double e
 
 							//Set the Wake potentials for this collimator
 							(CMapit->second)->SetWakePotentials(resWake);
-						}											
+						}
 					}
 					else
 					{
 						if(logFlag)
-						*log << "Rejected: " << (CMapit->second)->GetName() << endl;
+						{
+							*log << "Rejected: " << (CMapit->second)->GetName() << endl;
+						}
 						//std::cout << "Rejected "  << std::endl;
 					}
 
-					}
 				}
 			}
+		}
 		//}
 	}
 	if(logFlag)
-	*log << "Found " << PrimaryCollimator << "\tImpact sigma: " << ImpactSigma << endl;
+	{
+		*log << "Found " << PrimaryCollimator << "\tImpact sigma: " << ImpactSigma << endl;
+	}
 	return ImpactSigma;
 }
 /*
 void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
 {
-	
+
 	vector<Collimator*> Collimators;
 	size_t n_collimators = model->ExtractTypedElements(Collimators,"TCDQA*");
 	map<string,Collimator*> CollimatorMap;
@@ -637,23 +657,23 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 					{
 						double beta_x = twiss->Value(1,1,1,j);		//Beta x
 						double beta_y = twiss->Value(3,3,2,j);		//Beta y
-						
+
 						//Added x and y orbit parameters to center collimators on where the beam actually goes.
 						double x_orbit = twiss->Value(1,0,0,j);
 						double y_orbit = twiss->Value(3,0,0,j);
 						double collimator_aperture_tilt = Collimator[i].tilt;
-						
+
 						//New - we also want to align the collimator to the reference orbit and the beta function
 						double beta_x_exit = twiss->Value(1,1,1,j+1);		//Beta x
 						double beta_y_exit = twiss->Value(3,3,2,j+1);		//Beta y
-						
+
 						//Added x and y orbit parameters to center collimators on where the beam actually goes.
 						double x_orbit_exit = twiss->Value(1,0,0,j+1);
 						double y_orbit_exit = twiss->Value(3,0,0,j+1);
-						
+
 						if(logFlag)
 						*log << std::setw(15) << beta_x << std::setw(15)<< beta_y << std::setw(15)<< x_orbit << std::setw(15) << y_orbit;
-						
+
 					if( !(beta_x == 0 || beta_y == 0) )
 					{
 						double sigma_entrance = sqrt( ( beta_x * emittance_x * cos(collimator_aperture_tilt) * cos(collimator_aperture_tilt)) + \
@@ -674,7 +694,7 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 
 						Material* collimator_material = CollData[i].JawMaterial;
 
-						
+
 						#ifdef ENABLE_MPI
 						//Lets start with Jaw 1
 						//Random x,y
@@ -690,7 +710,7 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 						double xAngleError2;
 						double yAngleError2;
 						double wholeOffsetDisp(0.1);
-					
+
 						#endif
 
 						#ifndef ENABLE_MPI
@@ -707,13 +727,13 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 						double xOffsetError2 = 0;
 						double yOffsetError2 = 0;//RandomNG::uniform(-PositionError,PositionError);
 						//cout << "xOffsetError1" << "\t" << xOffsetError1 << "\t" << "xOffsetError2" << "\t" << xOffsetError2 << endl;
-							
+
 						//Random theta1, theta2 - small angle approx
 						double xAngleError2 = 0;
-						double yAngleError2 = 0;//length * RandomNG::uniform(-AngleError,AngleError);							
+						double yAngleError2 = 0;//length * RandomNG::uniform(-AngleError,AngleError);
 						#endif
-									
-						//ENTRANCE		
+
+						//ENTRANCE
 						//We will want to calculate the position of the left and right jaws
 						//First
 						double gap_x_entrance = collimator_aperture_width_entrance/2;
@@ -722,12 +742,12 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 						cout << "Whole Offset Displacement TDCQA" << "\t" << wholeOffsetDisp << endl;
 						double x1 = x_rot + gap_x_entrance + xOffsetError1 ;
 						double x2 = x_rot - gap_x_entrance + xOffsetError2  + wholeOffsetDisp;
-						
+
 						//Second
 						double gap_y_entrance = collimator_aperture_height_entrance/2;
 						double y_rot = (x_orbit * sin(-collimator_aperture_tilt)) + (y_orbit * cos(-collimator_aperture_tilt));
 						y_rot = y_orbit;
-						
+
 						double y1 = y_rot + gap_y_entrance + yOffsetError1;
 						double y2 = y_rot - gap_y_entrance + yOffsetError2;
 
@@ -737,14 +757,14 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 						double gap_x_exit = collimator_aperture_width_entrance/2;
 						double x_rot_exit = (x_orbit_exit * cos(-collimator_aperture_tilt)) - (y_orbit_exit * sin(-collimator_aperture_tilt));
 						x_rot_exit = x_orbit_exit;
-							
+
 						//double xx1 = x_rot_exit + gap_x_exit + xOffsetError1 + xAngleError1;
 						//double xx2 = x_rot_exit - gap_x_exit + xOffsetError2 + xAngleError2;
 						//cout << "xx1" << "\t" << xx1 << "\t" << "xx2" << "\t" << xx2  << endl;
-								
+
 						double xx1 = x_rot_exit + gap_x_exit + xOffsetError1 + xAngleError1  ;
 						double xx2 = x_rot_exit - gap_x_exit + xOffsetError2 + xAngleError2  + wholeOffsetDisp;
-						
+
 						//Second
 						double gap_y_exit = collimator_aperture_height_exit/2;
 						double y_rot_exit = (x_orbit_exit * sin(-collimator_aperture_tilt)) + (y_orbit_exit * cos(-collimator_aperture_tilt));
@@ -783,8 +803,8 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 						double x_pos_exit = (xx1 + xx2)/2;
 						double y_pos_exit = (yy1 + yy2)/2;
 						cout << (CMapit->second)->GetName() << "\t\t" << "x_size_entrance" << "\t\t" << "x_pos_entrance" << "\t\t" << "x_size_exit" << "\t\t" << "x_pos_exit" << endl;
-						cout << (CMapit->second)->GetName() << "\t" <<  x_size_entrance  << "\t" <<  x_pos_entrance  << "\t" <<  x_size_exit  << "\t" <<  x_pos_exit   << endl;	
-							
+						cout << (CMapit->second)->GetName() << "\t" <<  x_size_entrance  << "\t" <<  x_pos_entrance  << "\t" <<  x_size_exit  << "\t" <<  x_pos_exit   << endl;
+
 						//x_size += xOffsetError1;
 						//y_size += yOffsetError1;
 
@@ -805,9 +825,9 @@ void CollimatorDatabase::SetOneSideTCDQA(AcceleratorModel* model, double emittan
 						std::cerr << "Unsupported collimator configuration in CollimatorDatabase.cpp" << std::endl;
 						exit(1);
 					}
-		
-				}		
-			}		
+
+				}
+			}
 		}
 	}
 }
@@ -867,7 +887,7 @@ void CollimatorDatabase::SetJawAngleError(double Error)
 }
 
 void CollimatorDatabase::OutputFlukaDatabase(std::ostream* os)
-{	
+{
 	(*os) << "# ID\tname\tangle[rad]\tbetax[m]\tbetay[m]\thalfgap[m]\tMaterial\tLength[m]\tsigx[m]\tsigy[m]\ttilt1[rad]\ttilt2[rad]\tnsig" << endl;
 	for(vector<FlukaData*>::iterator its = StoredFlukaData.begin(); its != StoredFlukaData.end(); ++its)
 	{

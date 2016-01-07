@@ -11,7 +11,7 @@ using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
 /*
-Basic constructor taking the following arguments: 
+Basic constructor taking the following arguments:
 Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
 */
 Material::Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
@@ -129,8 +129,8 @@ double Material::CalculateSixtrackRutherfordCrossSection()
 
 double Material::CalculateSixtrackdEdx(double E)
 {
-	
-	
+
+
 	//Since the numbers in sixtrack make no sense, what can be done here?
 	return 1;
 }
@@ -320,28 +320,87 @@ double Material::GetSixtrackNuclearSlope() const
 bool Material::VerifyMaterial() const
 {
 	bool verification = true;
-	if(GetName().size() <1){return false;}
+	if(GetName().size() <1)
+	{
+		return false;
+	}
 
-	if(GetSymbol().size() <1){std::cerr << "Failed to verify Symbol for " << GetName() << ": " << GetSymbol() << std::endl; verification = false;}
-	if(GetAtomicNumber() <1){std::cerr << "Failed to verify AtomicNumber for " << GetName() << ": " << GetAtomicNumber() << std::endl; verification = false;}
-	if(GetAtomicMass() <=0){std::cerr << "Failed to verify AtomicMass for " << GetName() << ": " << GetAtomicMass() << std::endl; verification = false;}
+	if(GetSymbol().size() <1)
+	{
+		std::cerr << "Failed to verify Symbol for " << GetName() << ": " << GetSymbol() << std::endl;
+		verification = false;
+	}
+	if(GetAtomicNumber() <1)
+	{
+		std::cerr << "Failed to verify AtomicNumber for " << GetName() << ": " << GetAtomicNumber() << std::endl;
+		verification = false;
+	}
+	if(GetAtomicMass() <=0)
+	{
+		std::cerr << "Failed to verify AtomicMass for " << GetName() << ": " << GetAtomicMass() << std::endl;
+		verification = false;
+	}
 
-	if(GetConductivity() <=0){std::cerr << "failed to verify conductivity for " << GetName() << ": " << GetConductivity() << std::endl; verification = false;}
-	if(GetRadiationLength() <=0){std::cerr << "Failed to verify RadiationLength for " << GetName() << ": " << GetRadiationLength() << std::endl; verification = false;}
-	if(GetDensity() <=0){std::cerr << "Failed to verify Density for " << GetName() << ": " << GetDensity() << std::endl; verification = false;}
-	if(GetElectronDensity() <=0){std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl; verification = false;}
-	if(GetMeanExcitationEnergy() <=0){std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy() << std::endl; verification = false;}
-	if(GetPlasmaEnergy() <=0){std::cerr << "Failed to verify PlasmaEnergy for " << GetName() << ": " << GetPlasmaEnergy() << std::endl; verification = false;}
+	if(GetConductivity() <=0)
+	{
+		std::cerr << "failed to verify conductivity for " << GetName() << ": " << GetConductivity() << std::endl;
+		verification = false;
+	}
+	if(GetRadiationLength() <=0)
+	{
+		std::cerr << "Failed to verify RadiationLength for " << GetName() << ": " << GetRadiationLength() << std::endl;
+		verification = false;
+	}
+	if(GetDensity() <=0)
+	{
+		std::cerr << "Failed to verify Density for " << GetName() << ": " << GetDensity() << std::endl;
+		verification = false;
+	}
+	if(GetElectronDensity() <=0)
+	{
+		std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl;
+		verification = false;
+	}
+	if(GetMeanExcitationEnergy() <=0)
+	{
+		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy() << std::endl;
+		verification = false;
+	}
+	if(GetPlasmaEnergy() <=0)
+	{
+		std::cerr << "Failed to verify PlasmaEnergy for " << GetName() << ": " << GetPlasmaEnergy() << std::endl;
+		verification = false;
+	}
 
 
 	/*
 	* Sixtrack parameters
 	*/
-	if(GetSixtrackTotalNucleusCrossSection() <=0){std::cerr << "Failed to verify SixtrackTotalNucleusCrossSection for " << GetName() << ": " << GetSixtrackTotalNucleusCrossSection() << std::endl; verification = false;}
-	if(GetSixtrackInelasticNucleusCrossSection() <=0){std::cerr << "Failed to verify SixtrackInelasticNucleusCrossSection for " << GetName() << ": " << GetSixtrackInelasticNucleusCrossSection() << std::endl; verification = false;}
-	if(GetSixtrackRutherfordCrossSection() <=0){std::cerr << "Failed to verify SixtrackRutherfordCrossSection for " << GetName() << ": " << GetSixtrackRutherfordCrossSection() << std::endl; verification = false;}
-	if(GetSixtrackNuclearSlope() <=0){std::cerr << "Failed to verify SixtrackNuclearSlope for " << GetName() << ": " << GetSixtrackNuclearSlope() << std::endl; verification = false;}
-	if(GetSixtrackdEdx() <=0){std::cerr << "Failed to verify SixtrackdEdx for " << GetName() << ": " << GetSixtrackdEdx() << std::endl; verification = false;}
+	if(GetSixtrackTotalNucleusCrossSection() <=0)
+	{
+		std::cerr << "Failed to verify SixtrackTotalNucleusCrossSection for " << GetName() << ": " << GetSixtrackTotalNucleusCrossSection() << std::endl;
+		verification = false;
+	}
+	if(GetSixtrackInelasticNucleusCrossSection() <=0)
+	{
+		std::cerr << "Failed to verify SixtrackInelasticNucleusCrossSection for " << GetName() << ": " << GetSixtrackInelasticNucleusCrossSection() << std::endl;
+		verification = false;
+	}
+	if(GetSixtrackRutherfordCrossSection() <=0)
+	{
+		std::cerr << "Failed to verify SixtrackRutherfordCrossSection for " << GetName() << ": " << GetSixtrackRutherfordCrossSection() << std::endl;
+		verification = false;
+	}
+	if(GetSixtrackNuclearSlope() <=0)
+	{
+		std::cerr << "Failed to verify SixtrackNuclearSlope for " << GetName() << ": " << GetSixtrackNuclearSlope() << std::endl;
+		verification = false;
+	}
+	if(GetSixtrackdEdx() <=0)
+	{
+		std::cerr << "Failed to verify SixtrackdEdx for " << GetName() << ": " << GetSixtrackdEdx() << std::endl;
+		verification = false;
+	}
 
 	return verification;
 }

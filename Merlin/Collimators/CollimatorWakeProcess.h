@@ -27,44 +27,45 @@
 
 
 //	Class for calculating the longitudinal and
-//	transverse single-bunch wakefields 
+//	transverse single-bunch wakefields
 //	for Collimators with modes
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 
 class CollimatorWakeProcess : public WakeFieldProcess
 {
 public:
 
-  CollimatorWakeProcess(int, int, size_t, double);
-     ~CollimatorWakeProcess ();
+	CollimatorWakeProcess(int, int, size_t, double);
+	~CollimatorWakeProcess ();
 
-    virtual void ApplyWakefield(double);
-    virtual void CalculateWakeT (double, int);
-    virtual void CalculateWakeL (double, int);
+	virtual void ApplyWakefield(double);
+	virtual void CalculateWakeT (double, int);
+	virtual void CalculateWakeL (double, int);
 
- private:
+private:
 
-    double CalculateSm (int, int);
-    double CalculateCm (int, int);
-    
-    int nmodes;
-    
-//    double Cm[5][1000];  
-    double** Cm;
-//    double Sm[5][1000];  
-    double** Sm;
-    double wake_s;
-    double wake_c;
-    
-    double** wake_sl;
-    double** wake_cl;
-    double** wake_ct;
-    double** wake_st;
+	double CalculateSm (int, int);
+	double CalculateCm (int, int);
+
+	int nmodes;
+
+//    double Cm[5][1000];
+	double** Cm;
+//    double Sm[5][1000];
+	double** Sm;
+	double wake_s;
+	double wake_c;
+
+	double** wake_sl;
+	double** wake_cl;
+	double** wake_ct;
+	double** wake_st;
 
 //    ParticleBunch* currentBunch;
-    CollimatorWakePotentials* collimator_wake;  
+	CollimatorWakePotentials* collimator_wake;
 };
 
 }

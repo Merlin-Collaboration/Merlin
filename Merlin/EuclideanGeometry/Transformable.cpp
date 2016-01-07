@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/03/29 08:17:37 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
@@ -25,35 +25,38 @@
 
 Transformable::~Transformable()
 {
-    if(local_T)
-        delete local_T;
+	if(local_T)
+	{
+		delete local_T;
+	}
 }
 
 void Transformable::Translate (double dx, double dy, double dz)
 {
-    _TRNSFM(translation(dx,dy,dz));
+	_TRNSFM(translation(dx,dy,dz));
 }
 
 void Transformable::RotateX (double angle)
 {
-    _TRNSFM(rotationX(angle));
+	_TRNSFM(rotationX(angle));
 }
 
 void Transformable::RotateY (double angle)
 {
-    _TRNSFM(rotationY(angle));
+	_TRNSFM(rotationY(angle));
 }
 
 void Transformable::RotateZ (double angle)
 {
-    _TRNSFM(rotationZ(angle));
+	_TRNSFM(rotationZ(angle));
 }
 
 void Transformable::ClearTransform ()
 {
-    if(local_T){
-        delete local_T;
-        local_T=0;
-    }
-    Invalidate();
+	if(local_T)
+	{
+		delete local_T;
+		local_T=0;
+	}
+	Invalidate();
 }

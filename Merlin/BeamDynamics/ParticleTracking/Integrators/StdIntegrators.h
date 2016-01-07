@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/09/26 20:12:15 $
 // $Revision: 1.6 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef ParticleTracking_StdIntegrators_h
@@ -33,7 +33,8 @@
 	public ParticleComponentTracker::Integrator< C > { \
 	public: void TrackStep(double); };
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 // common integrators
 DECL_SIMPLE_INTG(MonitorCI,Monitor)
@@ -41,7 +42,8 @@ DECL_SIMPLE_INTG(MarkerCI,Marker)
 DECL_SIMPLE_INTG(SolenoidCI,Solenoid)
 //DECL_SIMPLE_INTG(ParticleMapCI,ParticleMapComponent)
 
-namespace THIN_LENS {
+namespace THIN_LENS
+{
 
 DECL_SIMPLE_INTG(DriftCI,Drift)
 DECL_SIMPLE_INTG(KickerCI,Kicker)
@@ -49,31 +51,34 @@ DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
 DECL_SIMPLE_INTG(TWRFStructureCI,TWRFStructure)
 DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure)
 
-class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend> {
+class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend>
+{
 public:
-    void TrackStep(double);
-    void TrackEntrance();
-    void TrackExit();
+	void TrackStep(double);
+	void TrackEntrance();
+	void TrackExit();
 protected:
-    void ApplyPoleFaceRotation(double h, const SectorBend::PoleFace& pf);
+	void ApplyPoleFaceRotation(double h, const SectorBend::PoleFace& pf);
 };
 
 DECL_INTG_SET(ParticleComponentTracker,StdISet)
 } //end namespace THIN_LENS
 
-namespace TRANSPORT {
+namespace TRANSPORT
+{
 
 DECL_SIMPLE_INTG(DriftCI,Drift)
 DECL_SIMPLE_INTG(KickerCI,Kicker)
 DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
 
-class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend> {
+class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend>
+{
 public:
-    void TrackStep(double);
-    void TrackEntrance();
-    void TrackExit();
+	void TrackStep(double);
+	void TrackEntrance();
+	void TrackExit();
 protected:
-    void ApplyPoleFaceRotation(const SectorBend::PoleFace* pf);
+	void ApplyPoleFaceRotation(const SectorBend::PoleFace* pf);
 };
 
 DECL_INTG_SET(ParticleComponentTracker,StdISet)

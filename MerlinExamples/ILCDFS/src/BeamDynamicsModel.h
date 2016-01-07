@@ -3,7 +3,7 @@
 // Encapsulates the exact physics models for simulating the transport
 // (acceleration) of a beam.
 //
-// ILCDFS Application Code 
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -11,7 +11,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_BeamDynamicsModel
@@ -23,7 +23,8 @@
 
 class SimulationOutput;
 
-class BeamDynamicsModel {
+class BeamDynamicsModel
+{
 public:
 
 	BeamDynamicsModel(const std::string& aName) : output(0),itsName(aName) {}
@@ -32,7 +33,7 @@ public:
 
 	// Sets the beamline to be tracked by all subsequent
 	// TrackBunch() operations.
-	virtual void SetBeamline(const AcceleratorModel::Beamline& bl) =0;	
+	virtual void SetBeamline(const AcceleratorModel::Beamline& bl) =0;
 
 	// Sets the initial bunch to be tracked by all subsequent
 	// TrackBunch() operations.
@@ -51,7 +52,10 @@ public:
 	virtual Bunch* CreateBunch(const BeamData& beam0) =0;
 
 	// Return the name of this model
-	const std::string& GetName() const { return itsName; }
+	const std::string& GetName() const
+	{
+		return itsName;
+	}
 
 	// Set the output object to be used during tracking
 	void SetOutput(SimulationOutput* so);
@@ -63,7 +67,7 @@ protected:
 private:
 
 	const std::string itsName;
-	
+
 };
 
 inline void BeamDynamicsModel::SetOutput(SimulationOutput* so)

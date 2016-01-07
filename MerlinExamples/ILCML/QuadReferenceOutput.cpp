@@ -15,18 +15,22 @@ using namespace PhysicalConstants;
 void QuadReferenceOutput::Record(const ComponentFrame* frame, const Bunch* bunch)
 {
 	if(!frame->IsComponent())
+	{
 		return;
+	}
 
 	const TWRFStructure* cavity = dynamic_cast<const TWRFStructure*>(&(frame->GetComponent()));
-	if(cavity) {
+	if(cavity)
+	{
 		// need to update the reference energy
 		refEnergy += (cavity->GetVoltage())/GeV;
 		double q = (bunch->GetTotalCharge())*ElectronCharge;
 		refEnergy-= eloss*q*Volt;
 	}
-	else { // must be a quadrupole
+	else   // must be a quadrupole
+	{
 		const Quadrupole& quad = static_cast<const Quadrupole&>(frame->GetComponent());
-		
+
 		PSvector S;
 		bunch->GetCentroid(S);
 		double p0 = bunch->GetReferenceMomentum();
@@ -38,13 +42,15 @@ void QuadReferenceOutput::Record(const ComponentFrame* frame, const Bunch* bunch
 		WRITE_FOS(17,8,p0);
 		WRITE_FOS(17,8,quad.GetFieldStrength());
 		(*fosptr)<<endl;
-    }
+	}
 }
 
 bool QuadReferenceOutput::NewFile(const std::string& fname)
 {
 	if(fosptr!=0)
+	{
 		delete fosptr;
+	}
 	fosptr = new ofstream(fname.c_str());
 	return *fosptr;
 }

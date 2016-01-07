@@ -36,7 +36,7 @@ using namespace ParticleTracking;
  *
  * Results are compared to a distribution generated with merlin in
  * 2015, which is roughly in agreement with those by Assmann. Hence
- * this currently checks that the physics have not changed, rather 
+ * this currently checks that the physics have not changed, rather
  * than checking that the physics is correct.
  *
  * The number of bins deviating by more than N sigma are recorded
@@ -47,7 +47,7 @@ using namespace ParticleTracking;
  * there is an actual issue. Bins out by more than 3 sigma are
  * displayed, repeated failure of the same bin would be suspicious.
  *
- * The time (seconds since epoch) is used as the seed unless an int is 
+ * The time (seconds since epoch) is used as the seed unless an int is
  * passed as the first argument.
  *
  *
@@ -58,21 +58,27 @@ int main(int argc, char* argv[])
 {
 	int seed = (int)time(NULL);
 	if (argc >=2)
-    {
-        seed = atoi(argv[1]);
-    }	
-    
+	{
+		seed = atoi(argv[1]);
+	}
+
 	cout << "Seed: " << seed << endl;
 	RandomNG::init(seed);
 	/*********************************************************************
 	**	GENERAL SETTINGS
 	*********************************************************************/
-    //Loss_Map or Merged Collimation
+	//Loss_Map or Merged Collimation
 	bool Loss_Map 				= 0;
-		if(Loss_Map){std::cout << "LOSSMAP Collimation (ProtonBunch)" << std::endl;}
-		else{std::cout << "MERGED Collimation (based on HEL code)" << std::endl;}
-    bool output_initial_bunch 	= 0;
-    bool output_final_bunch 	= 1;
+	if(Loss_Map)
+	{
+		std::cout << "LOSSMAP Collimation (ProtonBunch)" << std::endl;
+	}
+	else
+	{
+		std::cout << "MERGED Collimation (based on HEL code)" << std::endl;
+	}
+	bool output_initial_bunch 	= 0;
+	bool output_final_bunch 	= 1;
 
 	//Beam energy (GeV) 7000,3500,450 etc
 	//double beam_energy = 7000.0;
@@ -99,25 +105,37 @@ int main(int argc, char* argv[])
 
 	string paths[] = {"../data/cu50_merlin_sixtrack_hist.dat", "data/cu50_merlin_sixtrack_hist.dat", "MerlinTests/data/cu50_merlin_sixtrack_hist.dat"};
 	ifstream dist_file;
-	for (size_t i=0; i<3; i++){
+	for (size_t i=0; i<3; i++)
+	{
 		dist_file.open(paths[i].c_str());
-		if (dist_file){break;}
+		if (dist_file)
+		{
+			break;
+		}
 	}
 	if (! dist_file)
-	{	
+	{
 		cout << "Failed to open dist file"<< endl;
 		exit(1);
 	}
-	
+
 	size_t dist_bin;
 	double dist_val_x, dist_val_xp, dist_val_dp;
 	string line;
-	while (getline(dist_file, line)){
-		if (line == "") continue;
-		if (line[0] == '#')continue;
+	while (getline(dist_file, line))
+	{
+		if (line == "")
+		{
+			continue;
+		}
+		if (line[0] == '#')
+		{
+			continue;
+		}
 		istringstream liness(line);
 		liness >> dist_bin >> dist_val_x >> dist_val_xp >> dist_val_dp;
-		if (dist_bin >= (nbins+2)){
+		if (dist_bin >= (nbins+2))
+		{
 			cout << "Invalid bin ("<< dist_bin<<") in cu50_merlin_hist.dat";
 			exit(1);
 		}
@@ -131,10 +149,10 @@ int main(int argc, char* argv[])
 	**	ACCELERATOR MODEL LOADING
 	*********************************************************************/
 
-  	MaterialDatabase* mat = new MaterialDatabase();
+	MaterialDatabase* mat = new MaterialDatabase();
 	Material* CollimatorMaterial = mat->FindMaterial("Cu");
 
-	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();	
+	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
 	construct->NewModel();
 	double length = 0.5;
 	Collimator* TestCol = new Collimator("TestCollimator",length);
@@ -160,7 +178,7 @@ int main(int argc, char* argv[])
 	{
 		myBunch->AddParticle(p);
 	}
-	
+
 	/*********************************************************************
 	**	Output Initial Bunch
 	*********************************************************************/
@@ -168,14 +186,18 @@ int main(int argc, char* argv[])
 	{
 		ostringstream bunch_output_file;
 		if(Loss_Map)
+		{
 			bunch_output_file << "Bunch/LM_ST_initial.txt";
+		}
 		else
+		{
 			bunch_output_file << "Bunch/HEL_ST_initial.txt";
-		
+		}
+
 		ofstream* bunch_output = new ofstream(bunch_output_file.str().c_str());
 		myBunch->Output(*bunch_output);
 		delete bunch_output;
-	 }
+	}
 
 	/*********************************************************************
 	**	PARTICLE TRACKER
@@ -186,11 +208,12 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	**	COLLIMATION SETTINGS
 	*********************************************************************/
-	if(Loss_Map){
+	if(Loss_Map)
+	{
 		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2,4);
 		//myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
 		myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
-		stringstream loststr;	
+		stringstream loststr;
 
 		myCollimateProcess->ScatterAtCollimator(true);
 
@@ -202,14 +225,15 @@ int main(int argc, char* argv[])
 
 		//Add Collimation process to the tracker.
 		myCollimateProcess->SetOutputBinSize(length);
-		tracker->AddProcess(myCollimateProcess);	
+		tracker->AddProcess(myCollimateProcess);
 	}
-	else{
+	else
+	{
 		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2,4);
 		ScatteringModel* myScatter = new ScatteringModel;
 		myScatter->SetScatterType(0);
 		myCollimateProcess->SetScatteringModel(myScatter);
-		stringstream loststr;	
+		stringstream loststr;
 
 		myCollimateProcess->ScatterAtCollimator(true);
 
@@ -234,87 +258,118 @@ int main(int argc, char* argv[])
 	cout << "left: " << myBunch->size() << endl;
 	cout << "absorbed: " << npart - myBunch->size() << endl;
 
-	if (0){
+	if (0)
+	{
 		ostringstream bunch_output_file_out;
 		bunch_output_file_out << "cu50_test_bunch_out.txt";
 		ofstream* bunch_output_out = new ofstream(bunch_output_file_out.str().c_str());
 		*bunch_output_out << "#T0 P0 x xp y yp ct dp" << endl;
 		myBunch->Output(*bunch_output_out);
 	}
-	
+
 	/*********************************************************************
 	**	Output Final Bunch
 	*********************************************************************/
-	if(output_final_bunch){
+	if(output_final_bunch)
+	{
 		ostringstream bunch_output_file2;
 		if(Loss_Map)
+		{
 			bunch_output_file2 << "Bunch/LM_ST_final.txt";
+		}
 		else
+		{
 			bunch_output_file2 << "Bunch/HEL_ST_final.txt";
+		}
 
 		ofstream* bunch_output2 = new ofstream(bunch_output_file2.str().c_str());
 		myBunch->Output(*bunch_output2);
 		delete bunch_output2;
-	 }
+	}
 
 	// Histogramming
-	for (PSvectorArray::iterator ip=myBunch->begin(); ip!=myBunch->end(); ip++){
+	for (PSvectorArray::iterator ip=myBunch->begin(); ip!=myBunch->end(); ip++)
+	{
 
 		int bin_x = ((ip->x() - bin_min_x) / (bin_max_x-bin_min_x) * (nbins)) +1; // +1 because bin zero for outliers
 		//cout << "\nbin_x = " << bin_x << " x = " << ip->x() << endl;
 		// so handle end bins, by check against x, not bin
-		if (ip->x() < bin_min_x) bin_x = 0;
-		if (ip->x() > bin_max_x) bin_x = nbins+1;
+		if (ip->x() < bin_min_x)
+		{
+			bin_x = 0;
+		}
+		if (ip->x() > bin_max_x)
+		{
+			bin_x = nbins+1;
+		}
 		hist_x[bin_x] += 1;
 
 		int bin_xp = ((ip->xp() - bin_min_xp) / (bin_max_xp-bin_min_xp) * (nbins)) +1; // +1 because bin zero for outliers
-		if (ip->xp() < bin_min_xp) bin_xp = 0;
-		if (ip->xp() > bin_max_xp) bin_xp = nbins+1;
+		if (ip->xp() < bin_min_xp)
+		{
+			bin_xp = 0;
+		}
+		if (ip->xp() > bin_max_xp)
+		{
+			bin_xp = nbins+1;
+		}
 		hist_xp[bin_xp] += 1;
 
 		int bin_dp = ((-ip->dp() - bin_min_dp) / (bin_max_dp-bin_min_dp) * (nbins)) +1; // +1 because bin zero for outliers
-		if (-ip->dp() < bin_min_dp) bin_dp = 0;
-		if (-ip->dp() > bin_max_dp) bin_dp = nbins+1;
+		if (-ip->dp() < bin_min_dp)
+		{
+			bin_dp = 0;
+		}
+		if (-ip->dp() > bin_max_dp)
+		{
+			bin_dp = nbins+1;
+		}
 		hist_dp[bin_dp] += 1;
 	}
-	
+
 
 	delete myBunch;
 
 	//~ cout << "i x xp dp" << endl;
 	//~ for (size_t i=0; i<nbins+2; i++){
-		//~ cout << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
+	//~ cout << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
 	//~ }
-	
+
 	/*********************************************************************
 	**	Output Final Hist
 	*********************************************************************/
-	if(Loss_Map){
-		std::ofstream out2 ("Bunch/LM_S_hist.txt", std::ofstream::out); 
-		for (size_t i=0; i<nbins+2; i++){
+	if(Loss_Map)
+	{
+		std::ofstream out2 ("Bunch/LM_S_hist.txt", std::ofstream::out);
+		for (size_t i=0; i<nbins+2; i++)
+		{
 			out2 << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
-		}		
+		}
 	}
-	else{
+	else
+	{
 		std::ofstream out2 ("Bunch/HEL_S_hist.txt", std::ofstream::out);
-		for (size_t i=0; i<nbins+2; i++){
+		for (size_t i=0; i<nbins+2; i++)
+		{
 			out2 << i << " " << (double)hist_x[i]/npart << " " << (double)hist_xp[i]/npart <<" " << (double)hist_dp[i]/npart << endl;
-		}		
+		}
 	}
-	
-	
-	
-	
+
+
+
+
 	// Calculate sigma from sqrt(<n>)
 	// Count number of bins out by more than n-sigma
 	const int ns = 4;
 	// https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule, could use erf() in c++11
 	const double tails[] = {0, 0.682689492137086, 0.954499736103642, 0.997300203936740,
-	                           0.999936657516334, 0.999999426696856, 0.999999998026825};
+	                        0.999936657516334, 0.999999426696856, 0.999999998026825
+	                       };
 	int over_ns[ns+1] = {0};
 	const double error = 0.05; // accept a 5% error in addtion to stat error
 
-	for (size_t i = 0; i<nbins+2; i++){
+	for (size_t i = 0; i<nbins+2; i++)
+	{
 		// should use poisson stats or ks test, otherwise bins with small counts can give bad results
 		// Currently assume gaussian, don't allow sigma to be below 1.0
 		double exp_err_x = max(sqrt(c_hist_x[i]), 1.0);
@@ -328,31 +383,38 @@ int main(int argc, char* argv[])
 		double exp_err_dp = max(sqrt(c_hist_dp[i]), 1.0);
 		double diff_dp = hist_dp[i] - c_hist_dp[i];
 		exp_err_dp = sqrt(pow(exp_err_dp,2) + pow(c_hist_dp[i]*error,2));
-		
-		
-		for(int j=1; j<ns+1; j++){
-			if (fabs(diff_x)/exp_err_x > j) {
+
+
+		for(int j=1; j<ns+1; j++)
+		{
+			if (fabs(diff_x)/exp_err_x > j)
+			{
 				over_ns[j]++;
 				// display the worst bins
-				if (j>=3) {
+				if (j>=3)
+				{
 					cout << endl;
 					cout << "big error in x # bin, merlin, expected, error/sigma" << endl;
 					cout << i << " " << hist_x[i] << " " << c_hist_x[i] << "+-" << exp_err_x << " " << diff_x/exp_err_x << endl;
 				}
 			}
-			if (fabs(diff_xp)/exp_err_xp > j) {
+			if (fabs(diff_xp)/exp_err_xp > j)
+			{
 				over_ns[j]++;
 				// display the worst bins
-				if (j>=3) {
+				if (j>=3)
+				{
 					cout << endl;
 					cout << "big error in xp # bin, merlin, expected, error/sigma" << endl;
 					cout << i << " " << hist_xp[i] << " " << c_hist_xp[i] << "+-" << exp_err_xp << " " << diff_xp/exp_err_xp << endl;
 				}
 			}
-			if (fabs(diff_dp)/exp_err_dp > j) {
+			if (fabs(diff_dp)/exp_err_dp > j)
+			{
 				over_ns[j]++;
 				// display the worst bins
-				if (j>=3) {
+				if (j>=3)
+				{
 					cout << endl;
 					cout << "big error in dp # bin, merlin, expected, error/sigma" << endl;
 					cout << i << " " << hist_dp[i] << " " << c_hist_dp[i] << "+-" << exp_err_dp << " " << diff_dp/exp_err_dp << endl;
@@ -361,17 +423,22 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	
+
 	// put limit on fraction of bins out by more than n-sigma
 	// bad if 30% more than expected
 	// allow some leeway for low count bins, by using over_ns[j]-1)/(nbins+2)
-	
+
 	bool bad = 0;
 	double tol = 1.3;
 	cout << endl << "Bins out by more than";
-	for(int j=1; j<ns+1; j++){
+	for(int j=1; j<ns+1; j++)
+	{
 		cout << endl << "    "<< j <<" sigma: "<< over_ns[j] << " ("<< (double)over_ns[j]/(nbins+2)/3*100  << " %)";
-		if ((double)over_ns[j]/(nbins+2)/3 > (1-tails[j])*tol) {cout << "** bad **"; bad=1;}
+		if ((double)over_ns[j]/(nbins+2)/3 > (1-tails[j])*tol)
+		{
+			cout << "** bad **";
+			bad=1;
+		}
 	}
 	cout << endl;
 

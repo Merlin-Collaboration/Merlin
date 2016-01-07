@@ -9,8 +9,8 @@
 // energy difference is made up by adjusting the initial beam energy.
 //
 // Note that this method does not support incremental tracking.
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -18,7 +18,7 @@
 // Last CVS revision:
 // $Date: 2006/06/19 10:19:06 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_KSEnergyAdjustment
@@ -26,7 +26,8 @@
 
 #include "EnergyAdjustmentPolicy.h"
 
-class KSEnergyAdjustment :public EnergyAdjustmentPolicy {
+class KSEnergyAdjustment :public EnergyAdjustmentPolicy
+{
 
 public:
 
@@ -34,14 +35,15 @@ public:
 
 	// Only the nominal beam and a single off-energy
 	// state are current supported.
-	size_t GetNumEnergyStates() {
-		return 2; 
+	size_t GetNumEnergyStates()
+	{
+		return 2;
 	}
 
 	// Sets the nes-th energy state.
 	void SetEnergyState(size_t nes);
 
-	// Initialise the policy. This function is called 
+	// Initialise the policy. This function is called
 	// before implementation of DFS to allow any implementation
 	// dependent initialisation to be performed.
 	void Initialise();
@@ -50,13 +52,14 @@ public:
 	void SetActiveBeamlineSegment(DFS_Segment &seg);
 
 	// Incremental tracking is not supported.
-	bool SupportsIncrementalTracking() {
+	bool SupportsIncrementalTracking()
+	{
 		return false;
 	}
 
 private:
 
-	double energy0; 
+	double energy0;
 	double delta;
 	std::pair<size_t,size_t> cKlysRange;
 	double dEbeam;

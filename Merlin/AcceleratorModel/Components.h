@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/03/29 08:25:16 $
 // $Revision: 1.5 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 //	A single include file which includes all the header

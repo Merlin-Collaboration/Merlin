@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // File ModelConstruction.h implementation
 // Routine to construct ILC Main Linac model
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -10,7 +10,7 @@
 // Last CVS revision:
 // $Date: 2006/06/12 14:30:09 $
 // $Revision: 1.1 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include <vector>
@@ -40,7 +40,9 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 
 	dfs_trace(dfs_trace::level_1)<<"Constructing model from "<<fname;
 	if(addcurv)
+	{
 		dfs_trace(dfs_trace::level_1)<<" with Earth curvature";
+	}
 	dfs_trace(dfs_trace::level_1)<<endl;
 
 
@@ -66,21 +68,23 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 	vector<TComponentFrame<TWRFStructure>*> cavities;
 	model->ExtractTypedComponents(cavities,"*"); // linac cavities only
 
-	TeslaWakePotentials* wake = new TeslaWakePotentials;	
+	TeslaWakePotentials* wake = new TeslaWakePotentials;
 	CircularAperture* iris = new CircularAperture(0.035); // TESLA iris aperture
 
 	size_t nCavsPerKlystron = 24;
 	size_t nKlys=0;
 	vector<RFStructure*> kcavs;
 
-	for(size_t n=0; n<cavities.size(); n++) {
+	for(size_t n=0; n<cavities.size(); n++)
+	{
 
 		TWRFStructure& cav = cavities[n]->GetComponent();
 		cav.SetWakePotentials(wake);
 		cav.SetAperture(iris);
 
 		kcavs.push_back(&cav);
-		if(kcavs.size()==nCavsPerKlystron) {
+		if(kcavs.size()==nCavsPerKlystron)
+		{
 			nKlys++;
 			ostringstream ss;
 			ss<<"KLYS_"<<nKlys;
@@ -90,7 +94,8 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 	}
 
 	// Add last klystron
-	if(!kcavs.empty()) {
+	if(!kcavs.empty())
+	{
 		nKlys++;
 		ostringstream ss;
 		ss<<"KLYS_"<<nKlys;
@@ -98,7 +103,8 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 		kcavs.clear();
 	}
 
-	if(addcurv) {
+	if(addcurv)
+	{
 
 		// Now adjust the  machine to approximately follow the earth's curvature
 		// We do this by extracting the VPIV geometry patch frames.
@@ -110,16 +116,21 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 		double totalDist = 0.0;
 		size_t npatches = 0;
 
-		for(AcceleratorModel::BeamlineIterator ci = let.begin(); ci!=let.end(); ci++) {
+		for(AcceleratorModel::BeamlineIterator ci = let.begin(); ci!=let.end(); ci++)
+		{
 
 			PatchFrame* vpatch = dynamic_cast<PatchFrame*>(*ci);
 
-			if(vpatch) {
+			if(vpatch)
+			{
 				npatches++;
 
 				if(vpatch0==0)
-					vpatch0 = vpatch; // first vpatch
-				else {
+				{
+					vpatch0 = vpatch;    // first vpatch
+				}
+				else
+				{
 
 					double dist = (*vpatch).GetPosition() - (*vpatch0).GetPosition();
 					double angle = dist/earthRho;

@@ -1,8 +1,8 @@
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (2000)
-* 
+*
 * file Merlin\BeamDynamics\ParticleTracking\ParticleBunchUtilities.cpp
 * last modified 30/04/01 12:28:48
 */
@@ -11,11 +11,11 @@
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 *
-* Copyright (c) 2000 by The Merlin Collaboration.  
-* ALL RIGHTS RESERVED. 
+* Copyright (c) 2000 by The Merlin Collaboration.
+* ALL RIGHTS RESERVED.
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -39,7 +39,8 @@
 #include <iostream>
 #endif
 
-namespace {
+namespace
+{
 
 using namespace std;
 using namespace ParticleTracking;
@@ -66,7 +67,8 @@ size_t TruncateZ(ParticleBunch& particles, double zmin, double zmax)
 
 }
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 // Sort the bunch in ascending z (ct) order, and return
 // a vector of iterators which point to the equal-spaced
@@ -84,21 +86,21 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nb
 {
 //cout << "In ParticleBinList" << endl;
 //cout << zmin << "\t" << zmax << "\t" << nbins << endl;
-    double dz = (zmax-zmin)/double(nbins);
-    vector<ParticleBunch::iterator> bins;
-    vector<double> hbins(nbins,0);
-    bins.reserve(nbins+1);
+	double dz = (zmax-zmin)/double(nbins);
+	vector<ParticleBunch::iterator> bins;
+	vector<double> hbins(nbins,0);
+	bins.reserve(nbins+1);
 
-    bunch.SortByCT();
+	bunch.SortByCT();
 
-    size_t lost = TruncateZ(bunch,zmin,zmax);
+	size_t lost = TruncateZ(bunch,zmin,zmax);
 
-    ParticleBunch::iterator p = bunch.begin();
-    bins.push_back(p);
+	ParticleBunch::iterator p = bunch.begin();
+	bins.push_back(p);
 
-    double z=zmin;
-    double total=0;
-    size_t n;
+	double z=zmin;
+	double total=0;
+	size_t n;
 
 	for(n=0; n<nbins; n++)
 	{
@@ -109,49 +111,49 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nb
 			hbins[n]++;
 			p++;
 		}
-        	bins.push_back(p);
+		bins.push_back(p);
 	}
 
 
-    if(p!=bunch.end())
-    {
-    	#ifdef ENABLE_MPI
-    	cerr << "bad slicing in rank: " << MPI::COMM_WORLD.Get_rank() << endl;
-	#endif
+	if(p!=bunch.end())
+	{
+#ifdef ENABLE_MPI
+		cerr << "bad slicing in rank: " << MPI::COMM_WORLD.Get_rank() << endl;
+#endif
 
-	#ifndef ENABLE_MPI
-    	cerr << "bad slicing" << endl;
-	#endif
+#ifndef ENABLE_MPI
+		cerr << "bad slicing" << endl;
+#endif
 
-	cerr << "z = " << z << " ct = " << p->ct() << " zmax = " << zmax << endl;
-	//Dump out the bad bunch
-/*
-	ofstream* badbunch = new ofstream("badbunch.bunch");
-	bunch.Output(*badbunch);
-	badbunch->close();
-	delete badbunch;
-	cerr << "Output of the current bunch is to badbunch.bunch" << endl;
-*/
-	#ifndef ENABLE_MPI
-	abort();
-	#endif
-	
-	#ifdef ENABLE_MPI
-	MPI::COMM_WORLD.Abort(1);
-	#endif
-    }
+		cerr << "z = " << z << " ct = " << p->ct() << " zmax = " << zmax << endl;
+		//Dump out the bad bunch
+		/*
+			ofstream* badbunch = new ofstream("badbunch.bunch");
+			bunch.Output(*badbunch);
+			badbunch->close();
+			delete badbunch;
+			cerr << "Output of the current bunch is to badbunch.bunch" << endl;
+		*/
+#ifndef ENABLE_MPI
+		abort();
+#endif
 
-    //	bins.push_back(p); // should be end()
+#ifdef ENABLE_MPI
+		MPI::COMM_WORLD.Abort(1);
+#endif
+	}
 
-    // normalise distribution
-    // and apply filter
+	//	bins.push_back(p); // should be end()
 
-    vector<double> fbins(nbins,0);
-    vector<double> fpbins(nbins,0);
+	// normalise distribution
+	// and apply filter
 
-    double a = 1/total/dz;
-    int w = c ? (c->size()-1)/2 : 0;
-    size_t m;
+	vector<double> fbins(nbins,0);
+	vector<double> fpbins(nbins,0);
+
+	double a = 1/total/dz;
+	int w = c ? (c->size()-1)/2 : 0;
+	size_t m;
 
 	for(n=0; n<nbins; n++)
 	{
@@ -159,14 +161,16 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nb
 		if(c)
 			//for(m=_MAX(0,int(n)-w); m<=_MIN(nbins,int(n)+w); m++)// ERROR! m can be set to nbins -> out of range!
 			for(m=_MAX(0,int(n)-w); m<_MIN(nbins,size_t(n)+w); m++)   // This needs to be checked!
+			{
 				fpbins[n] += hbins[m]*(*c)[m-n+w]*a;
+			}
 	}
 
-    pbins.swap(bins);
-    hd.swap(fbins);
-    hdp.swap(fpbins);
+	pbins.swap(bins);
+	hd.swap(fbins);
+	hdp.swap(fpbins);
 
-    return lost;
+	return lost;
 }
 
 // Return the distribution of particles for the coordinate u.
@@ -181,37 +185,44 @@ size_t ParticleBunchDistribution(ParticleBunch& bunch, PScoord u,
                                  double umin, double umax, double du, vector<double>& bins,
                                  bool normalise, bool truncate)
 {
-    size_t nb = (umax-umin)/du;
-    bins = vector<double>(nb,0.0);
-    size_t np0 = bunch.size();
+	size_t nb = (umax-umin)/du;
+	bins = vector<double>(nb,0.0);
+	size_t np0 = bunch.size();
 
-    ParticleBunch::iterator p = bunch.begin();
-    size_t lost=0;
-    double total = 0;
+	ParticleBunch::iterator p = bunch.begin();
+	size_t lost=0;
+	double total = 0;
 
-    while(p!=bunch.end()) {
-        double uval = (*p)[u];
-        if((uval<umin)||(uval>umax)) {
-            lost++;
-            if(truncate) {
-                p=bunch.erase(p);
-                p--;
-            }
-        }
-        else {
-            size_t n = (uval-umin)/du;
-            assert(n<nb);
-            bins[n]++;
-            total++;
-        }
-        p++;
-    }
-    if(normalise) {
-        double factor = 1/total/du;
-        for(size_t i=0; i<bins.size(); i++)
-            bins[i] *= factor;
-    }
-    return lost;
+	while(p!=bunch.end())
+	{
+		double uval = (*p)[u];
+		if((uval<umin)||(uval>umax))
+		{
+			lost++;
+			if(truncate)
+			{
+				p=bunch.erase(p);
+				p--;
+			}
+		}
+		else
+		{
+			size_t n = (uval-umin)/du;
+			assert(n<nb);
+			bins[n]++;
+			total++;
+		}
+		p++;
+	}
+	if(normalise)
+	{
+		double factor = 1/total/du;
+		for(size_t i=0; i<bins.size(); i++)
+		{
+			bins[i] *= factor;
+		}
+	}
+	return lost;
 }
 
 }

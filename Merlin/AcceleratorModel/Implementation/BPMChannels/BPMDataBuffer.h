@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:51 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef BPMDataBuffer_h
@@ -28,44 +28,45 @@ class BPMDataBuffer : public BPM::Buffer
 {
 public:
 
-    //	Constructor
-    BPMDataBuffer ();
+	//	Constructor
+	BPMDataBuffer ();
 
-    // Record the data to the buffer.
-    virtual void Record (const BPM& aBPM, const BPM::Data& data);
+	// Record the data to the buffer.
+	virtual void Record (const BPM& aBPM, const BPM::Data& data);
 
-    // Set the ID of the buffer.
-    void SetID (const string& anID);
+	// Set the ID of the buffer.
+	void SetID (const string& anID);
 
-    // Set buffer offsets (note: this is a temporary solution
-    // to setting arbitrary offsets to BPMs)
-    void SetOffsets(double x, double y);
+	// Set buffer offsets (note: this is a temporary solution
+	// to setting arbitrary offsets to BPMs)
+	void SetOffsets(double x, double y);
 
 private:
 
-    double x;
-    double x_off;
+	double x;
+	double x_off;
 
-    double y;
-    double y_off;
+	double y;
+	double y_off;
 
-    string id;
+	string id;
 
-    friend class BPMChannel;
+	friend class BPMChannel;
 };
 
 inline BPMDataBuffer::BPMDataBuffer ()
-        :x(0),x_off(0),y(0),y_off(0),id()
+	:x(0),x_off(0),y(0),y_off(0),id()
 {}
 
 inline void BPMDataBuffer::SetID (const string& anID)
 {
-    id=anID;
+	id=anID;
 }
 
-inline void BPMDataBuffer::SetOffsets(double x, double y) {
-    x_off = x;
-    y_off = y;
+inline void BPMDataBuffer::SetOffsets(double x, double y)
+{
+	x_off = x;
+	y_off = y;
 }
 
 #endif

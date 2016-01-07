@@ -2,7 +2,8 @@
 #include "NumericalUtils/NumericalConstants.h"
 
 
-namespace PhysicalUnits {
+namespace PhysicalUnits
+{
 
 
 //Area

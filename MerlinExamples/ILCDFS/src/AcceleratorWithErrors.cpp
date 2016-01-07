@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // Class AcceleratorWithErrors implementation
 // Represents the physical accelerator with errors.
-// 
-// ILCDFS Application Code 
+//
+// ILCDFS Application Code
 // Based on the MERLIN class library
 //
 // Copyright: see Merlin/copyright.txt
@@ -10,7 +10,7 @@
 // Last CVS revision:
 // $Date: 2008/01/14 21:08:22 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #include "AcceleratorWithErrors.h"
@@ -21,13 +21,17 @@
 #include "Random/RandomNG.h"
 #include "AcceleratorModel/ActiveMonitors/BPM.h"
 
-class AlignmentError : public FrameTraverser {
+class AlignmentError : public FrameTraverser
+{
 public:
 	AlignmentError(const string& sp, bool clear_t)
 		: fpattern(sp),s(sp),ct(clear_t) {}
 	void ActOn(LatticeFrame* f);
 
-	void Init() { count=0; }
+	void Init()
+	{
+		count=0;
+	}
 	void Report() const;
 
 protected:
@@ -43,10 +47,13 @@ private:
 void AlignmentError::ActOn(LatticeFrame* f)
 {
 	const string& id = f->GetQualifiedName();
-	if(fpattern(id)) {
+	if(fpattern(id))
+	{
 		dfs_trace(dfs_trace::level_3)<<"adding alignment errors to "<<id<<endl;
 		if(ct)
+		{
 			f->ClearLocalFrameTransform();
+		}
 		ApplyError(f);
 		count++;
 	}
@@ -57,48 +64,51 @@ void AlignmentError::Report() const
 	dfs_trace(dfs_trace::level_2)<<count<<" alignment errors added to "<<s<<endl;
 }
 
-namespace {
+namespace
+{
 
-	class TransverseError : public AlignmentError {
-	public:
-		TransverseError(const string& sp, double xrms, double yrms, bool ct)
-			: AlignmentError(sp,ct),xvar(xrms*xrms),yvar(yrms*yrms) {}
-	protected:
-		void ApplyError(LatticeFrame* f);
-	private:
-		double xvar, yvar;
-	};
+class TransverseError : public AlignmentError
+{
+public:
+	TransverseError(const string& sp, double xrms, double yrms, bool ct)
+		: AlignmentError(sp,ct),xvar(xrms*xrms),yvar(yrms*yrms) {}
+protected:
+	void ApplyError(LatticeFrame* f);
+private:
+	double xvar, yvar;
+};
 
-	class RotationError : public AlignmentError {
-	public:
-		RotationError(const string& sp, double xrms, double yrms, double zrms, bool ct)
-			: AlignmentError(sp,ct),xvar(xrms*xrms),yvar(yrms*yrms),zvar(zrms*zrms) {}
-	protected:
-		void ApplyError(LatticeFrame* f);
-	private:
-		double xvar, yvar, zvar;
-	};
+class RotationError : public AlignmentError
+{
+public:
+	RotationError(const string& sp, double xrms, double yrms, double zrms, bool ct)
+		: AlignmentError(sp,ct),xvar(xrms*xrms),yvar(yrms*yrms),zvar(zrms*zrms) {}
+protected:
+	void ApplyError(LatticeFrame* f);
+private:
+	double xvar, yvar, zvar;
+};
 
-	void TransverseError::ApplyError(LatticeFrame* f)
-	{
-		double x = RandomNG::normal(0,xvar);
-		double y = RandomNG::normal(0,yvar);
-		f->Translate(x,y,0);
-	}
+void TransverseError::ApplyError(LatticeFrame* f)
+{
+	double x = RandomNG::normal(0,xvar);
+	double y = RandomNG::normal(0,yvar);
+	f->Translate(x,y,0);
+}
 
-	void RotationError::ApplyError(LatticeFrame* f)
-	{
-		double x = RandomNG::normal(0,xvar);
-		double y = RandomNG::normal(0,yvar);
-		double z = RandomNG::normal(0,zvar);
-		f->RotateX(x);
-		f->RotateY(y);
-		f->RotateZ(z);
-	}
+void RotationError::ApplyError(LatticeFrame* f)
+{
+	double x = RandomNG::normal(0,xvar);
+	double y = RandomNG::normal(0,yvar);
+	double z = RandomNG::normal(0,zvar);
+	f->RotateX(x);
+	f->RotateY(y);
+	f->RotateZ(z);
+}
 }
 
 AcceleratorWithErrors::AcceleratorWithErrors(const std::string& name, AcceleratorModel* mdl, BeamData* beam0)
-:Accelerator(name,mdl,beam0)
+	:Accelerator(name,mdl,beam0)
 {}
 
 void AcceleratorWithErrors::TransverseErrors(const string& pattern, double x_rms, double y_rms, bool clear_transform)
@@ -125,11 +135,15 @@ void AcceleratorWithErrors::BPMresolution(double rms)
 {
 	dfs_trace(dfs_trace::level_1)<<"BPM resolution = "<<rms<<endl;
 	AcceleratorModel::Beamline bl = itsAccModel->GetBeamline();
-	for(AcceleratorModel::BeamlineIterator c = bl.begin(); c!=bl.end(); c++) {
-		if((*c)->IsComponent()) {
+	for(AcceleratorModel::BeamlineIterator c = bl.begin(); c!=bl.end(); c++)
+	{
+		if((*c)->IsComponent())
+		{
 			BPM* bpm = dynamic_cast<BPM*>(&((*c)->GetComponent()));
 			if(bpm)
+			{
 				bpm->SetRes(rms);
+			}
 		}
 	}
 }
@@ -147,7 +161,8 @@ void AcceleratorWithErrors::InitialBeamJitterInSigma(double xrms, double yrms)
 
 void AcceleratorWithErrors::ApplyStaticErrors()
 {
-	for(list<AlignmentError*>::iterator ei = alignErrorDefs.begin(); ei!=alignErrorDefs.end(); ei++) {
+	for(list<AlignmentError*>::iterator ei = alignErrorDefs.begin(); ei!=alignErrorDefs.end(); ei++)
+	{
 		AlignmentError* aerr = *ei;
 		aerr->Init();
 		(itsAccModel->GetGlobalFrame()).Traverse(*aerr);
@@ -159,10 +174,13 @@ void AcceleratorWithErrors::ApplyStaticErrors()
 
 
 	AcceleratorModel::Beamline bl = itsAccModel->GetBeamline();
-	for(AcceleratorModel::BeamlineIterator c = bl.begin(); c!=bl.end(); c++) {
-		if((*c)->IsComponent()) {
+	for(AcceleratorModel::BeamlineIterator c = bl.begin(); c!=bl.end(); c++)
+	{
+		if((*c)->IsComponent())
+		{
 			BPM* bpm = dynamic_cast<BPM*>(&((*c)->GetComponent()));
-			if(bpm) {
+			if(bpm)
+			{
 				double ce = bpmCalErr2==0? 1.0 : 1.0+RandomNG::normal(0,bpmCalErr2);
 				bpm->SetScale(ce,ce); // Same error in both planes?
 			}

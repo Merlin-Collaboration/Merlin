@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 5.01 (2015)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
-// Created:		08.01.15 Haroon Rafique	
+// Created:		08.01.15 Haroon Rafique
 // Modified:	09.11.15 Haroon Rafique & Alessia Valloni
 // Last Edited: 10.11.15 HR + AV
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 #include <algorithm>
 #include <string>
@@ -25,7 +25,8 @@
 #include "Exception/MerlinException.h"
 
 using namespace std;
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 Dustbin::Dustbin(OutputType ot)
 {
@@ -46,32 +47,33 @@ void FlukaDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Part
 {
 	// If current component is a collimator we store the loss, otherwise we do not
 	if (currentComponent != &currcomponent)
-	{	
+	{
 		currentComponent = &currcomponent;
 	}
 	temp.reset();
-	
+
 	Collimator* aCollimator = dynamic_cast<Collimator*>(&currcomponent);
 	bool is_collimator = aCollimator;
-	
-	if(is_collimator){
+
+	if(is_collimator)
+	{
 
 		temp.ElementName = currentComponent->GetQualifiedName().c_str();
 		temp.s = currentComponent->GetComponentLatticePosition();
-		
+
 		// For Fluka output pos is the lost position within the element
 		temp.position = pos;
 		temp.length = currentComponent->GetLength();
 		temp.lost = 1;
-		
+
 		temp.coll_id = currentComponent->GetCollID();
 		temp.turn = turn;
-		
+
 		const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (currentComponent->GetAperture());
 		temp.angle = tap->GetCollimatorTilt();
-		
+
 		temp.p = particle;
-		
+
 		//pushback vector
 		DeadParticles.push_back(temp);
 	}
@@ -84,8 +86,8 @@ void FlukaDustbin::Finalise()
 	{
 		if( (*its).p.type() == 1 || (*its).p.type() == 4 )
 		{
-				OutputLosses.push_back(*its);
-		}		
+			OutputLosses.push_back(*its);
+		}
 	}
 }
 
@@ -104,9 +106,9 @@ void FlukaDustbin::Output(std::ostream* os)
 		(*os) << setw(20) << left << (*its).p.yp();
 		(*os) << setw(20) << left << (*its).p.type();
 		(*os) << setw(20) << left << (*its).p.id();
-		(*os) << setw(20) << left << (*its).turn;			
+		(*os) << setw(20) << left << (*its).turn;
 		(*os) << endl;
-	}	
+	}
 }
 
 
@@ -116,7 +118,7 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 	//~ cout << "\nLossMapDustbin called" << endl;
 
 	if (currentComponent != &currcomponent)
-	{	
+	{
 		currentComponent = &currcomponent;
 	}
 	temp.reset();
@@ -127,7 +129,7 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 	temp.position = (pos + temp.s);
 	temp.length = currentComponent->GetLength();
 	temp.lost = 1;
-		
+
 	//calculate 10cm interval - move to 10cm binning?
 	double inter = 0.0;
 	bool fin = 0;
@@ -139,15 +141,15 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 			temp.interval = inter;
 			fin = 1;
 		}
-		else 
+		else
 		{
 			inter += 0.1;
 		}
 	}
 	while(fin == 0);
-	
+
 	//obsolete
-	//if(currentComponent->GetType() =="Collimator"){temp.temperature = 0;}				
+	//if(currentComponent->GetType() =="Collimator"){temp.temperature = 0;}
 	//else if(currentComponent->GetType() =="SectorBend"){temp.temperature = 1;}
 	//else if(currentComponent->GetType() =="Quadrupole"){temp.temperature = 1;}
 	//else if(currentComponent->GetType() =="SkewQuadrupole"){temp.temperature = 1;}
@@ -156,19 +158,49 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 	//else if(currentComponent->GetType() =="YCor"){temp.temperature = 1;}
 	//else if(currentComponent->GetType() =="BPM"){temp.temperature = 1;}
 	//else if(currentComponent->GetType() =="Drift"){temp.temperature = 1;}
-	//else {temp.temperature = 2;}	
+	//else {temp.temperature = 2;}
 
 	//For LHC Loss Maps
-	if(currentComponent->GetType() =="Collimator"){temp.temperature = 0;}				
-	else if(temp.ElementName.substr(0, 14) =="SectorBend.MBW"){temp.temperature = 2;}	
-	else if(temp.ElementName.substr(0, 15) =="SectorBend.MBXW"){temp.temperature = 2;}
-	else if(temp.ElementName.substr(0, 14) =="Quadrupole.MQW"){temp.temperature = 2;}
-	else if(temp.ElementName.substr(0, 9) =="XCor.MCBW"){temp.temperature = 2;}
-	else if(temp.ElementName.substr(0, 9) =="YCor.MCBW"){temp.temperature = 2;}
-	else if(temp.ElementName.substr(0, 9) =="BPM.BPMWE"){temp.temperature = 2;}
-	else if(temp.ElementName.substr(0, 10) =="Drift.MCBW"){temp.temperature = 2;}
-	else if( (temp.s > 1.9790884399999788E+04) && (temp.s <= 2.0244198399999801E+04 ) && (temp.ElementName.substr(0, 11) == "Drift.DRIFT") ) {temp.temperature = 2;} //Drifts in IR7
-	else {temp.temperature = 1;}	
+	if(currentComponent->GetType() =="Collimator")
+	{
+		temp.temperature = 0;
+	}
+	else if(temp.ElementName.substr(0, 14) =="SectorBend.MBW")
+	{
+		temp.temperature = 2;
+	}
+	else if(temp.ElementName.substr(0, 15) =="SectorBend.MBXW")
+	{
+		temp.temperature = 2;
+	}
+	else if(temp.ElementName.substr(0, 14) =="Quadrupole.MQW")
+	{
+		temp.temperature = 2;
+	}
+	else if(temp.ElementName.substr(0, 9) =="XCor.MCBW")
+	{
+		temp.temperature = 2;
+	}
+	else if(temp.ElementName.substr(0, 9) =="YCor.MCBW")
+	{
+		temp.temperature = 2;
+	}
+	else if(temp.ElementName.substr(0, 9) =="BPM.BPMWE")
+	{
+		temp.temperature = 2;
+	}
+	else if(temp.ElementName.substr(0, 10) =="Drift.MCBW")
+	{
+		temp.temperature = 2;
+	}
+	else if( (temp.s > 1.9790884399999788E+04) && (temp.s <= 2.0244198399999801E+04 ) && (temp.ElementName.substr(0, 11) == "Drift.DRIFT") )
+	{
+		temp.temperature = 2;   //Drifts in IR7
+	}
+	else
+	{
+		temp.temperature = 1;
+	}
 
 	temp.p = particle;
 	//pushback vector
@@ -177,16 +209,16 @@ void LossMapDustbin::Dispose(AcceleratorComponent& currcomponent, double pos, Pa
 }
 
 void LossMapDustbin::Finalise()
-{	
+{
 	//First sort DeadParticles according to s
-	sort(DeadParticles.begin(), DeadParticles.end(), Compare_LossData); 	
+	sort(DeadParticles.begin(), DeadParticles.end(), Compare_LossData);
 
 	cout << "DUSTBIN:: DeadParticles.size() = " <<  DeadParticles.size() << endl;
 
 	int outit = 0;
 	int total = 0;
 
-	switch(otype) 
+	switch(otype)
 	{
 	case nearestelement:
 		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
@@ -195,8 +227,8 @@ void LossMapDustbin::Finalise()
 			// Start at s = min and push back the first LossData
 			if (OutputLosses.size() == 0)
 			{
-				OutputLosses.push_back(*it); 
-			}				
+				OutputLosses.push_back(*it);
+			}
 			// If old element ++loss
 			if (it->ElementName == OutputLosses[outit].ElementName)
 			{
@@ -205,11 +237,11 @@ void LossMapDustbin::Finalise()
 			// If new element OutputLosses.push_back
 			else
 			{
-				OutputLosses.push_back(*it);	
-				outit++;				
+				OutputLosses.push_back(*it);
+				outit++;
 			}
 		}
-	break;
+		break;
 	case precise:
 		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
@@ -217,8 +249,8 @@ void LossMapDustbin::Finalise()
 			// Start at s = min and push back the first LossData
 			if (OutputLosses.size() == 0)
 			{
-				OutputLosses.push_back(*it); 
-			}	
+				OutputLosses.push_back(*it);
+			}
 			// If position is equal
 			if (it->position == OutputLosses[outit].position)
 			{
@@ -227,11 +259,11 @@ void LossMapDustbin::Finalise()
 			// If new element outit.push_back
 			else
 			{
-				OutputLosses.push_back(*it);	
-				outit++;				
+				OutputLosses.push_back(*it);
+				outit++;
 			}
 		}
-	break;
+		break;
 	case tencm:
 		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
@@ -239,11 +271,11 @@ void LossMapDustbin::Finalise()
 			//if no losses are yet stored
 			if (OutputLosses.size() == 0)
 			{
-				OutputLosses.push_back(*it); 
+				OutputLosses.push_back(*it);
 				//~ // We set this to zero as it will be incremented in the next if
 				//~ OutputLosses[outit].lost = 0;
 				OutputLosses[outit].lost = 1;
-			}	
+			}
 			// If in the same bin ++loss
 			else if ((it->ElementName == OutputLosses[outit].ElementName) && (it->interval == OutputLosses[outit].interval))
 			{
@@ -252,12 +284,12 @@ void LossMapDustbin::Finalise()
 			// If new element outit.push_back and set loss to 1
 			else
 			{
-				OutputLosses.push_back(*it);	
-				outit++;				
+				OutputLosses.push_back(*it);
+				outit++;
 				OutputLosses[outit].lost =1;
 			}
 		}
-	break;
+		break;
 	};
 	cout << "DUSTBIN:: OutputLosses.size() = " << OutputLosses.size() << endl;
 	cout << "DUSTBIN:: Total losses = " << total << endl;
@@ -265,9 +297,9 @@ void LossMapDustbin::Finalise()
 
 void LossMapDustbin::Output(std::ostream* os)
 {
-	switch(otype) 
-	{	
-		case nearestelement:
+	switch(otype)
+	{
+	case nearestelement:
 		for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << setw(34) << left << (*its).ElementName;
@@ -279,7 +311,7 @@ void LossMapDustbin::Output(std::ostream* os)
 		}
 		break;
 
-		case precise:
+	case precise:
 		for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << setw(34) << left << (*its).ElementName;
@@ -292,7 +324,7 @@ void LossMapDustbin::Output(std::ostream* os)
 		}
 		break;
 
-		case tencm:
+	case tencm:
 		(*os) << "#\tName\ts\tbin_start\tloss\ttemperature\tlength" << endl;
 		for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{

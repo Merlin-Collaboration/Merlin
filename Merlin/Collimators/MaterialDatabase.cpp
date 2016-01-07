@@ -15,41 +15,41 @@ using namespace PhysicalUnits;
 
 MaterialDatabase::MaterialDatabase()
 {
-/*
-Here we create new materials, add their properties, then push them into a map for manipulation.
-References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties/
-*/
+	/*
+	Here we create new materials, add their properties, then push them into a map for manipulation.
+	References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties/
+	*/
 
 //ALL CROSS SECTIONS IN BARNS!
 
 	//new Material(Name, A, AN, SE, SI, SR, dE, X, rho, sig);
 	//Beryllium - using constructor rather than addinf each variable
-	Material* Be = new Material("Beryllium", "Be", 9.012182, 4, 0.069, 0.199, 0.000035, 0.55, 651900, 1848, 3.08E7);	
+	Material* Be = new Material("Beryllium", "Be", 9.012182, 4, 0.069, 0.199, 0.000035, 0.55, 651900, 1848, 3.08E7);
 	Be->SetSixtrackTotalNucleusCrossSection(0.268);
 	Be->SetSixtrackNuclearSlope(74.7);
 	Be->SetMeanExcitationEnergy(63.7*eV);
 	Be->SetElectronDensity(Be->CalculateElectronDensity());
 	Be->SetPlasmaEnergy(Be->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Be->GetSymbol(),Be));
-/*
-	//Obsolete due to constructor
-	Material* Be = new Material();
-	Be->SetAtomicNumber(4);
-	Be->SetAtomicMass(9.012182);
-	Be->SetName("Beryllium");
-	Be->SetSymbol("Be");
-	Be->SetSixtrackInelasticNucleusCrossSection(0.199);
-	Be->SetSixtrackRutherfordCrossSection(0.000035);
-	Be->SetConductivity(3.08E7);
-	Be->SetRadiationLength(651900);
-	Be->SetSixtrackdEdx(0.55);
-	Be->SetDensity(1848);
-*/
-	
+	/*
+		//Obsolete due to constructor
+		Material* Be = new Material();
+		Be->SetAtomicNumber(4);
+		Be->SetAtomicMass(9.012182);
+		Be->SetName("Beryllium");
+		Be->SetSymbol("Be");
+		Be->SetSixtrackInelasticNucleusCrossSection(0.199);
+		Be->SetSixtrackRutherfordCrossSection(0.000035);
+		Be->SetConductivity(3.08E7);
+		Be->SetRadiationLength(651900);
+		Be->SetSixtrackdEdx(0.55);
+		Be->SetDensity(1848);
+	*/
+
 //	Be->rho=1.848;
-//	Be->SetRadiationLength(Be->CalculateRadiationLength());	
+//	Be->SetRadiationLength(Be->CalculateRadiationLength());
 //	Be->SetElectronCriticalEnergy(113.70*MeV);
-	
+
 
 	//Carbon (graphite)
 	Material* C = new Material();
@@ -303,7 +303,7 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 
 	/*
 	* LHC TCLA/TCL material
-	* Copper + Aluminium Oxide powder 
+	* Copper + Aluminium Oxide powder
 	* Glidcop - 99.72% Copper + 0.28% Aluminium Oxide for Glidcop-15 by mass
 	*/
 	//~ MaterialMixture* Glidcop = new MaterialMixture();
@@ -318,7 +318,7 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 
 	Glidcop->SetDensity(8930);
 	Glidcop->SetConductivity(5.38E7);	//CERN-ATS-2011-224
-	
+
 	Glidcop->Assemble();
 
 	//~ Glidcop->VerifyMaterial();
@@ -329,16 +329,16 @@ References: Particle data group: http://pdg.lbl.gov/2013/AtomicNuclearProperties
 	//~ Glidcop->SetElectronDensity(Glidcop->CalculateElectronDensity());
 	//~ Glidcop->SetPlasmaEnergy(Glidcop->CalculatePlasmaEnergy());
 	//~ Glidcop->SetSixtrackdEdx(Glidcop->CalculateSixtrackdEdx());
-	
+
 	// Test Mixture function
 	vector< pair<string,double> > els = Glidcop->GetConstituentElements();
 	vector< pair<string,double> >::iterator el_it;
 	//~ for(el_it = els.begin(); el_it != els.end(); ++el_it){
-		//~ std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
+	//~ std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
 	//~ }
-	
+
 	//~ DumpMaterialProperties();
-	
+
 	db.insert(pair<string,Material*>(Glidcop->GetSymbol(),Glidcop));
 }
 

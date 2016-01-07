@@ -28,27 +28,34 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "Random/Random.h"
 
-class NegativeExpntl: public Random {
+class NegativeExpntl: public Random
+{
 protected:
-    double pMean;
+	double pMean;
 public:
-    NegativeExpntl(double xmean, RNG *gen);
-    double mean();
-    double mean(double x);
+	NegativeExpntl(double xmean, RNG *gen);
+	double mean();
+	double mean(double x);
 
-    virtual double operator()();
+	virtual double operator()();
 };
 
 
 inline NegativeExpntl::NegativeExpntl(double xmean, RNG *gen)
-        : Random(gen) {
-    pMean = xmean;
+	: Random(gen)
+{
+	pMean = xmean;
 }
 
-inline double NegativeExpntl::mean() { return pMean; }
-inline double NegativeExpntl::mean(double x) {
-    double t = pMean; pMean = x;
-    return t;
+inline double NegativeExpntl::mean()
+{
+	return pMean;
+}
+inline double NegativeExpntl::mean(double x)
+{
+	double t = pMean;
+	pMean = x;
+	return t;
 }
 
 #endif

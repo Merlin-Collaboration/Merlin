@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2005/03/29 08:33:05 $
 // $Revision: 1.4 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef AcceleratorModelConstructor_h
@@ -38,76 +38,78 @@ class AcceleratorModelConstructor
 {
 public:
 
-    typedef std::stack< SequenceFrame* > FrameStack;
+	typedef std::stack< SequenceFrame* > FrameStack;
 
-    AcceleratorModelConstructor ();
-    ~AcceleratorModelConstructor ();
+	AcceleratorModelConstructor ();
+	~AcceleratorModelConstructor ();
 
-    //	Initialises a new AcceleratorModel. Must be called
-    //	before any subsequent constructor calls.
-    void NewModel ();
+	//	Initialises a new AcceleratorModel. Must be called
+	//	before any subsequent constructor calls.
+	void NewModel ();
 
-    //	Ends the current model construction and returns the
-    //	model. The model must be in a valid (complete) state.
-    AcceleratorModel* GetModel ();
+	//	Ends the current model construction and returns the
+	//	model. The model must be in a valid (complete) state.
+	AcceleratorModel* GetModel ();
 
-    //	Begin construction of a new LatticeFrame.
-    void NewFrame (SequenceFrame* aFrame);
+	//	Begin construction of a new LatticeFrame.
+	void NewFrame (SequenceFrame* aFrame);
 
-    //	Finish construction of the specified frame.
-    void EndFrame ();
+	//	Finish construction of the specified frame.
+	void EndFrame ();
 
-    //	Append the specified component a distance d meters
-    //	downstream of the last component.
-    template<class T> T* AppendComponent (T& acc, double d = 0)
-    {
-        if(!fequal(d,0.0))
-            AppendDrift(d);
-        AppendComponentFrame(new TComponentFrame<T>(acc));
-        return &acc;
-    }
+	//	Append the specified component a distance d meters
+	//	downstream of the last component.
+	template<class T> T* AppendComponent (T& acc, double d = 0)
+	{
+		if(!fequal(d,0.0))
+		{
+			AppendDrift(d);
+		}
+		AppendComponentFrame(new TComponentFrame<T>(acc));
+		return &acc;
+	}
 
-    template<class T> T* AppendComponent(T* acc, double d=0)
-    {
-        return AppendComponent(*acc,d);
-    }
+	template<class T> T* AppendComponent(T* acc, double d=0)
+	{
+		return AppendComponent(*acc,d);
+	}
 
-    // Append an arbitrary ComponentFrame
-    void AppendComponentFrame (ComponentFrame* cf);
+	// Append an arbitrary ComponentFrame
+	void AppendComponentFrame (ComponentFrame* cf);
 
-    // Append an entire SequenceFrame (or derivative) to the current model.
-    // This function allows complex structures (eg. girders) which have
-    // been externally constructed to placed in the current model
-    void AppendFrame(SequenceFrame* aFrame);
+	// Append an entire SequenceFrame (or derivative) to the current model.
+	// This function allows complex structures (eg. girders) which have
+	// been externally constructed to placed in the current model
+	void AppendFrame(SequenceFrame* aFrame);
 
-    //	Returns a const reference to the current frame.
-    SequenceFrame& GetCurrentFrame () const
-    {
-        return *(frameStack.top());
-    }
+	//	Returns a const reference to the current frame.
+	SequenceFrame& GetCurrentFrame () const
+	{
+		return *(frameStack.top());
+	}
 
-    //	Returns the depth of the current frame. 0 refers to the
-    //	global frame (top level).
-    int GetCurrentFrameDepth () const
-    {
-        return frameStack.size()-1;
-    }
+	//	Returns the depth of the current frame. 0 refers to the
+	//	global frame (top level).
+	int GetCurrentFrameDepth () const
+	{
+		return frameStack.size()-1;
+	}
 
-    //	Appends a simple drift to the current model.
-    void AppendDrift (double d);
+	//	Appends a simple drift to the current model.
+	void AppendDrift (double d);
 
-    //	Adds a ModelElement to the Accelerator Model.
-    void AddModelElement (ModelElement* element);
+	//	Adds a ModelElement to the Accelerator Model.
+	void AddModelElement (ModelElement* element);
 
-    //	Prints a table to os  containing statistics on the type
-    //	and number of ModelElement current contained in the
-    //	model.
-    void ReportStatistics (std::ostream& os) const;
+	//	Prints a table to os  containing statistics on the type
+	//	and number of ModelElement current contained in the
+	//	model.
+	void ReportStatistics (std::ostream& os) const;
 
 private:
 
-    AcceleratorModel* currentModel;
-    FrameStack frameStack;
+	AcceleratorModel* currentModel;
+	FrameStack frameStack;
 };
 
 

@@ -10,18 +10,19 @@ using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 
-namespace {
+namespace
+{
 
-	double DispersionCorrectedEmittance(const PSmoments& S)
-	{
-		double s36 = S(ps_Y,ps_DP);
-		double s46 = S(ps_YP,ps_DP);
-		double dp2 = S.var(ps_DP);
-		double s33 = S.var(ps_Y)-s36*s36/dp2;
-		double s34 = S(ps_Y,ps_YP)-s36*s46/dp2;
-		double s44 = S.var(ps_YP)-s46*s46/dp2;
-		return sqrt(s33*s44-s34*s34);
-	}
+double DispersionCorrectedEmittance(const PSmoments& S)
+{
+	double s36 = S(ps_Y,ps_DP);
+	double s46 = S(ps_YP,ps_DP);
+	double dp2 = S.var(ps_DP);
+	double s33 = S.var(ps_Y)-s36*s36/dp2;
+	double s34 = S(ps_Y,ps_YP)-s36*s46/dp2;
+	double s44 = S.var(ps_YP)-s46*s46/dp2;
+	return sqrt(s33*s44-s34*s34);
+}
 
 }
 
@@ -45,7 +46,9 @@ void DFSOutput::Record(const ComponentFrame* frm, const Bunch* bunch)
 void DFSOutput::Record(const string& id, const Bunch* bunch)
 {
 	if(!fos)
+	{
 		return;
+	}
 
 	using std::setw;
 	using std::setprecision;
@@ -75,9 +78,12 @@ void DFSOutput::Record(const string& id, const Bunch* bunch)
 void DFSOutput::NewFile(const std::string& fname)
 {
 	if(fos)
+	{
 		delete fos;
+	}
 	fos = new ofstream(fname.c_str());
-	if(!*fos) {
+	if(!*fos)
+	{
 		dfs_trace(dfs_trace::error)<<"**** DFSOutput failed to open file "<<fname<<endl;
 		delete fos;
 		fos=0;

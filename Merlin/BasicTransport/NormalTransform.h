@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2006/09/07 11:18:44 $
 // $Revision: 1.3 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 
@@ -32,9 +32,10 @@ RealMatrix DecoupleSigma(SigmaMatrix& S);
 RealMatrix InverseBetaTransform(double bx, double by, double ax, double ay);
 
 PSmoments& BeamDataToSigmaMtrx(const BeamData& t, PSmoments& S);
-inline PSmoments BeamDataToSigmaMtrx(const BeamData& t) {
-    PSmoments S;
-    return BeamDataToSigmaMtrx(t,S);
+inline PSmoments BeamDataToSigmaMtrx(const BeamData& t)
+{
+	PSmoments S;
+	return BeamDataToSigmaMtrx(t,S);
 }
 
 BeamData& SigmaMatrixToBeamData(const PSmoments& S0, BeamData& t);

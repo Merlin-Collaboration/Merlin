@@ -14,14 +14,15 @@
 #include "AcceleratorModel/StdComponent/StandardMultipoles.h"
 #include "BeamDynamics/ParticleTracking/ParticleComponentTracker.h"
 
-namespace ParticleTracking {
-    
-    class QuadIntegrator : public ParticleComponentTracker::Integrator<Quadrupole>
-    {
-    public:
-        void TrackStep(double ds);
-    };
-    
+namespace ParticleTracking
+{
+
+class QuadIntegrator : public ParticleComponentTracker::Integrator<Quadrupole>
+{
+public:
+	void TrackStep(double ds);
+};
+
 } // end namespace ParticleTracking
 
 #endif

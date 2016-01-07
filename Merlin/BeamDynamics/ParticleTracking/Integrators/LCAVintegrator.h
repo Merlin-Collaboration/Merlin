@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:53 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef _h_LCAVIntegrator
@@ -18,18 +18,20 @@
 #include "AcceleratorModel/StdComponent/TWRFStructure.h"
 #include "BeamDynamics/ParticleTracking/ParticleComponentTracker.h"
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
-class LCAVIntegrator : public ParticleComponentTracker::Integrator<TWRFStructure> {
+class LCAVIntegrator : public ParticleComponentTracker::Integrator<TWRFStructure>
+{
 protected:
 
-    void TrackStep(double);
-    void TrackEntrance();
-    void TrackExit();
+	void TrackStep(double);
+	void TrackEntrance();
+	void TrackExit();
 
 private:
 
-    void ApplyEndField(double gsgn);
+	void ApplyEndField(double gsgn);
 };
 
 } // end namespace ParticleTracking

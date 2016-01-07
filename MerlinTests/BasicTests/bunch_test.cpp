@@ -4,7 +4,8 @@
 
 using namespace std;
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[])
+{
 	double beam_mom = 100;
 	double charge = 1;
 

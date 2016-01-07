@@ -1,15 +1,15 @@
 /////////////////////////////////////////////////////////////////////////
 //
 // Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//  
+//
 // Class library version 3 (2004)
-// 
+//
 // Copyright: see Merlin/copyright.txt
 //
 // Last CVS revision:
 // $Date: 2004/12/13 08:38:52 $
 // $Revision: 1.2 $
-// 
+//
 /////////////////////////////////////////////////////////////////////////
 
 #ifndef BunchProcess_h
@@ -36,76 +36,79 @@ class BunchProcess
 {
 public:
 
-    //	Constructing taking the process ID and its priority
-    //	(default =0, high).
-    explicit BunchProcess (const string& anID, int aPriority = 0);
+	//	Constructing taking the process ID and its priority
+	//	(default =0, high).
+	explicit BunchProcess (const string& anID, int aPriority = 0);
 
-    virtual ~BunchProcess ();
+	virtual ~BunchProcess ();
 
-    //	Set/Get the priority. Highest priority is 0, followed by
-    //	1,2,...etc.
-    void SetPriority (int p);
-    int GetPriority () const;
+	//	Set/Get the priority. Highest priority is 0, followed by
+	//	1,2,...etc.
+	void SetPriority (int p);
+	int GetPriority () const;
 
-    //	Initialise this process with the specified Bunch.
-    virtual void InitialiseProcess (Bunch& bunch) = 0;
+	//	Initialise this process with the specified Bunch.
+	virtual void InitialiseProcess (Bunch& bunch) = 0;
 
-    //	Sets the current accelerator component. This function
-    //	should be called just before tracking of the component
-    //	begins. Concrete processes should override this function
-    //	to perform component and preocess dependent
-    //	initialisation.
-    virtual void SetCurrentComponent (AcceleratorComponent& component) {
-        currentComponent = &component;
-    }
+	//	Sets the current accelerator component. This function
+	//	should be called just before tracking of the component
+	//	begins. Concrete processes should override this function
+	//	to perform component and preocess dependent
+	//	initialisation.
+	virtual void SetCurrentComponent (AcceleratorComponent& component)
+	{
+		currentComponent = &component;
+	}
 
-    //	Preform the process for the specified step ds.
-    virtual void DoProcess (double ds) = 0;
+	//	Preform the process for the specified step ds.
+	virtual void DoProcess (double ds) = 0;
 
-    //	Returns the current maximum step length for this process.
-    virtual double GetMaxAllowedStepSize () const = 0;
+	//	Returns the current maximum step length for this process.
+	virtual double GetMaxAllowedStepSize () const = 0;
 
-    //	Returns true if this processes is active.
-    bool IsActive () const;
+	//	Returns true if this processes is active.
+	bool IsActive () const;
 
-    const string& GetID () const;
+	const string& GetID () const;
 
 protected:
 
-    bool active;
-    AcceleratorComponent* currentComponent;
+	bool active;
+	AcceleratorComponent* currentComponent;
 
 private:
 
-    //The following two lines disable the copying of BunchProcess objects via the copy constructor or via assignment.	
-    BunchProcess(const BunchProcess& bp);
-    BunchProcess& operator=(const BunchProcess& bp);
+	//The following two lines disable the copying of BunchProcess objects via the copy constructor or via assignment.
+	BunchProcess(const BunchProcess& bp);
+	BunchProcess& operator=(const BunchProcess& bp);
 
-    string ID;
-    int priority;
+	string ID;
+	int priority;
 };
 
 // Template class for defining bunch specific BunchProcess classes
 
-template<class B> class TBunchProc : public BunchProcess {
+template<class B> class TBunchProc : public BunchProcess
+{
 public:
 
-    explicit TBunchProc(const std::string& anID, int aPriority =0)
-            : BunchProcess(anID,aPriority)
-    {}
+	explicit TBunchProc(const std::string& anID, int aPriority =0)
+		: BunchProcess(anID,aPriority)
+	{}
 
-    // Sets the current bunch, if bunch is of type bunch
-    virtual void InitialiseProcess (Bunch& bunch) {
-        currentBunch = dynamic_cast<B*>(&bunch);
-    }
+	// Sets the current bunch, if bunch is of type bunch
+	virtual void InitialiseProcess (Bunch& bunch)
+	{
+		currentBunch = dynamic_cast<B*>(&bunch);
+	}
 
 protected:
 
-    B* currentBunch;
+	B* currentBunch;
 };
 
 inline BunchProcess::BunchProcess (const string& anID, int aPriority)
-        : active(false),currentComponent(NULL),ID(anID),priority(aPriority)
+	: active(false),currentComponent(NULL),ID(anID),priority(aPriority)
 {}
 
 inline BunchProcess::~BunchProcess ()
@@ -113,22 +116,22 @@ inline BunchProcess::~BunchProcess ()
 
 inline void BunchProcess::SetPriority (int p)
 {
-    priority = p;
+	priority = p;
 }
 
 inline int BunchProcess::GetPriority () const
 {
-    return priority;
+	return priority;
 }
 
 inline bool BunchProcess::IsActive () const
 {
-    return active;
+	return active;
 }
 
 inline const string& BunchProcess::GetID () const
 {
-    return ID;
+	return ID;
 }
 
 #endif

@@ -8,7 +8,8 @@
 
 #include "AcceleratorModel/WakePotentials.h"
 
-class TeslaWakePotentials : public WakePotentials {
+class TeslaWakePotentials : public WakePotentials
+{
 public:
 
 	double Wlong(double z) const;

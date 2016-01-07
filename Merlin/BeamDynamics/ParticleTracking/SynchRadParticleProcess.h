@@ -3,9 +3,9 @@
 
 /*
 * Merlin C++ Class Library for Charged Particle Accelerator Simulations
-* 
+*
 * Class library version 2.0 (1999)
-* 
+*
 * file Merlin\BeamDynamics\ParticleTracking\SynchRadParticleProcess.h
 * last modified 09/06/01 01:50:53 PM
 */
@@ -14,10 +14,10 @@
 * This file is derived from software bearing the following
 * restrictions:
 *
-* MERLIN C++ class library for 
+* MERLIN C++ class library for
 * Charge Particle Accelerator Simulations
 * Copyright (c) 2001 by The Merlin Collaboration.
-* - ALL RIGHTS RESERVED - 
+* - ALL RIGHTS RESERVED -
 *
 * Permission to use, copy, modify, distribute and sell this
 * software and its documentation for any purpose is hereby
@@ -72,60 +72,61 @@ double AWSpectrumGen(double u);
 //	the additional change with respect to the mean.
 
 
-namespace ParticleTracking {
+namespace ParticleTracking
+{
 
 class SynchRadParticleProcess : public ParticleBunchProcess
 {
 public:
 
-    typedef double (*PhotonGenerator)(double);
+	typedef double (*PhotonGenerator)(double);
 
-    //	Constructor taking the process priority (>=0), the
-    //	number of equal steps to take through a component
-    //	(nstep). If the flag q==true, then quantum excitation is
-    //	modelled.
-    SynchRadParticleProcess (int prio, bool q = false);
+	//	Constructor taking the process priority (>=0), the
+	//	number of equal steps to take through a component
+	//	(nstep). If the flag q==true, then quantum excitation is
+	//	modelled.
+	SynchRadParticleProcess (int prio, bool q = false);
 
-    //	Sets the current accelerator component. If component is
-    //	a SectorBend, then the process becomes active.
-    virtual void SetCurrentComponent (AcceleratorComponent& component);
+	//	Sets the current accelerator component. If component is
+	//	a SectorBend, then the process becomes active.
+	virtual void SetCurrentComponent (AcceleratorComponent& component);
 
-    //	Preform the process for the specified step ds.
-    virtual void DoProcess (double ds);
+	//	Preform the process for the specified step ds.
+	virtual void DoProcess (double ds);
 
-    //	Returns the current maximum step length for this process.
-    virtual double GetMaxAllowedStepSize () const;
+	//	Returns the current maximum step length for this process.
+	virtual double GetMaxAllowedStepSize () const;
 
-    //	Include radiation effects in Quadrupoles and Skew
-    //	Quadrupoles.
-    void IncludeQuadRadiation (bool quadsr);
+	//	Include radiation effects in Quadrupoles and Skew
+	//	Quadrupoles.
+	void IncludeQuadRadiation (bool quadsr);
 
-    //	Sets the function to be called to generate the photon
-    //	spectrum.
-    static void SetPhotonGenerator (PhotonGenerator pg)
-    {
-        pgen = pg;
-    }
+	//	Sets the function to be called to generate the photon
+	//	spectrum.
+	static void SetPhotonGenerator (PhotonGenerator pg)
+	{
+		pgen = pg;
+	}
 
-    //	Sets the minimum number of equal steps to take through
-    //	the component.
-    void SetNumComponentSteps (int n);
+	//	Sets the minimum number of equal steps to take through
+	//	the component.
+	void SetNumComponentSteps (int n);
 
-    //	Sets the maximum step length to take through
-    //	the component.
-    void SetMaxComponentStepSize (double ds_max);
+	//	Sets the maximum step length to take through
+	//	the component.
+	void SetMaxComponentStepSize (double ds_max);
 
-    //	If gp==true, include quantum excitation effects via
-    //	photon generation.
-    void GeneratePhotons (bool gp);
+	//	If gp==true, include quantum excitation effects via
+	//	photon generation.
+	void GeneratePhotons (bool gp);
 
-    //	If flg==true, the reference energy (momentum) of the
-    //	ParticleBunch is adjusted to the mean of the particle
-    //	energies. If false, then only the dp/p are adjusted.
-    void AdjustBunchReferenceEnergy (bool flg)
-    {
-        adjustEref = flg;
-    }
+	//	If flg==true, the reference energy (momentum) of the
+	//	ParticleBunch is adjusted to the mean of the particle
+	//	energies. If false, then only the dp/p are adjusted.
+	void AdjustBunchReferenceEnergy (bool flg)
+	{
+		adjustEref = flg;
+	}
 
 	//  If flg==true, changes to phase space variables are
 	//  calculated appropriately for symplectic variables,
@@ -139,60 +140,60 @@ public:
 		sympVars = flg;
 	}
 
-    // Data Members for Associations
+	// Data Members for Associations
 
 
-    //	Pointer to the function which generates the random
-    //	photon spectrum. The function should have the form
-    //
-    //	double (*)(double u)
-    //
-    //	where u is the critical photon energy. Returns the
-    //	energy of the photon in GeV.
+	//	Pointer to the function which generates the random
+	//	photon spectrum. The function should have the form
+	//
+	//	double (*)(double u)
+	//
+	//	where u is the critical photon energy. Returns the
+	//	energy of the photon in GeV.
 
-    static PhotonGenerator pgen;
+	static PhotonGenerator pgen;
 
-    static bool sympVars;	// Flag to indicate whether tracking uses symplectic variables
+	static bool sympVars;	// Flag to indicate whether tracking uses symplectic variables
 
-    double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
+	double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
 
 protected:
 private:
-    // Data Members for Class Attributes
+	// Data Members for Class Attributes
 
-    int ns;
+	int ns;
 
-    PhotonGenerator quantum;
+	PhotonGenerator quantum;
 
-    bool incQ;
+	bool incQ;
 
-    bool adjustEref;
+	bool adjustEref;
 
 private:
-    // Data Members for Class Attributes
+	// Data Members for Class Attributes
 
-    //	The rms momentum addition per unit length.
-    double ds2;
+	//	The rms momentum addition per unit length.
+	double ds2;
 
-    //	The mean energy loss per unit length.
-    double ds1;
+	//	The mean energy loss per unit length.
+	double ds1;
 
-    double dL;
+	double dL;
 
-    int nk1;
+	int nk1;
 
-    double intS;
+	double intS;
 
 
-    // Data Members for Associations
+	// Data Members for Associations
 
-    MultipoleField* currentField;
+	MultipoleField* currentField;
 
-    double dsMax;
+	double dsMax;
 
-    // Copy prevention
-    SynchRadParticleProcess(const SynchRadParticleProcess& rhs);
-    SynchRadParticleProcess& operator=(const SynchRadParticleProcess& rhs);
+	// Copy prevention
+	SynchRadParticleProcess(const SynchRadParticleProcess& rhs);
+	SynchRadParticleProcess& operator=(const SynchRadParticleProcess& rhs);
 };
 
 
