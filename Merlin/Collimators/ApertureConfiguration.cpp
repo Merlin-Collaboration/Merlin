@@ -377,7 +377,11 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 		}
 		if(logFlag)
 		{
-			*log << (*comp)->GetName() << "\t" << (*comp)->GetLength() << "\t" << (*comp)->GetComponentLatticePosition() << "\t";
+			*log << std::setw(25) << std::left << (*comp)->GetName();
+			*log << std::setw(14) << std::left << (*comp)->GetType();
+			*log << std::setw(10) << std::left << (*comp)->GetLength();
+			*log << std::setw(10) << std::left << (*comp)->GetComponentLatticePosition();
+
 			if ((*comp)->GetAperture() != NULL)
 			{
 				(*comp)->GetAperture()->printout(*log);
