@@ -37,7 +37,7 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 	//The z coordinate is used to find the other aperture components
 	for(size_t n=1; n < ApertureList.size(); n++)
 	{
-		if(ApertureList[n].s > z)
+		if(ApertureList[n].s >= z)
 		{
 			apBack = InterpolatedAperture::ApertureList[n-1];
 			apFront = InterpolatedAperture::ApertureList[n];
@@ -157,7 +157,7 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 	//The z coordinate is used to find the other aperture components
 	for(size_t n=1; n < ApertureList.size(); n++)
 	{
-		if(ApertureList[n].s > z)
+		if(ApertureList[n].s >= z)
 		{
 			apBack.s = InterpolatedAperture::ApertureList[n-1].s;
 			apBack.ap3 = InterpolatedAperture::ApertureList[n-1].ap3;
@@ -230,7 +230,7 @@ double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
 	//The z coordinate is used to find the other aperture components
 	for(size_t n=1; n < ApertureList.size(); n++)
 	{
-		if(ApertureList[n].s > z)
+		if(ApertureList[n].s >= z)
 		{
 			apBack = InterpolatedAperture::ApertureList[n-1];
 			apFront = InterpolatedAperture::ApertureList[n];
@@ -276,41 +276,4 @@ void InterpolatedCircularAperture::printout(std::ostream& out) const
 	}
 	out << ")";
 }
-
-
-/*
-inline void InterpolatedRectEllipseAperture::SetRectHalfWidth(double w)
-{
-	rect_half_width = w;
-}
-
-inline void InterpolatedRectEllipseAperture::SetRectHalfHeight(double h)
-{
-	rect_half_height = h;
-}
-
-inline void InterpolatedRectEllipseAperture::SetEllipseHalfHorizontal(double h)
-{
-	ellipse_half_horizontal = h;
-}
-
-inline void InterpolatedRectEllipseAperture::SetEllipseHalfVertical(double v)
-{
-	ellipse_half_vertical = v;
-}
-*/
-/*
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap1 << "\tBack: " <<  apBack.ap1 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap2 << "\tBack: " <<  apBack.ap2 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap3 << "\tBack: " <<  apBack.ap3 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap4 << "\tBack: " <<  apBack.ap4 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.s << "\tBack: " <<  apBack.s << endl;
-cout << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap1 << "\tBack: " <<  apBack1.ap1 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap2 << "\tBack: " <<  apBack1.ap2 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap3 << "\tBack: " <<  apBack1.ap3 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap4 << "\tBack: " <<  apBack1.ap4 << endl;
-	cout << c << endl;
-abort();
-*/
 

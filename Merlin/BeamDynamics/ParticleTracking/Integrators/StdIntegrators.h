@@ -24,7 +24,6 @@
 #include "AcceleratorModel/StdComponent/Marker.h"
 #include "AcceleratorModel/StdComponent/Monitor.h"
 #include "AcceleratorModel/StdComponent/Solenoid.h"
-#include "AcceleratorModel/StdComponent/Kicker.h"
 
 #include "BeamDynamics/ParticleTracking/ParticleComponentTracker.h"
 #include "BeamDynamics/ParticleTracking/Integrators/ParticleMapPI.h"
@@ -46,7 +45,6 @@ namespace THIN_LENS
 {
 
 DECL_SIMPLE_INTG(DriftCI,Drift)
-DECL_SIMPLE_INTG(KickerCI,Kicker)
 DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
 DECL_SIMPLE_INTG(TWRFStructureCI,TWRFStructure)
 DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure)
@@ -68,7 +66,6 @@ namespace TRANSPORT
 {
 
 DECL_SIMPLE_INTG(DriftCI,Drift)
-DECL_SIMPLE_INTG(KickerCI,Kicker)
 DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
 
 class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend>

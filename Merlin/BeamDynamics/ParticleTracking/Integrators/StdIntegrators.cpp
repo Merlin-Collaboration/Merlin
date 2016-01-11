@@ -43,37 +43,11 @@ struct psdrift
 	}
 };
 
-// Functor which applies a thin kick
-struct pskick
-{
-	double x_kick,y_kick;
-	pskick(double x, double y):x_kick(x),y_kick(y) {}
-	void operator()(PSvector& p)
-	{
-//	cout << p.xp() << "\t" << x_kick << "\t" << p.yp() << "\t" << y_kick; // << endl;
-		p.xp() += ((x_kick));// / ( 1 + p.dp() );
-		p.yp() += ((y_kick));// / ( 1 + p.dp() );
-//	cout << "\t" << p.xp() << "\t" << p.yp() << endl;
-	}
-};
-
 inline void ApplyDrift(PSvectorArray& psv,double z)
 {
 	if(z!=0)
 	{
 		for_each(psv.begin(),psv.end(),psdrift(z));
-	}
-}
-
-inline void ApplyKick(PSvectorArray& psv, double x, double y, double tilt)
-{
-	//Apply the kick rotation
-	double x1 = (x * cos(tilt)) - (y * sin(tilt));
-	double y1 = (x * sin(tilt)) + (y * cos(tilt));
-
-	if(x!=0 || y!=0)
-	{
-		for_each(psv.begin(),psv.end(),pskick(x1,y1));
 	}
 }
 
@@ -141,7 +115,6 @@ namespace THIN_LENS
 // Integrator set definition
 DEF_INTG_SET(ParticleComponentTracker,StdISet)
 ADD_INTG(DriftCI)
-ADD_INTG(KickerCI)
 ADD_INTG(SectorBendCI)
 ADD_INTG(RectMultipoleCI)
 ADD_INTG(LCAVIntegrator)
@@ -159,44 +132,7 @@ void DriftCI::TrackStep (double ds)
 	return;
 }
 
-void KickerCI::TrackStep (double ds)
-{
-	cout << "THIN_LENS::KickerCI::Trackstep" << endl;
-	cout << "CurrentComponent = " << currentComponent->GetName() << endl;
-	double len = currentComponent->GetLength();
-	cout << "\tlen = " << len << endl;
-	if(ds == len)
-	{
-		ApplyDrift(currentBunch->GetParticles(),ds/2);
-		cout << "kicking with tilt: " << currentComponent->tilt <<endl;
-		ApplyKick(currentBunch->GetParticles(),currentComponent->x_kick,currentComponent->y_kick,currentComponent->tilt);
-		ApplyDrift(currentBunch->GetParticles(),ds/2);
-	}
-
-	//Drift-Kick-Drift
-	else if(len != 0)
-	{
-		if(fequal(GetIntegratedLength(),len/2))
-		{
-			cout << "kicking with tilt: " << currentComponent->tilt <<endl;
-			ApplyKick(currentBunch->GetParticles(),currentComponent->x_kick,currentComponent->y_kick,currentComponent->tilt);
-		}
-		else
-		{
-			ApplyDrift(currentBunch->GetParticles(),ds);
-		}
-	}
-	else if(len == 0)
-	{
-		cout << "kicking with tilt: " << currentComponent->tilt <<endl;
-		ApplyKick(currentBunch->GetParticles(),currentComponent->x_kick,currentComponent->y_kick,currentComponent->tilt);
-	}
-	cout << "Kicker: " << currentComponent->GetName() << "\t" << currentComponent->GetLength() << "\t" << ds << "\t" << GetIntegratedLength() << "\t" << currentComponent->x_kick<< "\t" <<currentComponent->y_kick << endl;
-	return;
-}
-
 // Class TWRFStructureCI
-
 void TWRFStructureCI::TrackStep (double ds)
 {
 	cout << "In TWRFStructureCI" << endl;
