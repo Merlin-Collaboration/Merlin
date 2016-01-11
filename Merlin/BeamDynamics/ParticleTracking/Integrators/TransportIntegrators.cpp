@@ -32,7 +32,6 @@ namespace TRANSPORT
 // Integrator set definition
 DEF_INTG_SET(ParticleComponentTracker,StdISet)
 ADD_INTG(DriftCI)
-ADD_INTG(THIN_LENS::KickerCI)
 ADD_INTG(SectorBendCI)
 ADD_INTG(RectMultipoleCI)
 ADD_INTG(LCAVIntegrator)
@@ -161,12 +160,12 @@ struct ApplyRFMap
 
 inline void ApplyMapToBunch(ParticleBunch& bunch, RTMap* amap)
 {
-	//Old method (and now MPI)
+//Old method (and now MPI)
 #ifndef ENABLE_OPENMP
 	for_each(bunch.begin(),bunch.end(),ApplyMap(amap));
 #endif
 
-	//OpenMP option
+//OpenMP option
 #ifdef ENABLE_OPENMP
 	#pragma omp parallel for
 	for(size_t i = 0; i<bunch.size(); i++)
