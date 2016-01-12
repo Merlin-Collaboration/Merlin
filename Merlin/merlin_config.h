@@ -34,4 +34,11 @@
 #define _MAX(a,b) std::max(a,b)
 #define _MIN(a,b) std::min(a,b)
 
+//Define the floating point type used in Merlin
+/** Use doubles (64-bit) */
+typedef double Mfloat_t;
+
+/** Use floats (32-bit) */
+//typedef float Mfloat_t;
+
 #endif /* _h_merlin_config */
