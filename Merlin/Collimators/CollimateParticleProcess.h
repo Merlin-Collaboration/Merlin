@@ -43,84 +43,108 @@ public:
 	ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart);
 };
 
-//	A process which effectively collimates the particle
-//	beam, given the aperture of the current  component.
-//	Collimation within a component can occur at one or more
-//	positions:
-//
-//	COLL_AT_ENTRANCE,
-//	COLL_AT_CENTER,
-//	COLL_AT_EXIT
+/**
+* A process which effectively collimates the particle
+* beam, given the aperture of the current  component.
+* Collimation within a component can occur at one or more
+* positions:
 
+* COLL_AT_ENTRANCE,
+* COLL_AT_CENTER,
+* COLL_AT_EXIT
+*/
 class CollimateParticleProcess : public ParticleBunchProcess
 {
 public:
 
-	//	Used to generate unique filenames for particle loss data
-	//	files.
+	/**
+	* Used to generate unique filenames for particle loss data files.
+	*/
 	typedef map<string,int> IDTBL;
 
-	//	Constructor taking the collimation mode, and the output
-	//	stream pointer to which to print the results. mode can
-	//	be a logical OR combination of the collimation modes. A
-	//	null pointer for osp (default) suppresses output.
+	/**
+	* Constructor taking the collimation mode, and the output
+	* stream pointer to which to print the results. mode can
+	* be a logical OR combination of the collimation modes. A
+	* null pointer for osp (default) suppresses output.
+	*/
 	CollimateParticleProcess (int priority, int mode, std::ostream* osp = 0);
+
 	~CollimateParticleProcess ();
 
-	//	Initialise this process with the specified Bunch. If
-	//	bunch is not a ParticleBunch object, the process becomes
-	//	inactive.
+	/**
+	* Initialise this process with the specified Bunch. If
+	* bunch is not a ParticleBunch object, the process becomes
+	* inactive.
+	*/
 	virtual void InitialiseProcess (Bunch& bunch);
 
-	//	Sets the current accelerator component.
+	/**
+	* Sets the current accelerator component.
+	*/
 	virtual void SetCurrentComponent (AcceleratorComponent& component);
 
-	//	Preform the process for the specified step ds.
+	/**
+	* Preform the process for the specified step ds.
+	*/
 	virtual void DoProcess (double ds);
 
-	//	Returns the current maximum step length for this process.
+	/**
+	* Returns the current maximum step length for this process.
+	*/
 	virtual double GetMaxAllowedStepSize () const;
 
-	// If set to true, the process scatters the particles in
-	// energy and angle at a Collimator element, if the particle is
-	// outside the aperture.
+	/**
+	* If set to true, the process scatters the particles in
+	* energy and angle at a Collimator element, if the particle is
+	* outside the aperture.
+	*/
 	void ScatterAtCollimator(bool tf);
 
-	//	If flg is true, then files are generated containing the
-	//	lost (collimated) particles. The file names have the
-	//	form {fprefix.}type.id.n.loss, where the string fprefix
-	//	is optional, type.id is the qualified name of the
-	//	element where the particle loss occurs, and n is an
-	//	occurrence count for like-named elements (starting with
-	//	n=1).
+	/**
+	* If flg is true, then files are generated containing the
+	* lost (collimated) particles. The file names have the
+	* form {fprefix.}type.id.n.loss, where the string fprefix
+	* is optional, type.id is the qualified name of the
+	* element where the particle loss occurs, and n is an
+	* occurrence count for like-named elements (starting with
+	* n=1).
+	*/
 	void CreateParticleLossFiles (bool flg, string fprefix = "");
 
-	//	If index is true, then the initial  particles are
-	//	sequential indexed (1..n). These index values for each
-	//	particle are then maintained, and output during any
-	//	particle output operation (as the first column). The
-	//	indexing allows particles to be traced back to the
-	//	original cooridinates.
+	/**
+	* If index is true, then the initial  particles are
+	* sequential indexed (1..n). These index values for each
+	* particle are then maintained, and output during any
+	* particle output operation (as the first column). The
+	* indexing allows particles to be traced back to the
+	* original cooridinates.
+	*/
 	void IndexParticles (bool index);
 	void IndexParticles (std::list<size_t>& anIndex);
 	const std::list<size_t>& GetIndecies() const;
 
-	//	Sets the threshold for particle loss before the process
-	//	throws ParticleLossThreshold exception. The value is in
-	//	% of the initial particle number (default = 100%).
+	/**
+	* Sets the threshold for particle loss before the process
+	* throws ParticleLossThreshold exception. The value is in
+	* % of the initial particle number (default = 100%).
+	*/
 	void SetLossThreshold (double losspc);
 
-	// Set the log stream for the process. A NULL pointer
-	// turns logging off.
+	/**
+	* Set the log stream for the process. A NULL pointer
+	* turns logging off.
+	*/
 	void SetLogStream(std::ostream* anOs);
 
-	//Enable collimator jaw imperfections
+	/**
+	* Enable collimator jaw imperfections
+	*/
 	void EnableImperfections(bool);
 
 	virtual double GetOutputBinSize() const;
 	virtual void SetOutputBinSize(double);
 
-	//~ virtual void SetDustbin (Dustbin& odb){outputdustbin = &odb; dustset=1;}
 	virtual void SetDustbin (Dustbin* odb)
 	{
 		DustbinVector.push_back(odb);
@@ -130,10 +154,7 @@ public:
 	vector<Dustbin*> DustbinVector;
 	vector<Dustbin*>::iterator DustbinIterator;
 
-	//~ Dustbin* outputdustbin;
-
 protected:
-
 
 	int cmode;
 	std::ostream* os;
@@ -144,13 +165,20 @@ protected:
 	std::list< size_t >* pindex;
 
 	IDTBL idtbl;
-	PSvectorArray InputArray;	//The input array
+
+	/**
+	* The input array
+	*/
+	PSvectorArray InputArray;
 
 	double s_total;
 	double s;
 	double next_s;
-	double len; // physical length
 
+	/**
+	* physical length
+	*/
+	double len;
 
 	bool is_collimator;
 	bool at_entr;
@@ -189,7 +217,10 @@ private:
 	double Xr; // radiation length
 	virtual bool DoScatter(Particle&);
 
-	std::vector<unsigned int> LostParticlePositions;	//A list of particles we want to use in the input array
+	/**
+	* A list of particles we want to use in the input array
+	*/
+	std::vector<unsigned int> LostParticlePositions;
 };
 
 inline void CollimateParticleProcess::CreateParticleLossFiles (bool flg, string fprefix)
