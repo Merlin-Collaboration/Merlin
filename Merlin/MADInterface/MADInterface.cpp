@@ -398,7 +398,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 		}
 	}
 
-	cout << "MADInterface:: ARC distance from MAD file: " << z <<" m"<< endl;
+	//cout << "MADInterface:: ARC distance from MAD file: " << z <<" m"<< endl;
 
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
