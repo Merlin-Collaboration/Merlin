@@ -7,6 +7,11 @@
 #include <string>
 #include <cstring>
 
+//Include for x86 vector functions
+#ifdef __x86_64__
+#include <immintrin.h>
+#endif
+
 //#if _MSC_VER >= 1400
 //#define __TYPENAME__ typename
 //#endif
