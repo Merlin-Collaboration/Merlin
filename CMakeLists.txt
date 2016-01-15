@@ -21,6 +21,11 @@ OPTION(ENABLE_TESTS "Build the library test programs. Default OFF" OFF)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(BUILD_DYNAMIC "Build Merlin as a dynamic library. Default ON" ON)
 OPTION(BUILD_STATIC "Build Merlin as a static library. Default OFF" OFF)
+OPTION(BUILD_DOCUMENTATION "Build doxygen documentation. Default OFF" OFF)
+OPTION(ORBIT_DEBUG "Enable closed orbit debugging. Default OFF" OFF)
+OPTION(INSTALL_HEADERS "Install the Merlin headers. Default OFF" OFF)
+OPTION(LIBNUMA "Link to libnuma. See utility/CPUFeatures.h Default OFF" OFF)
+OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -28,7 +33,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 #MPI default build options
-SET( CMAKE_CXX_FLAGS_MPI "-Wall -ansi -O3 -pedantic -DENABLE_MPI -march=native" CACHE STRING
+SET( CMAKE_CXX_FLAGS_MPI "-DNDEBUG -Wall -ansi -O3 -pedantic -DENABLE_MPI -march=native" CACHE STRING
 	"Flags used by the C++ compiler during MPI builds."
 	FORCE )
 SET( CMAKE_EXE_LINKER_FLAGS_MPI
@@ -68,12 +73,6 @@ SET(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
 	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel MPI MPIDebug."
 	FORCE)
 
-
-#Check for OpenMP
-if(ENABLE_OPENMP)
-	find_package(OpenMP REQUIRED)
-endif(ENABLE_OPENMP)
-
 #Check for MPI
 if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)
 	FIND_PACKAGE(MPI REQUIRED)
@@ -97,14 +96,15 @@ if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)
 endif()
 
 #Set Merlin version info
-set(${PROJECT_NAME}_VERSION "4.1.0")
+set(${PROJECT_NAME}_VERSION "4.9.0")
 set(${PROJECT_NAME}_VERSION_MAJOR "4")
-set(${PROJECT_NAME}_VERSION_MINOR "1")
+set(${PROJECT_NAME}_VERSION_MINOR "9")
 set(${PROJECT_NAME}_VERSION_PATCH "0")
 
 # Add the source and includes
 include_directories(${MERLIN_SOURCE_DIR}/Merlin/)
 
+AUX_SOURCE_DIRECTORY(Merlin sources)
 AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel sources)
 AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/ActiveMonitors sources)
 AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Apertures sources)
@@ -145,7 +145,26 @@ AUX_SOURCE_DIRECTORY(Merlin/TLAS sources)
 AUX_SOURCE_DIRECTORY(Merlin/utility sources)
 
 #Additional Compiler flags
-ADD_DEFINITIONS("-Wall -Wextra -ansi -pedantic")
+#ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-variable -ansi -pedantic")
+ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -ansi -pedantic -Wabi")
+
+#Closed orbit debugging
+if(ORBIT_DEBUG)
+	ADD_DEFINITIONS("-DDEBUG_CLOSED_ORBIT")
+endif(ORBIT_DEBUG)
+
+#Check for Root
+if(ENABLE_ROOT)
+	#/usr/share/root/cmake/FindROOT.cmake
+	SET(CMAKE_MODULE_PATH /usr/share/root/cmake/)
+	find_package(ROOT REQUIRED)
+	include_directories(${ROOT_INCLUDE_DIR})
+endif(ENABLE_ROOT)
+
+#Check for OpenMP
+if(ENABLE_OPENMP)
+	find_package(OpenMP REQUIRED)
+endif(ENABLE_OPENMP)
 
 #Enable to build the MerlinExamples folder
 if(ENABLE_EXAMPLES)
@@ -191,11 +210,17 @@ if(OPENMP_FOUND)
 	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "${OpenMP_CXX_FLAGS}")
 endif()
 
+if(LIBNUMA)
+	SET_TARGET_PROPERTIES(merlin PROPERTIES COMPILE_FLAGS "-DLIBNUMA")
+	target_link_libraries(merlin numa)
+endif(LIBNUMA)
+
 install(TARGETS merlin LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib )
 install(DIRECTORY Merlin/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATCHING PATTERN "*.h")
 
 # Build doxygen documentation
 # make doxygen
+if(BUILD_DOCUMENTATION)
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
 	find_file(DOXYFILE_IN "Merlin.Doxyfile.in"
@@ -221,6 +246,6 @@ if(DOXYGEN_FOUND)
 			"${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
 
 endif()
-
+endif()
 
 
