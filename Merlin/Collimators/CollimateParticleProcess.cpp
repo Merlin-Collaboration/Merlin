@@ -478,7 +478,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 	nlost+=lost.size();
 	// Old loss output - depreciated due to Dustbin
-	//~ DoOutput(lost,lost_i);
+	DoOutput(lost,lost_i);
 
 	//make sure to clear up
 	InputArray.clear();				//The input array
