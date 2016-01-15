@@ -461,7 +461,7 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	lambda_tot = A * 1.e-6 / ((sigma_pN_total + Z*ElasticDifference) * barn * rho * Avogadro);	// total mean free path (units meter)
 
 	SetScatterConfigured(true);
-	bool output_scattering_details = true;
+	bool output_scattering_details = false;
 	if(output_scattering_details)
 	{
 		std::cout << "Merlin Scattering Configuration"<< std::endl;
@@ -908,7 +908,7 @@ void ProtonBunch::ConfigureScatterSixtrack(const Aperture* ap)
 	lambda_tot = A * 1.e-6 / ((sigma_pN_total + sigma_Rutherford) * barn * rho * Avogadro);	// total mean free path (units meter)
 
 	SetScatterConfigured(true);
-	bool output_scattering_details = true;
+	bool output_scattering_details = false;
 	if(output_scattering_details)
 	{
 		std::cout << "SixTrack Scattering Configuration" << std::endl;
