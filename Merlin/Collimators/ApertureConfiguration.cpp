@@ -89,7 +89,17 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 	//Get a list of all elements
 	vector<AcceleratorComponent*> elements;
 	int nelements = model->ExtractTypedElements(elements,"*");
-	cout << "Got " << nelements << " elements for aperture configuration" << endl;
+	std::cout << "Got " << nelements << " elements for aperture configuration" << std::endl;
+
+	/**
+	* elements - The container with all AcceleratorComponent entries
+	* comp - Iterator to all AcceleratorComponent entries
+	*
+	* ApertureList - The container with all Aperture entries
+	* itr - Iterator to all Aperture entries.
+	*
+	* ThisElementAperture - The container for the current element Aperture.
+	*/
 
 	for(vector<AcceleratorComponent*>::iterator comp = elements.begin(); comp!=elements.end(); comp++)
 	{
@@ -97,7 +107,6 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 		Collimator* collimator = NULL;
 		if((*comp)->GetAperture() == NULL)
 		{
-
 			double element_length = (*comp)->GetLength();
 			double position = (*comp)->GetComponentLatticePosition();
 
@@ -106,18 +115,21 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 			{
 				//cout <<	(*comp)->GetName() << "\t" << element_length << endl;
 
+				//Loop over all aperture entries
 				for(vector<ap>::iterator itr = ApertureList.begin(); itr!=ApertureList.end(); itr++)
 				{
+					//If the aperture entry is >= the element position
 					if(itr->s >= position)
 					{
+						//gone past where we need to go
 						//cout << (*comp)->GetName() << "\t" << itr->s << endl;
 						vector<ap> ThisElementAperture;
-						//gone past where we need to go
 
 						//itr-- will give the point before the element + should check for first element if a ring
+						//The following does assume symmetry
 						if(itr == ApertureList.begin())
 						{
-							cout <<"At first element, getting aperture iterpolation from last element" << endl;
+							std::cout << "At first element, getting aperture iterpolation from last element" << std::endl;
 							//got the initial point
 							itr = ApertureList.end();
 							itr--;
@@ -138,52 +150,43 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 							itr++;
 						}
 
+
+						//Now add in all entries that exist within the length of the element
 						while(itr->s <= (position + element_length))
 						{
-							if(itr == ApertureList.end())
+							//Check if we are at the end of the aperture entries - i.e. at the end of the ring.
+							if(itr != ApertureList.end())
 							{
-								/*
-									cout << "end badness: " << itr->s << endl;
-									cout << "end badness: " << itr->ap1 << endl;
-									cout << "end badness: " << itr->ap2 << endl;
-									cout << "end badness: " << itr->ap3 << endl;
-								*/
-								itr = ApertureList.begin();
-								/*
-									cout << (*itr).s << endl;
-									cout << (*itr).ap1 << endl;
-									cout << (*itr).ap2 << endl;
-									cout << (*itr).ap3 << endl;
-									cout << (*itr).ap4 << endl;
-								*/
-								break;
-								//abort();
+								//Here we add in a standard element aperture entry and iterate to the next position.
+								ThisElementAperture.push_back(*itr);
+
+								//Increment the iterator to the next entry
+								itr++;
 							}
 							else
 							{
-								//dorec
-								ThisElementAperture.push_back(*itr);
-								itr++;
+								//If we are at the last element, then break out of the loop and grab the first entry.
+								std::cout << "At last element, getting aperture iterpolation from first element" << std::endl;
+								break;
 							}
 						}
 
 						//grab the last point - for the last element we will need to loop over to the first element again for a ring.
-						itr++;
 						if(itr == ApertureList.end())
 						{
-							//itr--;
 							//cout << "at end: " << (*comp)->GetName() << endl;
 							//cout << itr->s << "\t"<< itr->ap2 <<  endl;
 							itr = ApertureList.begin();
-							cout << (*itr).s << endl;
-							cout << (*itr).ap1 << endl;
-							cout << (*itr).ap2 << endl;
-							cout << (*itr).ap3 << endl;
-							cout << (*itr).ap4 << endl;
-							//cout << itr->s << "\t"<< itr->ap2 <<  endl;
+							(*itr).s += element_length + position;
+							std::cout << (*itr).s << std::endl;
+							std::cout << (*itr).ap1 << std::endl;
+							std::cout << (*itr).ap2 << std::endl;
+							std::cout << (*itr).ap3 << std::endl;
+							std::cout << (*itr).ap4 << std::endl;
+
 							ThisElementAperture.push_back(*itr);
-							cout << "ApertureConfiguration: Failed to obtain interpolation from final element to first" << endl;
-							abort();
+							//std::cout << "ApertureConfiguration: Failed to obtain interpolation from final element to first" << std::endl;
+							//abort();
 						}
 						else
 						{
@@ -191,6 +194,10 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 						}
 
 						//cout << position << "\t" << (*comp)->GetName()  << "\t" << ThisElementAperture.size() << endl;
+
+						/**
+						* Now move on to assigning the correct type of aperture.
+						*/
 
 						//aper_# means for all apertypes but racetrack:
 						//aper_1 = half width rectangle
@@ -266,12 +273,13 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 
 						//Now to decide what type of aperture to make
 						Aperture* aper;
-//					cout << (*comp)->GetName() << "\t" << position + element_length << "\t";
+						//cout << (*comp)->GetName() << "\t" << position + element_length << "\t";
+
 						if(circle == true )
 						{
 							if(ap1 == false || ap2 == false || ap3 == false || ap4 == false)
 							{
-//							cout << "Interpolated Circle" << endl;
+								//cout << "Interpolated Circle" << endl;
 
 								InterpolatedAperture* apInterpolated = new InterpolatedAperture();
 
@@ -284,27 +292,30 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 									apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap3;
 									apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap4;
 									/*
-																	cout << "ap3: " << ThisElementAperture[n].ap3 << endl;
-																	cout << "ap3 loaded: " << apInterpolated->ApertureEntry.ap3 << endl;
-																	cout << "ap1: " << apInterpolated->ApertureEntry.ap1 << endl;
-																	cout << "ap3: " << apInterpolated->ApertureEntry.ap2 << endl;
-																	cout << "ap4: " << apInterpolated->ApertureEntry.ap4 << endl << endl;
+									cout << "ap3: " << ThisElementAperture[n].ap3 << endl;
+									cout << "ap3 loaded: " << apInterpolated->ApertureEntry.ap3 << endl;
+									cout << "ap1: " << apInterpolated->ApertureEntry.ap1 << endl;
+									cout << "ap3: " << apInterpolated->ApertureEntry.ap2 << endl;
+									cout << "ap4: " << apInterpolated->ApertureEntry.ap4 << endl << endl;
 									*/
+
 									if(ThisElementAperture[n].ap3 == 0 || apInterpolated->ApertureEntry.ap3 == 0)
 									{
 										for(size_t m=0; m < ThisElementAperture.size(); m++ )
 										{
-											cout << ThisElementAperture[m].s << "\t" << ThisElementAperture[m].ap3 << endl;
+											std::cout << ThisElementAperture[m].s << "\t" << ThisElementAperture[m].ap3 << std::endl;
 										}
 										abort();
 									}
 									apInterpolated->ApertureList.push_back(apInterpolated->ApertureEntry);
+
 									if(ThisElementAperture[n].ap4 < 0)
 									{
-										cout << "broken 4" << endl;
+										std::cout << "broken 4" << std::endl;
 									}
 									//cout << ThisElementAperture[n].s << "\t" << element_length << endl;
 								}
+
 								aper = new InterpolatedCircularAperture(apInterpolated->GetApertureList());
 								(*comp)->SetAperture(aper);
 								ApertureType = "Interpolated Circular";
@@ -312,7 +323,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 							}
 							else
 							{
-//							cout << "Circle" << endl;
+								//cout << "Circle" << endl;
 								aper = new CircularAperture(ap3p);
 								(*comp)->SetAperture(aper);
 								ApertureType = "Circular";
@@ -351,7 +362,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 							}
 							else
 							{
-//							cout << "RectEllipse" << endl;
+								//cout << "RectEllipse" << endl;
 								aper = new RectEllipseAperture(ap1p,ap2p,ap3p,ap4p);
 								(*comp)->SetAperture(aper);
 								ApertureType = "RectEllipse";
@@ -375,6 +386,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 				}
 			}
 		}
+
 		if(logFlag)
 		{
 			*log << std::setw(25) << std::left << (*comp)->GetName();
@@ -386,6 +398,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
 			{
 				(*comp)->GetAperture()->printout(*log);
 			}
+
 			*log << endl;
 		}
 	}
@@ -401,19 +414,4 @@ void ApertureConfiguration::EnableLogging(bool flg)
 {
 	logFlag = flg;
 }
-/*
-			if(s > (position+length))
-			{
-				//gone past where we need to go
-				//got the last point
-				//s-- will give the last point in the element
-				//s will give the next point.
-			}
-									cout << (*itr).s << endl;
-						cout << (*itr).ap1 << endl;
-						cout << (*itr).ap2 << endl;
-						cout << (*itr).ap3 << endl;
-						cout << (*itr).ap4 << endl;
-						cout << "next" << endl;
-*/
 
