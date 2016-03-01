@@ -164,26 +164,28 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 
 			apFront.s = InterpolatedAperture::ApertureList[n].s;
 			apFront.ap3 = InterpolatedAperture::ApertureList[n].ap3;
+
 			if(apFront.ap3 == 0 || apBack.ap3 == 0)
 			{
-				cout << z << endl;
-				cout << apFront.s << endl;
-				cout << apBack.s << endl;
-				cout << apFront.ap3 << endl;
-				cout << apBack.ap3 << endl;
-				cout << ApertureList[n].ap3 << endl;
-				cout << ApertureList[n-1].ap3 << endl;
+				std::cout << z << std::endl;
+				std::cout << apFront.s << std::endl;
+				std::cout << apBack.s << std::endl;
+				std::cout << apFront.ap3 << std::endl;
+				std::cout << apBack.ap3 << std::endl;
+				std::cout << ApertureList[n].ap3 << std::endl;
+				std::cout << ApertureList[n-1].ap3 << std::endl;
 				abort();
 			}
+
 			break;
 		}
+
 		if(n == (ApertureList.size()-1))
 		{
-			cout << "no aperture found" << endl;
-			cout << "z: " << z << endl;
+			std::cout << "No aperture found for InterpolatedCircularAperture at z = " << z << std::endl;
 			for(size_t m=0; m < ApertureList.size(); m++)
 			{
-				cout << ApertureList[m].s << endl;
+				std::cout << "Entry " << m << " - z = " << ApertureList[m].s << "\t" << ApertureList[m].ap1 << std::endl;
 			}
 			abort();
 		}
