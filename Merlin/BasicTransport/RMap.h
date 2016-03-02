@@ -1,9 +1,10 @@
-// class RTMap
-//
-// A second-order TRANSPORT map for a PSvector
-//
-// class RTMap represents both the first-order R and second-order T TRANSPORT
-// matrices. For efficiency, only non-zero terms are stored.
+/** class RTMap
+*
+* A second-order TRANSPORT map for a PSvector
+*
+* class RTMap represents both the first-order R and second-order T TRANSPORT
+* matrices. For efficiency, only non-zero terms are stored.
+*/
 
 #ifndef RMap_h
 #define RMap_h 1
@@ -15,13 +16,14 @@
 #include "TLAS/LinearAlgebra.h"
 #include "NumericalUtils/utils.h"
 
-// class RMap
-// A linear phase space map. RMap represents a 6x6 matrixs (R matrix) which
-// can map either a single PSvector or a SigmaMatrix (2nd-order moments), or
-// a PSmoment object (combination of first- and second-order moments).
-// Efficiency in terms of space and speed are achieved by using a sparse-matrix
-// representation.
-
+/**
+* class RMap
+* A linear phase space map. RMap represents a 6x6 matrixs (R matrix) which
+* can map either a single PSvector or a SigmaMatrix (2nd-order moments), or
+* a PSmoment object (combination of first- and second-order moments).
+* Efficiency in terms of space and speed are achieved by using a sparse-matrix
+* representation.
+*/
 class RMap
 {
 public:
@@ -103,12 +105,16 @@ public:
 
 	// Mapping functions
 
-	// Apply to a single PSvector
+	/**
+	* Apply to a single PSvector
+	*/
 	PSvector& Apply(PSvector&) const;
 
-	// Apply to a covariance (sigma) matrix
-	// - MSVC6 needs this to be defined here (inlined) for
-	// - the compiler to correctly compile it!
+	/**
+	* Apply to a covariance (sigma) matrix
+	* - MSVC6 needs this to be defined here (inlined) for
+	* - the compiler to correctly compile it!
+	*/
 	template<class T, int N>
 	TCovMtrx<T,N>& Apply(TCovMtrx<T,N>& S) const
 	{
@@ -139,11 +145,15 @@ public:
 		return S=result;
 	}
 
-	// Conversion to a matrix
+	/**
+	* Conversion to a matrix
+	*/
 	void ToMatrix(RealMatrix&, bool init=true) const;
 	operator RealMatrix () const;
 
-	// Output (matrix form)
+	/**
+	* Output (matrix form)
+	*/
 	void MatrixForm(std::ostream&) const;
 
 	// Array like accessors
@@ -165,7 +175,9 @@ protected:
 
 	void Apply(const PSvector&, PSvector&) const;
 
-	// helper function used to map second order moments
+	/**
+	* helper function used to map second order moments
+	*/
 	template<class T, int N>
 	void map2nd(TCovMtrx<T,N>& res, const Rij& r1, const Rij& r2,
 	            const TCovMtrx<T,N>& orig) const
@@ -183,10 +195,12 @@ protected:
 	LinearTermArray rterms;
 };
 
-// class R2Map
-// simple POD R matrix representation for one degree of freedom
 //struct R2Map {
 //FIXME
+/**
+* class R2Map
+* simple POD R matrix representation for one degree of freedom
+*/
 class R2Map
 {
 public:
@@ -217,7 +231,9 @@ public:
 
 // Routines for applying R2Map objects
 
-// Applies the R2Map to the specified 'plane' of a PSvector
+/**
+* Applies the R2Map to the specified 'plane' of a PSvector
+*/
 inline void ApplyR2Map(const R2Map& R, PSvector& X, int plane)
 {
 	double *x0 = &X[0]+2*plane;
@@ -227,7 +243,9 @@ inline void ApplyR2Map(const R2Map& R, PSvector& X, int plane)
 	x0[1]=x2;
 }
 
-// Map (transform) plane terms: R.S.R'
+/**
+* Map (transform) plane terms: R.S.R'
+*/
 inline void ApplyR2Map(const R2Map& R, TPSMoments<2>& S, int plane)
 {
 	ApplyR2Map(R,static_cast<PSvector&>(S),plane);
@@ -250,8 +268,9 @@ inline void ApplyR2Map(const R2Map& R, TPSMoments<2>& S, int plane)
 	S(p+1,p)=s12;
 	S(p+1,p+1)=s22;
 }
-
-// Map (transform) coupled terms Rx.Sxy.Ry'
+/**
+* Map (transform) coupled terms Rx.Sxy.Ry'
+*/
 inline void ApplyR2Map(const R2Map& Rx, TPSMoments<2>& S, const R2Map& Ry)
 {
 	double s13=0;
@@ -290,7 +309,9 @@ void MakeIdentity(RMap& R, int ndf=3);
 
 // utility routines for mapping arrays of objects
 
-// Functor for applying a map as given
+/**
+* Functor for applying a map as given
+*/
 template<class M,class X>
 struct map_applicator
 {
@@ -302,18 +323,24 @@ struct map_applicator
 	}
 };
 
-// Functions for apply simple drift spaces.
-// We provide these functions for effeciency: since drift
-// spaces generally make up half the number of elements
-// in a beamline, we provide special 'tuned' routines
-// for speeding the drifts up.
+/**
+* Functions for apply simple drift spaces.
+* We provide these functions for effeciency: since drift
+* spaces generally make up half the number of elements
+* in a beamline, we provide special 'tuned' routines
+* for speeding the drifts up.
+*/
 
-// Apply a simple drift
+/**
+* Apply a simple drift
+*/
 struct ApplySimpleDrift
 {
 	double z;
 
-	// Apply to single vector
+	/**
+	* Apply to single vector
+	*/
 	explicit ApplySimpleDrift(double len):z(len) {}
 	void Apply(PSvector& x) const
 	{
@@ -321,7 +348,9 @@ struct ApplySimpleDrift
 		x.y()+=z*x.yp();
 	}
 
-	// apply to 4D phase space moments
+	/**
+	* apply to 4D phase space moments
+	*/
 	void Apply(TPSMoments<2>& s) const
 	{
 		Apply(static_cast<PSvector&>(s));
@@ -334,7 +363,9 @@ struct ApplySimpleDrift
 		s(2,3)+=z*s(3,3);
 	}
 
-	// apply to 6D phase space moments
+	/**
+	* apply to 6D phase space moments
+	*/
 	void Apply(TPSMoments<3>& s) const
 	{
 		Apply(static_cast<PSvector&>(s));
@@ -358,7 +389,9 @@ struct ApplySimpleDrift
 	}
 };
 
-// Apply a simple drift with (2nd-order) path length
+/**
+* Apply a simple drift with (2nd-order) path length
+*/
 struct ApplyDriftWithPathLength
 {
 	double s;
@@ -375,11 +408,13 @@ struct ApplyDriftWithPathLength
 	}
 };
 
-// Functor for apply a map after re-scaling the momentum.
-// Used mainly for tracking dipole magnets where the
-// reference geometry (curvature) does not match the bend
-// field / beam energy. typename X must supply double X::dp()
-// function.
+/**
+* Functor for apply a map after re-scaling the momentum.
+* Used mainly for tracking dipole magnets where the
+* reference geometry (curvature) does not match the bend
+* field / beam energy. typename X must supply double X::dp()
+* function.
+*/
 template<class M,class X>
 struct map_applicator_dp
 {
