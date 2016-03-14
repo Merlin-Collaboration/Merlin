@@ -2,18 +2,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
-//Circle
-
-
-
-//RectEllipse
-
 
 //Returns true if the point (x,y,z) is within the aperture.
 bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z) const
 {
-//	MerlinProfile::StartProcessTimer("APERTURE");
-//	cout << "InterpolatedRectEllipse Aperture" << endl;
 	ap apFront;
 	ap apBack;
 
@@ -41,7 +33,6 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 		{
 			apBack = InterpolatedAperture::ApertureList[n-1];
 			apFront = InterpolatedAperture::ApertureList[n];
-			//cout << "Got aperture at " << n << "\tTotal size: " << ApertureList.size() << endl;
 			break;
 		}
 	}
@@ -75,30 +66,14 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 
 	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
 	{
-		//Particle is NOT inside the eliptical aperture component
-//		if(Print == true)
-
-//		cout << "Not in ellipse: " << x*x << "\t" << ellipse_half_horizontal*ellipse_half_horizontal << "\t" << y*y << "\t" << (ellipse_half_vertical*ellipse_half_vertical);
-//		cout << "\t" << ((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) << endl;
-
-//		MerlinProfile::EndProcessTimer("APERTURE");
 		return 0;
 	}
 	else if(fabs(x) > rect_half_width || fabs(y) > rect_half_height)
 	{
-		//Particle is NOT inside the rectangular aperture component
-//		if(Print == true)
-//		cout << "Not in rectangle:\tx: " << x << "\t" << rect_half_width << "\ty: " << y << "\t" << rect_half_height << endl;
-//		cout << "x1: " << apBack.ap1 << "\tx2: " << apFront.ap1 << "\ty1: " << apBack.ap2 << "\ty2: " << apFront.ap2 << endl;
-//		MerlinProfile::EndProcessTimer("APERTURE");
 		return 0;
 	}
 	else
 	{
-		//Particle is inside both components, and is inside the aperture
-//		if(Print == true)
-//		cout << "RECTELLIPSE APERTURE CHECK ok" << endl;
-//		MerlinProfile::EndProcessTimer("APERTURE");
 		return 1;
 	}
 }
@@ -133,7 +108,6 @@ void InterpolatedRectEllipseAperture::printout(std::ostream& out) const
 
 inline bool InterpolatedCircularAperture::PointInside (double x, double y, double z) const
 {
-//	cout << "InterpolatedCircular Aperture: PointInside()" << endl;
 	ap apFront;
 	ap apBack;
 
@@ -204,11 +178,12 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 
 	//aper_3 = half horizontal axis ellipse (or radius if circle)
 	double r2 = pow((g * z) + c,2);
+
 	if((x*x+y*y<r2) == 0)
 	{
-		//cout << "Interpolated Circular aperture: " << (x*x) + (y*y) << "\tR: " << r2 << "\t" << apFront.ap3 << "\t" << apBack.ap3 << endl;
 		return false;
 	}
+
 	return x*x+y*y<r2;
 }
 
