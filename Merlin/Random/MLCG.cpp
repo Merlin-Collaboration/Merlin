@@ -26,14 +26,14 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 static _G_int32_t seedTable[SEED_TABLE_SIZE] =
 {
-	0xbdcc47e5, 0x54aea45d, 0xec0df859, 0xda84637b,
-	0xc8c6cb4f, 0x35574b01, 0x28260b7d, 0x0d07fdbf,
-	0x9faaeeb0, 0x613dd169, 0x5ce2d818, 0x85b9e706,
-	0xab2469db, 0xda02b0dc, 0x45c60d6e, 0xffe49d10,
-	0x7224fea3, 0xf9684fc9, 0xfc7ee074, 0x326ce92a,
-	0x366d13b5, 0x17aaa731, 0xeb83a675, 0x7781cb32,
-	0x4ec7c92d, 0x7f187521, 0x2cf346b4, 0xad13310f,
-	0xb89cff2b, 0x12164de1, 0xa865168d, 0x32b56cdf
+	_G_int32_t(0xbdcc47e5), _G_int32_t(0x54aea45d), _G_int32_t(0xec0df859), _G_int32_t(0xda84637b),
+	_G_int32_t(0xc8c6cb4f), _G_int32_t(0x35574b01), _G_int32_t(0x28260b7d), _G_int32_t(0x0d07fdbf),
+	_G_int32_t(0x9faaeeb0), _G_int32_t(0x613dd169), _G_int32_t(0x5ce2d818), _G_int32_t(0x85b9e706),
+	_G_int32_t(0xab2469db), _G_int32_t(0xda02b0dc), _G_int32_t(0x45c60d6e), _G_int32_t(0xffe49d10),
+	_G_int32_t(0x7224fea3), _G_int32_t(0xf9684fc9), _G_int32_t(0xfc7ee074), _G_int32_t(0x326ce92a),
+	_G_int32_t(0x366d13b5), _G_int32_t(0x17aaa731), _G_int32_t(0xeb83a675), _G_int32_t(0x7781cb32),
+	_G_int32_t(0x4ec7c92d), _G_int32_t(0x7f187521), _G_int32_t(0x2cf346b4), _G_int32_t(0xad13310f),
+	_G_int32_t(0xb89cff2b), _G_int32_t(0x12164de1), _G_int32_t(0xa865168d), _G_int32_t(0x32b56cdf)
 };
 
 MLCG::MLCG(_G_int32_t seed1, _G_int32_t seed2)
