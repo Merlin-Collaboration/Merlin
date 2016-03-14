@@ -146,7 +146,7 @@ AUX_SOURCE_DIRECTORY(Merlin/utility sources)
 
 #Additional Compiler flags
 #ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-variable -ansi -pedantic")
-ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -ansi -pedantic -Wabi")
+ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -ansi -pedantic -Wabi -std=c++11")
 
 #Closed orbit debugging
 if(ORBIT_DEBUG)
