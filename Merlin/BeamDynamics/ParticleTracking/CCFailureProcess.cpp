@@ -474,7 +474,7 @@ void CCFailureProcess::DoProcess (double ds)
 						ApplyPostCCKick(*p, V2, M12, Horizontal_CC);
 					}
 				}
-				if( isnan((*p).x()) || isnan((*p).xp()) || isnan((*p).y()) || isnan((*p).yp()) || isnan((*p).ct()) || isnan((*p).dp()) )
+				if( std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(p->ct()) || std::isnan(p->dp()) )
 				{
 					cout << "CC Particle Lost" << endl;
 				}
@@ -604,7 +604,7 @@ void CCFailureProcess::DoProcess (double ds)
 					ApplyPostCCKick(*p, V2, M12, Horizontal_CC);
 				}
 
-				if( isnan((*p).x()) || isnan((*p).xp()) || isnan((*p).y()) || isnan((*p).yp()) || isnan((*p).ct()) || isnan((*p).dp()) )
+				if( std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(p->ct()) || std::isnan(p->dp()) )
 				{
 					cout << "CC Particle Lost" << endl;
 				}
@@ -721,7 +721,7 @@ void CCFailureProcess::DoProcess (double ds)
 					ApplyPostCCKick(*p, V2, M12, Horizontal_CC);
 				}
 
-				if( isnan((*p).x()) || isnan((*p).xp()) || isnan((*p).y()) || isnan((*p).yp()) || isnan((*p).ct()) || isnan((*p).dp()) )
+				if( std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(p->ct()) || std::isnan(p->dp()) )
 				{
 					cout << "CC Particle Lost" << endl;
 				}
