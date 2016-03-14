@@ -5,7 +5,7 @@
 #include <cmath>
 #include "AcceleratorModel/Aperture.h"
 
-/*
+/**
 * Rectellipse Aperture
 * This class defines the LHC beam screen
 */
@@ -63,3 +63,4 @@ protected:
 };
 
 #endif
+

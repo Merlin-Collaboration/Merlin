@@ -42,4 +42,3 @@ void RectEllipseAperture::printout(std::ostream& out) const
 	    EllipseHalfHorizontal << ", "<<EllipseHalfVertical << ")";
 }
 
-

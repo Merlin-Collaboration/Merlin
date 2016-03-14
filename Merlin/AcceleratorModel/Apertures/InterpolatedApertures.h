@@ -63,7 +63,7 @@ public:
 	{
 		//MerlinProfile::AddProcess("APERTURE");
 		Print = false;
-		ApertureMaterial = NULL;
+		ApertureMaterial = nullptr;
 	}
 
 	//Returns true if the point (x,y,z) is within the aperture.
@@ -98,7 +98,7 @@ public:
 	*/
 };
 
-inline string InterpolatedRectEllipseAperture::GetApertureType() const
+inline std::string InterpolatedRectEllipseAperture::GetApertureType() const
 {
 	return "INTERPOLATEDRECTELLIPSE";
 }
@@ -125,7 +125,7 @@ private:
 	double r2;
 };
 
-inline string InterpolatedCircularAperture::GetApertureType() const
+inline std::string InterpolatedCircularAperture::GetApertureType() const
 {
 	return "INTERPOLATEDCIRCULAR";
 }
