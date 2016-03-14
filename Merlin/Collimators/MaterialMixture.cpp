@@ -10,7 +10,6 @@
 
 #include "Random/RandomNG.h"
 
-using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
@@ -164,12 +163,12 @@ double MaterialMixture::CalculateRadiationLength()
 /*
 * Set parameters
 */
-void MaterialMixture::SetName(string p)
+void MaterialMixture::SetName(std::string p)
 {
 	Name = p;
 }
 
-void MaterialMixture::SetSymbol(string p)
+void MaterialMixture::SetSymbol(std::string p)
 {
 	Symbol = p;
 }
@@ -217,12 +216,12 @@ void MaterialMixture::SetSixtrackdEdx(double p)
 /*
 * Accessors
 */
-string MaterialMixture::GetName() const
+std::string MaterialMixture::GetName() const
 {
 	return Name;
 }
 
-string MaterialMixture::GetSymbol() const
+std::string MaterialMixture::GetSymbol() const
 {
 	return Symbol;
 }
@@ -382,19 +381,19 @@ bool MaterialMixture::VerifyMaterial() const
 	}
 
 	//Verify that the mass and number fraction components sum to 1
-	unsigned int oldprec = cerr.precision(16);
+	unsigned int oldprec = std::cerr.precision(16);
 	double tol = 1e-12;
 	if(std::fabs(MassFraction - 1.0) > tol)
 	{
-		std::cerr << "Invalid mass fraction sum for: " << GetName() << " - " << MassFraction << endl;
+		std::cerr << "Invalid mass fraction sum for: " << GetName() << " - " << MassFraction << std::endl;
 		verification = false;
 	}
 	if(std::fabs(NumberFraction - 1.0) > tol)
 	{
-		std::cerr << "Invalid number fraction sum for: " << GetName() << " - " << NumberFraction << endl;
+		std::cerr << "Invalid number fraction sum for: " << GetName() << " - " << NumberFraction << std::endl;
 		verification = false;
 	}
-	cerr.precision(oldprec);
+	std::cerr.precision(oldprec);
 	return verification;
 }
 
@@ -485,12 +484,12 @@ bool MaterialMixture::IsMixture() const
 	return true;
 }
 
-vector< pair<string,double> > MaterialMixture::GetConstituentElements()
+std::vector< std::pair<std::string,double> > MaterialMixture::GetConstituentElements()
 {
 	std::map< Material*,std::pair<double,double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
-	vector< pair<string,double> > elements;
-	std::pair<string,double> test;
+	std::vector< std::pair<std::string,double> > elements;
+	std::pair<std::string,double> test;
 
 	for(MaterialIt; MaterialIt != MixtureMap.end(); ++MaterialIt)
 	{

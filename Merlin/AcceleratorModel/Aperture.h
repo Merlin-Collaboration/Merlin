@@ -33,7 +33,7 @@ public:
 	* Constructor
 	* @param[in] m The material to attach to this aperture.
 	*/
-	Aperture(Material* m = NULL) : ApertureMaterial(m) {}
+	Aperture(Material* m = nullptr) : ApertureMaterial(m) {}
 
 	/**
 	* Destructor
@@ -68,7 +68,7 @@ public:
 	* Returns the type of the aperture.
 	* @return A string containing the type of the aperture.
 	*/
-	virtual string GetApertureType() const = 0;
+	virtual std::string GetApertureType() const = 0;
 
 	/**
 	* Gets the material associated with this aperture.

@@ -10,7 +10,6 @@
 
 #include "NumericalUtils/PhysicalUnits.h"
 
-using namespace std;
 using namespace PhysicalUnits;
 
 MaterialDatabase::MaterialDatabase()
@@ -331,22 +330,22 @@ MaterialDatabase::MaterialDatabase()
 	//~ Glidcop->SetSixtrackdEdx(Glidcop->CalculateSixtrackdEdx());
 
 	// Test Mixture function
-	vector< pair<string,double> > els = Glidcop->GetConstituentElements();
-	vector< pair<string,double> >::iterator el_it;
+	std::vector< std::pair<std::string,double> > els = Glidcop->GetConstituentElements();
+	std::vector< std::pair<std::string,double> >::iterator el_it;
 	//~ for(el_it = els.begin(); el_it != els.end(); ++el_it){
 	//~ std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
 	//~ }
 
 	//~ DumpMaterialProperties();
 
-	db.insert(pair<string,Material*>(Glidcop->GetSymbol(),Glidcop));
+	db.insert(std::pair<std::string,Material*>(Glidcop->GetSymbol(),Glidcop));
 }
 
 //Try and find the material we want
-Material* MaterialDatabase::FindMaterial(string symbol)
+Material* MaterialDatabase::FindMaterial(std::string symbol)
 {
 	//Iterator for use with the material pointers map
-	std::map<string,Material*>::iterator position;
+	std::map<std::string,Material*>::iterator position;
 
 	//Try to find the material required
 	position = db.find(symbol);

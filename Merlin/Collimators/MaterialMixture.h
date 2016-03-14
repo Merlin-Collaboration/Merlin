@@ -7,8 +7,6 @@
 
 #include "Collimators/Material.h"
 
-using namespace std;
-
 /*
 * A material mixture is a mixture of assorted materials, e.g. a metal alloy
 * It contains a map with the component materials.
@@ -50,8 +48,8 @@ public:
 
 	// Define accessors
 	double GetAtomicNumber() const;
-	string GetName() const;
-	string GetSymbol() const;
+	std::string GetName() const;
+	std::string GetSymbol() const;
 	double GetAtomicMass() const;
 	double GetConductivity() const;
 	double GetRadiationLength() const;
@@ -97,7 +95,7 @@ public:
 	virtual bool IsMixture() const;
 
 	// Return list of constitutent element symbols as strings
-	vector< pair<string,double> > GetConstituentElements();
+	std::vector< std::pair<std::string,double> > GetConstituentElements();
 
 private:
 

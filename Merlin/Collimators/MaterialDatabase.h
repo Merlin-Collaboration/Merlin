@@ -7,8 +7,6 @@
 
 #include "Collimators/Material.h"
 
-using namespace std;
-
 class MaterialDatabase
 {
 
@@ -17,10 +15,10 @@ public:
 	MaterialDatabase();
 
 //Storage for pointers to material types.
-	std::map<string,Material*> db;
+	std::map<std::string,Material*> db;
 
 //Find the material we are interested in
-	Material* FindMaterial(string symbol);
+	Material* FindMaterial(std::string symbol);
 
 	/*
 	* Check all the materials in the database are doing something sensible
