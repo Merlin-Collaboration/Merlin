@@ -27,7 +27,6 @@ private:
 
 	size_t Points;
 	double StepSize;
-	std::ofstream* OutputFile;
 	AcceleratorModel* AccMod;
 };
 
