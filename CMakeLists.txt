@@ -33,7 +33,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 #MPI default build options
-SET( CMAKE_CXX_FLAGS_MPI "-DNDEBUG -Wall -ansi -O3 -pedantic -DENABLE_MPI -march=native" CACHE STRING
+SET( CMAKE_CXX_FLAGS_MPI "-DNDEBUG -Wall -O3 -pedantic -DENABLE_MPI -march=native" CACHE STRING
 	"Flags used by the C++ compiler during MPI builds."
 	FORCE )
 SET( CMAKE_EXE_LINKER_FLAGS_MPI
@@ -51,7 +51,7 @@ MARK_AS_ADVANCED(
 	CMAKE_SHARED_LINKER_FLAGS_MPI)
 
 #MPI debug default build options
-SET( CMAKE_CXX_FLAGS_MPIDEBUG "-Wall -ansi -g3 -ggdb -pedantic -DENABLE_MPI -march=native" CACHE STRING
+SET( CMAKE_CXX_FLAGS_MPIDEBUG "-Wall -g3 -ggdb -pedantic -DENABLE_MPI -march=native" CACHE STRING
 	"Flags used by the C++ compiler during MPI Debug builds."
 	FORCE )
 SET( CMAKE_EXE_LINKER_FLAGS_MPIDEBUG
@@ -146,7 +146,7 @@ AUX_SOURCE_DIRECTORY(Merlin/utility sources)
 
 #Additional Compiler flags
 #ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-variable -ansi -pedantic")
-ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -ansi -pedantic -Wabi -std=c++11")
+ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic -Wabi -std=c++11")
 
 #Closed orbit debugging
 if(ORBIT_DEBUG)
