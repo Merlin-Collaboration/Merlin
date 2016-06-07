@@ -9,6 +9,7 @@
 using namespace std;
 using namespace ParticleTracking;
 using namespace PhysicalConstants;
+
 namespace ParticleTracking
 {
 
@@ -19,21 +20,20 @@ class MuonBunch :public ParticleBunch
 
 public:
 
-	//	Constructs a MuonBunch using the specified momentum,
-	//	total charge and the particle array. Note that on exit,
-	//	particles is empty.
-	MuonBunch (double P0, double Q, PSvectorArray& particles)
-		: ParticleBunch(P0, Q, particles) {};
+	/**
+	* Constructs a MuonBunch using the specified momentum, total charge and the particle array. Note that on exit, particles is empty.
+	*/
+	MuonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles) {};
 
-	//	Read phase space vectors from specified input stream.
-	MuonBunch (double P0, double Q, std::istream& is)
-		: ParticleBunch(P0, Q, is) {};
+	/**
+	* Read phase space vectors from specified input stream.
+	*/
+	MuonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is) {};
 
-	//	Constructs an empty MuonBunch with the specified
-	//	momentum P0 and charge per macro particle Qm (default =
-	//	+1).
-	MuonBunch (double P0, double Qm = 1)
-		: ParticleBunch(P0, Qm) {};
+	/**
+	* Constructs an empty MuonBunch with the specified momentum P0 and charge per macro particle Qm (default = +1).
+	*/
+	MuonBunch (double P0, double Qm = 1) : ParticleBunch(P0, Qm) {};
 
 	virtual bool IsStable() const;
 	virtual double GetParticleMass() const;
@@ -42,7 +42,7 @@ public:
 
 
 	//int Scatter(PSvector& pi, double x, double E0, const Aperture* ap);
-	int Scatter(PSvector&, double, double, const Aperture*);
+	//int Scatter(PSvector&, double, double, const Aperture*);
 
 	void set()
 	{
@@ -56,5 +56,7 @@ public:
 		cout<<endl;
 	}
 }; // end MuonBunch class
+
 } // end namespace ParticleTracking
 #endif
+
