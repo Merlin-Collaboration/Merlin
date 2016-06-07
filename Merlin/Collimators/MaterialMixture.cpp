@@ -160,7 +160,7 @@ double MaterialMixture::CalculateRadiationLength()
 	return 1.0/X0;
 }
 
-/*
+/**
 * Set parameters
 */
 void MaterialMixture::SetName(std::string p)
@@ -213,7 +213,7 @@ void MaterialMixture::SetSixtrackdEdx(double p)
 	dEdx = p;
 }
 
-/*
+/**
 * Accessors
 */
 std::string MaterialMixture::GetName() const
@@ -487,11 +487,10 @@ bool MaterialMixture::IsMixture() const
 std::vector< std::pair<std::string,double> > MaterialMixture::GetConstituentElements()
 {
 	std::map< Material*,std::pair<double,double> >::const_iterator MaterialIt;
-	MaterialIt = MixtureMap.begin();
 	std::vector< std::pair<std::string,double> > elements;
 	std::pair<std::string,double> test;
 
-	for(MaterialIt; MaterialIt != MixtureMap.end(); ++MaterialIt)
+	for(MaterialIt = MixtureMap.begin(); MaterialIt != MixtureMap.end(); ++MaterialIt)
 	{
 		test = make_pair(MaterialIt->first->GetSymbol(), MaterialIt->second.second);
 		elements.push_back(test);
