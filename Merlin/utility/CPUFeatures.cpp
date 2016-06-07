@@ -21,15 +21,15 @@ void CheckCPUFeatures()
 
 	std::cout << "Running on: " << CPUName << std::endl;
 
-	bool GotSSE2 = false;
-	bool GotAVX = false;
+	//bool GotSSE2 = false;
+	//bool GotAVX = false;
 
 	//SSE2
 	std::cout << "SSE2:\t";
 	if((edxf>>26) & 0x1)
 	{
 		std::cout << "Supported" << std::endl;
-		GotSSE2 = true;
+		//GotSSE2 = true;
 	}
 	else
 	{
@@ -41,7 +41,7 @@ void CheckCPUFeatures()
 	if((ecxf>>28) & 0x1)
 	{
 		std::cout << "Supported" << std::endl;
-		GotAVX = true;
+		//GotAVX = true;
 	}
 	else
 	{
