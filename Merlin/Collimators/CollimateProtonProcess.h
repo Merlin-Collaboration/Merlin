@@ -19,7 +19,6 @@
 
 #include "Collimators/CollimateParticleProcess.h"
 #include "Collimators/ScatteringModel.h"
-//~ #include "Collimators/Dustbin.h"
 
 using namespace std;
 using namespace Collimation;
@@ -27,16 +26,17 @@ using namespace Collimation;
 namespace ParticleTracking
 {
 
-
 class CollimateProtonProcess : public CollimateParticleProcess
 {
 public:
 
-	//	Constructor taking the collimation mode, and the output
-	//	stream pointer to which to print the results. mode can
-	//	be a logical OR combination of the collimation modes. A
-	//	null pointer for osp (default) suppresses output.
-	CollimateProtonProcess (int priority, int mode, std::ostream* osp = 0);
+	/**
+	* Constructor taking the collimation mode, and the output
+	* stream pointer to which to print the results. mode can
+	* be a logical OR combination of the collimation modes. A
+	* null pointer for osp (default) suppresses output.
+	*/
+	CollimateProtonProcess (int priority, int mode, std::ostream* osp = nullptr);
 
 	void SetScatter(Collimation::ScatteringModel* sm);
 
@@ -48,7 +48,7 @@ private:
 
 	bool DoScatter(Particle&);
 
-	bool scatterset;
+//	bool scatterset;
 };
 
 } // end namespace ParticleTracking

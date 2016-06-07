@@ -26,7 +26,7 @@
 
 #include "BeamModel/PSTypes.h"
 
-#include "Collimators/Dustbin.h"
+#include "Collimators/Output/CollimationOutput.h"
 
 #include "Exception/MerlinException.h"
 
@@ -145,14 +145,14 @@ public:
 	virtual double GetOutputBinSize() const;
 	virtual void SetOutputBinSize(double);
 
-	virtual void SetDustbin (Dustbin* odb)
+	virtual void SetCollimationOutput (CollimationOutput* odb)
 	{
-		DustbinVector.push_back(odb);
-		dustset=1;
+		CollimationOutputVector.push_back(odb);
+		CollimationOutputSet=true;
 	}
 
-	vector<Dustbin*> DustbinVector;
-	vector<Dustbin*>::iterator DustbinIterator;
+	std::vector<CollimationOutput*> CollimationOutputVector;
+	std::vector<CollimationOutput*>::iterator CollimationOutputIterator;
 
 protected:
 
@@ -189,8 +189,8 @@ protected:
 
 	vector<double> lostparticles;
 
-	// 0 when no dustbin is set
-	bool dustset;
+	// 0 when no CollimationOutput is set
+	bool CollimationOutputSet;
 
 	double GetBinSize() const
 	{
