@@ -60,7 +60,7 @@ double PhaseAdvance::PhaseAdvanceBetween(int n1, int n2, bool horizontal)
 	{
 		deltamu = element2.first - element1.first;
 	}
-	else if(!horizontal)
+	else
 	{
 		deltamu = element2.second - element1.second;
 	}
