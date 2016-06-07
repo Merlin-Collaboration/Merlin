@@ -34,7 +34,7 @@ namespace ParticleTracking
 
 
 HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(false), SimpleProfile(true), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
 {
 	if (mode == 0)
 	{
@@ -59,7 +59,7 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 }
 
 HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e), ACSet(false), SimpleProfile(true), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
 {
 	if (mode == 0)
 	{
@@ -85,7 +85,7 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 }
 
 HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(false), SimpleProfile(true), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
 {
 	if (mode == 0)
 	{
@@ -391,10 +391,12 @@ double HollowELensProcess::CalcThetaMax (double r)
 double HollowELensProcess::CalcKickSimple (Particle &p)
 {
 	double thet = 0;
-	double Length = 0;
+
 	double x = 0;
 	double y = 0;
 
+	/*
+	double Length = 0;
 	if(EffectiveLength == 0.)
 	{
 		cout << "HELProcess: Length = 0, setting L = 2.0[m]" << endl;
@@ -405,6 +407,7 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 		Length = EffectiveLength;
 	}
 	//~ cout << "\n\tHEL Length = " << Length << endl;
+	*/
 
 	// Start of HEL
 	x = p.x();
@@ -443,20 +446,21 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 {
 	double f = 0;
 	double thet = 0;
-	double Length = 0;
+
 	double x = 0;
 	double y = 0;
-
-	if(EffectiveLength == 0.)
-	{
-		Length = 2.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
-	//~ cout << "\n\tHEL Length = " << Length << endl;
-
+	/*
+		double Length = 0;
+		if(EffectiveLength == 0.)
+		{
+			Length = 2.0;
+		}
+		else
+		{
+			Length = EffectiveLength;
+		}
+		//~ cout << "\n\tHEL Length = " << Length << endl;
+	*/
 	// Start of HEL
 	x = p.x();
 	y = p.y();
