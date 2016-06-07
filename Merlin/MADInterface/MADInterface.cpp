@@ -73,7 +73,6 @@ void StripHeader(istream& is)
 		if(c=='*'||c=='$'||c=='@')
 		{
 			is.getline(buffer,5000);
-			//~ is.getline(buffer,10240,char('\n'));
 		}
 		else
 		{
@@ -88,12 +87,9 @@ inline string StripQuotes(const string& text)
 	return text.substr(1,text.length()-2);
 }
 
-//Aperture* ConstructAperture(const string& apstr)
 Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 {
 	Aperture* ap;
-//	double w,h,d,t,r,a,b;
-//	string::size_type n,n2;
 	double w,h,r,a,b;
 
 	/*
@@ -119,7 +115,6 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 	aper_3 and rtol = radius
 	aper_4 = not used
 	*/
-
 
 	//Circle
 	if(ap_type == 1)
@@ -169,7 +164,6 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 		else
 		{
 			ap = new RectEllipseAperture (w, h, a, b);
-			//cout << endl << endl << w <<"\t" << h << endl;
 		}
 	}
 
@@ -215,7 +209,7 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 MADInterface::MADInterface (const std::string& madFileName, double P0)
 	: energy(P0),filename(madFileName),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
 	  log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-	  incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(1)
+	  incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(false)
 {
 	if(ifs)
 	{
@@ -228,14 +222,12 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	}
 
 	// By default, we currently treat the following MAD types as drifts
-//	TreatTypeAsDrift("MARKER");	// merlin bug!
-	TreatTypeAsDrift("INSTRUMENT"); // merlin bug!
+	TreatTypeAsDrift("INSTRUMENT");
 
 	//Addition of missing elements in V6.503 LHC "as built" optics
 	TreatTypeAsDrift("PLACEHOLDER"); // placeholders for extra upgrade components etc (LHC)
 
 	TreatTypeAsDrift("TKICKER");	// merlin bug! - transverse dampers, injection + extraction kickers + friends.
-	//TreatTypeAsDrift("RFCAVITY");	// merlin bug! - Fix tracking with zero cavity voltage.
 
 	IgnoreZeroLengthType("RCOLLIMATOR");
 }
@@ -267,18 +259,19 @@ void MADInterface::Initialise()
 	string s;
 	char c;
 	bool tfs = 0;
-	//This just grabs the top line, we really want the line that starts with *, aka the one with the headers.
-	//The following checks were for a file that is not valid TFS format, changing to check for what MADX actually produces - JM
-	//getline((*ifs),s);
-	//check_column_heading((*ifs),"*");
-	//check_column_heading((*ifs),"NAME");
-	//check_column_heading((*ifs),"KEYWORD");
-	//Is MAD8 different?
 
-	//check_column_heading((*ifs),"@");
-	//check_column_heading((*ifs),"NAME");
-	//Fixed - JM:
+	/*
+	This just grabs the top line, we really want the line that starts with *, aka the one with the headers.
+	The following checks were for a file that is not valid TFS format, changing to check for what MADX actually produces - JM
+	getline((*ifs),s);
+	check_column_heading((*ifs),"*");
+	check_column_heading((*ifs),"NAME");
+	check_column_heading((*ifs),"KEYWORD");
+	Is MAD8 different?
 
+	check_column_heading((*ifs),"@");
+	check_column_heading((*ifs),"NAME");
+	*/
 	while((*ifs).good())
 	{
 		c = (*ifs).get();
@@ -334,6 +327,7 @@ void MADInterface::AppendModel (const string& fname, double Pref)
 	StripHeader((*ifs));
 
 	energy = Pref;
+
 	while((*ifs))
 	{
 		ReadComponent();
@@ -377,10 +371,8 @@ AcceleratorModel* MADInterface::ConstructModel()
 	ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
 
-	// reset the stream pointer
-	//~ (*ifs).seekg(0);
 	StripHeader((*ifs));
-	//~ (*ifs).seekg(0);
+
 	//Main component read in loop
 	while((*ifs).good())
 	{
@@ -392,13 +384,12 @@ AcceleratorModel* MADInterface::ConstructModel()
 		*log << endl;
 		ctor->ReportStatistics(*log);
 		*log << endl << "ARC distance from MAD file: " << z << endl;
+
 		if(inc_sr)
 		{
 			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
 		}
 	}
-
-	//cout << "MADInterface:: ARC distance from MAD file: " << z <<" m"<< endl;
 
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
@@ -497,9 +488,6 @@ void MADInterface::EndFrame (const string& name)
 double MADInterface::ReadComponent ()
 {
 #define  _READ(value) if(!((*ifs)>>value)) return 0;
-
-	//~ cout << "MADInterface::ReadComponent() started" << endl;
-
 	string name,type,aptype,parent,aperture;
 	double len,ks,angle,e1,e2,k1,k2,k3,h,tilt;
 	_READ(name);
@@ -508,13 +496,9 @@ double MADInterface::ReadComponent ()
 	prmMap->ReadRow((*ifs));
 
 	name=StripQuotes(name);
-	//~ cout << "MADInterface::ReadComponent() : name = " << name << endl;
 	type=StripQuotes(type);
-	//~ cout << "MADInterface::ReadComponent() : type = " << type << endl;
 
-	//~ cout << name << "\t" << type << "\t" << prmMap->GetParameter("S") << endl;
-
-	AcceleratorComponent *component = NULL;
+	AcceleratorComponent *component = nullptr;
 	double brho = energy/eV/SpeedOfLight;
 
 	if(prmMap->has_type)
@@ -560,33 +544,6 @@ double MADInterface::ReadComponent ()
 		{
 			type="DRIFT";
 		}
-		/*	else if(type=="VKICKER")
-			{
-				if (prmMap->GetParameter("VKICK") == 0)
-				{
-					type="DRIFT";
-				}
-			}
-			else if(type=="HKICKER")
-			{
-				if (prmMap->GetParameter("HKICK") == 0)
-				{
-					type="DRIFT";
-				}
-			}
-		*/
-		else if(type =="RFCAVITY")
-		{
-			double volts=prmMap->GetParameter("VOLT");
-			if(volts == 0)
-			{
-				type="DRIFT";
-			}
-			else
-			{
-				type="RFCAVITY";
-			}
-		}
 		else if(type=="LCAV")
 		{
 			type="RFCAVITY";
@@ -606,7 +563,6 @@ double MADInterface::ReadComponent ()
 			{
 				type="SBEND";
 			}
-			//~ type="SBEND";	//HR 14.11.15 test for symplectic not working
 		}
 
 		if(type=="MULTIPOLE")
@@ -663,11 +619,7 @@ double MADInterface::ReadComponent ()
 			}
 
 			double kick = prmMap->GetParameter("VKICK");
-			//X,Y,tilt
-			//	cout << "VKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
 			YCor* aKicker = new YCor(name,len,scale*kick);
-//		if(tilt!=0)
-//		(*aKicker).GetGeometry().SetTilt(tilt);
 			ctor->AppendComponent(*aKicker);
 			component=aKicker;
 		}
@@ -683,17 +635,12 @@ double MADInterface::ReadComponent ()
 				scale = brho;
 			}
 			double kick = prmMap->GetParameter("HKICK");
-			//X,Y,tilt
-			//	cout << "HKICKER " << name << "\t" << len << "\t" << kick << "\t" << tilt << endl;
 			XCor* aKicker = new XCor(name,len,-scale*kick);
-//		if(tilt!=0)
-//		(*aKicker).GetGeometry().SetTilt(tilt);
 			ctor->AppendComponent(*aKicker);
 			component=aKicker;
 		}
 		else if(type=="COLLIMATOR")
 		{
-			//~ cout << "MADInterface: Found Collimator " << name << " with length " << len << " m" << endl;
 			Collimator* aCollimator = new Collimator(name,len);
 
 			//Add the component to the accelerator
@@ -724,16 +671,12 @@ double MADInterface::ReadComponent ()
 			component=aSolenoid;
 		}
 
-
 		//Dipole Bending Magnets
 		else if(type=="SBEND")
 		{
 			// K0L depreciated, replaced with ANGLE. HR 17.09.15
-			//~ angle=prmMap->GetParameter("K0L");
-			angle=prmMap->GetParameter("ANGLE");
-			//~ cout << "\nMADInterface: SBEND: K0L = " << prmMap->GetParameter("K0L") << ", ANGLE = " << prmMap->GetParameter("ANGLE") << endl;
-
-			k1   =prmMap->GetParameter("K1L");
+			angle = prmMap->GetParameter("ANGLE");
+			k1 = prmMap->GetParameter("K1L");
 			h = angle/len;
 			SectorBend* bend = new SectorBend(name,len,h,brho*h);
 
@@ -748,18 +691,6 @@ double MADInterface::ReadComponent ()
 
 			if(e1!=0 || e2!=0)
 			{
-				/*			if(e1==e2)
-							{
-								bend->SetPoleFaceInfo(new SectorBend::PoleFace(e1));
-							}
-
-							else
-							{
-								SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
-								SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
-								bend->SetPoleFaceInfo(pf1,pf2);
-							}
-				*/
 				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
 				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
 				bend->SetPoleFaceInfo(pf1,pf2);
@@ -862,7 +793,6 @@ double MADInterface::ReadComponent ()
 
 		else if(type=="RFCAVITY")
 		{
-			cout << "Found RF cavity\t";
 			// Here we assume an SW cavity
 			double freq=prmMap->GetParameter("FREQ");
 			double phase=prmMap->GetParameter("LAG");
@@ -925,7 +855,7 @@ double MADInterface::ReadComponent ()
 			else
 			{
 
-				if((len1/len-1) > 0.001)
+				if( ( (len1/len) - 1) > 0.001 )
 				{
 					MerlinIO::error() << "SW cavity length not valid ";
 					MerlinIO::error() << '('<<len<<", "<<len1<<')'<<endl;
@@ -973,6 +903,7 @@ double MADInterface::ReadComponent ()
 #ifndef NDEBUG
 				MERLIN_WARN << "Unknown monitor type: "<<name<<" defaulting to BPM" << endl;
 #endif
+
 				BPM* bpm = new BPM(name,len);
 				ctor->AppendComponent(*bpm);
 				component=bpm;
@@ -1030,12 +961,12 @@ double MADInterface::ReadComponent ()
 		}
 
 	}//End of try block
-
 	catch(MADKeyMap::bad_key&)
 	{
 		MerlinIO::error()<<"L not present in table"<<endl;
 		abort();
 	}
+
 	if(component)
 	{
 		component->SetComponentLatticePosition(z);

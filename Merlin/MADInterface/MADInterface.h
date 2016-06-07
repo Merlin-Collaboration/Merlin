@@ -110,7 +110,6 @@ protected:
 	bool honMadStructs;
 	bool incApertures;
 	bool inc_sr;
-	bool single_cell_rf;
 
 	std::set<std::string> zeroLengths;
 	std::set<std::string> driftTypes;
@@ -121,6 +120,8 @@ protected:
 	double ReadComponent ();
 	void Initialise();
 	double z;	//Distance along the lattice
+
+	bool single_cell_rf;
 };
 
 inline void MADInterface::SetLogFile (ostream& os)
