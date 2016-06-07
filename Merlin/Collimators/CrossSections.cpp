@@ -104,8 +104,6 @@ CrossSections::CrossSections(Material* mat, double E, int scattertype)
 	std::cout << "\nScatteringProcess::CrossSections: Lambda_tot = " << GetTotalMeanFreePath() << endl;
 }
 
-
-
 void CrossSections::ConfigureCrossSections(double E0)
 {
 	if (scat_type == 4)  //Merlin

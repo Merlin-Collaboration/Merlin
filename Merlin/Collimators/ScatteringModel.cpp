@@ -37,7 +37,6 @@ using namespace std;
 
 ScatteringModel::ScatteringModel()
 {
-	//~ ScatteringModelTurn = 1;
 	ScatterPlot_on = 0;
 	JawImpact_on = 0;
 }
