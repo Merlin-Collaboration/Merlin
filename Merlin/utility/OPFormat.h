@@ -31,7 +31,7 @@ class OPFormat
 {
 public:
 
-	explicit OPFormat (int p = 6)
+	explicit OPFormat (int p = 16)
 		:prc(p),wdt(0),fmt(),adjust(ios_base::right),allowovf(true)
 	{}
 
