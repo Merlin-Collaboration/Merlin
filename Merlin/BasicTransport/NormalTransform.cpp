@@ -130,19 +130,6 @@ RealMatrix NormalTransform(const BeamData& t)
 	RealMatrix A=AlphaMatrix(t.alpha_x,t.alpha_y);
 	RealMatrix C=CouplingMatrix(t.c_xy,t.c_xyp,t.c_xpy,t.c_xpyp);
 	RealMatrix E = D*B*A*C;
-//    MatrixForm(E, std::cout);
-	/*
-	    cout << "Dispersion Matrix D:" << endl;
-	    MatrixForm(D, std::cout);
-	    cout << "Beta Matrix B" << endl;
-	    MatrixForm(B, std::cout);
-	    cout << "Alpha Matrix A" << endl;
-	    MatrixForm(A, std::cout);
-	    cout << "Coupling Matrix C" << endl;
-	    MatrixForm(C, std::cout);
-	    cout << "E = D*B*A*C" << endl;
-	    MatrixForm(E, std::cout);
-	*/
 	return D*B*A*C;
 }
 
