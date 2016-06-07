@@ -505,7 +505,8 @@ void CCFailureProcess::DoProcess (double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			//double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			double DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 			int n1 (0.), n2(0.);
 
 
@@ -520,7 +521,7 @@ void CCFailureProcess::DoProcess (double ds)
 			if (upstream)
 			{
 				pair<double,double> DeltaMu = CalcDeltaMu(n1, n2);
-				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
+				//DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
 				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
 			}
 			else
@@ -528,7 +529,7 @@ void CCFailureProcess::DoProcess (double ds)
 				pair<double,double> DeltaMu;
 				DeltaMu = CalcMu(n1);
 
-				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
+				//DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
 				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi + Atlas_Upstream_deltamu[IP1_down_count-1];
 			}
 
@@ -636,7 +637,9 @@ void CCFailureProcess::DoProcess (double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			//double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			double DeltaMuX (0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+
 			int n1 (0.), n2(0.);
 
 
@@ -654,12 +657,12 @@ void CCFailureProcess::DoProcess (double ds)
 			if (upstream)
 			{
 				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
-				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+				//DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
 			}
 			else
 			{
 				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi + CMS_Upstream_deltamu[IP5_down_count-1];
-				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+				//DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
 			}
 
 			//Calc M12 & M22
