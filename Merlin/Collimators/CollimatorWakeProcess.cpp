@@ -59,7 +59,6 @@ namespace ParticleTracking
 CollimatorWakeProcess::CollimatorWakeProcess(int modes, int prio, size_t nb, double ns)
 	: WakeFieldProcess (prio, nb, ns)
 {
-	// cout<<" CollimatorWakeProcess "<<modes<<endl;
 	nmodes = modes;
 	Cm=new double*[modes+1];
 	Sm=new double*[modes+1];
@@ -104,14 +103,12 @@ CollimatorWakeProcess:: ~CollimatorWakeProcess()
 // Calculates the moments Cm for each slice
 double CollimatorWakeProcess::CalculateCm(int mode, int slice)
 {
-	// cout<<"Cm  mode and slice "<<mode<<" "<<slice<<endl;
 	double x=0;
 	for(ParticleBunch::iterator p=bunchSlices[slice]; p!=bunchSlices[slice+1]; p++)
 	{
 		double r = sqrt(powd(p->x(),2)+powd(p->y(),2));
 		double theta = atan2(p->y(),p->x());
 		x += powd(r,mode)*cos(mode*theta);
-		// cout<<" value x "<<x<<endl;
 	}
 	return x;
 }
@@ -121,13 +118,11 @@ double CollimatorWakeProcess::CalculateCm(int mode, int slice)
 double CollimatorWakeProcess::CalculateSm(int mode, int slice)
 {
 	double x=0;
-	// cout<<"Sm  mode and slice "<<mode<<" "<<slice<<endl;
 	for(ParticleBunch::iterator p=bunchSlices[slice]; p!=bunchSlices[slice+1]; p++)
 	{
 		double r = sqrt(powd(p->x(),2)+powd(p->y(),2));
 		double theta = atan2(p->y(),p->x());
 		x += powd(r,mode)*sin(mode*theta);
-		// cout<<" value x "<<x<<endl;
 	}
 	return x;
 }
@@ -139,8 +134,6 @@ void CollimatorWakeProcess::CalculateWakeT(double dz, int currmode)
 	for (size_t slice=0; slice<nbins; slice++)
 	{
 		w[slice] = collimator_wake-> Wtrans(slice*dz, currmode);
-		//cout<<" Wake "<<currmode<<" "<<slice<<" "<<w[slice]<<endl;
-		//cout << w[slice] << "\t" << slice << "\t" << dz << endl;
 	}
 
 	for (size_t slice=0; slice<nbins; slice++)
@@ -180,17 +173,6 @@ void CollimatorWakeProcess::CalculateWakeL(double dz, int currmode)
 
 void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 {
-	//CalculateQdist();
-
-	//pair<double,double> v=currentBunch ->GetMoments(ps_CT);
-	//double z0=v.first;
-	//double sigz=v.second;
-	//ofstream *logfile = new ofstream("Output/logfile.dat");
-	//logfile->precision(12);
-	//ofstream *bunchafterfile = new ofstream("Output/wakefield.dat");
-	//currentBunch->Output(*bunchafterfile);
-	//delete bunchafterfile;
-
 	collimator_wake=(CollimatorWakePotentials*) currentWake;
 	for(int m=1; m<=nmodes; m++)
 	{
@@ -224,7 +206,6 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 
 		for(size_t nslice = 0; nslice<nbins; nslice++)
 		{
-			// cout<<" trig stuff "<<currmode<<" "<<nslice<<" "<<Cm[currmode][nslice]<<" "<<Sm[currmode][nslice]<<endl;
 			double g_ct = WAKE_GRADIENT(wake_ct);
 			double g_st = WAKE_GRADIENT(wake_st);
 			double g_cl = WAKE_GRADIENT(wake_cl);
@@ -245,7 +226,6 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 				wake_y = currmode*powd(r,currmode-1)*(wys-wyc);
 				wake_x*=a0;
 				wake_y*=a0;
-				//	*logfile<<currmode<<"\t"<<r<< "\t" << theta << "\t" << wake_ct[currmode][nslice] <<"\t"<<wake_st[currmode][nslice]<<"\t" << wxc << "\t" << wxs << "\t" << wyc << "\t" << wys << endl;    //<<p->x()<<"\t"<<p->y()<<endl;
 				double wzc = cos(currmode*theta)*(wake_cl[currmode][nslice]+g_cl*zz);
 				double wzs = sin(currmode*theta)*(wake_sl[currmode][nslice]+g_sl*zz);
 				wake_z = powd(r,currmode)*(wzc-wzs);
@@ -258,22 +238,10 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 				p->xp() = (p->xp()+dxp)/(1+ddp);
 				double oldpy=p->yp();
 				p->yp() = (p->yp()+dyp)/(1+ddp);
-				// *logfile <<" new... slice "<<nslice<<" particle "<<(++iparticle)<< "\tangles "<< p->xp()<<"\t"<< p->yp()<<"\t"<<dxp<<"\t"<<dyp<<endl;
 			}
-			//*logfile << "slice number: " << nslice << "\tslice size: " << number_particles << endl;
-			z+=dz;
 
-			//	ostringstream bunchsave;
-			//	bunchsave << "Output/bunch_" << nslice << ".bunch";
-			//        ofstream *bunchsavefile = new ofstream(bunchsave.str().c_str());
-			//       currentBunch->Output(*bunchsavefile);
-			//	bunchsavefile->close();
-			//        delete bunchsavefile;
+			z+=dz;
 		}
 	}
-//	ofstream *bunchafterfile1 = new ofstream("Output/wakefield1.dat");
-//	currentBunch->Output(*bunchafterfile1);
-//	delete bunchafterfile1;
-//	delete logfile;
 }
 } //end namespace ParticleTracking

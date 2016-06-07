@@ -24,16 +24,14 @@
 
 #include "utility/StringPattern.h"
 
-
-
-//	Class for calculating the longitudinal and
-//	transverse single-bunch wakefields
-//	for Collimators with modes
-
 namespace ParticleTracking
 {
 
-
+/**
+* Class for calculating the longitudinal and
+* transverse single-bunch wakefields
+* for Collimators with modes
+*/
 class CollimatorWakeProcess : public WakeFieldProcess
 {
 public:
@@ -42,8 +40,8 @@ public:
 	~CollimatorWakeProcess ();
 
 	virtual void ApplyWakefield(double);
-	virtual void CalculateWakeT (double, int);
-	virtual void CalculateWakeL (double, int);
+	virtual void CalculateWakeT(double, int);
+	virtual void CalculateWakeL(double, int);
 
 private:
 
@@ -56,16 +54,18 @@ private:
 	double** Cm;
 //    double Sm[5][1000];
 	double** Sm;
-	double wake_s;
-	double wake_c;
+//	double wake_s;
+//	double wake_c;
 
 	double** wake_sl;
 	double** wake_cl;
 	double** wake_ct;
 	double** wake_st;
 
-//    ParticleBunch* currentBunch;
 	CollimatorWakePotentials* collimator_wake;
+
+	using  WakeFieldProcess::CalculateWakeT;
+	using  WakeFieldProcess::CalculateWakeL;
 };
 
 }
