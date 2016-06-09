@@ -55,9 +55,9 @@ const double microradian=1.0e-6*radian;
 const double degree=0.0174532925199*radian;
 
 // magnetic field
-double Tesla=1.0;
-double kGauss=1.0e-1*Tesla;
-double Gauss=1.0e-3*kGauss;
+const double Tesla=1.0;
+const double kGauss=1.0e-1*Tesla;
+const double Gauss=1.0e-3*kGauss;
 
 // mass
 const double amu = 931.494028*MeV; // atomic mass unit in MeV
