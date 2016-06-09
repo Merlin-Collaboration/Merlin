@@ -66,9 +66,9 @@ public:
 	* Constructor taking the collimation mode, and the output
 	* stream pointer to which to print the results. mode can
 	* be a logical OR combination of the collimation modes. A
-	* null pointer for osp (default) suppresses output.
+	* nullptr for osp (default) suppresses output.
 	*/
-	CollimateParticleProcess (int priority, int mode, std::ostream* osp = 0);
+	CollimateParticleProcess (int priority, int mode, std::ostream* osp = nullptr);
 
 	~CollimateParticleProcess ();
 
@@ -132,7 +132,7 @@ public:
 	void SetLossThreshold (double losspc);
 
 	/**
-	* Set the log stream for the process. A NULL pointer
+	* Set the log stream for the process. A nullptr
 	* turns logging off.
 	*/
 	void SetLogStream(std::ostream* anOs);

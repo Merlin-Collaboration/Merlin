@@ -540,7 +540,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 			*log << std::setw(10) << std::left << (*comp)->GetLength();
 			*log << std::setw(10) << std::left << (*comp)->GetComponentLatticePosition();
 
-			if ((*comp)->GetAperture() != NULL)
+			if ((*comp)->GetAperture() != nullptr)
 			{
 				(*comp)->GetAperture()->printout(*log);
 			}

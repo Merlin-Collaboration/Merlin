@@ -108,7 +108,7 @@ protected:
 };
 
 inline BunchProcess::BunchProcess (const string& anID, int aPriority)
-	: active(false),currentComponent(NULL),ID(anID),priority(aPriority)
+	: active(false),currentComponent(nullptr),ID(anID),priority(aPriority)
 {}
 
 inline BunchProcess::~BunchProcess ()

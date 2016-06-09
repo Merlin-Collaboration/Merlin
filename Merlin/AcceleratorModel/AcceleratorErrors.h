@@ -35,7 +35,7 @@ public:
 	* Constructor
 	*/
 	AcceleratorErrors()
-		: vx(0),vy(0),vz(0),mx(0),my(0),mz(0),clear(0),log(NULL)
+		: vx(0),vy(0),vz(0),mx(0),my(0),mz(0),clear(0),log(nullptr)
 	{};
 
 	/**

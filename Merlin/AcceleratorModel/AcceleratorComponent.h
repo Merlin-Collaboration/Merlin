@@ -66,14 +66,13 @@ public:
 
 	/**
 	* Returns a pointer to the this components geometry.
-	* Returns NULL if no geometry is associated with this component.
+	* Returns a nullptr if no geometry is associated with this component.
 	* @return The AcceleratorGeometry associated with this element.
 	*/
 	const AcceleratorGeometry* GetGeometry() const;
 
 	/**
-	* Returns a pointer to this components field. A NULL
-	* pointer is returned if the component has no field.
+	* Returns a pointer to this components field. A nullptr is returned if the component has no field.
 	* @return The EMField associated with this element.
 	*/
 	const EMField* GetEMField() const;

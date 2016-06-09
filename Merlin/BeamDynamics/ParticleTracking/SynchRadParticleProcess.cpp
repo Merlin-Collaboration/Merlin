@@ -166,8 +166,8 @@ void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& compone
 	PHOTCONST2 = 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/currentBunch->GetParticleMass()/PlanckConstant;
 	ParticleMassMeV	= currentBunch->GetParticleMassMeV()*MeV;
 
-	SectorBend* bend = NULL;
-	RectMultipole* rmult = NULL;
+	SectorBend* bend = nullptr;
+	RectMultipole* rmult = nullptr;
 
 	if((bend = dynamic_cast<SectorBend*>(&component)))
 	{

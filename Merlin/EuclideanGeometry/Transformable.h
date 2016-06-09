@@ -95,18 +95,18 @@ protected:
 // Class Transformable
 
 inline Transformable::Transformable ()
-	: local_T(0)
+	: local_T(nullptr)
 {}
 
 inline Transformable::Transformable(const Transformable& rhs)
-	:local_T(NULL)
+	:local_T(nullptr)
 {
 	local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : 0;
 }
 
 inline bool Transformable::IsTransformed () const
 {
-	return local_T!=0 && !local_T->isIdentity();
+	return local_T!=nullptr && !local_T->isIdentity();
 }
 
 inline void Transformable::Translate (const Vector3D& X)

@@ -200,12 +200,6 @@ bool check_column_heading(istream& is, const string& hd)
 } // Namespace end
 
 // Class MADInterface
-/*
-MADInterface::MADInterface (const std::string& madFileName, double P0)
-        : energy(P0),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
-        log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-        incApertures(true),inc_sr(false),ctor(0),prmMap(0),collimator_db(NULL),z(0)
-*/
 MADInterface::MADInterface (const std::string& madFileName, double P0)
 	: energy(P0),filename(madFileName),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
 	  log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
