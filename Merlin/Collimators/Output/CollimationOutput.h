@@ -96,7 +96,7 @@ struct LossData
 		}
 		else
 		{
-			cout << "Warning: CollimationOutput Class: Cannot operator+ for losses in different elements, returning original LossData object" << endl;
+			std::cout << "Warning: CollimationOutput Class: Cannot operator+ for losses in different elements, returning original LossData object" << std::endl;
 			return (*this);
 		}
 	}
@@ -171,44 +171,7 @@ protected:
 private:
 };
 
-
-
-class LossMapCollimationOutput : public CollimationOutput
-{
-
-public:
-
-	LossMapCollimationOutput(OutputType otype = tencm);
-	~LossMapCollimationOutput();
-
-	virtual void Finalise();
-	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
-
-protected:
-
-private:
-
-};
-
-class FlukaCollimationOutput : public CollimationOutput
-{
-
-public:
-
-	FlukaCollimationOutput(OutputType otype = tencm);
-	~FlukaCollimationOutput();
-
-	virtual void Finalise();
-	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
-
-protected:
-
-private:
-
-};
-
 } //End namespace ParticleTracking
 
 #endif
+
