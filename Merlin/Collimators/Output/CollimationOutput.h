@@ -31,6 +31,7 @@ namespace ParticleTracking
 */
 struct LossData
 {
+	typedef enum {Collimator, Cold, Warm, Undefined} LossTypes;
 	string ElementName;
 	PSvector p;
 	double s;
@@ -38,12 +39,12 @@ struct LossData
 	double position;
 	double length;
 	double lost;
-	int temperature;
+	LossTypes temperature;
 	int turn;
 	int coll_id;
 	double angle;
 
-	LossData() : ElementName(), p(), s(), interval(), position(), length(), lost(), temperature(), turn(), coll_id(), angle() {}
+	LossData() : ElementName(), p(), s(), interval(), position(), length(), lost(), turn(), coll_id(), angle() {}
 
 	void reset()
 	{
@@ -53,7 +54,7 @@ struct LossData
 		position=0;
 		length=0;
 		lost=0;
-		temperature=4;
+		temperature=Undefined;
 		turn=0;
 		coll_id=0;
 		angle=0;

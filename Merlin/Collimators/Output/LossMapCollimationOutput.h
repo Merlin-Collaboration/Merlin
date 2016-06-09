@@ -23,7 +23,12 @@ public:
 	virtual void Output(std::ostream* os);
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
 
+	void SetWarmRegion(std::pair<double, double>);
+	void ClearWarmRegions();
+	std::vector<std::pair<double,double> > GetWarmRegions() const;
+
 protected:
+	std::vector<std::pair<double,double> > WarmRegions;
 
 private:
 
