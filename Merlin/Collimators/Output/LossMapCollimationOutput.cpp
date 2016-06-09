@@ -81,7 +81,7 @@ void LossMapCollimationOutput::Finalise()
 	switch(otype)
 	{
 	case nearestelement:
-		for(std::vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
+		for(std::vector<LossData>::const_iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
 			++total;
 			// Start at s = min and push back the first LossData
@@ -104,7 +104,7 @@ void LossMapCollimationOutput::Finalise()
 		}
 		break;
 	case precise:
-		for(std::vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
+		for(std::vector<LossData>::const_iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
 			++total;
 			// Start at s = min and push back the first LossData
@@ -127,7 +127,7 @@ void LossMapCollimationOutput::Finalise()
 		}
 		break;
 	case tencm:
-		for(std::vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
+		for(std::vector<LossData>::const_iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
 			++total;
 			//if no losses are yet stored
@@ -161,25 +161,37 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 	switch(otype)
 	{
 	case nearestelement:
-		for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		(*os) << std::setw(34) << std::left << "#Name";
+		(*os) << std::setw(34) << std::left << "s";
+		(*os) << std::setw(16) << std::left << "loss";
+		(*os) << std::setw(16) << std::left << "temperature";
+		(*os) << std::setw(16) << std::left << "length" << std::endl;
+
+		for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
-			(*os) << setw(34) << left << (*its).ElementName;
-			(*os) << setw(34) << left << (*its).s;
-			(*os) << setw(16) << left << (*its).lost;
-			(*os) << setw(16) << left << (*its).temperature;
-			(*os) << setw(16) << left << (*its).length;
+			(*os) << std::setw(34) << std::left << its->ElementName;
+			(*os) << std::setw(34) << std::left << its->s;
+			(*os) << std::setw(16) << std::left << its->lost;
+			(*os) << std::setw(16) << std::left << its->temperature;
+			(*os) << std::setw(16) << std::left << its->length;
 			(*os) << std::endl;
 		}
 		break;
 
 	case precise:
-		for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		(*os) << std::setw(34) << std::left << "#Name";
+		(*os) << std::setw(34) << std::left << "s";
+		(*os) << std::setw(16) << std::left << "position";
+		(*os) << std::setw(16) << std::left << "loss";
+		(*os) << std::setw(16) << std::left << "temperature" << std::endl;
+
+		for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
-			(*os) << setw(34) << left << (*its).ElementName;
-			(*os) << setw(34) << left << (*its).s;
-			(*os) << setw(34) << left << (*its).position;
-			(*os) << setw(16) << left << (*its).lost;
-			(*os) << setw(16) << left << (*its).temperature;
+			(*os) << std::setw(34) << std::left << its->ElementName;
+			(*os) << std::setw(34) << std::left << its->s;
+			(*os) << std::setw(34) << std::left << its->position;
+			(*os) << std::setw(16) << std::left << its->lost;
+			(*os) << std::setw(16) << std::left << its->temperature;
 			(*os) << std::endl;
 
 		}
@@ -193,14 +205,14 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 		(*os) << std::setw(16) << std::left << "temperature";
 		(*os) << std::setw(16) << std::left << "length" << std::endl;
 
-		for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
-			(*os) << std::setw(34) << std::left << (*its).ElementName;
+			(*os) << std::setw(34) << std::left << its->ElementName;
 			(*os) << std::setw(34) << std::setprecision(15) << std::left << its->s + its->interval;
-			(*os) << std::setw(16) << std::left << (*its).interval;
-			(*os) << std::setw(16) << std::left << (*its).lost;
-			(*os) << std::setw(16) << std::left << (*its).temperature;
-			(*os) << std::setw(16) << std::left << (*its).length;
+			(*os) << std::setw(16) << std::setprecision(4) << std::left << its->interval;
+			(*os) << std::setw(16) << std::setprecision(15) << std::left << its->lost;
+			(*os) << std::setw(16) << std::left << its->temperature;
+			(*os) << std::setw(16) << std::left << its->length;
 			(*os) << std::endl;
 
 		}
@@ -224,4 +236,5 @@ std::vector<std::pair<double,double> > LossMapCollimationOutput::GetWarmRegions(
 	return WarmRegions;
 }
 
-} //End namespace
+} //End namespace ParticleTracking
+

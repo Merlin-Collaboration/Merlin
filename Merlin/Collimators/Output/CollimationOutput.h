@@ -32,7 +32,8 @@ namespace ParticleTracking
 struct LossData
 {
 	typedef enum {Collimator, Cold, Warm, Undefined} LossTypes;
-	string ElementName;
+
+	std::string ElementName;
 	PSvector p;
 	double s;
 	double interval;

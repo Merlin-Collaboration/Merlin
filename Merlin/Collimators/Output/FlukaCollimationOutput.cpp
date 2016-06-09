@@ -38,7 +38,7 @@ void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double
 		temp.coll_id = currentComponent->GetCollID();
 		temp.turn = turn;
 
-		const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (currentComponent->GetAperture());
+		const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (currentComponent->GetAperture());
 		temp.angle = tap->GetCollimatorTilt();
 
 		temp.p = particle;
@@ -46,14 +46,13 @@ void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double
 		//pushback vector
 		DeadParticles.push_back(temp);
 	}
-
 }
 
 void FlukaCollimationOutput::Finalise()
 {
-	for(std::vector <LossData>::iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
+	for(std::vector <LossData>::const_iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
 	{
-		if( (*its).p.type() == 1 || (*its).p.type() == 4 )
+		if( its->p.type() == 1 || its->p.type() == 4 )
 		{
 			OutputLosses.push_back(*its);
 		}
@@ -62,21 +61,21 @@ void FlukaCollimationOutput::Finalise()
 
 void FlukaCollimationOutput::Output(std::ostream* os)
 {
-	cout << "\nFlukaCollimationOutput OutputLosses size = " << OutputLosses.size() << ", DeadParticles.size() = " << DeadParticles.size() << endl;
-	(*os) << "#\t1=icoll\t2=c_rotation\t3=s\t4=x\t5=xp\t6=y\t7=yp\t8=nabs\t9=np\t10=ntu" << endl;
-	for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+	std::cout << std::endl << "FlukaCollimationOutput OutputLosses size = " << OutputLosses.size() << ", DeadParticles.size() = " << DeadParticles.size() << std::endl;
+	(*os) << "#\t1=icoll\t2=c_rotation\t3=s\t4=x\t5=xp\t6=y\t7=yp\t8=nabs\t9=np\t10=ntu" << std::endl;
+	for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 	{
-		(*os) << setw(16) << left << (*its).coll_id;
-		(*os) << setw(20) << left << (*its).angle;
-		(*os) << setw(20) << left << (*its).position;
-		(*os) << setw(20) << left << (*its).p.x();
-		(*os) << setw(20) << left << (*its).p.xp();
-		(*os) << setw(20) << left << (*its).p.y();
-		(*os) << setw(20) << left << (*its).p.yp();
-		(*os) << setw(20) << left << (*its).p.type();
-		(*os) << setw(20) << left << (*its).p.id();
-		(*os) << setw(20) << left << (*its).turn;
-		(*os) << endl;
+		(*os) << std::setw(16) << std::left << its->coll_id;
+		(*os) << std::setw(20) << std::left << its->angle;
+		(*os) << std::setw(20) << std::left << its->position;
+		(*os) << std::setw(20) << std::left << its->p.x();
+		(*os) << std::setw(20) << std::left << its->p.xp();
+		(*os) << std::setw(20) << std::left << its->p.y();
+		(*os) << std::setw(20) << std::left << its->p.yp();
+		(*os) << std::setw(20) << std::left << its->p.type();
+		(*os) << std::setw(20) << std::left << its->p.id();
+		(*os) << std::setw(20) << std::left << its->turn;
+		(*os) << std::endl;
 	}
 }
 
