@@ -187,7 +187,7 @@ protected:
 
 	size_t nlost;
 
-	vector<double> lostparticles;
+	std::vector<double> lostparticles;
 
 	// 0 when no CollimationOutput is set
 	bool CollimationOutputSet;
@@ -198,7 +198,7 @@ protected:
 	}
 
 	int ColParProTurn;
-	string FirstElementName;
+	std::string FirstElementName;
 	double FirstElementS;
 	bool FirstElementSet;
 

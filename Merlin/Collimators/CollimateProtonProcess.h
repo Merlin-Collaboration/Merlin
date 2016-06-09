@@ -20,7 +20,6 @@
 #include "Collimators/CollimateParticleProcess.h"
 #include "Collimators/ScatteringModel.h"
 
-using namespace std;
 using namespace Collimation;
 
 namespace ParticleTracking
@@ -48,7 +47,6 @@ private:
 
 	bool DoScatter(Particle&);
 
-//	bool scatterset;
 };
 
 } // end namespace ParticleTracking

@@ -38,7 +38,6 @@
 #include "NumericalUtils/utils.h"
 #include "NumericalUtils/PhysicalUnits.h"
 
-using namespace std;
 using namespace Collimation;
 
 namespace
@@ -71,10 +70,11 @@ CollimateProtonProcess::CollimateProtonProcess (int priority, int mode, std::ost
 
 }
 
+/**
+* returns true if particle survives, false if it dies
+*/
 bool CollimateProtonProcess::DoScatter(Particle& p)
 {
-	// returns true if particle survives, false if it dies
-
 	double P0 = currentBunch->GetReferenceMomentum();
 	double E0 = sqrt(P0*P0 + pow(PhysicalConstants::ProtonMassMeV*PhysicalUnits::MeV,2));
 
@@ -293,7 +293,7 @@ void CollimateProtonProcess::SetScatter(ScatteringModel* sm)
 	}
 	else
 	{
-		std::cout << "Warning ScatteringModel::SetScatterType: No scatter type selected, no ScatteringProcesses set by default - may be set by user" << endl;
+		std::cout << "Warning ScatteringModel::SetScatterType: No scatter type selected, no ScatteringProcesses set by default - may be set by user" << std::endl;
 	}
 
 }
