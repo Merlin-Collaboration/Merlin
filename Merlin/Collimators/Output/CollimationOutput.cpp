@@ -24,7 +24,6 @@
 
 #include "Exception/MerlinException.h"
 
-using namespace std;
 namespace ParticleTracking
 {
 
@@ -82,7 +81,7 @@ void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double
 
 void FlukaCollimationOutput::Finalise()
 {
-	for(vector <LossData>::iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
+	for(std::vector <LossData>::iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
 	{
 		if( (*its).p.type() == 1 || (*its).p.type() == 4 )
 		{
@@ -95,7 +94,7 @@ void FlukaCollimationOutput::Output(std::ostream* os)
 {
 	cout << "\nFlukaCollimationOutput OutputLosses size = " << OutputLosses.size() << ", DeadParticles.size() = " << DeadParticles.size() << endl;
 	(*os) << "#\t1=icoll\t2=c_rotation\t3=s\t4=x\t5=xp\t6=y\t7=yp\t8=nabs\t9=np\t10=ntu" << endl;
-	for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+	for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 	{
 		(*os) << setw(16) << left << (*its).coll_id;
 		(*os) << setw(20) << left << (*its).angle;
@@ -218,7 +217,7 @@ void LossMapCollimationOutput::Finalise()
 	switch(otype)
 	{
 	case nearestelement:
-		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
+		for(std::vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
 			++total;
 			// Start at s = min and push back the first LossData
@@ -240,7 +239,7 @@ void LossMapCollimationOutput::Finalise()
 		}
 		break;
 	case precise:
-		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
+		for(std::vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
 			++total;
 			// Start at s = min and push back the first LossData
@@ -262,7 +261,7 @@ void LossMapCollimationOutput::Finalise()
 		}
 		break;
 	case tencm:
-		for(vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
+		for(std::vector<LossData>::iterator it = DeadParticles.begin(); it != DeadParticles.end(); ++it)
 		{
 			++total;
 			//if no losses are yet stored
@@ -297,7 +296,7 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 	switch(otype)
 	{
 	case nearestelement:
-		for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << setw(34) << left << (*its).ElementName;
 			(*os) << setw(34) << left << (*its).s;
@@ -309,7 +308,7 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 		break;
 
 	case precise:
-		for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << setw(34) << left << (*its).ElementName;
 			(*os) << setw(34) << left << (*its).s;
@@ -323,7 +322,7 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 
 	case tencm:
 		(*os) << "#\tName\ts\tbin_start\tloss\ttemperature\tlength" << endl;
-		for(vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector <LossData>::iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << setw(34) << left << (*its).ElementName;
 			(*os) << setw(34) << setprecision(12) << left << ((*its).s + (*its).interval);

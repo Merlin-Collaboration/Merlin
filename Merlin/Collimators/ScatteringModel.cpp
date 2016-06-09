@@ -33,7 +33,6 @@ using namespace ParticleTracking;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
-using namespace std;
 
 ScatteringModel::ScatteringModel()
 {
@@ -43,72 +42,57 @@ ScatteringModel::ScatteringModel()
 
 double ScatteringModel::PathLength(Material* mat, double E0)
 {
-
-	//~ std::cout << "\nScatteringModel::PathLength: Start PathLength()" << std::endl;
-
 	static double lambda;
 	CrossSections* CurrentCS;
 
-	//~ std::cout << "\nScatteringModel::PathLength: CrossSections object made" << std::endl;
-	//~ std::cout << "ScatteringModel::PathLength: map.size = " << stored_cross_sections.size()  << std::endl;
-	//~ std::cout << "ScatteringModel::PathLength: mat->GetSymbol() = " << mat->GetSymbol()  << std::endl;
-
 	CS_iterator = stored_cross_sections.find(mat->GetSymbol());
-	//~ std::cout << "ScatteringModel::PathLength: CS Iterator sent to find material" << std::endl;
 
 	// If find gets to the end of the stored_cross_sections map, there is no value stored
 	if (CS_iterator == stored_cross_sections.end() )
 	{
-
-		//~ std::cout << "\nScatteringModel::PathLength: Stored cross sections not found " << endl;
-
 		//No previously calculated CrossSections, start from scratch
 		CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
 
-		//~ stored_cross_sections.insert(mat->GetSymbol(), NewCS);
 		stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), CurrentCS));
 
 		//Set iterator to correct position
 		CS_iterator = stored_cross_sections.find(mat->GetSymbol());
 
-		//~ std::cout << "\nScatteringModel::PathLength: Calculating fractions " << endl;
 		//Find fractions of cross sections
 		double sigma = 0;
 		int i = 0;
-		vector<ScatteringProcess*>::iterator p;
+		std::vector<ScatteringProcess*>::iterator p;
 
 		std::cout << "ScatteringModel::PathLength: MATERIAL = " << mat->GetSymbol()  << std::endl;
 		for(p = Processes.begin(); p != Processes.end(); p++)
 		{
 			(*p)->Configure(mat, CurrentCS);
 			fraction[i] = (*p)->sigma;
-			cout << (*p)->GetProcessType() << "\t\t sigma = " << (*p)->sigma << " barns" << endl;
+			std::cout << (*p)->GetProcessType() << "\t\t sigma = " << (*p)->sigma << " barns" << std::endl;
 			sigma+= fraction[i];
 			++i;
 		}
 
 		for(unsigned int j=0; j<fraction.size(); j++)
 		{
-			cout << " Process " << j << " total sigma " << setw(10) << setprecision(4) << sigma << "barns";
+			std::cout << " Process " << j << " total sigma " << setw(10) << setprecision(4) << sigma << "barns";
 			fraction[j] /= sigma;
-			cout << " fraction " << setw(10) << setprecision(4) << fraction[j] << endl;
+			std::cout << " fraction " << setw(10) << setprecision(4) << fraction[j] << std::endl;
 		}
 	}
 	else
 	{
-
-		//~ std::cout << "\nScatteringModel::PathLength: Stored cross sections found " << endl;
 		//Should return a pointer to the CrossSections we require
 		CurrentCS = CS_iterator->second;
 
 		//Make sure that the CrossSections are for the same case (scattering etc)
 		if (CurrentCS == CS_iterator->second)
 		{
-			//~ cout << "\n\tScatteringModel::PathLength: CurrentCS == NewCS"<< endl;
+
 		}
 		else
 		{
-			cout <<  "\n\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections" << endl;
+			std::cout <<  std::endl << "\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections" << std::endl;
 			CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
 			stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), CurrentCS));
 
@@ -224,7 +208,6 @@ void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0
 //HR 29Aug13
 void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, double E2)
 {
-
 	static const double root12 = sqrt(12.0);
 	double scaledx=x/mat->GetRadiationLengthInM();
 	double Eav = (E1+E2)/2.0;
@@ -240,7 +223,6 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, 
 	p.xp () += theta_plane_x;
 	p.y ()  += y_plane;
 	p.yp () += theta_plane_y;
-
 }
 
 
@@ -262,7 +244,7 @@ bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E)
 	exit(EXIT_FAILURE);
 }
 
-void ScatteringModel::DeathReport(PSvector& p, double x, double position, vector<double>& lost)
+void ScatteringModel::DeathReport(PSvector& p, double x, double position, std::vector<double>& lost)
 {
 	double pos = x + position;
 	lost.push_back(pos);
@@ -275,7 +257,6 @@ void ScatteringModel::SetScatterType(int st)
 
 void ScatteringModel::ScatterPlot(Particle& p, double z, int turn, string name)
 {
-
 	ScatterPlotData* temp = new ScatterPlotData;
 	(*temp).ID = p.id();
 	(*temp).x = p.x();
@@ -291,7 +272,6 @@ void ScatteringModel::ScatterPlot(Particle& p, double z, int turn, string name)
 
 void ScatteringModel::JawImpact(Particle& p, int turn, string name)
 {
-
 	JawImpactData* temp = new JawImpactData;
 	(*temp).ID = p.id();
 	(*temp).x = p.x();
@@ -319,16 +299,14 @@ void ScatteringModel::SetJawImpact(string name, int single_turn)
 	JawImpact_on = 1;
 }
 
-//~ void ScatteringModel::OutputScatterPlot(std::ostream* os){
 void ScatteringModel::OutputScatterPlot(string directory, int seed)
 {
 
-	for(vector<string>::iterator name = ScatterPlotNames.begin(); name != ScatterPlotNames.end(); ++name)
+	for(std::vector<std::string>::iterator name = ScatterPlotNames.begin(); name != ScatterPlotNames.end(); ++name)
 	{
 
 		std::ostringstream scatter_plot_file;
 		scatter_plot_file << directory << "scatter_plot_" << (*name) << "_" << seed << ".txt";
-		//~ std::ostringstream scatter_plot_file = directory + "Scatter.txt";
 		std::ofstream* os = new std::ofstream(scatter_plot_file.str().c_str());
 		if(!os->good())
 		{
@@ -339,7 +317,7 @@ void ScatteringModel::OutputScatterPlot(string directory, int seed)
 		//~ (*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << endl;
 		(*os) << "#\tparticle_id\tz\ty\tturn" << endl;
 
-		for(vector <ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its != StoredScatterPlotData.end(); ++its)
+		for(std::vector <ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its != StoredScatterPlotData.end(); ++its)
 		{
 			if( (*its)->name == (*name) )
 			{
@@ -364,21 +342,20 @@ void ScatteringModel::OutputScatterPlot(string directory, int seed)
 //~ void ScatteringModel::OutputJawImpact(std::ostream* os){
 void ScatteringModel::OutputJawImpact(string directory, int seed)
 {
-
-	for(vector<string>::iterator name = JawImpactNames.begin(); name != JawImpactNames.end(); ++name)
+	for(std::vector<std::string>::iterator name = JawImpactNames.begin(); name != JawImpactNames.end(); ++name)
 	{
 		std::ostringstream jaw_impact_file;
 		jaw_impact_file << directory << "jaw_impact_" << (*name) << "_" << seed << ".txt";
-		ofstream* os = new ofstream(jaw_impact_file.str().c_str());
+		std::ofstream* os = new std::ofstream(jaw_impact_file.str().c_str());
 		if(!os->good())
 		{
 			std::cerr << "ScatteringModel::OutputJawImpact: Could not open JawImpact file for collimator " << (*name) << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
-		(*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << endl;
+		(*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << std::endl;
 
-		for(vector <JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end(); ++its)
+		for(std::vector <JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end(); ++its)
 		{
 			if( (*its)->name == (*name) )
 			{
@@ -397,3 +374,4 @@ void ScatteringModel::OutputJawImpact(string directory, int seed)
 
 	StoredJawImpactData.clear();
 }
+

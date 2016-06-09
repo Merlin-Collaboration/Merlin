@@ -23,17 +23,12 @@
 
 #include "BeamModel/PSTypes.h"
 
-// CollimationOutput handles the output from the collimation process, specifically
-// lost particles. It is called from CollimateProtonProcess::DeathReport and
-// allows the user to create loss map output files, root hist files, or
-// a user specified output format.
-
-using namespace std;
-
 namespace ParticleTracking
 {
 
-// Struct used to store individual lost particle data
+/**
+* Struct used to store individual lost particle data
+*/
 struct LossData
 {
 	string ElementName;
@@ -132,7 +127,12 @@ inline bool Merge_LossData(const LossData &a, const LossData &b)
 // Possible output types for each class
 typedef enum {nearestelement, precise, tencm} OutputType;
 
-
+/**
+* CollimationOutput handles the output from the collimation process, specifically
+* lost particles. It is called from CollimateProtonProcess::DeathReport and
+* allows the user to create loss map output files, root hist files, or
+* a user specified output format.
+*/
 class CollimationOutput
 {
 
@@ -160,10 +160,10 @@ public:
 	LossData temp;
 
 	// Vector to hold the loss data
-	vector <LossData> DeadParticles;
+	std::vector <LossData> DeadParticles;
 
 	// Vector to hold output data
-	vector <LossData> OutputLosses;
+	std::vector <LossData> OutputLosses;
 
 protected:
 	AcceleratorComponent* currentComponent;
