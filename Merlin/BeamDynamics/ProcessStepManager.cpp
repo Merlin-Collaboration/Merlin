@@ -105,7 +105,7 @@ struct DoProc
 
 void DoProc::Trace(BunchProcess* proc)
 {
-	(*vos) << setw(24) << left << cid.c_str();
+	(*vos) << setw(30) << left << cid.c_str();
 	(*vos) << setw(24) << left << (*proc).GetID().c_str();
 	(*vos) << "from: " << right << s0 << " to: " << s0+ds << " (step = " << ds << ")" << std::endl;
 }
