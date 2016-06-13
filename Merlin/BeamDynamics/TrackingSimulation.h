@@ -173,7 +173,9 @@ public:
 		injOnAxis = onAxis;
 	}
 
-	//	Sets the initial bunch constructor.
+	/**
+	* Sets the initial bunch constructor.
+	*/
 	void SetInitialBunchCtor (BunchConstructor* bctor);
 
 	void SetLogStream (ostream& os)
@@ -255,7 +257,7 @@ private:
 
 	bool incX;
 	bool injOnAxis;
-	ostream* log;
+	std::ostream* log;
 	bool handle_me;
 	lattice_type type;
 
