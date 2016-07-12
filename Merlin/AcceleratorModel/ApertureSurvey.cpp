@@ -9,15 +9,13 @@
 
 using namespace std;
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, double step, size_t points_per_element)
+void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, double step_size, size_t points_per_element)
 {
-	step_size = step;
-	points = points_per_element;
-	AccMod = model;
+	double points = points_per_element;
 
 	//Create a file in the given directory
 	ostringstream file_stream_name;
-	file_stream_name << directory <<"Aperture_Survey_"<< step << "_steps_OR_" << points << "_points.txt";
+	file_stream_name << directory <<"Aperture_Survey_"<< step_size << "_steps_OR_" << points << "_points.txt";
 	ofstream* output_file = new ofstream(file_stream_name.str().c_str());
 	if(!output_file->good())
 	{
@@ -32,7 +30,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, double
 	double lims[4];
 	//~ cout << "aperture_survey" << endl;
 
-	for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
+	for (AcceleratorModel::BeamlineIterator bi = model->GetBeamline().begin(); bi != model->GetBeamline().end(); bi++)
 	{
 
 		AcceleratorComponent *ac = &(*bi)->GetComponent();
@@ -93,22 +91,20 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, double
 	}
 }
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, bool exact_s, double step)
+void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, bool exact_s, double step_size)
 {
 	if(!exact_s)
 	{
-		ApertureSurvey(model, directory, step);
+		ApertureSurvey(model, directory, step_size);
 	}
 	else
 	{
 
-		step_size = step;
-		points = 0;
-		AccMod = model;
+		double points = 0;
 
 		//Create a file in the given directory
 		ostringstream file_stream_name;
-		file_stream_name << directory <<"Aperture_Survey_"<< step << "_steps_OR_" << points << "_points.txt";
+		file_stream_name << directory <<"Aperture_Survey_"<< step_size << "_steps_OR_" << points << "_points.txt";
 		ofstream* output_file = new ofstream(file_stream_name.str().c_str());
 		if(!output_file->good())
 		{
@@ -123,7 +119,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, bool e
 		double lims[4];
 		//~ cout << "aperture_survey" << endl;
 
-		for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
+		for (AcceleratorModel::BeamlineIterator bi = model->GetBeamline().begin(); bi != model->GetBeamline().end(); bi++)
 		{
 
 			AcceleratorComponent *ac = &(*bi)->GetComponent();
@@ -185,11 +181,9 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, bool e
 	}
 }
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, double step, size_t points_per_element)
+void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, double step_size, size_t points_per_element)
 {
-	step_size = step;
-	points = points_per_element;
-	AccMod = model;
+	double points = points_per_element;
 
 	(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 
@@ -199,7 +193,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, double
 	double lims[4];
 	//~ cout << "aperture_survey" << endl;
 
-	for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
+	for (AcceleratorModel::BeamlineIterator bi = model->GetBeamline().begin(); bi != model->GetBeamline().end(); bi++)
 	{
 
 		AcceleratorComponent *ac = &(*bi)->GetComponent();
@@ -261,17 +255,15 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, double
 	}
 }
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double step)
+void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double step_size)
 {
 	if(!exact_s)
 	{
-		ApertureSurvey(model, os, step);
+		ApertureSurvey(model, os, step_size);
 	}
 	else
 	{
-		step_size = step;
-		points = 0;
-		AccMod = model;
+		double points = 0;
 
 		(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 
@@ -281,7 +273,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool e
 		double lims[4];
 		//~ cout << "aperture_survey" << endl;
 
-		for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
+		for (AcceleratorModel::BeamlineIterator bi = model->GetBeamline().begin(); bi != model->GetBeamline().end(); bi++)
 		{
 
 			AcceleratorComponent *ac = &(*bi)->GetComponent();
