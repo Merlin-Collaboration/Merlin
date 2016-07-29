@@ -659,7 +659,11 @@ inline double  __attribute__((optimize("O3,unsafe-math-optimizations"))) __attri
 	const double cl02 = 0.4149;
 	const double cl03 = 1.108  ;
 	const double cl04 = 0.9515;
-	const double Mcut = 3; // this is chosen from the fit on the crosss section data
+	double Mcut = 3; // this is chosen from the fit on the crosss section data
+	if(ss > 4000) // Adjust matching point for high s
+	{
+		Mcut = 3 + 0.6 * log(s/4000);
+	}
 	const double xi_c = pow(Mcut,2)/s;
 	const double xi_th = Mmin2/s; // (M_p + M_pion)^2/s
 	const double Mmin2bar = pow(Mproton-Mpion,2);
