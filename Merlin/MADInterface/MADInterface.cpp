@@ -221,6 +221,7 @@ MADInterface::MADInterface (const std::string& madFileName, double P0)
 	{
 		if(!(*ifs))
 		{
+			MERLIN_ERR << "ERROR opening file " << madFileName << std::endl;
 			throw MerlinException(string("ERROR opening file ")+string(madFileName));
 		}
 
