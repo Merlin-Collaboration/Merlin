@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 	for (int i = 0; i<nthrows; i++)
 	{
 		double x = RandomNG::landau();
-		assert(!isnan(x));
+		assert(!std::isnan(x));
 
 		// beware, this can rollover when x is big
 		int bin = ((x - bin_min) / (bin_max-bin_min) * (nbins)) +1; // +1 because bin zero for outliers
