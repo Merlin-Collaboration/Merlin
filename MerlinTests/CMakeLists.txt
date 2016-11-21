@@ -1,3 +1,4 @@
+# macro to install a test executable (need add_test() to call it)
 macro (merlin_test dir exe_name)
 	set(source_files "")
 	foreach(arg IN ITEMS ${ARGN})
@@ -18,6 +19,14 @@ macro (merlin_test dir exe_name)
 
 endmacro (merlin_test)
 
+# macro to install a test python script (need add_test() to call it)
+macro (merlin_test_py dir script_name)
+	add_custom_target(${script_name} ALL)
+	add_custom_command(TARGET ${script_name}
+	                   DEPENDS ${dir}/${script_name}
+	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir})
+endmacro (merlin_test_py)
+
 
 add_custom_target(TestDataFiles ALL)
 add_custom_command(TARGET TestDataFiles
@@ -26,6 +35,8 @@ add_custom_command(TARGET TestDataFiles
 add_custom_command(TARGET TestDataFiles
                    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/outputs)
 
+merlin_test_py(BasicTests have_python.py)
+add_test(have_python BasicTests/have_python.py)
 
 merlin_test(BasicTests bunch_test bunch_test.cpp)
 add_test(bunch_test BasicTests/bunch_test)
