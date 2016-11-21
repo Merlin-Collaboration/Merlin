@@ -42,7 +42,8 @@ merlin_test(BasicTests bunch_test bunch_test.cpp)
 add_test(bunch_test BasicTests/bunch_test)
 
 merlin_test(BasicTests landau_test landau_test.cpp)
-add_test(landau_test BasicTests/landau_test)
+merlin_test_py(BasicTests landau_test.py)
+add_test(landau_test.py BasicTests/landau_test.py)
 
 merlin_test(BasicTests aperture_test aperture_test.cpp)
 add_test(aperture_test BasicTests/aperture_test)
