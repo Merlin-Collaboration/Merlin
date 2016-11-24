@@ -63,7 +63,6 @@ void Rutherford::Configure(Material* matin, CrossSections* CSin)
 {
 	ScatteringProcess::Configure(matin, CSin);
 	tmin = 0.9982E-3; // DeMolaize thesis page 29 [GeV^2]
-	t = tmin/(1-RandomNG::uniform(0,1));
 	sigma = cs->Get_sig_R();
 	E0 = cs->Get_E0();
 }
@@ -72,6 +71,7 @@ bool Rutherford::Scatter(PSvector& p, double E)
 {
 	double TargetMass = AtomicMassUnit*mat->GetAtomicMass();
 
+	t = tmin/(1-RandomNG::uniform(0,1));
 	ScatterStuff(p, t, TargetMass, E0);
 	p.type() = 6;
 
@@ -91,7 +91,6 @@ void SixTrackRutherford::Configure(Material* matin, CrossSections* CSin)
 {
 	ScatteringProcess::Configure(matin, CSin);
 	tmin = 0.9982E-3; // DeMolaize thesis page 29 [GeV^2]
-	t = tmin/(1-RandomNG::uniform(0,1));
 	sigma = cs->Get_sig_R();
 	E0 = cs->Get_E0();
 }
@@ -99,6 +98,7 @@ void SixTrackRutherford::Configure(Material* matin, CrossSections* CSin)
 bool SixTrackRutherford::Scatter(PSvector& p, double E)
 {
 
+	t = tmin/(1-RandomNG::uniform(0,1));
 	ScatterStuff(p, t, E0);
 	p.type() = 6;
 
@@ -172,13 +172,13 @@ void ElasticpN::Configure(Material* matin, CrossSections* CSin)
 	sigma = cs->Get_sig_pN_el();
 	double b_N_ref = matin->GetSixtrackNuclearSlope();
 	b_N = b_N_ref * (cs->Get_sig_pN_tot()/cs->Get_sig_pN_tot_ref());
-	t = -log(RandomNG::uniform(0,1))/b_N;
 	E0 = cs->Get_E0();
 }
 bool ElasticpN::Scatter(PSvector& p, double E)
 {
 	double TargetMass = AtomicMassUnit*mat->GetAtomicMass();
 
+	t = -log(RandomNG::uniform(0,1))/b_N;
 	ScatterStuff(p, t, TargetMass, E0);
 	p.type() = 2;
 
@@ -200,12 +200,12 @@ void SixTrackElasticpN::Configure(Material* matin, CrossSections* CSin)
 	sigma = cs->Get_sig_pN_el();
 	double b_N_ref = matin->GetSixtrackNuclearSlope();
 	b_N = b_N_ref * (cs->Get_sig_pN_tot()/cs->Get_sig_pN_tot_ref());
-	t = -log(RandomNG::uniform(0,1))/b_N;
 	E0 = cs->Get_E0();
 }
 bool SixTrackElasticpN::Scatter(PSvector& p, double E)
 {
 
+	t = -log(RandomNG::uniform(0,1))/b_N;
 	ScatterStuff(p, t, E0);
 	p.type() = 2;
 
