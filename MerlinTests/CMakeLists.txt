@@ -58,7 +58,8 @@ merlin_test(OpticsTests lhc_fft_tune_test lhc_fft_tune_test.cpp)
 add_test(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
-add_test(cu50_test ScatteringTests/cu50_test)
+merlin_test_py(ScatteringTests cu50_test.py)
+add_test(cu50_test.py ScatteringTests/cu50_test.py)
 
 merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
 add_test(lhc_collimation_test ScatteringTests/lhc_collimation_test)
