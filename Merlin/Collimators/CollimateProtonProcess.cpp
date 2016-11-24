@@ -215,11 +215,16 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
 		}
 
-		if( (colap->PointInside( (p.x()), (p.y()), z)) || (xlen>lengthtogo) )
+		if( (colap->PointInside( (p.x()), (p.y()), z)))
 		{
-			//disabling agrees with assmann test case for 0.1m bins
-			//~ p.x() += p.xp()*lengthtogo;
-			//~ p.y() += p.yp()*lengthtogo;
+			//escaped jaw, so propagate to end of element
+			p.x() += p.xp()*lengthtogo;
+			p.y() += p.yp()*lengthtogo;
+			return false;
+		}
+
+		if (xlen>lengthtogo)
+		{
 			return false;
 		}
 
