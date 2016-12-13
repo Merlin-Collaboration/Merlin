@@ -17,7 +17,7 @@ PROJECT(MERLIN)
 
 OPTION(ENABLE_EXAMPLES "Build the example gslprograms. Default OFF" OFF)
 OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" OFF)
-OPTION(ENABLE_TESTS "Build the library test programs. Default OFF" OFF)
+OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(BUILD_DYNAMIC "Build Merlin as a dynamic library. Default ON" ON)
 OPTION(BUILD_STATIC "Build Merlin as a static library. Default OFF" OFF)
@@ -158,7 +158,7 @@ endif(ORBIT_DEBUG)
 #Check for Root
 if(ENABLE_ROOT)
 	#/usr/share/root/cmake/FindROOT.cmake
-	SET(CMAKE_MODULE_PATH /usr/share/root/cmake/)
+	SET(CMAKE_MODULE_PATH /usr/share/root/cmake/ ${CMAKE_MODULE_PATH})
 	find_package(ROOT REQUIRED)
 	include_directories(${ROOT_INCLUDE_DIR})
 endif(ENABLE_ROOT)
@@ -181,7 +181,7 @@ if(ENABLE_USER_RUNS)
 endif()
 
 #Enable to build the MerlinTests folder
-if(ENABLE_TESTS)
+if(BUILD_TESTING)
 	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
 	enable_testing()
 	add_subdirectory(MerlinTests)
