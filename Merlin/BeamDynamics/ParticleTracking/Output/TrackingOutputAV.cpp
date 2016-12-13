@@ -1,11 +1,11 @@
-#include "BeamDynamics/TrackingOutputAV.h"
+#include "BeamDynamics/ParticleTracking/Output/TrackingOutputAV.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 
 using namespace std;
 using namespace ParticleTracking;
 
 TrackingOutputAV::TrackingOutputAV(const std::string& filename):
-	SimulationOutput(), current_s(0), current_s_set(0), single_turn(1), turn_range_set(0), s_range_set(0), turn_number(0), suppress_unscattered(1)
+	SimulationOutput(), current_s(0), suppress_unscattered(1), current_s_set(0), single_turn(1), turn_range_set(0), s_range_set(0), turn_number(0)
 {
 	output_file = new std::ofstream(filename.c_str());
 	(*output_file) << "#id turn S x xp y yp dp type" << std::endl;

@@ -6,7 +6,6 @@
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
 
-using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
@@ -14,7 +13,7 @@ using namespace PhysicalUnits;
 Basic constructor taking the following arguments:
 Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
 */
-Material::Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
+Material::Material(std::string name0, std::string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
 {
 	Name = name0;
 	Symbol = sym0;
@@ -145,12 +144,12 @@ void Material::SetAtomicMass(double p)
 	AtomicMass = p;
 }
 
-void Material::SetName(string p)
+void Material::SetName(std::string p)
 {
 	Name = p;
 }
 
-void Material::SetSymbol(string p)
+void Material::SetSymbol(std::string p)
 {
 	Symbol = p;
 }
@@ -232,12 +231,12 @@ double Material::GetAtomicMass() const
 	return AtomicMass;
 }
 
-string Material::GetName() const
+std::string Material::GetName() const
 {
 	return Name;
 }
 
-string Material::GetSymbol() const
+std::string Material::GetSymbol() const
 {
 	return Symbol;
 }

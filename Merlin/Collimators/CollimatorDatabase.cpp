@@ -14,7 +14,6 @@
 
 #include "Random/RandomNG.h"
 
-using namespace std;
 using namespace PhysicalUnits;
 
 //Read in file into some sensible structure
@@ -28,7 +27,7 @@ CollimatorDatabase::CollimatorDatabase(string input_file, MaterialDatabase* db, 
 	ifstream* input = new ifstream(input_file.c_str(), ifstream::in);
 
 	//Do standard checks
-	if(input == NULL || !input->good())
+	if(input == nullptr || !input->good())
 	{
 		std::cerr << "Failed to open collimator database: " << input_file << " - Exiting." << std::endl;
 		exit(EXIT_FAILURE);

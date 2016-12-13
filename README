@@ -38,7 +38,7 @@ Running Tests
 =============
 
 Enable tests with
-cmake -DENABLE_TESTS=1
+cmake -DBUILD_TESTING=ON
 
 Then run:
 make

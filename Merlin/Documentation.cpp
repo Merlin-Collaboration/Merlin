@@ -12,7 +12,7 @@
 * 2: run "cmake /path/to/merlin/folder"
 * 3: run "ccmake /path/to/buildfolder"
 * 4: Pick the options you wish to use.
-* 5: run make -j <ncpu>
+* 5: run make -j < ncpu >
 * 6: This will make the merlin library
 *
 * The alternate method is to use the older makefiles
@@ -34,4 +34,15 @@
 *
 * which will compile merlin.
 * Other options exist such as "xcodebuild clean", which will clear out built files.
+*
+* \author Nick Walker
+* \author Dirk Kruecker
+* \author Andy Wolski
+* \author Roger Barlow
+* \author Adina Toader
+* \author James Molson
+* \author Haroon Rafique
+* \author Sam Tygier
+* \version 4.9
+* \date 2001-2016
 */

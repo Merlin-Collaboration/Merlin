@@ -33,7 +33,7 @@ public:
 	* Constructor
 	* @param[in] m The material to attach to this aperture.
 	*/
-	Aperture(Material* m = NULL) : ApertureMaterial(m) {}
+	Aperture(Material* m = nullptr) : ApertureMaterial(m) {}
 
 	/**
 	* Destructor
@@ -68,7 +68,7 @@ public:
 	* Returns the type of the aperture.
 	* @return A string containing the type of the aperture.
 	*/
-	virtual string GetApertureType() const = 0;
+	virtual std::string GetApertureType() const = 0;
 
 	/**
 	* Gets the material associated with this aperture.
@@ -97,5 +97,28 @@ protected:
 };
 
 std::ostream& operator<< (std::ostream& out, const Aperture& ap);
+
+/**
+* See the MAD users guide for how these apertures are defined.
+* (current as of V5.02.07)
+* http://madx.web.cern.ch/madx/releases/last-dev/madxuguide.pdf
+* "Physical Aperture: Aperture definition"
+*
+* Interpolated in this case is where one type joins another - future internal usage, not a MAD-X type.
+*/
+typedef enum
+{
+	NONE,
+	UNKNOWN,
+	CIRCLE,			//Supported
+	RECTANGLE,		//Supported
+	ELLIPSE,		//Supported
+	RECTCIRCLE,
+	LHCSCREEN,		//Supported as RECTELLIPSE
+	RECTELLIPSE,	//Supported
+	RACETRACK,
+	OCTAGON,
+	INTERPOLATED
+} ApertureClass;
 
 #endif

@@ -1,4 +1,3 @@
-//#include <TH1.h>
 #include <cmath>
 #include <fstream>
 #include "ProtonBunch.h"
@@ -8,8 +7,6 @@
 #include "Exception/MerlinException.h"
 #include "AcceleratorModel/Aperture.h"
 #include "AcceleratorModel/Apertures/CollimatorAperture.h"
-//#include <gsl/gsl_randist.h>
-//#include <gsl/gsl_rng.h>
 
 using namespace std;
 using namespace ParticleTracking;
@@ -39,51 +36,7 @@ bool ProtonBunch::IsStable() const
 	//We assume protons do not decay :]
 	return true;
 }
-/*
-void ProtonBunch::EnableSixtrackPhysics(bool state)
-{
-	if(state == true)
-	{
-		ScatteringPhysicsModel = 1;
-	}
-	else
-	{
-		ScatteringPhysicsModel = 0;
-	}
-}
-*/
-/*
-void ProtonBunch::ConfigureScatter(const Aperture* ap)
-{
-	if(ScatteringPhysicsModel == 1)
-	{
-		ConfigureScatterSixtrack(ap);
-		//cout << "SixTrack+K2 scattering configuration!" << endl;
-	}
-	else
-	{
-		ConfigureScatterMerlin(ap);
-		//cout << "MERLIN new scattering configuration!" << endl;
-	}
 
-}
-*/
-/*
-int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
-{
-	int returnvalue;
-	if(ScatteringPhysicsModel == 1)
-	{
-		returnvalue = ScatterSixtrack(p,x,ap);
-	}
-	else
-	{
-		//Do updated Merlin scattering physics
-		returnvalue = ScatterMerlin(p,x,ap);
-	}
-	return returnvalue;
-}
-*/
 void ProtonBunch::EnableScatteringPhysics(scatMode chooseScat)
 {
 	switch(chooseScat)
@@ -137,9 +90,9 @@ int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
 		returnvalue = ScatterMerlin(p,x,ap);
 		MERLIN_PROFILE_END_TIMER("ProtonBunch::ScatterMerlin");
 	}
-	if (isnan(p.x()) or isnan(p.xp()) or isnan(p.y()) or isnan(p.yp()) or isnan(p.dp()) or isnan(p.ct()))
+	if (std::isnan(p.x()) || std::isnan(p.xp()) || std::isnan(p.y()) || std::isnan(p.yp()) || std::isnan(p.dp()) || std::isnan(p.ct()))
 	{
-		cerr << "ProtonBunch::Scatter(): Particle has nan coordinate after scatter. ScatteringPhysicsModel=" << ScatteringPhysicsModel << endl;
+		std::cerr << "ProtonBunch::Scatter(): Particle has nan coordinate after scatter. ScatteringPhysicsModel=" << ScatteringPhysicsModel << std::endl;
 		abort();
 	}
 	return returnvalue;
@@ -177,8 +130,6 @@ void ProtonBunch::ConfigureScatter(const Aperture* ap)
 	}
 }
 
-
-
 void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 {
 
@@ -186,7 +137,7 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	const CollimatorAperture* tap= dynamic_cast<const CollimatorAperture*> (ap);
 	if(!tap)
 	{
-		cout << "ProtonBunch::ConfigureScatterMerlin() ap is not CollimatorAperture" << endl;
+		std::cout << "ProtonBunch::ConfigureScatterMerlin() ap is not CollimatorAperture" << std::endl;
 		throw MerlinException("ScatterProton : No Collimator Aperture");
 	}
 
@@ -216,18 +167,10 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	//double T0 = (gamma-1.0) * ProtonMassMeV*MeV;	//T0: kinetic energy
 
 
-	//cout << "E0: " << E0 << endl;
-//	cout << "T0: " << T0 << endl;
-	//cout << "P0: " << P0 << endl;
-	//cout << "gamma: " << gamma << endl;
-	//cout << "beta: " << beta << endl;
-
-
 	if(!GotElastic)
 	{
-
-		//cout << "Making Elastic Scatter class" << endl;
 		ElasticScatter = new ppElasticScatter();
+
 		/**
 		* Generate the elastic differential cross section for the proton energy
 		*/
@@ -240,15 +183,15 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 
 	if(!GotDiffractive)
 	{
-		//double sLHC = pow(114.6192348986088,2);
 		double Mproton = 0.938272013;
 		double Mpion = 0.1349766;
 		double sLHC = (2*pow(Mproton,2)+2*Mproton*E0);
-		//cout << "sLHC " << sLHC << endl;
+
 		double Mmin2 = pow(Mproton+Mpion,2);
 		double xi_th = Mmin2/sLHC; // (M_p + M_pion)^2/s
-		//cout << "Making Diffractive Scatter class" << endl;
+
 		DiffractiveScatter = new ppDiffractiveScatter();
+
 		/**
 		* Generate the Single Diffractive differential cross section for the proton energy
 		*/
@@ -461,7 +404,7 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	lambda_tot = A * 1.e-6 / ((sigma_pN_total + Z*ElasticDifference) * barn * rho * Avogadro);	// total mean free path (units meter)
 
 	SetScatterConfigured(true);
-	bool output_scattering_details = true;
+	bool output_scattering_details = false;
 	if(output_scattering_details)
 	{
 		std::cout << "Merlin Scattering Configuration"<< std::endl;
@@ -908,7 +851,7 @@ void ProtonBunch::ConfigureScatterSixtrack(const Aperture* ap)
 	lambda_tot = A * 1.e-6 / ((sigma_pN_total + sigma_Rutherford) * barn * rho * Avogadro);	// total mean free path (units meter)
 
 	SetScatterConfigured(true);
-	bool output_scattering_details = true;
+	bool output_scattering_details = false;
 	if(output_scattering_details)
 	{
 		std::cout << "SixTrack Scattering Configuration" << std::endl;

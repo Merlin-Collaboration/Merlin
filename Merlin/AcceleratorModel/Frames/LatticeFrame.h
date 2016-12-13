@@ -278,11 +278,11 @@ private:
 // Class LatticeFrame
 
 inline LatticeFrame::LatticeFrame (const string& id)
-	: ModelElement(id),Transformable(), s_0(0),superFrame(NULL),itsGeometry(NULL)
+	: ModelElement(id),Transformable(), s_0(0),superFrame(nullptr),itsGeometry(nullptr)
 {}
 
 inline LatticeFrame::LatticeFrame (const LatticeFrame& rhs)
-	: ModelElement(rhs),Transformable(rhs),s_0(0),superFrame(NULL),itsGeometry(NULL)
+	: ModelElement(rhs),Transformable(rhs),s_0(0),superFrame(nullptr),itsGeometry(nullptr)
 {}
 
 inline LatticeFrame::~LatticeFrame ()

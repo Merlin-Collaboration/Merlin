@@ -26,11 +26,8 @@
 using namespace std;
 using namespace ParticleTracking;
 
-//~ BetatronTunes::BetatronTunes(AcceleratorModel* aModel, double refMomentum)
-//~ : theModel(aModel), p0(refMomentum) {}
-
 BetatronTunes::BetatronTunes(AcceleratorModel* aModel, double refMomentum)
-	: theModel(aModel), p0(refMomentum), myHELProcess(NULL) {}
+	: theModel(aModel), p0(refMomentum), myHELProcess(nullptr) {}
 
 void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 {
@@ -46,27 +43,15 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 	vector<double> yData2;
 	yData2.reserve(ntrack * 2);
 
-	//~ ParticleBunch bunch(p0,1.0);
-	//~ bunch.push_back(particle);
 	ParticleBunch* bunch = new ParticleBunch(p0,1.0);
 	bunch->push_back(particle);
 
-	//~ ParticleTracker tracker(theModel->GetBeamline(), &bunch, false);
 	ParticleTracker* tracker = new ParticleTracker(theModel->GetBeamline(), bunch, false);
 	tracker->SetIntegratorSet(new ParticleTracking::TRANSPORT::StdISet());
-	//~ tracker->SetIntegratorSet(new ParticleTracking::THIN_LENS::StdISet());
-	//~ tracker->SetIntegratorSet(new ParticleTracking::SYMPLECTIC::StdISet());
 
-	//~ CollimateParticleProcess collimate(1,COLL_AT_EXIT);
-	//~ collimate.SetLossThreshold(200);
-	//~ collimate.ScatterAtCollimator(false);
-	//~ tracker.AddProcess(&collimate);
-
-	if(myHELProcess != NULL)
+	if(myHELProcess != nullptr)
 	{
-		//~ cout << "HEL" << endl;
 		tracker->AddProcess(myHELProcess);
-		//~ cout << "HEL end" << endl;
 	}
 
 	vector<double>* xData = &xData1;
@@ -74,27 +59,20 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 
 	bool stable = true;
 	int trackn = diffusion ? ntrack*2 : ntrack;
+
 	for(int nturn=0; nturn<trackn; nturn++)
 	{
-		//~ cout << "Tune turn: " << nturn << endl;
-		//~ if(nturn==0)
-		//~ tracker.Run();
-		//~ else
-		//~ tracker.Continue();
-		//~ ParticleBunch& tracked_bunch = tracker.GetTrackedBunch();
-
 		tracker->Track(bunch);
-		//~ cout << "tracked" << endl;
 
-		//~ if(tracked_bunch.size()==0){
 		if(bunch->size()==0)
 		{
 			stable = false;
 			break;
 		}
-		//~ ParticleBunch::iterator pp = tracked_bunch.begin();
+
 		ParticleBunch::iterator pp = bunch->begin();
 		Particle& p1 = *pp;
+
 #ifdef _MSV_VER
 		if( _isnan(p1.x()) || _isnan(p1.y()) )
 #else
@@ -102,7 +80,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 #endif
 		{
 			stable = false;
-			cout << "BetatronTunes::ERROR : unstable particle" <<endl;
+			std::cout << "BetatronTunes::ERROR : unstable particle" << std::endl;
 			break;
 		}
 

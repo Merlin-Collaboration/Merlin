@@ -14,7 +14,7 @@
 
 #include "Collimators/CollimatorWakeProcess.h"
 #include "Collimators/CollimatorWakePotentials.h"
-#include "Collimators/collimatortable.h"
+#include "Collimators/CollimatorTable.h"
 
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"

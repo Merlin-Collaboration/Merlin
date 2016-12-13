@@ -44,8 +44,6 @@
 #include "AcceleratorModel/StdComponent/Marker.h"
 // Solenoid
 #include "AcceleratorModel/StdComponent/Solenoid.h"
-// Kicker
-#include "AcceleratorModel/StdComponent/Kicker.h"
 //Collimator
 #include "AcceleratorModel/StdComponent/Collimator.h"
 // HollowElectronLens

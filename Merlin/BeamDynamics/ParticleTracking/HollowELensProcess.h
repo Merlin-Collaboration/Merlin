@@ -116,7 +116,7 @@ private:
 
 	bool ACSet;
 	bool SimpleProfile;
-	bool AlignedToOrbit;
+	//bool AlignedToOrbit;
 	double XOffset;
 	double YOffset;
 

@@ -45,8 +45,6 @@ struct ScatterPlotData
 	double yp;
 	double z;
 	string name;
-	//~ double ct;
-	//~ double dp;
 
 	inline bool operator==(const ScatterPlotData& rhs)
 	{
@@ -93,7 +91,7 @@ public:
 	// Constructor
 	ScatteringModel();
 
-// Collimation Functions
+	// Collimation Functions
 	// Set ScatterType
 	void SetScatterType(int st);
 
@@ -113,7 +111,7 @@ public:
 	bool ParticleScatter(PSvector& p, Material* mat, double E);
 
 	// Used for output
-	void DeathReport(PSvector& p, double x, double position, vector<double>& lost);
+	void DeathReport(PSvector& p, double x, double position, std::vector<double>& lost);
 
 // Other Functions
 
@@ -129,29 +127,30 @@ public:
 	}
 
 	// Scatter plot
-	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, string name);
-	void SetScatterPlot(string name, int single_turn = 0);
-	void OutputScatterPlot(string directory, int seed = 0);
-	vector<string> ScatterPlotNames;
+	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, std::string name);
+	void SetScatterPlot(std::string name, int single_turn = 0);
+	void OutputScatterPlot(std::string directory, int seed = 0);
+	std::vector<std::string> ScatterPlotNames;
 	bool ScatterPlot_on;
-	vector <ScatterPlotData*> StoredScatterPlotData;
+	std::vector <ScatterPlotData*> StoredScatterPlotData;
 
 	// Jaw impact
-	void JawImpact(ParticleTracking::Particle& p, int turn, string name);
-	void SetJawImpact(string name, int single_turn = 0);
-	void OutputJawImpact(string directory, int seed = 0);
-	vector<string> JawImpactNames;
+	void JawImpact(ParticleTracking::Particle& p, int turn, std::string name);
+	void SetJawImpact(std::string name, int single_turn = 0);
+	void OutputJawImpact(std::string directory, int seed = 0);
+	std::vector<std::string> JawImpactNames;
 	bool JawImpact_on;
-	vector <JawImpactData*> StoredJawImpactData;
+	std::vector <JawImpactData*> StoredJawImpactData;
 
 	// vector holding all scattering processes
-	vector <Collimation::ScatteringProcess*> Processes;
+	std::vector <Collimation::ScatteringProcess*> Processes;
+
 	// vector with fractions of the total scattering cross section assigned to each ScatteringProcess
-	vector <double> fraction;
+	std::vector <double> fraction;
 
 	//Store calculated CrossSections data to save time
-	std::map< string, Collimation::CrossSections* > stored_cross_sections;
-	std::map< string, Collimation::CrossSections* >::iterator CS_iterator;
+	std::map< std::string, Collimation::CrossSections* > stored_cross_sections;
+	std::map< std::string, Collimation::CrossSections* >::iterator CS_iterator;
 
 	int GetScatteringPhysicsModel()
 	{

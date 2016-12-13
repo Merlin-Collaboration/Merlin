@@ -9,6 +9,11 @@ class InterpolatedAperture
 {
 public:
 
+	/**
+	* Typedef for access to the enum
+	*/
+	typedef size_t ApertureClass_t;
+
 	struct ap
 	{
 		double s;
@@ -16,7 +21,9 @@ public:
 		double ap2;
 		double ap3;
 		double ap4;
+		ApertureClass_t ApType;
 	};
+
 	InterpolatedAperture() {};
 	InterpolatedAperture(std::vector<ap> ApertureListInput) : ApertureList(ApertureListInput) {};
 
@@ -63,7 +70,7 @@ public:
 	{
 		//MerlinProfile::AddProcess("APERTURE");
 		Print = false;
-		ApertureMaterial = NULL;
+		ApertureMaterial = nullptr;
 	}
 
 	//Returns true if the point (x,y,z) is within the aperture.
@@ -83,22 +90,9 @@ public:
 	void EnablePrint();
 	bool Print;
 	virtual void printout(std::ostream& out) const;
-
-	/*
-		void SetRectHalfWidth(double);
-		void SetRectHalfHeight(double);
-		void SetEllipseHalfHorizontal(double);
-		void SetEllipseHalfVertical(double);
-
-	//private:
-		double rect_half_width;
-		double rect_half_height;
-		double ellipse_half_horizontal;
-		double ellipse_half_vertical;
-	*/
 };
 
-inline string InterpolatedRectEllipseAperture::GetApertureType() const
+inline std::string InterpolatedRectEllipseAperture::GetApertureType() const
 {
 	return "INTERPOLATEDRECTELLIPSE";
 }
@@ -125,8 +119,35 @@ private:
 	double r2;
 };
 
-inline string InterpolatedCircularAperture::GetApertureType() const
+inline std::string InterpolatedCircularAperture::GetApertureType() const
 {
 	return "INTERPOLATEDCIRCULAR";
+}
+
+class InterpolatedEllipticalAperture : public InterpolatedAperture, public Aperture
+{
+public:
+	InterpolatedEllipticalAperture (std::vector<ap> ElementApertureList):InterpolatedAperture(ElementApertureList) {};
+
+//	double GetRadius () const;
+//	double GetDiameter () const;
+//	void SetRadius (double r);
+//	void SetDiameter (double d);
+
+	//Returns true if the point (x,y,z) is within the aperture.
+	virtual bool PointInside (double x, double y, double z) const;
+
+	//Returns the radius.
+	virtual double GetRadiusAt (double phi, double z) const;
+
+	virtual std::string GetApertureType() const;
+	virtual void printout(std::ostream& out) const;
+private:
+	//double r2;
+};
+
+inline std::string InterpolatedEllipticalAperture::GetApertureType() const
+{
+	return "INTERPOLATEDELLIPTICAL";
 }
 #endif

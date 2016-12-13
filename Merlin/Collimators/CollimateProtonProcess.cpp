@@ -38,7 +38,6 @@
 #include "NumericalUtils/utils.h"
 #include "NumericalUtils/PhysicalUnits.h"
 
-using namespace std;
 using namespace Collimation;
 
 namespace
@@ -66,20 +65,18 @@ namespace ParticleTracking
 {
 
 CollimateProtonProcess::CollimateProtonProcess (int priority, int mode, std::ostream* osp)
-//~ : CollimateParticleProcess(priority, mode, osp), dustset(0), scattermodel(NULL)
-	: CollimateParticleProcess(priority, mode, osp), scattermodel(NULL)
+	: CollimateParticleProcess(priority, mode, osp), scattermodel(nullptr)
 {
 
 }
 
+/**
+* returns true if particle survives, false if it dies
+*/
 bool CollimateProtonProcess::DoScatter(Particle& p)
 {
-	// returns true if particle survives, false if it dies
-
 	double P0 = currentBunch->GetReferenceMomentum();
 	double E0 = sqrt(P0*P0 + pow(PhysicalConstants::ProtonMassMeV*PhysicalUnits::MeV,2));
-
-	//~ cout << "ColProPro: Turn = " << ColParProTurn << endl;
 
 	bool scatter_plot = 0;
 	bool jaw_impact = 0;
@@ -89,10 +86,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 	double z = currentBunch->int_s;
 	double lengthtogo = s-z;
-
-	//~ cout << "\n\t\tColPROPro z = " << z << endl;
-	//~ cout << "\t\tColPROPro s = " << s << endl;
-	//~ cout << "\t\tColPROPro lengthtogo = " << lengthtogo << endl;
 
 	Collimator* C = static_cast<Collimator*> (currentComponent);
 
@@ -105,7 +98,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			if(ColName == *its)
 			{
 				scatter_plot = 1;
-				//~ cout << "ColProPro: ScatterPlot ON: ColName = " << ColName << ", ScatterPlotName = " << *its << endl;
 			}
 		}
 	}
@@ -117,7 +109,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			if(ColName == *its)
 			{
 				jaw_impact = 1;
-				//~ cout << "ColProPro: JawImpact ON: ColName = " << ColName << ", JawImpactName = " << *its << endl;
 			}
 		}
 	}
@@ -125,7 +116,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	const Aperture *colap = C->GetAperture();
 
 	//set scattering model
-	if (scattermodel == NULL)
+	if (scattermodel == nullptr)
 	{
 		std::cout << "\nCollimateProtonProcess::SoScatter::WARNING: no ScatteringModel set." << std::endl;
 		std::cout << "Use 'myCollimateProcess->SetScatteringModel(myScatter);'" << std::endl;
@@ -150,27 +141,22 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		double zstep = step_size * sqrt( 1 - p.xp()*p.xp() - p.yp()*p.yp() );
 
-		//~ cout << "\t\tColPROPro step_size = " << step_size << endl;
-		//~ cout << "\t\tColPROPro z+step_size = " << z+step_size << endl;
-
-
 		p.x() += step_size * p.xp();
 		p.y() += step_size * p.yp();
 
-//Jaw Impact
+		//Jaw Impact
 		if(jaw_impact && z == 0)
 		{
 			scattermodel->JawImpact(p, ColParProTurn, ColName);
 		}
 
-//Scatter Plot
+		//Scatter Plot
 		if(scatter_plot && z == 0)
 		{
-			//~ if(scatter_plot){
 			scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
 		}
 
-//Energy Loss
+		//Energy Loss
 		if(smode == 1 || smode == 4)
 		{
 			//Advanced
@@ -184,22 +170,22 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		E2 = E0 * (1 + p.dp());
 
-		//~ if(p.dp() < ((1/E0) - 1)){
 		if(E2 <=1.0)
 		{
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-			//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}
-			if(dustset)
+
+			if(CollimationOutputSet)
 			{
-				for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator)
+				for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator != CollimationOutputVector.end(); ++CollimationOutputIterator)
 				{
-					(*DustbinIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
+					(*CollimationOutputIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
 				}
 			}
 			return true;
 		}
-//MCS
+
+		//MCS
 		scattermodel->Straggle(p, step_size, C->p, E1, E2);
 
 		if( (E2 < (E0 / 100.0)) )
@@ -207,8 +193,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			return false;
 		}
 
-
-//Check if (returned to aperture) OR (travelled through length)
+		//Check if (returned to aperture) OR (travelled through length)
 		z+=zstep;
 		if(scatter_plot)
 		{
@@ -228,19 +213,19 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			return false;
 		}
 
-//Scattering - use E2
+		//Scattering - use E2
 		if(interacted)
 		{
 			if(!scattermodel->ParticleScatter(p, C->p, E2))
 			{
 				p.ct() = z;
 				scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-				//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}
-				if(dustset)
+
+				if(CollimationOutputSet)
 				{
-					for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator)
+					for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator != CollimationOutputVector.end(); ++CollimationOutputIterator)
 					{
-						(*DustbinIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
+						(*CollimationOutputIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
 					}
 				}
 				return true;
@@ -251,13 +236,12 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		{
 			p.ct() = z;
 			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
-			//~ if(scatter_plot){scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);}
-			//~ if(dustset){outputdustbin->Dispose(*currentComponent, (lengthtogo - step_size), p, ColParProTurn);}if(dustset){
-			if(dustset)
+
+			if(CollimationOutputSet)
 			{
-				for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator)
+				for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator != CollimationOutputVector.end(); ++CollimationOutputIterator)
 				{
-					(*DustbinIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
+					(*CollimationOutputIterator)->Dispose(*currentComponent, (z+zstep), p, ColParProTurn);
 				}
 			}
 			return true;
@@ -265,10 +249,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		lengthtogo -= step_size;
 
-//Scatter Plot
-		//~ if(scatter_plot){
-		//~ scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
-		//~ }
 	}
 
 	//If we reached here the particle hits the end of the collimator, and thus survives
@@ -277,8 +257,8 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 void CollimateProtonProcess::SetScatter(ScatteringModel* sm)
 {
-// set scattering mode
-// Note that inelastic should always be the last added process
+	// set scattering mode
+	// Note that inelastic should always be the last added process
 	if (sm->GetScatteringPhysicsModel() == 0) 	//SixTrack
 	{
 		(sm)->AddProcess(new SixTrackElasticpN());
@@ -321,7 +301,7 @@ void CollimateProtonProcess::SetScatter(ScatteringModel* sm)
 	}
 	else
 	{
-		std::cout << "Warning ScatteringModel::SetScatterType: No scatter type selected, no ScatteringProcesses set by default - may be set by user" << endl;
+		std::cout << "Warning ScatteringModel::SetScatterType: No scatter type selected, no ScatteringProcesses set by default - may be set by user" << std::endl;
 	}
 
 }

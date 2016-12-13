@@ -11,8 +11,8 @@
 // Last Edited: 20.07.15 HR
 //
 /////////////////////////////////////////////////////////////////////////
-#ifndef Dustbin_h
-#define Dustbin_h 1
+#ifndef CollimationOutput_h
+#define CollimationOutput_h 1
 
 #include <string>
 #include <vector>
@@ -23,32 +23,29 @@
 
 #include "BeamModel/PSTypes.h"
 
-// Dustbin handles the output from the collimation process, specifically
-// lost particles. It is called from CollimateProtonProcess::DeathReport and
-// allows the user to create loss map output files, root hist files, or
-// a user specified output format.
-
-using namespace std;
-
 namespace ParticleTracking
 {
 
-// Struct used to store individual lost particle data
+/**
+* Struct used to store individual lost particle data
+*/
 struct LossData
 {
-	string ElementName;
+	typedef enum {Collimator, Cold, Warm, Undefined} LossTypes;
+
+	std::string ElementName;
 	PSvector p;
 	double s;
 	double interval;
 	double position;
 	double length;
 	double lost;
-	int temperature;
+	LossTypes temperature;
 	int turn;
 	int coll_id;
 	double angle;
 
-	LossData() : ElementName(), p(), s(), interval(), position(), length(), lost(), temperature(), turn(), coll_id(), angle() {}
+	LossData() : ElementName(), p(), s(), interval(), position(), length(), lost(), turn(), coll_id(), angle() {}
 
 	void reset()
 	{
@@ -58,7 +55,7 @@ struct LossData
 		position=0;
 		length=0;
 		lost=0;
-		temperature=4;
+		temperature=Undefined;
 		turn=0;
 		coll_id=0;
 		angle=0;
@@ -75,6 +72,8 @@ struct LossData
 		{
 			return true;
 		}
+
+		return false;
 	}
 
 	// Note that the + operator cannot preserve the particle PSvector p
@@ -99,7 +98,7 @@ struct LossData
 		}
 		else
 		{
-			cout << "Warning: Dustbin Class: Cannot operator+ for losses in different elements, returning original LossData object" << endl;
+			std::cout << "Warning: CollimationOutput Class: Cannot operator+ for losses in different elements, returning original LossData object" << std::endl;
 			return (*this);
 		}
 	}
@@ -124,21 +123,28 @@ inline bool Merge_LossData(const LossData &a, const LossData &b)
 	{
 		return true;
 	}
+	return false;
 }
 
 // Possible output types for each class
 typedef enum {nearestelement, precise, tencm} OutputType;
 
-
-class Dustbin
+/**
+* CollimationOutput handles the output from the collimation process, specifically
+* lost particles. It is called from CollimateProtonProcess::DeathReport and
+* allows the user to create loss map output files, root hist files, or
+* a user specified output format.
+*/
+class CollimationOutput
 {
 
 public:
 
 	// Constructor
-	Dustbin(OutputType otype = nearestelement);
+	CollimationOutput(OutputType otype = nearestelement);
+
 	// Destructor
-	~Dustbin();
+	~CollimationOutput();
 
 	// Finalise will call any sorting algorithms and perform formatting for final output
 	virtual void Finalise() {}
@@ -146,7 +152,7 @@ public:
 	// Perform the final output
 	virtual void Output(std::ostream* os) {}
 
-	// Called from CollimateProtonProcess::DeathReport to add a particle to the dustbin
+	// Called from CollimateProtonProcess::DeathReport to add a particle to the CollimationOutput
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0) {}
 
 	// Output type switch
@@ -156,10 +162,10 @@ public:
 	LossData temp;
 
 	// Vector to hold the loss data
-	vector <LossData> DeadParticles;
+	std::vector <LossData> DeadParticles;
 
 	// Vector to hold output data
-	vector <LossData> OutputLosses;
+	std::vector <LossData> OutputLosses;
 
 protected:
 	AcceleratorComponent* currentComponent;
@@ -167,44 +173,7 @@ protected:
 private:
 };
 
-
-
-class LossMapDustbin : public Dustbin
-{
-
-public:
-
-	LossMapDustbin(OutputType otype = tencm);
-	~LossMapDustbin();
-
-	virtual void Finalise();
-	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
-
-protected:
-
-private:
-
-};
-
-class FlukaDustbin : public Dustbin
-{
-
-public:
-
-	FlukaDustbin(OutputType otype = tencm);
-	~FlukaDustbin();
-
-	virtual void Finalise();
-	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
-
-protected:
-
-private:
-
-};
-
 } //End namespace ParticleTracking
 
 #endif
+

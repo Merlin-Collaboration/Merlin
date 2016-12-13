@@ -23,12 +23,13 @@ class AcceleratorComponent;
 class BunchProcess;
 class Bunch;
 
-//	Responsible for coordinating the tracking of a bunch
-//	through a single AcceleratorComponent. Tracking occurs
-//	by the application of a series of processes, which
-//	effectively intergrate the bunch motion along the
-//	beamline.
-
+/**
+* Responsible for coordinating the tracking of a bunch
+* through a single AcceleratorComponent. Tracking occurs
+* by the application of a series of processes, which
+* effectively intergrate the bunch motion along the
+* beamline.
+*/
 class ProcessStepManager
 {
 public:
@@ -37,38 +38,52 @@ public:
 	ProcessStepManager ();
 	~ProcessStepManager ();
 
-	//	Initialise the step manager with the specified (initial)
-	//	bunch.
+	/**
+	* Initialise the step manager with the specified (initial) bunch.
+	*/
 	void Initialise (Bunch& bunch);
 
-	//	Track the specified component. The current bunch object
-	//	is updated accordingly.
+	/**
+	* Track the specified component. The current bunch object
+	* is updated accordingly.
+	*/
 	void Track (AcceleratorComponent& component);
 
-	//	Returns the total length integrated since the last call
-	//	to Initialise(Bunch&).
+	/**
+	* Returns the total length integrated since the last call to Initialise(Bunch&).
+	*/
 	double GetIntegratedLength ();
 
-	//	Add a process.
+	/**
+	* Add a process.
+	*/
 	void AddProcess (BunchProcess* aProcess);
 
-	//	Remove aProcess from the current process table. Returns
-	//	true if aProcess was present, otherwise false.
+	/**
+	* Remove aProcess from the current process table. Returns
+	* true if aProcess was present, otherwise false.
+	*/
 	bool RemoveProcess (BunchProcess* aProcess);
 
-	//	Remove and destroys all processes in the current process
-	//	table.
+	/**
+	* Remove and destroys all processes in the current process table.
+	*/
 	void ClearProcesses ();
 
 	void SetLogStream (std::ostream* os);
 
 private:
 
-	//	The current intgrated length.
+	/**
+	* The current intgrated length.
+	*/
 	double total_s;
+
 	std::ostream* log;
-	//	list of processes in order of priority.
-	//	ordered
+
+	/**
+	* list of processes in order of priority.
+	*/
 	std::list<BunchProcess*> processTable;
 
 	//Copy protection
@@ -77,3 +92,4 @@ private:
 };
 
 #endif
+

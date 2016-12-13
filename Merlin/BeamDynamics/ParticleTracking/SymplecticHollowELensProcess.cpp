@@ -34,7 +34,7 @@ namespace ParticleTracking
 
 
 SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), XOffset(0), YOffset(0), Turn(0), SkipTurn(0), ACSet(false), SimpleProfile(true)
 {
 	if (mode == 0)
 	{
@@ -59,7 +59,7 @@ SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mo
 }
 
 SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e), XOffset(0), YOffset(0), Turn(0), SkipTurn(0), ACSet(false), SimpleProfile(true)
 {
 	if (mode == 0)
 	{
@@ -85,7 +85,7 @@ SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mo
 }
 
 SymplecticHollowELensProcess::SymplecticHollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), XOffset(0), YOffset(0), Turn(0), SkipTurn(0), ACSet(false), SimpleProfile(true)
 {
 	if (mode == 0)
 	{
@@ -151,7 +151,6 @@ void SymplecticHollowELensProcess::SetAC (double tune, double deltatune, double 
 	Turn = 0;
 	ACSet = 1;
 	OMode = AC;
-
 }
 
 void SymplecticHollowELensProcess::SetTurnskip (int skip)
@@ -164,7 +163,6 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 {
 	double theta = 0;
 	double Gamma_p = 0;
-	//cout << "Entered Hollow Electron Lens Process" << endl;
 
 	ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
 	newbunch->clear();
@@ -197,45 +195,11 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 			}
 
 			ParticleAngle = atan2((*p).y(), (*p).x());
-			//~ cout << "\n\tX = " << (*p).x() << endl;
-			//~ cout << "\n\tY = " << (*p).y() << endl;
-			//~ cout << "\n\tAngle = " << ParticleAngle << endl;
-			//~ cout << "\n\tRadius = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2)) << endl;
-			//~ cout << "\n\tRadius = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2))/ sqrt(pow(293.031E-6,2) + pow(287.801E-6,2))<< " sigma" << endl;
 
 			if(theta!=0)
 			{
 
-				//~ cout << " x = " << (*p).x() << endl;
-				//~ cout << " y = " << (*p).y() << endl;
-				//~ cout << " xp = " << (*p).xp() << endl;
-				//~ cout << " yp = " << (*p).yp() << endl;
-				//~ cout << " ParticleAngle = " << ParticleAngle << endl;
-				//~ cout << " R = " << sqrt(pow((*p).x(),2) + pow((*p).y(),2)) << endl;
-				//~ cout << " Rmin = " << Rmin << endl;
-				//~ cout << " Rmax = " << Rmax << endl;
-				//~ cout << " L = " << EffectiveLength << endl;
-				//~ cout << " max_kick = " << CalcThetaMax(R) << endl;
-				//~ cout << " Current = " << Current << endl;
-				//~ cout << " Brho = " << Rigidity << endl;
-				//~ cout << " Gamma_p = " << Gamma_p << endl;
-				//~ cout << " theta = " << theta << endl;
-				//~ cout << "\n" << endl;
-
-				// Transform to symplectic co-ordinates
-				//~ double d1  = 1.0 + (*p).dp();
-				//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
 				double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
-
-				// Long winded kick
-				//~ double old_xp = asin((*p).xp()/k);
-				//~ double old_yp = asin((*p).yp()/k);
-
-				//~ double new_xp = old_xp - theta * cos(ParticleAngle);
-				//~ double new_yp = old_yp - theta * sin(ParticleAngle);
-
-				//~ (*p).xp() = k*new_xp;
-				//~ (*p).yp() = k*new_yp;
 
 				// Direct kick
 				(*p).xp() -= k * theta * cos(ParticleAngle);
@@ -247,7 +211,6 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 	break;
 	case AC:
 	{
-		//~ cout << "\n\tAC Mode, Rmin = " << Rmin << " Rmax = " << Rmax << endl;
 		// Resonant HEL kick - Adapted from V. Previtali's SixTrack elense
 		if(ACSet)
 		{
@@ -280,19 +243,7 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 					ParticleAngle = atan2((*p).y(), (*p).x());
 
 					// Transform to symplectic co-ordinates
-					//~ double d1  = 1.0 + (*p).dp();
-					//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
 					double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
-
-					// Long winded kick
-					//~ double old_xp = asin((*p).xp()/k);
-					//~ double old_yp = asin((*p).yp()/k);
-
-					//~ double new_xp = old_xp - theta * cos(ParticleAngle);
-					//~ double new_yp = old_yp - theta * sin(ParticleAngle);
-
-					//~ (*p).xp() = k*new_xp;
-					//~ (*p).yp() = k*new_yp;
 
 					// Direct kick
 					(*p).xp() -= k * theta * cos(ParticleAngle);
@@ -308,7 +259,6 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 	break;
 	case Diffusive:
 	{
-		//~ cout << "\n\tDiffusive Mode, Rmin = " << Rmin << " Rmax = " << Rmax << endl;
 		// HEL randomly switched on/off on a turn by turn basis
 		double rando = RandomNG::uniform(-1,1);
 
@@ -330,19 +280,7 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 				if(theta!=0)
 				{
 					// Transform to symplectic co-ordinates
-					//~ double d1  = 1.0 + (*p).dp();
-					//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
 					double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
-
-					// Long winded kick
-					//~ double old_xp = asin((*p).xp()/k);
-					//~ double old_yp = asin((*p).yp()/k);
-
-					//~ double new_xp = old_xp - theta * cos(ParticleAngle);
-					//~ double new_yp = old_yp - theta * sin(ParticleAngle);
-
-					//~ (*p).xp() = k*new_xp;
-					//~ (*p).yp() = k*new_yp;
 
 					// Direct kick
 					(*p).xp() -= k * theta * cos(ParticleAngle);
@@ -380,19 +318,7 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 				if(theta!=0)
 				{
 					// Transform to symplectic co-ordinates
-					//~ double d1  = 1.0 + (*p).dp();
-					//~ double k   = sqrt(d1*d1 - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
 					double k   = sqrt((1.0 + (*p).dp())*(1.0 + (*p).dp()) - (*p).xp()*(*p).xp() - (*p).yp()*(*p).yp());
-
-					// Long winded kick
-					//~ double old_xp = asin((*p).xp()/k);
-					//~ double old_yp = asin((*p).yp()/k);
-
-					//~ double new_xp = old_xp - theta * cos(ParticleAngle);
-					//~ double new_yp = old_yp - theta * sin(ParticleAngle);
-
-					//~ (*p).xp() = k*new_xp;
-					//~ (*p).yp() = k*new_yp;
 
 					// Direct kick
 					(*p).xp() -= k * theta * cos(ParticleAngle);
@@ -408,7 +334,6 @@ void SymplecticHollowELensProcess::DoProcess (double ds)
 	//Apply changes to particle bunch
 	currentBunch->clear();
 	currentBunch->swap(*newbunch);
-
 }
 
 double SymplecticHollowELensProcess::GetMaxAllowedStepSize () const
@@ -423,14 +348,6 @@ double SymplecticHollowELensProcess::CalcThetaMax (double r)
 		return 0;
 	}
 
-	//cout << "L = " << EffectiveLength << " Current = " << Current << " Rigidity = " << Rigidity << " Rmax = " << Rmax << " ElectronBeta = " << ElectronBeta << endl;
-
-	//OLD - Claiborne Smith et al. WE6RFP031
-	//ThetaMax = ((0.2 * EffectiveLength * Current) / (Rigidity * Rmax)) * ((1 + ElectronBeta)/(ElectronBeta));
-
-	//NEW - Previtali et al. MOPWO044
-	//ThetaMax = ( -2.0 *  EffectiveLength * Current * (1 + ElectronBeta * ProtonBeta) ) / ( 4 * pi * FreeSpacePermittivity * r * Rigidity * ElectronBeta * ProtonBeta * SpeedOfLight * SpeedOfLight);
-
 	//Simplify 4 pi e0 c^2 = 1/10^-7 = 10^7
 	ThetaMax = (2 * EffectiveLength * Current * (1 + (ElectronBeta * ProtonBeta) ) )/ ( r * 1E7 * Rigidity * ElectronBeta * ProtonBeta );
 
@@ -440,48 +357,42 @@ double SymplecticHollowELensProcess::CalcThetaMax (double r)
 double SymplecticHollowELensProcess::CalcKickSimple (Particle &p)
 {
 	double thet = 0;
-	double Length = 0;
+
 	double x = 0;
 	double y = 0;
 
-	if(EffectiveLength == 0.)
-	{
-		cout << "HELProcess: Length = 0, setting L = 2.0[m]" << endl;
-		Length = 2.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
-	//~ cout << "\n\tHEL Length = " << Length << endl;
-
+	/*
+		double Length = 0;
+		if(EffectiveLength == 0.)
+		{
+			cout << "HELProcess: Length = 0, setting L = 2.0[m]" << endl;
+			Length = 2.0;
+		}
+		else
+		{
+			Length = EffectiveLength;
+		}
+	*/
 	// Start of HEL
 	x = p.x();
 	y = p.y();
 
 	// Calculate particle transverse vector ('radius' in xy space)
 	R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
-	//~ R = sqrt( pow((x),2) + pow((y),2) );
-
-	//~ cout << "\n\n\t\tHELProcess :: R = " << R << " Rmin = " << Rmin << endl;
 
 	if (R < Rmin)
 	{
-		//~ cout << "\t\tHELProcess :: Returning zero at R = " << R << " Rmin = " << Rmin << endl;
 		return 0;
 	}
 	else if (R < Rmax && R > Rmin)
 	{
 		thet = ((pow(R,2) - pow(Rmin,2))/(pow(Rmax,2) - pow(Rmin,2))) * CalcThetaMax(R);
-		//thet = ((R - Rmin)/(Rmax - Rmin)) * CalcThetaMax(R);
-		//cout << "\nR < Rmax, theta = " << thet << " thetamax = " << CalcThetaMax(R) << "angle = " << ParticleAngle << endl;
 		return -1* thet;
 
 	}
 	else if (R >= Rmax)
 	{
 		thet = CalcThetaMax(R);
-		//cout << "\nR > Rmax, theta = " << thet << " thetamax = " << CalcThetaMax(Rmax) << "angle = " << ParticleAngle << endl;
 		return -1* thet;
 	}
 	return 0;
@@ -492,30 +403,28 @@ double SymplecticHollowELensProcess::CalcKickRadial (Particle &p)
 {
 	double f = 0;
 	double thet = 0;
-	double Length = 0;
+
 	double x = 0;
 	double y = 0;
-
-	if(EffectiveLength == 0.)
-	{
-		Length = 2.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
-	//~ cout << "\n\tHEL Length = " << Length << endl;
-
+	/*
+		double Length = 0;
+		if(EffectiveLength == 0.)
+		{
+			Length = 2.0;
+		}
+		else
+		{
+			Length = EffectiveLength;
+		}
+	*/
 	// Start of HEL
 	x = p.x();
 	y = p.y();
 
 	// Calculate particle transverse vector ('radius' in xy space)
 	R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
-	//~ R = sqrt( pow((x),2) + pow((y),2) );
 
 	// Adapted from V. Previtali's SixTrack elense implementation
-
 	if (R < Rmin)
 	{
 		return 0;
@@ -574,7 +483,6 @@ double SymplecticHollowELensProcess::CalcKickRadial (Particle &p)
 	}
 
 	thet = -1* CalcThetaMax(R) * f;
-	//cout << "\nR < Rmax, theta = " << thet << " thetamax = " << CalcThetaMax(R) << "angle = " << ParticleAngle << endl;
 	return thet;
 }
 
@@ -591,6 +499,7 @@ void SymplecticHollowELensProcess::SetRadiiSigma (double rmin, double rmax, Acce
 
 	//How many HELs in lattice?
 	int Hel_no = 0;
+
 	//Element no of last HEL
 	int Hel_ID = 0;
 
@@ -663,7 +572,6 @@ void SymplecticHollowELensProcess::SetRadiiSigma (double rmin, double rmax, Acce
 				twiss->PrintTable(std::cout,j-1,j);
 				twiss->PrintTable(std::cout,j+1,j+2);
 
-				//~ double sigma_y = sqrt(beta_y * emittance_y);
 				sigma_x = sqrt(beta_x * emittance_x);
 				sigma_y = sqrt(beta_y * emittance_y);
 
@@ -680,17 +588,18 @@ void SymplecticHollowELensProcess::SetRadiiSigma (double rmin, double rmax, Acce
 		}
 	}
 
-	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Beta_x = " << beta_x << " Sigma_x = " << sigma_x << endl;
-	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Alpha_x = " << alpha_x << " Sigma_xp = " << sigma_xp << endl;
-	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Beta_y = " << beta_y << " Sigma_y = " << sigma_y << endl;
-	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Alpha_y = " << alpha_y << " Sigma_yp = " << sigma_yp << endl;
-	cout << "SymplecticHollowELensProcess::SetRadiiSigma : Offset_x = " << XOffset << " Offset_y = " << YOffset << endl;
+	std::cout << "SymplecticHollowELensProcess::SetRadiiSigma : Beta_x = " << beta_x << " Sigma_x = " << sigma_x << std::endl;
+	std::cout << "SymplecticHollowELensProcess::SetRadiiSigma : Alpha_x = " << alpha_x << " Sigma_xp = " << sigma_xp << std::endl;
+	std::cout << "SymplecticHollowELensProcess::SetRadiiSigma : Beta_y = " << beta_y << " Sigma_y = " << sigma_y << std::endl;
+	std::cout << "SymplecticHollowELensProcess::SetRadiiSigma : Alpha_y = " << alpha_y << " Sigma_yp = " << sigma_yp << std::endl;
+	std::cout << "SymplecticHollowELensProcess::SetRadiiSigma : Offset_x = " << XOffset << " Offset_y = " << YOffset << std::endl;
 
 	Rmin = rmin * sigma_x;
 	Rmax = rmax * sigma_x;
 
-	cout << "SymplecticHollowELensProcess::SetRadiiSigma : RMax = " << Rmax << " RMin= " << Rmin << endl;
+	std::cout << "SymplecticHollowELensProcess::SetRadiiSigma : RMax = " << Rmax << " RMin= " << Rmin << std::endl;
 
 }
 
-}; // end namespace ParticleTracking
+} // end namespace ParticleTracking
+

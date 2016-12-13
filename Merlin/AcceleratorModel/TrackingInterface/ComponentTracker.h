@@ -107,7 +107,7 @@ public:
 		// otherwise false.
 		bool Add (ComponentIntegrator* intg);
 
-		// Return integrator n (or NULL if there is
+		// Return integrator n (or a nullptr if there is
 		// no associate integrator).
 		ComponentIntegrator* GetIntegrator (int n);
 

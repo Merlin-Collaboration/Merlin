@@ -47,7 +47,6 @@ public:
 		return dQy;
 	}
 
-	HollowELensProcess* myHELProcess;
 	void SetHELProcess(HollowELensProcess* HELP)
 	{
 		myHELProcess = HELP;
@@ -58,6 +57,8 @@ public:
 private:
 	AcceleratorModel* theModel;
 	double p0;
+	HollowELensProcess* myHELProcess;
+
 	void FFT(vector<double>& data);
 	double amp(double a, double b, double c);
 };

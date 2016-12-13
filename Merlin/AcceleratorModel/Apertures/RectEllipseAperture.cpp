@@ -27,8 +27,32 @@ bool RectEllipseAperture::PointInside (double x, double y, double z) const
 
 double RectEllipseAperture::GetRadiusAt (double phi, double z) const
 {
-	std::cerr << "Not yet implemented: RectEllipseAperture::GetRadius()" << std::endl;
-	exit(EXIT_FAILURE);
+	double a1 = RectHalfWidth;
+	double a2 = RectHalfHeight;
+	double a3 = EllipseHalfHorizontal;
+	double a4 = EllipseHalfVertical;
+
+	double t = phi;
+	double rect_x = a1*((fabs(cos(t))*cos(t)) + (fabs(sin(t))*sin(t)));
+	double rect_y = a2*((fabs(cos(t))*cos(t)) - (fabs(sin(t))*sin(t)));
+
+	//Get the angle for the rectangle coordinate
+	double EllipseAngle = atan2(rect_y,rect_x);
+	double rr = a3*a4 / sqrt(pow(a4*cos(EllipseAngle),2) + pow(a3*sin(EllipseAngle),2));
+	double ellipse_x = rr*cos(EllipseAngle);
+	double ellipse_y = rr*sin(EllipseAngle);
+
+	double rRectangle = sqrt((rect_x*rect_x) + (rect_y*rect_y));
+	double rEllipse = sqrt((ellipse_x*ellipse_x) + (ellipse_y*ellipse_y));
+
+	if(rRectangle < rEllipse)
+	{
+		return rRectangle;
+	}
+	else
+	{
+		return rEllipse;
+	}
 }
 
 std::string RectEllipseAperture::GetApertureType() const
@@ -41,5 +65,4 @@ void RectEllipseAperture::printout(std::ostream& out) const
 	out << GetApertureType() << "(" << RectHalfWidth << ", "<< RectHalfHeight << ", "<<
 	    EllipseHalfHorizontal << ", "<<EllipseHalfVertical << ")";
 }
-
 

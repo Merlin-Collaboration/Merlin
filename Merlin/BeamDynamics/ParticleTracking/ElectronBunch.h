@@ -41,7 +41,7 @@ public:
 	virtual double GetParticleLifetime() const;
 
 	//int Scatter(PSvector& pi, double x, double E0, const Aperture* ap);
-	int Scatter(PSvector&, double, double, const Aperture*);
+	//int Scatter(PSvector&, double, double, const Aperture*);
 
 	void set()
 	{

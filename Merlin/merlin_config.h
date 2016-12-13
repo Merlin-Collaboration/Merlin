@@ -7,6 +7,11 @@
 #include <string>
 #include <cstring>
 
+//Include for x86 vector functions
+#ifdef __x86_64__
+#include <immintrin.h>
+#endif
+
 //#if _MSC_VER >= 1400
 //#define __TYPENAME__ typename
 //#endif
@@ -33,5 +38,12 @@
 //dk must be defined somewhere
 #define _MAX(a,b) std::max(a,b)
 #define _MIN(a,b) std::min(a,b)
+
+//Define the floating point type used in Merlin
+/** Use doubles (64-bit) */
+typedef double Mfloat_t;
+
+/** Use floats (32-bit) */
+//typedef float Mfloat_t;
 
 #endif /* _h_merlin_config */

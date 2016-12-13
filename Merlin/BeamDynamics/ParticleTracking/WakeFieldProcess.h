@@ -33,16 +33,17 @@ class WakePotentials;
 namespace ParticleTracking
 {
 
-// class WakefieldProcess
-// Implements single-bunch wakefields.
-//
-// Modified by A.Wolski 12/2/2003
-// to include the derivative of the charge distribution
-// for handling CSR wake fields.
-//
-// Modified by D.Kruecker 18.2.2008
-// to be used as base class for other wakefield types (collimator,coupler,...)
-
+/**
+* class WakefieldProcess
+* Implements single-bunch wakefields.
+*
+* Modified by A.Wolski 12/2/2003
+* to include the derivative of the charge distribution
+* for handling CSR wake fields.
+*
+* Modified by D.Kruecker 18.2.2008
+* to be used as base class for other wakefield types (collimator,coupler,...)
+*/
 class WakeFieldProcess : public ParticleBunchProcess
 {
 public:

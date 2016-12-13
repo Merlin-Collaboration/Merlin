@@ -11,33 +11,30 @@
 
 #include "Collimators/ApertureConfiguration.h"
 
-using namespace std;
-
-ApertureConfiguration::ApertureConfiguration(string input_file) : logFlag(false), allRectEllipse(0)
+ApertureConfiguration::ApertureConfiguration(std::string InputFileName) : logFlag(false)
 {
-	LoadApertureConfiguration(input_file);
+	LoadApertureConfiguration(InputFileName);
 }
-
-ApertureConfiguration::ApertureConfiguration(string input_file, bool are) : logFlag(false), allRectEllipse(are)
+/*
+ApertureConfiguration::ApertureConfiguration(std::string InputFileName, bool are) : logFlag(false), allRectEllipse(are)
 {
-	LoadApertureConfiguration(input_file);
+	LoadApertureConfiguration(InputFileName);
 }
+*/
 
-
-void ApertureConfiguration::LoadApertureConfiguration(string input_file)
+void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 {
-	ifstream* input = new ifstream(input_file.c_str(), ifstream::in);
+	std::ifstream* input = new std::ifstream(InputFileName.c_str(), std::ifstream::in);
+
 	//Do standard checks
-	if(input == NULL || !input->good())
+	if(input == nullptr || !input->good())
 	{
-		std::cerr << "Failed to open aperture input file: " << input_file << " - Exiting." << std::endl;
+		std::cerr << "Failed to open aperture input file: " << InputFileName << " - Exiting." << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	//string buf,s,ap1,ap2,ap3,ap4;
-	string key,name,parent,l,ap1s;
-	double s,ap1,ap2,ap3,ap4;
 
-	string aptype;
+	std::string key,name,parent,aptype;
+	double s,l,ap1,ap2,ap3,ap4;
 
 	//Lets assume we have the correct file layout
 	if(input->good())
@@ -51,337 +48,503 @@ void ApertureConfiguration::LoadApertureConfiguration(string input_file)
 
 	while(input->good())
 	{
-		if(!allRectEllipse)
-		{
-			//				* KEYWORD	NAME	PARENT	S	L	APER_1	APER_2	APER_3	APER_4
-			(*input) >> 	key >> 		name >>	parent >> s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4 >> aptype;
-		}
-		else
-		{
-			(*input) >> 	key >> 		name >>	parent >> s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4;
-		}
+		//				* KEYWORD	NAME	PARENT	S	L	APER_1	APER_2	APER_3	APER_4  APTYPE
+		(*input) >> 	key >> 		name >>	parent >> s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4 >> aptype;
+
 		if( ( ap1 !=0) || (ap2 !=0) || (ap3 != 0) || (ap4 !=0) )
 		{
-			ApertureEntry.s = s;
+			//Assume refer = EXIT (if not we are in trouble)
+			ApertureEntry.s = s-l;
 			ApertureEntry.ap1 = ap1;
 			ApertureEntry.ap2 = ap2;
 			ApertureEntry.ap3 = ap3;
 			ApertureEntry.ap4 = ap4;
-			if(!allRectEllipse)
+			ApertureEntry.ap4 = ap4;
+
+			if(aptype == "\"RECTANGLE\"")
 			{
-				if(aptype == "\"CIRCLE\"")
-				{
-					//cout << "CIRCLE FIX" << endl;
-					ApertureEntry.ap2 = ap1;
-					ApertureEntry.ap3 = ap1;
-					ApertureEntry.ap4 = ap1;
-				}
+				ApertureEntry.ApType = RECTANGLE;
 			}
+			else if(aptype == "\"CIRCLE\"")
+			{
+				ApertureEntry.ApType = CIRCLE;
+			}
+			else if(aptype == "\"ELLIPSE\"")
+			{
+				ApertureEntry.ApType = ELLIPSE;
+			}
+			else if(aptype == "\"RECTELLIPSE\"")
+			{
+				ApertureEntry.ApType = RECTELLIPSE;
+			}
+			else if(aptype == "\"LHCSCREEN\"")
+			{
+				ApertureEntry.ApType = LHCSCREEN;
+			}
+			else if(aptype == "\"NONE\"")
+			{
+				ApertureEntry.ApType = NONE;
+			}
+			else
+			{
+				//Unknown type
+				std::cerr << "Unknown Aperture type found in Aperture input file: " << aptype << " - Exiting!" << std::endl;
+				exit(EXIT_FAILURE);
+			}
+
+			//Front of element
 			ApertureList.push_back(ApertureEntry);
-//			cout << ApertureEntry.s << "\t" << ApertureEntry.ap1 << "\t" << ApertureEntry.ap2 << "\t" << ApertureEntry.ap3 << "\t" << ApertureEntry.ap4 << endl;
+
+			//Exit of element
+			ApertureEntry.s = s;
+			ApertureList.push_back(ApertureEntry);
 		}
+	}
+	if(input)
+	{
+		input->close();
 	}
 	delete input;
 }
 
-void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* model)
+void ApertureConfiguration::OutputApertureList(std::ostream& os)
+{
+	for(size_t n=0; n < ApertureList.size(); n++)
+	{
+		os << ApertureList[n].s << "\t" << ApertureList[n].ap1 << "\t" << ApertureList[n].ap2 << "\t" << ApertureList[n].ap3 << "\t" << ApertureList[n].ap4 << "\t";
+		if(ApertureList[n].ApType == RECTELLIPSE)
+		{
+			os << "RECTELLIPSE";
+		}
+		else if(ApertureList[n].ApType == CIRCLE)
+		{
+			os << "CIRCLE";
+		}
+		else if(ApertureList[n].ApType == RECTANGLE)
+		{
+			os << "RECTANGLE";
+		}
+		else if(ApertureList[n].ApType == LHCSCREEN)
+		{
+			os << "LHCSCREEN";
+		}
+		else if(ApertureList[n].ApType == ELLIPSE)
+		{
+			os << "ELLIPSE";
+		}
+		else
+		{
+			os << "BUG";
+		}
+		os << std::endl;
+	}
+}
+
+void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 {
 	//Get a list of all elements
-	vector<AcceleratorComponent*> elements;
-	int nelements = model->ExtractTypedElements(elements,"*");
-	cout << "Got " << nelements << " elements for aperture configuration" << endl;
+	std::vector<AcceleratorComponent*> Elements;
+	int nElements = Model->ExtractTypedElements(Elements,"*");
+	std::cout << "Got " << nElements << " elements for aperture configuration" << std::endl;
+	std::cout << "Got " << ApertureList.size() << " Aperture entries" << std::endl;
 
-	for(vector<AcceleratorComponent*>::iterator comp = elements.begin(); comp!=elements.end(); comp++)
+	Aperture* aper;
+	/**
+	* Elements - The container with all AcceleratorComponent entries
+	* comp - Iterator to all AcceleratorComponent entries
+	*
+	* ApertureList - The container with all Aperture entries
+	* itr - Iterator to all Aperture entries.
+	*
+	* ThisElementAperture - The container for the current element Aperture.
+	*/
+
+	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp!=Elements.end(); comp++)
 	{
-		//Do not overwrite collimator apertures
-		Collimator* collimator = NULL;
-		if((*comp)->GetAperture() == NULL)
+		if((*comp)->GetAperture() == nullptr)
 		{
+			double ElementLength = (*comp)->GetLength();
+			double Position = (*comp)->GetComponentLatticePosition();
 
-			double element_length = (*comp)->GetLength();
-			double position = (*comp)->GetComponentLatticePosition();
+			/**
+			* Give magnets and other fixed elements a set aperture.
+			* Give drifts interpolated apertures.
+			*/
+
+			//Get the Type of Element this is.
+			std::string ElementType = (*comp)->GetType();
 
 			//We only care about non-zero length elements
-			if(element_length != 0)
+			if(ElementLength != 0)
 			{
-				//cout <<	(*comp)->GetName() << "\t" << element_length << endl;
-
-				for(vector<ap>::iterator itr = ApertureList.begin(); itr!=ApertureList.end(); itr++)
+				//For all elements that are not drifts, set a fixed (non-interpolated) aperture type.
+				if(ElementType != "Drift")
 				{
-					if(itr->s >= position)
+					//std::cout << (*comp)->GetQualifiedName() << " run" << std::endl;
+					//Loop over all aperture entries
+					for(std::vector<ap>::iterator itr = ApertureList.begin(); itr!=ApertureList.end(); itr++)
 					{
-						//cout << (*comp)->GetName() << "\t" << itr->s << endl;
-						vector<ap> ThisElementAperture;
-						//gone past where we need to go
-
-						//itr-- will give the point before the element + should check for first element if a ring
-						if(itr == ApertureList.begin())
+						//If the aperture entry is > the element start position and less than the exit
+						//if(( itr->s >= Position && itr->s <= (Position + ElementLength) ) || fequal(itr->s, (Position + ElementLength),1e-6) )
+						//if(( itr->s >= Position)  || fequal(itr->s, (Position + ElementLength),1e-6) )
+						if( itr->s >= Position )
 						{
-							cout <<"At first element, getting aperture iterpolation from last element" << endl;
-							//got the initial point
-							itr = ApertureList.end();
-							itr--;
-							(*itr).s = 0;
-							//record ap points
-							ThisElementAperture.push_back(*itr);
-							//go back to where we were
-							itr = ApertureList.begin();
-							itr++;
-						}
-						else
-						{
-							//got the initial point
-							itr--;
-							//record ap points
-							ThisElementAperture.push_back(*itr);
-							//go back to where we were
-							itr++;
-						}
-
-						while(itr->s <= (position + element_length))
-						{
-							if(itr == ApertureList.end())
+							//	std::cout << (*comp)->GetQualifiedName() << " hit" << std::endl;
+							//Add the appropriate aperture type
+							if(itr->ApType == RECTELLIPSE || itr->ApType == LHCSCREEN)
 							{
-								/*
-									cout << "end badness: " << itr->s << endl;
-									cout << "end badness: " << itr->ap1 << endl;
-									cout << "end badness: " << itr->ap2 << endl;
-									cout << "end badness: " << itr->ap3 << endl;
-								*/
-								itr = ApertureList.begin();
-								/*
-									cout << (*itr).s << endl;
-									cout << (*itr).ap1 << endl;
-									cout << (*itr).ap2 << endl;
-									cout << (*itr).ap3 << endl;
-									cout << (*itr).ap4 << endl;
-								*/
-								break;
-								//abort();
+								aper = new RectEllipseAperture(itr->ap1, itr->ap2, itr->ap3, itr->ap4);
+							}
+							else if(itr->ApType == CIRCLE)
+							{
+								aper = new CircularAperture(itr->ap1);
+							}
+							else if(itr->ApType == ELLIPSE)
+							{
+								aper = new EllipticalAperture(itr->ap1, itr->ap2);
+							}
+							else if(itr->ApType == RECTANGLE)
+							{
+								aper = new RectangularAperture(itr->ap1, itr->ap2);
 							}
 							else
 							{
-								//dorec
+								std::cerr << (*comp)->GetQualifiedName() << " aperture Class bug" << std::endl;
+								exit(EXIT_FAILURE);
+							}
+							(*comp)->SetAperture(aper);
+							itr=ApertureList.end();
+							break;
+						}
+						if(itr==ApertureList.end())
+						{
+							std::cerr << (*comp)->GetQualifiedName() << " hit end" << std::endl;
+						}
+					}
+				}//End of fixed elements
+				else //Deal with drifts
+				{
+					//std::cout << (*comp)->GetQualifiedName() << std::endl;
+					//Loop over all aperture entries
+					for(std::vector<ap>::iterator itr = ApertureList.begin(); itr!=ApertureList.end(); itr++)
+					{
+						//If the aperture entry is >= the element position
+						//or if we have reach the end of the aperture entries i.e. the left overs at the end of the ring past the last marker
+						if(itr->s >= Position || itr==(ApertureList.end()-1))
+						{
+							/**
+							* 3 possible cases
+							* 1: First entry in the element (or accelerator)
+							* 2: Entries within an element
+							* 3: Final entry within an element (or accelerator)
+							*/
+							std::vector<ap> ThisElementAperture;
+
+							//Deal with the first entry for this element
+							if(itr == ApertureList.begin())
+							{
+								std::cout << "At first element " << (*comp)->GetQualifiedName() << " getting aperture iterpolation from last element" << std::endl;
+
+								//got the initial point
+								itr = ApertureList.end()-1;
+
+								ap tempAp;
+								tempAp.s = 0;
+								tempAp.ap1 = itr->ap1;
+								tempAp.ap2 = itr->ap2;
+								tempAp.ap3 = itr->ap3;
+								tempAp.ap4 = itr->ap4;
+								tempAp.ApType = itr->ApType;
+
+								//record ap points
+								ThisElementAperture.push_back(tempAp);
+
+								//go back to where we were
+								itr = ApertureList.begin();
+							}
+							else
+							{
+								//get the previous point before this element
+								itr--;
+
+								//record ap points
 								ThisElementAperture.push_back(*itr);
+
+								//go back to where we were
 								itr++;
 							}
-						}
 
-						//grab the last point - for the last element we will need to loop over to the first element again for a ring.
-						itr++;
-						if(itr == ApertureList.end())
-						{
-							//itr--;
-							//cout << "at end: " << (*comp)->GetName() << endl;
-							//cout << itr->s << "\t"<< itr->ap2 <<  endl;
-							itr = ApertureList.begin();
-							cout << (*itr).s << endl;
-							cout << (*itr).ap1 << endl;
-							cout << (*itr).ap2 << endl;
-							cout << (*itr).ap3 << endl;
-							cout << (*itr).ap4 << endl;
-							//cout << itr->s << "\t"<< itr->ap2 <<  endl;
-							ThisElementAperture.push_back(*itr);
-							cout << "ApertureConfiguration: Failed to obtain interpolation from final element to first" << endl;
-							abort();
-						}
-						else
-						{
-							ThisElementAperture.push_back(*itr);
-						}
-
-						//cout << position << "\t" << (*comp)->GetName()  << "\t" << ThisElementAperture.size() << endl;
-
-						//aper_# means for all apertypes but racetrack:
-						//aper_1 = half width rectangle
-						//aper_2 = half heigth rectangle
-						//aper_3 = half horizontal axis ellipse (or radius if circle)
-						//aper_4 = half vertical axis ellipse
-
-						//Check if all values are constant
-						//if so check if we are a circle or rect
-
-						//if not constant check for circle
-						//if not circle -> rectellipse
-						bool ap1=true,ap2=true,ap3=true,ap4=true,circle=true;
-
-						if(!allRectEllipse)
-						{
-							circle=true;
-						}
-						else
-						{
-							circle = false;
-						}
-
-						double ap1p=0,ap2p=0,ap3p=0,ap4p=0;
-						//for(vector<ap>::iterator itap = ThisElementAperture.begin(); itap!=ThisElementAperture.end(); itap++)
-						for(unsigned int itap = 0; itap < ThisElementAperture.size(); itap++)
-						{
-							//configure for first pass
-							if(itap == 0)
+							//Now add in all entries that exist within the length of the element
+							while(itr->s <= (Position + ElementLength) )
+								//while(itr->s <= (Position + ElementLength))
 							{
-								ap1p = ThisElementAperture[itap].ap1;
-								ap2p = ThisElementAperture[itap].ap2;
-								ap3p = ThisElementAperture[itap].ap3;
-								ap4p = ThisElementAperture[itap].ap4;
+								ThisElementAperture.push_back(*itr);
+
+								//Increment the iterator to the next entry
+								itr++;
+
+								if(itr == ApertureList.end())
+								{
+									break;
+								}
 							}
 
-							//now check which elements are the same each pass
-							if(ThisElementAperture[itap].ap1 != ap1p)
+							//Deal with the very last element entry
+							if(itr == ApertureList.end())
 							{
-								ap1 = false;
+								std::cout << "At last element " << (*comp)->GetQualifiedName() << " getting aperture iterpolation from first element" << std::endl;
+								itr = ApertureList.begin();
+
+								ap tempAp;
+								tempAp.s = ElementLength + Position;
+								tempAp.ap1 = itr->ap1;
+								tempAp.ap2 = itr->ap2;
+								tempAp.ap3 = itr->ap3;
+								tempAp.ap4 = itr->ap4;
+								tempAp.ApType = itr->ApType;
+
+								ThisElementAperture.push_back(tempAp);
 							}
-							if(ThisElementAperture[itap].ap2 != ap2p)
+							else
 							{
-								ap2 = false;
-							}
-							if(ThisElementAperture[itap].ap3 != ap3p)
-							{
-								ap3 = false;
-							}
-							if(ThisElementAperture[itap].ap4 != ap4p)
-							{
-								ap4 = false;
-							}
-							if(ThisElementAperture[itap].ap1 != ThisElementAperture[itap].ap2)
-							{
-								circle = false;
-							}
-							if(ThisElementAperture[itap].ap1 != ThisElementAperture[itap].ap3)
-							{
-								circle = false;
-							}
-							if(ThisElementAperture[itap].ap1 != ThisElementAperture[itap].ap4)
-							{
-								circle = false;
+								ThisElementAperture.push_back(*itr);
+								itr = ApertureList.end();
 							}
 
-							//always set up for the next pass
-							ap1p = ThisElementAperture[itap].ap1;
-							ap2p = ThisElementAperture[itap].ap2;
-							ap3p = ThisElementAperture[itap].ap3;
-							ap4p = ThisElementAperture[itap].ap4;
-						}
+							/**
+							* Now move on to assigning the correct type of aperture.
+							*/
 
-						//Now to decide what type of aperture to make
-						Aperture* aper;
-//					cout << (*comp)->GetName() << "\t" << position + element_length << "\t";
-						if(circle == true )
-						{
+							bool ZeroEntry = false;
+							size_t NegativeCount = 0;
+							//First do a little bit of cleaning
+							//If we have an entry at 0 (or very close to), and also an entry at negative values, we can discard the negative entry
+							for(size_t itAp = 0; itAp < ThisElementAperture.size(); itAp++)
+							{
+								if( fequal(ThisElementAperture[itAp].s - Position, 0.0, 1e-7) )
+								{
+									ZeroEntry = true;
+									ThisElementAperture[itAp].s = Position;
+								}
+
+								if( ThisElementAperture[itAp].s - Position < 0 )
+								{
+									NegativeCount++;
+								}
+							}
+
+							if(NegativeCount!=0 && ZeroEntry)
+							{
+								//Delete the first entry (negative)
+								ThisElementAperture.erase(ThisElementAperture.begin());
+								NegativeCount--;
+							}
+
+							while(NegativeCount > 1 )
+							{
+								//Delete the first entry (negative)
+								ThisElementAperture.erase(ThisElementAperture.begin());
+								NegativeCount--;
+							}
+
+							if( fequal(ThisElementAperture[0].s - Position, 0.0, 5e-7) )
+							{
+								ThisElementAperture[0].s = Position;
+							}
+
+							/**
+							* Check if all values are constant
+							*/
+							bool ap1=true,ap2=true,ap3=true,ap4=true,circle=true;
+							double ap1p=0,ap2p=0,ap3p=0,ap4p=0;
+							bool ApTypeChange = false;
+							ApertureClass_t ApTypeToAdd;
+
+							for(size_t itap = 0; itap < ThisElementAperture.size(); itap++)
+							{
+								//configure for first pass
+								if(itap == 0)
+								{
+									ap1p = ThisElementAperture[itap].ap1;
+									ap2p = ThisElementAperture[itap].ap2;
+									ap3p = ThisElementAperture[itap].ap3;
+									ap4p = ThisElementAperture[itap].ap4;
+									ApTypeToAdd = ThisElementAperture[itap].ApType;
+								}
+								else
+								{
+									//now check which elements are the same each pass
+									if(ThisElementAperture[itap].ap1 != ap1p)
+									{
+										ap1 = false;
+									}
+									if(ThisElementAperture[itap].ap2 != ap2p)
+									{
+										ap2 = false;
+									}
+									if(ThisElementAperture[itap].ap3 != ap3p)
+									{
+										ap3 = false;
+									}
+									if(ThisElementAperture[itap].ap4 != ap4p)
+									{
+										ap4 = false;
+									}
+									if(ThisElementAperture[itap].ApType != ApTypeToAdd)
+									{
+										ApTypeChange = true;
+									}
+								}
+							}
+
+							bool Interpolated = false;
 							if(ap1 == false || ap2 == false || ap3 == false || ap4 == false)
 							{
-//							cout << "Interpolated Circle" << endl;
+								Interpolated = true;
+							}
 
+							if(Interpolated)
+							{
 								InterpolatedAperture* apInterpolated = new InterpolatedAperture();
 
 								for(size_t n=0; n < ThisElementAperture.size(); n++ )
 								{
-									ThisElementAperture[n].s -= position;
-									apInterpolated->ApertureEntry.s = ThisElementAperture[n].s;
+									//ThisElementAperture[n].s -= Position;
+									apInterpolated->ApertureEntry.s = ThisElementAperture[n].s - Position;
 									apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
 									apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
 									apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap3;
 									apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap4;
-									/*
-																	cout << "ap3: " << ThisElementAperture[n].ap3 << endl;
-																	cout << "ap3 loaded: " << apInterpolated->ApertureEntry.ap3 << endl;
-																	cout << "ap1: " << apInterpolated->ApertureEntry.ap1 << endl;
-																	cout << "ap3: " << apInterpolated->ApertureEntry.ap2 << endl;
-																	cout << "ap4: " << apInterpolated->ApertureEntry.ap4 << endl << endl;
-									*/
-									if(ThisElementAperture[n].ap3 == 0 || apInterpolated->ApertureEntry.ap3 == 0)
+
+									apInterpolated->ApertureList.push_back(apInterpolated->ApertureEntry);
+								}
+
+								//Check we have a constant aperture type
+								if(ApTypeChange == false)
+								{
+									if(ApTypeToAdd == CIRCLE)
 									{
-										for(size_t m=0; m < ThisElementAperture.size(); m++ )
+										aper = new InterpolatedCircularAperture(apInterpolated->GetApertureList());
+									}
+									else if(ApTypeToAdd == RECTANGLE)
+									{
+										std::cerr << "TODO: Add a InterpolatedRectangularAperture Class" << std::endl;
+										exit(EXIT_FAILURE);
+//										aper = new InterpolatedRectangularAperture(apInterpolated->GetApertureList());
+									}
+									else if(ApTypeToAdd == ELLIPSE)
+									{
+										aper = new InterpolatedEllipticalAperture(apInterpolated->GetApertureList());
+									}
+									else if(ApTypeToAdd == RECTELLIPSE || ApTypeToAdd == LHCSCREEN)
+									{
+										aper = new InterpolatedRectEllipseAperture(apInterpolated->GetApertureList());
+									}
+									else
+									{
+										std::cerr << "Drift: constant aperture Class bug" << std::endl;
+										exit(EXIT_FAILURE);
+									}
+									(*comp)->SetAperture(aper);
+									itr = ApertureList.end();
+									break;
+								}
+								else //We have a change in aperture type. Assume rectellipse for now
+								{
+									//This should work for changes between circles/ellipses/rectellipse
+									//Just set the missing coordinates to the same size as the known parameters for rectellipse
+									InterpolatedAperture* apInterpolated = new InterpolatedAperture();
+
+									for(size_t n=0; n < ThisElementAperture.size(); n++ )
+									{
+										ThisElementAperture[n].s -= Position;
+
+										apInterpolated->ApertureEntry.s = ThisElementAperture[n].s;
+
+										if(ThisElementAperture[n].ApType == RECTELLIPSE)
 										{
-											cout << ThisElementAperture[m].s << "\t" << ThisElementAperture[m].ap3 << endl;
+											apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
+											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap3;
+											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap4;
 										}
-										abort();
+										else if(ThisElementAperture[n].ApType == CIRCLE)
+										{
+											apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap1;
+										}
+										else if(ThisElementAperture[n].ApType == ELLIPSE)
+										{
+											apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
+											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap2;
+										}
+										else if(ThisElementAperture[n].ApType == RECTANGLE)
+										{
+											apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
+											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap2;
+										}
+										else
+										{
+											std::cerr << "Drift: interpolated aperture Class bug" << std::endl;
+											exit(EXIT_FAILURE);
+										}
+
+										apInterpolated->ApertureList.push_back(apInterpolated->ApertureEntry);
 									}
-									apInterpolated->ApertureList.push_back(apInterpolated->ApertureEntry);
-									if(ThisElementAperture[n].ap4 < 0)
-									{
-										cout << "broken 4" << endl;
-									}
-									//cout << ThisElementAperture[n].s << "\t" << element_length << endl;
+
+									aper = new InterpolatedRectEllipseAperture(apInterpolated->GetApertureList());
+									(*comp)->SetAperture(aper);
+									itr = ApertureList.end();
+									break;
 								}
-								aper = new InterpolatedCircularAperture(apInterpolated->GetApertureList());
-								(*comp)->SetAperture(aper);
-								ApertureType = "Interpolated Circular";
-
 							}
-							else
+							else //constant aperture drift, operate as for magnets
 							{
-//							cout << "Circle" << endl;
-								aper = new CircularAperture(ap3p);
-								(*comp)->SetAperture(aper);
-								ApertureType = "Circular";
-							}
-						}
-
-						else
-						{
-							if(ap1 == false || ap2 == false || ap3 == false || ap4 == false)
-							{
-//							cout << "Interpolated RectEllipse" << endl;
-								//aper = new InteroplatedRectEllipseAperture(ThisElementAperture);
-								//(*comp)->SetAperture(aper);
-								InterpolatedAperture* apInterpolated = new InterpolatedAperture();
-
-								for(size_t n=0; n < ThisElementAperture.size(); n++ )
+								if(ApTypeToAdd == RECTELLIPSE || ApTypeToAdd == LHCSCREEN)
 								{
-									ThisElementAperture[n].s -= position;
-									apInterpolated->ApertureEntry.s = ThisElementAperture[n].s;
-									apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
-									apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
-									apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap3;
-									apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap4;
-									apInterpolated->ApertureList.push_back(apInterpolated->ApertureEntry);
-									if(ThisElementAperture[n].ap4 < 0)
-									{
-										cout << "broken 4" << endl;
-									}
-									//cout << ThisElementAperture[n].s << "\t" << element_length << endl;
+									aper = new RectEllipseAperture(ap1p, ap2p, ap3p, ap4p);
 								}
-
-								aper = new InterpolatedRectEllipseAperture(apInterpolated->GetApertureList());
+								else if(ApTypeToAdd == CIRCLE)
+								{
+									aper = new CircularAperture(ap1p);
+								}
+								else if(ApTypeToAdd == ELLIPSE)
+								{
+									aper = new EllipticalAperture(ap1p, ap2p);
+								}
+								else if(ApTypeToAdd == RECTANGLE)
+								{
+									aper = new RectangularAperture(ap1p, ap2p);
+								}
 								(*comp)->SetAperture(aper);
-								ApertureType = "Interpolated RectEllipse";
-								delete apInterpolated;
+								itr = ApertureList.end();
+								break;
 							}
-							else
-							{
-//							cout << "RectEllipse" << endl;
-								aper = new RectEllipseAperture(ap1p,ap2p,ap3p,ap4p);
-								(*comp)->SetAperture(aper);
-								ApertureType = "RectEllipse";
-							}
-
 						}
-
-						//make aperture class;
-						//interpolate for ap1,2,3,4 in turn
-						//get ap1
-						//get ap1 at s--
-						//work out funct
-						//will have to create an interpolated aperture that calculates the aperture on the fly
-						//give each element the aperture points it requires + 1 either side
-						//(*comp)->SetAperture(aper);
-						//cout << "Aperture Load end" << endl;
-						break;
-						delete aper;
-
 					}
-				}
+
+				}//End of drifts
 			}
 		}
+
 		if(logFlag)
 		{
-			*log << (*comp)->GetName() << "\t" << (*comp)->GetLength() << "\t" << (*comp)->GetComponentLatticePosition() << "\t";
-			if ((*comp)->GetAperture() != NULL)
+			*log << std::setw(25) << std::left << (*comp)->GetName();
+			*log << std::setw(14) << std::left << (*comp)->GetType();
+			*log << std::setw(10) << std::left << (*comp)->GetLength();
+			*log << std::setw(10) << std::left << (*comp)->GetComponentLatticePosition();
+
+			if ((*comp)->GetAperture() != nullptr)
 			{
 				(*comp)->GetAperture()->printout(*log);
 			}
+
 			*log << endl;
 		}
 	}
@@ -397,19 +560,4 @@ void ApertureConfiguration::EnableLogging(bool flg)
 {
 	logFlag = flg;
 }
-/*
-			if(s > (position+length))
-			{
-				//gone past where we need to go
-				//got the last point
-				//s-- will give the last point in the element
-				//s will give the next point.
-			}
-									cout << (*itr).s << endl;
-						cout << (*itr).ap1 << endl;
-						cout << (*itr).ap2 << endl;
-						cout << (*itr).ap3 << endl;
-						cout << (*itr).ap4 << endl;
-						cout << "next" << endl;
-*/
 

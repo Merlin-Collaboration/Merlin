@@ -32,11 +32,6 @@
 #include "NumericalUtils/utils.h"
 #include "NumericalUtils/PhysicalUnits.h"
 
-using namespace std;
-
-//extern void ScatterParticle(PSvector& p, double X0, double x, double E0);
-//extern void ScatterProton(PSvector& p, double x, double E0, const TiltedAperture* tap);
-
 namespace
 {
 
@@ -63,12 +58,12 @@ namespace ParticleTracking
 
 CollimateParticleProcess::CollimateParticleProcess (int priority, int mode, std::ostream* osp)
 	: ParticleBunchProcess("PARTICLE COLLIMATION",priority),cmode(mode),os(osp),
-	  createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false), dustset(0), ColParProTurn(0), FirstElementSet(0)
+	  createLossFiles(false), file_prefix(""), lossThreshold(1), nstart(0), pindex(nullptr), CollimationOutputSet(false), ColParProTurn(0), FirstElementSet(0), scatter(false), bin_size(0.1*PhysicalUnits::meter), Imperfections(false)
 {}
 
 CollimateParticleProcess::~CollimateParticleProcess ()
 {
-	if(pindex!=0)
+	if(pindex!=nullptr)
 	{
 		delete pindex;
 	}
@@ -82,7 +77,7 @@ void CollimateParticleProcess::InitialiseProcess (Bunch& bunch)
 	{
 		nstart = currentBunch->size();
 		nlost = 0;
-		if(pindex!=0)
+		if(pindex!=nullptr)
 		{
 			pindex->clear();
 			for(size_t n=0; n<nstart; n++)
@@ -101,12 +96,10 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 		FirstElementS = component.GetComponentLatticePosition();
 		FirstElementSet = 1;
 		ColParProTurn = 1;
-		//~ cout << "ColParPro:: First Element: " << FirstElementName << ", at s = " << FirstElementS << endl;
 	}
 	else if(component.GetName() == FirstElementName && component.GetComponentLatticePosition() == FirstElementS)
 	{
 		++ColParProTurn;
-		//~ cout << "ColParPro:: Turn incrememented, number = " << ColParProTurn << endl;
 	}
 
 	active = (currentBunch!=0) && (component.GetAperture()!=0);
@@ -186,14 +179,14 @@ double CollimateParticleProcess::GetMaxAllowedStepSize () const
 
 void CollimateParticleProcess::IndexParticles (bool index)
 {
-	if(index && pindex==0)
+	if(index && pindex==nullptr)
 	{
 		pindex = new list<size_t>;
 	}
-	else if(!index && pindex!=0)
+	else if(!index && pindex!=nullptr)
 	{
 		delete pindex;
-		pindex=0;
+		pindex=nullptr;
 	}
 }
 
@@ -258,7 +251,7 @@ void CollimateParticleProcess::DoCollimation ()
 	list<size_t>  lost_i;
 
 	list<size_t>::iterator ip;
-	if(pindex!=0)
+	if(pindex!=nullptr)
 	{
 		ip=pindex->begin();
 	}
@@ -289,7 +282,6 @@ void CollimateParticleProcess::DoCollimation ()
 //			(*p).x() -= bin_size * (*p).xp();
 //			(*p).y() -= bin_size * (*p).yp();
 //		}
-
 		if(particle_number >= first_loss && !ap->PointInside( (*p).x(), (*p).y(), s) )
 		{
 			// If the 'aperture' is a collimator, then the particle is lost
@@ -306,7 +298,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 				// This is slow for a STL Vector - instead we place the surviving particles into a new bunch and then swap - this is faster
 				p++;
-				if(pindex!=0)
+				if(pindex!=nullptr)
 				{
 					lost_i.push_back(*ip);
 					ip = pindex->erase(ip);
@@ -321,7 +313,7 @@ void CollimateParticleProcess::DoCollimation ()
 				NewBunch->AddParticle(*p);
 				// need to increment iterators
 				p++;
-				if(pindex!=0)
+				if(pindex!=nullptr)
 				{
 					ip++;
 				}
@@ -338,7 +330,7 @@ void CollimateParticleProcess::DoCollimation ()
 			//Not interacting with the collimator: "Inside" the aperture; particle lives
 			NewBunch->AddParticle(*p);
 			p++;
-			if(pindex!=0)
+			if(pindex!=nullptr)
 			{
 				ip++;
 			}
@@ -419,12 +411,12 @@ void CollimateParticleProcess::DoCollimation ()
 
 						lost.push_back(*p);
 
-						//Dustbin loss
-						if(dustset && !is_collimator)
+						//CollimationOutput loss
+						if(CollimationOutputSet && !is_collimator)
 						{
-							for(DustbinIterator = DustbinVector.begin(); DustbinIterator != DustbinVector.end(); ++DustbinIterator)
+							for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator != CollimationOutputVector.end(); ++CollimationOutputIterator)
 							{
-								(*DustbinIterator)->Dispose(*currentComponent, IntegratedLength, (*p), ColParProTurn);
+								(*CollimationOutputIterator)->Dispose(*currentComponent, IntegratedLength, (*p), ColParProTurn);
 							}
 						}
 						p=LostBunch->erase(p);
@@ -450,8 +442,8 @@ void CollimateParticleProcess::DoCollimation ()
 			//If there is anything left - possible bug.
 			if(LostBunch->size() != 0)
 			{
-				cout <<	"POSSIBLE BUG: Leftovers: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
-				     LostParticleTracker->GetIntegratedLength() << "\t" << length << endl;
+				std::cout <<	"POSSIBLE BUG: Leftovers: " << LostBunch->size() << "\t" << currentComponent->GetQualifiedName() << "\t" << \
+				          LostParticleTracker->GetIntegratedLength() << "\t" << length << std::endl;
 				for(PSvectorArray::iterator p = LostBunch->begin(); p!=LostBunch->end(); p++)
 				{
 					(*p).ct() += LostParticleTracker->GetIntegratedLength();
@@ -477,8 +469,8 @@ void CollimateParticleProcess::DoCollimation ()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	nlost+=lost.size();
-	// Old loss output - depreciated due to Dustbin
-	//~ DoOutput(lost,lost_i);
+	// Old loss output - depreciated due to CollimationOutput
+	//DoOutput(lost,lost_i);
 
 	//make sure to clear up
 	InputArray.clear();				//The input array
@@ -486,7 +478,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 	if(double(nlost)/double(nstart)>=lossThreshold)
 	{
-		cout << "nlost: " << nlost << "\tnstart: " << nstart << endl;
+		std::cout << "nlost: " << nlost << "\tnstart: " << nstart << std::endl;
 		throw ExcessiveParticleLoss(currentComponent->GetQualifiedName(),lossThreshold,nlost,nstart);
 	}
 }
@@ -613,14 +605,14 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 					(*os) << std::setw(24)<<left<<lostp[j][1];							//Bin length
 					(*os) << "\t" << lostp[j][2];									//Loss count
 					(*os) << "\t" << j * lostp[0][1];								//Loss position in element
-					(*os) << endl;
+					(*os) << std::endl;
 				}
 			}
 			delete [] lostp;
 		}
 		if(createLossFiles)
 		{
-			string id = (*currentComponent).GetQualifiedName();
+			std::string id = (*currentComponent).GetQualifiedName();
 			pair<IDTBL::iterator,bool> result = idtbl.insert(IDTBL::value_type(id,0));
 			int n = ++(*(result.first)).second;
 			ostringstream fname;
@@ -632,14 +624,16 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 
 			fname << "_" << currentComponent->GetComponentLatticePosition() << "_";
 			fname << id << '.' << n << ".loss";
-			ofstream file(fname.str().c_str());
+
+			std::ofstream file(fname.str().c_str());
+
 			if (!file)
 			{
-				cerr << "CollimateParticleProcess::DoOutput(): Failed to open " << fname.str() << endl;
-				exit(1);
+				std::cerr << "CollimateParticleProcess::DoOutput(): Failed to open " << fname.str() << std::endl;
+				exit(EXIT_FAILURE);
 			}
 
-			if(pindex==0)
+			if(pindex==nullptr)
 			{
 				copy(lostb.begin(),lostb.end(),ostream_iterator<PSvector>(file));
 			}
@@ -693,3 +687,4 @@ void CollimateParticleProcess::EnableImperfections(bool enable)
 	Imperfections = enable;
 }
 } // end namespace ParticleTracking
+

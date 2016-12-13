@@ -1,6 +1,5 @@
 #include <cmath>
 #include "MuonBunch.h"
-//#include "Collimators/CoulombScatter.h"
 #include "NumericalUtils/PhysicalUnits.h"
 #include "NumericalUtils/PhysicalConstants.h"
 #include "Exception/MerlinException.h"
@@ -15,6 +14,7 @@ double MuonBunch::GetParticleMass() const
 {
 	return MuonMass;
 }
+
 double MuonBunch::GetParticleMassMeV() const
 {
 	return MuonMassMeV;
@@ -29,8 +29,9 @@ bool MuonBunch::IsStable() const
 {
 	return false;
 }
-
+/*
 int MuonBunch::Scatter(PSvector& p,double x,double E0,const Aperture* ap)
 {
 	return 0;
 } //End of ScatterMuon
+*/

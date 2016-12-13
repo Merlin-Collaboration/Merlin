@@ -3,8 +3,6 @@
 
 #include <string>
 
-using namespace std;
-
 /*
 * Base class for the material definition
 */
@@ -20,7 +18,7 @@ public:
 	* Overloaded constructor
 	*/
 	Material() {};
-	Material(string name0, string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0);
+	Material(std::string name0, std::string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0);
 
 	/*
 	* Parameter calculation functions
@@ -59,8 +57,8 @@ public:
 	* Define accessors
 	*/
 	virtual double GetAtomicNumber() const;
-	virtual string GetName() const;
-	virtual string GetSymbol() const;
+	virtual std::string GetName() const;
+	virtual std::string GetSymbol() const;
 	virtual double GetAtomicMass() const;
 	virtual double GetConductivity() const;
 	virtual double GetRadiationLength() const;
@@ -100,26 +98,26 @@ protected:
 
 	//selected Sixtrack variable names in quotes
 	//~ size_t AtomicNumber;		//Atomic number (Z) //allow doubles for CompositeMaterials
-	double AtomicNumber;		//Atomic number (Z)
-	double AtomicMass;		//Atomic mass (A)
-	string Name;			//Element/compound name
-	string Symbol;			//Elemental symbol: what input file will check for
-//	double rho;			//Material Density, g/cm^3
-	double Conductivity;		//electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1 (@ stp)
-	double X0;			//Radiation Length
-	double Density;			//Material density, kg/m^3
-	double ElectronDensity;		//Electron density: calculated from other input data
+	double AtomicNumber;			//Atomic number (Z)
+	double AtomicMass;				//Atomic mass (A)
+	std::string Name;				//Element/compound name
+	std::string Symbol;				//Elemental symbol: what input file will check for
+//	double rho;						//Material Density, g/cm^3
+	double Conductivity;			//electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1 (@ stp)
+	double X0;						//Radiation Length
+	double Density;					//Material density, kg/m^3
+	double ElectronDensity;			//Electron density: calculated from other input data
 //	double ElectronCriticalEnergy;
 	double MeanExcitationEnergy;
 	double PlasmaEnergy;
 
 	//Sixtrack parameters
-	double sigma_pN_total;		//proton nucleus total cross section =sigma_el_pn + sigma_el_pN + sigma_SD_pn + sigma_inel_pN
-	double sigma_pN_elastic;	//proton nucleus elastic cross section
-	double sigma_pN_inelastic;	//proton nucleus inelastic cross section (sigma_inel_pN)
-	double sigma_Rutherford;	//Rutherford scattering cross section (sigma_R)
-	double dEdx;			// "dpodx"
-	double b_N;			//Nuclear slope
+	double sigma_pN_total;			//proton nucleus total cross section =sigma_el_pn + sigma_el_pN + sigma_SD_pn + sigma_inel_pN
+	double sigma_pN_elastic;		//proton nucleus elastic cross section
+	double sigma_pN_inelastic;		//proton nucleus inelastic cross section (sigma_inel_pN)
+	double sigma_Rutherford;		//Rutherford scattering cross section (sigma_R)
+	double dEdx;					// "dpodx"
+	double b_N;						//Nuclear slope
 };
 
 #endif

@@ -102,7 +102,7 @@ public:
 	void SetScale (double xs, double ys);
 
 	// Sets the response for the BPM. Returns the
-	// original Response object (or NULL).
+	// original Response object (or a nullptr).
 	Response* SetResponse(Response*);
 
 	//	Measure the beam centroid of bunch.

@@ -2,18 +2,14 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
-//Circle
 
-
-
-//RectEllipse
-
+/**
+* InterpolatedRectEllipseAperture
+*/
 
 //Returns true if the point (x,y,z) is within the aperture.
 bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z) const
 {
-//	MerlinProfile::StartProcessTimer("APERTURE");
-//	cout << "InterpolatedRectEllipse Aperture" << endl;
 	ap apFront;
 	ap apBack;
 
@@ -37,11 +33,10 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 	//The z coordinate is used to find the other aperture components
 	for(size_t n=1; n < ApertureList.size(); n++)
 	{
-		if(ApertureList[n].s > z)
+		if(ApertureList[n].s >= z)
 		{
 			apBack = InterpolatedAperture::ApertureList[n-1];
 			apFront = InterpolatedAperture::ApertureList[n];
-			//cout << "Got aperture at " << n << "\tTotal size: " << ApertureList.size() << endl;
 			break;
 		}
 	}
@@ -75,38 +70,99 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 
 	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
 	{
-		//Particle is NOT inside the eliptical aperture component
-//		if(Print == true)
-
-//		cout << "Not in ellipse: " << x*x << "\t" << ellipse_half_horizontal*ellipse_half_horizontal << "\t" << y*y << "\t" << (ellipse_half_vertical*ellipse_half_vertical);
-//		cout << "\t" << ((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) << endl;
-
-//		MerlinProfile::EndProcessTimer("APERTURE");
 		return 0;
 	}
 	else if(fabs(x) > rect_half_width || fabs(y) > rect_half_height)
 	{
-		//Particle is NOT inside the rectangular aperture component
-//		if(Print == true)
-//		cout << "Not in rectangle:\tx: " << x << "\t" << rect_half_width << "\ty: " << y << "\t" << rect_half_height << endl;
-//		cout << "x1: " << apBack.ap1 << "\tx2: " << apFront.ap1 << "\ty1: " << apBack.ap2 << "\ty2: " << apFront.ap2 << endl;
-//		MerlinProfile::EndProcessTimer("APERTURE");
 		return 0;
 	}
 	else
 	{
-		//Particle is inside both components, and is inside the aperture
-//		if(Print == true)
-//		cout << "RECTELLIPSE APERTURE CHECK ok" << endl;
-//		MerlinProfile::EndProcessTimer("APERTURE");
 		return 1;
 	}
 }
 
 double InterpolatedRectEllipseAperture::GetRadiusAt (double phi, double z) const
 {
-	std::cerr << "Not yet implemented: InterpolatedRectEllipseAperture::GetRadiusAt()" << std::endl;
-	exit(EXIT_FAILURE);
+	ap apFront;
+	ap apBack;
+
+	apFront.s = 0;
+	apFront.ap1 = 0;
+	apFront.ap2 = 0;
+	apFront.ap3 = 0;
+	apFront.ap4 = 0;
+
+	apBack.s = 0;
+	apBack.ap1 = 0;
+	apBack.ap2 = 0;
+	apBack.ap3 = 0;
+	apBack.ap4 = 0;
+
+	if(z < 0)
+	{
+		z = 0;
+	}
+
+	//The z coordinate is used to find the other aperture components
+	for(size_t n=1; n < ApertureList.size(); n++)
+	{
+		if(ApertureList[n].s >= z)
+		{
+			apBack = InterpolatedAperture::ApertureList[n-1];
+			apFront = InterpolatedAperture::ApertureList[n];
+			break;
+		}
+	}
+
+	//We now have the aperture before and after the particle.
+	//It must now be calculated at the point where the particle is currently.
+
+	//y = mx + c
+	//m = (y1 - y0) / (x1 - x0)
+	double delta_s = apFront.s - apBack.s;
+	double g1 = (apFront.ap1 - apBack.ap1) / delta_s;
+	double g2 = (apFront.ap2 - apBack.ap2) / delta_s;
+	double g3 = (apFront.ap3 - apBack.ap3) / delta_s;
+	double g4 = (apFront.ap4 - apBack.ap4) / delta_s;
+
+	//c = y - mx
+	double c1 = apFront.ap1 - (g1 * apFront.s);
+	double c2 = apFront.ap2 - (g2 * apFront.s);
+	double c3 = apFront.ap3 - (g3 * apFront.s);
+	double c4 = apFront.ap4 - (g4 * apFront.s);
+
+	double rect_half_width = (g1 * z) + c1;
+	double rect_half_height = (g2 * z) + c2;
+	double ellipse_half_horizontal = (g3 * z) + c3;
+	double ellipse_half_vertical = (g4 * z) + c4;
+
+	double a1 = rect_half_width;
+	double a2 = rect_half_height;
+	double a3 = ellipse_half_horizontal;
+	double a4 = ellipse_half_vertical;
+
+	double t = phi;
+	double rect_x = a1*((fabs(cos(t))*cos(t)) + (fabs(sin(t))*sin(t)));
+	double rect_y = a2*((fabs(cos(t))*cos(t)) - (fabs(sin(t))*sin(t)));
+
+//Get the angle for the rectangle coordinate
+	double EllipseAngle = atan2(rect_y,rect_x);
+	double rr = a3*a4 / sqrt(pow(a4*cos(EllipseAngle),2) + pow(a3*sin(EllipseAngle),2));
+	double ellipse_x = rr*cos(EllipseAngle);
+	double ellipse_y = rr*sin(EllipseAngle);
+
+	double rRectangle = sqrt((rect_x*rect_x) + (rect_y*rect_y));
+	double rEllipse = sqrt((ellipse_x*ellipse_x) + (ellipse_y*ellipse_y));
+
+	if(rRectangle < rEllipse)
+	{
+		return rRectangle;
+	}
+	else
+	{
+		return rEllipse;
+	}
 }
 
 
@@ -131,9 +187,12 @@ void InterpolatedRectEllipseAperture::printout(std::ostream& out) const
 	out << ")";
 }
 
-inline bool InterpolatedCircularAperture::PointInside (double x, double y, double z) const
+/**
+* InterpolatedCircularAperture
+*/
+
+bool InterpolatedCircularAperture::PointInside (double x, double y, double z) const
 {
-//	cout << "InterpolatedCircular Aperture: PointInside()" << endl;
 	ap apFront;
 	ap apBack;
 
@@ -157,33 +216,35 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 	//The z coordinate is used to find the other aperture components
 	for(size_t n=1; n < ApertureList.size(); n++)
 	{
-		if(ApertureList[n].s > z)
+		if(ApertureList[n].s >= z)
 		{
 			apBack.s = InterpolatedAperture::ApertureList[n-1].s;
-			apBack.ap3 = InterpolatedAperture::ApertureList[n-1].ap3;
+			apBack.ap1 = InterpolatedAperture::ApertureList[n-1].ap1;
 
 			apFront.s = InterpolatedAperture::ApertureList[n].s;
-			apFront.ap3 = InterpolatedAperture::ApertureList[n].ap3;
-			if(apFront.ap3 == 0 || apBack.ap3 == 0)
+			apFront.ap1 = InterpolatedAperture::ApertureList[n].ap1;
+
+			if(apFront.ap1 == 0 || apBack.ap1 == 0)
 			{
-				cout << z << endl;
-				cout << apFront.s << endl;
-				cout << apBack.s << endl;
-				cout << apFront.ap3 << endl;
-				cout << apBack.ap3 << endl;
-				cout << ApertureList[n].ap3 << endl;
-				cout << ApertureList[n-1].ap3 << endl;
+				std::cout << z << std::endl;
+				std::cout << apFront.s << std::endl;
+				std::cout << apBack.s << std::endl;
+				std::cout << apFront.ap1 << std::endl;
+				std::cout << apBack.ap1 << std::endl;
+				std::cout << ApertureList[n].ap1 << std::endl;
+				std::cout << ApertureList[n-1].ap1 << std::endl;
 				abort();
 			}
+
 			break;
 		}
+
 		if(n == (ApertureList.size()-1))
 		{
-			cout << "no aperture found" << endl;
-			cout << "z: " << z << endl;
+			std::cout << "No aperture found for InterpolatedCircularAperture at z = " << z << std::endl;
 			for(size_t m=0; m < ApertureList.size(); m++)
 			{
-				cout << ApertureList[m].s << endl;
+				std::cout << "Entry " << m << " - z = " << ApertureList[m].s << "\t" << ApertureList[m].ap1 << std::endl;
 			}
 			abort();
 		}
@@ -195,18 +256,19 @@ inline bool InterpolatedCircularAperture::PointInside (double x, double y, doubl
 	//y = mx + c
 	//m = (y1 - y0) / (x1 - x0)
 	double delta_s = apFront.s - apBack.s;
-	double g = (apFront.ap3 - apBack.ap3) / delta_s;
+	double g = (apFront.ap1 - apBack.ap1) / delta_s;
 
 	//c = y - mx
-	double c = apFront.ap3 - (g * apFront.s);
+	double c = apFront.ap1 - (g * apFront.s);
 
 	//aper_3 = half horizontal axis ellipse (or radius if circle)
 	double r2 = pow((g * z) + c,2);
+
 	if((x*x+y*y<r2) == 0)
 	{
-		//cout << "Interpolated Circular aperture: " << (x*x) + (y*y) << "\tR: " << r2 << "\t" << apFront.ap3 << "\t" << apBack.ap3 << endl;
 		return false;
 	}
+
 	return x*x+y*y<r2;
 }
 
@@ -230,7 +292,7 @@ double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
 	//The z coordinate is used to find the other aperture components
 	for(size_t n=1; n < ApertureList.size(); n++)
 	{
-		if(ApertureList[n].s > z)
+		if(ApertureList[n].s >= z)
 		{
 			apBack = InterpolatedAperture::ApertureList[n-1];
 			apFront = InterpolatedAperture::ApertureList[n];
@@ -244,10 +306,10 @@ double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
 	//y = mx + c
 	//m = (y1 - y0) / (x1 - x0)
 	double delta_s = apFront.s - apBack.s;
-	double g = (apFront.ap3 - apBack.ap3) / delta_s;
+	double g = (apFront.ap1 - apBack.ap1) / delta_s;
 
 	//c = y - mx
-	double c = apFront.ap3 - (g * apFront.s);
+	double c = apFront.ap1 - (g * apFront.s);
 
 	//aper_3 = half horizontal axis ellipse (or radius if circle)
 	double r2 = pow((g * z) + c,2);
@@ -256,9 +318,7 @@ double InterpolatedCircularAperture::GetRadiusAt (double phi, double z) const
 
 double InterpolatedCircularAperture::GetRadius () const
 {
-	std::cerr << "Not yet implemented: InterpolatedCircularAperture::GetRadius()" << std::endl;
-	exit(EXIT_FAILURE);
-//    return sqrt(r2);
+	return GetRadiusAt(0.0, 0.0);
 }
 
 void InterpolatedCircularAperture::printout(std::ostream& out) const
@@ -267,7 +327,7 @@ void InterpolatedCircularAperture::printout(std::ostream& out) const
 	for(size_t n=0; n < ApertureList.size(); n++)
 	{
 		out << ApertureList[n].s << " [";
-		out << ApertureList[n].ap3;
+		out << ApertureList[n].ap1;
 		out << "]";
 		if (n < ApertureList.size()-1)
 		{
@@ -277,40 +337,188 @@ void InterpolatedCircularAperture::printout(std::ostream& out) const
 	out << ")";
 }
 
-
-/*
-inline void InterpolatedRectEllipseAperture::SetRectHalfWidth(double w)
-{
-	rect_half_width = w;
-}
-
-inline void InterpolatedRectEllipseAperture::SetRectHalfHeight(double h)
-{
-	rect_half_height = h;
-}
-
-inline void InterpolatedRectEllipseAperture::SetEllipseHalfHorizontal(double h)
-{
-	ellipse_half_horizontal = h;
-}
-
-inline void InterpolatedRectEllipseAperture::SetEllipseHalfVertical(double v)
-{
-	ellipse_half_vertical = v;
-}
-*/
-/*
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap1 << "\tBack: " <<  apBack.ap1 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap2 << "\tBack: " <<  apBack.ap2 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap3 << "\tBack: " <<  apBack.ap3 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.ap4 << "\tBack: " <<  apBack.ap4 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront.s << "\tBack: " <<  apBack.s << endl;
-cout << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap1 << "\tBack: " <<  apBack1.ap1 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap2 << "\tBack: " <<  apBack1.ap2 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap3 << "\tBack: " <<  apBack1.ap3 << endl;
-	cout << delta_s << "\t" << gradient << "\tFront: " << apFront1.ap4 << "\tBack: " <<  apBack1.ap4 << endl;
-	cout << c << endl;
-abort();
+/**
+* InterpolatedEllipticalAperture
 */
 
+bool InterpolatedEllipticalAperture::PointInside (double x, double y, double z) const
+{
+	ap apFront;
+	ap apBack;
+
+	apFront.s = 0;
+	apFront.ap1 = 0;
+	apFront.ap2 = 0;
+	apFront.ap3 = 0;
+	apFront.ap4 = 0;
+
+	apBack.s = 0;
+	apBack.ap1 = 0;
+	apBack.ap2 = 0;
+	apBack.ap3 = 0;
+	apBack.ap4 = 0;
+
+	if(z < 0)
+	{
+		z = 0;
+	}
+
+	//The z coordinate is used to find the other aperture components
+	for(size_t n=1; n < ApertureList.size(); n++)
+	{
+		if(ApertureList[n].s >= z)
+		{
+			apBack.s = InterpolatedAperture::ApertureList[n-1].s;
+			apBack.ap1 = InterpolatedAperture::ApertureList[n-1].ap1;
+
+			apFront.s = InterpolatedAperture::ApertureList[n].s;
+			apFront.ap1 = InterpolatedAperture::ApertureList[n].ap1;
+
+			if(apFront.ap1 == 0 || apBack.ap1 == 0)
+			{
+				std::cout << z << std::endl;
+				std::cout << apFront.s << std::endl;
+				std::cout << apBack.s << std::endl;
+				std::cout << apFront.ap1 << std::endl;
+				std::cout << apBack.ap1 << std::endl;
+				std::cout << ApertureList[n].ap1 << std::endl;
+				std::cout << ApertureList[n-1].ap1 << std::endl;
+				abort();
+			}
+
+			break;
+		}
+
+		if(n == (ApertureList.size()-1))
+		{
+			std::cout << "No aperture found for InterpolatedEllipticalAperture at z = " << z << std::endl;
+			for(size_t m=0; m < ApertureList.size(); m++)
+			{
+				std::cout << "Entry " << m << " - z = " << ApertureList[m].s << "\t" << ApertureList[m].ap1 << std::endl;
+			}
+			abort();
+		}
+	}
+
+	//We now have the aperture before and after the particle.
+	//It must now be calculated at the point where the particle is currently.
+
+	//y = mx + c
+	//m = (y1 - y0) / (x1 - x0)
+	double delta_s = apFront.s - apBack.s;
+	double g1 = (apFront.ap1 - apBack.ap1) / delta_s;
+	double g2 = (apFront.ap2 - apBack.ap2) / delta_s;
+
+	//c = y - mx
+	double c1 = apFront.ap1 - (g1 * apFront.s);
+	double c2 = apFront.ap1 - (g2 * apFront.s);
+
+	double ellipse_half_horizontal = (g1 * z) + c1;
+	double ellipse_half_vertical = (g2 * z) + c2;
+
+	if(((x*x)/(ellipse_half_horizontal*ellipse_half_horizontal)) + ((y*y)/(ellipse_half_vertical*ellipse_half_vertical)) > 1)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+double InterpolatedEllipticalAperture::GetRadiusAt (double phi, double z) const
+{
+	ap apFront;
+	ap apBack;
+
+	apFront.s = 0;
+	apFront.ap1 = 0;
+	apFront.ap2 = 0;
+	apFront.ap3 = 0;
+	apFront.ap4 = 0;
+
+	apBack.s = 0;
+	apBack.ap1 = 0;
+	apBack.ap2 = 0;
+	apBack.ap3 = 0;
+	apBack.ap4 = 0;
+
+	if(z < 0)
+	{
+		z = 0;
+	}
+
+	//The z coordinate is used to find the other aperture components
+	for(size_t n=1; n < ApertureList.size(); n++)
+	{
+		if(ApertureList[n].s >= z)
+		{
+			apBack.s = InterpolatedAperture::ApertureList[n-1].s;
+			apBack.ap1 = InterpolatedAperture::ApertureList[n-1].ap1;
+
+			apFront.s = InterpolatedAperture::ApertureList[n].s;
+			apFront.ap1 = InterpolatedAperture::ApertureList[n].ap1;
+
+			if(apFront.ap1 == 0 || apBack.ap1 == 0)
+			{
+				std::cout << z << std::endl;
+				std::cout << apFront.s << std::endl;
+				std::cout << apBack.s << std::endl;
+				std::cout << apFront.ap1 << std::endl;
+				std::cout << apBack.ap1 << std::endl;
+				std::cout << ApertureList[n].ap1 << std::endl;
+				std::cout << ApertureList[n-1].ap1 << std::endl;
+				abort();
+			}
+
+			break;
+		}
+
+		if(n == (ApertureList.size()-1))
+		{
+			std::cout << "No aperture found for InterpolatedEllipticalAperture at z = " << z << std::endl;
+			for(size_t m=0; m < ApertureList.size(); m++)
+			{
+				std::cout << "Entry " << m << " - z = " << ApertureList[m].s << "\t" << ApertureList[m].ap1 << std::endl;
+			}
+			abort();
+		}
+	}
+
+	//We now have the aperture before and after the particle.
+	//It must now be calculated at the point where the particle is currently.
+
+	//y = mx + c
+	//m = (y1 - y0) / (x1 - x0)
+	double delta_s = apFront.s - apBack.s;
+	double g1 = (apFront.ap1 - apBack.ap1) / delta_s;
+	double g2 = (apFront.ap2 - apBack.ap2) / delta_s;
+
+	//c = y - mx
+	double c1 = apFront.ap1 - (g1 * apFront.s);
+	double c2 = apFront.ap1 - (g2 * apFront.s);
+
+	double ellipse_half_horizontal = (g1 * z) + c1;
+	double ellipse_half_vertical = (g2 * z) + c2;
+
+	double rr = ellipse_half_horizontal*ellipse_half_vertical / sqrt(pow(ellipse_half_vertical*cos(phi),2) + pow(ellipse_half_horizontal*sin(phi),2));
+	double ellipse_x = rr*cos(phi);
+	double ellipse_y = rr*sin(phi);
+	return sqrt((ellipse_x*ellipse_x) + (ellipse_y*ellipse_y));
+}
+
+void InterpolatedEllipticalAperture::printout(std::ostream& out) const
+{
+	out << GetApertureType() << "(";
+	for(size_t n=0; n < ApertureList.size(); n++)
+	{
+		out << ApertureList[n].s << " [";
+		out << ApertureList[n].ap1<< ", " << ApertureList[n].ap2;
+		out << "]";
+		if (n < ApertureList.size()-1)
+		{
+			out << ", ";
+		}
+	}
+	out << ")";
+}

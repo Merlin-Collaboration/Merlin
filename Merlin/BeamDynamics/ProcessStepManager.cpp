@@ -32,13 +32,12 @@ namespace
 #define _MAX(a,b) std::max(a,b)
 #endif
 
-using namespace std;
 using std::setw;
 
-typedef list<BunchProcess*>::iterator proc_itor;
-typedef list<BunchProcess*>::const_iterator const_proc_itor;
-typedef list<BunchProcess*>::reverse_iterator rev_proc_itor;
-typedef list<BunchProcess*>::const_reverse_iterator const_rev_proc_itor;
+typedef std::list<BunchProcess*>::iterator proc_itor;
+typedef std::list<BunchProcess*>::const_iterator const_proc_itor;
+typedef std::list<BunchProcess*>::reverse_iterator rev_proc_itor;
+typedef std::list<BunchProcess*>::const_reverse_iterator const_rev_proc_itor;
 
 struct InitProc
 {
@@ -90,7 +89,7 @@ struct DoProc
 	{
 		if(proc->IsActive())
 		{
-			if(vos!=0)
+			if(vos!=nullptr)
 			{
 				Trace(proc);
 			}
@@ -106,16 +105,16 @@ struct DoProc
 
 void DoProc::Trace(BunchProcess* proc)
 {
-	(*vos)<<setw(24)<<left<<cid.c_str();
-	(*vos)<<setw(24)<<left<<(*proc).GetID().c_str();
-	(*vos)<<"from: "<<right<<s0<<" to: "<<s0+ds<<" (step = "<<ds<<")"<<endl;
+	(*vos) << setw(30) << left << cid.c_str();
+	(*vos) << setw(24) << left << (*proc).GetID().c_str();
+	(*vos) << "from: " << right << s0 << " to: " << s0+ds << " (step = " << ds << ")" << std::endl;
 }
 
 } // end of anonymous namespace
 
 
 ProcessStepManager::ProcessStepManager ()
-	: total_s(0),log(0),processTable()
+	: total_s(0),log(nullptr),processTable()
 {}
 
 ProcessStepManager::~ProcessStepManager ()
@@ -131,7 +130,7 @@ void ProcessStepManager::Initialise (Bunch& bunch)
 
 void ProcessStepManager::Track (AcceleratorComponent& component)
 {
-	const string id = component.GetQualifiedName();
+	const std::string id = component.GetQualifiedName();
 
 	for_each(processTable.begin(),processTable.end(),SetCmpnt(component));
 

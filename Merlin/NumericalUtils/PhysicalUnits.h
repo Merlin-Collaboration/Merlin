@@ -55,9 +55,9 @@ extern const double microradian;
 extern const double degree;
 
 // magnetic field
-extern double Tesla;
-extern double kGauss;
-extern double Gauss;
+extern const double Tesla;
+extern const double kGauss;
+extern const double Gauss;
 
 // mass
 extern const double amu;

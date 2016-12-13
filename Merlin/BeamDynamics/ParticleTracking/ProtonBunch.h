@@ -5,8 +5,6 @@
 #include <iostream>
 #include "AcceleratorModel/Aperture.h"
 #include "NumericalUtils/PhysicalConstants.h"
-//#include <gsl/gsl_randist.h>
-//#include <gsl/gsl_rng.h>
 #include <vector>
 #include "Collimators/ElasticScatter.h"
 #include "Collimators/DiffractiveScatter.h"
@@ -24,16 +22,16 @@ class ProtonBunch :public ParticleBunch
 	int tally[ntally];
 
 public:
+
 	/**
 	* Constructs a ProtonBunch using the specified momentum,
 	* total charge and the particle array. Note that on exit,
 	* particles is empty.
 	*/
-	//ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles) {rng();};
 	ProtonBunch (double P0, double Q, PSvectorArray& particles) : ParticleBunch(P0, Q, particles), GotElastic(false),GotDiffractive(false)
 	{
 		SetUpProfiling();
-	};
+	}
 
 	/**
 	* Read phase space vectors from specified input stream.
@@ -42,7 +40,7 @@ public:
 	ProtonBunch (double P0, double Q, std::istream& is) : ParticleBunch(P0, Q, is),GotElastic(false),GotDiffractive(false)
 	{
 		SetUpProfiling();
-	};
+	}
 
 	/**
 	* Constructs an empty ProtonBunch with the specified
@@ -66,21 +64,6 @@ public:
 	int Scatter(Particle& pi, double x, const Aperture* ap);
 
 	int (*ScatterFunctionPointer)(Particle& p, double x, const Aperture* ap);
-
-	//const gsl_rng_type* T;
-	//gsl_rng* rnd;
-	/*
-	void rng()
-	{
-		GotElastic = false;
-		GotDiffractive = false;
-		cout << "rng config" << endl;
-		gsl_rng_env_setup();
-		T = gsl_rng_default;
-		rnd = gsl_rng_alloc (T);
-	}
-	*/
-
 
 	void set()
 	{

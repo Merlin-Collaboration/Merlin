@@ -38,7 +38,7 @@ public:
 	//	Constructs and returns a BPMChannel.
 	virtual ROChannel* ConstructRO (ModelElement* anElement);
 
-	//	Returns NULL.
+	//	Returns a nullptr.
 	virtual RWChannel* ConstructRW (ModelElement* anElement);
 
 	static BPMDataBufferServer theServer;

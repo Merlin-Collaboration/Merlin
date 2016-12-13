@@ -85,7 +85,7 @@ namespace ParticleTracking
 {
 
 WakeFieldProcess::WakeFieldProcess (int prio, size_t nb, double ns, string aID)
-	: ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(0),Qd(),Qdp(),filter(0),
+	: ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(nullptr),Qd(),Qdp(),filter(0),
 	  wake_x(0),wake_y(0),wake_z(0),recalc(true),inc_tw(true),oldBunchLen(0)
 {
 	SetFilter(14,2,1);
@@ -164,19 +164,17 @@ void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
 	//	WakePotentials* wake = cavity!=0 ? cavity->GetWakePotentials() : 0;
 
 	WakePotentials* wake = component.GetWakePotentials();
-	// if not initialize(=0) we assume that
-	// WakeFieldProcess is responsible - for backward compatibility
+
+	// if not initialize(=0) we assume that WakeFieldProcess is responsible - for backward compatibility
 	// in general expected process must be equal to this process
-	if( wake &&
-	        wake->GetExpectedProcess()!=0 &&
-	        typeid(*(wake->GetExpectedProcess()))!=typeid(*this))
+	if( wake && wake->GetExpectedProcess()!=nullptr && typeid(*(wake->GetExpectedProcess()))!=typeid(*this))
 	{
-		wake=0;
+		wake=nullptr;
 	}
 
 	//if(wake!=0) cout<<GetID()<<endl;
 
-	if(currentBunch!=0 && wake!=0)
+	if(currentBunch!=0 && wake!=nullptr)
 	{
 		clen = component.GetLength();
 		switch(imploc)
