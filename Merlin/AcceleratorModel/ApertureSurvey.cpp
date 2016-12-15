@@ -7,64 +7,71 @@
 
 #include "BeamDynamics/ParticleTracking/ParticleBunch.h"
 
+using namespace std;
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::string Directory, double Step, size_t PointsPerElement)
+ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, double step, size_t points_per_element)
 {
-	StepSize = Step;
-	Points = PointsPerElement;
-	AccMod = Model;
+	step_size = step;
+	points = points_per_element;
+	AccMod = model;
 
 	//Create a file in the given directory
-	std::ostringstream FileStreamName;
-	FileStreamName << Directory << "Aperture_Survey_" << Step << "_steps_OR_" << Points << "_points.txt";
-	std::ofstream* OutputFile = new std::ofstream(FileStreamName.str().c_str());
-
-	if(!OutputFile->good())
+	ostringstream file_stream_name;
+	file_stream_name << directory <<"Aperture_Survey_"<< step << "_steps_OR_" << points << "_points.txt";
+	ofstream* output_file = new ofstream(file_stream_name.str().c_str());
+	if(!output_file->good())
 	{
 		std::cerr << "Could not open ApertureSurvey file" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	(*output_file) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 
-	(*OutputFile) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << std::endl;
-
+	//~ DoApertureSurvey();
 	double s = 0;
-	double LastSample = 0-StepSize;
+	double last_sample = 0-step_size;
 	double lims[4];
+	//~ cout << "aperture_survey" << endl;
 
 	for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
 	{
+
 		AcceleratorComponent *ac = &(*bi)->GetComponent();
 
 		if (fabs(s - ac->GetComponentLatticePosition())> 1e-6)
 		{
-			exit(EXIT_FAILURE);
+			exit(1);
 		}
 
 		Aperture* ap =	ac->GetAperture();
 		Collimator* aCollimator = dynamic_cast<Collimator*>(ac);
 
-		std::vector<double> zs;
-		if (Points > 0)
+		//cout << "ap "<< s << " " << ac->GetName() << " " << ac->GetLength() << ((aCollimator!=NULL)?" Collimator":"");
+		//if (ap != NULL) cout << " " << ap->GetMaterial();
+		//cout << endl;
+
+		vector<double> zs;
+		if (points > 0)
 		{
-			for (size_t i=0; i<Points; i++)
+			for (size_t i=0; i<points; i++)
 			{
-				zs.push_back(i*ac->GetLength()*(1.0/(Points-1)));
+				zs.push_back(i*ac->GetLength()*(1.0/(points-1)));
 			}
 		}
 		else
 		{
-			while (LastSample+StepSize < s + ac->GetLength())
+			//~ cout << "last_sample = " << last_sample <<endl;
+			while (last_sample+step_size < s + ac->GetLength())
 			{
-				LastSample += StepSize;
-				zs.push_back(LastSample-s);
+				last_sample += step_size;
+				//~ //cout << "add step " <<  last_sample << endl;
+				zs.push_back(last_sample-s);
 			}
 		}
-
 		for (size_t zi = 0; zi < zs.size(); zi++)
 		{
 			double z = zs[zi];
-
-			if (ap != nullptr)
+			//~ cout << "call check_aperture(" << z+s << ")" << endl;
+			if (ap != NULL)
 			{
 				ApertureSurvey::CheckAperture(ap, z, lims);
 			}
@@ -72,84 +79,90 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::string Directory, d
 			{
 				lims[0] = lims[1] = lims[2]= lims[3] = 1;
 			}
-
-			(*OutputFile) << ac->GetName() << "\t";
-			(*OutputFile) << ac->GetType() << "\t";
-			(*OutputFile) << ac->GetComponentLatticePosition()+ac->GetLength() << "\t";
-			(*OutputFile) << ac->GetLength() << "\t";
+			(*output_file) << ac->GetName() << "\t";
+			(*output_file) << ac->GetType() << "\t";
+			(*output_file) << ac->GetComponentLatticePosition()+ac->GetLength() << "\t";
+			(*output_file) << ac->GetLength() << "\t";
 			//~ (*os) << s+z << "\t";
-			(*OutputFile) << lims[0] << "\t";
-			(*OutputFile) << lims[1] << "\t";
-			(*OutputFile) << lims[2] << "\t";
-			(*OutputFile) << lims[3] << std::endl;
+			(*output_file) << lims[0] << "\t";
+			(*output_file) << lims[1] << "\t";
+			(*output_file) << lims[2] << "\t";
+			(*output_file) << lims[3] << endl;
 		}
 		s += ac->GetLength();
 	}
 }
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::string Directory, bool exact_s, double Step)
+ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string directory, bool exact_s, double step)
 {
 	if(!exact_s)
 	{
-		ApertureSurvey(Model, Directory, Step);
+		ApertureSurvey(model, directory, step);
 	}
 	else
 	{
-		StepSize = Step;
-		Points = 0;
-		AccMod = Model;
+
+		step_size = step;
+		points = 0;
+		AccMod = model;
 
 		//Create a file in the given directory
-		std::ostringstream FileStreamName;
-		FileStreamName << Directory << "Aperture_Survey_" << Step << "_steps_OR_" << Points << "_points.txt";
-		std::ofstream* OutputFile = new std::ofstream(FileStreamName.str().c_str());
-
-		if(!OutputFile->good())
+		ostringstream file_stream_name;
+		file_stream_name << directory <<"Aperture_Survey_"<< step << "_steps_OR_" << points << "_points.txt";
+		ofstream* output_file = new ofstream(file_stream_name.str().c_str());
+		if(!output_file->good())
 		{
 			std::cerr << "Could not open ApertureSurvey file" << std::endl;
 			exit(EXIT_FAILURE);
 		}
+		(*output_file) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 
-		(*OutputFile) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << std::endl;
-
+		//~ DoApertureSurvey();
 		double s = 0;
-		double LastSample = 0-StepSize;
+		double last_sample = 0-step_size;
 		double lims[4];
+		//~ cout << "aperture_survey" << endl;
 
 		for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
 		{
+
 			AcceleratorComponent *ac = &(*bi)->GetComponent();
 
-			if (fabs(s - ac->GetComponentLatticePosition()) > 1e-6)
+			if (fabs(s - ac->GetComponentLatticePosition())> 1e-6)
 			{
-				exit(EXIT_FAILURE);
+				exit(1);
 			}
 
 			Aperture* ap =	ac->GetAperture();
 			Collimator* aCollimator = dynamic_cast<Collimator*>(ac);
 
-			std::vector<double> zs;
-			if (Points > 0)
+			//cout << "ap "<< s << " " << ac->GetName() << " " << ac->GetLength() << ((aCollimator!=NULL)?" Collimator":"");
+			//if (ap != NULL) cout << " " << ap->GetMaterial();
+			//cout << endl;
+
+			vector<double> zs;
+			if (points > 0)
 			{
-				for (size_t i=0; i<Points; i++)
+				for (size_t i=0; i<points; i++)
 				{
-					zs.push_back(i*ac->GetLength()*(1.0/(Points-1)));
+					zs.push_back(i*ac->GetLength()*(1.0/(points-1)));
 				}
 			}
 			else
 			{
-				while (LastSample+StepSize < s + ac->GetLength())
+				//~ cout << "last_sample = " << last_sample <<endl;
+				while (last_sample+step_size < s + ac->GetLength())
 				{
-					LastSample += StepSize;
-
-					zs.push_back(LastSample-s);
+					last_sample += step_size;
+					//~ //cout << "add step " <<  last_sample << endl;
+					zs.push_back(last_sample-s);
 				}
 			}
 			for (size_t zi = 0; zi < zs.size(); zi++)
 			{
 				double z = zs[zi];
-
-				if (ap != nullptr)
+				//~ cout << "call check_aperture(" << z+s << ")" << endl;
+				if (ap != NULL)
 				{
 					ApertureSurvey::CheckAperture(ap, z, lims);
 				}
@@ -157,74 +170,81 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::string Directory, b
 				{
 					lims[0] = lims[1] = lims[2]= lims[3] = 1;
 				}
-
-				(*OutputFile) << ac->GetName() << "\t";
-				(*OutputFile) << ac->GetType() << "\t";
-				(*OutputFile) << ac->GetComponentLatticePosition()+z << "\t";
-				//~ (*OutputFile) << ac->GetComponentLatticePosition()+ac->GetLength() << "\t";
-				(*OutputFile) << ac->GetLength() << "\t";
-				(*OutputFile) << lims[0] << "\t";
-				(*OutputFile) << lims[1] << "\t";
-				(*OutputFile) << lims[2] << "\t";
-				(*OutputFile) << lims[3] << std::endl;
+				(*output_file) << ac->GetName() << "\t";
+				(*output_file) << ac->GetType() << "\t";
+				(*output_file) << ac->GetComponentLatticePosition()+z << "\t";
+				//~ (*output_file) << ac->GetComponentLatticePosition()+ac->GetLength() << "\t";
+				(*output_file) << ac->GetLength() << "\t";
+				(*output_file) << lims[0] << "\t";
+				(*output_file) << lims[1] << "\t";
+				(*output_file) << lims[2] << "\t";
+				(*output_file) << lims[3] << endl;
 			}
 			s += ac->GetLength();
 		}
 	}
 }
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::ostream* os, double Step, size_t PointsPerElement)
+ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, double step, size_t points_per_element)
 {
-	StepSize = Step;
-	Points = PointsPerElement;
-	AccMod = Model;
+	step_size = step;
+	points = points_per_element;
+	AccMod = model;
 
-	(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << std::endl;
+	(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 
+	//~ DoApertureSurvey();
 	double s = 0;
-	double LastSample = 0-StepSize;
+	double last_sample = 0-step_size;
 	double lims[4];
+	//~ cout << "aperture_survey" << endl;
 
 	for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
 	{
+
 		AcceleratorComponent *ac = &(*bi)->GetComponent();
 
 		if (fabs(s - ac->GetComponentLatticePosition())> 1e-6)
 		{
-			exit(EXIT_FAILURE);
+			exit(1);
 		}
 
 		Aperture* ap =	ac->GetAperture();
 		Collimator* aCollimator = dynamic_cast<Collimator*>(ac);
 
+		//cout << "ap "<< s << " " << ac->GetName() << " " << ac->GetLength() << ((aCollimator!=NULL)?" Collimator":"");
+		//if (ap != NULL) cout << " " << ap->GetMaterial();
+		//cout << endl;
+
 		vector<double> zs;
-		if (Points > 0)
+		if (points > 0)
 		{
-			for (size_t i=0; i<Points; i++)
+			for (size_t i=0; i<points; i++)
 			{
-				zs.push_back(i*ac->GetLength()*(1.0/(Points-1)));
+				zs.push_back(i*ac->GetLength()*(1.0/(points-1)));
 			}
 		}
 		else
 		{
-			while (LastSample+StepSize < s + ac->GetLength())
+			//~ cout << "last_sample = " << last_sample <<endl;
+			while (last_sample+step_size < s + ac->GetLength())
 			{
-				LastSample += StepSize;
-
-				zs.push_back(LastSample-s);
+				last_sample += step_size;
+				//~ //cout << "add step " <<  last_sample << endl;
+				zs.push_back(last_sample-s);
 			}
 		}
 		for (size_t zi = 0; zi < zs.size(); zi++)
 		{
 			double z = zs[zi];
-
-			if (ap != nullptr)
+			//~ cout << "call check_aperture(" << z+s << ")" << endl;
+			if (ap != NULL)
 			{
 				ApertureSurvey::CheckAperture(ap, z, lims);
 			}
 			else
 			{
-				lims[0] = lims[1] = lims[2] = lims[3] = 1;
+				lims[0] = lims[1] = lims[2]= lims[3] = 1;
 			}
 
 			(*os) << ac->GetName() << "\t";
@@ -235,29 +255,31 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::ostream* os, double
 			(*os) << lims[0] << "\t";
 			(*os) << lims[1] << "\t";
 			(*os) << lims[2] << "\t";
-			(*os) << lims[3] << std::endl;
+			(*os) << lims[3] << endl;
 		}
 		s += ac->GetLength();
 	}
 }
 
-ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::ostream* os, bool exact_s, double Step)
+ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double step)
 {
 	if(!exact_s)
 	{
-		ApertureSurvey(Model, os, Step);
+		ApertureSurvey(model, os, step);
 	}
 	else
 	{
-		StepSize = Step;
-		Points = 0;
-		AccMod = Model;
+		step_size = step;
+		points = 0;
+		AccMod = model;
 
-		(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << std::endl;
+		(*os) << "#name\ttype\ts_end\tlength\tap_px\tap_mx\tap_py\tap_my" << endl;
 
+		//~ DoApertureSurvey();
 		double s = 0;
-		double LastSample = 0-StepSize;
+		double last_sample = 0-step_size;
 		double lims[4];
+		//~ cout << "aperture_survey" << endl;
 
 		for (AcceleratorModel::BeamlineIterator bi = AccMod->GetBeamline().begin(); bi != AccMod->GetBeamline().end(); bi++)
 		{
@@ -266,41 +288,45 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::ostream* os, bool e
 
 			if (fabs(s - ac->GetComponentLatticePosition())> 1e-6)
 			{
-				exit(EXIT_FAILURE);
+				exit(1);
 			}
 
 			Aperture* ap =	ac->GetAperture();
 			Collimator* aCollimator = dynamic_cast<Collimator*>(ac);
 
-			std::vector<double> zs;
+			//cout << "ap "<< s << " " << ac->GetName() << " " << ac->GetLength() << ((aCollimator!=NULL)?" Collimator":"");
+			//if (ap != NULL) cout << " " << ap->GetMaterial();
+			//cout << endl;
 
-			if (Points > 0)
+			vector<double> zs;
+			if (points > 0)
 			{
-				for (size_t i=0; i<Points; i++)
+				for (size_t i=0; i<points; i++)
 				{
-					zs.push_back(i*ac->GetLength()*(1.0/(Points-1)));
+					zs.push_back(i*ac->GetLength()*(1.0/(points-1)));
 				}
 			}
 			else
 			{
-				while (LastSample+StepSize < s + ac->GetLength())
+				//~ cout << "last_sample = " << last_sample <<endl;
+				while (last_sample+step_size < s + ac->GetLength())
 				{
-					LastSample += StepSize;
-					zs.push_back(LastSample-s);
+					last_sample += step_size;
+					//~ //cout << "add step " <<  last_sample << endl;
+					zs.push_back(last_sample-s);
 				}
 			}
-
 			for (size_t zi = 0; zi < zs.size(); zi++)
 			{
 				double z = zs[zi];
-
-				if (ap != nullptr)
+				//~ cout << "call check_aperture(" << z+s << ")" << endl;
+				if (ap != NULL)
 				{
 					ApertureSurvey::CheckAperture(ap, z, lims);
 				}
 				else
 				{
-					lims[0] = lims[1] = lims[2] = lims[3] = 1;
+					lims[0] = lims[1] = lims[2]= lims[3] = 1;
 				}
 
 				(*os) << ac->GetName() << "\t";
@@ -311,7 +337,7 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::ostream* os, bool e
 				(*os) << lims[0] << "\t";
 				(*os) << lims[1] << "\t";
 				(*os) << lims[2] << "\t";
-				(*os) << lims[3] << std::endl;
+				(*os) << lims[3] << endl;
 			}
 			s += ac->GetLength();
 		}
@@ -320,16 +346,16 @@ ApertureSurvey::ApertureSurvey(AcceleratorModel* Model, std::ostream* os, bool e
 
 void ApertureSurvey::CheckAperture(Aperture* ap, double s, double *aps)
 {
-	const double Step = 1e-6;
+	//~ cout << "CheckAperture" << endl;
+	const double step = 1e-6;
 	const double max = 1.0;
 	const double min = 0.0;
 
 	// iterate through directions
-	for(int dir=0; dir<4; dir++)
+	for (int dir=0; dir<4; dir++)
 	{
 		double xdir=0, ydir=0;
-
-		if(dir==0)
+		if (dir==0)
 		{
 			xdir=+1;
 		}
@@ -351,7 +377,7 @@ void ApertureSurvey::CheckAperture(Aperture* ap, double s, double *aps)
 		// scan for limit
 		double below=min, above=max;
 
-		while(above-below > Step)
+		while(above-below > step)
 		{
 			double guess = (above+below)/2;
 
@@ -367,4 +393,3 @@ void ApertureSurvey::CheckAperture(Aperture* ap, double s, double *aps)
 		aps[dir] = (above+below)/2;
 	}
 }
-

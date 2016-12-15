@@ -9,27 +9,22 @@
 class ApertureSurvey
 {
 public:
-
 	// Constructor
-	ApertureSurvey(AcceleratorModel* model, std::string directory, double StepSize=0.1, size_t PointsPerElement=0);
-
+	ApertureSurvey(AcceleratorModel* model, string directory, double step_size=0.1, size_t points_per_element=0);
 	// Overloaded Constructor
-	ApertureSurvey(AcceleratorModel* model, std::string directory, bool exact_s, double StepSize=0.1);
-
+	ApertureSurvey(AcceleratorModel* model, string directory, bool exact_s, double step_size=0.1);
 	// Overloaded Constructor
-	ApertureSurvey(AcceleratorModel* model, std::ostream* os, double StepSize=0.1, size_t PointsPerElement=0);
-
+	ApertureSurvey(AcceleratorModel* model, std::ostream* os, double step_size=0.1, size_t points_per_element=0);
 	// Overloaded Constructor
-	ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double StepSize=0.1);
+	ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double step_size=0.1);
 
 private:
 	void CheckAperture(Aperture* ap, double s, double *lims);
 
-	size_t Points;
-	double StepSize;
-	std::ofstream* OutputFile;
+	size_t points;
+	double step_size;
+	std::ofstream* output_file;
 	AcceleratorModel* AccMod;
 };
 
 #endif
-
