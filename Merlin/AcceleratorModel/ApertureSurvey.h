@@ -1,30 +1,58 @@
 #ifndef ApertureSurvey_h
 #define ApertureSurvey_h 1
 
-#include <fstream>
+#include <string>
+#include <iostream>
 
 #include "AcceleratorModel/AcceleratorModel.h"
 #include "AcceleratorModel/Aperture.h"
 
-class ApertureSurvey
+/**
+ * Survey an accelerator and find the aperture at each step.
+ *
+ * At each point the aperture is measured by bisection search, using the
+ * PointInside() method of the aperture attached to the element. This
+ * makes it useful for debugging the whole aperture system.
+ *
+ * Output file contains the columns:
+ *
+ * The element's
+ * name, type, s_end, length
+ *
+ * Position
+ * s
+ *
+ * Aperture limit in plus and minus x and y directions
+ * ap_px ap_mx ap_py ap_my
+ */
+namespace ApertureSurvey
 {
-public:
-	// Constructor
-	ApertureSurvey(AcceleratorModel* model, string directory, double step_size=0.1, size_t points_per_element=0);
-	// Overloaded Constructor
-	ApertureSurvey(AcceleratorModel* model, string directory, bool exact_s, double step_size=0.1);
-	// Overloaded Constructor
-	ApertureSurvey(AcceleratorModel* model, std::ostream* os, double step_size=0.1, size_t points_per_element=0);
-	// Overloaded Constructor
-	ApertureSurvey(AcceleratorModel* model, std::ostream* os, bool exact_s, double step_size=0.1);
-
-private:
-	void CheckAperture(Aperture* ap, double s, double *lims);
-
-	size_t points;
-	double step_size;
-	std::ofstream* output_file;
-	AcceleratorModel* AccMod;
+//! Mode for survey. Changes how step is interpreted.
+enum SurveyType
+{
+	points_per_element, /**< Record \a step times per element, e.g. 1: just at start, 2: start and end, 3: start, end and middle. */
+	distance, /**< Record every \a step distance, within each element. Include start and end of each element. */
+	abs_distance /**< Record every \a step distance, along \a model. */
 };
+
+/**
+ * Run aperture survey
+ * @param model The accelerator mode
+ * @param os Output stream
+ * @param mode Stepping mode
+ * @param step Definition depends on \a mode
+ */
+void ApertureSurvey(AcceleratorModel* model, std::ostream* os, SurveyType mode, double step);
+
+/**
+ * Run aperture survey
+ * @param model The accelerator mode
+ * @param filename Filename to output to
+ * @param mode Stepping mode
+ * @param step Definition depends on \a mode
+ */
+void ApertureSurvey(AcceleratorModel* model, string file_name, SurveyType mode, double step);
+
+}
 
 #endif
