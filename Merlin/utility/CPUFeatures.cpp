@@ -58,6 +58,7 @@ void CheckCPUFeatures()
 */
 unsigned int GetCPUFeatures1()
 {
+#ifdef __x86_64__
 	unsigned int ecx;
 
 	asm("cpuid"
@@ -67,6 +68,10 @@ unsigned int GetCPUFeatures1()
 	   );
 
 	return ecx;
+#else
+	std::cerr << "Currently only supported on X86_64" << std::endl;
+	return 0;
+#endif
 }
 
 /*
@@ -74,6 +79,7 @@ unsigned int GetCPUFeatures1()
 */
 unsigned int GetCPUFeatures2()
 {
+#ifdef __x86_64__
 	unsigned int edx;
 
 	asm("cpuid"
@@ -83,6 +89,10 @@ unsigned int GetCPUFeatures2()
 	   );
 
 	return edx;
+#else
+	std::cerr << "Currently only supported on X86_64" << std::endl;
+	return 0;
+#endif
 }
 
 /*
@@ -91,6 +101,7 @@ unsigned int GetCPUFeatures2()
 */
 std::string GetCPUName()
 {
+#ifdef __x86_64__
 	std::string CPUNameString;
 	char eax[4], ebx[4], ecx[4], edx[4];
 
@@ -123,6 +134,10 @@ std::string GetCPUName()
 	}
 
 	return CPUNameString;
+#else
+	std::cerr << "Currently only supported on X86_64" << std::endl;
+	return "UNKNOWN CPU";
+#endif
 }
 
 #ifdef LIBNUMA
