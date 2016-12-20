@@ -26,6 +26,7 @@ OPTION(ORBIT_DEBUG "Enable closed orbit debugging. Default OFF" OFF)
 OPTION(INSTALL_HEADERS "Install the Merlin headers. Default OFF" OFF)
 OPTION(LIBNUMA "Link to libnuma. See utility/CPUFeatures.h Default OFF" OFF)
 OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
+OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
 
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -196,6 +197,11 @@ endif()
 if(BUILD_STATIC)
 	add_library(merlin STATIC ${sources})
 endif()
+
+IF(COVERAGE)
+	target_compile_options(merlin PRIVATE -fprofile-arcs -ftest-coverage)
+	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "-fprofile-arcs ${CMAKE_EXE_LINKER_FLAGS}")
+ENDIF(COVERAGE)
 
 #We want to link to the mpi libraries if this is an MPI build.
 if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)
