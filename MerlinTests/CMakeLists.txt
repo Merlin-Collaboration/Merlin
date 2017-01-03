@@ -59,14 +59,15 @@ add_test(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 merlin_test_py(ScatteringTests cu50_test.py)
-add_test(cu50_test.py ScatteringTests/cu50_test.py)
+add_test(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
+add_test(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
+#add_test(cu50_test.py_1e8 ScatteringTests/cu50_test.py 0 100000000) # more thorough test
+#add_test(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
 
 merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
 add_test(lhc_collimation_test ScatteringTests/lhc_collimation_test)
 merlin_test(ScatteringTests rand_test rand_test.cpp)
 
-merlin_test(ScatteringTests cu50_sixtrack_test cu50_sixtrack_test.cpp)
-add_test(cu50_sixtrack_test ScatteringTests/cu50_sixtrack_test)
 
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
 INCLUDE(Dart)

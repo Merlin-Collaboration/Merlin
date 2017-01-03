@@ -3,6 +3,8 @@
 #include <sstream>
 #include <ctime>
 #include <unistd.h>
+#include <cstdint>
+#include <string>
 
 #include "AcceleratorModel/Components.h"
 #include "AcceleratorModel/Apertures/CollimatorAperture.h"
@@ -39,11 +41,39 @@ using namespace ParticleTracking;
 
 int main(int argc, char* argv[])
 {
-	int seed = (int)time(NULL);
+	int seed = 0;
 	if (argc >=2)
 	{
 		seed = atoi(argv[1]);
 	}
+
+	if (seed == 0)
+	{
+		seed = (int)time(NULL);
+	}
+
+	//Number of particles
+	//const int npart = 1e9;
+	uint64_t npart = 1e6;
+	if (argc >=3)
+	{
+		npart = std::stoull(argv[2]);
+	}
+
+	bool scatter_mode_sixtrack = 0;
+
+	if (argc >=4)
+	{
+		for(int i=3; i < argc; i++)
+		{
+			cout << "opt " << argv[i] << endl;
+			if (strcmp(argv[i], "sixtrack")==0)
+			{
+				scatter_mode_sixtrack = 1;
+			}
+		}
+	}
+
 
 	cout << "Seed: " << seed << endl;
 	RandomNG::init(seed);
@@ -66,11 +96,9 @@ int main(int argc, char* argv[])
 	//double beam_energy = 7000.0;
 	const double beam_energy = 7000.0;
 
-	//Number of particles
-	//const int npart = 1e9;
-	const size_t npart = 1e6;
-	size_t particles_left = npart;
-	const size_t max_particles_per_bunch = 1e6; // batch, to avoid high mem usage
+
+	uint64_t particles_left = npart;
+	const uint64_t max_particles_per_bunch = 1e6; // batch, to avoid high mem usage
 
 	const size_t nbins = 100;
 
@@ -87,7 +115,7 @@ int main(int argc, char* argv[])
 	bin_maxs[4] = 1e-1;      //dp
 
 
-	int hists[5][nbins+2] = {0};
+	uint64_t hists[5][nbins+2] = {0};
 
 	/*********************************************************************
 	**	ACCELERATOR MODEL LOADING
@@ -131,11 +159,15 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	**	COLLIMATION SETTINGS
 	*********************************************************************/
+	ScatteringModel* myScatter;
 	if(Loss_Map)
 	{
 		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2,4);
 		myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
-		//myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
+		if (scatter_mode_sixtrack)
+		{
+			myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
+		}
 		stringstream loststr;
 
 		myCollimateProcess->ScatterAtCollimator(true);
@@ -153,8 +185,12 @@ int main(int argc, char* argv[])
 	else
 	{
 		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2,4);
-		ScatteringModel* myScatter = new ScatteringModel;
+		myScatter = new ScatteringModel;
 		myScatter->SetScatterType(4);
+		if (scatter_mode_sixtrack)
+		{
+			myScatter->SetScatterType(1);
+		}
 		myCollimateProcess->SetScatteringModel(myScatter);
 		stringstream loststr;
 
@@ -237,13 +273,24 @@ int main(int argc, char* argv[])
 			}
 		}
 	}
+
+	if(!Loss_Map)
+	{
+		delete myScatter;
+	}
 	delete myBunch;
 	delete tracker;
+	delete construct;
+	delete mat;
+	delete TestCol;
 	/*********************************************************************
 	**	Output Final Hist
 	*********************************************************************/
+	std::ostringstream filename;
+	filename << "cu50_test_hist_" << (scatter_mode_sixtrack ? "st":"m") << "_" << npart << ".dat";
+
 	std::ofstream out2;
-	out2.open("LM_M_hist.txt");
+	out2.open(filename.str());
 	out2 << "# From merlin npart="<<npart<<endl;
 	out2 << "# bin x xp y yp dp"<<endl;
 	for (size_t i=0; i<nbins+2; i++)
@@ -255,7 +302,7 @@ int main(int argc, char* argv[])
 		}
 		out2 << endl;
 	}
-
+	cout << "Wrote "<< filename.str() << endl;
 
 	return 0;
 }
