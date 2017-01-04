@@ -262,7 +262,7 @@ public:
 	* @exception Throws a BadRange exception if the requested range cannot be found.
 	* @return The requested Beamline.
 	*/
-	Beamline GetBeamline(Index n1, Index n2) throw (BadRange);
+	Beamline GetBeamline(Index n1, Index n2);
 
 	/**
 	* Returns a Beamline from the n1-th occurrence of the
@@ -276,7 +276,7 @@ public:
 	* @exception Throws a BadRange exception if the requested range cannot be found.
 	* @return The requested Beamline.
 	*/
-	Beamline GetBeamline(const string& pat1, const string& pat2, int n1 = 1, int n2 = 1) throw (BadRange);
+	Beamline GetBeamline(const string& pat1, const string& pat2, int n1 = 1, int n2 = 1);
 
 	/**
 	* Assumes that the AcceleratorModel represents a ring

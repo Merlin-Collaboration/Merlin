@@ -50,7 +50,7 @@ public:
 
 	//	Sets the position of the measurement point on the local
 	//	geometry. Must be in the range -length/2 to +length/2.
-	void SetMeasurementPt (double mpt) throw (AcceleratorGeometry::BeyondExtent);
+	void SetMeasurementPt (double mpt);
 
 	//	Return the current measurement point.
 	double GetMeasurementPt () const;

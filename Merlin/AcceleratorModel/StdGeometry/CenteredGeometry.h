@@ -38,10 +38,10 @@ public:
 protected:
 
 	//	Used to check if (s1s2) is within the geometry bounds.
-	void CheckBounds (double s1, double s2) const throw (BeyondExtent);
+	void CheckBounds (double s1, double s2) const;
 
 	//	Used to check if s1 is within the geometry bounds.
-	void CheckBounds (double s) const throw (BeyondExtent);
+	void CheckBounds (double s) const;
 
 	double len;
 };
@@ -61,7 +61,7 @@ inline AcceleratorGeometry::Extent CenteredGeometry::GetGeometryExtent () const
 	return Extent(-s,s);
 }
 
-inline void CenteredGeometry::CheckBounds (double s1, double s2) const throw (BeyondExtent)
+inline void CenteredGeometry::CheckBounds (double s1, double s2) const
 {
 	double hl=len/2;
 	if(fabs(s1)>hl || fabs(s2)>hl)
@@ -70,7 +70,7 @@ inline void CenteredGeometry::CheckBounds (double s1, double s2) const throw (Be
 	}
 }
 
-inline void CenteredGeometry::CheckBounds (double s) const throw (BeyondExtent)
+inline void CenteredGeometry::CheckBounds (double s) const
 {
 	if(fabs(s)>len/2)
 	{

@@ -40,7 +40,7 @@ public:
 	//	frame at s0 and the frame at s. s and s0 are in the
 	//	geometry's s-frame, and must be within the geometry
 	//	extents.
-	virtual Transform3D GetGeometryTransform (double s0, double s) const throw (BeyondExtent);
+	virtual Transform3D GetGeometryTransform (double s0, double s) const;
 
 	//	Returns the transformation from the geometry origin to
 	//	the specified boundary plane.
@@ -229,7 +229,7 @@ SequenceGeometry::~SequenceGeometry ()
 	}
 }
 
-Transform3D SequenceGeometry::GetGeometryTransform (double s0, double s) const throw (BeyondExtent)
+Transform3D SequenceGeometry::GetGeometryTransform (double s0, double s) const
 {
 	if(fequal(s,s0))
 	{

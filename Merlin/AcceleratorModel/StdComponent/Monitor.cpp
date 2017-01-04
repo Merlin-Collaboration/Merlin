@@ -32,7 +32,7 @@ Monitor::~Monitor ()
 void Monitor::MakeMeasurement (const Bunch& )
 {}
 
-void Monitor::SetMeasurementPt (double mpt) throw (AcceleratorGeometry::BeyondExtent)
+void Monitor::SetMeasurementPt (double mpt)
 {
 	//GetGeometry().CheckBounds(mpt); // might throw
 	mp=mpt;

@@ -31,7 +31,7 @@ public:
 	RectangularGeometry (double l);
 
 	//	Returns a translation along the z-axis of (s-s0).
-	virtual Transform3D GetGeometryTransform (double s0, double s) const throw (BeyondExtent);
+	virtual Transform3D GetGeometryTransform (double s0, double s) const;
 
 	//	Returns a translation along the z-axis of either +l/2 or
 	//	-l/2 for the entrance and exit boundary planes

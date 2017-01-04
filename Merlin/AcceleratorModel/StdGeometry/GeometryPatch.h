@@ -33,7 +33,7 @@ class GeometryPatch : public AcceleratorGeometry, public Transformable
 {
 public:
 
-	virtual Transform3D GetGeometryTransform (double s0, double s) const throw (BeyondExtent)
+	virtual Transform3D GetGeometryTransform (double s0, double s) const
 	{
 		if(s0!=0 || s!=0)
 		{

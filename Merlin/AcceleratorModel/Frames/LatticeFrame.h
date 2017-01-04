@@ -138,11 +138,11 @@ public:
 
 	//	Returns the AcceleratorGeometry transformation from s0
 	//	to s (local s-frame).
-	Transform3D GetGeometryTransform (double s0, double s) const throw (AcceleratorGeometry::BeyondExtent);
+	Transform3D GetGeometryTransform (double s0, double s) const;
 
 	//	Returns the AcceleratorGeometry transformation from the
 	//	local origin to s (local s-frame).
-	Transform3D GetGeometryTransform (double s) const throw (AcceleratorGeometry::BeyondExtent);
+	Transform3D GetGeometryTransform (double s) const;
 
 	//	Returns the transformation from the origin to the
 	//	specified boundary plane.
@@ -308,7 +308,7 @@ inline double LatticeFrame::GetLocalPosition () const
 	return s_0;
 }
 
-inline Transform3D LatticeFrame::GetGeometryTransform (double s0, double s) const throw (AcceleratorGeometry::BeyondExtent)
+inline Transform3D LatticeFrame::GetGeometryTransform (double s0, double s) const
 {
 	if(itsGeometry!=0)
 	{
@@ -324,7 +324,7 @@ inline Transform3D LatticeFrame::GetGeometryTransform (double s0, double s) cons
 	}
 }
 
-inline Transform3D LatticeFrame::GetGeometryTransform (double s) const throw (AcceleratorGeometry::BeyondExtent)
+inline Transform3D LatticeFrame::GetGeometryTransform (double s) const
 {
 	if(itsGeometry!=0)
 	{

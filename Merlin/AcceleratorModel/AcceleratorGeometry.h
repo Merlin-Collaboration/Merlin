@@ -74,7 +74,7 @@ public:
 	* @exception Throws a BeyondExtent exception if the requested s values are outside the geometry extent.
 	* @return The 3D transformation from the entrance to the exit of this geometry.
 	*/
-	virtual Transform3D GetGeometryTransform(double s0, double s) const throw (BeyondExtent) = 0;
+	virtual Transform3D GetGeometryTransform(double s0, double s) const = 0;
 
 	/**
 	* Return the three-dimensional transformation from the
@@ -84,7 +84,7 @@ public:
 	* @exception Throws a BeyondExtent exception if the requested s value is outside the geometry extent.
 	* @return The 3D transformation from the entrance to the exit of this geometry.
 	*/
-	Transform3D GetGeometryTransform(double s) const throw (BeyondExtent);
+	Transform3D GetGeometryTransform(double s) const;
 
 	/**
 	* Returns the transformation from the geometry origin to
@@ -117,7 +117,7 @@ public:
 inline AcceleratorGeometry::~AcceleratorGeometry()
 {}
 
-inline Transform3D AcceleratorGeometry::GetGeometryTransform(double s) const throw (BeyondExtent)
+inline Transform3D AcceleratorGeometry::GetGeometryTransform(double s) const
 {
 	return GetGeometryTransform(0,s);
 }
