@@ -24,7 +24,7 @@ macro (merlin_test_py dir script_name)
 	add_custom_target(${script_name} ALL)
 	add_custom_command(TARGET ${script_name}
 	                   DEPENDS ${dir}/${script_name}
-	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir})
+	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
 endmacro (merlin_test_py)
 
 
