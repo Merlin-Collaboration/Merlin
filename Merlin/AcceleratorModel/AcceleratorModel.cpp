@@ -114,7 +114,7 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline ()
 	return Beamline(lattice.begin(),i,0,lattice.size()-1);
 }
 
-AcceleratorModel::Beamline AcceleratorModel::GetBeamline (AcceleratorModel::Index n1, AcceleratorModel::Index n2) throw (BadRange)
+AcceleratorModel::Beamline AcceleratorModel::GetBeamline (AcceleratorModel::Index n1, AcceleratorModel::Index n2)
 {
 	if(n2>=lattice.size())
 	{
@@ -128,7 +128,7 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (AcceleratorModel::Inde
 	return Beamline(i1,i2,n1,n2);
 }
 
-AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, const string& pat2, int n1, int n2) throw (BadRange)
+AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, const string& pat2, int n1, int n2)
 {
 	assert(n1>=1 && n2>=1);
 

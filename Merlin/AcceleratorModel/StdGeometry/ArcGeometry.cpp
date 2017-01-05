@@ -25,7 +25,7 @@ inline Transform3D MakeTransform(double phi, double h)
 } // end annonymous namespace
 
 
-Transform3D ArcGeometry::GetGeometryTransform (double s0, double s) const throw (BeyondExtent)
+Transform3D ArcGeometry::GetGeometryTransform (double s0, double s) const
 {
 	CheckBounds(s,s0);
 	return MakeTransform((s-s0)*h,h);

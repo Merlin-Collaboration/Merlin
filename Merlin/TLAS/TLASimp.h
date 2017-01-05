@@ -37,7 +37,7 @@ public:
 	// Construction from an arbitrary (square) matrix.
 	// Throws DimensionError() if the matrix is not square, or
 	// SingularMatrix() if the matrix is singular.
-	explicit LUMatrix(const Matrix<T>& M) throw (DimensionError, SingularMatrix)
+	explicit LUMatrix(const Matrix<T>& M)
 		: lud(M),indecies(),d(1)
 	{
 		ludcmp(lud,indecies,d);
@@ -103,8 +103,8 @@ public:
 	// made square by the addition of M.ncols()-M.nrows() zero rows. threshold specifies
 	// the relative (to the largest singular value) threshold value below which the
 	// singular values are set to zero.
-	explicit SVDMatrix(const Matrix<T>& M, T threshold = T(1e-06)) throw (ConvergenceFailure,SingularValuesAllZero);
-	SVDMatrix(const Matrix<T>& M, const Vector<T>& wts, T threshold = T(1e-06)) throw (ConvergenceFailure,SingularValuesAllZero);
+	explicit SVDMatrix(const Matrix<T>& M, T threshold = T(1e-06));
+	SVDMatrix(const Matrix<T>& M, const Vector<T>& wts, T threshold = T(1e-06));
 
 	// Solve the RHS vector using this SVD.
 	Vector<T> operator()(const Vector<T>& rhs) const
@@ -158,7 +158,7 @@ private:
 };
 
 template<class T>
-SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, T threshold) throw (ConvergenceFailure, SingularValuesAllZero)
+SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, T threshold)
 	: wts(M.nrows())
 {
 	wts=T(1);
@@ -167,7 +167,6 @@ SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, T threshold) throw (ConvergenceFailu
 
 template<class T>
 SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, const Vector<T>& wts1, T threshold)
-throw (ConvergenceFailure, SingularValuesAllZero)
 	: wts(M.nrows())
 {
 	wts=wts1;

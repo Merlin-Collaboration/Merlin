@@ -14,7 +14,7 @@
 
 #include "AcceleratorModel/StdGeometry/RectangularGeometry.h"
 
-Transform3D RectangularGeometry::GetGeometryTransform (double s0, double s) const throw (BeyondExtent)
+Transform3D RectangularGeometry::GetGeometryTransform (double s0, double s) const
 {
 	CheckBounds(s,s0);
 	return Transform3D::translation(0,0,s-s0);

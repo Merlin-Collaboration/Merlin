@@ -46,7 +46,7 @@ public:
 	double GetAngle () const;
 
 	//	Returns the arc transform from s0 to s (angle=h*(s-s0)).
-	virtual Transform3D GetGeometryTransform (double s0, double s) const throw (BeyondExtent);
+	virtual Transform3D GetGeometryTransform (double s0, double s) const;
 
 	//	Returns the arc transform for either -angle/2 or
 	//	+angle/2 for the entrance and exit planes respectively.
