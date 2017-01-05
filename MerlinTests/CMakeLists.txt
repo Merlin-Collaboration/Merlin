@@ -65,7 +65,10 @@ add_test(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtr
 #add_test(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
 
 merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
-add_test(lhc_collimation_test ScatteringTests/lhc_collimation_test)
+merlin_test_py(ScatteringTests lhc_collimation_test.py)
+add_test(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
+#add_test(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
+
 merlin_test(ScatteringTests rand_test rand_test.cpp)
 
 
