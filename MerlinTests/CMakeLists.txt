@@ -1,3 +1,4 @@
+# macro to install a test executable (need add_test() to call it)
 macro (merlin_test dir exe_name)
 	set(source_files "")
 	foreach(arg IN ITEMS ${ARGN})
@@ -18,6 +19,14 @@ macro (merlin_test dir exe_name)
 
 endmacro (merlin_test)
 
+# macro to install a test python script (need add_test() to call it)
+macro (merlin_test_py dir script_name)
+	add_custom_target(${script_name} ALL)
+	add_custom_command(TARGET ${script_name}
+	                   DEPENDS ${dir}/${script_name}
+	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
+endmacro (merlin_test_py)
+
 
 add_custom_target(TestDataFiles ALL)
 add_custom_command(TARGET TestDataFiles
@@ -26,12 +35,15 @@ add_custom_command(TARGET TestDataFiles
 add_custom_command(TARGET TestDataFiles
                    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/outputs)
 
+merlin_test_py(BasicTests have_python.py)
+add_test(have_python BasicTests/have_python.py)
 
 merlin_test(BasicTests bunch_test bunch_test.cpp)
 add_test(bunch_test BasicTests/bunch_test)
 
 merlin_test(BasicTests landau_test landau_test.cpp)
-add_test(landau_test BasicTests/landau_test)
+merlin_test_py(BasicTests landau_test.py)
+add_test(landau_test.py BasicTests/landau_test.py)
 
 merlin_test(BasicTests aperture_test aperture_test.cpp)
 add_test(aperture_test BasicTests/aperture_test)
@@ -46,14 +58,19 @@ merlin_test(OpticsTests lhc_fft_tune_test lhc_fft_tune_test.cpp)
 add_test(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
-add_test(cu50_test ScatteringTests/cu50_test)
+merlin_test_py(ScatteringTests cu50_test.py)
+add_test(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
+add_test(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
+#add_test(cu50_test.py_1e8 ScatteringTests/cu50_test.py 0 100000000) # more thorough test
+#add_test(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
 
 merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
-add_test(lhc_collimation_test ScatteringTests/lhc_collimation_test)
+merlin_test_py(ScatteringTests lhc_collimation_test.py)
+add_test(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
+#add_test(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
+
 merlin_test(ScatteringTests rand_test rand_test.cpp)
 
-merlin_test(ScatteringTests cu50_sixtrack_test cu50_sixtrack_test.cpp)
-add_test(cu50_sixtrack_test ScatteringTests/cu50_sixtrack_test)
 
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
 INCLUDE(Dart)
