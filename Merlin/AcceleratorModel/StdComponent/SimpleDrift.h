@@ -45,7 +45,5 @@
 
 typedef TAccCompG< RectangularGeometry > SimpleDrift;
 
-template class TAccCompG< RectangularGeometry >;
-
 
 #endif
