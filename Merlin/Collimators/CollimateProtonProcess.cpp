@@ -40,27 +40,6 @@
 
 using namespace Collimation;
 
-namespace
-{
-
-using namespace ParticleTracking;
-
-void OutputIndexParticles(const PSvectorArray lost_p, const list<size_t>& lost_i, ostream& os)
-{
-	PSvectorArray::const_iterator p = lost_p.begin();
-	list<size_t>::const_iterator ip = lost_i.begin();
-
-	while(p!=lost_p.end())
-	{
-		os << std::setw(12) << right << *ip;
-		os << *p;
-		++p;
-		++ip;
-	}
-}
-
-} // end anonymous namespace
-
 namespace ParticleTracking
 {
 
@@ -173,7 +152,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		if(E2 <=1.0)
 		{
 			p.ct() = z;
-			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
 
 			if(CollimationOutputSet)
 			{
@@ -219,7 +197,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			if(!scattermodel->ParticleScatter(p, C->p, E2))
 			{
 				p.ct() = z;
-				scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
 
 				if(CollimationOutputSet)
 				{
@@ -235,7 +212,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		if( (p.dp() < -0.95) || (p.dp() < -1) )
 		{
 			p.ct() = z;
-			scattermodel->DeathReport(p, step_size, currentComponent->GetComponentLatticePosition(), lostparticles);
 
 			if(CollimationOutputSet)
 			{

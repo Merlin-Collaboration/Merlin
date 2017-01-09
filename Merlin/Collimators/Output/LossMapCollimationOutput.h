@@ -31,7 +31,7 @@ public:
 	virtual void Output(std::ostream* os);
 
 	/**
-	* Called from CollimateProtonProcess::DeathReport to add a particle to the CollimationOutput
+	* Called from CollimateProtonProcess::DoScatter to add a particle to the CollimationOutput
 	*/
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
 

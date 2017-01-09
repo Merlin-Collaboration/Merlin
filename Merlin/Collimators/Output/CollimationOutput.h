@@ -131,7 +131,7 @@ typedef enum {nearestelement, precise, tencm} OutputType;
 
 /**
 * CollimationOutput handles the output from the collimation process, specifically
-* lost particles. It is called from CollimateProtonProcess::DeathReport and
+* lost particles. It is called from CollimateProtonProcess::DoScatter and
 * allows the user to create loss map output files, root hist files, or
 * a user specified output format.
 */
@@ -152,7 +152,7 @@ public:
 	// Perform the final output
 	virtual void Output(std::ostream* os) {}
 
-	// Called from CollimateProtonProcess::DeathReport to add a particle to the CollimationOutput
+	// Called from CollimateProtonProcess::DoScatter to add a particle to the CollimationOutput
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0) {}
 
 	// Output type switch
