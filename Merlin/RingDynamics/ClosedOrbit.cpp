@@ -208,6 +208,7 @@ void ClosedOrbit::FindClosedOrbit(PSvector& particle, int ncpt)
 	if(ringdt)
 	{
 		theTracker->RemoveProcess(ringdt);
+		delete ringdt;
 	}
 
 #ifdef DEBUG_CLOSED_ORBIT

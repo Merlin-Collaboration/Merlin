@@ -474,6 +474,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	ofstream mfile("TransferMatrix.dat");
 	MatrixForm(M2,mfile,OPFormat().precision(6).fixed());
 
+	delete particle;
 	return p.dp();
 }
 
