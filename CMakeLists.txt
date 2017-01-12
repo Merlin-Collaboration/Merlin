@@ -27,6 +27,7 @@ OPTION(INSTALL_HEADERS "Install the Merlin headers. Default OFF" OFF)
 OPTION(LIBNUMA "Link to libnuma. See utility/CPUFeatures.h Default OFF" OFF)
 OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
+SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
