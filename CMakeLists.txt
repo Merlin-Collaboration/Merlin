@@ -27,6 +27,7 @@ OPTION(INSTALL_HEADERS "Install the Merlin headers. Default OFF" OFF)
 OPTION(LIBNUMA "Link to libnuma. See utility/CPUFeatures.h Default OFF" OFF)
 OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
+SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -198,16 +199,19 @@ if(BUILD_STATIC)
 	add_library(merlin STATIC ${sources})
 endif()
 
+
+
 IF(COVERAGE)
+	set(COVERAGE_FLAGS "-fprofile-arcs")
 	target_compile_options(merlin PRIVATE -fprofile-arcs -ftest-coverage)
-	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "-fprofile-arcs ${CMAKE_EXE_LINKER_FLAGS}")
+	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS " ${COVERAGE_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
 ENDIF(COVERAGE)
 
 #We want to link to the mpi libraries if this is an MPI build.
 if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)
 	#Add in linker and compile flags
 	SET_TARGET_PROPERTIES(merlin PROPERTIES COMPILE_FLAGS "${MPI_CXX_COMPILE_FLAGS}")
-	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "${MPI_CXX_LINK_FLAGS}")
+	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "${MPI_CXX_LINK_FLAGS} ${COVERAGE_FLAGS}")
 	#and the lib link
 	target_link_libraries(merlin ${MPI_CXX_LIBRARIES})
 endif()

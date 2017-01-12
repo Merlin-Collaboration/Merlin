@@ -27,6 +27,11 @@ macro (merlin_test_py dir script_name)
 	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
 endmacro (merlin_test_py)
 
+# test with an extended timeout
+macro (add_test_t name)
+	add_test(${name} ${ARGN})
+	set_tests_properties(${name} PROPERTIES TIMEOUT ${TEST_TIMEOUT})
+endmacro (add_test_t)
 
 add_custom_target(TestDataFiles ALL)
 add_custom_command(TARGET TestDataFiles
@@ -36,38 +41,38 @@ add_custom_command(TARGET TestDataFiles
                    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/outputs)
 
 merlin_test_py(BasicTests have_python.py)
-add_test(have_python BasicTests/have_python.py)
+add_test_t(have_python BasicTests/have_python.py)
 
 merlin_test(BasicTests bunch_test bunch_test.cpp)
-add_test(bunch_test BasicTests/bunch_test)
+add_test_t(bunch_test BasicTests/bunch_test)
 
 merlin_test(BasicTests landau_test landau_test.cpp)
 merlin_test_py(BasicTests landau_test.py)
-add_test(landau_test.py BasicTests/landau_test.py)
+add_test_t(landau_test.py BasicTests/landau_test.py)
 
 merlin_test(BasicTests aperture_test aperture_test.cpp)
-add_test(aperture_test BasicTests/aperture_test)
+add_test_t(aperture_test BasicTests/aperture_test)
 
 merlin_test(BasicTests collimate_particle_process_test collimate_particle_process_test.cpp)
-add_test(collimate_particle_process_test BasicTests/collimate_particle_process_test)
+add_test_t(collimate_particle_process_test BasicTests/collimate_particle_process_test)
 
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
-add_test(lhc_optics_test OpticsTests/lhc_optics_test)
+add_test_t(lhc_optics_test OpticsTests/lhc_optics_test)
 
 merlin_test(OpticsTests lhc_fft_tune_test lhc_fft_tune_test.cpp)
-add_test(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
+add_test_t(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 merlin_test_py(ScatteringTests cu50_test.py)
-add_test(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
-add_test(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
-#add_test(cu50_test.py_1e8 ScatteringTests/cu50_test.py 0 100000000) # more thorough test
-#add_test(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
+add_test_t(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
+add_test_t(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
+#add_test_t(cu50_test.py_1e8 ScatteringTests/cu50_test.py 0 100000000) # more thorough test
+#add_test_t(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
 
 merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
 merlin_test_py(ScatteringTests lhc_collimation_test.py)
-add_test(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
-#add_test(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
+add_test_t(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
+#add_test_t(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
 
 merlin_test(ScatteringTests rand_test rand_test.cpp)
 
