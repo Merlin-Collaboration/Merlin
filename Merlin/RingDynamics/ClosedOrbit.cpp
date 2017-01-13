@@ -18,6 +18,10 @@
 #include "RingDynamics/ClosedOrbit.h"
 #include "TLAS/TLASimp.h"
 
+#ifdef DEBUG_CLOSED_ORBIT
+#include "BeamDynamics/ParticleTracking/NANCheckProcess.h"
+#endif
+
 using namespace std;
 using namespace TLAS;
 using namespace ParticleTracking;
@@ -108,8 +112,11 @@ void ClosedOrbit::FindClosedOrbit(PSvector& particle, int ncpt)
 	// outside respective if blocks so we
 	// can check them for non-null status
 	// at the end of the method
-	SynchRadParticleProcess* srproc =0;;
-	RingDeltaTProcess* ringdt =0;
+	SynchRadParticleProcess* srproc = nullptr;
+	RingDeltaTProcess* ringdt = nullptr;
+#ifdef DEBUG_CLOSED_ORBIT
+	NANCheckProcess* NANproc = nullptr;
+#endif
 
 	if(radiation)
 	{
@@ -143,6 +150,8 @@ void ClosedOrbit::FindClosedOrbit(PSvector& particle, int ncpt)
 
 #ifdef DEBUG_CLOSED_ORBIT
 	cout<<"Finding closed orbit:"<<endl;
+	NANproc = new NANCheckProcess();
+	theTracker->AddProcess(NANproc);
 #endif
 
 	while((w>tol) && (iter<max_iter))
@@ -162,14 +171,15 @@ void ClosedOrbit::FindClosedOrbit(PSvector& particle, int ncpt)
 			}
 		}
 
-#ifdef DEBUG_CLOSED_ORBIT
-		cout<<particle;
-#endif
-
 		theTracker->Run();
 
 		ip = theTracker->GetTrackedBunch().begin();
 		const Particle& p_ref = *ip++; // reference particle
+
+#ifdef DEBUG_CLOSED_ORBIT
+		cout<<"After tracking:"<<endl;
+		cout<<p_ref << endl;
+#endif
 
 		for(k=0; k<cpt; k++,ip++)
 		{
@@ -211,6 +221,7 @@ void ClosedOrbit::FindClosedOrbit(PSvector& particle, int ncpt)
 	}
 
 #ifdef DEBUG_CLOSED_ORBIT
+	theTracker->RemoveProcess(NANproc);
 	cout<<"Found closed orbit: "<<w<<endl;
 	cout<<particle<<endl;
 #endif
