@@ -16,16 +16,17 @@ void NANCheckProcess::InitialiseProcess (Bunch& bunch)
 
 void NANCheckProcess::DoProcess (const double ds)
 {
-	std::string name = currentComponent->GetQualifiedName();
 	ParticleBunch::iterator p;
+	size_t count = 0;
 	for(p = currentBunch->begin(); p != currentBunch->end(); p++)
 	{
-		if(std::isnan(p->x()) || std::isnan(p->y()) ||  std::isnan(p->ct()) )
+		if(std::isnan(p->x()) || std::isnan(p->y()) ||  std::isnan(p->ct()) || std::isnan(p->xp()) || std::isnan(p->yp()) || std::isnan(p->dp()))
 		{
-			std::cout << "FIRST NAN entry found in " << name << "\t";
+			std::cout << "FIRST NAN entry found in particle " << count << " at " << currentComponent->GetQualifiedName() << "\t";
 			std::cout << *p << std::endl;
 			active = false;
 		}
+		count++;
 	}
 
 }
