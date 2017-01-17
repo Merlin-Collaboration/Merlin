@@ -187,8 +187,6 @@ protected:
 
 	size_t nlost;
 
-	std::vector<double> lostparticles;
-
 	// 0 when no CollimationOutput is set
 	bool CollimationOutputSet;
 

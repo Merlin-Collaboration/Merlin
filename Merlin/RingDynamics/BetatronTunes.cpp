@@ -47,7 +47,8 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 	bunch->push_back(particle);
 
 	ParticleTracker* tracker = new ParticleTracker(theModel->GetBeamline(), bunch, false);
-	tracker->SetIntegratorSet(new ParticleTracking::TRANSPORT::StdISet());
+	ParticleTracker::integrator_set_base* ti = new ParticleTracking::TRANSPORT::StdISet();
+	tracker->SetIntegratorSet(ti);
 
 	if(myHELProcess != nullptr)
 	{
@@ -108,6 +109,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 	dQx = Qx2 - Qx;
 	dQy = Qy2 - Qy;
 
+	delete ti;
 	delete tracker;
 	delete bunch;
 }

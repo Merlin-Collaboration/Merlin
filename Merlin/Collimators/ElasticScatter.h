@@ -41,18 +41,6 @@ public:
 	void GenerateTDistribution(double energy);
 
 	/**
-	* Generates the elastic differential cross section
-	* Places the results into the vectors t and DSig
-	* @param energy sqrt s
-	*/
-	void GenerateDsigDt(double energy);
-
-	/**
-	* Integrates the elastic differential cross section
-	*/
-	void IntegrateDsigDt();
-
-	/**
 	* Picks a t value from the generated distribution (including interpolation)
 	*/
 	double SelectT();
@@ -107,6 +95,18 @@ public:
 
 private:
 	/**
+	* Generates the elastic differential cross section
+	* Places the results into the vectors t and DSig
+	* @param energy sqrt s
+	*/
+	void GenerateDsigDt(double energy);
+
+	/**
+	* Integrates the elastic differential cross section
+	*/
+	void IntegrateDsigDt();
+
+	/**
 	* Interpolation classes for the cross section data
 	*/
 	Interpolation *LinearInterpolation;
@@ -133,12 +133,10 @@ private:
 	double step;
 
 
-	std::vector<double> Uniformt;
-	std::vector<double> DSig;
-	std::vector<double> IntSig;
-	std::vector<double> Sig;
+	std::vector<double> *Uniformt;
+	std::vector<double> *DSig;
 
-	std::vector<double> DSigN;
+	std::vector<double> *DSigN;
 //std::vector<double> IntSigN;
 	/**
 	* The Integrated elastic cross section

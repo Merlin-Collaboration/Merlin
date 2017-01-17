@@ -110,9 +110,6 @@ public:
 	// Function performs scattering and returns true if inelastic scatter
 	bool ParticleScatter(PSvector& p, Material* mat, double E);
 
-	// Used for output
-	void DeathReport(PSvector& p, double x, double position, std::vector<double>& lost);
-
 // Other Functions
 
 	// Add/clear ScatteringProcesses

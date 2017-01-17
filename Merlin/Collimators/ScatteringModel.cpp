@@ -244,12 +244,6 @@ bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E)
 	exit(EXIT_FAILURE);
 }
 
-void ScatteringModel::DeathReport(PSvector& p, double x, double position, std::vector<double>& lost)
-{
-	double pos = x + position;
-	lost.push_back(pos);
-}
-
 void ScatteringModel::SetScatterType(int st)
 {
 	ScatteringPhysicsModel = st;
