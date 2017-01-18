@@ -9,7 +9,7 @@ class TrackingOutput : public SimulationOutput
 {
 public:
 	TrackingOutput(const std::string& fname)
-		: SimulationOutput(),fosptr(0)
+		: SimulationOutput(),fosptr(nullptr)
 	{
 		NewFile(fname);
 	}

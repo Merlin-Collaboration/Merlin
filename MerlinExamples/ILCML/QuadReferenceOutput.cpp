@@ -47,10 +47,10 @@ void QuadReferenceOutput::Record(const ComponentFrame* frame, const Bunch* bunch
 
 bool QuadReferenceOutput::NewFile(const std::string& fname)
 {
-	if(fosptr!=0)
+	if(fosptr)
 	{
 		delete fosptr;
 	}
 	fosptr = new ofstream(fname.c_str());
-	return *fosptr;
+	return fosptr->good();
 }

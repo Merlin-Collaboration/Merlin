@@ -68,11 +68,11 @@ void TrackingOutput::Record(const string& id, const Bunch* bunch)
 
 bool TrackingOutput::NewFile(const std::string& fname)
 {
-	if(fosptr!=0)
+	if(fosptr)
 	{
 		delete fosptr;
 	}
 	fosptr = new ofstream(fname.c_str());
-	return *fosptr;
+	return fosptr->good();
 }
 
