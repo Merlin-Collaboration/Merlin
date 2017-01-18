@@ -136,7 +136,7 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, co
 	BeamlineIterator i1=lattice.end();
 	BeamlineIterator i2=lattice.end();
 	int nn1(0),nn2(0);
-	int ni=0,ni1,ni2;//, ni1=0, ni2=0; //set ni1,ni2 = 0 by default? - JM
+	int ni=0, ni1=0, ni2=0; // initiallise to please gcc. Paths where they don't get set result in throw.
 
 	for(BeamlineIterator i = lattice.begin(); i!=lattice.end() && (nn1!=n1 || nn2!=n2); i++,ni++)
 	{
@@ -151,7 +151,6 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, co
 			i2=i;
 			ni2=ni;
 		}
-//	else {cout << "ni1 or ni2 is not initialized - FIXME in AcceleratorModel.cpp" << endl;}
 	}
 
 	if(i1==lattice.end() || i2==lattice.end())
