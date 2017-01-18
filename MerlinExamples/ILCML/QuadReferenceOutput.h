@@ -7,7 +7,7 @@ class QuadReferenceOutput : public SimulationOutput
 {
 public:
 	QuadReferenceOutput(const std::string& fname, double E0, double el)
-		: SimulationOutput(),fosptr(0),refEnergy(E0),eloss(el)
+		: SimulationOutput(),fosptr(nullptr),refEnergy(E0),eloss(el)
 	{
 		NewFile(fname);
 		AddIdentifier("Quadrupole.*");

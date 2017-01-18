@@ -372,7 +372,7 @@ inline bool is_skewsext(double tilt)
 
 #define TYPEIS(kw) (dat.keywrd == #kw)
 
-}; // end namespace
+} // end namespace
 
 void XTFFInterface_1::ConstructComponent(XTFF_Data& dat)
 {
