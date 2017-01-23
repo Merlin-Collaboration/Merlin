@@ -28,7 +28,7 @@ class WakePotentials
 
 public:
 
-	WakePotentials(double r, double s) : csr(false), expectedProcess(0), radius(r), conductivity(s) {}
+	WakePotentials(double r, double s) : csr(false), expectedProcess(nullptr), radius(r), conductivity(s) {}
 	WakePotentials() : csr(false), expectedProcess(nullptr) {}   // back to the original constructor
 	//WakePotentials() : csr(false) {}   // back to the original constructor
 
