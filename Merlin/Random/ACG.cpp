@@ -266,7 +266,7 @@ ACG::~ACG()
 	{
 		delete state;
 	}
-	state = 0;
+	state = nullptr;
 	// don't delete auxState, it's really an alias for state.
 }
 

@@ -123,7 +123,7 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 		if(r == 0.0)
 		{
 			//Zero radius, disable the aperture
-			ap = 0;
+			ap = nullptr;
 		}
 		else
 		{
@@ -140,7 +140,7 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 
 		if (w == 0.0 || h == 0.0)
 		{
-			ap = 0;
+			ap = nullptr;
 		}
 		else
 		{
@@ -159,7 +159,7 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 
 		if (w == 0.0 || h == 0.0 || a == 0.0 || b == 0.0)
 		{
-			ap = 0;
+			ap = nullptr;
 		}
 		else
 		{
@@ -171,13 +171,13 @@ Aperture* ConstructAperture(const double& ap_type, MADKeyMap* prmMap)
 	else if(ap_type == 0.0)
 	{
 		//No aperture defined, disable aperture for this component
-		ap = 0;
+		ap = nullptr;
 	}
 
 	else
 	{
 		MERLIN_ERR << "WARNING: unknown aperture definition ("<<ap_type<<") ignored"<<endl;
-		ap=0;
+		ap=nullptr;
 	}
 
 	return ap;
@@ -201,9 +201,9 @@ bool check_column_heading(istream& is, const string& hd)
 
 // Class MADInterface
 MADInterface::MADInterface (const std::string& madFileName, double P0)
-	: energy(P0),filename(madFileName),ifs(madFileName.empty() ? 0 : new ifstream(madFileName.c_str())),
+	: energy(P0),filename(madFileName),ifs(madFileName.empty() ? nullptr : new ifstream(madFileName.c_str())),
 	  log(MerlinIO::std_out),logFlag(false),flatLattice(false),honMadStructs(false),
-	  incApertures(true),inc_sr(false),ctor(0),prmMap(0),z(0),single_cell_rf(false)
+	  incApertures(true),inc_sr(false),ctor(nullptr),prmMap(nullptr),z(0),single_cell_rf(false)
 {
 	if(ifs)
 	{
@@ -246,14 +246,14 @@ MADInterface::~MADInterface()
 
 void MADInterface::Initialise()
 {
-	if(prmMap!=0)
+	if(prmMap!=nullptr)
 	{
 		delete prmMap;
 	}
 
 	string s;
 	char c;
-	bool tfs = 0;
+	bool tfs = false;
 
 	/*
 	This just grabs the top line, we really want the line that starts with *, aka the one with the headers.
@@ -312,7 +312,7 @@ void MADInterface::AppendModel (const string& fname, double Pref)
 
 	Initialise();
 
-	if(ctor==0)
+	if(ctor==nullptr)
 	{
 		// first file
 		ctor = new AcceleratorModelConstructor();
@@ -345,7 +345,7 @@ AcceleratorModel* MADInterface::GetModel()
 
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
-	ctor=0;
+	ctor=nullptr;
 	return theModel;
 }
 
@@ -358,7 +358,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 		abort();
 	}
 
-	if(ctor!=0)
+	if(ctor!=nullptr)
 	{
 		delete ctor;
 	}
@@ -388,7 +388,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
-	ctor=0;
+	ctor=nullptr;
 	return theModel;
 }
 
@@ -598,7 +598,7 @@ double MADInterface::ReadComponent ()
 			}
 			else
 			{
-				component = 0;
+				component = nullptr;
 			}
 		}
 		else if(type=="VKICKER")
@@ -686,8 +686,8 @@ double MADInterface::ReadComponent ()
 
 			if(e1!=0 || e2!=0)
 			{
-				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
-				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
+				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : nullptr;
+				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : nullptr;
 				bend->SetPoleFaceInfo(pf1,pf2);
 			}
 
@@ -724,8 +724,8 @@ double MADInterface::ReadComponent ()
 
 			if(e1!=0 || e2!=0)
 			{
-				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : 0;
-				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : 0;
+				SectorBend::PoleFace* pf1 = e1!=0 ? new SectorBend::PoleFace(e1) : nullptr;
+				SectorBend::PoleFace* pf2 = e2!=0 ? new SectorBend::PoleFace(e2) : nullptr;
 				bend->SetPoleFaceInfo(pf1,pf2);
 			}
 
@@ -920,18 +920,18 @@ double MADInterface::ReadComponent ()
 					ConstructNewFrame(name);
 				}
 			}
-			component=0;
+			component=nullptr;
 		}
 
 		else if(type=="MATRIX") // just ignore for now.
 		{
-			component=0;
+			component=nullptr;
 		}
 
 		else if(type=="SROT")
 		{
 			ctor->AppendComponentFrame(ConstructSrot(prmMap->GetParameter("L"),name));
-			component=0;
+			component=nullptr;
 		}
 		else if(type=="MARKER")
 		{

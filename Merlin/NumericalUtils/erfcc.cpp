@@ -20,11 +20,7 @@ using namespace std;
 // Error function and complimentry error function
 // Taken for NRiC (and modified)
 
-#ifdef __APPLE__
 double erfc(double x)
-#else
-double erfc(double x) throw ()
-#endif
 {
 	double t,z,ans;
 	z=fabs(x);
