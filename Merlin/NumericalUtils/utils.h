@@ -41,13 +41,6 @@ OS<<"done: real time: "<<int(difftime(time(0),start_t))<<" seconds"<<endl;}
 // special function definitions
 // ----------------------------
 
-// Error function
-double erfc(double x);
-inline double erf(double x)
-{
-	return 1-erfc(x);
-}
-
 double NormalBin(double x1, double x2);
 
 // Modified Bessel function
