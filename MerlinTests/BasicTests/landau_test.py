@@ -52,7 +52,7 @@ sq_diff = ((results_hist-expected)/numpy.sqrt(expected))**2
 chi_sq = (sq_diff * useful_bins).sum()
 print("Chi^2 =", chi_sq)
 
-cdf = chi2(df=df).cdf(chi_sq)
+cdf = chi2.cdf(chi_sq, df)
 print("cdf(chi^2)=", cdf)
 print("percent of chi^2 higher even if true dist:", (1-cdf)*100)
 
