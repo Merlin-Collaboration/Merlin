@@ -83,6 +83,12 @@ struct ScatterPlotData
 	}
 };
 
+/**
+ * Base class for scattering models
+ *
+ * The user can customise a ScatteringModel using AddProcess(), or can
+ * use the predefiend models such as ScatteringModelMerlin.
+ */
 class ScatteringModel
 {
 
@@ -90,6 +96,7 @@ public:
 
 	// Constructor
 	ScatteringModel();
+	virtual ~ScatteringModel() {};
 
 	// Collimation Functions
 	// Set ScatterType
@@ -112,8 +119,10 @@ public:
 
 // Other Functions
 
-	// Add/clear ScatteringProcesses
-	void AddProcess(Collimation::ScatteringProcess* S)
+	/**
+	 * Add ScatteringProcesses to the model
+	 */
+	virtual void AddProcess(Collimation::ScatteringProcess* S)
 	{
 		Processes.push_back(S);
 		fraction.push_back(0);
@@ -139,6 +148,12 @@ public:
 	bool JawImpact_on;
 	std::vector <JawImpactData*> StoredJawImpactData;
 
+	int GetScatteringPhysicsModel()
+	{
+		return ScatteringPhysicsModel;
+	}
+
+protected:
 	// vector holding all scattering processes
 	std::vector <Collimation::ScatteringProcess*> Processes;
 
@@ -148,13 +163,6 @@ public:
 	//Store calculated CrossSections data to save time
 	std::map< std::string, Collimation::CrossSections* > stored_cross_sections;
 	std::map< std::string, Collimation::CrossSections* >::iterator CS_iterator;
-
-	int GetScatteringPhysicsModel()
-	{
-		return ScatteringPhysicsModel;
-	}
-
-protected:
 
 private:
 
