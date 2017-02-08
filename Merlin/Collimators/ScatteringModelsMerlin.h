@@ -41,5 +41,43 @@ public:
 	ScatteringModelMerlin();
 };
 
+/**
+ * Sixtrack style physics model
+ *
+ * ScatteringModel preset with physics based on SixTrack K2 scattering
+ */
+class ScatteringModelSixTrack: public ScatteringModelFixed
+{
+public:
+	ScatteringModelSixTrack();
+};
+
+/**
+ * Sixtrack style physics model + new  Ionisation
+ */
+class ScatteringModelSixTrackIoniz: public ScatteringModelFixed
+{
+public:
+	ScatteringModelSixTrackIoniz();
+};
+
+/**
+ * Sixtrack style physics model + new elastic scattering
+ */
+class ScatteringModelSixTrackElastic: public ScatteringModelFixed
+{
+public:
+	ScatteringModelSixTrackElastic();
+};
+
+/**
+ * Sixtrack style physics model + new single diffractive
+ */
+class ScatteringModelSixTrackSD: public ScatteringModelFixed
+{
+public:
+	ScatteringModelSixTrackSD();
+};
+
 }
 #endif

@@ -18,7 +18,7 @@
 //~ #include "Collimators/CollimateParticleProcess.h"
 #include "Collimators/CollimateProtonProcess.h"
 #include "Collimators/ScatteringProcess.h"
-#include "Collimators/ScatteringModel.h"
+#include "Collimators/ScatteringModelsMerlin.h"
 #include "Collimators/CollimatorDatabase.h"
 #include "Collimators/MaterialDatabase.h"
 #include "Collimators/ApertureConfiguration.h"
@@ -343,7 +343,7 @@ int main(int argc, char* argv[])
 	filename << "lhc_collimation_test_lossmap_"<< npart << ".dat";
 
 	LossMapCollimationOutput* myLossOutput = new LossMapCollimationOutput(tencm);
-
+	ScatteringModel* myScatter;
 	if(Loss_Map)
 	{
 		CollimateParticleProcess* myCollimateProcess;
@@ -363,14 +363,13 @@ int main(int argc, char* argv[])
 		myCollimateProcess=new CollimateProtonProcess(2,4);
 		myCollimateProcess->ScatterAtCollimator(true);
 
-		ScatteringModel* myScatter = new ScatteringModel;
 		if(st_scatter)
 		{
-			myScatter->SetScatterType(0);
+			myScatter = new ScatteringModelSixTrack;
 		}
 		else
 		{
-			myScatter->SetScatterType(4);
+			myScatter = new ScatteringModelMerlin;
 		}
 
 		myCollimateProcess->SetScatteringModel(myScatter);

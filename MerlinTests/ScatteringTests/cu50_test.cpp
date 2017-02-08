@@ -186,12 +186,14 @@ int main(int argc, char* argv[])
 	else
 	{
 		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2,4);
-		myScatter = new ScatteringModelMerlin;
-		//myScatter->SetScatterType(4);
-		//if (scatter_mode_sixtrack)
-		//{
-		//	myScatter->SetScatterType(1);
-		//}
+		if (scatter_mode_sixtrack)
+		{
+			myScatter = new ScatteringModelSixTrack;
+		}
+		else
+		{
+			myScatter = new ScatteringModelMerlin;
+		}
 		myCollimateProcess->SetScatteringModel(myScatter);
 		stringstream loststr;
 
