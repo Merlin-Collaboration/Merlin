@@ -285,7 +285,7 @@ void CollimateProtonProcess::SetScatter(ScatteringModel* sm)
 void CollimateProtonProcess::SetScatteringModel(Collimation::ScatteringModel* s)
 {
 	scattermodel = s;
-	SetScatter(scattermodel);
+	//SetScatter(scattermodel);
 }
 
 } // end namespace ParticleTracking
