@@ -170,10 +170,13 @@ void ppElasticScatter::GenerateTDistribution(double energy)
 	}
 }
 
-//ppElasticScatter::~ppElasticScatter()
-//{
-//delete LinearInterpolation;
-//}
+ppElasticScatter::~ppElasticScatter()
+{
+	if(LinearInterpolation)
+	{
+		delete LinearInterpolation;
+	}
+}
 
 /**
 * Generates the elastic differential cross section

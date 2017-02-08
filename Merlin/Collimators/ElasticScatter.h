@@ -32,9 +32,9 @@ public:
 	/**
 	* class constructor
 	*/
-	ppElasticScatter(): Configured(false),Debug(false) {}
+	ppElasticScatter(): LinearInterpolation(nullptr),Configured(false),Debug(false) {}
 
-//~ppElasticScatter();
+	~ppElasticScatter();
 	/**
 	* Generates the requried differential cross sections and integrates for the specified energy
 	*/

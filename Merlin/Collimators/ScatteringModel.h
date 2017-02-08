@@ -96,7 +96,7 @@ public:
 
 	// Constructor
 	ScatteringModel();
-	virtual ~ScatteringModel() {};
+	virtual ~ScatteringModel();
 
 	// Collimation Functions
 	// Set ScatterType

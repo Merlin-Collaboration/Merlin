@@ -122,7 +122,7 @@ void Elasticpn::Configure(Material* matin, CrossSections* CSin)
 }
 bool Elasticpn::Scatter(PSvector& p, double E)
 {
-	t = cs->ElasticScatter->SelectT();
+	t = cs->GetElasticScatter()->SelectT();
 
 	ScatterStuff(p, t, AtomicMassUnit, E0);
 	p.type() = 3;
@@ -229,7 +229,7 @@ void SingleDiffractive::Configure(Material* matin, CrossSections* CSin)
 }
 bool SingleDiffractive::Scatter(PSvector& p, double E)
 {
-	std::pair<double,double>TM = cs->DiffractiveScatter->Select();
+	std::pair<double,double>TM = cs->GetDiffractiveScatter()->Select();
 	t = TM.first;
 	m_rec = TM.second;
 	double com_sqd = (2 * ProtonMassMeV * MeV * E0) + (2 * ProtonMassMeV * MeV * ProtonMassMeV * MeV);

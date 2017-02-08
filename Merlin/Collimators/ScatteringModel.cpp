@@ -40,6 +40,14 @@ ScatteringModel::ScatteringModel()
 	JawImpact_on = 0;
 }
 
+ScatteringModel::~ScatteringModel()
+{
+	for (auto it: stored_cross_sections)
+	{
+		delete it.second;
+	}
+}
+
 double ScatteringModel::PathLength(Material* mat, double E0)
 {
 	static double lambda;
