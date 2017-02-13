@@ -11,7 +11,8 @@
 
 #include "Collimators/ApertureConfiguration.h"
 
-ApertureConfiguration::ApertureConfiguration(std::string InputFileName) : logFlag(false)
+ApertureConfiguration::ApertureConfiguration(std::string InputFileName) : logFlag(false), DefaultAperture(nullptr), DefaultApertureFlag(false)
+
 {
 	LoadApertureConfiguration(InputFileName);
 }
@@ -81,6 +82,10 @@ void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 			{
 				ApertureEntry.ApType = LHCSCREEN;
 			}
+			else if(aptype == "\"OCTAGON\"")
+			{
+				ApertureEntry.ApType = OCTAGON;
+			}
 			else if(aptype == "\"NONE\"")
 			{
 				ApertureEntry.ApType = NONE;
@@ -131,6 +136,10 @@ void ApertureConfiguration::OutputApertureList(std::ostream& os)
 		else if(ApertureList[n].ApType == ELLIPSE)
 		{
 			os << "ELLIPSE";
+		}
+		else if(ApertureList[n].ApType == OCTAGON)
+		{
+			os << "OCTAGON";
 		}
 		else
 		{
@@ -206,6 +215,10 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							else if(itr->ApType == RECTANGLE)
 							{
 								aper = new RectangularAperture(itr->ap1, itr->ap2);
+							}
+							else if(itr->ApType == OCTAGON)
+							{
+								aper = new OctagonalAperture(itr->ap1, itr->ap2, itr->ap3, itr->ap4);
 							}
 							else
 							{
@@ -440,9 +453,14 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 									{
 										aper = new InterpolatedRectEllipseAperture(apInterpolated->GetApertureList());
 									}
+									else if(ApTypeToAdd == OCTAGON)
+									{
+										aper = new InterpolatedOctagonalAperture(apInterpolated->GetApertureList());
+									}
 									else
 									{
-										std::cerr << "Drift: constant aperture Class bug" << std::endl;
+										std::cerr << "Drift: constant type aperture Class bug: " << (*comp)->GetQualifiedName() << " at " << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
+										std::cerr << "Trying to make an INTERPOLATED APERTURE class of a type that does not exist currently!" << std::endl;
 										exit(EXIT_FAILURE);
 									}
 									(*comp)->SetAperture(aper);
@@ -454,6 +472,9 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 									//This should work for changes between circles/ellipses/rectellipse
 									//Just set the missing coordinates to the same size as the known parameters for rectellipse
 									InterpolatedAperture* apInterpolated = new InterpolatedAperture();
+
+									bool octagon = false;
+									bool rectellipse = false;
 
 									for(size_t n=0; n < ThisElementAperture.size(); n++ )
 									{
@@ -467,6 +488,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
 											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap3;
 											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap4;
+											rectellipse = true;
 										}
 										else if(ThisElementAperture[n].ApType == CIRCLE)
 										{
@@ -474,6 +496,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap1;
 											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap1;
 											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap1;
+											rectellipse = true;
 										}
 										else if(ThisElementAperture[n].ApType == ELLIPSE)
 										{
@@ -481,6 +504,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
 											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap1;
 											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap2;
+											rectellipse = true;
 										}
 										else if(ThisElementAperture[n].ApType == RECTANGLE)
 										{
@@ -488,11 +512,35 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
 											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap1;
 											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap2;
+											rectellipse = true;
+										}
+										else if(ThisElementAperture[n].ApType == OCTAGON)
+										{
+											apInterpolated->ApertureEntry.ap1 = ThisElementAperture[n].ap1;
+											apInterpolated->ApertureEntry.ap2 = ThisElementAperture[n].ap2;
+											apInterpolated->ApertureEntry.ap3 = ThisElementAperture[n].ap3;
+											apInterpolated->ApertureEntry.ap4 = ThisElementAperture[n].ap4;
+											octagon = true;
 										}
 										else
 										{
-											std::cerr << "Drift: interpolated aperture Class bug" << std::endl;
+											std::cerr << "Drift: changing type interpolated aperture Class bug: " << (*comp)->GetQualifiedName() << " at " << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
+											std::cerr << "Trying to make an INTERPOLATED APERTURE class of a type that does not exist currently!: " << ThisElementAperture[n].ApType << std::endl;
 											exit(EXIT_FAILURE);
+										}
+
+										if(rectellipse && octagon)
+										{
+											if(DefaultApertureFlag && DefaultAperture)
+											{
+												aper = DefaultAperture;
+											}
+											else
+											{
+												std::cerr << "Drift: changing type interpolated aperture Class bug: " << (*comp)->GetQualifiedName() << " at " << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
+												std::cerr << "Trying to connect octagon apertures with types that are not compatible and no default aperture class is set." << std::endl;
+												exit(EXIT_FAILURE);
+											}
 										}
 
 										apInterpolated->ApertureList.push_back(apInterpolated->ApertureEntry);
@@ -521,6 +569,10 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 								else if(ApTypeToAdd == RECTANGLE)
 								{
 									aper = new RectangularAperture(ap1p, ap2p);
+								}
+								else if(ApTypeToAdd == OCTAGON)
+								{
+									aper = new OctagonalAperture(ap1p, ap2p, ap3p, ap4p);
 								}
 								(*comp)->SetAperture(aper);
 								itr = ApertureList.end();
@@ -561,3 +613,27 @@ void ApertureConfiguration::EnableLogging(bool flg)
 	logFlag = flg;
 }
 
+void ApertureConfiguration::DeleteAllApertures(AcceleratorModel* Model)
+{
+	std::vector<AcceleratorComponent*> Elements;
+	int nElements = Model->ExtractTypedElements(Elements,"*");
+
+	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp!=Elements.end(); comp++)
+	{
+		if((*comp)->GetAperture() != nullptr)
+		{
+			delete (*comp)->GetAperture();
+			(*comp)->SetAperture(nullptr);
+		}
+	}
+}
+
+void ApertureConfiguration::SetDefaultAperture(Aperture* ap)
+{
+	DefaultAperture = ap;
+}
+
+void ApertureConfiguration::EnableDefaultAperture(bool flag)
+{
+	DefaultApertureFlag = flag;
+}
