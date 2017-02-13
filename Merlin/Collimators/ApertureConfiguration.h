@@ -35,10 +35,16 @@ public:
 	void OutputApertureList(std::ostream& os);
 
 	/**
-	* Configures the
+	* Configures the beam pipe for a given accelerator model
 	* @param[in] Model A pointer to the AcceleratorModel class to add the apertures to
 	*/
 	void ConfigureElementApertures(AcceleratorModel*);
+
+	/**
+	* Deletes all apertures currently attached to the given accelerator model
+	* @param[in] Model A pointer to the AcceleratorModel class to add the apertures to
+	*/
+	void DeleteAllApertures(AcceleratorModel* Model);
 
 	/**
 	* Set the stream for the collimator settings log.
@@ -51,6 +57,18 @@ public:
 	* @param [in] flag The requested logging state
 	*/
 	void EnableLogging(bool flag);
+
+	/**
+	* Set a default class of aperture to use in ambiguous cases
+	* @param [in] flag The requested logging state
+	*/
+	void SetDefaultAperture(Aperture* ap);
+
+	/**
+	* Enable/disable use of the default aperture where it is not possible to clearly select an aperture type (e.g. OCTAGON -> RECTELLIPSE joins)
+	* @param [in] flag A bool to enable or disable the usage of the default aperture
+	*/
+	void EnableDefaultAperture(bool flag);
 
 	/**
 	* The output log file
@@ -110,6 +128,12 @@ public:
 	* The global list of Aperture entries
 	*/
 	std::vector<ap> ApertureList;
+
+	/**
+	* A pointer to a default aperture entry
+	*/
+	Aperture* DefaultAperture;
+	bool DefaultApertureFlag;
 };
 
 #endif

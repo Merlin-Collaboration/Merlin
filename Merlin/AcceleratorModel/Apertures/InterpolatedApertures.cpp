@@ -522,3 +522,136 @@ void InterpolatedEllipticalAperture::printout(std::ostream& out) const
 	}
 	out << ")";
 }
+
+/**
+* InterpolatedOctagonalAperture
+*/
+
+//Returns true if the point (x,y,z) is within the aperture.
+bool InterpolatedOctagonalAperture::PointInside (double x, double y, double z) const
+{
+	ap apFront;
+	ap apBack;
+
+	apFront.s = 0;
+	apFront.ap1 = 0;
+	apFront.ap2 = 0;
+	apFront.ap3 = 0;
+	apFront.ap4 = 0;
+
+	apBack.s = 0;
+	apBack.ap1 = 0;
+	apBack.ap2 = 0;
+	apBack.ap3 = 0;
+	apBack.ap4 = 0;
+
+	if(z < 0)
+	{
+		z = 0;
+	}
+
+	//The z coordinate is used to find the other aperture components
+	for(size_t n=1; n < ApertureList.size(); n++)
+	{
+		if(ApertureList[n].s >= z)
+		{
+			apBack = InterpolatedAperture::ApertureList[n-1];
+			apFront = InterpolatedAperture::ApertureList[n];
+			break;
+		}
+	}
+
+	//We now have the aperture before and after the particle.
+	//It must now be calculated at the point where the particle is currently.
+
+	//y = mx + c
+	//m = (y1 - y0) / (x1 - x0)
+	double delta_s = apFront.s - apBack.s;
+	double g1 = (apFront.ap1 - apBack.ap1) / delta_s;
+	double g2 = (apFront.ap2 - apBack.ap2) / delta_s;
+	double g3 = (apFront.ap3 - apBack.ap3) / delta_s;
+	double g4 = (apFront.ap4 - apBack.ap4) / delta_s;
+
+	//c = y - mx
+	double c1 = apFront.ap1 - (g1 * apFront.s);
+	double c2 = apFront.ap2 - (g2 * apFront.s);
+	double c3 = apFront.ap3 - (g3 * apFront.s);
+	double c4 = apFront.ap4 - (g4 * apFront.s);
+
+	// hw(h), hh(v), angle1(a1), angle2(a2)
+	double hw = (g1 * z) + c1;
+	double hh = (g2 * z) + c2;
+	double angle1 = (g3 * z) + c3;
+	double angle2 = (g4 * z) + c4;
+
+	//Compute the tangents.
+	double tana1 = tan(angle1);
+	double tana2 = tan(pi/2 - angle2);
+
+	//Make some constants.
+	//(hh*tana2 - hw)
+	double cc1 = (hh*tana2 - hw);
+
+	//hw*tana1
+	double cc2 = hw*tana1;
+
+	//hh - hw*tana1
+	double cc3 = hh - cc2;
+
+	//This is just taken from trrun.f90 in MAD-X. - credit to: 2015-Feb-20  18:42:26  ghislain: added octagon shape
+
+	/*
+	!*** case of octagon: test outer rectangle (ap1,ap2) then test cut corner.
+	lost =  x .gt. ap1 .or. y .gt. ap2 .or. &
+	     (ap2*tan(pi/2 - ap4) - ap1)*(y - ap1*tan(ap3)) - (ap2 - ap1*tan(ap3))*(x - ap1) .lt. zero
+	*/
+
+	double fabsx = fabs(x);
+	double fabsy = fabs(y);
+
+	x=fabsx;
+	y=fabsy;
+	//First check the rectangle
+	if(x >= hw || y >= hh)
+	{
+		return false;
+	}
+
+	if(cc1*(y - cc2) - cc3*(x - hw) <= 0 )
+	{
+		return false;
+	}
+
+	//Particle survives both checks
+	return true;
+}
+
+double InterpolatedOctagonalAperture::GetRadiusAt (double phi, double z) const
+{
+	std::cerr << "InterpolatedOctagonalAperture::GetRadiusAt() - Not yet implemented." << std::endl;
+	exit(EXIT_FAILURE);
+	return 0;
+}
+
+
+void InterpolatedOctagonalAperture::EnablePrint()
+{
+	Print = true;
+}
+
+void InterpolatedOctagonalAperture::printout(std::ostream& out) const
+{
+	out << GetApertureType() << "(";
+	for(size_t n=0; n < ApertureList.size(); n++)
+	{
+		out << ApertureList[n].s << " [";
+		out << ApertureList[n].ap1<< ", " << ApertureList[n].ap2<< ", "<< ApertureList[n].ap3<< ", "<< ApertureList[n].ap4;
+		out << "]";
+		if (n < ApertureList.size()-1)
+		{
+			out << ", ";
+		}
+	}
+	out << ")";
+}
+

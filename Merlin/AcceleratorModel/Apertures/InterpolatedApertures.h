@@ -150,4 +150,38 @@ inline std::string InterpolatedEllipticalAperture::GetApertureType() const
 {
 	return "INTERPOLATEDELLIPTICAL";
 }
+
+//RectEllipse Aperture
+class InterpolatedOctagonalAperture : public InterpolatedAperture, public Aperture
+{
+public:
+	//Constructor
+	InterpolatedOctagonalAperture (std::vector<InterpolatedAperture::ap> ElementApertureList):InterpolatedAperture(ElementApertureList)
+	{
+		//MerlinProfile::AddProcess("APERTURE");
+		Print = false;
+		ApertureMaterial = nullptr;
+	}
+
+	//Returns true if the point (x,y,z) is within the aperture.
+	virtual bool PointInside (double x, double y, double z) const;
+
+	//TODO
+	//Returns true if the point p is within the aperture.
+	//bool PointInside (const Point3D& p) const;
+
+	//Returns the radius to the aperture at location z and angle phi.
+	virtual double GetRadiusAt (double phi, double z) const;
+
+	virtual std::string GetApertureType() const;
+
+	void EnablePrint();
+	bool Print;
+	virtual void printout(std::ostream& out) const;
+};
+
+inline std::string InterpolatedOctagonalAperture::GetApertureType() const
+{
+	return "INTERPOLATEDOCTAGONAL";
+}
 #endif
