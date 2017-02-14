@@ -574,6 +574,11 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 								{
 									aper = new OctagonalAperture(ap1p, ap2p, ap3p, ap4p);
 								}
+								else
+								{
+									std::cerr << "Trying to create an unknown aperture type! ApTypeToAdd = "<< ApTypeToAdd << std::endl;
+									exit(EXIT_FAILURE);
+								}
 								(*comp)->SetAperture(aper);
 								itr = ApertureList.end();
 								break;
