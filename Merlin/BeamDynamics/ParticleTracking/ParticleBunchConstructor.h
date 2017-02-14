@@ -33,8 +33,7 @@ namespace ParticleTracking
 
 typedef enum {normalDistribution,flatDistribution,ringDistribution,skewHaloDistribution,\
               horizontalHaloDistribution1,verticalHaloDistribution1,horizontalHaloDistribution2,\
-              horizontalHaloDistribution3,verticalHaloDistribution2,tuneTestDistribution,\
-              vertTestDistribution, CCDistn, CCDistn2, RFDistn, LHCDistn
+              verticalHaloDistribution2
              } DistributionType;
 
 /**
