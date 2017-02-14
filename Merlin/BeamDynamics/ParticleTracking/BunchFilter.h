@@ -22,8 +22,6 @@ class HorizontalHaloParticleBunchFilter : public ParticleBunchFilter
 {
 public:
 
-//    ~ParticleBunchFilter ();
-
 	//	Used by a ParticleBunchConstructor object to select
 	//	vectors for inclusion in a ParticleBunch.
 	bool Apply (const PSvector& v) const;
@@ -31,6 +29,7 @@ public:
 	void SetHorizontalLimit(double);
 	void SetHorizontalOrbit(double);
 
+private:
 	double limit;
 	double orbit;
 };
@@ -40,14 +39,13 @@ class VerticalHaloParticleBunchFilter : public ParticleBunchFilter
 {
 public:
 
-	//  ~ParticleBunchFilter ();
-
 	//	Used by a ParticleBunchConstructor object to select
 	//	vectors for inclusion in a ParticleBunch.
 	bool Apply (const PSvector& v) const;
 
 	void SetVerticalLimit(double);
 
+private:
 	double limit;
 };
 
