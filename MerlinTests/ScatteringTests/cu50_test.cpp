@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
 	bin_maxs[4] = 1e-1;      //dp
 
 
-	uint64_t hists[5][nbins+2] = {0};
+	uint64_t hists[5][nbins+2] = {{0}};
 
 	/*********************************************************************
 	**	ACCELERATOR MODEL LOADING
