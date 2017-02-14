@@ -39,11 +39,11 @@ public:
 	// bunch charge is specified, the constructor uses the ELOSS information
 	// for the cavities to calculate the reference (matched) energy for the
 	// magnet strengths.
-	XTFFInterface(const std::string& fname, double nb=0, ostream* log =0);
+	XTFFInterface(const std::string& fname, double nb=0, ostream* log=nullptr);
 
 	// This version should be used when multiple files are to be parsed
 	// using AppendModel().
-	XTFFInterface(double nb=0, ostream* log =0);
+	XTFFInterface(double nb=0, ostream* log=nullptr);
 
 	// Destructor
 	~XTFFInterface();

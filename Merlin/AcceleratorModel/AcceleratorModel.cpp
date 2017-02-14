@@ -84,7 +84,7 @@ void ExtractAcceleratorSupports::ActOn(LatticeFrame* aFrame)
 
 extern ChannelServer* ConstructChannelServer();
 
-AcceleratorModel::AcceleratorModel() : globalFrame(0)
+AcceleratorModel::AcceleratorModel() : globalFrame(nullptr)
 {
 	theElements = new ElementRepository();
 	chServer = ConstructChannelServer();
@@ -225,7 +225,7 @@ size_t AcceleratorModel::GetRWChannels (AcceleratorModel::Beamline& aBeamline, c
 
 void AcceleratorModel::AddModelElement (ModelElement* element)
 {
-	if(element!=0)
+	if(element!=nullptr)
 	{
 		theElements->Add(element);
 	}

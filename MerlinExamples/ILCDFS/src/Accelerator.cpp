@@ -41,7 +41,7 @@ bool KlystronSort(const Klystron* k1, const Klystron* k2)
 } // end of anonymous namespace
 
 Accelerator::Accelerator(const std::string& name, AcceleratorModel* aModel, BeamData* ibeamdat)
-	: itsAccModel(aModel),itsName(name),itsTracker(0),beam0(ibeamdat),cachedBunches(),
+	: itsAccModel(aModel),itsName(name),itsTracker(nullptr),beam0(ibeamdat),cachedBunches(),
 	  currentSegment(0,0),allowIncrTracking(false)
 {}
 

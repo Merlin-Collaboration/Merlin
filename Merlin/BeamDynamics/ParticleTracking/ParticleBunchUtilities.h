@@ -47,7 +47,7 @@ namespace ParticleTracking
 //
 size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nbins,
                        std::vector<ParticleBunch::iterator>& pbins,
-                       vector<double>& hd, vector<double>& hdp, vector<double>* c = 0);
+                       vector<double>& hd, vector<double>& hdp, vector<double>* c = nullptr);
 
 // Return the distribution of particles for the coordinate u.
 // The distribution is returned as a binned histogram, with

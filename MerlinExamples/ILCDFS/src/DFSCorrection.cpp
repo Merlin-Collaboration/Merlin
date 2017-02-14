@@ -19,15 +19,15 @@
 #include "ResponseMatrixGenerator.h"
 #include "ILCDFS_IO.h"
 
-EnergyAdjustmentPolicy* DFSCorrection::theEnergyAdjustmentPolicy =0;
-Accelerator* DFSCorrection::theReferenceModel =0;
-Accelerator* DFSCorrection::theSimulationModel =0;
+EnergyAdjustmentPolicy* DFSCorrection::theEnergyAdjustmentPolicy = nullptr;
+Accelerator* DFSCorrection::theReferenceModel = nullptr;
+Accelerator* DFSCorrection::theSimulationModel = nullptr;
 
 double DFSCorrection::w_abs = 1;
 double DFSCorrection::w_diff =1;
 
 DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
-	: itsSegment(aSegment), itsBPMdataFilter(0), bpms(), correctors(),svd(0),refdata()
+	: itsSegment(aSegment), itsBPMdataFilter(nullptr), bpms(), correctors(),svd(nullptr),refdata()
 {
 	// First we use theReferenceModel to calculate the design
 	// response model matrix which will be used to calculate

@@ -43,6 +43,6 @@ ROChannel* BPMChannelCtor::ConstructRO (ModelElement* anElement)
 
 RWChannel* BPMChannelCtor::ConstructRW (ModelElement* anElement)
 {
-	return (RWChannel*)0;
+	return (RWChannel*)nullptr;
 }
 

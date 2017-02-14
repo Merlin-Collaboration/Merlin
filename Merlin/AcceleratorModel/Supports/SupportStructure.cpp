@@ -18,7 +18,7 @@ SupportStructure::SupportStructure (const string& id, Type type)
 	: SequenceFrame(id)
 {
 	sup1 = new AcceleratorSupport();
-	sup2 = (type==girder) ? new AcceleratorSupport() : 0;
+	sup2 = (type==girder) ? new AcceleratorSupport() : nullptr;
 }
 
 SupportStructure::SupportStructure (const SupportStructure& rhs)

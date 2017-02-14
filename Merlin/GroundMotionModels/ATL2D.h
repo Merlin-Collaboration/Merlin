@@ -49,7 +49,7 @@ public:
 
 	//	Constructor taking the A constant and the list of
 	//	support structures.
-	ATL2D (double anA, const AcceleratorSupportList& supports, const Point2D refPoint=Point2D(0,0), ifstream* evecTFile=0, ifstream* evalFile=0);
+	ATL2D (double anA, const AcceleratorSupportList& supports, const Point2D refPoint=Point2D(0,0), ifstream* evecTFile=nullptr, ifstream* evalFile=nullptr);
 
 	~ATL2D ();
 

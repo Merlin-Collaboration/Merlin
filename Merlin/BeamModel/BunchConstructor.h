@@ -76,7 +76,7 @@ inline StaticBunchCtor<B>::StaticBunchCtor (B* source, bool del)
 template <class B>
 StaticBunchCtor<B>::~StaticBunchCtor ()
 {
-	if(owns && sourceBunch!=0)
+	if(owns && sourceBunch!=nullptr)
 	{
 		delete sourceBunch;
 	}

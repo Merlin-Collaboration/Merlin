@@ -55,7 +55,7 @@ public:
 };
 
 inline Marker::Marker (const std::string& id)
-	: AcceleratorComponent(id,0,0)
+	: AcceleratorComponent(id,nullptr,nullptr)
 {}
 
 #endif

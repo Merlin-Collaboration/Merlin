@@ -190,7 +190,7 @@ public:
 
 	void SetLoggingOff ()
 	{
-		stepper.SetLogStream(0);
+		stepper.SetLogStream(nullptr);
 	}
 
 	/**

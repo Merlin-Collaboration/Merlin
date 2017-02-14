@@ -156,7 +156,7 @@ void CCFailureProcess::InitialiseProcess (Bunch& bunch)
 void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 	CrabMarker* aCrabMarker = dynamic_cast<CrabMarker*>(&component);
-	active = (currentBunch!=0) && (aCrabMarker);
+	active = (currentBunch!=nullptr) && (aCrabMarker);
 
 	if(active)
 	{
@@ -292,7 +292,7 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 	}
 	else
 	{
-		currentComponent = 0;
+		currentComponent = nullptr;
 	}
 }
 

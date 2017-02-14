@@ -69,7 +69,7 @@ bool ComponentTracker::IntegratorSet::Add (ComponentIntegrator* intg)
 ComponentIntegrator* ComponentTracker::IntegratorSet::GetIntegrator (int n)
 {
 	IMap::iterator i = itsMap.find(n);
-	return i==itsMap.end() ? 0 : (*i).second;
+	return i==itsMap.end() ? nullptr : (*i).second;
 }
 
 void DefaultMarkerIntegrator::TrackStep (double ds)
@@ -119,7 +119,7 @@ double ComponentTracker::TrackStep (double ds)
 
 void ComponentTracker::Reset ()
 {
-	integrator = 0;
+	integrator = nullptr;
 	itsState = undefined;
 }
 
@@ -156,7 +156,7 @@ void ComponentTracker::InitialiseIntegrator (ComponentIntegrator*)
 
 bool ComponentTracker::Register (ComponentIntegrator* intg)
 {
-	if(iSet==0)
+	if(iSet==nullptr)
 	{
 		iSet = new IntegratorSet();
 	}

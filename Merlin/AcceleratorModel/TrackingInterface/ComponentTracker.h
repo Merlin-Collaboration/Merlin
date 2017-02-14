@@ -229,18 +229,18 @@ public:
 	{
 	public:
 		virtual ~ISetBase() {};
-		virtual void Init(TBunchCMPTracker&) const =0;
+		virtual void Init(TBunchCMPTracker&) const = 0;
 	};
 
 	// Default constructor (uses default integrator set)
-	TBunchCMPTracker() : ComponentTracker(), currentBunch(0)
+	TBunchCMPTracker() : ComponentTracker(), currentBunch(nullptr)
 	{
 		defIS->Init(*this);
 	}
 
 	// Constructor taking explicit integrator set
 	explicit TBunchCMPTracker(const ISetBase& iset)
-		: ComponentTracker(), currentBunch(0)
+		: ComponentTracker(), currentBunch(nullptr)
 	{
 		iset.Init(*this);
 	}

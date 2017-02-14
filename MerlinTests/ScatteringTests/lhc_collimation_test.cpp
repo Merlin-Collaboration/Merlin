@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 
 	if (seed == 0)
 	{
-		seed = (int)time(NULL);
+		seed = (int)time(nullptr);
 	}
 
 	if (argc >=3)

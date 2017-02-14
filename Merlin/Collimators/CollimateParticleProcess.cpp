@@ -102,7 +102,7 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 		++ColParProTurn;
 	}
 
-	active = (currentBunch!=0) && (component.GetAperture()!=0);
+	active = (currentBunch!=nullptr) && (component.GetAperture()!=nullptr);
 	if(active)
 	{
 		currentComponent = &component;
@@ -141,7 +141,7 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 	else
 	{
 		s_total += component.GetLength();
-		currentComponent = 0;
+		currentComponent = nullptr;
 	}
 }
 
@@ -529,7 +529,7 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 	if(!lostb.empty())
 	{
 //	PSvectorArray lostp = bin_lost_output(lostb);
-		if(os!=0)
+		if(os!=nullptr)
 		{
 			double length = currentComponent->GetLength();
 			double** lostp;

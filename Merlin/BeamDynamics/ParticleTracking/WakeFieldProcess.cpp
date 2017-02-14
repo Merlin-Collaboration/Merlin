@@ -85,7 +85,7 @@ namespace ParticleTracking
 {
 
 WakeFieldProcess::WakeFieldProcess (int prio, size_t nb, double ns, string aID)
-	: ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(nullptr),Qd(),Qdp(),filter(0),
+	: ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(nullptr),Qd(),Qdp(),filter(nullptr),
 	  wake_x(0),wake_y(0),wake_z(0),recalc(true),inc_tw(true),oldBunchLen(0)
 {
 	SetFilter(14,2,1);
@@ -174,7 +174,7 @@ void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
 
 	//if(wake!=0) cout<<GetID()<<endl;
 
-	if(currentBunch!=0 && wake!=nullptr)
+	if(currentBunch!=nullptr && wake!=nullptr)
 	{
 		clen = component.GetLength();
 		switch(imploc)
@@ -437,7 +437,7 @@ void WakeFieldProcess::DumpSliceCentroids(ostream& os) const
 void WakeFieldProcess::InitialiseProcess (Bunch& bunch)
 {
 	ParticleBunchProcess::InitialiseProcess(bunch);
-	currentWake = 0;
+	currentWake = nullptr;
 	recalc = true;
 }
 

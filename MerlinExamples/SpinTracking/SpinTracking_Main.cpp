@@ -142,7 +142,7 @@ int main()
 //		spinBunch->Output(trackingLog);
 
 		delete spinBunch;
-		tracker.SetOutput(0);
+		tracker.SetOutput(nullptr);
 		delete spOut;
 
 		// Quadrupole sensitivities

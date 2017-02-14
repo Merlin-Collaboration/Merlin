@@ -43,18 +43,18 @@ public:
 	// Returns true if this is an empty frame
 	bool IsComponent() const
 	{
-		return theComponent!=0;
+		return theComponent!=nullptr;
 	}
 
 	// Returns the (design) geometry patches for this component
 	// frame.
 	virtual const Transform3D* GetEntranceGeometryPatch() const
 	{
-		return 0;
+		return nullptr;
 	}
 	virtual const Transform3D* GetExitGeometryPatch() const
 	{
-		return 0;
+		return nullptr;
 	}
 
 	//	Causes any cached state to be invalidated. The cached
@@ -113,7 +113,7 @@ inline ComponentFrame::ComponentFrame(AcceleratorComponent* ac, const string& id
 
 inline AcceleratorComponent& ComponentFrame::GetComponent ()
 {
-	if(theComponent==0)
+	if(theComponent==nullptr)
 	{
 		throw "bad_component";
 	}
@@ -122,7 +122,7 @@ inline AcceleratorComponent& ComponentFrame::GetComponent ()
 
 inline const AcceleratorComponent& ComponentFrame::GetComponent () const
 {
-	if(theComponent==0)
+	if(theComponent==nullptr)
 	{
 		throw "bad_component";
 	}

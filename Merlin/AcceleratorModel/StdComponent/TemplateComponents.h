@@ -50,7 +50,7 @@ public:
 	typedef G geom_type;
 
 public:
-	TAccCompG (const string& id, G* geom, EMField* field = 0);
+	TAccCompG (const string& id, G* geom, EMField* field = nullptr);
 
 	TAccCompG (const TAccCompG<G>& rhs);
 
@@ -160,7 +160,7 @@ inline const F& TAccCompGF<G,F>::GetField () const
 
 template <class G>
 TAccCompG<G>::TAccCompG (const TAccCompG<G>& rhs)
-	: AcceleratorComponent(rhs.GetName(),new G(rhs.GetGeometry()),0)
+	: AcceleratorComponent(rhs.GetName(),new G(rhs.GetGeometry()),nullptr)
 {
 }
 

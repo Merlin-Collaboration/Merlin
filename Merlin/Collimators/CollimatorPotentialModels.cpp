@@ -37,7 +37,7 @@ TaperedCollimatorPotentials::TaperedCollimatorPotentials(int m, double aa, doubl
 
 TaperedCollimatorPotentials::~TaperedCollimatorPotentials()
 {
-	if(coeff!=0)
+	if(coeff!=nullptr)
 	{
 		delete[] coeff;
 	}
@@ -74,7 +74,7 @@ ResistiveWakePotentials::ResistiveWakePotentials(int m, double r, double s, doub
 
 ResistiveWakePotentials::~ResistiveWakePotentials()
 {
-	if(coeff!=0)
+	if(coeff!=nullptr)
 	{
 		delete[] coeff;
 	}

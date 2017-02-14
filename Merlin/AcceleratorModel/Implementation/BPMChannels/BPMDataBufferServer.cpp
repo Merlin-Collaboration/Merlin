@@ -26,7 +26,7 @@ BPMDataBuffer* BPMDataBufferServer::GetDataBuffer (BPM* bpm, bool create)
 
 	if(!create)
 	{
-		return (BPMDataBuffer*)0;
+		return (BPMDataBuffer*)nullptr;
 	}
 
 	// make new buffer

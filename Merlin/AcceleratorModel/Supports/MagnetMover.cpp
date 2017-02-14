@@ -23,7 +23,7 @@ ModelElement* MagnetMover::Copy () const
 {
 	// Not sure what to do here!
 	assert(false);
-	return 0;
+	return nullptr;
 }
 
 Transform3D MagnetMover::GetLocalFrameTransform () const

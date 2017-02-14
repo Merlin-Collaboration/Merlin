@@ -60,11 +60,11 @@ private:
 template <class M, class B, class D>
 inline bool AMBufferManager<M,B,D>::empty () const
 {
-	return defBuffer==0 && buffers.empty();
+	return defBuffer==nullptr && buffers.empty();
 }
 
 template <class M, class B, class D>
-B* AMBufferManager<M,B,D>::defBuffer = 0;
+B* AMBufferManager<M,B,D>::defBuffer = nullptr;
 
 
 template <class M, class B, class D>
@@ -100,7 +100,7 @@ void AMBufferManager<M,B,D>::SetDefaultBuffer (B* buf)
 template <class M, class B, class D>
 void AMBufferManager<M,B,D>::SendToBuffers (const M& monitor, const D& data)
 {
-	if(defBuffer!=0)
+	if(defBuffer!=nullptr)
 	{
 		defBuffer->Record(monitor,data);
 	}
