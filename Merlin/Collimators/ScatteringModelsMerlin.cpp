@@ -41,7 +41,7 @@ ScatteringModelMerlin::ScatteringModelMerlin()
 	AddProcess(new SingleDiffractive());
 	AddProcess(new Rutherford());
 	AddProcess(new Inelastic());
-	SetScatterType(4); // FIXME, still needed to select EnergyLoss() in CollimateProtonProcess::DoScatter()
+	SetScatterType(4); // FIXME, still needed for CrossSections
 	is_fixed = true;
 }
 
@@ -52,7 +52,8 @@ ScatteringModelSixTrack::ScatteringModelSixTrack()
 	AddProcess(new SixTrackSingleDiffractive());
 	AddProcess(new SixTrackRutherford());
 	AddProcess(new Inelastic());
-	SetScatterType(0); // FIXME, still needed to select EnergyLoss() in CollimateProtonProcess::DoScatter()
+	energy_loss_mode = SimpleEnergyLoss;
+	SetScatterType(0); // FIXME, still needed for CrossSections
 	is_fixed = true;
 }
 
@@ -63,7 +64,7 @@ ScatteringModelSixTrackIoniz::ScatteringModelSixTrackIoniz()
 	AddProcess(new SixTrackSingleDiffractive());
 	AddProcess(new SixTrackRutherford());
 	AddProcess(new Inelastic());
-	SetScatterType(1); // FIXME, still needed to select EnergyLoss() in CollimateProtonProcess::DoScatter()
+	SetScatterType(1); // FIXME, still needed for CrossSections
 	is_fixed = true;
 }
 
@@ -74,7 +75,8 @@ ScatteringModelSixTrackElastic::ScatteringModelSixTrackElastic()
 	AddProcess(new SixTrackSingleDiffractive());
 	AddProcess(new SixTrackRutherford());
 	AddProcess(new Inelastic());
-	SetScatterType(2); // FIXME, still needed to select EnergyLoss() in CollimateProtonProcess::DoScatter()
+	energy_loss_mode = SimpleEnergyLoss;
+	SetScatterType(2); // FIXME, still needed for CrossSections
 	is_fixed = true;
 }
 
@@ -85,7 +87,8 @@ ScatteringModelSixTrackSD::ScatteringModelSixTrackSD()
 	AddProcess(new SingleDiffractive());
 	AddProcess(new SixTrackRutherford());
 	AddProcess(new Inelastic());
-	SetScatterType(3); // FIXME, still needed to select EnergyLoss() in CollimateProtonProcess::DoScatter()
+	energy_loss_mode = SimpleEnergyLoss;
+	SetScatterType(3); // FIXME, still needed for CrossSections
 	is_fixed = true;
 }
 

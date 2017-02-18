@@ -104,8 +104,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		exit(EXIT_FAILURE);
 	}
 
-	int smode = scattermodel->GetScatteringPhysicsModel();
-
 	while(lengthtogo>0)
 	{
 		double E1 = E0 * (1 + p.dp());
@@ -136,16 +134,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		}
 
 		//Energy Loss
-		if(smode == 1 || smode == 4)
-		{
-			//Advanced
-			scattermodel->EnergyLoss(p, step_size, C->p, E0);
-		}
-		else
-		{
-			//Simple
-			scattermodel->EnergyLoss(p, step_size, C->p, E0, E1);
-		}
+		scattermodel->EnergyLoss(p, step_size, C->p, E0);
 
 		E2 = E0 * (1 + p.dp());
 

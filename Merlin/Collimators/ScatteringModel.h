@@ -83,6 +83,8 @@ struct ScatterPlotData
 	}
 };
 
+enum EnergyLossMode {SimpleEnergyLoss, FullEnergyLoss};
+
 /**
  * Base class for scattering models
  *
@@ -105,10 +107,7 @@ public:
 	// Calculate the particle path length in given material using scattering processes
 	double PathLength(Material* mat, double E0);
 
-	// Energy loss via ionisation
-	void EnergyLoss(PSvector& p, double x, Material* mat, double E0, double E1);
-
-	// Advanced energy loss via ionisation
+	// Dispatches to EnergyLossSimple or EnergyLossFull
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0);
 
 	// Multiple Coulomb scattering
@@ -163,11 +162,15 @@ protected:
 	//Store calculated CrossSections data to save time
 	std::map< std::string, Collimation::CrossSections* > stored_cross_sections;
 	std::map< std::string, Collimation::CrossSections* >::iterator CS_iterator;
+	EnergyLossMode energy_loss_mode;
 
 private:
-
+	// Energy loss via ionisation
+	void EnergyLossSimple(PSvector& p, double x, Material* mat, double E0);
+	// Advanced energy loss via ionisation
+	void EnergyLossFull(PSvector& p, double x, Material* mat, double E0);
 	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN
-	int ScatteringPhysicsModel;
+	int ScatteringPhysicsModel; // Still required for CrossSections
 };
 
 } //end namespace Collimation
