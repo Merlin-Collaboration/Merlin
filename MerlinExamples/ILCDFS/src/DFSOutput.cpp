@@ -86,7 +86,7 @@ void DFSOutput::NewFile(const std::string& fname)
 	{
 		dfs_trace(dfs_trace::error)<<"**** DFSOutput failed to open file "<<fname<<endl;
 		delete fos;
-		fos=0;
+		fos=nullptr;
 	}
 }
 

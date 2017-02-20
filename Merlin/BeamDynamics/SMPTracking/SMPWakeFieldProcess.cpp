@@ -82,7 +82,7 @@ namespace SMPTracking
 
 
 WakeFieldProcess::WakeFieldProcess (int prio, double sw, string aID)
-	: SMPBunchProcess(aID,prio),imploc(atExit),recalc(true),inc_tw(true),dz(sw),currentWake(0)
+	: SMPBunchProcess(aID,prio),imploc(atExit),recalc(true),inc_tw(true),dz(sw),currentWake(nullptr)
 {}
 
 WakeFieldProcess::~WakeFieldProcess()
@@ -96,14 +96,14 @@ void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
 	// WakeFieldProcess is responsible - for backward compatibility
 	// in general expected process must be equal to this process
 	if( wake &&
-	        wake->GetExpectedProcess()!=0 &&
+	        wake->GetExpectedProcess()!=nullptr &&
 	        typeid(*(wake->GetExpectedProcess()))!=typeid(*this))
 	{
-		wake=0;
+		wake=nullptr;
 	}
 
 
-	if(currentBunch!=0 && wake!=0)
+	if(currentBunch!=nullptr && wake!=nullptr)
 	{
 		clen = component.GetLength();
 		switch(imploc)
@@ -228,7 +228,7 @@ void WakeFieldProcess::PrepLWake()
 void WakeFieldProcess::InitialiseProcess (Bunch& bunch)
 {
 	SMPBunchProcess::InitialiseProcess(bunch);
-	currentWake = 0;
+	currentWake = nullptr;
 	recalc = true;
 }
 

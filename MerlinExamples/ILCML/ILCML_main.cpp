@@ -61,7 +61,7 @@ using namespace SMPTracking;
 // Tracks the sliced macroparticle bunch through the linac, with or
 // without wakefields (transvers and longitudinal).
 void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac,
-                     SMPBunch* bunch, bool inc_wf, SimulationOutput* simout=0);
+                     SMPBunch* bunch, bool inc_wf, SimulationOutput* simout=nullptr);
 
 // Inputs the standard misalignment data and corrector settings
 // and adjusts the lattice accordingly (exercise 2)
@@ -138,7 +138,7 @@ void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac, SMP
 {
 	SMPTracking::SMPTracker tracker(linac);
 
-	SimulationOutput* sout=0;
+	SimulationOutput* sout=nullptr;
 	if(simout)
 	{
 		sout=simout;

@@ -122,7 +122,7 @@ private:
 		CachedBunch(const CachedBunch& rhs)
 			: location(rhs.location),bunch(rhs.bunch)
 		{
-			rhs.bunch=0;
+			rhs.bunch=nullptr;
 		}
 
 		~CachedBunch()

@@ -96,7 +96,7 @@ public:
 	{
 	public:
 		PoleFaceInfo ()
-			: entrance(0),exit(0)
+			: entrance(nullptr),exit(nullptr)
 		{
 		}
 
@@ -125,8 +125,6 @@ public:
 			exit=e2;
 			entrance->type = 1;
 			exit->type = 0;
-//	cout << "entrance\t" << entrance->type << endl;
-			//cout << "exit\t" << exit->type << endl << endl;
 		}
 
 		void SetInfo (PoleFace* e1)
@@ -135,8 +133,6 @@ public:
 			entrance=exit=e1;
 			entrance->type = 1;
 			exit->type = 0;
-//	cout << "entrance\t" << entrance->type << endl;
-//	cout << "exit\t" << exit->type << endl << endl;
 		}
 
 		// Data Members for Class Attributes

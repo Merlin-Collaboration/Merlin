@@ -32,7 +32,7 @@ RandGenerator* RandomNG::generator;
 
 RandGenerator::RandGenerator (unsigned iseed)
 	: nseed(iseed),
-	  gen(0),gaussGen(0),uniformGen(0),poissonGen(0),landauGen(0)
+	  gen(nullptr),gaussGen(nullptr),uniformGen(nullptr),poissonGen(nullptr),landauGen(nullptr)
 {
 	reset(nseed);
 }

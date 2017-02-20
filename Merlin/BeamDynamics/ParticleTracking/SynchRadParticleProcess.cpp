@@ -75,7 +75,7 @@ struct ApplySR
 
 	double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
 
-	ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2, const double MassMeV, spec_gen sg =0)
+	ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2, const double MassMeV, spec_gen sg = nullptr)
 		: Bf(field),dL(dl),P0(p0),symp(sV),photgen(sg),meanU(0),n(0),PHOTCONST1(PCONST1),PHOTCONST2(PCONST2),ParticleMassMeV(MassMeV) {};
 
 	double MeanEnergyLoss() const
@@ -180,7 +180,7 @@ void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& compone
 	}
 	else
 	{
-		currentField = 0;
+		currentField = nullptr;
 	}
 
 	int ns1 = (ns==0) ? 1 + component.GetLength()/dsMax : ns;
@@ -254,7 +254,7 @@ void SynchRadParticleProcess::SetMaxComponentStepSize (double ds_max)
 void SynchRadParticleProcess::GeneratePhotons (bool gp)
 {
 
-	quantum = gp ? pgen : 0;
+	quantum = gp ? pgen : nullptr;
 
 }
 } // end namespace ParticleTracking

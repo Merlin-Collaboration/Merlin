@@ -286,7 +286,7 @@ void SectorBendCI::TrackStep(double ds)
 void SectorBendCI::TrackEntrance()
 {
 	const SectorBend::PoleFaceInfo& pfi = currentComponent->GetPoleFaceInfo();
-	if(pfi.entrance!=0)
+	if(pfi.entrance!=nullptr)
 	{
 		double h = (currentComponent->GetGeometry()).GetCurvature();
 		ApplyPoleFaceRotation(h,*pfi.entrance);
@@ -296,7 +296,7 @@ void SectorBendCI::TrackEntrance()
 void SectorBendCI::TrackExit()
 {
 	const SectorBend::PoleFaceInfo& pfi = currentComponent->GetPoleFaceInfo();
-	if(pfi.exit!=0)
+	if(pfi.exit!=nullptr)
 	{
 		double h = (currentComponent->GetGeometry()).GetCurvature();
 		ApplyPoleFaceRotation(h,*pfi.exit);

@@ -57,7 +57,7 @@ public:
 	void InitialiseProcess (Bunch& bunch)
 	{
 		TBunchProc<bunch_type>::InitialiseProcess(bunch);
-		if(this->currentBunch!=0)
+		if(this->currentBunch!=nullptr)
 		{
 			this->active=true;
 			ctracker.SetBunch(*this->currentBunch);
@@ -173,7 +173,7 @@ public:
 	*/
 	void SetInitialBunch (bunch_type* pbunch0, bool del = false)
 	{
-		if(pbunch0!=0)
+		if(pbunch0!=nullptr)
 		{
 			SetInitialBunchCtor(MakeBunchCtor(pbunch0,del));
 		}

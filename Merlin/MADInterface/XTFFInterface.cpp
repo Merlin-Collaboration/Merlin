@@ -177,8 +177,8 @@ SectorBend* ConstructSectorBend(const Data& data)
 	}
 
 	// add pole-face rotation information
-	SectorBend::PoleFace* entrPF = (!fequal(e1,0.0))? new SectorBend::PoleFace(e1,0,hg) : 0;
-	SectorBend::PoleFace* exitPF = (!fequal(e2,0.0))? new SectorBend::PoleFace(e2,0,hg) : 0;
+	SectorBend::PoleFace* entrPF = (!fequal(e1,0.0))? new SectorBend::PoleFace(e1,0,hg) : nullptr;
+	SectorBend::PoleFace* exitPF = (!fequal(e2,0.0))? new SectorBend::PoleFace(e2,0,hg) : nullptr;
 	bend->SetPoleFaceInfo(entrPF,exitPF);
 
 	return bend;
@@ -217,8 +217,8 @@ SectorBend* ConstructRectBend(const Data& data)
 	}
 
 	// add pole-face rotation information
-	SectorBend::PoleFace* entrPF = (!fequal(e1,0.0))? new SectorBend::PoleFace(e1,0,hg) : 0;
-	SectorBend::PoleFace* exitPF = (!fequal(e2,0.0))? new SectorBend::PoleFace(e2,0,hg) : 0;
+	SectorBend::PoleFace* entrPF = (!fequal(e1,0.0))? new SectorBend::PoleFace(e1,0,hg) : nullptr;
+	SectorBend::PoleFace* exitPF = (!fequal(e2,0.0))? new SectorBend::PoleFace(e2,0,hg) : nullptr;
 	bend->SetPoleFaceInfo(entrPF,exitPF);
 
 	return bend;
@@ -485,7 +485,7 @@ void XTFFInterface::ConstructComponent(XTFF_Data& dat)
 				frameStack.push(girderName);
 				ConstructNewFrame(girderName);
 			}
-			c=0;
+			c=nullptr;
 		}
 		else if(dat.label=="VPIV")
 		{
@@ -512,7 +512,7 @@ void XTFFInterface::ConstructComponent(XTFF_Data& dat)
 	else if(dat.keywrd=="SROT")
 	{
 		mc->AppendComponentFrame(ConstructSrot(dat[SROT],dat.label));
-		c=0;
+		c=nullptr;
 	}
 	else
 	{
@@ -573,7 +573,7 @@ void XTFFInterface::ConstructNewFrame (const string& name)
 }
 
 XTFFInterface::XTFFInterface(const string& fname, double Nb, ostream* logstream)
-	: ifs(new ifstream(fname.c_str())),mc(0),beam0(0),nb(Nb),logos(logstream),incApertures(true),
+	: ifs(new ifstream(fname.c_str())),mc(nullptr),beam0(nullptr),nb(Nb),logos(logstream),incApertures(true),
 	  girders(false),frameStack()
 {
 	if(!(*ifs))
@@ -585,7 +585,7 @@ XTFFInterface::XTFFInterface(const string& fname, double Nb, ostream* logstream)
 }
 
 XTFFInterface::XTFFInterface(double Nb, ostream* logstream)
-	: ifs(0),mc(0),beam0(0),nb(Nb),logos(logstream),incApertures(true),
+	: ifs(nullptr),mc(nullptr),beam0(nullptr),nb(Nb),logos(logstream),incApertures(true),
 	  girders(false),frameStack()
 {}
 
@@ -596,11 +596,11 @@ XTFFInterface::~XTFFInterface()
 	{
 		delete ifs;
 	}
-	if(mc!=0)
+	if(mc!=nullptr)
 	{
 		delete mc;
 	}
-	if(beam0!=0)
+	if(beam0!=nullptr)
 	{
 		delete beam0;
 	}
@@ -608,7 +608,7 @@ XTFFInterface::~XTFFInterface()
 
 pair<AcceleratorModel*,BeamData*> XTFFInterface::Parse()
 {
-	if(beam0!=0)
+	if(beam0!=nullptr)
 	{
 		delete beam0;
 	}
@@ -621,7 +621,7 @@ pair<AcceleratorModel*,BeamData*> XTFFInterface::Parse()
 
 pair<AcceleratorModel*,BeamData*> XTFFInterface::Parse(double P_ref)
 {
-	if(beam0!=0)
+	if(beam0!=nullptr)
 	{
 		delete beam0;
 	}
@@ -650,7 +650,7 @@ void XTFFInterface::AppendModel(const string& fname)
 	BeamData* b = new BeamData();
 	int nelm = ParseHeader(b);
 
-	if(beam0==0)
+	if(beam0==nullptr)
 	{
 		beam0 = b;
 	}
@@ -665,9 +665,9 @@ void XTFFInterface::AppendModel(const string& fname)
 
 void XTFFInterface::Parse1(int nelm, bool isNewModel)
 {
-	if(mc==0 || isNewModel)
+	if(mc==nullptr || isNewModel)
 	{
-		if(mc!=0)
+		if(mc!=nullptr)
 		{
 			delete mc;
 		}
@@ -707,7 +707,7 @@ pair<AcceleratorModel*,BeamData*> XTFFInterface::GetModel()
 	}
 
 	BeamData* beam = beam0;
-	beam0=0;
+	beam0=nullptr;
 	return make_pair(mc->GetModel(),beam);
 }
 

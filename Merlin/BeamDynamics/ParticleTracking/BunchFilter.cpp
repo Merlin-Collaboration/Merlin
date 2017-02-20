@@ -15,11 +15,9 @@ bool HorizontalHaloParticleBunchFilter::Apply(const PSvector& v) const
 	{
 		if (v.x() != 0.0 && v.xp() != 0.0)
 		{
-			//cout << v.x() << "\t" << limit << endl;
 			return true;
 		}
 	}
-	//cout << v.x() << "\t" << limit << endl;
 	return false;
 }
 
@@ -39,12 +37,8 @@ bool VerticalHaloParticleBunchFilter::Apply(const PSvector& v) const
 {
 	if(fabs(v.y()) > limit)
 	{
-//		cout << "Particle passes filter" << endl;
-//		cout << v.y() << "\t" << limit << endl << endl;
 		return true;
 	}
-//	cout << "Particle fails filter" << endl;
-//	cout << v.y() << "\t" << limit << endl << endl;
 	return false;
 }
 

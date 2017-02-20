@@ -87,7 +87,7 @@ protected:
 		{
 			delete local_T;
 		}
-		local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : 0;
+		local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : nullptr;
 		return *this;
 	}
 };
@@ -101,7 +101,7 @@ inline Transformable::Transformable ()
 inline Transformable::Transformable(const Transformable& rhs)
 	:local_T(nullptr)
 {
-	local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : 0;
+	local_T = rhs.local_T ? new Transform3D(*rhs.local_T) : nullptr;
 }
 
 inline bool Transformable::IsTransformed () const

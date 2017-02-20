@@ -33,6 +33,6 @@ ComponentFrame* ConstructXrot(double angle, const std::string& name)
 	}
 	else
 	{
-		return new PatchFrame(0,name);
+		return new PatchFrame(nullptr,name);
 	}
 }

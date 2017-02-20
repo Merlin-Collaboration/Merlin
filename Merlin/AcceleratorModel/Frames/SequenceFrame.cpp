@@ -84,7 +84,7 @@ private:
 };
 
 inline SequenceGeometry::SequenceGeometry (SequenceFrame::FrameList* frames, SequenceFrame::Origin origin)
-	: AcceleratorGeometry(),len_t(0),theFrameList(frames),omode(origin),t_cache(0)
+	: AcceleratorGeometry(),len_t(0),theFrameList(frames),omode(origin),t_cache(nullptr)
 {}
 
 SequenceFrame::SequenceFrame (const string& id, Origin originLoc)
@@ -366,7 +366,7 @@ double SequenceGeometry::GetGeometryLength () const
 void SequenceGeometry::CalculateCachedTransforms ()
 {
 	// Set up cached transformations for efficiency
-	if(t_cache==0)
+	if(t_cache==nullptr)
 	{
 		t_cache = new TCache;
 	}

@@ -24,7 +24,7 @@ class DFSOutput : public SimulationOutput
 {
 public:
 
-	DFSOutput() : fos(0) {}
+	DFSOutput() : fos(nullptr) {}
 
 	// Close any existing file stream and open
 	// a new output file.

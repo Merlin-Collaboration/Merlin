@@ -23,7 +23,7 @@
 // Transformable
 #include "EuclideanGeometry/Transformable.h"
 
-#define GLOBAL_FRAME (LatticeFrame*)0
+#define GLOBAL_FRAME (LatticeFrame*)nullptr
 
 // Class FrameTraverser
 // An abstract iterator class that is used to
@@ -35,7 +35,7 @@ class FrameTraverser
 {
 public:
 	virtual ~FrameTraverser() {}
-	virtual void ActOn(LatticeFrame* frame) =0;
+	virtual void ActOn(LatticeFrame* frame) = 0;
 };
 
 //	A LatticeFrame is a ModelElement that provides a
@@ -290,7 +290,7 @@ inline LatticeFrame::~LatticeFrame ()
 
 inline Transform3D LatticeFrame::GetLocalFrameTransform () const
 {
-	return local_T!=0 ? *local_T : Transform3D();
+	return local_T!=nullptr ? *local_T : Transform3D();
 }
 
 inline Transform3D LatticeFrame::GetLocalPhysicalTransform () const
@@ -310,7 +310,7 @@ inline double LatticeFrame::GetLocalPosition () const
 
 inline Transform3D LatticeFrame::GetGeometryTransform (double s0, double s) const
 {
-	if(itsGeometry!=0)
+	if(itsGeometry!=nullptr)
 	{
 		return  itsGeometry->GetGeometryTransform(s0,s);
 	}
@@ -326,7 +326,7 @@ inline Transform3D LatticeFrame::GetGeometryTransform (double s0, double s) cons
 
 inline Transform3D LatticeFrame::GetGeometryTransform (double s) const
 {
-	if(itsGeometry!=0)
+	if(itsGeometry!=nullptr)
 	{
 		return  itsGeometry->GetGeometryTransform(s);
 	}
@@ -342,22 +342,22 @@ inline Transform3D LatticeFrame::GetGeometryTransform (double s) const
 
 inline Transform3D LatticeFrame::GetGeometryTransform (BoundaryPlane p) const
 {
-	return (itsGeometry!=0)? itsGeometry->GetGeometryTransform(p) : Transform3D();
+	return (itsGeometry!=nullptr)? itsGeometry->GetGeometryTransform(p) : Transform3D();
 }
 
 inline Transform3D LatticeFrame::GetTotalGeometryTransform () const
 {
-	return (itsGeometry!=0)? itsGeometry->GetTotalGeometryTransform() : Transform3D();
+	return (itsGeometry!=nullptr)? itsGeometry->GetTotalGeometryTransform() : Transform3D();
 }
 
 inline AcceleratorGeometry::Extent LatticeFrame::GetLocalGeometryExtent () const
 {
-	return (itsGeometry!=0)? itsGeometry->GetGeometryExtent() : AcceleratorGeometry::Extent(0,0);
+	return (itsGeometry!=nullptr)? itsGeometry->GetGeometryExtent() : AcceleratorGeometry::Extent(0,0);
 }
 
 inline double LatticeFrame::GetGeometryLength () const
 {
-	return (itsGeometry!=0) ? itsGeometry->GetGeometryLength() : 0;
+	return (itsGeometry!=nullptr) ? itsGeometry->GetGeometryLength() : 0;
 }
 
 inline Transform3D LatticeFrame::GetEntrancePlaneTransform () const
@@ -420,7 +420,7 @@ inline bool LatticeFrame::ReplaceSubFrame (LatticeFrame* subFrame, LatticeFrame*
 
 inline bool LatticeFrame::IsGlobalFrame () const
 {
-	return superFrame==0;
+	return superFrame==nullptr;
 }
 
 inline void LatticeFrame::SetGeometry (const AcceleratorGeometry* geom)

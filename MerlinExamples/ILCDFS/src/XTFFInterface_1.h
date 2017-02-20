@@ -38,7 +38,7 @@ public:
 	// bunch charge is specified, the constructor uses the ELOSS information
 	// for the cavities to calculate the reference (matched) energy for the
 	// magnet strengths.
-	XTFFInterface_1(const std::string& fname, double nb=0, ostream* log =0);
+	XTFFInterface_1(const std::string& fname, double nb=0, ostream* log=nullptr);
 	~XTFFInterface_1();
 
 	pair<AcceleratorModel*,BeamData*> Parse();

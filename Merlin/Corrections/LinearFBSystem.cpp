@@ -32,15 +32,15 @@ double ChannelRMS(const ROChannelArray& channels)
 }
 
 LinearFBSystem::LinearFBSystem (std::vector<ROChannel*>& sigs, std::vector<RWChannel*>& acts, const RealMatrix& M)
-	: gain(1.0),signals(sigs),actuators(acts),setpoints(0.0,sigs.size()),cached_actuators(0),Mi(0),
-	  actuatorQueue(0)
+	: gain(1.0),signals(sigs),actuators(acts),setpoints(0.0,sigs.size()),cached_actuators(nullptr),Mi(nullptr),
+	  actuatorQueue(nullptr)
 {
 	SetResponseMatrix(M);
 }
 
 LinearFBSystem::LinearFBSystem (ROChannelArray& sigs, RWChannelArray& acts, const RealMatrix& M)
-	: gain(1.0),signals(sigs),actuators(acts),setpoints(),cached_actuators(0),Mi(0),
-	  actuatorQueue(0)
+	: gain(1.0),signals(sigs),actuators(acts),setpoints(),cached_actuators(nullptr),Mi(nullptr),
+	  actuatorQueue(nullptr)
 {
 	setpoints.redim(signals.Size());
 	SetResponseMatrix(M);
@@ -48,15 +48,15 @@ LinearFBSystem::LinearFBSystem (ROChannelArray& sigs, RWChannelArray& acts, cons
 
 LinearFBSystem::~LinearFBSystem ()
 {
-	if(Mi!=0)
+	if(Mi!=nullptr)
 	{
 		delete Mi;
 	}
-	if(actuatorQueue!=0)
+	if(actuatorQueue!=nullptr)
 	{
 		delete actuatorQueue;
 	}
-	if(cached_actuators!=0)
+	if(cached_actuators!=nullptr)
 	{
 		delete cached_actuators;
 	}
@@ -73,7 +73,7 @@ void LinearFBSystem::StoreActuators () const
 {
 	// Note that this stores the current actuator setting, regardless
 	// of the state of actuatorQueue.
-	if(cached_actuators==0)
+	if(cached_actuators==nullptr)
 	{
 		cached_actuators = new RealVector(GetNumActuators());
 	}
@@ -82,14 +82,14 @@ void LinearFBSystem::StoreActuators () const
 
 void LinearFBSystem::RestoreActuators ()
 {
-	assert(cached_actuators!=0);
+	assert(cached_actuators!=nullptr);
 	actuators.WriteAll(*cached_actuators);
 }
 
 void LinearFBSystem::SetResponseMatrix (const RealMatrix& M)
 {
 	assert(signals.Size()==M.nrows() && actuators.Size()==M.ncols());
-	if(Mi!=0)
+	if(Mi!=nullptr)
 	{
 		delete Mi;
 	}
@@ -159,10 +159,10 @@ int LinearFBSystem::GetNumActuators () const
 
 void LinearFBSystem::SetPulseDelay(int n)
 {
-	if(actuatorQueue!=0)
+	if(actuatorQueue!=nullptr)
 	{
 		delete actuatorQueue;
-		actuatorQueue = 0;
+		actuatorQueue = nullptr;
 	}
 
 	assert(n>0);

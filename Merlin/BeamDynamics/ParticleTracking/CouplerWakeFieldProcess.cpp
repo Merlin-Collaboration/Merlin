@@ -75,7 +75,7 @@ void CouplerWakeFieldProcess::SetCurrentComponent (AcceleratorComponent& compone
 {
 
 	CombinedWakeRF* wake = dynamic_cast<CombinedWakeRF*>(component.GetWakePotentials());
-	if(currentBunch!=0 && wake!=0)
+	if(currentBunch!=nullptr && wake!=nullptr)
 	{
 		clen = component.GetLength();
 		switch(imploc)

@@ -56,7 +56,7 @@ void Transformable::ClearTransform ()
 	if(local_T)
 	{
 		delete local_T;
-		local_T=0;
+		local_T=nullptr;
 	}
 	Invalidate();
 }

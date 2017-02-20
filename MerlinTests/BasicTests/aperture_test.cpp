@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 	cout << "CollimatorAperture ";
 	cout.flush();
 	// double w,double h, double t, Material* m, double length, double x_off, double y_off
-	CollimatorAperture *collapp = new CollimatorAperture(12, 10, 0, NULL, 1, 0, 0);
+	CollimatorAperture *collapp = new CollimatorAperture(12, 10, 0, nullptr, 1, 0, 0);
 	collapp->SetExitWidth(collapp->GetFullEntranceWidth());
 	collapp->SetExitHeight(collapp->GetFullEntranceHeight());
 	assert(collapp->PointInside(1,1,0));
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 
 
 	cout << "CollimatorAperture with tilt ";
-	collapp = new CollimatorAperture(24, 20, M_PI/4, NULL, 1, 0, 0);
+	collapp = new CollimatorAperture(24, 20, M_PI/4, nullptr, 1, 0, 0);
 	collapp->SetExitWidth(collapp->GetFullEntranceWidth());
 	collapp->SetExitHeight(collapp->GetFullEntranceHeight());
 	assert(collapp->PointInside(1,1,0));
@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
 	 */
 
 	cout << "CollimatorAperture with offset";
-	collapp = new CollimatorAperture(2, 2, 0, NULL, 1, 1, 1);
+	collapp = new CollimatorAperture(2, 2, 0, nullptr, 1, 1, 1);
 	collapp->SetExitWidth(collapp->GetFullEntranceWidth());
 	collapp->SetExitHeight(collapp->GetFullEntranceHeight());
 	collapp->SetExitXOffset(collapp->GetEntranceXOffset());
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
 
 	cout << "CollimatorAperture with taper";
-	collapp = new CollimatorAperture(4, 4, 0, NULL, 1, 0, 0);
+	collapp = new CollimatorAperture(4, 4, 0, nullptr, 1, 0, 0);
 	collapp->SetExitWidth(2);
 	collapp->SetExitHeight(2);
 	collapp->SetExitXOffset(collapp->GetEntranceXOffset());

@@ -7,7 +7,7 @@
 using namespace SMPTracking;
 
 SMPTrackingModel::SMPTrackingModel(size_t nslice, size_t mpps)
-	: BeamDynamicsModel("SMP TRACKING"),ns(nslice),nps(mpps),cBunch0(0)
+	: BeamDynamicsModel("SMP TRACKING"),ns(nslice),nps(mpps),cBunch0(nullptr)
 {
 	dfs_trace(dfs_trace::level_1)<<"SMP TRACKING initialised with n_slice = "<<ns<<", n_mp = "<<nps<<endl;
 	tracker = new SMPTracker();

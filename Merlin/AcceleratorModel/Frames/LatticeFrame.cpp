@@ -94,7 +94,7 @@ Transform3D LatticeFrame::GetBoundaryPlaneTransform (BoundaryPlane p) const
 	}
 
 	Transform3D t0=LocalBoundaryPlaneTransform(p);
-	if(superFrame!=0 && superFrame->IsBoundaryPlane(p,this))
+	if(superFrame!=nullptr && superFrame->IsBoundaryPlane(p,this))
 	{
 		t0=t0*(superFrame->GetBoundaryPlaneTransform(p));
 	}
@@ -157,7 +157,7 @@ void LatticeFrame::ClearLocalFrameTransform ()
 
 LatticeFrame* LatticeFrame::GetGlobalFrame () const
 {
-	return superFrame==0 ? const_cast<LatticeFrame*>(this) : superFrame->GetGlobalFrame();
+	return superFrame==nullptr ? const_cast<LatticeFrame*>(this) : superFrame->GetGlobalFrame();
 }
 
 Transform3D LatticeFrame::LocalBoundaryPlaneTransform (BoundaryPlane p) const

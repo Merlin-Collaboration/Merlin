@@ -87,7 +87,7 @@ private:
 
 
 AcceleratorModelConstructor::AcceleratorModelConstructor ()
-	: currentModel(0)
+	: currentModel(nullptr)
 {}
 
 AcceleratorModelConstructor::~AcceleratorModelConstructor ()
@@ -123,7 +123,7 @@ AcceleratorModel* AcceleratorModelConstructor::GetModel ()
 	currentModel->globalFrame->ConsolidateConstruction();
 
 	AcceleratorModel* t=currentModel;
-	currentModel=0;
+	currentModel=nullptr;
 	return t;
 }
 

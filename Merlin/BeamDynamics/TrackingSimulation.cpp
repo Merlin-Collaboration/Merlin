@@ -80,7 +80,7 @@ template <class I>
 ComponentFrame* TrackingSimulation::TStepper<I>::NextFrame ()
 {
 	curr++;
-	return cFrame = curr==last ? 0 : *curr;
+	return cFrame = curr==last ? nullptr : *curr;
 }
 
 TrackingSimulation::TrackingSimulation (const AcceleratorModel::Beamline& bline)
@@ -295,7 +295,7 @@ bool TrackingSimulation::StepComponent ()
 		simOp->DoRecord(frame,bunch);
 	}
 
-	return cstepper->NextFrame() != 0;
+	return cstepper->NextFrame() != nullptr;
 }
 
 

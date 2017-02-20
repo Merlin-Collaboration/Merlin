@@ -28,7 +28,7 @@ public:
 	enum trace_level {error=0,warning=1,level_1=2,level_2=3,level_3=4};
 	static trace_level verbosity;
 
-	dfs_trace(trace_level l=level_3) : do_output((l<=verbosity)&&(os!=0)) {}
+	dfs_trace(trace_level l=level_3) : do_output((l<=verbosity)&&(os!=nullptr)) {}
 
 	static void set_trace_stream(std::ostream& anOs)
 	{

@@ -59,14 +59,14 @@ SectorBend::PoleFace::PoleFace (double angle, double f_int, double hg, double fa
 
 void SectorBend::PoleFaceInfo::Copy (const PoleFaceInfo& rhs)
 {
-	entrance = rhs.entrance ? new PoleFace(*(rhs.entrance)) : 0;
+	entrance = rhs.entrance ? new PoleFace(*(rhs.entrance)) : nullptr;
 	if(rhs.entrance==rhs.exit)
 	{
 		exit = entrance;
 	}
 	else
 	{
-		exit = rhs.exit ? new PoleFace(*(rhs.exit)) : 0;
+		exit = rhs.exit ? new PoleFace(*(rhs.exit)) : nullptr;
 	}
 }
 

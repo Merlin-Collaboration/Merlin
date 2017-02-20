@@ -122,7 +122,7 @@ void HollowELensProcess::InitialiseProcess (Bunch& bunch)
 void HollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 	HollowElectronLens* aHollowELens = dynamic_cast<HollowElectronLens*>(&component);
-	active = (currentBunch!=0) && (aHollowELens);
+	active = (currentBunch!=nullptr) && (aHollowELens);
 
 	if(active)
 	{
@@ -134,7 +134,7 @@ void HollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
 	}
 	else
 	{
-		currentComponent = 0;
+		currentComponent = nullptr;
 	}
 }
 

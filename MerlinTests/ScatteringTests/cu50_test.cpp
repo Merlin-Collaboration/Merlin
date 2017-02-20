@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
 	if (seed == 0)
 	{
-		seed = (int)time(NULL);
+		seed = (int)time(nullptr);
 	}
 
 	//Number of particles
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
 	bin_maxs[4] = 1e-1;      //dp
 
 
-	uint64_t hists[5][nbins+2] = {0};
+	uint64_t hists[5][nbins+2] = {{0}};
 
 	/*********************************************************************
 	**	ACCELERATOR MODEL LOADING
@@ -175,8 +175,8 @@ int main(int argc, char* argv[])
 		// Sets maximum allowed loss percentage at a single collimator.
 		myCollimateProcess->SetLossThreshold(101.0);
 
-		//sets process log stream, NULL to disable. aka, what col_output is above
-		myCollimateProcess->SetLogStream(NULL);
+		//sets process log stream, nullptr to disable. aka, what col_output is above
+		myCollimateProcess->SetLogStream(nullptr);
 
 		//Add Collimation process to the tracker.
 		myCollimateProcess->SetOutputBinSize(length);
@@ -199,8 +199,8 @@ int main(int argc, char* argv[])
 		// Sets maximum allowed loss percentage at a single collimator.
 		myCollimateProcess->SetLossThreshold(101.0);
 
-		//sets process log stream, NULL to disable. aka, what col_output is above
-		myCollimateProcess->SetLogStream(NULL);
+		//sets process log stream, nullptr to disable. aka, what col_output is above
+		myCollimateProcess->SetLogStream(nullptr);
 
 		//Add Collimation process to the tracker.
 		myCollimateProcess->SetOutputBinSize(length);

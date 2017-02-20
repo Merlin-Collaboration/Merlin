@@ -75,7 +75,7 @@ protected:
 
 	//  Perform the tracking for step ds. Concrete integrators
 	//  must supply this function.
-	virtual void TrackStep(double ds) =0;
+	virtual void TrackStep(double ds) = 0;
 
 	// functions for applying entrance and exit field maps.
 	virtual void TrackEntrance() {};
@@ -95,7 +95,7 @@ private:
 };
 
 inline ComponentIntegrator::ComponentIntegrator ()
-	: cur_S(0),tot_S(0),component(0)
+	: cur_S(0),tot_S(0),component(nullptr)
 {}
 
 inline ComponentIntegrator::~ComponentIntegrator ()

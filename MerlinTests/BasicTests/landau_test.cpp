@@ -16,7 +16,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-	int seed = (int)time(NULL);
+	int seed = (int)time(nullptr);
 	if (argc >=2)
 	{
 		seed = atoi(argv[1]);

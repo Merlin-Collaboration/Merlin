@@ -80,7 +80,7 @@ public:
 	{
 	public:
 		virtual ~Response() {};
-		virtual void Apply(Data*) =0;
+		virtual void Apply(Data*) = 0;
 	};
 
 	typedef AMBufferManager<BPM,Buffer,Data> BufferManager;
@@ -155,7 +155,7 @@ inline BPM::Buffer::~Buffer ()
 
 inline BPM::BPM (const string& id, double len, double mpos)
 	: Monitor(id,len,mpos),res_x(0),res_y(0),
-	  scale_x(1),scale_y(1),itsResponse(0),buffers()
+	  scale_x(1),scale_y(1),itsResponse(nullptr),buffers()
 {}
 
 inline void BPM::SetResolution (double xr, double yr)

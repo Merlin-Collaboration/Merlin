@@ -32,7 +32,7 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 {
 	// Identify last klystron upstream of segment
 	double energy = energy0;
-	size_t nk1,nk2;
+	size_t nk1,nk2=0;
 	for(size_t i=0; i<theKlystrons.size(); i++)
 	{
 		std::vector<size_t> ki;

@@ -65,7 +65,7 @@ int main()
 	};
 
 
-	BPM::SetDefaultBuffer(0);
+	BPM::SetDefaultBuffer(nullptr);
 	delete bpmVecBuffer;
 
 	delete theBunch;

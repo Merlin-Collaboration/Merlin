@@ -56,7 +56,7 @@ public:
 
 	virtual const Transform3D* GetEntranceGeometryPatch() const
 	{
-		return itsPatch ? itsPatch->GetTransformation() : 0;
+		return itsPatch ? itsPatch->GetTransformation() : nullptr;
 	}
 
 	void SetGeometryPatch(GeometryPatch* gp)
@@ -75,7 +75,7 @@ private:
 };
 
 inline PatchFrame::PatchFrame (GeometryPatch* pg, const string& id)
-	: ComponentFrame(0,id), itsPatch(pg)
+	: ComponentFrame(nullptr,id), itsPatch(pg)
 {
 	SetGeometry(itsPatch);
 }
@@ -83,7 +83,7 @@ inline PatchFrame::PatchFrame (GeometryPatch* pg, const string& id)
 inline PatchFrame::PatchFrame (const PatchFrame& rhs)
 	: ComponentFrame(rhs)
 {
-	itsPatch = rhs.itsPatch ? new GeometryPatch(*rhs.itsPatch) : 0;
+	itsPatch = rhs.itsPatch ? new GeometryPatch(*rhs.itsPatch) : nullptr;
 	SetGeometry(itsPatch);
 }
 

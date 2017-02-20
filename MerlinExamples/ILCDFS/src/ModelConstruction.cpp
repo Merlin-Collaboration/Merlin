@@ -110,7 +110,7 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 		// We do this by extracting the VPIV geometry patch frames.
 
 		AcceleratorModel::Beamline let = model->GetBeamline();
-		PatchFrame* vpatch0 = 0;
+		PatchFrame* vpatch0 = nullptr;
 		double earthRho = 6.0e+06; // 6000 km
 		double totalAngle = 0.0;
 		double totalDist = 0.0;
@@ -125,7 +125,7 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 			{
 				npatches++;
 
-				if(vpatch0==0)
+				if(vpatch0==nullptr)
 				{
 					vpatch0 = vpatch;    // first vpatch
 				}
