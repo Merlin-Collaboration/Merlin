@@ -14,8 +14,7 @@
 #ifndef CollimateProtonProcess_h
 #define CollimateProtonProcess_h 1
 
-#include <iostream>
-#include <vector>
+#include <fstream>
 
 #include "Collimators/CollimateParticleProcess.h"
 #include "Collimators/ScatteringModel.h"
@@ -37,13 +36,10 @@ public:
 	*/
 	CollimateProtonProcess (int priority, int mode, std::ostream* osp = nullptr);
 
-	void SetScatter(Collimation::ScatteringModel* sm);
-
 	void SetScatteringModel(Collimation::ScatteringModel* s);
 
-	Collimation::ScatteringModel* scattermodel;
-
 private:
+	Collimation::ScatteringModel* scattermodel;
 
 	bool DoScatter(Particle&);
 
