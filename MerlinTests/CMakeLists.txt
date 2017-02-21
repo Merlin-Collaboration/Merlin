@@ -73,6 +73,7 @@ merlin_test(ScatteringTests rand_test rand_test.cpp)
 
 
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
+set( MEMORYCHECK_COMMAND_OPTIONS " --tool=memcheck --leak-check=yes --show-reachable=yes --trace-children=yes --suppressions=${CMAKE_CURRENT_BINARY_DIR}/data/python.supp")
 INCLUDE(Dart)
 
 
