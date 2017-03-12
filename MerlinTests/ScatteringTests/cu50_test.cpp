@@ -15,6 +15,7 @@
 
 #include "Collimators/CollimateParticleProcess.h"
 #include "Collimators/CollimateProtonProcess.h"
+#include "Collimators/ScatteringModelsMerlin.h"
 #include "Collimators/MaterialDatabase.h"
 
 #include "NumericalUtils/PhysicalUnits.h"
@@ -185,11 +186,13 @@ int main(int argc, char* argv[])
 	else
 	{
 		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2,4);
-		myScatter = new ScatteringModel;
-		myScatter->SetScatterType(4);
 		if (scatter_mode_sixtrack)
 		{
-			myScatter->SetScatterType(1);
+			myScatter = new ScatteringModelSixTrack;
+		}
+		else
+		{
+			myScatter = new ScatteringModelMerlin;
 		}
 		myCollimateProcess->SetScatteringModel(myScatter);
 		stringstream loststr;

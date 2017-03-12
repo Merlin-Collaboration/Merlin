@@ -30,6 +30,8 @@ public:
 	//overloaded constructor
 	CrossSections(Material* mat, double E, int scattertype);
 
+	~CrossSections();
+
 	inline bool operator==(const CrossSections& rhs)
 	{
 		if( (this->sig_pN_tot_ref != rhs.sig_pN_tot_ref) || (this->scat_type != rhs.scat_type) || (this->lambda_tot != rhs.lambda_tot ))
@@ -45,8 +47,7 @@ public:
 	void ConfigureCrossSections(double E0);
 
 	double GetTotalMeanFreePath();
-	ParticleTracking::ppElasticScatter* ElasticScatter;
-	ParticleTracking::ppDiffractiveScatter* DiffractiveScatter;
+
 
 	void Set_E0(double a)
 	{
@@ -228,7 +229,19 @@ public:
 		return scat_type;
 	}
 
+	ParticleTracking::ppElasticScatter* GetElasticScatter() const
+	{
+		return ElasticScatter;
+	}
+
+	ParticleTracking::ppDiffractiveScatter* GetDiffractiveScatter() const
+	{
+		return DiffractiveScatter;
+	}
+
 private:
+	ParticleTracking::ppElasticScatter* ElasticScatter;
+	ParticleTracking::ppDiffractiveScatter* DiffractiveScatter;
 	double E0;
 	double sig_pN_tot_ref;
 	double sig_pN_inel_ref;

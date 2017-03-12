@@ -83,6 +83,14 @@ struct ScatterPlotData
 	}
 };
 
+enum EnergyLossMode {SimpleEnergyLoss, FullEnergyLoss};
+
+/**
+ * Base class for scattering models
+ *
+ * The user can customise a ScatteringModel using AddProcess(), or can
+ * use the predefiend models such as ScatteringModelMerlin.
+ */
 class ScatteringModel
 {
 
@@ -90,6 +98,7 @@ public:
 
 	// Constructor
 	ScatteringModel();
+	virtual ~ScatteringModel();
 
 	// Collimation Functions
 	// Set ScatterType
@@ -98,10 +107,7 @@ public:
 	// Calculate the particle path length in given material using scattering processes
 	double PathLength(Material* mat, double E0);
 
-	// Energy loss via ionisation
-	void EnergyLoss(PSvector& p, double x, Material* mat, double E0, double E1);
-
-	// Advanced energy loss via ionisation
+	// Dispatches to EnergyLossSimple or EnergyLossFull
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0);
 
 	// Multiple Coulomb scattering
@@ -112,8 +118,10 @@ public:
 
 // Other Functions
 
-	// Add/clear ScatteringProcesses
-	void AddProcess(Collimation::ScatteringProcess* S)
+	/**
+	 * Add ScatteringProcesses to the model
+	 */
+	virtual void AddProcess(Collimation::ScatteringProcess* S)
 	{
 		Processes.push_back(S);
 		fraction.push_back(0);
@@ -139,6 +147,12 @@ public:
 	bool JawImpact_on;
 	std::vector <JawImpactData*> StoredJawImpactData;
 
+	int GetScatteringPhysicsModel()
+	{
+		return ScatteringPhysicsModel;
+	}
+
+protected:
 	// vector holding all scattering processes
 	std::vector <Collimation::ScatteringProcess*> Processes;
 
@@ -148,18 +162,15 @@ public:
 	//Store calculated CrossSections data to save time
 	std::map< std::string, Collimation::CrossSections* > stored_cross_sections;
 	std::map< std::string, Collimation::CrossSections* >::iterator CS_iterator;
-
-	int GetScatteringPhysicsModel()
-	{
-		return ScatteringPhysicsModel;
-	}
-
-protected:
+	EnergyLossMode energy_loss_mode;
 
 private:
-
+	// Energy loss via ionisation
+	void EnergyLossSimple(PSvector& p, double x, Material* mat, double E0);
+	// Advanced energy loss via ionisation
+	void EnergyLossFull(PSvector& p, double x, Material* mat, double E0);
 	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN
-	int ScatteringPhysicsModel;
+	int ScatteringPhysicsModel; // Still required for CrossSections
 };
 
 } //end namespace Collimation

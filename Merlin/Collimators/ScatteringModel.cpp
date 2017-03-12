@@ -34,10 +34,18 @@ using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
 
-ScatteringModel::ScatteringModel()
+ScatteringModel::ScatteringModel(): energy_loss_mode(FullEnergyLoss)
 {
 	ScatterPlot_on = 0;
 	JawImpact_on = 0;
+}
+
+ScatteringModel::~ScatteringModel()
+{
+	for (auto it: stored_cross_sections)
+	{
+		delete it.second;
+	}
 }
 
 double ScatteringModel::PathLength(Material* mat, double E0)
@@ -108,17 +116,30 @@ double ScatteringModel::PathLength(Material* mat, double E0)
 	return -(lambda)*log(RandomNG::uniform(0,1));
 }
 
+void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0)
+{
+	switch (energy_loss_mode)
+	{
+	case SimpleEnergyLoss:
+		EnergyLossSimple(p, x, mat, E0);
+		break;
+	case FullEnergyLoss:
+		EnergyLossFull(p, x, mat, E0);
+		break;
+	}
+}
+
 //Simple energy loss
-void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0, double E1)
+void ScatteringModel::EnergyLossSimple(PSvector& p, double x, Material* mat, double E0)
 {
 	double dp = x * (mat->GetSixtrackdEdx());
+	double E1 = E0 * (1 + p.dp());
 	p.dp() = ((E1 - dp) - E0) / E0;
 }
 
 //Advanced energy loss
-void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0)
+void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, double E0)
 {
-
 	double E1 = E0 * (1 + p.dp());
 	double gamma = E1/(ProtonMassMeV*MeV);
 	double beta = sqrt(1 - ( 1 / (gamma*gamma)));

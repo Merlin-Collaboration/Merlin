@@ -13,12 +13,10 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <iterator>
-#include <string>
-#include <iomanip>
+#include <iostream>
 #include <typeinfo>
-#include <fstream>
-#include <sstream>
 #include <unistd.h>
+#include <vector>
 #include <algorithm>
 
 #include "merlin_config.h"
@@ -99,12 +97,8 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	{
 		std::cout << "\nCollimateProtonProcess::SoScatter::WARNING: no ScatteringModel set." << std::endl;
 		std::cout << "Use 'myCollimateProcess->SetScatteringModel(myScatter);'" << std::endl;
-		std::cout << "Don't forget to assign a scattering mode using 'myScatter->SetScatterType(n);'" << std::endl;
-		std::cout << "Where n: 0=SixTrack, 1=ST+Adv. Ionisation, 2=ST+Adv. Elastic, 3=ST+Adv. Single Diffractive, 4=Merlin" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-
-	int smode = scattermodel->GetScatteringPhysicsModel();
 
 	while(lengthtogo>0)
 	{
@@ -136,16 +130,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		}
 
 		//Energy Loss
-		if(smode == 1 || smode == 4)
-		{
-			//Advanced
-			scattermodel->EnergyLoss(p, step_size, C->p, E0);
-		}
-		else
-		{
-			//Simple
-			scattermodel->EnergyLoss(p, step_size, C->p, E0, E1);
-		}
+		scattermodel->EnergyLoss(p, step_size, C->p, E0);
 
 		E2 = E0 * (1 + p.dp());
 
@@ -231,61 +216,9 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	return true;
 }
 
-void CollimateProtonProcess::SetScatter(ScatteringModel* sm)
-{
-	// set scattering mode
-	// Note that inelastic should always be the last added process
-	if (sm->GetScatteringPhysicsModel() == 0) 	//SixTrack
-	{
-		(sm)->AddProcess(new SixTrackElasticpN());
-		(sm)->AddProcess(new SixTrackElasticpn());
-		(sm)->AddProcess(new SixTrackSingleDiffractive());
-		(sm)->AddProcess(new SixTrackRutherford());
-		(sm)->AddProcess(new Inelastic());
-	}
-	else if (sm->GetScatteringPhysicsModel() ==1)  //ST + Adv Ionisation
-	{
-		(sm)->AddProcess(new SixTrackElasticpN());
-		(sm)->AddProcess(new SixTrackElasticpn());
-		(sm)->AddProcess(new SixTrackSingleDiffractive());
-		(sm)->AddProcess(new SixTrackRutherford());
-		(sm)->AddProcess(new Inelastic());
-	}
-	else if (sm->GetScatteringPhysicsModel() == 2)  //ST + Adv Elastic
-	{
-		(sm)->AddProcess(new ElasticpN());
-		(sm)->AddProcess(new Elasticpn());
-		(sm)->AddProcess(new SixTrackSingleDiffractive());
-		(sm)->AddProcess(new SixTrackRutherford());
-		(sm)->AddProcess(new Inelastic());
-	}
-	else if (sm->GetScatteringPhysicsModel() == 3)  //ST + Adv SD
-	{
-		(sm)->AddProcess(new SixTrackElasticpN());
-		(sm)->AddProcess(new SixTrackElasticpn());
-		(sm)->AddProcess(new SingleDiffractive());
-		(sm)->AddProcess(new SixTrackRutherford());
-		(sm)->AddProcess(new Inelastic());
-	}
-	else if (sm->GetScatteringPhysicsModel() == 4)  //Merlin
-	{
-		(sm)->AddProcess(new ElasticpN());
-		(sm)->AddProcess(new Elasticpn());
-		(sm)->AddProcess(new SingleDiffractive());
-		(sm)->AddProcess(new Rutherford());
-		(sm)->AddProcess(new Inelastic());
-	}
-	else
-	{
-		std::cout << "Warning ScatteringModel::SetScatterType: No scatter type selected, no ScatteringProcesses set by default - may be set by user" << std::endl;
-	}
-
-}
-
 void CollimateProtonProcess::SetScatteringModel(Collimation::ScatteringModel* s)
 {
 	scattermodel = s;
-	SetScatter(scattermodel);
 }
 
 } // end namespace ParticleTracking
