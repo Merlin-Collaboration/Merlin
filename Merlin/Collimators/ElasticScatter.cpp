@@ -204,6 +204,9 @@ void ppElasticScatter::GenerateDsigDt(double energy)
 
 
 	unsigned int nSteps = (t_max - t_min) / step;
+	Uniformt->clear();
+	DSig->clear();
+	DSigN->clear();
 	Uniformt->reserve(nSteps);
 	DSig->reserve(nSteps);
 	DSigN->reserve(nSteps);
