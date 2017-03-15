@@ -29,6 +29,19 @@ OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
 SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
+
+SET(CMAKE_CXX_FLAGS "--std=c++11 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic")
+SET(CMAKE_CXX_FLAGS_DEBUG "-g")
+SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	# enables optimizations that do not interfere with debugging
+	# introduced in GCC 4.8
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
+else()
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+endif()
+
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
 	MESSAGE(STATUS "No build type set. You probably want to run ccmake and pick one.")
@@ -147,10 +160,6 @@ AUX_SOURCE_DIRECTORY(Merlin/RingDynamics sources)
 AUX_SOURCE_DIRECTORY(Merlin/stdext sources)
 AUX_SOURCE_DIRECTORY(Merlin/TLAS sources)
 AUX_SOURCE_DIRECTORY(Merlin/utility sources)
-
-#Additional Compiler flags
-#ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-variable -ansi -pedantic")
-ADD_DEFINITIONS("-Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic -Wabi -std=c++11")
 
 #Closed orbit debugging
 if(ORBIT_DEBUG)
