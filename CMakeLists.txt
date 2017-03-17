@@ -30,10 +30,9 @@ OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
 SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
-
-SET(CMAKE_CXX_FLAGS "--std=c++11 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic")
-SET(CMAKE_CXX_FLAGS_DEBUG "-g")
-SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic")
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	# enables optimizations that do not interfere with debugging
@@ -45,7 +44,7 @@ endif()
 
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
-	MESSAGE(STATUS "No build type set. You probably want to run ccmake and pick one.")
+	SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES MPI)
@@ -72,10 +71,6 @@ if(ENABLE_MPI)
 	SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--warn-unresolved-symbols,--warn-once")
 	SET(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 endif()
-
-SET(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
-	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-	FORCE)
 
 #Set Merlin version info
 set(${PROJECT_NAME}_VERSION "4.9.0")
@@ -202,8 +197,10 @@ install(DIRECTORY Merlin/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATC
 # Build doxygen documentation
 # make doxygen
 if(BUILD_DOCUMENTATION)
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
+	find_package(Doxygen)
+	if(NOT DOXYGEN_FOUND)
+		MESSAGE(FATAL_ERROR "Doxygen requested but no Doxygen found!")
+	endif()
 	find_file(DOXYFILE_IN "Merlin.Doxyfile.in"
 			PATHS "${MERLIN_SOURCE_DIR}/doxygen"
 			NO_DEFAULT_PATH
@@ -225,8 +222,6 @@ if(DOXYGEN_FOUND)
 			APPEND PROPERTY
 			ADDITIONAL_MAKE_CLEAN_FILES
 			"${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
-
-endif()
 endif()
 
 
