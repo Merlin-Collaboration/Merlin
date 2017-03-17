@@ -141,9 +141,13 @@ if(ENABLE_ROOT)
 	include_directories(${ROOT_INCLUDE_DIR})
 endif(ENABLE_ROOT)
 
-#Check for OpenMP
+#Check for and set up OpenMP
 if(ENABLE_OPENMP)
 	find_package(OpenMP REQUIRED)
+	if(NOT OPENMP_FOUND)
+		MESSAGE(FATAL_ERROR "OpenMP build requested but no OpenMP libraries found!")
+	endif()
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif(ENABLE_OPENMP)
 
 #Enable to build the MerlinExamples folder
@@ -186,12 +190,6 @@ IF(COVERAGE)
 	target_compile_options(merlin PRIVATE -fprofile-arcs -ftest-coverage)
 	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS " ${COVERAGE_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
 ENDIF(COVERAGE)
-
-#If we have OpenMP enabled, set the compiler flags needed
-if(OPENMP_FOUND)
-	SET_TARGET_PROPERTIES(merlin PROPERTIES COMPILE_FLAGS "${OpenMP_CXX_FLAGS}")
-	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "${OpenMP_CXX_FLAGS}")
-endif()
 
 if(LIBNUMA)
 	SET_TARGET_PROPERTIES(merlin PROPERTIES COMPILE_FLAGS "-DLIBNUMA")
