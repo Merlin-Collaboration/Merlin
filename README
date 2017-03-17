@@ -1,18 +1,3 @@
-Building with gnu make
-======================
-
-In the merlin-unix directory. Edit the Makefile to set
-MERLIN_INSTALL_DIR
-
-Run:
-make config
-to generate the make files.
-
-Run:
-make
-to build Merlin. The libmerlin.so library will be placed in MERLIN_INSTALL_DIR
-
-
 Building with cmake
 ===================
 

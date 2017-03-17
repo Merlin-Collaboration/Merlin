@@ -15,9 +15,6 @@
 * 5: run make -j < ncpu >
 * 6: This will make the merlin library
 *
-* The alternate method is to use the older makefiles
-* See Merlin/merlin-unix/
-*
 * \subsection Windows
 * Needs to be updated.
 * \subsection OSX
