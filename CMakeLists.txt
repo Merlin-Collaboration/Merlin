@@ -19,6 +19,7 @@ OPTION(ENABLE_EXAMPLES "Build the example gslprograms. Default OFF" OFF)
 OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" OFF)
 OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
+OPTION(ENABLE_MPI "Use MPI where possible. Default OFF" OFF)
 OPTION(BUILD_DYNAMIC "Build Merlin as a dynamic library. Default ON" ON)
 OPTION(BUILD_STATIC "Build Merlin as a static library. Default OFF" OFF)
 OPTION(BUILD_DOCUMENTATION "Build doxygen documentation. Default OFF" OFF)
@@ -47,68 +48,34 @@ if(NOT CMAKE_BUILD_TYPE)
 	MESSAGE(STATUS "No build type set. You probably want to run ccmake and pick one.")
 endif()
 
-#MPI default build options
-SET( CMAKE_CXX_FLAGS_MPI "-DNDEBUG -Wall -O3 -pedantic -DENABLE_MPI -march=native" CACHE STRING
-	"Flags used by the C++ compiler during MPI builds."
-	FORCE )
-SET( CMAKE_EXE_LINKER_FLAGS_MPI
-	"-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-	"Flags used for linking binaries during MPI builds."
-	FORCE )
-SET( CMAKE_SHARED_LINKER_FLAGS_MPI
-	"-Wl,--warn-unresolved-symbols,--warn-once -fPIC" CACHE STRING
-	"Flags used by the shared libraries linker during MPI builds."
-	FORCE )
-MARK_AS_ADVANCED(
-	CMAKE_CXX_FLAGS_MPI
-	#CMAKE_C_FLAGS_MPI
-	CMAKE_EXE_LINKER_FLAGS_MPI
-	CMAKE_SHARED_LINKER_FLAGS_MPI)
+if(CMAKE_BUILD_TYPE MATCHES MPI)
+	MESSAGE(FATAL_ERROR "To enable MPI use the Release or Debug build type and the ENABLE_MPI option")
+endif()
 
-#MPI debug default build options
-SET( CMAKE_CXX_FLAGS_MPIDEBUG "-Wall -g3 -ggdb -pedantic -DENABLE_MPI -march=native" CACHE STRING
-	"Flags used by the C++ compiler during MPI Debug builds."
-	FORCE )
-SET( CMAKE_EXE_LINKER_FLAGS_MPIDEBUG
-	"-Wl,--warn-unresolved-symbols,--warn-once" CACHE STRING
-	"Flags used for linking binaries during MPI Debug builds."
-	FORCE )
-SET( CMAKE_SHARED_LINKER_FLAGS_MPIDEBUG
-	"-Wl,--warn-unresolved-symbols,--warn-once -fPIC" CACHE STRING
-	"Flags used by the shared libraries linker during MPI Debug builds."
-	FORCE )
-MARK_AS_ADVANCED(
-	CMAKE_CXX_FLAGS_MPIDEBUG
-	#CMAKE_C_FLAGS_MPIDEBUG
-	CMAKE_EXE_LINKER_FLAGS_MPIDEBUG
-	CMAKE_SHARED_LINKER_FLAGS_MPIDEBUG )
-
-# Update the documentation string of CMAKE_BUILD_TYPE for GUIs to include the MPI options
-SET(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
-	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel MPI MPIDebug."
-	FORCE)
-
-#Check for MPI
-if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)
+if(ENABLE_MPI)
 	FIND_PACKAGE(MPI REQUIRED)
 	if(NOT MPI_CXX_FOUND)
 		MESSAGE(FATAL_ERROR "MPI build requested but no MPI libraries found!")
 	endif()
-	if(MPI_CXX_FOUND)
-		message(STATUS "Using MPI C++ compiler: ${MPI_CXX_COMPILER}")
-		message(STATUS "Using MPI runtime: ${MPIEXEC}")
-#		message(STATUS "Using MPI process number switch: ${MPIEXEC_NUMPROC_FLAG}")
-#		message(STATUS "Using MPI pre-flags: ${MPIEXEC_PREFLAGS}")
-#		message(STATUS "Using MPI post-flags: ${MPIEXEC_POSTFLAGS}")
-		message(STATUS "Using MPI includes: ${MPI_CXX_INCLUDE_PATH}")
-		message(STATUS "Using MPI libraries: ${MPI_CXX_LIBRARIES}")
-		message(STATUS "Using MPI compile flags: ${MPI_CXX_COMPILE_FLAGS}")
-		message(STATUS "Using MPI link flags: ${MPI_CXX_LINK_FLAGS}")
 
-		#We need the MPI headers to be included!
-		include_directories(${MPI_CXX_INCLUDE_PATH})
-	endif()
+	message(STATUS "Using MPI C++ compiler: ${MPI_CXX_COMPILER}")
+	message(STATUS "Using MPI runtime: ${MPIEXEC}")
+	message(STATUS "Using MPI includes: ${MPI_CXX_INCLUDE_PATH}")
+	message(STATUS "Using MPI libraries: ${MPI_CXX_LIBRARIES}")
+	message(STATUS "Using MPI compile flags: ${MPI_CXX_COMPILE_FLAGS}")
+	message(STATUS "Using MPI link flags: ${MPI_CXX_LINK_FLAGS}")
+
+	include_directories(${MPI_CXX_INCLUDE_PATH})
+
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLE_MPI ")
+	SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--warn-unresolved-symbols,--warn-once ")
+	SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--warn-unresolved-symbols,--warn-once")
+	SET(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 endif()
+
+SET(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
+	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+	FORCE)
 
 #Set Merlin version info
 set(${PROJECT_NAME}_VERSION "4.9.0")
@@ -209,21 +176,16 @@ if(BUILD_STATIC)
 endif()
 
 
+if(ENABLE_MPI)
+	target_link_libraries(merlin ${MPI_CXX_LIBRARIES})
+endif()
+
 
 IF(COVERAGE)
 	set(COVERAGE_FLAGS "-fprofile-arcs")
 	target_compile_options(merlin PRIVATE -fprofile-arcs -ftest-coverage)
 	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS " ${COVERAGE_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
 ENDIF(COVERAGE)
-
-#We want to link to the mpi libraries if this is an MPI build.
-if(CMAKE_BUILD_TYPE STREQUAL MPI OR CMAKE_BUILD_TYPE STREQUAL MPIDEBUG)
-	#Add in linker and compile flags
-	SET_TARGET_PROPERTIES(merlin PROPERTIES COMPILE_FLAGS "${MPI_CXX_COMPILE_FLAGS}")
-	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS "${MPI_CXX_LINK_FLAGS} ${COVERAGE_FLAGS}")
-	#and the lib link
-	target_link_libraries(merlin ${MPI_CXX_LIBRARIES})
-endif()
 
 #If we have OpenMP enabled, set the compiler flags needed
 if(OPENMP_FOUND)
