@@ -518,7 +518,7 @@ void CompositeMaterial::CalculateAllWeightedVariables()
 	SetRadiationLength(CalculateRadiationLength());
 	SetSixtrackdEdx(CalculateSixtrackdEdx());
 
-	double wb_n, wsig_R, wsig_tot, wsig_E, wsig_I, wA, wZ = 0.0;
+	double wb_n = 0.0, wsig_R = 0.0, wsig_tot = 0.0, wsig_E = 0.0, wsig_I = 0.0, wA = 0.0, wZ = 0.0;
 
 	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();

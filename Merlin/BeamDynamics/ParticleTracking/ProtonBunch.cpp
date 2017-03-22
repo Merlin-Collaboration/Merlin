@@ -90,6 +90,11 @@ int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
 		returnvalue = ScatterMerlin(p,x,ap);
 		MERLIN_PROFILE_END_TIMER("ProtonBunch::ScatterMerlin");
 	}
+	else
+	{
+		std::cerr << "Unknown scatter type: " << ScatteringPhysicsModel << std::endl;
+		abort();
+	}
 	if (std::isnan(p.x()) || std::isnan(p.xp()) || std::isnan(p.y()) || std::isnan(p.yp()) || std::isnan(p.dp()) || std::isnan(p.ct()))
 	{
 		std::cerr << "ProtonBunch::Scatter(): Particle has nan coordinate after scatter. ScatteringPhysicsModel=" << ScatteringPhysicsModel << std::endl;

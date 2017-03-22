@@ -203,8 +203,8 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, doubl
 		delta = 0.0;
 	}
 
-	double tcut = 2.0*MeV;
-	tcut = tmax;
+	//double tcut = 2.0*MeV;
+	//tcut = tmax;
 
 	//Mott Correction
 	double G = pi*FineStructureConstant*beta/2.0;

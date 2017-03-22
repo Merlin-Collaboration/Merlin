@@ -245,7 +245,8 @@ void ChannelServer::RegisterCtor (ChannelCtor* chctor)
 {
 	pair<CtorTable::iterator,bool> rv = chCtors.insert(
 	                                        CtorTable::value_type(chctor->GetID(),chctor));
-	assert(rv.second);
+	assert(rv.second); // Check that ConstructChannelServer does not make duplicates
+	(void) rv.second; // assert not needed in release mode. avoid warning
 }
 
 void ChannelServer::SetRepository (ElementRepository* me_repo)
