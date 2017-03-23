@@ -249,8 +249,15 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, 
 
 bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E)
 {
+	if (fraction.size() == 0)
+	{
+		cerr << "ScatteringModel has no ScatteringProcesses. Use AddProcess() or "
+		     << "one of the inbuilt ScatteringModels such as ScatteringModelMerlin." <<endl;
+		exit(EXIT_FAILURE);
+	}
 
 	double r = RandomNG::uniform(0,1);
+
 	for(unsigned int i = 0; i<fraction.size(); i++)
 	{
 		r -= fraction[i];
@@ -260,7 +267,7 @@ bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E)
 		}
 	}
 
-	cout << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = " << r << endl;
+	cerr << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = " << r << endl;
 
 	exit(EXIT_FAILURE);
 }
