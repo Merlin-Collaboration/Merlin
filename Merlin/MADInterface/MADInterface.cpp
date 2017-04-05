@@ -945,7 +945,7 @@ double MADInterface::ReadComponent ()
 			abort();
 		}
 
-		if(component && log)
+		if(component && log && logFlag)
 		{
 			Log(component->GetQualifiedName(),ctor->GetCurrentFrameDepth(),*log);
 		}

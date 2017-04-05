@@ -45,27 +45,18 @@ MultipoleField::MultipoleField (int np, double bn, double an, double r0)
 	B0=abs(z);
 	expansion[np]=z/B0;
 	B0/=pow(r0,np);
-#ifndef NDEBUG
-	cout<<" CONSTRUCT 1"<<endl;
-#endif
 }
 
 MultipoleField::MultipoleField (int np, double bn, double r0, bool skew)
 	: B0(),expansion(np+1,Complex(0,0))
 {
 	expansion[np] = skew ? Complex(0,1) : Complex(1,0);
-#ifndef NDEBUG
-	cout<<" CONSTRUCT 2"<<endl;
-#endif
 	B0=bn/pow(r0,np);
 }
 
 MultipoleField::MultipoleField (int np, double bn, bool skew)
 	:B0(bn/factorial(np)),expansion(np+1,Complex(0,0))
 {
-#ifndef NDEBUG
-	cout<<" CONSTRUCT 3 "<<np<<" "<<bn<<" "<<skew<<endl;
-#endif
 	expansion[np] = skew ? Complex(0,1) : Complex(1,0);
 }
 
