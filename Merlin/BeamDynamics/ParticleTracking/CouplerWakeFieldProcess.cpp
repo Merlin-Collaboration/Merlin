@@ -45,24 +45,6 @@ Point2D GetSliceCentroid(ParticleBunch::const_iterator first,
 	}
 	return n>1 ? c/n : c;
 }
-PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first,
-                            ParticleBunch::const_iterator last)
-{
-	PSvector c(0);
-	double n=0;
-	while(first!=last)
-	{
-		c += *first;
-		first++;
-		n++;
-	}
-	if(n>1)
-	{
-		c/=n;
-	}
-	return c;
-}
-
 } //end namespace
 
 namespace ParticleTracking
