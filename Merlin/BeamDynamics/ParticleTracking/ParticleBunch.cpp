@@ -264,19 +264,24 @@ void ParticleBunch::SortByCT ()
 
 void ParticleBunch::Output (std::ostream& os) const
 {
-	//	std::copy(begin(),end(),ostream_iterator<PSvector>(os));
-//    int oldp=os.precision(10);
+	Output(os, false);
+}
+
+void ParticleBunch::Output (std::ostream& os, bool show_header) const
+{
 	int oldp=os.precision(16);
 	ios_base::fmtflags oflg = os.setf(ios::scientific,ios::floatfield);
+	if(show_header)
+	{
+		os << "#T P0 X XP Y YP CT DP" << std::endl;
+	}
 	for(PSvectorArray::const_iterator p = begin(); p!=end(); p++)
 	{
-//        os<<std::setw(24)<<GetReferenceTime();
-//        os<<std::setw(24)<<GetReferenceMomentum();
 		os<<std::setw(35)<<GetReferenceTime();
 		os<<std::setw(35)<<GetReferenceMomentum();
 		for(size_t k=0; k<6; k++)
 		{
-			os<<std::setw(35)<<(*p)[k];    //20
+			os<<std::setw(35)<<(*p)[k];
 		}
 		os<<endl;
 	}
