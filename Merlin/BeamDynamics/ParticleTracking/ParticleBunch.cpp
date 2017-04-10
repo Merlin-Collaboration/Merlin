@@ -264,7 +264,7 @@ void ParticleBunch::SortByCT ()
 
 void ParticleBunch::Output (std::ostream& os) const
 {
-	Output(os, false);
+	Output(os, true);
 }
 
 void ParticleBunch::Output (std::ostream& os, bool show_header) const
@@ -310,8 +310,15 @@ void ParticleBunch::Input (double Q, std::istream& is)
 {
 	double reftime, refmom;
 	PSvector p;
-	while(is>>reftime>>refmom>>p)
+	string line;
+	while(getline(is, line))
 	{
+		if (line == "" || line[0] == '#')
+		{
+			continue;
+		}
+		istringstream liness(line);
+		liness>>reftime>>refmom>>p;
 		push_back(p);
 
 		SetReferenceTime(reftime);
