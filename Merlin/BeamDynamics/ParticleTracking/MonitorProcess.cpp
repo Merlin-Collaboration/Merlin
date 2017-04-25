@@ -7,7 +7,6 @@ using namespace ParticleTracking;
 
 MonitorProcess::MonitorProcess(const string& aID ,int prio, const string& prefix ): ParticleBunchProcess(aID,prio)
 {
-	//cout << "MonitorProcess()" << endl;
 	active = true;
 	file_prefix = prefix;
 	count = 1;
@@ -31,35 +30,29 @@ void MonitorProcess::InitialiseProcess (Bunch& bunch)
 	{
 		active = false;
 	}
-	//cout << "MonitorProcess::InitialiseProcess()" << endl;
 }
 void MonitorProcess::DoProcess (const double ds)
 {
 	string filename;
-	filename = file_prefix + currentComponent->GetName();
+	filename = file_prefix + currentComponent->GetName() + "_" + to_string(count);
 
-	stringstream f;
-	f << file_prefix;
-	f <<count;
-	filename = f.str();
 	count++;
-	cout << filename << endl;
-#ifndef ENABLE_MPI
-	//cout << "MonitorProcess::DoProcess(): " << filename << endl;
-	ofstream out_file(filename.c_str());
-	currentBunch->Output(out_file);
-	out_file.close();
-#endif
-
 #ifdef ENABLE_MPI
 	currentBunch->gather();
 	if(currentBunch->MPI_rank == 0)
+#endif
 	{
-		//cout << "MonitorProcess::DoProcess(): " << filename << endl;
-		ofstream out_file(filename.c_str());
+		cout << "MonitorProcess writing" << filename << endl;
+		ofstream out_file(filename);
+		if(!out_file.good())
+		{
+			cerr << "Error opening " << filename << endl;
+			exit(EXIT_FAILURE);
+		}
 		currentBunch->Output(out_file);
 		out_file.close();
 	}
+#ifdef ENABLE_MPI
 	currentBunch->distribute();
 #endif
 }
@@ -72,23 +65,8 @@ double MonitorProcess::GetMaxAllowedStepSize() const
 void MonitorProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 	currentComponent = &component;
-	std::vector<string>::iterator result = dump_at_elements.begin();
-	//active = false;
-	active = true;
-	while(result != dump_at_elements.end())
-	{
-		//cout << (*result) << "\t" << component.GetName() << endl;
-		if((*result) == component.GetName())
-		{
-			active = true;
-		}
-		/*	if(dump_at_elements.begin() == dump_at_elements.end())
-			{
-				cout << "one" << endl;
-				break;
-			}
-			*/
-		result++;
-	}
-
+	string name = currentComponent->GetName();
+	// active if current component name in dump_at_elements
+	active = any_of(dump_at_elements.begin(), dump_at_elements.end(),
+	                [&name](string &s){return (s == name);});
 }
