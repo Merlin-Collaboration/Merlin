@@ -46,6 +46,9 @@ add_test_t(have_python BasicTests/have_python.py)
 merlin_test(BasicTests bunch_test bunch_test.cpp)
 add_test_t(bunch_test BasicTests/bunch_test)
 
+merlin_test(BasicTests bunch_io_test bunch_io_test.cpp)
+add_test_t(bunch_io_test BasicTests/bunch_io_test)
+
 merlin_test(BasicTests landau_test landau_test.cpp)
 merlin_test_py(BasicTests landau_test.py)
 add_test_t(landau_test.py BasicTests/landau_test.py)
