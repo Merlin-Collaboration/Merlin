@@ -7,8 +7,8 @@
 // Copyright: see Merlin/copyright.txt
 //
 // Created:		2014 HR
-// Modified:
-// Last Edited: 19.09.15 HR
+// Modified:	13.03.16 HR
+// Last Edited: 13.03.16 HR
 //
 /////////////////////////////////////////////////////////////////////////
 #ifndef HollowELensProcess_h
@@ -38,7 +38,6 @@ public:
 	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity);
 	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e);
 	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
-
 	//	Initialise this process with the specified Bunch. If
 	//	bunch is not a ParticleBunch object, the process becomes
 	//	inactive.
@@ -56,9 +55,7 @@ public:
 	// Set minimum and maximum e- beam radii in [m] or [sigma]
 	virtual void SetRadii (double rmin, double rmax);
 	virtual void SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
-
-	// Used to align the e- lens with the beam envelope
-	virtual double CalcSigma (double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
+	virtual void SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0);
 
 	// Set the effective length of the e- lens
 	virtual void SetEffectiveLength (double l_e)
@@ -83,9 +80,13 @@ public:
 
 	// Use simple profile to calculate kick
 	virtual double CalcKickSimple (Particle &p);
+	// Need this to output profiles
+	virtual double CalcKickSimple (double r);
 
 	// Use radial (measured) profile to calculate kick
 	virtual double CalcKickRadial (Particle &p);
+	// Need this to output profiles
+	virtual double CalcKickRadial (double r);
 
 	// Change to radial (measured) profile, simple (perfect) is default
 	virtual void SetRadialProfile()
@@ -96,27 +97,64 @@ public:
 	{
 		SimpleProfile = 1;
 	}
+	virtual void SetLHCRadialProfile()
+	{
+		LHC_Radial = 1;
+	}
 
-	virtual void OutputKick(std::ostream* os) {}
+	// Change electron direction (defualt opposite protons = 1)
+	virtual void SetElectronDirection(bool dir);
 
+	// Set to elliptical matching operation
+	virtual void SetEllipticalMatching(bool io);
+
+	// Adjust HEL for elliptical operation
+	virtual void EllipticalAdjust();
+	// Overloaded to manually choose which point of the compass (core) to touch
+	virtual void EllipticalAdjust(int compass);
+
+	// Set to hula elliptical matching operation
+	virtual void SetHulaElliptical(bool io);
+
+	// Adjust HEL for hula elliptical operation
+	virtual void HulaAdjust();
+
+	// Set to close hula elliptical matching operation
+	virtual void SetCloseHulaElliptical(bool io);
+
+	// Adjust HEL for close hula elliptical operation
+	virtual void CloseHulaAdjust();
+
+	// Set to pogo elliptical matching operation
+	virtual void SetPogoElliptical(bool io);
+
+	// Adjust HEL for pogo elliptical operation
+	virtual void PogoAdjust();
+
+	// Output the HEL radial profile in x y phase space (assumes circular HEL)
+	virtual void OutputProfile(std::ostream* os, double E=7000, double min=0, double max=10);
+
+	// Output the HEL footprint in x y phase space using a mapping of particles
+	virtual void OutputFootprint(std::ostream* os, int npart = 1E3);
 
 private:
 	// Data Members for Class Attributes
+
+	// Hardware parameters
+	double Rigidity;
 	double Current;
 	double ElectronBeta;
-	double Rigidity;
 	double ProtonBeta;
 	double EffectiveLength;
+	double Rmin;
+	double Rmax;
+	double Sigma_x;
+	double Sigma_y;
 
+	// Variables
 	double ThetaMax;
 	double ParticleAngle;
 	double R;
-	double Rmin;
-	double Rmax;
-
-	bool ACSet;
-	bool SimpleProfile;
-	//bool AlignedToOrbit;
 	double XOffset;
 	double YOffset;
 
@@ -129,11 +167,41 @@ private:
 	double Nstep;
 	double OpTune;
 	double Phi;
+
+	//For non-circular operation (fit to top of ellipse)
+	double SemiMinor;
+	double SemiMajor;
+	double YShift;
+	double XShift;
+	double g;				// Ratio of rmax/rmin
+	bool Elliptical;
+	bool EllipticalSet;
+	double Rmin_original;
+	double Rmax_original;
+
+	bool HulaElliptical;
+	bool HulaEllipticalSet;
+	int Compass;
+
+	bool CloseHulaElliptical;
+	bool CloseHulaEllipticalSet;
+
+	bool PogoElliptical;
+	bool PogoEllipticalSet;
+	int NorthSouth;
+	int Last_Turn;
+
 	int Turn;
 	int SkipTurn;
 
 	double MinTune;
 	double MaxTune;
+
+	bool ACSet;					// AC mode variable set?
+	bool SimpleProfile;			// 1 = use perfect HEL profile, 0 = use paramaterisation of measured LHC prototype cathode profile
+	bool AlignedToOrbit;		// Is the HEL aligned to the closed orbit
+	bool ElectronDirection;		// 1 = opposite protons (-ve kick), 0 = same as protons (+ve kick)
+	bool LHC_Radial;			// 1 = use empirically scaled measured radial profile (LHC hardware), 0 = use measured radial HEL profile
 
 	OperationMode OMode;
 
