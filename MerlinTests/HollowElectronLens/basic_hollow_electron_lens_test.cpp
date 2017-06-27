@@ -162,6 +162,7 @@ int main()
 		delete tracker;
 		delete myBunch;
 	}
+	delete theModel;
 	of.close();
 	return 0;
 }

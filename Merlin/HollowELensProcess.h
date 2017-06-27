@@ -53,8 +53,7 @@ public:
 
 	// Set minimum and maximum e- beam radii in [m] or [sigma]
 	virtual void SetRadii (double rmin, double rmax);
-	virtual void SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
-	virtual void SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0);
+	virtual void SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0=0);
 
 	// Set the effective length of the e- lens
 	virtual void SetEffectiveLength (double l_e)
@@ -80,12 +79,12 @@ public:
 	// Use simple profile to calculate kick
 	virtual double CalcKickSimple (Particle &p);
 	// Need this to output profiles
-	virtual double CalcKickSimple (double r);
+	virtual double CalcKickSimple (double R);
 
 	// Use radial (measured) profile to calculate kick
 	virtual double CalcKickRadial (Particle &p);
 	// Need this to output profiles
-	virtual double CalcKickRadial (double r);
+	virtual double CalcKickRadial (double R);
 
 	// Change to radial (measured) profile, simple (perfect) is default
 	virtual void SetRadialProfile()
@@ -133,9 +132,6 @@ private:
 	double Sigma_y;
 
 	// Variables
-	double ThetaMax;
-	double ParticleAngle;
-	double R;
 	double XOffset;
 	double YOffset;
 
@@ -146,8 +142,6 @@ private:
 	double TurnsPerStep;
 	double Multiplier;
 	double Nstep;
-	double OpTune;
-	double Phi;
 
 	//For non-circular operation (fit to top of ellipse)
 	double SemiMinor;

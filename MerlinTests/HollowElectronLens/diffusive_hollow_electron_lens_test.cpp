@@ -127,6 +127,7 @@ int main()
 	delete ac_tracker;
 	delete diff_bunch;
 	delete ac_bunch;
+	delete theModel;
 
 	if (found_match != -1)
 	{
