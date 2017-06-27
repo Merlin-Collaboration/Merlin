@@ -23,7 +23,6 @@ int main()
 {
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
-	AcceleratorComponent *drift = new Drift("d1",1*meter);
 	AcceleratorComponent *hel = new HollowElectronLens("hel1",0);
 	ctor->AppendComponent(*hel);
 	AcceleratorModel* theModel = ctor->GetModel();
