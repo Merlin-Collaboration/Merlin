@@ -113,24 +113,6 @@ public:
 	// Overloaded to manually choose which point of the compass (core) to touch
 	virtual void EllipticalAdjust(int compass);
 
-	// Set to hula elliptical matching operation
-	virtual void SetHulaElliptical(bool io);
-
-	// Adjust HEL for hula elliptical operation
-	virtual void HulaAdjust();
-
-	// Set to close hula elliptical matching operation
-	virtual void SetCloseHulaElliptical(bool io);
-
-	// Adjust HEL for close hula elliptical operation
-	virtual void CloseHulaAdjust();
-
-	// Set to pogo elliptical matching operation
-	virtual void SetPogoElliptical(bool io);
-
-	// Adjust HEL for pogo elliptical operation
-	virtual void PogoAdjust();
-
 	// Output the HEL radial profile in x y phase space (assumes circular HEL)
 	virtual void OutputProfile(std::ostream* os, double E=7000, double min=0, double max=10);
 
@@ -178,18 +160,6 @@ private:
 	bool EllipticalSet;
 	double Rmin_original;
 	double Rmax_original;
-
-	bool HulaElliptical;
-	bool HulaEllipticalSet;
-	int Compass;
-
-	bool CloseHulaElliptical;
-	bool CloseHulaEllipticalSet;
-
-	bool PogoElliptical;
-	bool PogoEllipticalSet;
-	int NorthSouth;
-	int Last_Turn;
 
 	int Turn;
 	int SkipTurn;
