@@ -34,37 +34,10 @@ namespace ParticleTracking
 {
 
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity),\
-	  ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0), ElectronDirection(1),\
-	  LHC_Radial(0), YShift(0.), XShift(0.), Elliptical(0), EllipticalSet(0), g(0.)
-{
-	if (mode == 0)
-	{
-		OMode = DC;
-	}
-	else if (mode == 1)
-	{
-		OMode = AC;
-	}
-	else if (mode == 2)
-	{
-		OMode = Diffusive;
-	}
-	else if (mode == 3)
-	{
-		OMode = Turnskip;
-	}
-	else
-	{
-		cout << "\tHEL operation mode invalid. Please choose between: \n\t int 0 = DC \n\t int 1 = AC \n\t int 2 = Diffusive \n\t int 3 = Turnskip" << endl;
-	}
-}
-
 HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity),\
-	  EffectiveLength(length_e), ACSet(0), SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0),\
-	  ElectronDirection(1),  LHC_Radial(0), YShift(0.), XShift(0.), Elliptical(0), EllipticalSet(0), g(0.)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e),
+	  XOffset(0), YOffset(0), YShift(0.), XShift(0.), g(0.), Elliptical(0), EllipticalSet(0),
+	  Turn(0), SkipTurn(0),  ACSet(0), SimpleProfile(1), AlignedToOrbit(0),  ElectronDirection(1), LHC_Radial(0)
 {
 	if (mode == 0)
 	{
@@ -86,35 +59,12 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 	{
 		cout << "\tHEL operation mode invalid. Please choose between: \n\t int 0 = DC \n\t int 1 = AC \n\t int 2 = Diffusive \n\t int 3 = Turnskip" << endl;
 	}
-
 }
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin,\
+HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e, double rmin,
                                         double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), ACSet(0),\
-	  SimpleProfile(1), AlignedToOrbit(0), XOffset(0), YOffset(0), Turn(0), SkipTurn(0), ElectronDirection(1), LHC_Radial(0),\
-	  YShift(0.), XShift(0.), Elliptical(0), EllipticalSet(0), g(0.)
+	: HollowELensProcess(priority, mode, current, beta_e, rigidity, length_e)
 {
-	if (mode == 0)
-	{
-		OMode = DC;
-	}
-	else if (mode == 1)
-	{
-		OMode = AC;
-	}
-	else if (mode == 2)
-	{
-		OMode = Diffusive;
-	}
-	else if (mode == 3)
-	{
-		OMode = Turnskip;
-	}
-	else
-	{
-		cout << "\tHEL operation mode invalid. Please choose between: \n\t int 0 = DC \n\t int 1 = AC \n\t int 2 = Diffusive \n\t int 3 = Turnskip" << endl;
-	}
 	SetRadiiSigma(rmin, rmax, model, emittance_x, emittance_y, twiss);
 }
 
@@ -454,20 +404,8 @@ double HollowELensProcess::CalcThetaMax (double r)
 double HollowELensProcess::CalcKickSimple (Particle &p)
 {
 	double thet = 0;
-	double Length = 0;
 	double x = 0;
 	double y = 0;
-
-	if(EffectiveLength == 0.)
-	{
-		cout << "HELProcess: Length = 0, setting L = 3.0[m]" << endl;
-		Length = 3.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
-	//~ cout << "\n\tHEL Length = " << Length << endl;
 
 	// Start of HEL
 	x = p.x();
@@ -508,17 +446,7 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 double HollowELensProcess::CalcKickSimple (double r)
 {
 	double thet = 0;
-	double Length = 0;
 
-	if(EffectiveLength == 0.)
-	{
-		cout << "HELProcess: Length = 0, setting L = 3.0[m]" << endl;
-		Length = 3.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
 	//~ cout << "\n\tHEL Length = " << Length << endl;
 
 	// Calculate particle transverse vector ('radius' in xy space)
@@ -553,20 +481,8 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 {
 	double f = 0;
 	double thet = 0;
-	double Length = 0;
 	double x = 0;
 	double y = 0;
-
-	if(EffectiveLength == 0.)
-	{
-		cout << "HELProcess: Length = 0, setting L = 3.0[m]" << endl;
-		Length = 3.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
-	//~ cout << "\n\tHEL Length = " << Length << endl;
 
 	// Start of HEL
 	x = p.x();
@@ -661,18 +577,6 @@ double HollowELensProcess::CalcKickRadial (double r)
 {
 	double f = 0;
 	double thet = 0;
-	double Length = 0;
-
-	if(EffectiveLength == 0.)
-	{
-		cout << "HELProcess: Length = 0, setting L = 3.0[m]" << endl;
-		Length = 3.0;
-	}
-	else
-	{
-		Length = EffectiveLength;
-	}
-	//~ cout << "\n\tHEL Length = " << Length << endl;
 
 	// Calculate particle transverse vector ('radius' in xy space)
 	R = r;
@@ -939,7 +843,6 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 	double gamma_y = 0;
 	double sigma_yp = 0;
 
-	int stored_j = 0;
 	double stored_s = 0;
 
 	for (vector<HollowElectronLens*>::iterator it = HELs.begin(); it!= HELs.end(); it++)
@@ -955,7 +858,6 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 				// this doesn't cause any issues. If however there is a zero length element after
 				// the HEL, the values below should be equal as well.
 
-				stored_j = j;
 				stored_s = (*it)->GetComponentLatticePosition();
 				cout << " S_HEL = " << (*it)->GetComponentLatticePosition() << "m" << endl;
 				cout << " S_twiss = " << twiss->Value(0,0,0,j) << "m" << endl;
@@ -1174,20 +1076,17 @@ void HollowELensProcess::EllipticalAdjust(int compass)
 	// Radii in sigma
 	double rmin = Rmin_original/Sigma_x;
 	double rmax = Rmax_original/Sigma_x;
-	bool horizontal = 0;
 
 	// Radii in Sigma
 	if(Sigma_x > Sigma_y)
 	{
 		SemiMinor = Sigma_y * rmin;
 		SemiMajor = Sigma_x * rmin;
-		horizontal = 0;
 	}
 	else
 	{
 		SemiMinor = Sigma_x * rmin;
 		SemiMajor = Sigma_y * rmin;
-		horizontal = 1;
 	}
 }
 

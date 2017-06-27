@@ -35,9 +35,8 @@ class HollowELensProcess : public ParticleBunchProcess
 {
 public:
 	//	Constructor
-	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity);
 	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e);
-	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
+	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
 	//	Initialise this process with the specified Bunch. If
 	//	bunch is not a ParticleBunch object, the process becomes
 	//	inactive.
@@ -123,9 +122,9 @@ private:
 	// Data Members for Class Attributes
 
 	// Hardware parameters
-	double Rigidity;
 	double Current;
 	double ElectronBeta;
+	double Rigidity;
 	double ProtonBeta;
 	double EffectiveLength;
 	double Rmin;
