@@ -4,21 +4,21 @@
 #include <ctime>
 #include <unistd.h>
 
-#include "AcceleratorModel/Components.h"
-#include "AcceleratorModel/Apertures/CollimatorAperture.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
+#include "Components.h"
+#include "CollimatorAperture.h"
+#include "AcceleratorModelConstructor.h"
 
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
+#include "ParticleTracker.h"
+#include "ParticleBunchTypes.h"
 
-#include "Collimators/CollimateParticleProcess.h"
-#include "Collimators/CollimateProtonProcess.h"
-#include "Collimators/MaterialDatabase.h"
+#include "CollimateParticleProcess.h"
+#include "CollimateProtonProcess.h"
+#include "MaterialDatabase.h"
 
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 
 using namespace std;
 using namespace PhysicalUnits;

@@ -5,9 +5,9 @@
 #include <iomanip>
 
 
-#include "MADInterface/MADInterface.h"
-#include "RingDynamics/LatticeFunctions.h"
-#include "AcceleratorModel/AcceleratorModel.h"
+#include "MADInterface.h"
+#include "LatticeFunctions.h"
+#include "AcceleratorModel.h"
 
 /* Read a TFS lattice with the MAD interface, measure the twiss parameters with
  * LatticeFunctionTable. Also read the data from the TFS file

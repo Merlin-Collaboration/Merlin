@@ -2,13 +2,13 @@
 #include <iostream>
 
 
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/Components.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "Collimators/CollimateParticleProcess.h"
+#include "AcceleratorModelConstructor.h"
+#include "Components.h"
+#include "PhysicalUnits.h"
+#include "ParticleBunchTypes.h"
+#include "ParticleTracker.h"
+#include "SimpleApertures.h"
+#include "CollimateParticleProcess.h"
 
 /* Create a bunch of particle, and check that the correct number survive various sized apertures
  *

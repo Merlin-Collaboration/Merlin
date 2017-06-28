@@ -1,5 +1,5 @@
 #include "../tests.h"
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 #include <iostream>
 #include <cstdlib>
 #include <fstream>

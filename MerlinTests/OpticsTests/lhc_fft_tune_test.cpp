@@ -5,14 +5,14 @@
 #include <iomanip>
 
 
-#include "MADInterface/MADInterface.h"
-#include "RingDynamics/LatticeFunctions.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "RingDynamics/BetatronTunes.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
+#include "MADInterface.h"
+#include "LatticeFunctions.h"
+#include "AcceleratorModel.h"
+#include "BetatronTunes.h"
+#include "ParticleBunchTypes.h"
 
-#include "RingDynamics/TransferMatrix.h"
-#include "RingDynamics/ClosedOrbit.h"
+#include "TransferMatrix.h"
+#include "ClosedOrbit.h"
 
 
 

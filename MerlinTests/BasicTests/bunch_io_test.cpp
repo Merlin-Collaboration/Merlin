@@ -1,6 +1,6 @@
 #include <sstream>
 #include "../tests.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchTypes.h"
+#include "ParticleBunchTypes.h"
 
 using namespace std;
 

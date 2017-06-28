@@ -2,9 +2,9 @@
 #include <iostream>
 
 
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/Apertures/RectEllipseAperture.h"
-#include "AcceleratorModel/Apertures/CollimatorAperture.h"
+#include "SimpleApertures.h"
+#include "RectEllipseAperture.h"
+#include "CollimatorAperture.h"
 
 /*
  * Test that the PointInside function for various aperture shapes

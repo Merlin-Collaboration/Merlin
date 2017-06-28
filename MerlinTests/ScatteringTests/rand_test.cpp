@@ -5,7 +5,7 @@
 #include <cstdlib>
 
 
-#include "Random/ACG.h"
+#include "ACG.h"
 using namespace std;
 
 /*
