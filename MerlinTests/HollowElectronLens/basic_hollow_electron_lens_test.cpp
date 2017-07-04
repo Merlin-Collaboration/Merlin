@@ -23,7 +23,7 @@ int main()
 {
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
-	AcceleratorComponent *hel = new HollowElectronLens("hel1",0);
+	HollowElectronLens *hel = new HollowElectronLens("hel1",0);
 	ctor->AppendComponent(*hel);
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
@@ -84,7 +84,7 @@ int main()
 			// 1 = opposite to protons (focussing)
 			myHELProcess->SetElectronDirection(1);
 			myHELProcess->SetOpMode(DC);
-			myHELProcess->SetRadii(2*millimeter, 5*millimeter);
+			hel->SetRadii(2*millimeter, 5*millimeter);
 			break;
 		}
 		case (1):
@@ -97,7 +97,7 @@ int main()
 			// for LHC hardware we need to scale the radial profile
 			myHELProcess->SetLHCRadialProfile();
 			myHELProcess->SetOpMode(DC);
-			myHELProcess->SetRadii(2*millimeter, 5*millimeter);
+			hel->SetRadii(2*millimeter, 5*millimeter);
 			break;
 		}
 		case (2):
@@ -106,7 +106,7 @@ int main()
 
 			myHELProcess->SetElectronDirection(0);
 			myHELProcess->SetOpMode(DC);
-			myHELProcess->SetRadii(2*millimeter, 5*millimeter);
+			hel->SetRadii(2*millimeter, 5*millimeter);
 			break;
 		}
 		case (3):
@@ -116,7 +116,7 @@ int main()
 			myHELProcess->SetElectronDirection(1);
 			myHELProcess->SetAC(0.31, .002, 5E-5, 1E3, 2.);
 			myHELProcess->SetOpMode(AC);
-			myHELProcess->SetRadii(3*millimeter, 5*millimeter);
+			hel->SetRadii(3*millimeter, 5*millimeter);
 			break;
 		}
 		case (4):
@@ -126,7 +126,7 @@ int main()
 			myHELProcess->SetElectronDirection(0);
 			myHELProcess->SetAC(0.31, .002, 5E-5, 1E3, 2.);
 			myHELProcess->SetOpMode(AC);
-			myHELProcess->SetRadii(3*millimeter, 5*millimeter);
+			hel->SetRadii(3*millimeter, 5*millimeter);
 			nturns = 5;
 			break;
 		}
@@ -136,7 +136,7 @@ int main()
 
 			myHELProcess->SetTurnskip(2);
 			myHELProcess->SetOpMode(Turnskip);
-			myHELProcess->SetRadii(1*millimeter, 4*millimeter);
+			hel->SetRadii(1*millimeter, 4*millimeter);
 			nturns = 5;
 			break;
 		}

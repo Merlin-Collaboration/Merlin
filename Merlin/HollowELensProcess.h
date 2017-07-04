@@ -22,7 +22,6 @@
 #include "ParticleBunchProcess.h"
 #include "ParticleBunch.h"
 
-#include "LatticeFunctions.h"
 
 namespace ParticleTracking
 {
@@ -36,7 +35,7 @@ class HollowELensProcess : public ParticleBunchProcess
 public:
 	//	Constructor
 	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e);
-	HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e, double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
+
 	//	Initialise this process with the specified Bunch. If
 	//	bunch is not a ParticleBunch object, the process becomes
 	//	inactive.
@@ -50,10 +49,6 @@ public:
 
 	//	Returns the current maximum step length for this process.
 	virtual double GetMaxAllowedStepSize () const;
-
-	// Set minimum and maximum e- beam radii in [m] or [sigma]
-	virtual void SetRadii (double rmin, double rmax);
-	virtual void SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0=0);
 
 	// Set the effective length of the e- lens
 	virtual void SetEffectiveLength (double l_e)
@@ -106,11 +101,9 @@ public:
 	// Output the HEL radial profile in x y phase space (assumes circular HEL)
 	virtual void OutputProfile(std::ostream* os, double E=7000, double min=0, double max=10);
 
-	// Output the HEL footprint in x y phase space using a mapping of particles
-	virtual void OutputFootprint(std::ostream* os, int npart = 1E3);
-
 private:
 	// Data Members for Class Attributes
+	HollowElectronLens* currentComponentHEL;
 
 	// Hardware parameters
 	double Current;
@@ -118,8 +111,6 @@ private:
 	double Rigidity;
 	double ProtonBeta;
 	double EffectiveLength;
-	double Rmin;
-	double Rmax;
 	double Sigma_x;
 	double Sigma_y;
 

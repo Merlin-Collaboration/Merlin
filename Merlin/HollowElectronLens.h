@@ -58,8 +58,8 @@ public:
 	}
 
 	virtual void SetRmax (double rmax);
-
 	virtual void SetRmin (double rmin);
+	void SetRadii (double rmin, double rmax);
 
 	//	Unique index for an Accelerator component.
 	static const int ID;

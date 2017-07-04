@@ -53,6 +53,13 @@ void  HollowElectronLens::SetRmin (double rmin)
 	Rmin = rmin;
 }
 
+void  HollowElectronLens::SetRadii (double rmin, double rmax)
+{
+	SetRmin(rmin);
+	SetRmax(rmax);
+}
+
+
 ModelElement* HollowElectronLens::Copy () const
 {
 	return new HollowElectronLens(*this);

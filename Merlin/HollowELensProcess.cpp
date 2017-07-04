@@ -19,8 +19,6 @@
 
 #include "HollowELensProcess.h"
 
-#include "LatticeFunctions.h"
-#include "PhaseAdvance.h"
 
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
@@ -34,7 +32,7 @@ namespace ParticleTracking
 {
 
 HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e),
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), currentComponentHEL(nullptr), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e),
 	  XOffset(0), YOffset(0),
 	  Turn(0), SkipTurn(0),  ACSet(0), SimpleProfile(1), AlignedToOrbit(0),  ElectronDirection(1), LHC_Radial(0)
 {
@@ -60,13 +58,6 @@ HollowELensProcess::HollowELensProcess (int priority, int mode, double current, 
 	}
 }
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e, double rmin,
-                                        double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss)
-	: HollowELensProcess(priority, mode, current, beta_e, rigidity, length_e)
-{
-	SetRadiiSigma(rmin, rmax, model, emittance_x, emittance_y, twiss);
-}
-
 void HollowELensProcess::InitialiseProcess (Bunch& bunch)
 {
 	ParticleBunchProcess::InitialiseProcess(bunch);
@@ -84,6 +75,7 @@ void HollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
 	if(active)
 	{
 		currentComponent = &component;
+		currentComponentHEL = aHollowELens;
 
 		double Gamma_p = LorentzGamma(currentBunch->GetReferenceMomentum(), ProtonMass);
 		ProtonBeta = LorentzBeta(Gamma_p);
@@ -322,8 +314,10 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 double HollowELensProcess::CalcKickSimple (double R)
 {
 	double thet = 0;
+	double Rmin = currentComponentHEL->GetRmin();
+	double Rmax = currentComponentHEL->GetRmax();
 
-	if (R < Rmin)
+	if (R <= Rmin)
 	{
 		return 0;
 	}
@@ -354,9 +348,10 @@ double HollowELensProcess::CalcKickRadial (double R)
 {
 	double f = 0;
 	double thet = 0;
+	double Rmin = currentComponentHEL->GetRmin();
 
 	// Adapted from V. Previtali's SixTrack elense implementation
-	if (R < Rmin)
+	if (R <= Rmin)
 	{
 		return 0;
 	}
@@ -431,12 +426,7 @@ double HollowELensProcess::CalcKickRadial (double R)
 	return thet;
 }
 
-void HollowELensProcess::SetRadii (double rmin, double rmax)
-{
-	cout << "\n\tHEL warning: HEL radii not set using beam envelope, and not aligned to beam orbit" << endl;
-	Rmin = rmin;
-	Rmax = rmax;
-}
+/* TODO: Should be reimplemented as a HollowElectionLensConfiguration system (like ApertureConfiguration)
 
 void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0)
 {
@@ -568,6 +558,7 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 	cout << "HollowELensProcess::SetRadiiSigma : RMax = " << Rmax << " RMin= " << Rmin << endl;
 
 }
+*/
 
 void HollowELensProcess::OutputProfile(std::ostream* os, double E, double min, double max)
 {
@@ -575,6 +566,13 @@ void HollowELensProcess::OutputProfile(std::ostream* os, double E, double min, d
 	double Gamma_p = LorentzGamma(E, ProtonMass);
 	ProtonBeta = LorentzBeta(Gamma_p);
 
+	if(!currentComponentHEL)
+	{
+		cerr << "currentComponentHEL not set. Call SetCurrentComponent()" << endl;
+		return;
+	}
+	double Rmin = currentComponentHEL->GetRmin();
+	double Rmax = currentComponentHEL->GetRmax();
 	cout << " Rmin = " << Rmin << ", = " << Rmin/Sigma_x << " sigma" << endl;
 	cout << " Rmax = " << Rmax << ", = " << Rmax/Sigma_x << " sigma" << endl;
 	cout << " L = " << EffectiveLength << endl;
@@ -592,36 +590,6 @@ void HollowELensProcess::OutputProfile(std::ostream* os, double E, double min, d
 	{
 		(*os) << (r/Sigma_x) <<"\t"<< CalcKickRadial(r) <<"\t"<< CalcKickSimple(r) <<"\t"<< sqrt(pow(CalcKickRadial(r),2)) <<"\t"<< sqrt(pow(CalcKickSimple(r),2)) << endl;
 		r += ((max-min)/points) * Sigma_x;
-	}
-}
-
-void HollowELensProcess::OutputFootprint(std::ostream* os, int npart)
-{
-	cout << " Rmin = " << Rmin << ", = " << Rmin/Sigma_x << " sigma" << endl;
-	cout << " Rmax = " << Rmax << ", = " << Rmax/Sigma_x << " sigma" << endl;
-	cout << " L = " << EffectiveLength << endl;
-	cout << " Current = " << Current << endl;
-	cout << " Brho = " << Rigidity << endl;
-	cout << " ElectronBeta = " << ElectronBeta << endl;
-	cout << " ProtonBeta = " << ProtonBeta << endl;
-
-	// Make a 'distribution' in xy phase space
-	double x_probe;
-	double y_probe;
-
-	// using up to 3*R
-	double max_xy = 3*(sqrt(pow(Rmax,2))/2);
-
-	(*os) << "#r\tx\ty\tr" << endl;
-
-	for(int i = 0; i<npart; ++i)
-	{
-		x_probe = RandomNG::uniform(-max_xy,max_xy) - XOffset;
-		y_probe = RandomNG::uniform(-max_xy,max_xy) - YOffset;
-		if( ((sqrt( pow((x_probe-XOffset),2) + pow((y_probe-YOffset),2) )) > Rmin) &&((sqrt( pow((x_probe-XOffset),2) + pow((y_probe-YOffset),2) )) < Rmax) )
-		{
-			(*os) << x_probe << "\t" << y_probe << "\t" << sqrt(pow(x_probe,2) + pow(y_probe,2)) << endl;
-		}
 	}
 }
 

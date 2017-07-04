@@ -25,7 +25,7 @@ int main()
 {
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
-	AcceleratorComponent *hel = new HollowElectronLens("hel1",0);
+	HollowElectronLens *hel = new HollowElectronLens("hel1",0);
 	ctor->AppendComponent(*hel);
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
@@ -71,7 +71,7 @@ int main()
 
 	diff_HELProcess = new HollowELensProcess(3, 2, 5, 0.195, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
 	diff_HELProcess->SetElectronDirection(1);
-	diff_HELProcess->SetRadii(2*millimeter, 5*millimeter);
+	hel->SetRadii(2*millimeter, 5*millimeter);
 
 	diff_tracker->AddProcess(diff_HELProcess);
 
@@ -91,7 +91,7 @@ int main()
 
 	ac_HELProcess = new HollowELensProcess(3, 0, 5, 0.195, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
 	ac_HELProcess->SetElectronDirection(1);
-	ac_HELProcess->SetRadii(2*millimeter, 5*millimeter);
+	hel->SetRadii(2*millimeter, 5*millimeter);
 
 	ac_tracker->AddProcess(ac_HELProcess);
 
