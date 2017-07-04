@@ -35,7 +35,7 @@ namespace ParticleTracking
 
 HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
 	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e),
-	  XOffset(0), YOffset(0), YShift(0.), XShift(0.), g(0.), Elliptical(0), EllipticalSet(0),
+	  XOffset(0), YOffset(0),
 	  Turn(0), SkipTurn(0),  ACSet(0), SimpleProfile(1), AlignedToOrbit(0),  ElectronDirection(1), LHC_Radial(0)
 {
 	if (mode == 0)
@@ -158,16 +158,7 @@ void HollowELensProcess::DoProcess (double ds)
 
 			if(theta!=0)
 			{
-
-				if(!Elliptical)
-				{
-					ParticleAngle = atan2((*p).y(), (*p).x());
-				}
-				else
-				{
-					ParticleAngle = atan2( ((*p).y()-YShift) , ((*p).x()-XShift)  );
-				}
-
+				ParticleAngle = atan2((*p).y(), (*p).x());
 				//~ // Particle phase space angle and amplitude (radius)
 				(*p).xp() += theta * cos(ParticleAngle);
 				(*p).yp() += theta * sin(ParticleAngle);
@@ -206,15 +197,7 @@ void HollowELensProcess::DoProcess (double ds)
 					double Phi = Multiplier * ( Turn * OpTune * 2 * pi );
 					theta *= 0.5*(1 + cos(Phi));
 
-					if(!Elliptical)
-					{
-						ParticleAngle = atan2((*p).y(), (*p).x());
-					}
-					else
-					{
-						ParticleAngle = atan2( ((*p).y()-YShift) , ((*p).x()-XShift)  );
-					}
-
+					ParticleAngle = atan2((*p).y(), (*p).x());
 					// Particle phase space angle and amplitude (radius)
 					(*p).xp() += theta * cos(ParticleAngle);
 					(*p).yp() += theta * sin(ParticleAngle);
@@ -245,15 +228,7 @@ void HollowELensProcess::DoProcess (double ds)
 					theta = CalcKickRadial(*p);
 				}
 
-				if(!Elliptical)
-				{
-					ParticleAngle = atan2((*p).y(), (*p).x());
-				}
-				else
-				{
-					ParticleAngle = atan2( ((*p).y()-YShift) , ((*p).x()-XShift)  );
-				}
-
+				ParticleAngle = atan2((*p).y(), (*p).x());
 				if(theta!=0)
 				{
 					// Particle phase space angle and amplitude (radius)
@@ -286,16 +261,7 @@ void HollowELensProcess::DoProcess (double ds)
 					theta = CalcKickRadial(*p);
 				}
 
-				if(!Elliptical)
-				{
-					ParticleAngle = atan2((*p).y(), (*p).x());
-				}
-				else
-				{
-					ParticleAngle = atan2( ((*p).y()-YShift) , ((*p).x()-XShift)  );
-				}
-
-
+				ParticleAngle = atan2((*p).y(), (*p).x());
 				if(theta!=0)
 				{
 					// Particle phase space angle and amplitude (radius)
@@ -349,7 +315,7 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 	double y = p.y();
 
 	// Calculate particle transverse vector ('radius' in xy space)
-	double R = sqrt( pow((x-XOffset+XShift),2) + pow((y-YOffset+YShift),2) );
+	double R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
 	return CalcKickSimple(R);
 }
 
@@ -380,7 +346,7 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 	double y = p.y();
 
 	// Calculate particle transverse vector ('radius' in xy space)
-	double R = sqrt( pow((x-XOffset+XShift),2) + pow((y-YOffset+YShift),2) );
+	double R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
 	return  CalcKickRadial(R);
 }
 
@@ -467,17 +433,13 @@ double HollowELensProcess::CalcKickRadial (double R)
 
 void HollowELensProcess::SetRadii (double rmin, double rmax)
 {
-	g = rmax/rmin;
 	cout << "\n\tHEL warning: HEL radii not set using beam envelope, and not aligned to beam orbit" << endl;
 	Rmin = rmin;
 	Rmax = rmax;
-	Rmin_original = Rmin;
-	Rmax_original = Rmax;
 }
 
 void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0)
 {
-	g = rmax/rmin;
 	//How many HELs in lattice?
 	int Hel_no = 0;
 	//Element no of last HEL
@@ -600,8 +562,6 @@ void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorMod
 
 	Rmin = rmin * sigma_x;
 	Rmax = rmax * sigma_x;
-	Rmin_original = Rmin;
-	Rmax_original = Rmax;
 	Sigma_x = sigma_x;
 	Sigma_y = sigma_y;
 
@@ -654,12 +614,11 @@ void HollowELensProcess::OutputFootprint(std::ostream* os, int npart)
 
 	(*os) << "#r\tx\ty\tr" << endl;
 
-	// Note here we subtract XShift, for the particle distribution we add XShift
 	for(int i = 0; i<npart; ++i)
 	{
-		x_probe = RandomNG::uniform(-max_xy,max_xy) - XOffset - XShift;
-		y_probe = RandomNG::uniform(-max_xy,max_xy) - YOffset - YShift;
-		if( ((sqrt( pow((x_probe-XOffset-XShift),2) + pow((y_probe-YOffset-YShift),2) )) > Rmin) &&((sqrt( pow((x_probe-XOffset-XShift),2) + pow((y_probe-YOffset-YShift),2) )) < Rmax) )
+		x_probe = RandomNG::uniform(-max_xy,max_xy) - XOffset;
+		y_probe = RandomNG::uniform(-max_xy,max_xy) - YOffset;
+		if( ((sqrt( pow((x_probe-XOffset),2) + pow((y_probe-YOffset),2) )) > Rmin) &&((sqrt( pow((x_probe-XOffset),2) + pow((y_probe-YOffset),2) )) < Rmax) )
 		{
 			(*os) << x_probe << "\t" << y_probe << "\t" << sqrt(pow(x_probe,2) + pow(y_probe,2)) << endl;
 		}
@@ -676,98 +635,6 @@ void HollowELensProcess::SetElectronDirection(bool dir)
 	else
 	{
 		cout << "HELProcess: electrons travelling in the same direction as protons: positive (defocussing) kick" << endl;
-	}
-}
-
-void HollowELensProcess::SetEllipticalMatching(bool io)
-{
-	Elliptical = io;
-
-	// Radii in sigma
-	double rmin = Rmin_original/Sigma_x;
-	double rmax = Rmax_original/Sigma_x;
-
-	cout << "\n\t HELProcess : Using Elliptical Operation" << endl;
-
-	// Need to set SemiMajor and SemiMinor axes for our ellipse - will be used to fnd HEL R_min
-	// The ratio of Rmin to Max is set by hardware and is 2 for the LHC, and shoulf be set in SetRadiiSigma or SetRadii
-	if(g ==0.)
-	{
-		g = 2.0;
-	}
-	// Also need to set XShift or YShift for co-ordinate transforms
-	if(Elliptical)
-	{
-		// x larger than y, shift co-ordinates up in y
-		if(Sigma_x > Sigma_y)
-		{
-			SemiMinor = Sigma_y * rmin;
-			SemiMajor = Sigma_x * rmin;
-			Rmin = sqrt(SemiMajor/SemiMinor)*( pow(SemiMajor,2) + pow(SemiMinor,2) ) / (2 * SemiMinor);
-			Rmax = g*Rmin;
-			YShift = SemiMinor - Rmin;
-		}
-		// y larger than x, shift co-ordinates right in x (i.e. assuming beam1 for LHC)
-		else if(Sigma_x < Sigma_y)
-		{
-			SemiMinor = Sigma_x * rmin;
-			SemiMajor = Sigma_y * rmin;
-			Rmin = sqrt(SemiMajor/SemiMinor)*( pow(SemiMajor,2) + pow(SemiMinor,2) ) / (2 * SemiMinor);
-			Rmax = g*Rmin;
-			XShift = SemiMinor - Rmin;
-		}
-
-		EllipticalSet = 1;
-	}
-	else
-	{
-		EllipticalSet = 0;
-	}
-}
-
-void HollowELensProcess::EllipticalAdjust()
-{
-	// Radii in sigma
-	double rmin = Rmin_original/Sigma_x;
-	double rmax = Rmax_original/Sigma_x;
-
-	// x larger than y, shift co-ordinates up in y
-	if(Sigma_x > Sigma_y)
-	{
-		SemiMinor = Sigma_y * rmin;
-		SemiMajor = Sigma_x * rmin;
-		Rmin = sqrt(SemiMajor/SemiMinor)*( pow(SemiMajor,2) + pow(SemiMinor,2) ) / (2 * SemiMinor);
-		Rmax = g*Rmin;
-		YShift = SemiMinor - Rmin;
-	}
-	// y larger than x, shift co-ordinates right in x (i.e. assuming beam1 for LHC)
-	else if(Sigma_x < Sigma_y)
-	{
-		SemiMinor = Sigma_x * rmin;
-		SemiMajor = Sigma_y * rmin;
-		Rmin = sqrt(SemiMajor/SemiMinor)*( pow(SemiMajor,2) + pow(SemiMinor,2) ) / (2 * SemiMinor);
-		Rmax = g*Rmin;
-		XShift = SemiMinor - Rmin;
-	}
-
-}
-
-void HollowELensProcess::EllipticalAdjust(int compass)
-{
-	// Radii in sigma
-	double rmin = Rmin_original/Sigma_x;
-	double rmax = Rmax_original/Sigma_x;
-
-	// Radii in Sigma
-	if(Sigma_x > Sigma_y)
-	{
-		SemiMinor = Sigma_y * rmin;
-		SemiMajor = Sigma_x * rmin;
-	}
-	else
-	{
-		SemiMinor = Sigma_x * rmin;
-		SemiMajor = Sigma_y * rmin;
 	}
 }
 

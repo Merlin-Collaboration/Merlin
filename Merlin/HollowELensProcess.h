@@ -103,14 +103,6 @@ public:
 	// Change electron direction (defualt opposite protons = 1)
 	virtual void SetElectronDirection(bool dir);
 
-	// Set to elliptical matching operation
-	virtual void SetEllipticalMatching(bool io);
-
-	// Adjust HEL for elliptical operation
-	virtual void EllipticalAdjust();
-	// Overloaded to manually choose which point of the compass (core) to touch
-	virtual void EllipticalAdjust(int compass);
-
 	// Output the HEL radial profile in x y phase space (assumes circular HEL)
 	virtual void OutputProfile(std::ostream* os, double E=7000, double min=0, double max=10);
 
@@ -142,17 +134,6 @@ private:
 	double TurnsPerStep;
 	double Multiplier;
 	double Nstep;
-
-	//For non-circular operation (fit to top of ellipse)
-	double SemiMinor;
-	double SemiMajor;
-	double YShift;
-	double XShift;
-	double g;				// Ratio of rmax/rmin
-	bool Elliptical;
-	bool EllipticalSet;
-	double Rmin_original;
-	double Rmax_original;
 
 	int Turn;
 	int SkipTurn;
