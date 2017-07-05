@@ -14,15 +14,12 @@
 #include <cmath>
 
 #include "utils.h"
-
 #include "RandomNG.h"
-
 #include "HollowELensProcess.h"
-
-
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
 #include "NumericalConstants.h"
+
 
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
@@ -31,32 +28,9 @@ using namespace std;
 namespace ParticleTracking
 {
 
-HollowELensProcess::HollowELensProcess (int priority, int mode, double current, double beta_e, double rigidity, double length_e)
-	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), currentComponentHEL(nullptr), Current(current), ElectronBeta(beta_e), Rigidity(rigidity), EffectiveLength(length_e),
-	  XOffset(0), YOffset(0),
-	  Turn(0), SkipTurn(0),  ACSet(0), SimpleProfile(1), AlignedToOrbit(0),  ElectronDirection(1), LHC_Radial(0)
-{
-	if (mode == 0)
-	{
-		OMode = DC;
-	}
-	else if (mode == 1)
-	{
-		OMode = AC;
-	}
-	else if (mode == 2)
-	{
-		OMode = Diffusive;
-	}
-	else if (mode == 3)
-	{
-		OMode = Turnskip;
-	}
-	else
-	{
-		cout << "\tHEL operation mode invalid. Please choose between: \n\t int 0 = DC \n\t int 1 = AC \n\t int 2 = Diffusive \n\t int 3 = Turnskip" << endl;
-	}
-}
+HollowELensProcess::HollowELensProcess (int priority)
+	: ParticleBunchProcess("HOLLOW ELECTRON LENS", priority), currentComponentHEL(nullptr)
+{}
 
 void HollowELensProcess::InitialiseProcess (Bunch& bunch)
 {
@@ -86,30 +60,8 @@ void HollowELensProcess::SetCurrentComponent (AcceleratorComponent& component)
 	}
 }
 
-void HollowELensProcess::SetAC (double tune, double deltatune, double tunevarperstep, double turnsperstep, double multi)
+void HollowELensProcess::DoProcess (double /*ds*/)
 {
-	Tune = tune;
-	DeltaTune = deltatune;
-	TuneVarPerStep = tunevarperstep;
-	TurnsPerStep = turnsperstep;
-	Multiplier = multi;
-	MinTune = Tune - DeltaTune;
-	MaxTune = Tune + DeltaTune;
-	Nstep = (2 * DeltaTune / TuneVarPerStep)+1;
-	Turn = 0;
-	ACSet = 1;
-	OMode = AC;
-}
-
-void HollowELensProcess::SetTurnskip (int skip)
-{
-	SkipTurn = skip;
-	OMode = Turnskip;
-}
-
-void HollowELensProcess::DoProcess (double ds)
-{
-
 	// NB
 	// CalcThetaMax returns +ve theta
 	// CalcKick Radial and Simple return -ve theta
@@ -118,6 +70,9 @@ void HollowELensProcess::DoProcess (double ds)
 	double theta = 0;
 	double Gamma_p = 0;
 	double ParticleAngle;
+
+	bool SimpleProfile = currentComponentHEL->SimpleProfile;
+	bool ACSet = currentComponentHEL->ACSet;
 
 	ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
 	newbunch->clear();
@@ -130,9 +85,9 @@ void HollowELensProcess::DoProcess (double ds)
 	}
 
 	// Have to increment Turn as the process doesn't have access to the turn value from user code
-	++Turn;
+	currentComponentHEL->Turn++;
 
-	switch (OMode)
+	switch (currentComponentHEL->OMode)
 	{
 	case DC:
 	{
@@ -163,6 +118,14 @@ void HollowELensProcess::DoProcess (double ds)
 		// Resonant HEL kick - Adapted from V. Previtali's SixTrack elense
 		if(ACSet)
 		{
+			double TuneVarPerStep = currentComponentHEL->TuneVarPerStep;
+			double DeltaTune = currentComponentHEL->DeltaTune;
+			double MinTune = currentComponentHEL->MinTune;
+			int Turn = currentComponentHEL->Turn;
+			double TurnsPerStep = currentComponentHEL->TurnsPerStep;
+			double Nstep = currentComponentHEL->Nstep;
+			double Tune = currentComponentHEL->Tune;
+			double Multiplier = currentComponentHEL->Multiplier;
 			for(PSvectorArray::iterator p = newbunch->begin(); p!=newbunch->end(); p++)
 			{
 				if(SimpleProfile)
@@ -227,13 +190,14 @@ void HollowELensProcess::DoProcess (double ds)
 					(*p).xp() += theta * cos(ParticleAngle);
 					(*p).yp() += theta * sin(ParticleAngle);
 				}
-
 			}
 		}
 	}
 	break;
 	case Turnskip:
 	{
+		int SkipTurn = currentComponentHEL->SkipTurn;
+		int Turn = currentComponentHEL->Turn;
 		// HEL switched on/off if turn = muliple of n
 		if (SkipTurn == 0)
 		{
@@ -260,7 +224,6 @@ void HollowELensProcess::DoProcess (double ds)
 					(*p).xp() += theta * cos(ParticleAngle);
 					(*p).yp() += theta * sin(ParticleAngle);
 				}
-
 			}
 		}
 	}
@@ -285,6 +248,12 @@ double HollowELensProcess::CalcThetaMax (double r)
 		return 0;
 	}
 
+	bool ElectronDirection = currentComponentHEL->ElectronDirection;
+	double EffectiveLength = currentComponentHEL->EffectiveLength;
+	double Current = currentComponentHEL->Current;
+	double ElectronBeta = currentComponentHEL->ElectronBeta;
+	double Rigidity = currentComponentHEL->Rigidity;
+
 	double ThetaMax;
 	if(ElectronDirection)
 	{
@@ -305,6 +274,9 @@ double HollowELensProcess::CalcKickSimple (Particle &p)
 	// Start of HEL
 	double x = p.x();
 	double y = p.y();
+
+	double XOffset = currentComponentHEL->XOffset;
+	double YOffset = currentComponentHEL->YOffset;
 
 	// Calculate particle transverse vector ('radius' in xy space)
 	double R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
@@ -339,6 +311,9 @@ double HollowELensProcess::CalcKickRadial (Particle &p)
 	double x = p.x();
 	double y = p.y();
 
+	double XOffset = currentComponentHEL->XOffset;
+	double YOffset = currentComponentHEL->YOffset;
+
 	// Calculate particle transverse vector ('radius' in xy space)
 	double R = sqrt( pow((x-XOffset),2) + pow((y-YOffset),2) );
 	return  CalcKickRadial(R);
@@ -349,6 +324,7 @@ double HollowELensProcess::CalcKickRadial (double R)
 	double f = 0;
 	double thet = 0;
 	double Rmin = currentComponentHEL->GetRmin();
+	bool LHC_Radial = currentComponentHEL->LHC_Radial;
 
 	// Adapted from V. Previtali's SixTrack elense implementation
 	if (R <= Rmin)
@@ -573,6 +549,12 @@ void HollowELensProcess::OutputProfile(std::ostream* os, double E, double min, d
 	}
 	double Rmin = currentComponentHEL->GetRmin();
 	double Rmax = currentComponentHEL->GetRmax();
+	double Sigma_x = currentComponentHEL->Sigma_x;
+	double EffectiveLength = currentComponentHEL->EffectiveLength;
+	double Current = currentComponentHEL->Current;
+	double Rigidity = currentComponentHEL->Rigidity;
+	double ElectronBeta = currentComponentHEL->ElectronBeta;
+
 	cout << " Rmin = " << Rmin << ", = " << Rmin/Sigma_x << " sigma" << endl;
 	cout << " Rmax = " << Rmax << ", = " << Rmax/Sigma_x << " sigma" << endl;
 	cout << " L = " << EffectiveLength << endl;
@@ -590,19 +572,6 @@ void HollowELensProcess::OutputProfile(std::ostream* os, double E, double min, d
 	{
 		(*os) << (r/Sigma_x) <<"\t"<< CalcKickRadial(r) <<"\t"<< CalcKickSimple(r) <<"\t"<< sqrt(pow(CalcKickRadial(r),2)) <<"\t"<< sqrt(pow(CalcKickSimple(r),2)) << endl;
 		r += ((max-min)/points) * Sigma_x;
-	}
-}
-
-void HollowELensProcess::SetElectronDirection(bool dir)
-{
-	ElectronDirection = dir;
-	if(ElectronDirection)
-	{
-		cout << "HELProcess: electrons travelling opposite to protons: negative (focussing) kick" << endl;
-	}
-	else
-	{
-		cout << "HELProcess: electrons travelling in the same direction as protons: positive (defocussing) kick" << endl;
 	}
 }
 

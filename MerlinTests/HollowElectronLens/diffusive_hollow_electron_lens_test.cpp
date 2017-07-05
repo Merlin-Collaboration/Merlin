@@ -23,12 +23,13 @@ using namespace PhysicalUnits;
 
 int main()
 {
-	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
-	ctor->NewModel();
-	HollowElectronLens *hel = new HollowElectronLens("hel1",0);
-	ctor->AppendComponent(*hel);
-	AcceleratorModel* theModel = ctor->GetModel();
-	delete ctor;
+	HollowElectronLens *diff_hel = new HollowElectronLens("hel1",0, 2, 5, 0.195, 2.334948339E4, 3.0);
+	diff_hel->SetElectronDirection(1);
+	diff_hel->SetRadii(2*millimeter, 5*millimeter);
+
+	HollowElectronLens *ac_hel = new HollowElectronLens("hel1",0, 0, 5, 0.195, 2.334948339E4, 3.0);
+	ac_hel->SetElectronDirection(1);
+	ac_hel->SetRadii(2*millimeter, 5*millimeter);
 
 	const double beam_energy = 7000.0;
 	const size_t npart = 400;
@@ -62,38 +63,43 @@ int main()
 	}
 
 	// first track diff_turns turns though the diffusive mode
-	HollowELensProcess* diff_HELProcess;
+
 	vector<Particle> diff_coords{pcoords};
 	ProtonBunch* diff_bunch = new ProtonBunch(beam_energy,1, diff_coords);
 
+	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
+	ctor->NewModel();
+	ctor->AppendComponent(*diff_hel);
+	AcceleratorModel* theModel = ctor->GetModel();
+	delete ctor;
+
 	AcceleratorModel::RingIterator ring = theModel->GetRing();
 	ParticleTracker* diff_tracker = new ParticleTracker(ring, diff_bunch);
-
-	diff_HELProcess = new HollowELensProcess(3, 2, 5, 0.195, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
-	diff_HELProcess->SetElectronDirection(1);
-	hel->SetRadii(2*millimeter, 5*millimeter);
-
-	diff_tracker->AddProcess(diff_HELProcess);
+	HollowELensProcess* HELProcess = new HollowELensProcess(3);
+	diff_tracker->AddProcess(HELProcess);
 
 	for(int n=0; n < diff_turns; n++)
 	{
 		diff_tracker->Track(diff_bunch);
 	}
 	//diff_bunch->begin()->y() += 1e-6; // artificial error to test the test
+	delete theModel;
+	delete diff_tracker;
 
 	// then track though the DC mode, until the bunch matches the diffusive
-	HollowELensProcess* ac_HELProcess;
 	vector<Particle> ac_coords{pcoords};
 	ProtonBunch* ac_bunch = new ProtonBunch(beam_energy,1, ac_coords);
 
+	ctor = new AcceleratorModelConstructor();
+	ctor->NewModel();
+	ctor->AppendComponent(*ac_hel);
+	theModel = ctor->GetModel();
+	delete ctor;
 	ring = theModel->GetRing();
 	ParticleTracker* ac_tracker = new ParticleTracker(ring, ac_bunch);
 
-	ac_HELProcess = new HollowELensProcess(3, 0, 5, 0.195, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
-	ac_HELProcess->SetElectronDirection(1);
-	hel->SetRadii(2*millimeter, 5*millimeter);
-
-	ac_tracker->AddProcess(ac_HELProcess);
+	HELProcess = new HollowELensProcess(3);
+	ac_tracker->AddProcess(HELProcess);
 
 	int found_match = -1;
 	for(int n=0; n < diff_turns; n++)
@@ -123,7 +129,7 @@ int main()
 		}
 	}
 
-	delete diff_tracker;
+
 	delete ac_tracker;
 	delete diff_bunch;
 	delete ac_bunch;

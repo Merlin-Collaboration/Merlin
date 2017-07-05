@@ -21,13 +21,6 @@ using namespace PhysicalUnits;
 
 int main()
 {
-	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
-	ctor->NewModel();
-	HollowElectronLens *hel = new HollowElectronLens("hel1",0);
-	ctor->AppendComponent(*hel);
-	AcceleratorModel* theModel = ctor->GetModel();
-	delete ctor;
-
 	const double beam_energy = 7000.0;
 	const size_t npart = 400;
 
@@ -64,78 +57,72 @@ int main()
 	}
 	of << "# case id x xp y yp" << endl;
 
-	HollowELensProcess* myHELProcess;
+
 	for(int testcase = 0; testcase < 6; testcase++)
 	{
 		vector<Particle> bcoords{pcoords};
 		ProtonBunch* myBunch = new ProtonBunch(beam_energy,1, bcoords);
 
 		int nturns = 1;
-		AcceleratorModel::RingIterator ring = theModel->GetRing();
-		ParticleTracker* tracker = new ParticleTracker(ring,myBunch);
+
+		HollowElectronLens *hel;
 
 		cout << "Running case " << testcase << endl;
 		switch (testcase)
 		{
 		case (0):
 		{
-			myHELProcess = new HollowELensProcess(3, 0, 5, 0.195, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
-
+			hel = new HollowElectronLens("hel1",0, 0, 5, 0.195, 2.334948339E4, 3.0);
 			// 1 = opposite to protons (focussing)
-			myHELProcess->SetElectronDirection(1);
-			myHELProcess->SetOpMode(DC);
+			hel->SetElectronDirection(1);
+			hel->SetOpMode(DC);
 			hel->SetRadii(2*millimeter, 5*millimeter);
 			break;
 		}
 		case (1):
 		{
-			myHELProcess = new HollowELensProcess(3, 0, 5, 0.5, 1.5E4, 2.0);// LHC: 3m, 10KeV, 5A
-
-			myHELProcess->SetElectronDirection(1);
+			hel = new HollowElectronLens("hel1",0, 0, 5, 0.5, 1.5E4, 2.0);
+			hel->SetElectronDirection(1);
 			// radial (measured) or perfect profile
-			myHELProcess->SetRadialProfile();
+			hel->SetRadialProfile();
 			// for LHC hardware we need to scale the radial profile
-			myHELProcess->SetLHCRadialProfile();
-			myHELProcess->SetOpMode(DC);
+			hel->SetLHCRadialProfile();
+			hel->SetOpMode(DC);
 			hel->SetRadii(2*millimeter, 5*millimeter);
 			break;
 		}
 		case (2):
 		{
-			myHELProcess = new HollowELensProcess(3, 0, 5, 0.195, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
-
-			myHELProcess->SetElectronDirection(0);
-			myHELProcess->SetOpMode(DC);
+			hel = new HollowElectronLens("hel1",0, 0, 5, 0.195, 2.334948339E4, 3.0);
+			hel->SetElectronDirection(0);
+			hel->SetOpMode(DC);
 			hel->SetRadii(2*millimeter, 5*millimeter);
 			break;
 		}
 		case (3):
 		{
-			myHELProcess = new HollowELensProcess(3, 0, 5, 0.7, 2.334948339E4, 3.0);// LHC: 3m, 10KeV, 5A
-
-			myHELProcess->SetElectronDirection(1);
-			myHELProcess->SetAC(0.31, .002, 5E-5, 1E3, 2.);
-			myHELProcess->SetOpMode(AC);
+			hel = new HollowElectronLens("hel1",0, 0, 5, 0.7, 2.334948339E4, 3.0);
+			hel->SetElectronDirection(1);
+			hel->SetAC(0.31, .002, 5E-5, 1E3, 2.);
+			hel->SetOpMode(AC);
 			hel->SetRadii(3*millimeter, 5*millimeter);
 			break;
 		}
 		case (4):
 		{
-			myHELProcess = new HollowELensProcess(3, 0, 5, 0.195, 2.0E4, 3.0);// LHC: 3m, 10KeV, 5A
-
-			myHELProcess->SetElectronDirection(0);
-			myHELProcess->SetAC(0.31, .002, 5E-5, 1E3, 2.);
-			myHELProcess->SetOpMode(AC);
+			hel = new HollowElectronLens("hel1",0, 0, 5, 0.195, 2.0E4, 3.0);
+			hel->SetElectronDirection(0);
+			hel->SetAC(0.31, .002, 5E-5, 1E3, 2.);
+			hel->SetOpMode(AC);
 			hel->SetRadii(3*millimeter, 5*millimeter);
 			nturns = 5;
 			break;
 		}
 		case (5):
 		{
-			myHELProcess = new HollowELensProcess(3, 0, 5, 0.195, 2.334948339E4, 2.0);// LHC: 3m, 10KeV, 5A
-
-			myHELProcess->SetTurnskip(2);
-			myHELProcess->SetOpMode(Turnskip);
+			hel = new HollowElectronLens("hel1",0, 0, 5, 0.195, 2.334948339E4, 2.0);
+			hel->SetTurnskip(2);
+			hel->SetOpMode(Turnskip);
 			hel->SetRadii(1*millimeter, 4*millimeter);
 			nturns = 5;
 			break;
@@ -146,6 +133,16 @@ int main()
 			abort();
 		}
 		}
+
+		AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
+		ctor->NewModel();
+		ctor->AppendComponent(*hel);
+		AcceleratorModel* theModel = ctor->GetModel();
+		delete ctor;
+		AcceleratorModel::RingIterator ring = theModel->GetRing();
+		ParticleTracker* tracker = new ParticleTracker(ring,myBunch);
+
+		HollowELensProcess* myHELProcess = new HollowELensProcess(3);
 		tracker->AddProcess(myHELProcess);
 
 		for(int n=0; n < nturns; n++)
@@ -161,8 +158,9 @@ int main()
 
 		delete tracker;
 		delete myBunch;
+		delete theModel;
 	}
-	delete theModel;
+
 	of.close();
 	return 0;
 }
