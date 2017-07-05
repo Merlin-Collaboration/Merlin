@@ -13,10 +13,10 @@
 #ifndef _H_TeslaCoupler
 #define _H_TeslaCoupler
 
-#include "AcceleratorModel/CombinedWakeRF.h"
-#include "NumericalUtils/Complex.h"
-#include "EuclideanGeometry/Transform2D.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "CombinedWakeRF.h"
+#include "Complex.h"
+#include "Transform2D.h"
+#include "PhysicalConstants.h"
 
 using namespace PhysicalConstants;
 using namespace std;

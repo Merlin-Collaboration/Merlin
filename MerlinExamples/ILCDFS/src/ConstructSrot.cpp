@@ -13,8 +13,8 @@
 /////////////////////////////////////////////////////////////////////////
 
 
-#include "MADInterface/ConstructSrot.h"
-#include "AcceleratorModel/Frames/PatchFrame.h"
+#include "ConstructSrot.h"
+#include "PatchFrame.h"
 
 ComponentFrame* ConstructSrot(double angle, const std::string& name)
 {

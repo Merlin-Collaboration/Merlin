@@ -1,11 +1,11 @@
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "BeamDynamics/SMPTracking/SMPTracker.h"
-#include "BeamDynamics/SMPTracking/SMPBunch.h"
-#include "BeamDynamics/SMPTracking/SMPBunchConstructor.h"
-#include "BeamDynamics/SMPTracking/SMPWakeFieldProcess.h"
-#include "BasicTransport/NormalTransform.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/PhysicalUnits.h"
+#include "AcceleratorModel.h"
+#include "SMPTracker.h"
+#include "SMPBunch.h"
+#include "SMPBunchConstructor.h"
+#include "SMPWakeFieldProcess.h"
+#include "NormalTransform.h"
+#include "PhysicalConstants.h"
+#include "PhysicalUnits.h"
 
 #include <fstream>
 

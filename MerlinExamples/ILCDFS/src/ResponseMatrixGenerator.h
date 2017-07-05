@@ -18,8 +18,8 @@
 #ifndef _h_ResponseMatrixGenerator
 #define _h_ResponseMatrixGenerator
 
-#include "TLAS/TLAS.h"
-#include "Channels/Channels.h"
+#include "TLAS.h"
+#include "Channels.h"
 #include "Accelerator.h"
 
 class ResponseMatrixGenerator

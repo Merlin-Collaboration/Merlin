@@ -4,8 +4,8 @@
 #ifndef _h_HaloTracker
 #define _h_HaloTracker 1
 
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "BeamModel/BeamData.h"
+#include "AcceleratorModel.h"
+#include "BeamData.h"
 
 class HaloTracker
 {

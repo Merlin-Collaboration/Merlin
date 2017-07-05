@@ -6,7 +6,7 @@
 #ifndef _H_TeslaWakePotential
 #define _H_TeslaWakePotential
 
-#include "AcceleratorModel/WakePotentials.h"
+#include "WakePotentials.h"
 
 class TeslaWakePotentials : public WakePotentials
 {

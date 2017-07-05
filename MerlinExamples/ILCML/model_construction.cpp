@@ -1,12 +1,12 @@
 #include "merlin_config.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "MADInterface/XTFFInterface.h"
-#include "BeamModel/BeamData.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/StdComponent/TWRFStructure.h"
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
+#include "AcceleratorModel.h"
+#include "XTFFInterface.h"
+#include "BeamData.h"
+#include "PhysicalConstants.h"
+#include "TWRFStructure.h"
+#include "SimpleApertures.h"
 #include "TeslaWakePotential.h"
-#include "AcceleratorModel/Frames/PatchFrame.h"
+#include "PatchFrame.h"
 #include <vector>
 
 using namespace std;

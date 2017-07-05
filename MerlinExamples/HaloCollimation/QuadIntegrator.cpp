@@ -8,9 +8,9 @@
 // particle integrator for multipoles, which using an second-
 // order expansion for the energy.
 
-#include "BasicTransport/TransportMatrix.h"
-#include "BasicTransport/MatrixMaps.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "TransportMatrix.h"
+#include "MatrixMaps.h"
+#include "PhysicalConstants.h"
 #include "QuadIntegrator.h"
 
 using namespace PhysicalUnits;

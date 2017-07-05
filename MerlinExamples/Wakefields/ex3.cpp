@@ -3,18 +3,18 @@
 //    DK 29.11.2008
 //
 
-#include "Random/RandomNG.h"
-#include "BeamModel/BeamData.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/Components.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "RandomNG.h"
+#include "BeamData.h"
+#include "ParticleBunchConstructor.h"
+#include "ParticleTracker.h"
+#include "AcceleratorModelConstructor.h"
+#include "Components.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 
 #include "TeslaCoupler.h"
-#include "BeamDynamics/ParticleTracking/CouplerWakeFieldProcess.h"
-#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
+#include "CouplerWakeFieldProcess.h"
+#include "WakeFieldProcess.h"
 
 #include <fstream>
 #include <iostream>

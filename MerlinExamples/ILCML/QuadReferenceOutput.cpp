@@ -1,8 +1,8 @@
 #include "QuadReferenceOutput.h"
 #include <fstream>
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/Components.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
+#include "Components.h"
 #include <iomanip>
 
 using namespace std;

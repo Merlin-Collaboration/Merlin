@@ -17,9 +17,9 @@
 #ifndef _h_BeamDynamicsModel
 #define _h_BeamDynamicsModel 1
 
-#include "BeamModel/Bunch.h"
-#include "BeamModel/BeamData.h"
-#include "AcceleratorModel/AcceleratorModel.h"
+#include "Bunch.h"
+#include "BeamData.h"
+#include "AcceleratorModel.h"
 
 class SimulationOutput;
 

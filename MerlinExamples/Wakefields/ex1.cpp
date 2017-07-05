@@ -5,27 +5,27 @@
 #include <fstream>
 #include <iostream>
 
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/StdComponent/Collimator.h"
+#include "SimpleApertures.h"
+#include "AcceleratorModelConstructor.h"
+#include "Collimator.h"
 
-#include "BeamModel/BeamData.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+#include "BeamData.h"
+#include "ParticleBunchConstructor.h"
+#include "ParticleTracker.h"
 
-#include "Collimators/CollimatorWakeProcess.h"
-#include "Collimators/CollimateParticleProcess.h"
-#include "Collimators/CollimatorWakePotentials.h"
+#include "CollimatorWakeProcess.h"
+#include "CollimateParticleProcess.h"
+#include "CollimatorWakePotentials.h"
 
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 
 // these classes implement examples of wake potentials
 // see A.M. Toader et al., EPAC08, Genua, WEPP161 for
 // a collection of collimator wakefield formulae
-#include "Collimators/CollimatorPotentialModels.h"
+#include "CollimatorPotentialModels.h"
 
 using namespace std;
 using namespace PhysicalUnits;

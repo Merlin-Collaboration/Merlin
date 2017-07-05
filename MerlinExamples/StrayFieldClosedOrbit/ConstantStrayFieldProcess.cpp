@@ -9,10 +9,10 @@
 //-------------------------------------------------------------------------
 
 #include "ConstantStrayFieldProcess.h"
-#include "AcceleratorModel/AcceleratorComponent.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/utils.h"
+#include "AcceleratorComponent.h"
+#include "PhysicalConstants.h"
+#include "PhysicalUnits.h"
+#include "utils.h"
 #include <algorithm>
 
 using namespace PhysicalConstants;

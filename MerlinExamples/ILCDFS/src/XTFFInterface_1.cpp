@@ -22,13 +22,13 @@
 #include <stdexcept>
 #include <cctype>
 
-#include "AcceleratorModel/Components.h"
-#include "AcceleratorModel/Construction/AcceleratorModelConstructor.h"
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
-#include "AcceleratorModel/Supports/SupportStructure.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "Components.h"
+#include "AcceleratorModelConstructor.h"
+#include "SimpleApertures.h"
+#include "SupportStructure.h"
+#include "PhysicalConstants.h"
 #include "ConstructSrot.h"
-#include "Exception/MerlinException.h"
+#include "MerlinException.h"
 
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;

@@ -19,8 +19,8 @@
 #include <fstream>
 #include <string>
 #include <set>
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "BeamModel/BeamData.h"
+#include "AcceleratorModel.h"
+#include "BeamData.h"
 
 class AcceleratorModelConstructor;
 

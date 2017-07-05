@@ -5,11 +5,11 @@
 //
 
 #include "merlin_config.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "MADInterface/MADInterface.h"
-#include "BeamModel/BeamData.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/Miscellaneous/CorrectorWinding.h"
+#include "AcceleratorModel.h"
+#include "MADInterface.h"
+#include "BeamData.h"
+#include "PhysicalConstants.h"
+#include "CorrectorWinding.h"
 
 using namespace std;
 using namespace PhysicalConstants;

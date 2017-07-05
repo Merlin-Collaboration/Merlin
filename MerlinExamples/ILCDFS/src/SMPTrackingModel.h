@@ -17,8 +17,8 @@
 #define _h_SMPTrackingModel 1
 
 #include "BeamDynamicsModel.h"
-//#include "BeamDynamics/SMPTracking/SMPBunch.h"
-#include "BeamDynamics/SMPTracking/SMPTracker.h"
+//#include "SMPBunch.h"
+#include "SMPTracker.h"
 
 class AcceleratorModel;
 class BeamData;

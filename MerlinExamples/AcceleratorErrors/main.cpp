@@ -5,27 +5,27 @@
 //
 
 #include "merlin_config.h"
-#include "Random/RandomNG.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "MADInterface/XTFFInterface.h"
-#include "BeamModel/BeamData.h"
-#include "BeamDynamics/SMPTracking/SMPComponentTracker.h"
-#include "BeamDynamics/SMPTracking/SMPTracker.h"
-#include "BeamDynamics/SMPTracking/SMPBunch.h"
-#include "BeamDynamics/SMPTracking/SMPBunchConstructor.h"
+#include "RandomNG.h"
+#include "AcceleratorModel.h"
+#include "XTFFInterface.h"
+#include "BeamData.h"
+#include "SMPComponentTracker.h"
+#include "SMPTracker.h"
+#include "SMPBunch.h"
+#include "SMPBunchConstructor.h"
 
-#include "AcceleratorModel/StdComponent/TWRFStructure.h"
-#include "AcceleratorModel/Supports/AcceleratorSupport.h"
-#include "AcceleratorModel/Supports/SupportStructure.h"
+#include "TWRFStructure.h"
+#include "AcceleratorSupport.h"
+#include "SupportStructure.h"
 
-#include "NumericalUtils/NumericalConstants.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalConstants.h"
+#include "PhysicalConstants.h"
+#include "PhysicalUnits.h"
 
 //#include "SplitMagnets.h"
 using namespace std;
 
-#include "AcceleratorModel/AcceleratorErrors.h"
+#include "AcceleratorErrors.h"
 
 #include <iostream>
 

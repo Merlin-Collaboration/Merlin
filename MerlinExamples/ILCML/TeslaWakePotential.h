@@ -16,7 +16,7 @@
 
 
 
-#include "AcceleratorModel/WakePotentials.h"
+#include "WakePotentials.h"
 
 
 

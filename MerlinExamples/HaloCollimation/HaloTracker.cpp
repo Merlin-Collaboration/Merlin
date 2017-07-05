@@ -4,12 +4,12 @@
 #include <fstream>
 #include <cmath>
 
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "Collimators/CollimateParticleProcess.h"
-#include "NumericalUtils/NumericalConstants.h"
+#include "ParticleTracker.h"
+#include "ParticleBunchConstructor.h"
+#include "CollimateParticleProcess.h"
+#include "NumericalConstants.h"
 
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 #include "QuadIntegrator.h"
 
 using namespace ParticleTracking;

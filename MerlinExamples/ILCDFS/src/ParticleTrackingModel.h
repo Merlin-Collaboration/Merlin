@@ -17,8 +17,8 @@
 #define _h_ParticleTrackingModel 1
 
 #include "BeamDynamicsModel.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+#include "ParticleBunch.h"
+#include "ParticleTracker.h"
 
 class AcceleratorModel;
 class BeamData;

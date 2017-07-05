@@ -11,8 +11,8 @@
 #ifndef QuadIntegrator_h
 #define QuadIntegrator_h
 
-#include "AcceleratorModel/StdComponent/StandardMultipoles.h"
-#include "BeamDynamics/ParticleTracking/ParticleComponentTracker.h"
+#include "StandardMultipoles.h"
+#include "ParticleComponentTracker.h"
 
 namespace ParticleTracking
 {

@@ -15,8 +15,8 @@
 #ifndef _h_CommonDataStructures
 #define _h_CommonDataStructures 1
 
-#include "AcceleratorModel/ControlElements/Klystron.h"
-#include "BeamModel/ReferenceParticle.h"
+#include "Klystron.h"
+#include "ReferenceParticle.h"
 #include <iostream>
 #include <vector>
 #include <utility>
