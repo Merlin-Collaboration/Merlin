@@ -1,4 +1,4 @@
-#include "AcceleratorModel/ActiveMonitors/BPM.h"
+#include "BPM.h"
 
 class BPMVectorBuffer : public BPM::Buffer
 {

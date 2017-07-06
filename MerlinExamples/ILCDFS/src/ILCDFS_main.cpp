@@ -12,7 +12,7 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 #include "DFSApp.h"
 #include "ParticleTrackingModel.h"
 #include "SMPTrackingModel.h"
@@ -20,7 +20,7 @@
 #include "ConstantGradientAdjustment.h"
 #include "ModelConstruction.h"
 #include "ILCDFS_IO.h"
-#include "NumericalUtils/PhysicalUnits.h"
+#include "PhysicalUnits.h"
 #include "DFSOutput.h"
 #include "OneToOneCorrection.h"
 

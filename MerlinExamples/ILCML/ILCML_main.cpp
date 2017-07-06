@@ -35,16 +35,16 @@
 #include <iostream>
 #include <fstream>
 
-#include "NumericalUtils/NumericalConstants.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "Random/RandomNG.h"
+#include "NumericalConstants.h"
+#include "PhysicalConstants.h"
+#include "PhysicalUnits.h"
+#include "RandomNG.h"
 
-#include "BeamDynamics/SMPTracking/SMPTracker.h"
-#include "BeamDynamics/SMPTracking/SMPBunchConstructor.h"
-#include "BeamDynamics/SMPTracking/SMPWakeFieldProcess.h"
-#include "AcceleratorModel/StdComponent/CorrectorDipoles.h"
-#include "AcceleratorModel/Frames/TComponentFrame.h"
+#include "SMPTracker.h"
+#include "SMPBunchConstructor.h"
+#include "SMPWakeFieldProcess.h"
+#include "CorrectorDipoles.h"
+#include "TComponentFrame.h"
 #include "model_construction.h"
 #include "TrackingOutput.h"
 #include "QuadReferenceOutput.h"

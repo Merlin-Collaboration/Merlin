@@ -15,7 +15,7 @@
 #include "OneToOneCorrection.h"
 #include "ResponseMatrixGenerator.h"
 #include "Accelerator.h"
-#include "TLAS/TLASimp.h"
+#include "TLASimp.h"
 #include "ILCDFS_IO.h"
 
 using namespace TLAS;

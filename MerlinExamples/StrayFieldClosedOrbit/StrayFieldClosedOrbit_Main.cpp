@@ -1,9 +1,9 @@
-#include "NumericalUtils/PhysicalUnits.h"
-#include "MADInterface/MADInterface.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+#include "PhysicalUnits.h"
+#include "MADInterface.h"
+#include "ParticleBunch.h"
+#include "ParticleTracker.h"
 
-#include "RingDynamics/ClosedOrbit.h"
+#include "ClosedOrbit.h"
 
 #include "BPMVectorBuffer.h"
 #include "ConstantStrayFieldProcess.h"

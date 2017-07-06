@@ -17,7 +17,7 @@
 // particle tracking mechanism (see HaloTracker.cpp and QuadIntegrator.[h,cpp]
 //
 
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 
 // For this example, we incapsulate the halo construction
 // and tracking in a utility class HaloTracker.

@@ -1,8 +1,8 @@
-#include "NumericalUtils/PhysicalUnits.h"
-#include "MADInterface/MADInterface.h"
-#include "AcceleratorModel/Supports/MagnetMover.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+#include "PhysicalUnits.h"
+#include "MADInterface.h"
+#include "MagnetMover.h"
+#include "ParticleBunch.h"
+#include "ParticleTracker.h"
 
 #include "BPMVectorBuffer.h"
 

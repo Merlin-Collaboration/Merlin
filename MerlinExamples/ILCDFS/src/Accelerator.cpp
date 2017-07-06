@@ -13,10 +13,10 @@
 /////////////////////////////////////////////////////////////////////////
 
 // Merlinlib
-#include "Channels/Channels.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "BeamModel/Bunch.h"
-#include "BeamModel/BeamData.h"
+#include "Channels.h"
+#include "AcceleratorModel.h"
+#include "Bunch.h"
+#include "BeamData.h"
 
 // ILCDFS
 #include "Accelerator.h"

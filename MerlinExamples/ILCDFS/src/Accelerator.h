@@ -22,8 +22,8 @@
 #include <utility>
 
 #include "CommonDataStructures.h"
-#include "BeamModel/Bunch.h"
-#include "BeamModel/BeamData.h"
+#include "Bunch.h"
+#include "BeamData.h"
 
 class RWChannelArray;
 class ROChannelArray;

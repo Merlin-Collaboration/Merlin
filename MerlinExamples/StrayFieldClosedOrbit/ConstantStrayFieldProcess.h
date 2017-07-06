@@ -18,7 +18,7 @@
 #ifndef _h_ConstantStrayFieldProcess
 #define _h_ConstantStrayFieldProcess 1
 
-#include "BeamDynamics/ParticleTracking/ParticleBunchProcess.h"
+#include "ParticleBunchProcess.h"
 
 namespace ParticleTracking
 {

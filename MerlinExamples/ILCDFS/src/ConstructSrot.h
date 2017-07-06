@@ -16,7 +16,7 @@
 #define _h_ConstructSrot 1
 
 #include <string>
-#include "AcceleratorModel/Frames/ComponentFrame.h"
+#include "ComponentFrame.h"
 
 ComponentFrame* ConstructSrot(double angle, const std::string& name);
 ComponentFrame* ConstructXrot(double angle, const std::string& name);

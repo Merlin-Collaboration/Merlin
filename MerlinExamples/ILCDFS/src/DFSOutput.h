@@ -16,7 +16,7 @@
 #ifndef _h_DFSOutput
 #define _h_DFSOutput 1
 
-#include "BeamDynamics/TrackingSimulation.h"
+#include "TrackingSimulation.h"
 #include <string>
 #include <fstream>
 

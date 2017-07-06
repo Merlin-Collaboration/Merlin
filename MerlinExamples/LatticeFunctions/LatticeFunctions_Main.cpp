@@ -1,9 +1,9 @@
-#include "NumericalUtils/PhysicalUnits.h"
-#include "MADInterface/MADInterface.h"
-#include "AcceleratorModel/StdComponent/StandardMultipoles.h"
-#include "AcceleratorModel/Supports/MagnetMover.h"
+#include "PhysicalUnits.h"
+#include "MADInterface.h"
+#include "StandardMultipoles.h"
+#include "MagnetMover.h"
 
-#include "RingDynamics/LatticeFunctions.h"
+#include "LatticeFunctions.h"
 
 #define BEAMENERGY 5.0*GeV
 

@@ -14,19 +14,19 @@
 //
 
 #include "merlin_config.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "Random/RandomNG.h"
-#include "MADInterface/MADInterface.h"
-#include "BeamModel/BeamData.h"
-#include "AcceleratorModel/StdComponent/StandardMultipoles.h"
-#include "AcceleratorModel/Frames/TComponentFrame.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/SpinParticleProcess.h"
-#include "BeamDynamics/ParticleTracking/SynchRadParticleProcess.h"
-#include "BasicTransport/NormalTransform.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
+#include "RandomNG.h"
+#include "MADInterface.h"
+#include "BeamData.h"
+#include "StandardMultipoles.h"
+#include "TComponentFrame.h"
+#include "ParticleBunch.h"
+#include "ParticleBunchConstructor.h"
+#include "ParticleTracker.h"
+#include "SpinParticleProcess.h"
+#include "SynchRadParticleProcess.h"
+#include "NormalTransform.h"
 
 #define BEAMENERGY 5.0*GeV
 

@@ -16,8 +16,8 @@
 #ifndef _h_DFSCorrection
 #define _h_DFSCorrection 1
 
-#include "Channels/Channels.h"
-#include "TLAS/LinearAlgebra.h"
+#include "Channels.h"
+#include "LinearAlgebra.h"
 #include "CommonDataStructures.h"
 #include "Accelerator.h"
 

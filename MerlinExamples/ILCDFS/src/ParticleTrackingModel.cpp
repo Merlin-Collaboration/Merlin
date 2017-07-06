@@ -1,6 +1,6 @@
 #include "ParticleTrackingModel.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
+#include "ParticleBunchConstructor.h"
+#include "WakeFieldProcess.h"
 #include "ILCDFS_IO.h"
 
 using namespace ParticleTracking;

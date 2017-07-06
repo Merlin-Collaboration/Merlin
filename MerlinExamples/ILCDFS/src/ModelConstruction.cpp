@@ -17,16 +17,16 @@
 #include <sstream>
 
 #include "merlin_config.h"
-#include "AcceleratorModel/AcceleratorModel.h"
+#include "AcceleratorModel.h"
 #include "XTFFInterface_1.h"
-#include "BeamModel/BeamData.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "AcceleratorModel/StdComponent/TWRFStructure.h"
-#include "AcceleratorModel/Apertures/SimpleApertures.h"
+#include "BeamData.h"
+#include "PhysicalConstants.h"
+#include "TWRFStructure.h"
+#include "SimpleApertures.h"
 #include "TeslaWakePotential.h"
-#include "AcceleratorModel/Frames/PatchFrame.h"
-#include "AcceleratorModel/ControlElements/Klystron.h"
-#include "AcceleratorModel/Frames/TComponentFrame.h"
+#include "PatchFrame.h"
+#include "Klystron.h"
+#include "TComponentFrame.h"
 #include "ILCDFS_IO.h"
 
 using namespace std;

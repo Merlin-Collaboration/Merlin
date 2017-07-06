@@ -1,7 +1,7 @@
 #include "SMPTrackingModel.h"
-#include "BeamDynamics/SMPTracking/SMPBunch.h"
-#include "BeamDynamics/SMPTracking/SMPBunchConstructor.h"
-#include "BeamDynamics/SMPTracking/SMPWakeFieldProcess.h"
+#include "SMPBunch.h"
+#include "SMPBunchConstructor.h"
+#include "SMPWakeFieldProcess.h"
 #include "ILCDFS_IO.h"
 
 using namespace SMPTracking;

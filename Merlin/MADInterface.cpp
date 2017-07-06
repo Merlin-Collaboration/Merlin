@@ -746,7 +746,7 @@ double MADInterface::ReadComponent ()
 
 		else if(type=="HEL")
 		{
-			HollowElectronLens* hel = new HollowElectronLens(name, len);
+			HollowElectronLens* hel = new HollowElectronLens(name, len,0,0,0,0,0);
 			ctor->AppendComponent(*hel);
 			component=hel;
 		}

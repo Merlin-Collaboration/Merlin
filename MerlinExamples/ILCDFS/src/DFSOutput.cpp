@@ -1,8 +1,8 @@
 #include "DFSOutput.h"
 #include "ILCDFS_IO.h"
-#include "BasicTransport/NormalTransform.h"
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "NormalTransform.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 #include <fstream>
 #include <iomanip>
 

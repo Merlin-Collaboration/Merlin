@@ -14,12 +14,12 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include "AcceleratorWithErrors.h"
-#include "utility/StringPattern.h"
-#include "AcceleratorModel/Frames/LatticeFrame.h"
-#include "AcceleratorModel/AcceleratorModel.h"
+#include "StringPattern.h"
+#include "LatticeFrame.h"
+#include "AcceleratorModel.h"
 #include "ILCDFS_IO.h"
-#include "Random/RandomNG.h"
-#include "AcceleratorModel/ActiveMonitors/BPM.h"
+#include "RandomNG.h"
+#include "BPM.h"
 
 class AlignmentError : public FrameTraverser
 {

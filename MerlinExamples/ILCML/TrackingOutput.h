@@ -1,8 +1,8 @@
-#include "BeamDynamics/TrackingSimulation.h"
+#include "TrackingSimulation.h"
 #include <fstream>
 #include <set>
 #include <string>
-#include "utility/StringPattern.h"
+#include "StringPattern.h"
 
 
 class TrackingOutput : public SimulationOutput

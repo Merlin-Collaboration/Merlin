@@ -1,7 +1,7 @@
-#include "NumericalUtils/PhysicalUnits.h"
-#include "MADInterface/MADInterface.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
+#include "PhysicalUnits.h"
+#include "MADInterface.h"
+#include "ParticleBunch.h"
+#include "ParticleTracker.h"
 
 #define BEAMENERGY 5.0*GeV
 
