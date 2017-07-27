@@ -131,6 +131,10 @@ public:
 	}
 	void HeaderSetWithStr(const std::string col_name, std::string x);
 
+	size_t Length() const
+	{
+		return length;
+	};
 private:
 	template <typename T, typename... Args>
 	void AddRowN(size_t col_n, size_t row_n, T x, Args... arg);
