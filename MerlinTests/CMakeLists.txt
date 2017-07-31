@@ -86,6 +86,12 @@ add_test_t(basic_hollow_electron_lens_test.py HollowElectronLens/basic_hollow_el
 merlin_test(HollowElectronLens diffusive_hollow_electron_lens_test diffusive_hollow_electron_lens_test.cpp)
 add_test_t(diffusive_hollow_electron_lens_test HollowElectronLens/diffusive_hollow_electron_lens_test)
 
+merlin_test(DataTable datatable_test datatable_test.cpp)
+add_test_t(datatable_test DataTable/datatable_test)
+
+merlin_test(DataTable datatable_tfs_test datatable_tfs_test.cpp)
+add_test_t(datatable_tfs_test DataTable/datatable_tfs_test)
+
 find_program(MEMORYCHECK_COMMAND NAMES valgrind)
 set( MEMORYCHECK_COMMAND_OPTIONS " --tool=memcheck --leak-check=yes --show-reachable=yes --trace-children=yes --suppressions=${CMAKE_CURRENT_BINARY_DIR}/data/python.supp")
 INCLUDE(Dart)
