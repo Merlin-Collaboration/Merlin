@@ -190,6 +190,17 @@ public:
 	{
 		return length;
 	};
+
+	/// Test if the DataTable has a given column
+	bool HasCol(std::string col_name) const;
+	/// Test if the DataTable has a given column of given type
+	bool HasCol(std::string col_name, char type) const;
+
+	/// Test if the DataTable header has a given key
+	bool HeaderHasKey(std::string col_name) const;
+	/// Test if the DataTable header has a given key of given type
+	bool HeaderHasKey(std::string col_name, char type) const;
+
 private:
 	/// See AddRow()
 	template <typename T, typename... Args>

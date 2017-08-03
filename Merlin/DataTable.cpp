@@ -285,6 +285,27 @@ std::string DataTable::HeaderGetAsStr(const std::string col_name) const
 	}
 }
 
+
+bool DataTable::HasCol(std::string col_name) const
+{
+	return lookup.count(col_name) == 1;
+}
+
+bool DataTable::HasCol(std::string col_name, char type) const
+{
+	return lookup.count(col_name) == 1 && lookup.at(col_name).type == type;
+}
+
+bool DataTable::HeaderHasKey(std::string col_name) const
+{
+	return hlookup.count(col_name) == 1;
+}
+
+bool DataTable::HeaderHasKey(std::string col_name, char type) const
+{
+	return hlookup.count(col_name) == 1 && hlookup.at(col_name).type == type;
+}
+
 void DataTable::OutputAscii(std::ostream &os) const
 {
 	for(auto &col_name: hcol_names)

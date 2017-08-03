@@ -138,6 +138,24 @@ void test_const(const DataTable dt)
 	assert(dt.HeaderGet_s("z") == "test");
 }
 
+void test_has_key()
+{
+	cout << "test_has_key()" <<endl;
+	const auto dt2 = make_example_dt2();
+	assert(dt2.HasCol("a") == true);
+	assert(dt2.HasCol("d") == false);
+
+	assert(dt2.HasCol("a", 's') == true);
+	assert(dt2.HasCol("a", 'i') == false);
+	assert(dt2.HasCol("d", 'i') == false);
+
+	assert(dt2.HeaderHasKey("x") == true);
+	assert(dt2.HeaderHasKey("w") == false);
+
+	assert(dt2.HeaderHasKey("x", 'd') == true);
+	assert(dt2.HeaderHasKey("x", 'i') == false);
+	assert(dt2.HeaderHasKey("w", 'i') == false);
+}
 
 int main()
 {
@@ -151,6 +169,8 @@ int main()
 
 	const auto dt2 = make_example_dt2();
 	test_const(dt2);
+
+	test_has_key();
 
 	return 0;
 }
