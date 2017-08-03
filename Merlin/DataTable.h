@@ -21,9 +21,26 @@ public:
 	WrongTypeException(const std::string& what_arg): runtime_error(what_arg) {};
 };
 
+/** @brief A data structure for holding named type columns
+ *
+ * DataTable is designed to hold tables of data where each column has a
+ * name and can be of type integer, double or string.
+ *
+ * DataTable can be used to read and write TFS files, see DataTableReaderTFS
+ * and DataTableWriterTFS.
+ *
+ * Note that accessing values requires typed versions of functions, as it
+ * not possible to overload a function by return type. Use Get_d(), Get_i()
+ * or Get_s(). For setting values the type can be inferred from the argument
+ * type, Set(), or typed versions can be used Set_d(), Set_i() and Set_s().
+ *
+ * DataTable can also hold a set of values, also with types, in its header.
+*/
 class DataTable
 {
 protected:
+
+	/// Used to index the location of columns in DataTable.
 	struct location
 	{
 		char type;
@@ -48,100 +65,141 @@ protected:
 	std::unordered_map<std::string, location> hlookup;
 
 public:
+	/// Construct an empty DataTable.
 	DataTable():length() {};
 
+	/// Add a new column.
+	/// \param type One of 'i' (integer), 'd' (double) or 's' (string)
 	void AddColumn(std::string col_name, char type);
+	/// New empty row.
 	size_t AddRow();
 
 	// get type in name
+	///Get double value by name and row.
 	double Get_d(const std::string col_name, size_t i) const;
+	///Get integer value by name and row.
 	int Get_i(const std::string col_name, size_t i) const;
+	///Get string value by name and row.
 	std::string Get_s(const std::string col_name, size_t i) const;
+	///Get value by name and row converted to string.
 	std::string GetAsStr(const std::string col_name, size_t i) const;
 
 	// overloaded
+	/// Set double value by name and row.
 	void Set(const std::string col_name, size_t i, double x);
+	/// Set integer value by name and row.
 	void Set(const std::string col_name, size_t i, int x);
+	/// Set string value by name and row.
 	void Set(const std::string col_name, size_t i, std::string x);
 
-	// get type in name
+
+	// set with type in name
+	/// Set double value by name and row.
 	void Set_d(const std::string col_name, size_t i, double x)
 	{
 		Set(col_name, i, x);
 	}
+	/// Set integer value by name and row.
 	void Set_i(const std::string col_name, size_t i, int x)
 	{
 		Set(col_name, i, x);
 	}
+	/// Set string value by name and row.
 	void Set_s(const std::string col_name, size_t i, std::string x)
 	{
 		Set(col_name, i, x);
 	}
+	/// Set value by name and row, converted from a string.
 	void SetWithStr(const std::string col_name, size_t i, std::string x);
 
-	// add row variable length argument list
+	/** @brief Variadic method for setting a whole row.
+	*
+	* Pass a set of values with the correct types for the columns, e.g.:
+	*
+	*     dt.AddRow('x', 1, 2.3, 4.2);
+	*/
 	template <typename... Args>
 	void AddRow(Args... arg);
 
 	DataTableRowIterator begin() const;
 	DataTableRowIterator end() const;
 
+	/// Access column names.
 	const std::vector<std::string>& ColumnNames()
 	{
 		return col_names;
 	}
+	/// Access header names.
 	const std::vector<std::string>& HeaderNames()
 	{
 		return hcol_names;
 	}
+	/// Access column types.
 	char GetColumnType(std::string col_name)
 	{
 		return lookup.at(col_name).type;
 	}
+	/// Access header types.
 	char GetHeaderType(std::string header_name)
 	{
 		return hlookup.at(header_name).type;
 	}
 
+	/// Add new element to the header .
 	void HeaderAddColumn(std::string col_name, char type);
 
 	// header access
+	/// Get double value from header by name.
 	double HeaderGet_d(const std::string col_name) const;
+	/// Get integer value from header by name.
 	int HeaderGet_i(const std::string col_name) const;
+	/// Get string value from header by name.
 	std::string HeaderGet_s(const std::string col_name) const;
+	/// Get value from header by name as string.
 	std::string HeaderGetAsStr(const std::string col_name) const;
 
 	// overloaded
+	/// Set double header value.
 	void HeaderSet(const std::string col_name, double x);
+	/// Set integer header value.
 	void HeaderSet(const std::string col_name, int x);
+	/// Set string header value.
 	void HeaderSet(const std::string col_name, std::string x);
 
 	// get type in name
+	/// Set double header value.
 	void HeaderSet_d(const std::string col_name, double x)
 	{
 		HeaderSet(col_name, x);
 	}
+	/// Set integer header value.
 	void HeaderSet_i(const std::string col_name, int x)
 	{
 		HeaderSet(col_name, x);
 	}
+	/// Set string header value.
 	void HeaderSet_s(const std::string col_name, std::string x)
 	{
 		HeaderSet(col_name, x);
 	}
+	/// Set value from header by name as string.
 	void HeaderSetWithStr(const std::string col_name, std::string x);
 
+	/// Return the length of table, i.e. number of rows.
 	size_t Length() const
 	{
 		return length;
 	};
 private:
+	/// See AddRow()
 	template <typename T, typename... Args>
 	void AddRowN(size_t col_n, size_t row_n, T x, Args... arg);
+	/// See AddRow()
 	void AddRowN(size_t, size_t) {}; // Terminating case
 
 public:
 	//demo output
+	/// Output data table to ascii stream.
 	void OutputAscii(std::ostream &os) const;
 };
 
@@ -163,6 +221,14 @@ void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args... arg)
 	AddRowN(col_n+1, row_n, arg...);
 }
 
+/** @brief Access individual rows of a DataTable.
+ *
+ * Type returned when using DataTableRowIterator. Does not actually hold
+ * any data, just access values from the DataTable that is being iterated.
+ *
+ * Methods are wrappers around the accessors in DataTable, but without the
+ * row number argument.
+ */
 class DataTableRow
 {
 public:
@@ -190,6 +256,10 @@ private:
 	size_t pos;
 };
 
+/** @brief Emulate pointer access to individual rows of a DataTable
+ *
+ * See DataTableRow
+ */
 class DataTableRowPtr
 {
 public:
@@ -206,7 +276,7 @@ private:
 	DataTableRow dtr;
 };
 
-
+/// @brief Row iterator for DataTable.
 class DataTableRowIterator :public std::iterator<std::bidirectional_iterator_tag,
 	DataTableRow,
 	std::ptrdiff_t,
