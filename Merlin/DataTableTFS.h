@@ -33,7 +33,6 @@ private:
 class DataTableWriterTFS: public DataTableWriter
 {
 public:
-	DataTableWriterTFS(): width_int(8), width_float(18), prec_float(10) {};
 	/// Write to an ostream, e.g. an already opened file
 	DataTableWriterTFS(std::ostream *_out):DataTableWriterTFS()
 	{
@@ -45,11 +44,13 @@ public:
 	/// Write the DataTable to the file or stream
 	void Write(DataTable& dt);
 private:
+	DataTableWriterTFS(): width_int(8), width_float(18), prec_float(10) {};
 	int width_int;
 	int width_float;
 	int prec_float;
 
 	std::ostream *out;
+	std::shared_ptr<std::ostream> outf;
 };
 
 #endif

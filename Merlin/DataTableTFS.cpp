@@ -174,12 +174,13 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 
 DataTableWriterTFS::DataTableWriterTFS(std::string filename):DataTableWriterTFS()
 {
-	out = new std::ofstream(filename);
-	if (!out->good())
+	outf = std::make_shared<std::ofstream>(filename);
+	if (!outf->good())
 	{
 		std::cerr << "Could not open file "<< filename << std::endl;
 		exit(1);
 	}
+	out = outf.get();
 }
 
 void DataTableWriterTFS::Write(DataTable & dt)
