@@ -17,7 +17,9 @@
 
 #include "LinearAlgebra.h"
 
-// functions for constructing 3x3 rotation arrays
+/**
+* functions for constructing 3x3 rotation arrays
+*/
 
 inline RealMatrix DECL_XROT(double c, double s)
 {

@@ -16,15 +16,14 @@
 #define RectMultipoleField_h 1
 
 #include "merlin_config.h"
-// TemplateComponents
 #include "TemplateComponents.h"
-// MultipoleField
 #include "MultipoleField.h"
-// RectangularGeometry
 #include "RectangularGeometry.h"
 
-//	A magnetic multipole field referenced to a rectangular
-//	geometry.
+/**
+*	A magnetic multipole field referenced to a rectangular
+*	geometry.
+*/
 
 typedef TAccCompGF< RectangularGeometry,MultipoleField > RectMultipoleField;
 

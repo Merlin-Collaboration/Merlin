@@ -28,7 +28,9 @@ class RMap
 {
 public:
 
-	// A single term in the matrix
+	/**
+	* A single term in the matrix
+	*/
 	struct Rij
 	{
 		int i,j;
@@ -129,7 +131,9 @@ public:
 		return S=result;
 	}
 
-	// Apply to PSmoments
+	/**
+	* Apply to PSmoments
+	*/
 	template<int N>
 	TPSMoments<N>& Apply(TPSMoments<N>& S) const
 	{

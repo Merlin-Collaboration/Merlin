@@ -17,27 +17,33 @@
 
 #include "merlin_config.h"
 #include "PhysicalConstants.h"
-// TemplateComponents
 #include "TemplateComponents.h"
-// RectangularGeometry
 #include "RectangularGeometry.h"
-// RFAcceleratingField
 #include "RFAcceleratingField.h"
 
-//	Takes a field which is derived from RFAcceleratingField.
+/**
+*	Takes a field which is derived from RFAcceleratingField.
+*/
 
 class RFStructure : public TAccCompGF_NC<RectangularGeometry,RFAcceleratingField>
 {
 public:
 
-	//	Returns the frequency.
+	/**
+	*	Returns the frequency.
+	*	@return Frequency
+	*/
 	double GetFrequency () const;
 
-	//	Access the peak amplitude (gradient).
+	/**
+	*	Access the peak amplitude (gradient).
+	*/
 	void SetAmplitude (double Epk);
 	double GetAmplitude () const;
 
-	// Accessing the voltage and phase
+	/**
+	* Accessing the voltage and phase
+	*/
 	void SetVoltage(double v);
 	void SetPhase (double phase);
 	void SetVoltagePhasor(const Complex& z);
@@ -46,23 +52,35 @@ public:
 	double GetPhase () const;
 	Complex GetVoltagePhasor() const;
 
-	// Calculate the nominal energy gain
+	/**
+	* Calculate the nominal energy gain
+	*/
 	double GetBeamVoltage() const;
 
-	//	Returns the wavelength of the RF (in meter).
+	/**
+	*	Returns the wavelength of the RF (in meter).
+	*	@return Wavelength of RF (m)
+	*/
 	double GetWavelength () const;
 
-	//	Returns the k value (=2pi/wavelength) for the field.
+	/**
+	*	Returns the k value (=2pi/wavelength) for the field.
+	*	@return Wavenumber k (\f$ 2\pi/\lambda \f$) for the field
+	*/
 	double GetK () const;
 
-	//	Modify the frequency
+	/**
+	*	Modify the frequency
+	*/
 	void SetFrequency (double f);
 	void SetWavelength (double lambda);
 	void SetK (double k);
 
 protected:
 
-	// Protected constructor prevents insantiation of this class.
+	/**
+	* Protected constructor prevents instantiation of this class.
+	*/
 	RFStructure (const string& id, double len, RFAcceleratingField* aField);
 };
 

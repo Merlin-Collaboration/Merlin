@@ -17,16 +17,18 @@
 
 #include <iterator>
 
-// template class ring_iterator
-// An iterator which cyclicly iterates through a sequence (container).
+/**
+* template class ring_iterator
+* An iterator which cyclically iterates through a sequence (container).
+*/
 
 template<class C, class I>
 class ring_iterator
 {
 private:
 
-	I curr;   // current iterator position
-	C* cont;  // pointer to container
+	I curr;   /// current iterator position
+	C* cont;  /// pointer to container
 
 public:
 

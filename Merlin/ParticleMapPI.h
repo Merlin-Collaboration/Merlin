@@ -18,7 +18,6 @@
 #include "merlin_config.h"
 // ParticleBunchIntegrator
 #include "ParticleComponentTracker.h"
-// ParticleMapComponent
 #include "ParticleMapComponent.h"
 
 namespace ParticleTracking

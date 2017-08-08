@@ -35,12 +35,14 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #endif
 #define _RandomInteger_h 1
 
-// RandomInteger uses a random number generator to generate an integer
-// in a specified range.  By default the range is 0..1.  Since in my
-// experience random numbers are often needed for a wide variety of
-// ranges in the same program, this generator accepts a new low or high value
-// as an argument to the asLong and operator() methods to temporarily
-// override stored values
+/**
+* RandomInteger uses a random number generator to generate an integer
+* in a specified range.  By default the range is 0..1.  Since in my
+* experience random numbers are often needed for a wide variety of
+* ranges in the same program, this generator accepts a new low or high value
+* as an argument to the asLong and operator() methods to temporarily
+* override stored values
+*/
 
 #include <math.h>
 #include <RNG.h>
@@ -60,30 +62,38 @@ public:
 	RandomInteger(long high, RNG *gen);
 	RandomInteger(RNG *gen);
 
-	// read params
+	/**
+	* read params
+	*/
 
 	long low() const;
 	long high() const;
 	RNG* generator() const;
 
-	// change params
+	/**
+	* change params
+	*/
 
 	long low(long x);
 	long high(long x);
 	RNG* generator(RNG *gen);
 
-	// get a random number
+	/**
+	* get a random number
+	*/
 
 	long asLong();
-	long operator()(); // synonym for asLong
-	int  asInt();      // (possibly) truncate as int
+	long operator()(); /// synonym for asLong
+	int  asInt();      /// (possibly) truncate as int
 
-	// override params for one shot
+	/**
+	* override params for one shot
+	*/
 
 	long asLong(long high);
 	long asLong(long low, long high);
 
-	long operator () (long high);  // synonyms
+	long operator () (long high);  /// synonyms
 	long operator () (long low, long high);
 
 };

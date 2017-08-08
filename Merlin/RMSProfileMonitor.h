@@ -19,27 +19,28 @@
 
 #include "NumericalConstants.h"
 #include <set>
-// AMBufferManager
 #include "AMBufferManager.h"
-// Monitor
 #include "Monitor.h"
-// Measurement
 #include "Measurement.h"
 
 class Bunch;
 class ComponentTracker;
 
-//	An RMS profile monitor. A profile monitor which mimicks
-//	the action of a "wire scanner". A profile monitor can
-//	measure the rms beam projection onto three planes:
-//	horizontal (x), vertical (y) and a third so-called
-//	u-wire, which is at a specifid angle to the x plane.
+/**
+*	An RMS profile monitor. A profile monitor which mimicks
+*	the action of a "wire scanner". A profile monitor can
+*	measure the rms beam projection onto three planes:
+*	horizontal (x), vertical (y) and a third so-called
+*	u-wire, which is at a specifid angle to the x plane.
+*/
 
 class RMSProfileMonitor : public Monitor
 {
 public:
 
-	// Data structure for monitor data
+	/**
+	* Data structure for monitor data
+	*/
 	struct Data
 	{
 		Measurement x0;
@@ -93,23 +94,34 @@ public:
 		BufferManager::SetDefaultBuffer(buffer);
 	}
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*/
 	virtual int GetIndex () const;
 
-	//	Returns the type string for this component.
+	/**
+	*	Returns the type string for this component.
+	*	@return Component type string
+	*/
 	virtual const string& GetType () const;
 
-	//	Pure virtual function. Makes a measurement on the
-	//	supplied Beam object. Concrete diagnostics must supply
-	//	this function.
+	/**
+	*	Pure virtual function. Makes a measurement on the
+	*	supplied Beam object. Concrete diagnostics must supply
+	*	this function.
+	*/
 	virtual void MakeMeasurement (const Bunch& aBunch);
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
 	static const int ID;

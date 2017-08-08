@@ -37,8 +37,10 @@ public:
 	virtual ~RangeBase() {};
 };
 
-//	Represents an allowed contiguous range of a floating
-//	point number.
+/**
+*	Represents an allowed contiguous range of a floating
+*	point number.
+*/
 struct UnboundedRange {};
 
 template <class T, class C = std::less<T> >
@@ -46,36 +48,57 @@ class NumericalRange : public RangeBase
 {
 public:
 
-	//	Constructor taking the range (lo,hi>
+	/**
+	*	Constructor taking the range (lo,hi>
+	*/
 	NumericalRange (const T& lo, const T& hi);
 
-	//    Construct an unbounded range
+	/**
+	*    Construct an unbounded range
+	*/
 	NumericalRange (UnboundedRange) : lower(1),upper(-1) {}
 
-	//    Construct a fixed point (zero range)
+	/**
+	*    Construct a fixed point (zero range)
+	*/
 	explicit NumericalRange (const T& fp) : lower(fp),upper(fp) {}
 
-	//	Returns true if this range is unbouned (i.e. represents
-	//	+/-infinity).
+	/**
+	*	Returns true if this range is unbounded (i.e. represents
+	*	+/-infinity).
+	*
+	*	@retval true If range unbounded (i.e. \f$\pm\infty\f$)
+	*	@retval false If range bounded
+	*/
 	bool IsUnbounded () const;
 	bool IsFixedPoint () const
 	{
 		return lower==upper;
 	}
 
-	//	Returns true if lower<=x<=upper.
+	/**
+	*	Returns true if lower<=x<=upper.
+	*
+	*	@retval true If \f$ \mathrm{lower} \le x \le \mathrm{upper} \f$
+	*/
 	bool operator () (const T& x) const;
 	bool operator == (const NumericalRange& rhs) const;
 	bool operator != (const NumericalRange& rhs) const;
 
-	//	Checks id x is within the range. Returns belowlower, ok or
-	//	aboveupper.
+	/**
+	*	Checks id x is within the range. Returns belowlower, ok or
+	*	aboveupper.
+	*/
 	RangeBase::Result Check (const T& x) const;
 
-	//	The lowerimum value of the range.
+	/**
+	*	The lowerimum value of the range.
+	*/
 	T lower;
 
-	//	The upperimum value of the range.
+	/**
+	*	The upperimum value of the range.
+	*/
 	T upper;
 };
 

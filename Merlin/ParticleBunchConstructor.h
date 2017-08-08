@@ -16,13 +16,9 @@
 #define ParticleBunchConstructor_h 1
 
 #include "merlin_config.h"
-// BeamData
 #include "BeamData.h"
-// BunchConstructor
 #include "BunchConstructor.h"
-// MatrixMaps
 #include "MatrixMaps.h"
-// ParticleBunch
 #include "ParticleBunch.h"
 #include "ParticleBunchTypes.h"
 #include "BunchFilter.h"

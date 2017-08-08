@@ -40,30 +40,18 @@ namespace ParticleTracking
 
 class ParticleBunch;
 
-
-
-
-
-
-//	An arbitrary map that can be applied to a ParticleBunch.
-
-
-
-
-
-
-
+/**
+*	An arbitrary map that can be applied to a ParticleBunch.
+*/
 class ParticleMap
 {
 public:
 
-
 	virtual ~ParticleMap ();
 
-
-
-
-	//	Applies the map to the specified ParticleBunch.
+	/**
+	*	Applies the map to the specified ParticleBunch.
+	*/
 	virtual ParticleBunch& Apply (ParticleBunch& bunch) const = 0;
 
 
@@ -74,17 +62,14 @@ private:
 private:
 };
 
-// Class ParticleMap
-
-
+/**
+* Class ParticleMap
+*/
 inline ParticleMap::~ParticleMap ()
 {
 
 
 }
-
-
-// Class ParticleMap
 
 } //end namespace ParticleTracking
 

@@ -16,13 +16,13 @@
 #define RectTWRF_h 1
 
 #include "merlin_config.h"
-// TWRFfield
 #include "TWRFfield.h"
-// RFStructure
 #include "RFStructure.h"
 
-//	A travelling-wave RF accelerating field referenced to a
-//	rectangular geometry.
+/**
+*	A travelling-wave RF accelerating field referenced to a
+*	rectangular geometry.
+*/
 
 typedef RFStructure< TWRFfield > RectTWRF;
 

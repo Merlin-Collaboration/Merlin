@@ -16,17 +16,17 @@
 #define PSvectorTransform3D_h 1
 
 #include "merlin_config.h"
-// Transform3D
 #include "Transform3D.h"
-// PSTypes
 #include "PSTypes.h"
 
-//	Utility class for performing an arbitrary 3D coordinate
-//	transformation on PSvector objects. The transformation
-//	assumes that the particle(s) are fully relativistic.
-//	Since small angle approximations are assumed, large
-//	rotations about the x and y axis may lead to significant
-//	errors.
+/**
+*	Utility class for performing an arbitrary 3D coordinate
+*	transformation on PSvector objects. The transformation
+*	assumes that the particle(s) are fully relativistic.
+*	Since small angle approximations are assumed, large
+*	rotations about the x and y axis may lead to significant
+*	errors.
+*/
 
 class PSvectorTransform3D
 {

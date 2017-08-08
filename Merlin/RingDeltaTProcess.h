@@ -4,9 +4,7 @@
 
 #include "merlin_config.h"
 
-// ParticleBunchProcess
 #include "ParticleBunchProcess.h"
-// MultipoleField
 #include "MultipoleField.h"
 
 namespace ParticleTracking

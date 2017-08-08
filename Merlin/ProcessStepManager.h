@@ -51,6 +51,7 @@ public:
 
 	/**
 	* Returns the total length integrated since the last call to Initialise(Bunch&).
+	* @return Total length integrate since last call to `Initialise(Bunch&)`
 	*/
 	double GetIntegratedLength ();
 
@@ -62,6 +63,9 @@ public:
 	/**
 	* Remove aProcess from the current process table. Returns
 	* true if aProcess was present, otherwise false.
+	*
+	* @retval true If aProcess present
+	* @retval false If aProcess not present
 	*/
 	bool RemoveProcess (BunchProcess* aProcess);
 

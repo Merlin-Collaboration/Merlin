@@ -28,36 +28,40 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 typedef unsigned int _G_uint32_t;
 typedef int _G_int32_t;
 
-union PrivateRNGSingleType  		   	// used to access floats as unsigneds
+union PrivateRNGSingleType  		   	/// used to access floats as unsigneds
 {
 	float s;
 	unsigned int u;
 };
 
-union PrivateRNGDoubleType  		   	// used to access doubles as unsigneds
+union PrivateRNGDoubleType  		   	/// used to access doubles as unsigneds
 {
 	double d;
 	unsigned int u[2];
 };
 
-//
-// Base class for Random Number Generators. See ACG and MLCG for instances.
-//
+/**
+* Base class for Random Number Generators. See ACG and MLCG for instances.
+* @see ACG
+* @see MLCG
+*/
 class RNG
 {
-	static PrivateRNGSingleType singleMantissa;	// mantissa bit vector
-	static PrivateRNGDoubleType doubleMantissa;	// mantissa bit vector
+	static PrivateRNGSingleType singleMantissa;	/// mantissa bit vector
+	static PrivateRNGDoubleType doubleMantissa;	/// mantissa bit vector
 public:
 	RNG();
 	virtual ~RNG() {};
-	//
-	// Return a long-words word of random bits
-	//
+
+	/**
+	* Return a long-words word of random bits
+	*/
 	virtual _G_uint32_t asLong() = 0;
 	virtual void reset() = 0;
-	//
-	// Return random bits converted to either a float or a double
-	//
+
+	/**
+	* Return random bits converted to either a float or a double
+	*/
 	float asFloat();
 	double asDouble();
 };

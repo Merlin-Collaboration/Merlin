@@ -16,13 +16,13 @@
 #define RectSWRF_h 1
 
 #include "merlin_config.h"
-// SWRFfield
 #include "SWRFfield.h"
-// RFStructure
 #include "RFStructure.h"
 
-//	A standing-wave RF accelerating field referenced to a
-//	rectangular geometry.
+/**
+*	A standing-wave RF accelerating field referenced to a
+*	rectangular geometry.
+*/
 
 typedef RFStructure< SWRFfield > RectSWRF;
 
