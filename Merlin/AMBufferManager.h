@@ -62,6 +62,7 @@ public:
 
 	/*
 	*	Returns true if there are no buffers.
+	*	@return True if there are no buffers
 	*/
 	bool empty () const;
 

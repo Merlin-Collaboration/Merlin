@@ -16,14 +16,14 @@
 #define CorrectorWinding_h 1
 
 #include "merlin_config.h"
-// RectMultipole
 #include "RectMultipole.h"
-// ModelElement
 #include "ModelElement.h"
 
-//	Represents a dipole corrector winding that can be added
-//	to any RectMultipole component. The Bx and By field
-//	values are in integrated strengths (Tesla.meter).
+/**
+*	Represents a dipole corrector winding that can be added
+*	to any RectMultipole component. The Bx and By field
+*	values are in integrated strengths (Tesla.meter).
+*/
 
 class CorrectorWinding : public ModelElement
 {
@@ -35,16 +35,24 @@ public:
 	double GetBx () const;
 	double GetBy () const;
 
-	//	Return the name of the element.
+	/**
+	*	Return the name of the element.
+	*/
 	virtual const string& GetName () const;
 
-	//	Return the type string for the element.
+	/**
+	*	Return the type string for the element.
+	*/
 	virtual const string& GetType () const;
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
-	//  Get the uniques beamline index for this frame
+	/**
+	*  Get the uniques beamline index for this frame
+	*/
 	size_t GetBeamlineIndex() const;
 	void AppendBeamlineIndecies(std::vector<size_t>&) const;
 

@@ -17,9 +17,7 @@
 
 #include "merlin_config.h"
 #include <stack>
-// TComponentFrame
 #include "TComponentFrame.h"
-// AcceleratorModel
 #include "AcceleratorModel.h"
 #include "utils.h"
 
@@ -99,6 +97,7 @@ public:
 
 	/**
 	*	Returns a const reference to the current frame.
+	*	@return The current frame reference
 	*/
 	SequenceFrame& GetCurrentFrame () const
 	{
@@ -108,6 +107,7 @@ public:
 	/**
 	*	Returns the depth of the current frame. 0 refers to the
 	*	global frame (top level).
+	*	@return The current frame depth
 	*/
 	int GetCurrentFrameDepth () const
 	{

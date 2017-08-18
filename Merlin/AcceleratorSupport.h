@@ -40,14 +40,16 @@ public:
 
 	/**
 	*	Sets the location of the support in the global
-	*	coordinate frame. (x,z) represent the location in the
-	*	accelerator plane, while s is the arc position of the
-	*	support.
+	*	coordinate frame.
+	*	@param[in] x The x position in the accelerator plane
+	*	@param[in] z The z position in the accelerator plane
+	*	@param[in] s The arc position of the support
 	*/
 	void SetPosition (double s, double x, double z);
 
 	/*
 	*	Returns the arc position.
+	*	@return The arc position
 	*/
 	double GetArcPosition () const;
 
@@ -55,12 +57,13 @@ public:
 	*	Returns the location of the support in the accelerator
 	*	plane (x,z). Note that  Point2D::y here refers to the
 	*	z-coordinate.
+	*	@return The location of the support in the accelerator plane
 	*/
 	Point2D GetLocation () const;
 
 	/*
-	*	Returns the linear distance from this support to a
-	*	Support.
+	*	Returns the linear distance from this support to another Support.
+	*	@return The linear distance from this support to another support
 	*/
 	double DistanceTo (const AcceleratorSupport& aSupport) const;
 
@@ -76,6 +79,7 @@ public:
 
 	/*
 	*	Returns the current offset.
+	*	@return The current offset
 	*/
 	const Vector3D& GetOffset () const;
 

@@ -66,6 +66,7 @@ public:
 	/**
 	*	Perform a single step of dt seconds. Returns the current
 	*	simulated time.
+	*	@return Current simulated time (s)
 	*/
 	double DoStep (double dt);
 
@@ -77,6 +78,7 @@ public:
 
 	/**
 	*	Returns the current simulated time (in seconds).
+	*	@return Current simulated time (s)
 	*/
 	double GetTime () const;
 
@@ -87,6 +89,7 @@ public:
 
 	/**
 	*	Returns the current random seed
+	*	@return Current random seed
 	*/
 	unsigned int GetRandomSeed () const;
 

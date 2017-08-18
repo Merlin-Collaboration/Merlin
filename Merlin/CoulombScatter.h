@@ -4,12 +4,17 @@
 #include "RandomNG.h"
 namespace ParticleTracking
 {
-// calculate random small-angle Coulomb scattering
+
+/**
+* calculate random small-angle Coulomb scattering
+*/
 pair<double,double> CoulombScatter(double x, double theta0)
 {
-	// x - material length in meters
-	// theta0 - RMS scattering angle (plane)
-	// See particle data book section 27.3
+	/**
+	* x - material length in meters
+	* theta0 - RMS scattering angle (plane)
+	* See particle data book section 27.3
+	*/
 	static const double root12 = sqrt(12.0);
 
 	double z1 = RandomNG::normal(0,1);

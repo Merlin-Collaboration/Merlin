@@ -16,11 +16,8 @@
 #define ArcMultipoleField_h 1
 
 #include "merlin_config.h"
-// TemplateComponents
 #include "TemplateComponents.h"
-// MultipoleField
 #include "MultipoleField.h"
-// ArcGeometry
 #include "ArcGeometry.h"
 
 /**

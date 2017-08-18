@@ -18,15 +18,10 @@
 #include "merlin_config.h"
 #include <string>
 
-// EMField
 #include "EMField.h"
-// AcceleratorGeometry
 #include "AcceleratorGeometry.h"
-// Aperture
 #include "Aperture.h"
-// ModelElement
 #include "ModelElement.h"
-// WakePotentials
 #include "WakePotentials.h"
 
 class ComponentTracker;

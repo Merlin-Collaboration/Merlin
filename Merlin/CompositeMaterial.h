@@ -9,16 +9,18 @@
 
 using namespace std;
 
-// A CompositeMaterial is a composite of assorted materials
-// and contains a map of constituent materials.
-// It is similar to a MaterialMixture however it uses bulk material
-// properties as well as mass fraction weighted values for atomic mass,
-// number, etc, and all cross sections.
-// This makes the CompositeMaterial compatible with CrossSections.
-// Note that scattering will be performed from imaginary composite
-// nuclei rather than the constituent nuclei of the composite, unless
-// this is taken into account by creating CrossSections for each
-// constituent and using the SelectRandomMaterial() function.
+/**
+* A CompositeMaterial is a composite of assorted materials
+* and contains a map of constituent materials.
+* It is similar to a MaterialMixture however it uses bulk material
+* properties as well as mass fraction weighted values for atomic mass,
+* number, etc, and all cross sections.
+* This makes the CompositeMaterial compatible with CrossSections.
+* Note that scattering will be performed from imaginary composite
+* nuclei rather than the constituent nuclei of the composite, unless
+* this is taken into account by creating CrossSections for each
+* constituent and using the SelectRandomMaterial() function.
+*/
 
 class CompositeMaterial : public Material
 {
@@ -32,10 +34,12 @@ public:
 	double CalculateRadiationLength();
 	double CalculateSixtrackdEdx();
 
-	//This calculates and sets all variables using mass fraction weighting
+	/**
+	*This calculates and sets all variables using mass fraction weighting
+	*/
 	void CalculateAllWeightedVariables();
 
-	//New weighed calculate functions
+	// New weighed calculate functions
 	double CalculateWeightedA();
 	double CalculateWeightedZ();
 	double CalculateSixTrackElasticNucleusCrossSection();
@@ -80,46 +84,68 @@ public:
 	double GetSixtrackNuclearSlope() const;
 
 
-	// Check that the material properties make some sort of sense
+	/**
+	* Check that the material properties make some sort of sense
+	*/
 	bool VerifyMaterial() const;
 
-	// This function adds materials by mass fraction
-	// i.e. if 5% of the material by mass is element m, the double here is 0.05, etc.
+	/**
+	* This function adds materials by mass fraction
+	* i.e. if 5% of the material by mass is element m, the double here is 0.05, etc.
+	*/
 	bool AddMaterialByMassFraction(Material*,double);
 
-	// This function adds materials by number density fraction
-	// i.e. if 5% of the component atoms are element m, the double here is 0.05, etc.
+	/**
+	* This function adds materials by number density fraction
+	* i.e. if 5% of the component atoms are element m, the double here is 0.05, etc.
+	*/
 	bool AddMaterialByNumberFraction(Material*,double);
 
-	// Returns a random element and sets CurrentElement to this element also.
+	/**
+	* Returns a random element and sets CurrentElement to this element also.
+	*/
 	Material* SelectRandomMaterial();
 
-	// Returns CurrentElement.
+	/**
+	* Returns CurrentElement.
+	*/
 	Material* GetCurrentMaterial();
 
-	// Assembles the material
+	/**
+	* Assembles the material
+	*/
 	bool Assemble();
 
-	// Is this material ready to be used?
+	/**
+	* Is this material ready to be used?
+	*/
 	bool IsAssembled();
 
-	// Is this a compound material?
-	// true for compounds, false for elements
+	/**
+	* Is this a compound material?
+	* true for compounds, false for elements
+	*/
 	virtual bool IsMixture() const;
 
-	// Return list of constitutent element symbols as strings
+	/**
+	* Return list of constitutent element symbols as strings
+	*/
 	vector< pair<string,double> > GetConstituentElements();
 
 private:
 
-	// A map of number density fractions in the material, along with the material pointer.
-	// In the double pair:
-	// first = number fraction
-	// second = mass fraction
+	/**
+	* A map of number density fractions in the material, along with the material pointer.
+	* In the double pair:
+	* first = number fraction
+	* second = mass fraction
+	*/
 	std::map<Material*,std::pair<double,double> > MixtureMap;
 
 
-	// Current element selected
+	/**
+	* Current element selected
+	*/
 	Material* CurrentMaterial;
 
 	bool Assembled;

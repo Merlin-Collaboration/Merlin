@@ -40,48 +40,63 @@ public:
 	/**
 	*	Constructor taking the arc length and the curvature
 	*	(1/r) of the geometry.
+	*	@param[in] 1 Arc length
+	*	@param[in] curv Curvature (\f$\frac{1}{r}\f$)
 	*/
 	ArcGeometry (double l, double curv);
 
 	/**
 	*	Return the curvature of the ArcGeometry.
+	*	@return Curvature of ArcGeometry
 	*/
+
 	double GetCurvature () const;
 
 	/**
 	*	Return the total arc angle of the geometry.
+	*	@return Total arc angle of the geometry
 	*/
 	double GetAngle () const;
 
 	/**
 	*	Returns the arc transform from s0 to s (angle=h*(s-s0)).
+	*	@return Arc transform from s0 to s (\f$\mathrm{angle}=h\times(s-s_0)\f$)
 	*/
 	virtual Transform3D GetGeometryTransform (double s0, double s) const;
 
 	/**
 	*	Returns the arc transform for either -angle/2 or
 	*	+angle/2 for the entrance and exit planes respectively.
+	*
+	*	@return Arc transform for \f$\frac{-\mathrm{angle}}{2}\f$ or
+	*   \f$\frac{+\mathrm{angle}}{2}\f$ corresponding to the entrance and exit
+	*   planes respectively
 	*/
 	virtual Transform3D GetGeometryTransform (BoundaryPlane p) const;
 
 	/**
 	*	Returns the arc transformation from the entrance plane
 	*	frame to the exit plane frame.
+	*	@return Arc transformation from the entrance plane frame to the exit
+	*	plane frame
 	*/
 	virtual Transform3D GetTotalGeometryTransform () const;
 
 	/**
 	*	Sets the curvature (=1/r) of the arc.
+	*	@param[in] curv Curvature (\f$\frac{1}{r}\f$)
 	*/
 	void SetCurvature (double curv);
 
+
 	/**
-	*	Sets the tilt of the geomety in radians.
+	*	Sets the tilt of the geometry in radians.
 	*/
 	void SetTilt (double t);
 
 	/**
 	*	Returns the tilt of the geometry in radians.
+	*	@return Tilt of the geometry (in radians)
 	*/
 	double GetTilt () const;
 

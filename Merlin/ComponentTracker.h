@@ -20,95 +20,125 @@
 #include "AcceleratorComponent.h"
 #include <map>
 
-//  class ComponentTracker
-//
-//	ComponentTracker provides the primary interface for tracking
-//	operations through a series of AcceleratorComponents. An object of
-//	class ComponentTracker can be thought of as a collection of
-//	Integrator objects, each of which is responsible for
-//	"tracking" some beam-like representation through a
-//	specific component. Selection of the correct Integrator
-//	is performed via the callback mechanism SelectIntegrator(),
-//	which is called directly by Accelerator
-//	AcceleratorComponent::PrepareTracker.
-//  Concrete Tracker objects
-//	should supply the (concrete) Integrators, which when
-//	identified, are then passed back down to the concrete
-//	class via a call the virtual function SetCurrent
-//	Integrator.
-//
-//	The callback mechanism used by Tracker replaces the
-//	canonical virtual function mechanism. It is a form of
-//	the visitor pattern, but without the circular dependency
-//	which is normally associated with that pattern.  Thus
-//	the accelerator model representation can be easily
-//	extended without the need to add new visitor functions.
+/**
+*  class ComponentTracker
+*
+*	ComponentTracker provides the primary interface for tracking
+*	operations through a series of AcceleratorComponents. An object of
+*	class ComponentTracker can be thought of as a collection of
+*	Integrator objects, each of which is responsible for
+*	"tracking" some beam-like representation through a
+*	specific component. Selection of the correct Integrator
+*	is performed via the callback mechanism SelectIntegrator(),
+*	which is called directly by Accelerator
+*	AcceleratorComponent::PrepareTracker.
+*  Concrete Tracker objects
+*	should supply the (concrete) Integrators, which when
+*	identified, are then passed back down to the concrete
+*	class via a call the virtual function SetCurrent
+*	Integrator.
+*
+*	The callback mechanism used by Tracker replaces the
+*	canonical virtual function mechanism. It is a form of
+*	the visitor pattern, but without the circular dependency
+*	which is normally associated with that pattern.  Thus
+*	the accelerator model representation can be easily
+*	extended without the need to add new visitor functions.
+*/
 
 class ComponentTracker
 {
 public:
 
-	//	Tracker state
+	/**
+	*	Tracker state
+	*/
 	typedef enum {undefined, initialised, tracking, finished} State;
 
-	//	Exception thrown when no valid integrator is identified.
+	/**
+	*	Exception thrown when no valid integrator is identified.
+	*/
 	struct UnknownComponent {};
 
-	//	Destructor
+	/**
+	*	Destructor
+	*/
 	virtual ~ComponentTracker ();
 
-	//	Track the entire current accelerator component. Initial
-	//	tracker state must be initialised, and final state is
-	//	finished.
+	/**
+	*	Track the entire current accelerator component. Initial
+	*	tracker state must be initialised, and final state is
+	*	finished.
+	*/
 	void Track ();
 
-	//	Track a step ds through the current component, and
-	//	return the remaining distance to the exit boundary.
-	//	Initial state must be either initialised or tracking.
-	//	Final state is either tracking or finished. If ds tracks
-	//	beyond the current AcceleratorComponent geometry, a
-	//	BeyondExtent exception is thrown.
+	/**
+	*	Track a step ds through the current component, and
+	*	return the remaining distance to the exit boundary.
+	*	Initial state must be either initialised or tracking.
+	*	Final state is either tracking or finished. If ds tracks
+	*	beyond the current AcceleratorComponent geometry, a
+	*	BeyondExtent exception is thrown.
+	*/
 	double TrackStep (double ds);
 
-	//	Returns the current state of the Tracker.
+	/**
+	*	Returns the current state of the Tracker.
+	*/
 	ComponentTracker::State GetState () const;
 
-	//	Reset the Tracker. The state is automatically set to
-	//	undefined.
+	/**
+	*	Reset the Tracker. The state is automatically set to
+	*	undefined.
+	*/
 	void Reset ();
 
-	//	Returns the remaining tracking distance. Current state
-	//	must be initialised, tracking or finished.
+	/**
+	*	Returns the remaining tracking distance. Current state
+	*	must be initialised, tracking or finished.
+	*/
 	double GetRemainingLength () const;
 
-	//	Returns the total integrated length. State must be
-	//	initialised, tracking or finished.
+	/**
+	*	Returns the total integrated length. State must be
+	*	initialised, tracking or finished.
+	*/
 	double GetIntegratedLength () const;
 
-	//	Function called by AcceleratorComponent objects to
-	//	select the correct Integrator for component. Returns
-	//	true if an Integrator object is found for index,
-	//	otherwise false.
+	/**
+	*	Function called by AcceleratorComponent objects to
+	*	select the correct Integrator for component. Returns
+	*	true if an Integrator object is found for index,
+	*	otherwise false.
+	*/
 	bool SelectIntegrator (int index, AcceleratorComponent& component);
 
-	//	Function operator overload. Tracks the specified
-	//	AcceleratorComponent in one step.
+	/**
+	*	Function operator overload. Tracks the specified
+	*	AcceleratorComponent in one step.
+	*/
 	void operator () (AcceleratorComponent* component);
 
-	// IntegratorSet class
+	/**
+	* IntegratorSet class
+	*/
 	class IntegratorSet
 	{
 	public:
 		typedef std::map< int,ComponentIntegrator* > IMap;
 		~IntegratorSet ();
 
-		// Adds the specified integrator. Returns true
-		// if the the integrator replaces an existing one,
-		// otherwise false.
+		/**
+		* Adds the specified integrator. Returns true
+		* if the the integrator replaces an existing one,
+		* otherwise false.
+		*/
 		bool Add (ComponentIntegrator* intg);
 
-		// Return integrator n (or a nullptr if there is
-		// no associate integrator).
+		/**
+		* Return integrator n (or a nullptr if there is
+		* no associate integrator).
+		*/
 		ComponentIntegrator* GetIntegrator (int n);
 
 	private:
@@ -126,27 +156,35 @@ public:
 
 protected:
 
-	//	Constructor(s) made protected to prevent instantiation
+	/**
+	*	Constructor(s) made protected to prevent instantiation
+	*/
 	ComponentTracker ();
 	explicit ComponentTracker (IntegratorSet* iset);
 
-	//	Protected virtual function called by SelectIntegrator()
-	//	when it has successfully located a valid integrator.
-	//	Concrete Tracker objects should override this function
-	//	to perform any initialisation appropriate on the
-	//	(concrete) integrator.
+	/**
+	*	Protected virtual function called by SelectIntegrator()
+	*	when it has successfully located a valid integrator.
+	*	Concrete Tracker objects should override this function
+	*	to perform any initialisation appropriate on the
+	*	(concrete) integrator.
+	*/
 	virtual void InitialiseIntegrator (ComponentIntegrator*);
 
-	//	Used to register an integrator. Returns true if this
-	//	integrator overrides an existing one, otherwise false.
-	//	Register() should be called by the constructors of
-	//	concrete Tracker classes in order to setup the required
-	//	integrators.
+	/**
+	*	Used to register an integrator. Returns true if this
+	*	integrator overrides an existing one, otherwise false.
+	*	Register() should be called by the constructors of
+	*	concrete Tracker classes in order to setup the required
+	*	integrators.
+	*/
 	bool Register (ComponentIntegrator* intg);
 
 private:
 
-	// Dissable copy construction
+	/**
+	* Disable copy construction
+	*/
 	ComponentTracker(const ComponentTracker&);
 
 	State itsState;
@@ -155,11 +193,13 @@ private:
 	IntegratorSet* iSet;
 };
 
-// template class TBunchCMPTracker
-//
-// This template class can be used to instantiate concrete
-// ComponentTracker classes which are used to track a specific
-// Bunch object.
+/**
+* template class TBunchCMPTracker
+*
+* This template class can be used to instantiate concrete
+* ComponentTracker classes which are used to track a specific
+* Bunch object.
+*/
 
 template<class _B>
 class TBunchCMPTracker : public ComponentTracker
@@ -168,7 +208,9 @@ public:
 
 	typedef _B bunch_type;
 
-	// Bunch specific integrators
+	/**
+	* Bunch specific integrators
+	*/
 	class B_Integrator : public ComponentIntegrator
 	{
 	public:
@@ -186,16 +228,20 @@ public:
 		_B* currentBunch;
 	};
 
-	// Template for component-specific bunch integrator
-	// concrete BunchType integrators should inherit from
-	// an instantiation of this template.
+	/**
+	* Template for component-specific bunch integrator
+	* concrete BunchType integrators should inherit from
+	* an instantiation of this template.
+	*/
 	template<class _C>
 	class Integrator : public B_Integrator
 	{
 	public:
 		typedef _C ComponentType;
 	protected:
-		// virtual function override
+		/**
+		* virtual function override
+		*/
 		void SetCurrentComponent (AcceleratorComponent& c)
 		{
 			ComponentIntegrator::SetCurrentComponent(c);
@@ -212,19 +258,25 @@ public:
 
 	// Methods
 
-	// Registration of bunch integrators
+	/**
+	* Registration of bunch integrators
+	*/
 	bool Register(B_Integrator* ci)
 	{
 		return ComponentTracker::Register(ci);
 	}
 
-	// Set the bunch to be tracked.
+	/**
+	* Set the bunch to be tracked.
+	*/
 	void SetBunch(_B& aBunch)
 	{
 		currentBunch = &aBunch;
 	}
 
-	// Integrator set definition.
+	/**
+	* Integrator set definition.
+	*/
 	class ISetBase
 	{
 	public:
@@ -232,13 +284,17 @@ public:
 		virtual void Init(TBunchCMPTracker&) const = 0;
 	};
 
-	// Default constructor (uses default integrator set)
+	/**
+	* Default constructor (uses default integrator set)
+	*/
 	TBunchCMPTracker() : ComponentTracker(), currentBunch(nullptr)
 	{
 		defIS->Init(*this);
 	}
 
-	// Constructor taking explicit integrator set
+	/**
+	* Constructor taking explicit integrator set
+	*/
 	explicit TBunchCMPTracker(const ISetBase& iset)
 		: ComponentTracker(), currentBunch(nullptr)
 	{
@@ -259,7 +315,9 @@ protected:
 	static ISetBase* defIS;
 
 
-	// virtual function override
+	/**
+	* virtual function override
+	*/
 	void InitialiseIntegrator (ComponentIntegrator* ci)
 	{
 		ComponentTracker::InitialiseIntegrator(ci);

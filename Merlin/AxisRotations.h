@@ -17,11 +17,8 @@
 
 #include "merlin_config.h"
 #include <math.h>
-// Space3D
 #include "Space3D.h"
-// RotationType
 #include "RotationType.h"
-// Rot3Drep
 #include "Rot3Drep.h"
 
 class GeneralRotation;
@@ -36,20 +33,26 @@ public:
 
 	/**
 	*	Constructor taking the axis rotation angle in radians.
+	*	@param[in] phi Axis rotation angle (radians)
 	*/
 	PureAxisRotation (double phi);
 
 	/**
 	*	Return the angle of rotation in radians.
+	*	@return Angle of rotation (radians)
 	*/
 	double angle () const;
 
 	/**
 	*	Return the sine of the rotation angle.
+	*	@return Sine of the rotation angle
 	*/
 	double sine () const;
 
-	//	Return the cosine of the rotation angle.
+	/**
+	*	Return the cosine of the rotation angle.
+	*	@return Cosine of the rotation angle
+	*/
 	double cosine () const;
 
 protected:
@@ -57,15 +60,17 @@ protected:
 	/**
 	*	Protected constructor taking the sine and cosine of the
 	*	rotation angle
+	*	@param cosa Cosine of the rotation angle
+	*	@param sina Sine of the rotation angle
 	*/
 	PureAxisRotation (double cosa, double sina);
 
 private:
 
-	/**
-	*  The single angle is
-	*	stored as sine and cosine for efficiency reasons when
-	*	performing rotations.
+
+	/*
+	*   The single angle is stored as sine and cosine for efficiency reasons when
+	*   performing rotations.
 	*/
 	double cosphi;
 	double sinphi;
@@ -81,6 +86,7 @@ public:
 
 	/**
 	*	Contructor taking the rotation angle in radians.
+	*	@param[in] phi Rotation angle (radians)
 	*/
 	RotationX (double phi);
 
@@ -91,11 +97,15 @@ public:
 
 	/**
 	*	Rotate the specified point and return the result.
+	*	@param[in] p A point in 3D space
+	*	@return The rotated point @ref p
 	*/
 	virtual Point3D rotate (const Point3D& p) const;
 
 	/**
 	*	Rotate the specified vector and return the result.
+	*	@param[in] v A 3D vector
+	*	@return The rotated vector @ref v
 	*/
 	virtual Vector3D rotate (const Vector3D& v) const;
 
@@ -127,11 +137,13 @@ public:
 	/**
 	*	Return the type of rotation. Can be identity, xrot,
 	*	yrot, zrot or general.
+	*	@return Rotation type
 	*/
 	virtual RotationType type () const;
 
 	/**
 	*	Returns true.
+	*	@return true
 	*/
 	virtual bool isXrot () const;
 
@@ -152,6 +164,7 @@ public:
 
 	/**
 	*	Returns in m the 3x3 rotation matrix.
+	*	@param[out] m 3x3 rotation matrix
 	*/
 	virtual RealMatrix& getMatrix (RealMatrix& m) const;
 
@@ -160,6 +173,8 @@ private:
 	/**
 	*	Private constructor taking the sine and cosine of the
 	*	rotation angle.
+	*	@param[in] cosa Cosine of rotation angle
+	*	@param[in] sina Sine of rotation angle
 	*/
 	RotationX (double cosa, double sina);
 };
@@ -173,6 +188,7 @@ class RotationY : public PureAxisRotation
 public:
 	/**
 	*	Constructor taking the rotation angle in radians.
+	*	@param[in] phi Rotation angle (radians)
 	*/
 	RotationY (double phi);
 
@@ -183,11 +199,15 @@ public:
 
 	/**
 	*	Rotate the specified point and return the result.
+	*	@param[in] p A point in 3D space
+	*	@return The rotated point @ref p
 	*/
 	virtual Point3D rotate (const Point3D& p) const;
 
 	/**
 	*	Rotate the specified vector and return the result.
+	*	@param[in] v A 3D vector
+	*	@return The rotated vector @ref v
 	*/
 	virtual Vector3D rotate (const Vector3D& v) const;
 
@@ -217,11 +237,13 @@ public:
 	/**
 	*	Return the type of rotation. Can be identity, xrot,
 	*	yrot, zrot or general.
+	*	@return Rotation type
 	*/
 	virtual RotationType type () const;
 
 	/**
 	*	Returns true.
+	*	@return true
 	*/
 	virtual bool isYrot () const;
 
@@ -242,6 +264,7 @@ public:
 
 	/**
 	*	Returns in m the 3x3 rotation matrix.
+	*	@param[out] m 3x3 rotation matrix
 	*/
 	virtual RealMatrix& getMatrix (RealMatrix& m) const;
 
@@ -263,7 +286,8 @@ class RotationZ : public PureAxisRotation
 {
 public:
 	/**
-	*	Contructor taking the rotation angle in radians.
+	*	Constructor taking the rotation angle in radians.
+	*	@param[in] phi Axis rotation angle (radians)
 	*/
 	RotationZ (double phi);
 
@@ -311,11 +335,13 @@ public:
 	/**
 	*	Return the type of rotation. Can be identity, xrot,
 	*	yrot, zrot or general.
+	*	@return Rotation type
 	*/
 	virtual RotationType type () const;
 
 	/**
 	*	Returns true.
+	*	@return true
 	*/
 	virtual bool isZrot () const;
 
@@ -336,6 +362,7 @@ public:
 
 	/**
 	*	Returns in m the 3x3 rotation matrix.
+	*	@param[out] m 3x3 rotation matrix
 	*/
 	virtual RealMatrix& getMatrix (RealMatrix& m) const;
 

@@ -68,6 +68,7 @@ public:
 
 	/**
 	* Return a long-words word of random bits
+	* @return A long-words type of random bits
 	*/
 	virtual unsigned int asLong();
 	virtual void reset();
