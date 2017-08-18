@@ -26,7 +26,7 @@ using namespace std;
 /**
 *	A single process which is applied to a Bunch object
 *	during tracking. A Process can represent any physical
-*	(eg. particle transport) or abstract mechanism (eg.
+*	(e.g. particle transport) or abstract mechanism (e.g.
 *	output) which may be applied to a bunch at a specific
 *	AcceleratorComponent. Concrete processes may be generic
 *	to all Bunch model types , or may be specific to a
@@ -47,10 +47,15 @@ public:
 	virtual ~BunchProcess ();
 
 	/**
-	*	Set/Get the priority. Highest priority is 0, followed by
+	*	Set the priority. Highest priority is 0, followed by
 	*	1,2,...etc.
 	*/
 	void SetPriority (int p);
+
+	/**
+	*	Get the priority. Highest priority is 0, followed by
+	*	1,2,...etc.
+	*/
 	int GetPriority () const;
 
 	/**
@@ -77,11 +82,14 @@ public:
 
 	/**
 	*	Returns the current maximum step length for this process.
+	*	@return Current maximum step length for the process
 	*/
 	virtual double GetMaxAllowedStepSize () const = 0;
 
 	/**
-	*	Returns true if this processes is active.
+	*	Returns true if this process is active.
+	*	@retval true If process is active
+	*	@retval false If process is inactive
 	*/
 	bool IsActive () const;
 
@@ -94,7 +102,8 @@ protected:
 
 private:
 
-	/**
+
+	/*
 	* The following two lines disable the copying of BunchProcess objects via the copy constructor or via assignment.
 	*/
 	BunchProcess(const BunchProcess& bp);

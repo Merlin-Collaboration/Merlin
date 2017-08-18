@@ -35,17 +35,17 @@ public:
 	{}
 
 	/**
-	*	Checks consistancy of definition. Returns true if *this
+	*	Checks consistency of definition. Returns true if *this
 	*	is a valid beam, otherwise false.
+	*	@retval true If beam is valid
+	*	@retval false If beam is invalid
 	*/
 	bool ok () const
 	{
 		return emit_x>0 && emit_y>0 && beta_x>0 && beta_y>0;
 	}
 
-	/**
-	*	TWISS beam parameters
-	*/
+	// TWISS beam parameters
 	double beta_x;
 	double beta_y;
 	double alpha_x;

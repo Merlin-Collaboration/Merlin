@@ -57,16 +57,19 @@ public:
 
 		/**
 		*	Returns the ID of the channel (i.e. type.key).
+		*	@return Channel ID
 		*/
 		std::string GetID ();
 
 		/**
 		*	Returns the ModelElement type.
+		*	@return ModelElement type
 		*/
 		const string& GetType () const;
 
 		/**
 		*	Returns the channel key.
+		*	@return Channel key
 		*/
 		const string& GetKey () const;
 
@@ -83,12 +86,18 @@ public:
 	/**
 	*	Returns in channels all ROChannels matching chID.
 	*	Returns the number of channels found.
+	*
+	*	@param[out] channels All ROChannels matching chID
+	*	@return Number of channels found
 	*/
 	size_t GetROChannels (const string& chID, std::vector<ROChannel*>& channels);
 
 	/**
 	*	Returns in channels all RWChannels matching chID.
 	*	Returns the number of channels found.
+	*
+	*	@param[out] channels All RWChannels matching chID
+	*	@return Number of channels found
 	*/
 	size_t GetRWChannels (const string& chID, std::vector<RWChannel*>& channels);
 
@@ -97,6 +106,9 @@ public:
 	*	matching components in aBeamline. Note that only
 	*	channels associated with AcceleratorComponents can be
 	*	extracted using this method.
+	*
+	*	@param[out] channels All ROChannels matching chID for all matching
+	*	components in aBeamline
 	*/
 	size_t GetROChannels (AcceleratorModel::Beamline& aBeamline, const std::string& chid, std::vector<ROChannel*>& channels);
 
@@ -105,6 +117,8 @@ public:
 	*	matching components in aBeamline. Note that only
 	*	channels associated with AcceleratorComponents can be
 	*	extracted using this method.
+	*	@param[out] channels All ROChannels matching chID for all matching
+	*	components in aBeamline
 	*/
 	size_t GetRWChannels (AcceleratorModel::Beamline& aBeamline, const std::string& chid, std::vector<RWChannel*>& channels);
 
@@ -127,6 +141,9 @@ private:
 	/**
 	*	Returns in elements the ModelElements that match
 	*	pattern. elements is sorted by TYPE.
+	*
+	*	@param[out] elements ModelElements that match pattern id_pat, sorted by
+	*	type
 	*/
 	void FindElements (const std::string& id_pat, std::vector<ModelElement*>& elements);
 };

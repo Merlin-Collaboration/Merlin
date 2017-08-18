@@ -28,10 +28,13 @@ namespace ParticleTracking
 {
 
 /**
-* A Physics Process based on Andrea Santamaria Garcia's simple crab kick model, and allowing for a voltage or phase failure
-* Note that in order to use process this we must inject a gaussian bunch immediately before a set of upstream CCs
-* We assume that both sets of CCs are in use (horizontal @ CMS, and vertical @ ATLAS), and have been placed in the TFS table as CRABMARKER elements
-* Currently the phase advances calculated in MADX are used as MERLIN doesn't store this information in the LatticeFunctionTable
+* A Physics Process based on Andrea Santamaria Garcia's simple crab kick model,
+* and allowing for a voltage or phase failure. Note that in order to use
+* process this we must inject a gaussian bunch immediately before a set of
+* upstream CCs. We assume that both sets of CCs are in use (horizontal @ CMS,
+* and vertical @ ATLAS), and have been placed in the TFS table as CRABMARKER
+* elements. Currently the phase advances calculated in MADX are used as MERLIN
+* doesn't store this information in the LatticeFunctionTable
 */
 
 class CCFailureProcess : public ParticleBunchProcess
@@ -62,11 +65,13 @@ public:
 
 	/**
 	*	Preform the process for the specified step ds.
+	*	@param[in] ds Specified step
 	*/
 	virtual void DoProcess (double ds);
 
 	/**
 	*	Returns the current maximum step length for this process.
+	*	@return Current maximum step length
 	*/
 	virtual double GetMaxAllowedStepSize() const;
 
@@ -84,11 +89,13 @@ public:
 
 	/**
 	* Returns the phase advance in x and y for element
+	* @return Phase advance in x and y for the element
 	*/
 	virtual pair<double,double> CalcMu(int element);
 
 	/**
 	* Returns the phase advance in x and y from element1 to element2
+	* @return Phase advance in x and y from element1 to element2
 	*/
 	virtual pair<double,double> CalcDeltaMu(int element1, int element2);
 
@@ -101,23 +108,39 @@ public:
 	*/
 	virtual double CalcV2(double V1, double M22);
 
-	// Performs the particle kick
+	/**
+	*  Performs the pre-CC particle kick
+	*  @param[in] M12 Transfer matrix element between two points
+	*/
 	virtual void ApplyPreCCKick(PSvector &p, double V, double M12, bool horizontal);
+
+	/**
+	*  Performs the post-CC particle kick
+	*  @param[in] M12 Transfer matrix element between two points
+	*/
 	virtual void ApplyPostCCKick(PSvector &p, double V, double M12, bool horizontal);
 
-	// Switch on/off Failure
+	/**
+	* Switch on/off Failure
+	*/
 	virtual void SetFailureOnOff(bool onoff)
 	{
 		failure_on = onoff;
 		cout << "CCFailure::Failure_on = " << failure_on << endl;
 	}
 
-	// Select number of turns for failure
+	/**
+	* Select number of turns failed
+	*/
 	virtual void SetFailureTurns(int ft)
 	{
 		fail_turns = ft;
 		cout << "CCFailure::SetFailureTurns = " << fail_turns << endl;
 	}
+
+	/**
+	* Select number of turns not failed
+	*/
 	virtual void SetNonFailureTurns(int nft)
 	{
 		non_fail_turns = nft;

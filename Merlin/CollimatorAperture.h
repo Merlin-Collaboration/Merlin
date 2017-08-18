@@ -88,12 +88,10 @@ public:
 	bool PointInside(double x,double y,double z) const;
 };
 
-/**********************************************************************
-*
+/**
 *	A collimtor jaw, aligned to the beam orbit and beta function changes
 * 	This has jaw flatness errors
-*
-**********************************************************************/
+*/
 
 class CollimatorApertureWithErrors: public CollimatorAperture
 {
@@ -101,12 +99,10 @@ class CollimatorApertureWithErrors: public CollimatorAperture
 	bool PointInside(double x,double y,double z) const;
 };
 
-/**********************************************************************
-*
+/**
 *	A collimtor jaw, unaligned to the beam orbit or beta function changes
 * 	This has jaw flatness errors
-*
-**********************************************************************/
+*/
 
 class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 {
@@ -115,12 +111,10 @@ class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 };
 
 
-/**********************************************************************
-*
+/**
 *	A collimtor jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
-*
-**********************************************************************/
+*/
 
 class OneSidedUnalignedCollimatorAperture: public CollimatorAperture
 {

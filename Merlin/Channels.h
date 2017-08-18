@@ -19,12 +19,13 @@
 #include <vector>
 #include <string>
 #include <iostream>
-
-// LinearAlgebra
 #include "LinearAlgebra.h"
 
-//	A Read-Only Channel representing a constant floating
-//	point attribute or parameter.
+
+/**
+*	A Read-Only Channel representing a constant floating
+*	point attribute or parameter.
+*/
 
 class ROChannel
 {
@@ -32,68 +33,99 @@ public:
 
 	virtual ~ROChannel ();
 
-	//	Returns the ID of the channel (parameter).
+	/**
+	*	Returns the ID of the channel (parameter).
+	*	@return Channel ID
+	*/
 	virtual std::string GetID () const = 0;
 
-	//	Returns the current value of the parameter/attribute
-	//	associated with the channel.
+	/**
+	*	Returns the current value of the parameter/attribute
+	*	associated with the channel.
+	*/
 	virtual double Read () const = 0;
 };
 
-//	A Read-Write Channel,  representing a single
-//	floating-point attribute or parameter that can be
-//	accessed (Read) or modified (Write).
+/**
+*	A Read-Write Channel,  representing a single
+*	floating-point attribute or parameter that can be
+*	accessed (Read) or modified (Write).
+*/
 
 class RWChannel : public ROChannel
 {
 public:
 
-	//	Sets the current value of the parameter/attribute
-	//	associated with the channel.
+	/**
+	*	Sets the current value of the parameter/attribute
+	*	associated with the channel.
+	*/
 	virtual void Write (double value) = 0;
 
-	//	Increments the current value of the parameter/attribute
-	//	associated with the channel. Returns the final
-	//	(incremented) value.
+	/**
+	*	Increments the current value of the parameter/attribute
+	*	associated with the channel. Returns the final
+	*	(incremented) value.
+	*/
 	virtual double Increment (double delta);
 };
 
-//	A linear array (vector) of ROChannels. On destruction,
-//	an ROChannelArray object will destroy its associated
-//	channels.
+/**
+*	A linear array (vector) of ROChannels. On destruction,
+*	an ROChannelArray object will destroy its associated
+*	channels.
+*/
 
 class ROChannelArray
 {
 public:
-	//	Constructor taking a vector of ROChannel objects.
+	/**
+	*	Constructor taking a vector of ROChannel objects.
+	*/
 	explicit ROChannelArray (const std::vector<ROChannel*>& chnls);
+
 	ROChannelArray(ROChannelArray& rhs);
 	ROChannelArray ();
 
 	~ROChannelArray ();
 
-	//	Reads the n-th channel.
+	/**
+	*	Reads the n-th channel.
+	*/
 	double Read (size_t n) const;
 
-	//	Reads all the channels and returns the results in vec.
+	/**
+	*	Reads all the channels and returns the results in vec.
+	*	@param[out] Result of reading channels
+	*/
 	void ReadAll (RealVector& vec) const;
 
-	//	Convertion to a RealVector (containing the current
-	//	values of the channels).
+	/**
+	*	Conversion to a RealVector (containing the current
+	*	values of the channels).
+	*/
 	operator RealVector () const;
 
-	//	Prints the vector as a two column table. Column 1
-	//	contains the ID's of the channels; column 2 contains the
-	//	current values.
+	/**
+	*	Prints the vector as a two column table. Column 1
+	*	contains the ID's of the channels; column 2 contains the
+	*	current values.
+	*/
 	void Print (std::ostream& os) const;
 
-	//	Returns the size of the array.
+	/**
+	*	Returns the size of the array.
+	*/
 	size_t Size () const;
 
-	// Initialisation
+	/**
+	* Initialisation
+	*/
 	size_t SetChannels(const std::vector<ROChannel*>& chnls);
 
-	// channel access
+	/**
+	* channel access
+	*/
 	const ROChannel& operator[](size_t n) const
 	{
 		return *(channels[n]);
@@ -105,7 +137,9 @@ public:
 
 protected:
 
-	//	Protected constructing taking the size of the array.
+	/**
+	*	Protected constructing taking the size of the array.
+	*/
 	explicit ROChannelArray (size_t n);
 
 	void DestroyChannels();
@@ -117,33 +151,49 @@ class RWChannelArray : public ROChannelArray
 {
 public:
 
-	//	Constructor taking a vector of RWChannels.
+	/**
+	*	Constructor taking a vector of RWChannels.
+	*/
 	explicit RWChannelArray (const std::vector<RWChannel*>& chnls);
 	RWChannelArray (RWChannelArray& rhs);
 	RWChannelArray ();
 
 	size_t SetChannels (const std::vector<RWChannel*>& chnls);
 
-	//	Write a value to the n-th channel.
+	/**
+	*	Write a value to the n-th channel.
+	*/
 	void Write (size_t n, double value);
 
-	//	Write the same value to all the channels.
+	/**
+	*	Write the same value as **Write** to all the channels.
+	*/
 	void WriteAll (double value);
 
-	//	Copy the vector to the channels.
+	/**
+	*	Copy the vector to the channels.
+	*/
 	void WriteAll (const RealVector& values);
 
-	//	Increments the value of the n-th channel.
+	/**
+	*	Increments the value of the n-th channel.
+	*/
 	void Increment (size_t n, double value);
 
-	//	Increments  all the channels by the same value.
+	/**
+	*	Increments  all the channels by the same value.
+	*/
 	void IncrementAll (double value);
 
-	//	Increments the channels by the corresponding values in
-	//	the supplied vector.
+	/**
+	*	Increments the channels by the corresponding values in
+	*	the supplied vector.
+	*/
 	void IncrementAll (const RealVector& values);
 
-	//	Copy assignment from a RealVector.
+	/**
+	*	Copy assignment from a RealVector.
+	*/
 	void operator = (const RealVector& v);
 
 private:

@@ -33,11 +33,13 @@ public:
 
 	/**
 	*	Returns the magnetic field at the point x and time t.
+	*	@return Magnetic field at point x, time t
 	*/
 	virtual Vector3D GetBFieldAt (const Point3D& x, double t = 0) const;
 
 	/**
 	*	Returns the electric field at the point x and time t
+	*	@return Electric field at point x, time t
 	*/
 	virtual Vector3D GetEFieldAt (const Point3D& x, double t = 0) const;
 

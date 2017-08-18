@@ -146,31 +146,49 @@ class CollimationOutput
 
 public:
 
-	// Constructor
+	/**
+	* Constructor
+	*/
 	CollimationOutput(OutputType otype = nearestelement);
 
-	// Destructor
+	/**
+	* Destructor
+	*/
 	~CollimationOutput();
 
-	// Finalise will call any sorting algorithms and perform formatting for final output
+	/**
+	* Finalise will call any sorting algorithms and perform formatting for final output
+	*/
 	virtual void Finalise() {}
 
-	// Perform the final output
+	/**
+	* Perform the final output
+	*/
 	virtual void Output(std::ostream* os) {}
 
-	// Called from CollimateProtonProcess::DoScatter to add a particle to the CollimationOutput
+	/**
+	* Called from CollimateProtonProcess::DoScatter to add a particle to the CollimationOutput
+	*/
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0) {}
 
-	// Output type switch
+	/**
+	* Output type switch
+	*/
 	OutputType otype;
 
-	// Temporary LossData struct use to transfer data
+	/**
+	* Temporary LossData struct use to transfer data
+	*/
 	LossData temp;
 
-	// Vector to hold the loss data
+	/**
+	* Vector to hold the loss data
+	*/
 	std::vector <LossData> DeadParticles;
 
-	// Vector to hold output data
+	/**
+	* Vector to hold output data
+	*/
 	std::vector <LossData> OutputLosses;
 
 protected:

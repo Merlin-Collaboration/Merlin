@@ -32,12 +32,14 @@ public:
 
 	/**
 	*	Returns the ID of the channel (parameter).
+	*	@return Channel ID
 	*/
 	virtual std::string GetID () const;
 
 	/**
 	*	Returns the current value of the parameter/attribute
 	*	associated with the channel.
+	*	@return Current value of the associated parameter/attribute
 	*/
 	virtual double Read () const;
 

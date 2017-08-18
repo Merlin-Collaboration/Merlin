@@ -29,9 +29,7 @@
 #define Collimator_h 1
 
 #include "merlin_config.h"
-
 #include "Drift.h"
-
 #include "Material.h"
 #include "ScatteringModel.h"
 
@@ -57,6 +55,7 @@ public:
 	/**
 	* Returns the length of the collimator in units of its
 	* radiation length
+	* @return Collimator length
 	*/
 	double GetNumRadLengths() const
 	{
@@ -65,6 +64,7 @@ public:
 
 	/**
 	* Returns the material radiation length (meter)
+	* @return Radiation material length (m)
 	*/
 	double GetMaterialRadiationLength() const
 	{
@@ -73,12 +73,14 @@ public:
 
 	/**
 	*	Returns the type string for this component.
+	*	@return String type of component
 	*/
 	virtual const string& GetType () const;
 
 	/**
 	*	Returns the unique index for this class of accelerator
 	*	components.
+	*	@return Unique index for the class of accelerator components
 	*/
 	virtual int GetIndex () const;
 
@@ -113,6 +115,7 @@ public:
 
 	/**
 	* Get collimator ID for Fluka output
+	* @return Collimator ID for Fluka output
 	*/
 	virtual int GetCollID()
 	{
@@ -121,7 +124,9 @@ public:
 
 	bool scatter_at_this_collimator;
 
-	// Collimator material
+	/**
+	* Collimator material
+	*/
 	Material* p;
 	virtual void SetMaterial(Material* pp)
 	{

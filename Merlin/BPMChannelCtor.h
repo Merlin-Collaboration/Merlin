@@ -39,11 +39,13 @@ public:
 
 	/**
 	*	Constructs and returns a BPMChannel.
+	*	@return Constructed BPMChannel
 	*/
 	virtual ROChannel* ConstructRO (ModelElement* anElement);
 
 	/**
 	*	Returns a nullptr.
+	*	@return nullptr
 	*/
 	virtual RWChannel* ConstructRW (ModelElement* anElement);
 

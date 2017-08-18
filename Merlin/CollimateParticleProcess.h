@@ -21,13 +21,9 @@
 #include <vector>
 
 #include "merlin_config.h"
-
 #include "ParticleBunchProcess.h"
-
 #include "PSTypes.h"
-
 #include "CollimationOutput.h"
-
 #include "MerlinException.h"
 
 #define COLL_AT_ENTRANCE 1
@@ -91,6 +87,7 @@ public:
 
 	/**
 	* Returns the current maximum step length for this process.
+	* @return Current maximum step length
 	*/
 	virtual double GetMaxAllowedStepSize () const;
 
@@ -187,7 +184,10 @@ protected:
 
 	size_t nlost;
 
-	// 0 when no CollimationOutput is set
+	/**
+	* 0 when no CollimationOutput is set
+	* @retval 0 No CollimationOutput set
+	*/
 	bool CollimationOutputSet;
 
 	double GetBinSize() const
@@ -208,11 +208,11 @@ private:
 	void bin_lost_output(const PSvectorArray& lostb);
 
 	bool scatter;
-	double bin_size;		// size of bins
-	double step_size;		// step size to handle when the collimator cannot be split equally into bins
+	double bin_size;		/// size of bins
+	double step_size;		/// step size to handle when the collimator cannot be split equally into bins
 	bool Imperfections;
 
-	double Xr; // radiation length
+	double Xr; /// radiation length
 	virtual bool DoScatter(Particle&);
 
 	/**

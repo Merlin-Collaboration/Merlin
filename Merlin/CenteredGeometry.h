@@ -35,11 +35,13 @@ public:
 
 	/**
 	*	Returns the total arc-length of the geometry.
+	*	@return Total arc-length
 	*/
 	virtual double GetGeometryLength () const;
 
 	/**
 	*	Returns the local extent of this geometry.
+	*	@return Local extent of this geometry
 	*/
 	virtual AcceleratorGeometry::Extent GetGeometryExtent () const;
 
