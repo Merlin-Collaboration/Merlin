@@ -17,9 +17,7 @@
 
 #include "merlin_config.h"
 #include <cassert>
-// PSTypes
 #include "PSTypes.h"
-// LinearAlgebra
 #include "LinearAlgebra.h"
 
 #include "utils.h"
@@ -37,16 +35,21 @@ public:
 
 	/**
 	* Return the number of degrees of freedom for this matrix (dimension/2).
+	* @return Number of degrees of freedom for matrix
 	*/
 	int GetNDF () const;
 
 	/**
 	* Return the reference momentum in GeV/c (returns 0 if the map is energy independent).
+	* @return Reference momentum (GeV/c)
 	*/
 	double GetRefMomentum () const;
 
 	/**
 	* Returns true if this map is energy independent.
+	*
+	* @retval true If map is energy independent
+	* @retval false If map is energy dependent
 	*/
 	bool EnergyIndependent () const;
 
@@ -63,6 +66,7 @@ protected:
 
 	/**
 	* Returns the momentum error re-scaled to the reference momentum.
+	* @return Momentum error
 	*/
 	double scaledp (double P, double dp) const;
 

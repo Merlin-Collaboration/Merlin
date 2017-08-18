@@ -16,41 +16,58 @@
 #define Marker_h 1
 
 #include "merlin_config.h"
-// AcceleratorComponent
 #include "AcceleratorComponent.h"
 
 class ComponentTracker;
 
-//	Special Marker component. This does not represent a
-//	physical component, and is provided for uses wishing to
-//	"mark" specific locations in the lattice. It has no
-//	field or geometry associated with it.
+/**
+*	Special Marker component. This does not represent a
+*	physical component, and is provided for uses wishing to
+*	"mark" specific locations in the lattice. It has no
+*	field or geometry associated with it.
+*/
 
 class Marker : public AcceleratorComponent
 {
 public:
 
-	//	Constructor
+	/**
+	*	Constructor
+	*/
 	explicit Marker (const std::string& id);
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*	@return Unique index for the class of accelerator components
+	*/
 	virtual int GetIndex () const;
 
-	//	Returns the type string for this component.
+	/**
+	*	Returns the type string for this component.
+	*	@return Type string for component
+	*/
 	virtual const string& GetType () const;
 
-	//	Virtual constructor. - FIXME
+	/**
+	*	Virtual constructor. - FIXME
+	*/
 	virtual ModelElement* Copy () const;
 
-	//	Rotates the component 180 degrees about its local Y axis.
+	/**
+	*	Rotates the component 180 degrees about its local Y axis.
+	*/
 	virtual void RotateY180 ();
 
-	//	Unique index for an Accelerator component.
+	/**
+	*	Unique index for an Accelerator component.
+	*/
 	static const int ID;
 };
 

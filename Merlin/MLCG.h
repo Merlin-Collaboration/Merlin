@@ -23,9 +23,11 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #include "RNG.h"
 #include <cmath>
 
-//
-//	Multiplicative Linear Conguential Generator
-//
+/**
+*
+*	Multiplicative Linear Conguential Generator
+*
+*/
 
 class MLCG : public RNG
 {
@@ -38,9 +40,11 @@ protected:
 
 public:
 	MLCG(_G_int32_t seed1 = 0, _G_int32_t seed2 = 1);
-	//
-	// Return a long-words word of random bits
-	//
+	/**
+	*
+	* Return a long-words word of random bits
+	*
+	*/
 	virtual _G_uint32_t asLong();
 	virtual void reset();
 	_G_int32_t seed1();

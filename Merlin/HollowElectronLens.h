@@ -19,12 +19,16 @@
 
 class ComponentTracker;
 
-// HEL operation modes
+/**
+* HEL operation modes
+*/
 typedef enum {DC, AC, Diffusive, Turnskip} OperationMode;
 
-// A HollowElectronLens provides a method of active halo control.
-// It can be used as a soft scraper. Optically the element is a drift.
-// See HollowELensProcess.
+/**
+* A HollowElectronLens provides a method of active halo control.
+* It can be used as a soft scraper. Optically the element is a drift.
+* See HollowELensProcess.
+*/
 
 class HollowElectronLens : public Drift
 {
@@ -32,21 +36,33 @@ public:
 
 	HollowElectronLens (const string& id, double len, int mode, double current, double beta_e, double rigidity, double length_e);
 
-	//	Returns the type string for this component.
+	/**
+	*	Returns the type string for this component.
+	*	@return Component type string
+	*/
 	virtual const string& GetType () const;
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*	@return Accelerator component class unique index
+	*/
 	virtual int GetIndex () const;
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Rotates the component 180 degrees about its local Y axis.
+	/**
+	*	Rotates the component 180 degrees about its local Y axis.
+	*/
 	virtual void RotateY180 ();
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
 	virtual double GetRmax () const
@@ -63,25 +79,35 @@ public:
 	virtual void SetRmin (double rmin);
 	void SetRadii (double rmin, double rmax);
 
-	// Set the effective length of the e- lens
+	/**
+	* Set the effective length of the e- lens
+	*/
 	virtual void SetEffectiveLength (double l_e)
 	{
 		EffectiveLength = l_e;
 	}
 
-	// Set the type of HEL operation required
+	/**
+	* Set the type of HEL operation required
+	*/
 	virtual void SetOpMode (OperationMode mode)
 	{
 		OMode = mode;
 	}
 
-	// Set variables for AC mode operation
+	/**
+	* Set variables for AC mode operation
+	*/
 	virtual void SetAC (double tune, double deltatune, double tunevarperstep, double turnsperstep, double multi);
 
-	//SetTurnSkip
+	/**
+	* SetTurnSkip
+	*/
 	virtual void SetTurnskip (int skip);
 
-	// Change to radial (measured) profile, simple (perfect) is default
+	/**
+	* Change to radial (measured) profile, simple (perfect) is default
+	*/
 	virtual void SetRadialProfile()
 	{
 		SimpleProfile = 0;
@@ -95,10 +121,14 @@ public:
 		LHC_Radial = 1;
 	}
 
-	// Change electron direction (defualt opposite protons = 1)
+	/**
+	* Change electron direction (defualt opposite protons = 1)
+	*/
 	virtual void SetElectronDirection(bool dir);
 
-	//	Unique index for an Accelerator component.
+	/**
+	*	Unique index for an Accelerator component.
+	*/
 	static const int ID;
 
 private:
@@ -131,11 +161,11 @@ public:
 
 	double MinTune;
 
-	bool ACSet;					// AC mode variable set?
-	bool SimpleProfile;			// 1 = use perfect HEL profile, 0 = use paramaterisation of measured LHC prototype cathode profile
-	bool AlignedToOrbit;		// Is the HEL aligned to the closed orbit
-	bool ElectronDirection;		// 1 = opposite protons (-ve kick), 0 = same as protons (+ve kick)
-	bool LHC_Radial;			// 1 = use empirically scaled measured radial profile (LHC hardware), 0 = use measured radial HEL profile
+	bool ACSet;					/// AC mode variable set?
+	bool SimpleProfile;			/// 1 = use perfect HEL profile, 0 = use paramaterisation of measured LHC prototype cathode profile
+	bool AlignedToOrbit;		/// Is the HEL aligned to the closed orbit
+	bool ElectronDirection;		/// 1 = opposite protons (-ve kick), 0 = same as protons (+ve kick)
+	bool LHC_Radial;			/// 1 = use empirically scaled measured radial profile (LHC hardware), 0 = use measured radial HEL profile
 
 	OperationMode OMode;
 };

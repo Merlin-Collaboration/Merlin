@@ -8,12 +8,15 @@
 #include "MatrixPrinter.h"
 #include "OPFormat.h"
 
-// A multivariate normal random number generator
-// by Cholesky decomposition: L*Lt=Cov, v=L*x, x<-normal(0,1)
-// input: covariance and mean
-// output: N-dim normal random number according to covariance
-// RandomNG must be initialized
 // DK 2006-02-23
+
+/**
+* A multivariate normal random number generator
+* by Cholesky decomposition: L*Lt=Cov, v=L*x, x<-normal(0,1)
+* input: covariance and mean
+* output: N-dim normal random number according to covariance
+* RandomNG must be initialized
+*/
 
 template<int N>
 class MultiNormal

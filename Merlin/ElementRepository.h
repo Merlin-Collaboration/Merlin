@@ -19,43 +19,57 @@
 #include <vector>
 #include <string>
 #include <set>
-// ModelElement
 #include "ModelElement.h"
 
-//	Used to store and access all the ModelElement objects
-//	associated (contained) by an AcceleratorModel. Primary
-//	functions are fast keyed access to ModelElements, and
-//	memory management.
+/**
+*	Used to store and access all the ModelElement objects
+*	associated (contained) by an AcceleratorModel. Primary
+*	functions are fast keyed access to ModelElements, and
+*	memory management.
+*/
 
 class ElementRepository
 {
 public:
-	//	Used to map the element ID's to ModelElement objects in
-	//	the repository.
 
+	/**
+	*	Used to map the element ID's to ModelElement objects in
+	*	the repository.
+	*/
 	typedef std::set< ModelElement* > ElementSet;
 	typedef ElementSet::iterator iterator;
 	typedef ElementSet::const_iterator const_iterator;
 
 	~ElementRepository ();
 
-	//	Adds the element to the repository. Returns true if
-	//	successful, or false if the element already exists in
-	//	the repository.
+	/**
+	*	Adds the element to the repository. Returns true if
+	*	successful, or false if the element already exists in
+	*	the repository.
+	*	@retval true If successful in adding element to the repository
+	*	@retval false If element in repository already exists
+	*/
 	bool Add (ModelElement* anElement);
 
-	//	Counts the number of elements in the repository with
-	//	identifiers which match id. id takes the form
-	//	"type.name", where type, name or both can be patterns.
+	/**
+	*	Counts the number of elements in the repository with
+	*	identifiers which match id. id takes the form
+	*	"type.name", where type, name or both can be patterns.
+	*/
 	size_t Count (const std::string& id) const;
 
-	//	Finds and returns in elements all ModelElement objects
-	//	whose identifiers match id (see Count() for details of
-	//	id).
+	/**
+	*	Finds and returns in elements all ModelElement objects
+	*	whose identifiers match id (see Count() for details of
+	*	id).
+	*/
 	size_t Find (const std::string& id, std::vector<ModelElement*>& elements);
 
-	//	Returns the number of ModelElement objects in the
-	//	repository.
+	/**
+	*	Returns the number of ModelElement objects in the
+	*	repository.
+	*	@return Number of ModelElement objects in the repository
+	*/
 	size_t Size () const;
 
 	ElementRepository::iterator begin ();

@@ -14,7 +14,7 @@ public:
 	* In some cases that doesn't make sense.
 	*/
 
-	/*
+	/**
 	* Overloaded constructor
 	*/
 	Material() {};
@@ -76,20 +76,20 @@ public:
 	virtual double GetSixtrackdEdx() const;
 	virtual double GetSixtrackNuclearSlope() const;
 
-	/*
+	/**
 	* Verifies that all the material entries exist and make sense.
 	* returns true if the material is good.
 	* returns false if the material is bad.
 	*/
 	virtual bool VerifyMaterial() const;
 
-	/*
+	/**
 	* Is this a compound material?
 	* true for compounds, false for elements
 	*/
 	virtual bool IsMixture() const;
 
-	/*
+	/**
 	* Select a random material for mixtures
 	*/
 	virtual Material* SelectRandomMaterial();
@@ -97,27 +97,27 @@ public:
 protected:
 
 	//selected Sixtrack variable names in quotes
-	//~ size_t AtomicNumber;		//Atomic number (Z) //allow doubles for CompositeMaterials
-	double AtomicNumber;			//Atomic number (Z)
-	double AtomicMass;				//Atomic mass (A)
-	std::string Name;				//Element/compound name
-	std::string Symbol;				//Elemental symbol: what input file will check for
-//	double rho;						//Material Density, g/cm^3
-	double Conductivity;			//electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1 (@ stp)
-	double X0;						//Radiation Length
-	double Density;					//Material density, kg/m^3
-	double ElectronDensity;			//Electron density: calculated from other input data
+	//~ size_t AtomicNumber;		/// Atomic number (Z) -- allow doubles for CompositeMaterials
+	double AtomicNumber;			/// Atomic number (Z)
+	double AtomicMass;				/// Atomic mass (A)
+	std::string Name;				/// Element/compound name
+	std::string Symbol;				/// Elemental symbol: what input file will check for
+//	double rho;						/// Material Density, g/cm^3
+	double Conductivity;			/// electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1 (@ stp)
+	double X0;						/// Radiation Length
+	double Density;					/// Material density, kg/m^3
+	double ElectronDensity;			/// Electron density: calculated from other input data
 //	double ElectronCriticalEnergy;
 	double MeanExcitationEnergy;
 	double PlasmaEnergy;
 
 	//Sixtrack parameters
-	double sigma_pN_total;			//proton nucleus total cross section =sigma_el_pn + sigma_el_pN + sigma_SD_pn + sigma_inel_pN
-	double sigma_pN_elastic;		//proton nucleus elastic cross section
-	double sigma_pN_inelastic;		//proton nucleus inelastic cross section (sigma_inel_pN)
-	double sigma_Rutherford;		//Rutherford scattering cross section (sigma_R)
-	double dEdx;					// "dpodx"
-	double b_N;						//Nuclear slope
+	double sigma_pN_total;			/// proton nucleus total cross section =sigma_el_pn + sigma_el_pN + sigma_SD_pn + sigma_inel_pN
+	double sigma_pN_elastic;		/// proton nucleus elastic cross section
+	double sigma_pN_inelastic;		/// proton nucleus inelastic cross section (sigma_inel_pN)
+	double sigma_Rutherford;		/// Rutherford scattering cross section (sigma_R)
+	double dEdx;					///  "dpodx"
+	double b_N;						/// Nuclear slope
 };
 
 #endif

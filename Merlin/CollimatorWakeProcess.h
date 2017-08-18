@@ -15,13 +15,10 @@
 #include <vector>
 
 #include "merlin_config.h"
-
 #include "CollimatorWakePotentials.h"
-
 #include "ParticleBunch.h"
 #include "ParticleBunchProcess.h"
 #include "WakeFieldProcess.h"
-
 #include "StringPattern.h"
 
 namespace ParticleTracking

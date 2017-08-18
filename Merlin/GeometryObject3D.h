@@ -16,56 +16,82 @@
 #define GeometryObject3D_h 1
 
 #include "merlin_config.h"
-// Transform3D
 #include "Transform3D.h"
 
-//	A mixin class which represents an geometric entity which
-//	can be rotated and translated with respect to some
-//	(implicit) reference frame.
-
+/**
+*	A mixin class which represents an geometric entity which
+*	can be rotated and translated with respect to some
+*	(implicit) reference frame.
+*/
 class GeometryObject3D
 {
 public:
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ~GeometryObject3D ();
 
-	//	Translate the object by the relative vector (dx,dy,dz).
+	/**
+	*	Translate the object by the relative vector (dx,dy,dz).
+	*/
 	void Translate (double dx, double dy, double dz);
 
-	//	Rotates the object about the current x-axis by angle.
+	/**
+	*	Rotates the object about the current x-axis by angle.
+	*/
 	void RotateX (double angle);
 
-	//	Rotates the object about the current y-axis by angle.
+	/**
+	*	Rotates the object about the current y-axis by angle.
+	*/
 	void RotateY (double angle);
 
-	//	Rotates the object about the current z-axis by angle.
+	/**
+	*	Rotates the object about the current z-axis by angle.
+	*/
 	void RotateZ (double angle);
 
-	//	Transform the object (with respect to the current axes)
-	//	by the transformation t.
+	/**
+	*	Transform the object (with respect to the current axes)
+	*	by the transformation t.
+	*/
 	void ApplyTransformation (const Transform3D& t1);
 
-	//	Clear all transformations.
+	/**
+	*	Clear all transformations.
+	*/
 	void ClearTransformation ();
 
-	//	Set the absolute transformation for this object.
+	/**
+	*	Set the absolute transformation for this object.
+	*/
 	void SetTransformation (const Transform3D& t1);
 
-	//	Return the current transformation.
+	/**
+	*	Return the current transformation.
+	*/
 	const Transform3D& GetTransformation () const;
 
-	//	Returns true if this object has been transformed.
+	/**
+	*	Returns true if this object has been transformed.
+	*	@retval true Object has been transformed
+	*	@retval false Object hasn't been transformed
+	*/
 	bool IsTransformed () const;
 
 protected:
 
-	//	Protected constructor taking the initial transformation.
+	/**
+	*	Protected constructor taking the initial transformation.
+	*/
 	explicit GeometryObject3D (const Transform3D& t0 = Transform3D());
 
-	//	Virtual function used to notify derived classes that the
-	//	state of the transformation has changed. Default action
-	//	does nothing.
+	/**
+	*	Virtual function used to notify derived classes that the
+	*	state of the transformation has changed. Default action
+	*	does nothing.
+	*/
 	virtual void HasChanged () const;
 
 private:

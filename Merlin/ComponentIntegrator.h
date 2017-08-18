@@ -44,44 +44,53 @@ public:
 	/**
 	*	Tracks a single step ds through the current component.
 	*  Returns the remaining length.
+	*  @return Remaining length of current component
 	*/
 	virtual double Track (double ds);
 
 	/**
 	*	Returns the component index for this integrator.
+	*	@return Component index for this integrator
 	*/
 	virtual int GetComponentIndex () const = 0;
 
 	/**
 	*	Returns the total integrated length through the current
 	*	component.
+	*	@return Total integrated length through current component
 	*/
 	double GetIntegratedLength () const;
 
 	/**
 	*	Returns the remaining length to integrate.
+	*	@return Length remaining to integrate
 	*/
 	double GetRemainingLength () const;
 
 	/**
 	*	Returns true if the step ds is valid (allowed)
+	*	@retval true If the step ds is valid
+	*	@retval false If the step ds is invalid
 	*/
 	bool IsValidStep (double ds) const;
 
 	/**
 	*  Returns the remaining valid step range for this integrator.
 	*  Default behaviour returns [0,GetRemainingLength()]
+	*  @return Remaining valid step range for the integrator
 	*/
 	virtual FloatRange GetValidStepRange() const;
 
 	/**
 	*	Component boundary checks
 	*  Returns true if GetIntegratedLength()==0
+	*  @retval true If `GetIntegratedLength()==0`
 	*/
 	bool AtEntrance() const;
 
 	/**
 	*  Returns true if step == GetRemainingLength()
+	*  @retval true If `step == GetRemainingLength()`
 	*/
 	bool AtExit(double step=0) const;
 
@@ -90,7 +99,7 @@ protected:
 	friend class ComponentTracker;
 
 	/**
-	*  Sets the current component to track
+	*  Sets the current component to track.
 	*  Can only be called by ComponentTracker via friendship
 	*/
 	virtual void SetCurrentComponent (AcceleratorComponent& aComponent);
@@ -101,14 +110,21 @@ protected:
 	*/
 	virtual void TrackStep(double ds) = 0;
 
-	// functions for applying entrance and exit field maps.
+	/**
+	* Function applies entrance field map
+	*/
 	virtual void TrackEntrance() {};
+
+	/**
+	* Function applies exit field map
+	*/
+
 	virtual void TrackExit() {};
 
 private:
 
-	double cur_S; // current integrated length
-	double tot_S; // total length
+	double cur_S; /// current integrated length
+	double tot_S; /// total length
 
 	/**
 	*  The current component
