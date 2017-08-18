@@ -22,21 +22,13 @@
 #include <string>
 #include "ComponentFrame.h"
 
-// AcceleratorComponent
 #include "AcceleratorComponent.h"
-// ModelElement
 #include "ModelElement.h"
-// ElementRepository
 #include "ElementRepository.h"
-// LatticeFrame
 #include "LatticeFrame.h"
-// StringPattern
 #include "StringPattern.h"
-// ring_iterator
 #include "ring_iterator.h"
-// MerlinException
 #include "MerlinException.h"
-// AcceleratorSupports
 #include "AcceleratorSupport.h"
 
 class ChannelServer;
@@ -52,7 +44,6 @@ using std::vector;
 class AcceleratorModel
 {
 public:
-
 
 	typedef size_t Index;
 

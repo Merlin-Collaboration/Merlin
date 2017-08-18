@@ -17,36 +17,41 @@
 
 #include "merlin_config.h"
 #include <iostream>
-// ReferenceParticle
 #include "ReferenceParticle.h"
-// PSTypes
 #include "PSTypes.h"
-// Space2D
 #include "Space2D.h"
 
 class Transform3D;
 class Histogram;
 
-//	A charged particle bunch. Bunch fields a set of methods
-//	for accessing certain macroscopic quantities of a single
-//	bunch. An object of class Bunch represents an ensemble
-//	of like particle only. Functions for accessing the full
-//	six-dimensional phase space, as well as projection on a
-//	single phase plane are provided. Concrete classes should
-//	implement algorithm specific models of a bunch.
+/**
+*	A charged particle bunch. Bunch fields a set of methods
+*	for accessing certain macroscopic quantities of a single
+*	bunch. An object of class Bunch represents an ensemble
+*	of like particle only. Functions for accessing the full
+*	six-dimensional phase space, as well as projection on a
+*	single phase plane are provided. Concrete classes should
+*	implement algorithm specific models of a bunch.
+*/
 
 class Bunch : public ReferenceParticle
 {
 public:
 
-	//	Constructor taking the initial reference momentum in Ge
-	//	V/c, and the total charge/e of the bunch.
+	/**
+	*	Constructor taking the initial reference momentum in Ge
+	*	V/c, and the total charge/e of the bunch.
+	*/
 	Bunch (double p, double q);
 
-	//	virtual destructor.
+	/**
+	*	virtual destructor.
+	*/
 	virtual ~Bunch ();
 
-	//	Returns the total charge (in units of e).
+	/**
+	*	Returns the total charge (in units of e).
+	*/
 	virtual double GetTotalCharge () const = 0;
 
 	virtual PSmoments& GetMoments (PSmoments& sigma) const = 0;
@@ -59,27 +64,37 @@ public:
 	virtual PSvector& GetCentroid (PSvector& p) const = 0;
 	virtual Point2D GetProjectedCentroid (PScoord u, PScoord v) const = 0;
 
-	//	Set the reference momentum to the mean (centroid)
-	//	momentum of the bunch. Returns the new value in GeV/c.
+	/**
+	*	Set the reference momentum to the mean (centroid)
+	*	momentum of the bunch. Returns the new value in GeV/c.
+	*/
 	virtual double AdjustRefMomentumToMean () = 0;
 
-	//	Set the reference time to the mean (centroid) time of
-	//	the bunch. Returns the new value in ct (meters).
+	/**
+	*	Set the reference time to the mean (centroid) time of
+	*	the bunch. Returns the new value in ct (meters).
+	*/
 	virtual double AdjustRefTimeToMean () = 0;
 
-	//	Output a bunch-model dependent representation to the
-	//	specified stream.
+	/**
+	*	Output a bunch-model dependent representation to the
+	*	specified stream.
+	*/
 	virtual void Output (std::ostream& os) const = 0;
 
-	//	Used to generate a 1-D profile of the bunch projected
-	//	onto the specified coordinate. The total area of the
-	//	historgram is normalised to unity.
+	/**
+	*	Used to generate a 1-D profile of the bunch projected
+	*	onto the specified coordinate. The total area of the
+	*	historgram is normalised to unity.
+	*/
 	virtual Histogram& ProjectDistribution (PScoord axis, Histogram& hist) const = 0;
 
-	//	Apply the specified 3D coordinate transformation to the
-	//	bunch. Returns true if successful (note that it may not
-	//	be possible to apply a general 3D transformation to some
-	//	concrete bunch representations).
+	/**
+	*	Apply the specified 3D coordinate transformation to the
+	*	bunch. Returns true if successful (note that it may not
+	*	be possible to apply a general 3D transformation to some
+	*	concrete bunch representations).
+	*/
 	virtual bool ApplyTransformation (const Transform3D& t) = 0;
 };
 

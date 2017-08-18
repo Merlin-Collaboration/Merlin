@@ -26,6 +26,7 @@ protected:
 	double w_exit,h_exit;
 	double cosalpha;
 	double sinalpha;
+
 //bool errors;
 //double e1,e2,e3,e4,e5,e6;
 //double aperture_error;

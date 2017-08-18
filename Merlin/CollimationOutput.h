@@ -76,13 +76,19 @@ struct LossData
 		return false;
 	}
 
-	// Note that the + operator cannot preserve the particle PSvector p
+	/**
+	* Note that the + operator cannot preserve the particle PSvector p
+	*/
 	LossData operator+(LossData other)
 	{
-		// Create temporary LossData struct to hold final LossData object
+		/**
+		* Create temporary LossData struct to hold final LossData object
+		*/
 		LossData temp;
 
-		// Check that the loss is in the same element
+		/**
+		* Check that the loss is in the same element
+		*/
 		if( ElementName == other.ElementName )
 		{
 			temp.ElementName = ElementName;

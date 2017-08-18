@@ -16,11 +16,12 @@
 #define BzField_h 1
 
 #include "merlin_config.h"
-// EMField
 #include "EMField.h"
 
-//	Represents a constant magnetic field in along the local
-//	z-axis (a solenoidal field.)
+/**
+*	Represents a constant magnetic field in along the local
+*	z-axis (a solenoidal field.)
+*/
 
 class BzField : public EMField
 {
@@ -30,13 +31,19 @@ public:
 
 	double GetStrength () const;
 
-	//	Returns the magnetic field at the point x and time t.
+	/**
+	*	Returns the magnetic field at the point x and time t.
+	*/
 	virtual Vector3D GetBFieldAt (const Point3D& x, double t = 0) const;
 
-	//	Returns the electric field at the point x and time t
+	/**
+	*	Returns the electric field at the point x and time t
+	*/
 	virtual Vector3D GetEFieldAt (const Point3D& x, double t = 0) const;
 
-	//	Sets the strength of the field in Tesla.
+	/**
+	*	Sets the strength of the field in Tesla.
+	*/
 	void SetStrength (double B);
 
 private:

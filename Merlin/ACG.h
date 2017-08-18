@@ -23,28 +23,33 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifdef __GNUG__
 #endif
 
-//
-//	Additive number generator. This method is presented in Volume II
-//	of The Art of Computer Programming by Knuth. I've coded the algorithm
-//	and have added the extensions by Andres Nowatzyk of CMU to randomize
-//	the result of algorithm M a bit	by using an LCG & a spatial
-//	permutation table.
-//
-//	The version presented uses the same constants for the LCG that Andres
-//	uses (chosen by trial & error). The spatial permutation table is
-//	the same size (it's based on word size). This is for 32-bit words.
-//
-//	The ``auxillary table'' used by the LCG table varies in size, and
-//	is chosen to be the the smallest power of two which is larger than
-//	twice the size of the state table.
-//
+/**
+*
+*	Additive number generator. This method is presented in Volume II
+*	of The Art of Computer Programming by Knuth. I've coded the algorithm
+*	and have added the extensions by Andres Nowatzyk of CMU to randomize
+*	the result of algorithm M a bit	by using an LCG & a spatial
+*	permutation table.
+*
+*	The version presented uses the same constants for the LCG that Andres
+*	uses (chosen by trial & error). The spatial permutation table is
+*	the same size (it's based on word size). This is for 32-bit words.
+*
+*	The ``auxillary table'' used by the LCG table varies in size, and
+*	is chosen to be the the smallest power of two which is larger than
+*	twice the size of the state table.
+*
+*/
 
 typedef unsigned int _G_uint32_t;
 
 class ACG : public RNG
 {
 
-	_G_uint32_t initialSeed;	// used to reset generator
+	/**
+	 * Used to reset generator
+	 */
+	_G_uint32_t initialSeed;
 	int initialTableEntry;
 
 	_G_uint32_t *state;
@@ -60,9 +65,10 @@ protected:
 public:
 	ACG(_G_uint32_t seed = 0, int size = 55);
 	virtual ~ACG();
-	//
-	// Return a long-words word of random bits
-	//
+
+	/**
+	* Return a long-words word of random bits
+	*/
 	virtual unsigned int asLong();
 	virtual void reset();
 

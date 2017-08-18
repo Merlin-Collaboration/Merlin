@@ -19,7 +19,9 @@
 
 class Bunch;
 
-//	Abstract factory for constructing a Bunch.
+/**
+*	Abstract factory for constructing a Bunch.
+*/
 
 class BunchConstructor
 {
@@ -27,16 +29,20 @@ public:
 
 	virtual ~BunchConstructor ();
 
-	//	Constructs a (new) bunch in memory. The bunch index is
-	//	supplied for implementations that support multiple
-	//	bunches (i.e. bunch trains).
+	/**
+	*	Constructs a (new) bunch in memory. The bunch index is
+	*	supplied for implementations that support multiple
+	*	bunches (i.e. bunch trains).
+	*/
 	virtual Bunch* ConstructBunch (int bunchIndex = 0) const = 0;
 };
 
-//	Template class to generate a BunchConstructor which
-//	constructs a Bunch of type B. The Construct() method
-//	always returns a copy of the same (stored) bunch. Class
-//	B must provide a copy constructor.
+/**
+*	Template class to generate a BunchConstructor which
+*	constructs a Bunch of type B. The Construct() method
+*	always returns a copy of the same (stored) bunch. Class
+*	B must provide a copy constructor.
+*/
 
 template <class B>
 class StaticBunchCtor : public BunchConstructor
@@ -46,18 +52,24 @@ public:
 
 	~StaticBunchCtor ();
 
-	//	Constructs and returns a copy of the source bunch.
+	/**
+	*	Constructs and returns a copy of the source bunch.
+	*/
 	virtual Bunch* ConstructBunch (int bunchIndex = 0) const;
 
-	//	Sets the source bunch. Set del to true if the bunch is
-	//	to be deleted when the destructor is called.
+	/**
+	*	Sets the source bunch. Set del to true if the bunch is
+	*	to be deleted when the destructor is called.
+	*/
 	void SetSourceBunch (B* bunch0, bool del = false);
 
 private:
 
 	B* sourceBunch;
 
-	//	Set true if the ctor owns the source bunch.
+	/**
+	*	Set true if the ctor owns the source bunch.
+	*/
 	bool owns;
 
 	//Copy protection for bunches

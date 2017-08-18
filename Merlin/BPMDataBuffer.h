@@ -16,29 +16,38 @@
 #define BPMDataBuffer_h 1
 
 #include "merlin_config.h"
-// BPM
 #include "BPM.h"
 
-//	A BPM buffer which stores a single (x,y) pair from a
-//	BPM. The cached data is updated on each call to Record().
-//  A BPMbuffer can contain an additional offset.
+/**
+*	A BPM buffer which stores a single (x,y) pair from a
+*	BPM. The cached data is updated on each call to Record().
+*   A BPMbuffer can contain an additional offset.
+*/
 
 
 class BPMDataBuffer : public BPM::Buffer
 {
 public:
 
-	//	Constructor
+	/**
+	*	Constructor
+	*/
 	BPMDataBuffer ();
 
-	// Record the data to the buffer.
+	/**
+	* Record the data to the buffer.
+	*/
 	virtual void Record (const BPM& aBPM, const BPM::Data& data);
 
-	// Set the ID of the buffer.
+	/**
+	* Set the ID of the buffer.
+	*/
 	void SetID (const string& anID);
 
-	// Set buffer offsets (note: this is a temporary solution
-	// to setting arbitrary offsets to BPMs)
+	/**
+	* Set buffer offsets (note: this is a temporary solution
+	* to setting arbitrary offsets to BPMs)
+	*/
 	void SetOffsets(double x, double y);
 
 private:

@@ -73,46 +73,74 @@ public:
 	void ConfigureCollimators(AcceleratorModel* model);
 //	void SetOneSideTCDQA(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
 
-	//What impact factor do we wish our halo to impact the collimator jaw (in m).
-	//This just enables a sigma value for bunch generation to be calculated
+	/**
+	* What impact factor do we wish our halo to impact the collimator jaw (in m).
+	* This just enables a sigma value for bunch generation to be calculated
+	*/
 	void SelectImpactFactor(string pcoll, double impact);
 
-	//Set the stream for the collimator settings log.
+	/**
+	* Set the stream for the collimator settings log.
+	*/
+
 	void SetLogFile (ostream& os);
 
-	//Enable/disable logging
+	/**
+	* Enable/disable logging
+	*/
 	void EnableLogging(bool);
 
-	//Set the stream for the collimator errors log.
+	/**
+	* Set the stream for the collimator errors log.
+	*/
 	void SetErrorLogFile (ostream& os);
 
-	//Enable/disable logging
+	/**
+	* Enable/disable logging
+	*/
 	void EnableErrorLogging(bool);
 
-	//Do we match the collimator positions at entry AND exit to the beam envelope? (beta function)
+	/**
+	* Do we match the collimator positions at entry AND exit to the beam envelope? (beta function)
+	*/
 	void MatchBeamEnvelope(bool);
 
-	//Enable/disable the collimators to be matched to the reference orbit and crossing angle
+	/**
+	* Enable/disable the collimators to be matched to the reference orbit and crossing angle
+	*/
 	void MatchReferenceOrbit(bool);
 
-	//Enable jaw flatness errors.
+	/**
+	* Enable jaw flatness errors.
+	*/
 	void EnableJawFlattnessErrors(bool);
 
-	//Enable jaw alignment errors.
+	/**
+	* Enable jaw alignment errors.
+	*/
 	void EnableJawAlignmentErrors(bool);
 
-	//Set one side jaw for TCDQA collimator
-	//void EnableOneSideJawTCDQA(bool);
+	// Set one side jaw for TCDQA collimator
+	// void EnableOneSideJawTCDQA(bool);
 
-	//Set jaw position offset sigma.
+	/**
+	* Set jaw position offset sigma.
+	*/
 	void SetJawPositionError(double);
 
-	//Set jaw position angle sigma.
+	/**
+	* Set jaw position angle sigma.
+	*/
 	void SetJawAngleError(double);
 
-	//Vector to store FlukaData
+	/**
+	* Vector to store FlukaData
+	*/
 	vector<FlukaData*> StoredFlukaData;
-	//Function to output FlukaDatabase file
+
+	/**
+	* Function to output FlukaDatabase file
+	*/
 	void OutputFlukaDatabase(std::ostream* os);
 
 protected:

@@ -18,29 +18,41 @@
 #include "merlin_config.h"
 #include "AcceleratorGeometry.h"
 
-//	Base class for accelerator geometry types whose origin
-//	is at the center of the their arc length. Hence their
-//	extent extends from -length/2 to +length/2.
+/**
+*	Base class for accelerator geometry types whose origin
+*	is at the center of the their arc length. Hence their
+*	extent extends from -length/2 to +length/2.
+*/
 
 class CenteredGeometry : public AcceleratorGeometry
 {
 public:
 
-	//	Constructor taking the arc length of the geometry.
+	/**
+	*	Constructor taking the arc length of the geometry.
+	*/
 	explicit CenteredGeometry (double l);
 
-	//	Returns the total arc-length of the geometry.
+	/**
+	*	Returns the total arc-length of the geometry.
+	*/
 	virtual double GetGeometryLength () const;
 
-	//	Returns the local extent of this geometry.
+	/**
+	*	Returns the local extent of this geometry.
+	*/
 	virtual AcceleratorGeometry::Extent GetGeometryExtent () const;
 
 protected:
 
-	//	Used to check if (s1s2) is within the geometry bounds.
+	/**
+	*	Used to check if (s1s2) is within the geometry bounds.
+	*/
 	void CheckBounds (double s1, double s2) const;
 
-	//	Used to check if s1 is within the geometry bounds.
+	/**
+	*	Used to check if s1 is within the geometry bounds.
+	*/
 	void CheckBounds (double s) const;
 
 	double len;

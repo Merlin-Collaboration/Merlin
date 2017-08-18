@@ -20,11 +20,13 @@
 #include <algorithm>
 #include <cassert>
 
-//	Template class for managing active diagnotic buffers.
-//	The template M should be a diagnostic type defining a
-//	type M::Data and a type M::Buffer. M::Buffer should
-//	supply the following method:
-//
+/*
+*	Template class for managing active diagnotic buffers.
+*	The template M should be a diagnostic type defining a
+*	type M::Data and a type M::Buffer. M::Buffer should
+*	supply the following method:
+*/
+
 //	void M::Buffer::Record(const M&, const M::Data&)
 
 template <class M, class B, class D>
@@ -32,23 +34,35 @@ class AMBufferManager
 {
 public:
 
-	//	Add the specified buffer.
+	/*
+	*	Add the specified buffer.
+	*/
 	void AddBuffer (B* buf);
 
-	//	Remove buf from the buffer list, if it exisits. Returns
-	//	true if successful.
+	/*
+	*	Remove buf from the buffer list, if it exisits. Returns
+	*	true if successful.
+	*/
 	bool RemoveBuffer (B* buf);
 
-	//	Remove all buffers (not including the default buffer).
+	/*
+	*	Remove all buffers (not including the default buffer).
+	*/
 	void ClearAllBuffers ();
 
-	//	Sets the default buffer for all diagnostics of type M.
+	/*
+	*	Sets the default buffer for all diagnostics of type M.
+	*/
 	static void SetDefaultBuffer (B* buf);
 
-	//	Sends the data to all the buffers.
+	/*
+	*	Sends the data to all the buffers.
+	*/
 	void SendToBuffers (const M& monitor, const D& data);
 
-	//	Returns true if there are no buffers.
+	/*
+	*	Returns true if there are no buffers.
+	*/
 	bool empty () const;
 
 private:

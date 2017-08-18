@@ -23,9 +23,9 @@
 // ArcGeometry
 #include "ArcGeometry.h"
 
-
-//	A magnetic multipole field referenced to an arc geometry.
-
+/**
+*	A magnetic multipole field referenced to an arc geometry.
+*/
 typedef TAccCompGF< ArcGeometry,MultipoleField > ArcMultipoleField;
 
 #endif

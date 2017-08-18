@@ -17,12 +17,13 @@
 
 #include "merlin_config.h"
 #include <map>
-// BPMDataBuffer
 #include "BPMDataBuffer.h"
 
-//	Singleton instance of a strorage class for BPMChannel
-//	Data objects. BPMChannelData are indexed by their
-//	associated BPM pointer.
+/**
+*	Singleton instance of a strorage class for BPMChannel
+*	Data objects. BPMChannelData are indexed by their
+*	associated BPM pointer.
+*/
 
 class BPMDataBufferServer
 {
