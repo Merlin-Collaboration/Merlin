@@ -21,37 +21,59 @@
 
 class ComponentTracker;
 
-//	A travelling wave transverse deflecting structure.
-
+/**
+*	A travelling wave transverse deflecting structure.
+*/
 class TransverseRFStructure : public RFStructure
 {
 public:
 
-	//	Constructor taking the label for this cavity (id), the
-	//	cavity length (len) in meters, the frequency (f) in MHz,
-	//	and gradient (Epk) in MV/m and the phase (phi) in
-	//	radians.
+	/**
+	*	Constructor taking the label for this cavity (id), the
+	*	cavity length (len) in meters, the frequency (f) in MHz,
+	*	and gradient (Epk) in MV/m and the phase (phi) in
+	*	radians.
+	*/
 	TransverseRFStructure (const string& id, double len, double f, double Epk, double phi=0, double theta=0);
 
-	//  Orientation
+	/**
+	*  Get Field Orientation
+	*/
 	double GetFieldOrientation() const;
+
+	/**
+	*  Set Field Orientation
+	*/
 	void SetFieldOrientation(double);
 
-	//	Returns the type string "TransverseRFStructure".
+	/**
+	*	Returns the type string "TransverseRFStructure".
+	*	@return Type string TransverseRFStructrure
+	*/
 	virtual const string& GetType () const;
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*
+	*	@return Accelerator component class unique index
+	*/
 	virtual int GetIndex () const;
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Rotates the component 180 degrees about its local Y axis.
+	/**
+	*	Rotates the component 180 degrees about its local Y axis.
+	*/
 	virtual void RotateY180 ();
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
 	static const int ID;

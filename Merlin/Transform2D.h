@@ -9,59 +9,75 @@
 #include <cmath>
 #include <iostream>
 
-// Space2D
 #include "Space2D.h"
 #include "utils.h"
 
 using std::ostream;
 using std::istream;
 
-
-//	Represents a simpy X-Y rotoation.
-
-
+/**
+*	Represents a simpy X-Y rotoation.
+*/
 class Rotation2D
 {
 public:
-	//	Constructor taking the rotation angle (in radians).
+	/**
+	*	Constructor taking the rotation angle (in radians).
+	*/
 	explicit Rotation2D (double angle = 0)
 		: cosa(cos(angle)),sina(sin(angle))
 	{
 	}
 
-
-	//	Returns the rotation angle in radian.
+	/**
+	*	Returns the rotation angle in radian.
+	*	@return \f$ \phi \f$ (rad)
+	*/
 	double rotation () const
 	{
 		return atan2(sina,cosa);
 	}
 
-	//	Set the rotation angle.
+	/**
+	*	Set the rotation angle.
+	*/
 	void setRotation (double phi)
 	{
 		cosa=cos(phi);
 		sina=sin(phi);
 	}
 
-	//	Returns sin(rotation).
+	/**
+	*	Returns sin(rotation).
+	*	@return \f$ \sin(\phi) \f$
+	*/
 	double sinphi () const
 	{
 		return sina;
 	}
 
-	//	Returns cos(rotation).
+	/**
+	*	Returns cos(rotation).
+	*	@return \f$ \cos(\phi) \f$
+	*/
 	double cosphi () const
 	{
 		return cosa;
 	}
 
-	//	Returns true if the rotation angle is zero.
+	/**
+	*	Returns true if the rotation angle is zero.
+	*	@retval true If \f$ \phi = 0 \f$
+	*	@retval false
+	*/
 	bool isIdentity () const
 	{
 		return fequal(sina,0.0);
 	}
 
-	//	Premultipliy *this by R.
+	/**
+	*	Premultipliy *this by R.
+	*/
 	const Rotation2D& operator *= (const Rotation2D& R)
 	{
 		const double c = R.cosa*cosa-R.sina*sina;
@@ -71,27 +87,35 @@ public:
 		return *this;
 	}
 
-	//	Rotation multiplication.
+	/**
+	*	Rotation multiplication.
+	*/
 	friend Rotation2D operator * (const Rotation2D& R2, const Rotation2D& R1)
 	{
 		return Rotation2D(R2.cosa*R1.cosa-R2.sina*R1.sina,
 		                  R2.sina*R1.cosa+R2.cosa*R1.sina);
 	}
 
-	//	Return the inverse of *this.
+	/**
+	*	Return the inverse of *this.
+	*/
 	Rotation2D inv () const
 	{
 		return Rotation2D(cosa,-sina);
 	}
 
-	//	Invert (in-place) *this.
+	/**
+	*	Invert (in-place) *this.
+	*/
 	const Rotation2D& invert ()
 	{
 		sina=-sina;
 		return *this;
 	}
 
-	//	Transformation operations.
+	/**
+	*	Transformation operations.
+	*/
 	Point2D operator () (const Point2D& p) const
 	{
 		return Point2D(cosa*p.x-sina*p.y,sina*p.x+cosa*p.y);
@@ -118,7 +142,9 @@ public:
 
 protected:
 private:
-	//	Private constructor.
+	/**
+	*	Private constructor.
+	*/
 	Rotation2D (double c, double s)
 		: cosa(c),sina(s)
 	{
@@ -126,24 +152,30 @@ private:
 
 	// Data Members for Class Attributes
 
-	//	cosine of the rotation angle.
+	/**
+	*	cosine of the rotation angle.
+	*/
 	double cosa;
 
-	//	sin of the rotation angle.
+	/**
+	*	sin of the rotation angle.
+	*/
 	double sina;
 
 private:
 };
 
-//	A special sub-set of a full 3D Euclidean transformation,
-//	which represents a rotation in the Z-plane followed by
-//	an X and Y displacement.
-
-
+/**
+*	A special sub-set of a full 3D Euclidean transformation,
+*	which represents a rotation in the Z-plane followed by
+*	an X and Y displacement.
+*/
 class Transform2D
 {
 public:
-	//	Constructor.
+	/**
+	*	Constructor.
+	*/
 	Transform2D (double dx = 0, double dy = 0, double dphi = 0)
 		: r(dphi), x0(dx,dy)
 	{
@@ -167,21 +199,27 @@ public:
 		return Transform2D(t2.r*t1.r,t2.r(t1.x0)+t2.x0);
 	}
 
-	//	t1*=t2 facilitates pre-multiplication of t1 by t2, i.e.
-	//	t1->t2*t1.
+	/**
+	*	t1*=t2 facilitates pre-multiplication of t1 by t2, i.e.
+	*	t1->t2*t1.
+	*/
 	const Transform2D& operator *= (const Transform2D& t)
 	{
 		return *this = t*(*this);
 	}
 
-	//	Invert the transformation and return the result.
+	/**
+	*	Invert the transformation and return the result.
+	*/
 	Transform2D inv () const
 	{
 		Transform2D ti(*this);
 		return ti.invert();
 	}
 
-	//	Invert (in-place) this transformation.
+	/**
+	*	Invert (in-place) this transformation.
+	*/
 	const Transform2D& invert ()
 	{
 		r.invert();
@@ -189,37 +227,56 @@ public:
 		return *this;
 	}
 
-	//	Returns the (x,y) translation as a Point2D.
+	/**
+	*	Returns the (x,y) translation as a Point2D.
+	*	@return Point2D type translation
+	*/
 	const Point2D& translation () const
 	{
 		return x0;
 	}
 
-	//	Returns the rotation object.
+	/**
+	*	Returns the rotation object.
+	*	@return Rotation object
+	*/
 	const Rotation2D& rotation () const
 	{
 		return r;
 	}
 
-	//	Returns the rotation angle in radian.
+	/**
+	*	Returns the rotation angle in radian.
+	*	@return \f$ \phi \f$
+	*/
 	double rotationAngle () const
 	{
 		return r.rotation();
 	}
 
-	//	Returns sin(rotation).
+	/**
+	*	Returns sin(rotation).
+	*	@return \f$ \sin(\phi) \f$
+	*/
 	double sinphi () const
 	{
 		return r.sinphi();
 	}
 
-	//	Returns cos(rotation).
+	/**
+	*	Returns cos(rotation).
+	*	@return \f$ \cos(\phi) \f$
+	*/
 	double cosphi () const
 	{
 		return r.cosphi();
 	}
 
-	//	Returns true if this transform is the identity.
+	/**
+	*	Returns true if this transform is the identity.
+	*	@retval true If given the transform identity
+	*	@retval false
+	*/
 	bool isIdentity () const
 	{
 		return x0.isZero() && r.isIdentity();

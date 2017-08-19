@@ -20,40 +20,59 @@
 
 class ComponentTracker;
 
-//	A standing wave accelerating structure.
-
+/**
+*	A standing wave accelerating structure.
+*/
 class SWRFStructure : public RFStructure
 {
 public:
-	//	Constructor taking the name of the cavity, the number of
-	//	cells, the frequency (f)  in MHz, and peak electric
-	//	field (E0) in MV/m and the phase.
+	/**
+	*	Constructor taking the name of the cavity, the number of
+	*	cells, the frequency (f)  in MHz, and peak electric
+	*	field (E0) in MV/m and the phase.
+	*/
 	SWRFStructure (const string& id, int ncells, double f, double E0, double phi = 0);
 
-	//	Returns the type string for this component.
+	/**
+	*	Returns the type string for this component.
+	*	@return Component type string
+	*/
 	virtual const string& GetType () const;
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*
+	*	@return Accelerator component class unique index
+	*/
 	virtual int GetIndex () const;
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Rotates the component 180 degrees about its local Y axis.
+	/**
+	*	Rotates the component 180 degrees about its local Y axis.
+	*/
 	virtual void RotateY180 ();
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
-	// Data Members for Class Attributes
-
+	/**
+	* Data Members for Class Attributes
+	*/
 	static const int ID;
 
 protected:
 private:
-	// Private copy constuctor
+	/**
+	* Private copy constuctor
+	*/
 	SWRFStructure (const SWRFStructure&);
 };
 

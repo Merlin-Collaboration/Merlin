@@ -16,55 +16,81 @@
 #define Transformable_h 1
 
 #include "merlin_config.h"
-// Transform3D
 #include "Transform3D.h"
 
-// A mixin class which can be used to add translation and rotation
-// methods to other (derived) classes.
-
+/**
+* A mixin class which can be used to add translation and rotation
+* methods to other (derived) classes.
+*/
 class Transformable
 {
 public:
 
-	// Construction
+	/**
+	* Construction
+	*/
 	Transformable();
 	Transformable(const Transformable& rhs);
 
-	// Destruction
+	/**
+	* Destruction
+	*/
 	virtual ~Transformable();
 
-	//	Returns true if this object has been locally transformed.
+	/**
+	*	Returns true if this object has been locally transformed.
+	*/
 	bool IsTransformed () const;
 
-	// Translate by the vector X
+	/**
+	* Translate by the vector X
+	*/
 	void Translate (const Vector3D& X);
 
-	// Translate by the vector (x,y z)
+	/**
+	* Translate by the vector (x,y z)
+	*/
 	void Translate (double x, double y, double z);
 
-	//	Translates the frame along the current x-axis by dx.
+	/**
+	*	Translates the frame along the current x-axis by dx.
+	*/
 	void TranslateX (double dx);
 
-	//	Translates the frame along the current y-axis by dy.
+	/**
+	*	Translates the frame along the current y-axis by dy.
+	*/
 	void TranslateY (double dy);
 
-	//	Translates the frame along the current z-axis by dz.
+	/**
+	*	Translates the frame along the current z-axis by dz.
+	*/
 	void TranslateZ (double dz);
 
-	//	Rotates the frame about the current x-axis by angle.
+	/**
+	*	Rotates the frame about the current x-axis by angle.
+	*/
 	void RotateX (double angle);
 
-	//	Rotates the frame about the current y-axis by angle.
+	/**
+	*	Rotates the frame about the current y-axis by angle.
+	*/
 	void RotateY (double angle);
 
-	//	Rotates the frame about the current z-axis by angle.
+	/**
+	*	Rotates the frame about the current z-axis by angle.
+	*/
 	void RotateZ (double angle);
 
-	//	Clear the transformation.
+	/**
+	*	Clear the transformation.
+	*/
 	void ClearTransform ();
 
-	// Virtual function to allow derived classes to act on
-	// change of state.
+	/**
+	* Virtual function to allow derived classes to act on
+	* change of state.
+	*/
 	virtual void Invalidate() const
 	{
 		/* do nothing */
@@ -77,10 +103,14 @@ public:
 
 protected:
 
-	//	The local transformation
+	/**
+	*	The local transformation
+	*/
 	Transform3D* local_T;
 
-	// Copy
+	/**
+	* Copy
+	*/
 	Transformable& operator=(const Transformable& rhs)
 	{
 		if(local_T)
@@ -92,7 +122,9 @@ protected:
 	}
 };
 
-// Class Transformable
+/**
+* Class Transformable
+*/
 
 inline Transformable::Transformable ()
 	: local_T(nullptr)

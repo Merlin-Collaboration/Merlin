@@ -32,25 +32,15 @@
 #include "SMPComponentTracker.h"
 
 
-// SectorBend
 #include "SectorBend.h"
-// RectMultipole
 #include "RectMultipole.h"
-// SWRFStructure
 #include "SWRFStructure.h"
-// TWRFStructure
 #include "TWRFStructure.h"
-// Drift
 #include "Drift.h"
-// Marker
 #include "Marker.h"
-// MatrixMaps
 #include "MatrixMaps.h"
-// TransportMatrix
 #include "TransportMatrix.h"
-// Monitor
 #include "Monitor.h"
-// Solenoid
 #include "Solenoid.h"
 
 
@@ -80,8 +70,10 @@ protected:
 	void TrackEntrance();
 	void TrackExit();
 
-	//	Used to apply a linear pole face rotation to the current
-	//	bunch.
+	/**
+	*	Used to apply a linear pole face rotation to the current
+	*	bunch.
+	*/
 	void ApplyPoleFaceRotation (double h, const SectorBend::PoleFace& pf);
 };
 

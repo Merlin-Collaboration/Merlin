@@ -35,21 +35,11 @@
 
 #include "merlin_config.h"
 
-
-// TemplateComponents
 #include "TemplateComponents.h"
-// RectangularGeometry
 #include "RectangularGeometry.h"
-// BzField
 #include "BzField.h"
 
 
-
-
-
-
 typedef TAccCompGF< RectangularGeometry , BzField  > SimpleSolenoid;
-
-
 
 #endif

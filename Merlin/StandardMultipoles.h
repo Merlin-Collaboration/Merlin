@@ -35,46 +35,55 @@
 
 #include "merlin_config.h"
 
-
-// RectMultipole
 #include "RectMultipole.h"
 
 class ComponentTracker;
 
 // type strings for template parameter instantiation
 
-
-//	A standard quadrupole magnet.
-
-
-
-
+/**
+*	A standard quadrupole magnet.
+*/
 class Quadrupole : public RectMultipole
 {
 public:
-	//	Constructor. The primary field component is specified as
-	//	a the quadrupole gradient. Units are Tesla/meter.
+	/**
+	*	Constructor. The primary field component is specified as
+	*	the quadrupole gradient. Units are Tesla/meter.
+	*/
 	Quadrupole (const string& id, double len, double dnB);
 
-	//	Constructor. The primary field component is specified as
-	//	a field B (in Tesla) at a speciific radius r0 (in meter).
+	/**
+	*	Constructor. The primary field component is specified as
+	*	a field B (in Tesla) at a speciific radius r0 (in meter).
+	*/
 	Quadrupole (const string& id, double len, double B, double r0);
 
-
-	//	Initialise aTracker with *this.
+	/**
+	*	Initialise aTracker with *this.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Returns the unique index for a Quadrupole
+	/**
+	*	Returns the unique index for a Quadrupole
+	*	@return Quadrupole unique index
+	*/
 	virtual int GetIndex () const;
 
-	//	Returns the type string "Quadrupole"
+	/**
+	*	Returns the type string "Quadrupole"
+	*	@return Type string "Quadrupole"
+	*/
 	virtual const string& GetType () const;
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
-	// Data Members for Class Attributes
-
+	/**
+	* Data Members for Class Attributes
+	*/
 	static const int ID;
 
 protected:

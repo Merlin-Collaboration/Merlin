@@ -53,11 +53,15 @@ class RangeError {};
 typedef size_t Subscript;
 typedef size_t Dimension;
 
-// class Range
-// A contiguous inclusive range of Subscript values - also unsigned.
+/**
+* class Range
+* A contiguous inclusive range of Subscript values - also unsigned.
+*/
 typedef std::pair<Subscript,Subscript> Range;
 
-// Dimensions of a matrix.
+/**
+* Dimensions of a matrix.
+*/
 struct MatrixDim
 {
 	Dimension n,m;
@@ -82,8 +86,9 @@ inline MatrixDim swap(const MatrixDim& r)
 	return MatrixDim(r.m,r.n);
 }
 
-
-// Helper class for constructing identity matrix
+/**
+* Helper class for constructing identity matrix
+*/
 struct IdentityMatrix
 {
 	Dimension dim;
@@ -137,7 +142,7 @@ inline void in_range(Range r, Dimension n)
 
 // The following typedef is used to put the typedefs into
 // the scope of each class requiring them. Use of a base class
-// (TMTRX_BASE) which is the correct way to do it is prohbited
+// (TMTRX_BASE) which is the correct way to do it is prohibited
 // because of a bug in GCC 3.1
 
 #define VEC_TYPE_DEFS \
@@ -149,7 +154,9 @@ inline void in_range(Range r, Dimension n)
 		typedef const T* const_iterator
 
 
-// TMTRX_BASE class,
+/**
+* TMTRX_BASE class,
+*/
 template<class T>
 class TMTRX_BASE
 {
@@ -159,7 +166,6 @@ public:
 	VEC_TYPE_DEFS;
 };
 
-// class Vector
 template<class T>
 class Vector /*: public TMTRX_BASE<T>*/
 {
@@ -226,8 +232,8 @@ public:
 	}
 
 	// element access
-	// We provice both C-like [] and FORTRAN-like ()
-	// indexing. Indecies start at 0 (C-like).
+	// We provide both C-like [] and FORTRAN-like ()
+	// indexing. Indices start at 0 (C-like).
 	T& operator[](Subscript i)
 	{
 		in_range(i,array.size());
@@ -459,14 +465,16 @@ Vector<T> operator/(const Vector<T>& v, T s)
 	return rv/=s;
 }
 
-// template<class T> SubVector
-// A single (1-dimensional) slice_type (vector)
-// of a Matrix or Vector. SubVector objects have
-// reference semantics to their associated
-// matrix. They cannot be constructed or assigned
-// (except by a Matrix). They are intended as a
-// helper class for accessing rows and columns of
-// Matrices.
+/*
+* template<class T> SubVector
+* A single (1-dimensional) slice_type (vector)
+* of a Matrix or Vector. SubVector objects have
+* reference semantics to their associated
+* matrix. They cannot be constructed or assigned
+* (except by a Matrix). They are intended as a
+* helper class for accessing rows and columns of
+* Matrices.
+*/
 
 template<class T>
 class ConstSubVector /* : public TMTRX_BASE<T> */
@@ -679,14 +687,16 @@ private:
 	friend class Vector<T>;
 };
 
-// template<class T> SubMatrix
-// A contiguous (2-dimensional) block (sub-matrix)
-// of a Matrix. SubMatrix objects have
-// reference semantics to their associated
-// matrix. They cannot be constructed or assigned
-// (except by a Matrix). They are intended as a
-// helper class for accessing sub-sections of
-// Matrices.
+/**
+* template<class T> SubMatrix
+* A contiguous (2-dimensional) block (sub-matrix)
+* of a Matrix. SubMatrix objects have
+* reference semantics to their associated
+* matrix. They cannot be constructed or assigned
+* (except by a Matrix). They are intended as a
+* helper class for accessing sub-sections of
+* Matrices.
+*/
 
 template<class T>
 class ConstSubMatrix /* : public TMTRX_BASE<T> */

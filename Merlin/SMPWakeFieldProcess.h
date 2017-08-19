@@ -26,7 +26,9 @@ class WakePotentials;
 namespace SMPTracking
 {
 
-// Applies single-bunch long. and trans. wakefields to a SliceMacroParticles
+/**
+* Applies single-bunch long. and trans. wakefields to a SliceMacroParticles
+*/
 
 class WakeFieldProcess : public SMPBunchProcess
 {
@@ -73,7 +75,7 @@ private:
 	double bload;
 	bool recalc;
 	bool inc_tw;
-	const double dz; // slice width for binning
+	const double dz; /// slice width for binning
 	WakePotentials* currentWake;
 
 };

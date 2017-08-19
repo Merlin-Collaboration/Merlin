@@ -35,46 +35,57 @@
 
 #include "merlin_config.h"
 
-
-// SimpleSolenoid
 #include "SimpleSolenoid.h"
 
-
-//	A simple solenoid with field Bz.
-
-
-
+/**
+*	A simple solenoid with field Bz.
+*/
 class Solenoid : public SimpleSolenoid
 {
 public:
 	Solenoid (const std::string& id, double len, double Bz);
 
-
-	//	Returns the value of the field in Tesla.
+	/**
+	*	Returns the value of the field in Tesla.
+	*/
 	double GetBz () const;
 
-	//	Sets the value of the field in Tesla.
+	/**
+	*	Sets the value of the field in Tesla.
+	*/
 	void SetBz (double B);
 
-	//	Rotates the component 180 degrees about its local Y axis.
+	/**
+	*	Rotates the component 180 degrees about its local Y axis.
+	*/
 	virtual void RotateY180 ();
 
-	//	Return the type string for the element.
+	/**
+	*	Return the type string for the element.
+	*/
 	virtual const string& GetType () const;
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*/
 	virtual int GetIndex () const;
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	// The followind field access function added for
-	// compatability with other magnets
+	/**
+	* The following field access function added for
+	* compatibility with other magnets
+	*/
 	void SetFieldStrength(double b)
 	{
 		SetBz(b);
@@ -84,7 +95,9 @@ public:
 		return GetBz();
 	}
 
-	// Data Members for Class Attributes
+	/**
+	* Data Members for Class Attributes
+	*/
 
 	static const int ID;
 
@@ -93,9 +106,9 @@ private:
 private:
 };
 
-// Class Solenoid
-
-
+/**
+* Class Solenoid
+*/
 inline double Solenoid::GetBz () const
 {
 	return GetField().GetStrength();

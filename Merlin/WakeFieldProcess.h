@@ -19,13 +19,12 @@
 //#include <ctime>
 #include <time.h>
 #endif
+
 #include <vector>
 #include <typeinfo>
 
 #include "WakePotentials.h"
-
 #include "ParticleBunchProcess.h"
-
 #include "StringPattern.h"
 
 class WakePotentials;

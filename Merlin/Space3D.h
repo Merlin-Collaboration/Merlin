@@ -11,27 +11,33 @@
 #include "VectorTags.h"
 #include "utils.h"
 
-
-
-//	Template class for generating arithmetic three vectors
-//	(Euclidean) of the form (x,y,z). The template parameters
-//	are the type of data storage (double, float etc.) and an
-//	additional tag value. The tag class acts as a type-safe
-//	mechanism for distinguising different types of three
-//	vector (see Point3D and Vector3D).
+/**
+*	Template class for generating arithmetic three vectors
+*	(Euclidean) of the form (x,y,z). The template parameters
+*	are the type of data storage (double, float etc.) and an
+*	additional tag value. The tag class acts as a type-safe
+*	mechanism for distinguising different types of three
+*	vector (see Point3D and Vector3D).
+*/
 
 
 template <class T, class tag>
 class TVec3D
 {
 public:
-	//	Default constructor. Data is not initialised.
+	/**
+	*	Default constructor. Data is not initialised.
+	*/
 	TVec3D ();
 
-	//	Copy constructor.
+	/**
+	*	Copy constructor.
+	*/
 	TVec3D (const TVec3D<T,tag>& v);
 
-	//	Explicit constructor from the three vector components.
+	/**
+	*	Explicit constructor from the three vector components.
+	*/
 	TVec3D (const T& x1, const T& y1, const T& z1);
 
 	bool operator==(const TVec3D< T,tag > &right) const;
@@ -39,10 +45,14 @@ public:
 	bool operator!=(const TVec3D< T,tag > &right) const;
 
 
-	//	Copy assignment
+	/**
+	*	Copy assignment
+	*/
 	const TVec3D<T,tag>& operator = (const TVec3D<T,tag>& v);
 
-	//	Arithmetic assignment.
+	/**
+	*	Arithmetic assignment.
+	*/
 	const TVec3D<T,tag>& operator += (const TVec3D<T,tag>& v);
 
 	const TVec3D<T,tag>& operator -= (const TVec3D<T,tag>& v);
@@ -55,10 +65,16 @@ public:
 
 	TVec3D operator - (const TVec3D<T,tag>& v) const;
 
-	//	Dot (inner) product.
+	/**
+	*	Dot (inner) product.
+	*/
 	T dot (const TVec3D<T,tag>& v) const;
 
-	//	Return true if all components are zero.
+	/**
+	*	Return true if all components are zero.
+	*	@retval true If all components are zero
+	*	@retval false
+	*/
 	bool isZero () const;
 
 	TVec3D operator + (const TVec3D<T,tag>& v) const;
@@ -80,18 +96,19 @@ private:
 private:
 };
 
-//	A 3-d vector (x,y,z).
-
-
+/**
+*	A 3-d vector (x,y,z).
+*/
 typedef TVec3D< double,VectorTag > Vector3D;
 
-//	A (x,y,z) point.
-
-
+/**
+*	A (x,y,z) point.
+*/
 typedef TVec3D< double,PointTag > Point3D;
 
-// Parameterized Class TVec3D
-
+/**
+* Parameterized Class TVec3D
+*/
 template <class T, class tag>
 inline TVec3D<T,tag>::TVec3D ()
 {

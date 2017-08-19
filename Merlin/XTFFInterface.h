@@ -25,27 +25,34 @@
 
 class AcceleratorModelConstructor;
 
-//  class XTFFInterface
-//  Class used to construct a MERLIN model from a MAD TWISS TAPE
-//  output listing. XTFF (eXtended Tape File Format) contains
-//  SLAC extentions for cavities and acceleration.
-
+/**
+*  class XTFFInterface
+*  Class used to construct a MERLIN model from a MAD TWISS TAPE
+*  output listing. XTFF (eXtended Tape File Format) contains
+*  SLAC extensions for cavities and acceleration.
+*/
 class XTFFInterface
 {
 public:
 
-	// Constructer taking the name of the .xtff file, the total bunch
-	// charge (particle per bunch) and an option log file. When a non-zero
-	// bunch charge is specified, the constructor uses the ELOSS information
-	// for the cavities to calculate the reference (matched) energy for the
-	// magnet strengths.
+	/**
+	* Constructor taking the name of the .xtff file, the total bunch
+	* charge (particle per bunch) and an option log file. When a non-zero
+	* bunch charge is specified, the constructor uses the ELOSS information
+	* for the cavities to calculate the reference (matched) energy for the
+	* magnet strengths.
+	*/
 	XTFFInterface(const std::string& fname, double nb=0, ostream* log=nullptr);
 
-	// This version should be used when multiple files are to be parsed
-	// using AppendModel().
+	/**
+	* This version should be used when multiple files are to be parsed
+	* using AppendModel().
+	*/
 	XTFFInterface(double nb=0, ostream* log=nullptr);
 
-	// Destructor
+	/**
+	* Destructor
+	*/
 	~XTFFInterface();
 
 	pair<AcceleratorModel*,BeamData*> Parse();
@@ -55,22 +62,30 @@ public:
 	void AppendModel(const std::string& fname);
 	pair<AcceleratorModel*,BeamData*> GetModel();
 
-	// Construct apertures if flag is true (default)
+	/**
+	* Construct apertures if flag is true (default)
+	*/
 	void IncludeApertures(bool flag)
 	{
 		incApertures = flag;
 	}
 
-	// Treat MAD type as DRIFT
+	/**
+	* Treat MAD type as DRIFT
+	*/
 	void TreatTypeAsDrift(const string&);
 
-	// Construct girders
+	/**
+	* Construct girders
+	*/
 	void ConstructGirders(bool flg)
 	{
 		girders = flg;
 	}
 
-	// data structure for XTFF data
+	/**
+	* data structure for XTFF data
+	*/
 	struct XTFF_Data;
 
 private:
@@ -88,7 +103,9 @@ private:
 	ostream* logos;
 	bool incApertures;
 
-	// used for girder construction
+	/**
+	* used for girder construction
+	*/
 	bool girders;
 	std::stack<std::string> frameStack;
 	void ConstructNewFrame(const std::string&);

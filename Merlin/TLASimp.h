@@ -25,27 +25,32 @@ namespace TLAS
 {
 // Class Declarations
 
-// LUMatrix
-// Represents a LU-decomposition of a square matrix. An LUMatrix object
-// can be used to "solve" a system of linear equations with many RHS vectors.
-
+/**
+* LUMatrix
+* Represents a LU-decomposition of a square matrix. An LUMatrix object
+* can be used to "solve" a system of linear equations with many RHS vectors.
+*/
 template<class T>
 class LUMatrix
 {
 public:
 
-	// Construction from an arbitrary (square) matrix.
-	// Throws DimensionError() if the matrix is not square, or
-	// SingularMatrix() if the matrix is singular.
+	/**
+	* Construction from an arbitrary (square) matrix.
+	* Throws DimensionError() if the matrix is not square, or
+	* SingularMatrix() if the matrix is singular.
+	*/
 	explicit LUMatrix(const Matrix<T>& M)
 		: lud(M),indecies(),d(1)
 	{
 		ludcmp(lud,indecies,d);
 	}
 
-	// Solve the RHS vector using this LU-decomposition.
-	// Note that rhs is over-written with the result.
-	// Returns rhs.
+	/**
+	* Solve the RHS vector using this LU-decomposition.
+	* Note that rhs is over-written with the result.
+	* Returns rhs.
+	*/
 	Vector<T>& operator()(Vector<T>& rhs) const
 	{
 		return lubksb(lud,indecies,rhs);
@@ -55,7 +60,9 @@ public:
 		return lubksb(lud,indecies,rhs);
 	}
 
-	// These functions are provided for acting on const. rhs vectors.
+	/**
+	* These functions are provided for acting on const. rhs vectors.
+	*/
 	Vector<T> operator()(const Vector<T>& rhs) const
 	{
 		Vector<T> v(rhs);
@@ -72,7 +79,9 @@ public:
 		return operator()(v);
 	}
 
-	// Return the determinant of the original matrix
+	/**
+	* Return the determinant of the original matrix
+	*/
 	T det() const
 	{
 		double dt=d;
@@ -89,24 +98,30 @@ private:
 	T d;
 };
 
-// SVDMatrix
-// Represents a Singular-Value Decomposition of a matrix. As with LUMatrix, an
-// SVDMatrix object can be used to solve a system of linear equations with many
-// RHS vectors.
+/**
+* SVDMatrix
+* Represents a Singular-Value Decomposition of a matrix. As with LUMatrix, an
+* SVDMatrix object can be used to solve a system of linear equations with many
+* RHS vectors.
+*/
 
 template<class T>
 class SVDMatrix
 {
 public:
 
-	// Construction from an arbitrary matrix. If M.nrows()<M.ncols(), then M is first
-	// made square by the addition of M.ncols()-M.nrows() zero rows. threshold specifies
-	// the relative (to the largest singular value) threshold value below which the
-	// singular values are set to zero.
+	/**
+	* Construction from an arbitrary matrix. If M.nrows()<M.ncols(), then M is first
+	* made square by the addition of M.ncols()-M.nrows() zero rows. threshold specifies
+	* the relative (to the largest singular value) threshold value below which the
+	* singular values are set to zero.
+	*/
 	explicit SVDMatrix(const Matrix<T>& M, T threshold = T(1e-06));
 	SVDMatrix(const Matrix<T>& M, const Vector<T>& wts, T threshold = T(1e-06));
 
-	// Solve the RHS vector using this SVD.
+	/**
+	* Solve the RHS vector using this SVD.
+	*/
 	Vector<T> operator()(const Vector<T>& rhs) const
 	{
 		Vector<T> x(w.size());
@@ -133,7 +148,9 @@ public:
 		return wflgs;
 	}
 
-	// Decomposed matrices
+	/**
+	* Decomposed matrices
+	*/
 	const Matrix<T>& U() const
 	{
 		return u;

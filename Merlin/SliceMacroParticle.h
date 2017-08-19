@@ -32,7 +32,9 @@ public:
 	explicit SliceMacroParticle(double q=0);
 	SliceMacroParticle(const PSmoments& sigma, double ct, double dp, double q);
 
-	// Macroparticle charge
+	/**
+	* Macroparticle charge
+	*/
 	double Q() const
 	{
 		return q;
