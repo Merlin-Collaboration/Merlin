@@ -323,7 +323,7 @@ void ppElasticScatter::IntegrateDsigDt()
 	}
 
 	/*
-	* In our normalized distribtion, 0 sigma = t_min
+	* In our normalized distribution, 0 sigma = t_min
 	* 1 sigma = t_max
 	* Thus the first entry should be t_min
 	*/
@@ -359,7 +359,7 @@ void ppElasticScatter::IntegrateDsigDt()
 	}
 
 	/*
-	* In our normalized distribtion, 0 sigma = t_min
+	* In our normalized distribution, 0 sigma = t_min
 	* 1 sigma = t_max
 	* Thus the last entry should be t_max
 	*/

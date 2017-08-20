@@ -122,7 +122,7 @@ public:
 		while(f.get()!='}') ;
 		// cout<<" Table read OK "<<endl;
 
-		if((Gamma==0) && (xi==0))   // In principle the inerpolation should
+		if((Gamma==0) && (xi==0))   // In principle the interpolation should
 		{
 			// handle this but it seems cleaner this way
 			for(int i=0; i<ncoeff; i++)

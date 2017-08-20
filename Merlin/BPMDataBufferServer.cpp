@@ -12,7 +12,6 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// BPMDataBufferServer
 #include "BPMDataBufferServer.h"
 
 BPMDataBuffer* BPMDataBufferServer::GetDataBuffer (BPM* bpm, bool create)

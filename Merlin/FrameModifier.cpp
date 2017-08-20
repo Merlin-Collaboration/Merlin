@@ -12,7 +12,6 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// FrameModifier
 #include "FrameModifier.h"
 
 FrameModifier::FrameModifier (LatticeFrame* frame, const std::string& label)

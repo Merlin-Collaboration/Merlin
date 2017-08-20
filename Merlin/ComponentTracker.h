@@ -21,7 +21,7 @@
 #include <map>
 
 /**
-*  class ComponentTracker
+*   \class ComponentTracker
 *
 *	ComponentTracker provides the primary interface for tracking
 *	operations through a series of AcceleratorComponents. An object of
@@ -130,7 +130,7 @@ public:
 
 		/**
 		* Adds the specified integrator. Returns true
-		* if the the integrator replaces an existing one,
+		* if the integrator replaces an existing one,
 		* otherwise false.
 		*/
 		bool Add (ComponentIntegrator* intg);

@@ -76,7 +76,7 @@ public:
 
 	double ConfigureCollimators(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
 	void ConfigureCollimators(AcceleratorModel* model);
-//	void SetOneSideTCDQA(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss);
+//	void SetOneSideTCDQA(AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* TWISS);
 
 	/**
 	* What impact factor do we wish our halo to impact the collimator jaw (in m).

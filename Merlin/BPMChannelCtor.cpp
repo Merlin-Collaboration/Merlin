@@ -13,11 +13,8 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-// BPM
 #include "BPM.h"
-// BPMChannelCtor
 #include "BPMChannelCtor.h"
-// BPMChannel
 #include "BPMChannel.h"
 
 BPMDataBufferServer BPMChannelCtor::theServer;

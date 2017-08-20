@@ -18,7 +18,8 @@ std::string GetCPUName();
 
 /**
 * NUMA features (Non Uniform Memory Access)
-* See "man numa" on linux for details
+*
+* @see `man numa` on linux for details
 */
 #ifdef LIBNUMA
 bool CheckNUMA();

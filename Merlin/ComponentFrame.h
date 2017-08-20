@@ -74,12 +74,13 @@ public:
 	/**
 	*	Return the name of the element. Returns the name of the
 	*	AcceleratorComponent if the label for this frame has not
-	*	been explicitely set.
+	*	been explicitly set.
 	*/
 	virtual const string& GetName () const;
 
 	/**
 	*	Returns the type of the referenced AcceleratorComponent.
+	*	@return Referenced AcceleratorComponent type
 	*/
 	virtual const string& GetType () const;
 

@@ -85,7 +85,7 @@ public:
 	/**
 	*	Used to generate a 1-D profile of the bunch projected
 	*	onto the specified coordinate. The total area of the
-	*	historgram is normalised to unity.
+	*	histogram is normalised to unity.
 	*/
 	virtual Histogram& ProjectDistribution (PScoord axis, Histogram& hist) const = 0;
 

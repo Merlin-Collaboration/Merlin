@@ -30,7 +30,7 @@ namespace ParticleTracking
 /**
 * A Physics Process based on Andrea Santamaria Garcia's simple crab kick model,
 * and allowing for a voltage or phase failure. Note that in order to use
-* process this we must inject a gaussian bunch immediately before a set of
+* process this we must inject a Gaussian bunch immediately before a set of
 * upstream CCs. We assume that both sets of CCs are in use (horizontal @ CMS,
 * and vertical @ ATLAS), and have been placed in the TFS table as CRABMARKER
 * elements. Currently the phase advances calculated in MADX are used as MERLIN
@@ -80,7 +80,7 @@ public:
 	// Returns the M12 and M22 transfer matrix elements between two points
 	//~ virtual pair<double,double> CalcM_12_22( bool horizontal, int element2, int element1 = 0);
 
-	//Return M12 or M22 of twiss matrix
+	//Return M12 or M22 of TWISS matrix
 	//for voltage the phase advance is between CC and IP, for x/y kicks it is between the start and end of the CC
 	virtual double CalcM_12(int start, int end, double deltamu, bool horizontal);
 	virtual double CalcM_22(int start, int end, double deltamu, bool horizontal);

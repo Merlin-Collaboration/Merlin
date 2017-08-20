@@ -44,7 +44,7 @@ private:
 };
 
 /**
-* the resistive wake potentials  (in MKS ssytem)
+* the resistive wake potentials  (in MKS system)
 */
 class ResistiveWakePotentials: public CollimatorWakePotentials
 {

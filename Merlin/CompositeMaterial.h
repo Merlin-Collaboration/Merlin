@@ -128,7 +128,7 @@ public:
 	virtual bool IsMixture() const;
 
 	/**
-	* Return list of constitutent element symbols as strings
+	* Return list of constituent element symbols as strings
 	*/
 	vector< pair<string,double> > GetConstituentElements();
 

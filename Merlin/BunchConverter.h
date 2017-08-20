@@ -4,7 +4,7 @@
 #include "ParticleBunch.h"
 #include "SMPBunch.h"
 
-/**
+/*
 * Conversion functions between SMPBunch and ParticleBunch
 */
 

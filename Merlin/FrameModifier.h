@@ -16,15 +16,14 @@
 #define FrameModifier_h 1
 
 #include "merlin_config.h"
-// LatticeFrame
 #include "LatticeFrame.h"
 
 /**
 *	A utility class which adds an additional layer to the
-*	frame hierachy, and thus another level of coordinate
+*	frame hierarchy, and thus another level of coordinate
 *	transformations. FrameModifier effectively "wraps" a
 *	single LatticeFrame object. It can insert and remove
-*	itself in the lattice frame hierachy.
+*	itself in the lattice frame hierarchy.
 */
 class FrameModifier : public LatticeFrame
 {

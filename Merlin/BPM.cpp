@@ -13,13 +13,9 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include "merlin_config.h"
-// Bunch
 #include "Bunch.h"
-// BPM
 #include "BPM.h"
-// ComponentTracker
 #include "ComponentTracker.h"
-// RandomNG
 #include "RandomNG.h"
 
 #include "utils.h"

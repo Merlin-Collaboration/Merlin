@@ -37,7 +37,7 @@ public:
 	GeneralRotation (const GeneralRotation& gr);
 
 	/**
-	*	Contruction from a rotation matrix
+	*	Construction from a rotation matrix
 	*/
 	explicit GeneralRotation (const RealMatrix& r);
 

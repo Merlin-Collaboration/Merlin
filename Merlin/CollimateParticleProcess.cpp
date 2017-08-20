@@ -114,7 +114,7 @@ void CollimateParticleProcess::SetCurrentComponent (AcceleratorComponent& compon
 
 		if(!is_collimator)
 		{
-			// not a collimatorso set up for normal hard-edge collimation
+			// not a collimator, so set up for normal hard-edge collimation
 			at_entr = (COLL_AT_ENTRANCE & cmode)!=0;
 			at_cent = (COLL_AT_CENTER & cmode)!=0;
 			at_exit = (COLL_AT_EXIT & cmode)!=0;
@@ -208,7 +208,7 @@ void CollimateParticleProcess::SetLossThreshold (double losspc)
 
 void CollimateParticleProcess::DoCollimation ()
 {
-	//The apture of this element
+	//The aperture of this element
 	const Aperture *ap = currentComponent->GetAperture();
 
 	// If there are no losses there is no need to go through the expensive
@@ -395,7 +395,7 @@ void CollimateParticleProcess::DoCollimation ()
 
 					if(!ap->PointInside((*p).x(),(*p).y(),IntegratedLength ))
 					{
-						//if not, delete the particle, and add the coordintes to the lost bunch list (PSvectorArray lost)
+						//if not, delete the particle, and add the coordinates to the lost bunch list (PSvectorArray lost)
 
 						//Also set p.ct() as the length along the element!
 						(*p).ct() += IntegratedLength;
@@ -460,7 +460,7 @@ void CollimateParticleProcess::DoCollimation ()
 			//and the "lost particle bunch"
 			delete LostBunch;
 		}
-		//if the element has zero length nothing needs to be done since all the losses will have occured at the same point anyway.
+		//if the element has zero length nothing needs to be done since all the losses will have occurred at the same point anyway.
 		//So PSvectorArray loss will contain the correct information
 	}
 
@@ -546,7 +546,7 @@ void CollimateParticleProcess::DoOutput (const PSvectorArray& lostb, const list<
 				//The element length may not be an exact multiple of the bin size, so we must take this into account.
 				if ((length/(double)n) != 0.0)
 				{
-					//Add an aditional bin
+					//Add an additional bin
 					n++;
 					overflow = true;
 				}

@@ -13,9 +13,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-// BPMDataBuffer
 #include "BPMDataBuffer.h"
-// BPMChannel
 #include "BPMChannel.h"
 
 BPMChannel::BPMChannel (char XorY, BPMDataBuffer* dataBuff)

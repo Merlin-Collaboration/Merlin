@@ -54,7 +54,7 @@ double TaperedCollimatorPotentials::Wtrans(double z, int m) const
 }
 
 /**
-* the resistive wake potentials  (in MKS ssytem)
+* the resistive wake potentials  (in MKS system)
 */
 ResistiveWakePotentials::ResistiveWakePotentials(int m, double r, double s, double l)
 	: CollimatorWakePotentials(m), rad(r), sigma(s), length(l)

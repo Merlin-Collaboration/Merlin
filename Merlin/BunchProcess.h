@@ -67,7 +67,7 @@ public:
 	*	Sets the current accelerator component. This function
 	*	should be called just before tracking of the component
 	*	begins. Concrete processes should override this function
-	*	to perform component and preocess dependent
+	*	to perform component and process dependent
 	*	initialisation.
 	*/
 	virtual void SetCurrentComponent (AcceleratorComponent& component)

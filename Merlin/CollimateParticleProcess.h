@@ -115,7 +115,7 @@ public:
 	* particle are then maintained, and output during any
 	* particle output operation (as the first column). The
 	* indexing allows particles to be traced back to the
-	* original cooridinates.
+	* original coordinates.
 	*/
 	void IndexParticles (bool index);
 	void IndexParticles (std::list<size_t>& anIndex);

@@ -8,7 +8,7 @@
 
 /**********************************************************************
 *
-*	A collimtor jaw, aligned to the beam orbit and beta function changes
+*	A collimator jaw, aligned to the beam orbit and beta function changes
 * 	This does NOT have jaw flatness errors
 *
 **********************************************************************/
@@ -68,7 +68,7 @@ public:
 
 /**********************************************************************
 *
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
 *
 **********************************************************************/
@@ -89,7 +89,7 @@ public:
 };
 
 /**
-*	A collimtor jaw, aligned to the beam orbit and beta function changes
+*	A collimator jaw, aligned to the beam orbit and beta function changes
 * 	This has jaw flatness errors
 */
 
@@ -100,7 +100,7 @@ class CollimatorApertureWithErrors: public CollimatorAperture
 };
 
 /**
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This has jaw flatness errors
 */
 
@@ -112,7 +112,7 @@ class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 
 
 /**
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
 */
 

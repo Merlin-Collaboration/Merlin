@@ -51,7 +51,7 @@ public:
 	virtual ModelElement* Copy () const;
 
 	/**
-	*  Get the uniques beamline index for this frame
+	*  Get the unique beamline index for this frame
 	*/
 	size_t GetBeamlineIndex() const;
 	void AppendBeamlineIndecies(std::vector<size_t>&) const;

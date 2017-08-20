@@ -14,13 +14,9 @@
 
 #include <cassert>
 #include "MerlinIO.h"
-// Channels
 #include "Channels.h"
-// ModelElement
 #include "ModelElement.h"
-// StringPattern
 #include "StringPattern.h"
-// ChannelServer
 #include "ChannelServer.h"
 
 namespace
@@ -246,7 +242,7 @@ void ChannelServer::RegisterCtor (ChannelCtor* chctor)
 	pair<CtorTable::iterator,bool> rv = chCtors.insert(
 	                                        CtorTable::value_type(chctor->GetID(),chctor));
 	assert(rv.second); // Check that ConstructChannelServer does not make duplicates
-	(void) rv.second; // assert not needed in release mode. avoid warning
+	(void) rv.second; // assert not needed in release mode, avoid warning
 }
 
 void ChannelServer::SetRepository (ElementRepository* me_repo)

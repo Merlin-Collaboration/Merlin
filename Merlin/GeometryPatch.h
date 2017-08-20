@@ -27,7 +27,7 @@
 * transformation of the accelerator geometry.
 * GeometryPatch objects have zero extents.
 *
-* Note: this class was developed primarilly to
+* Note: this class was developed primarily to
 *       support MAD-like SROT elements.
 */
 

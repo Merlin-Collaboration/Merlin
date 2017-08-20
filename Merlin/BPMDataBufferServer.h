@@ -20,7 +20,7 @@
 #include "BPMDataBuffer.h"
 
 /**
-*	Singleton instance of a strorage class for BPMChannel
+*	Singleton instance of a storage class for BPMChannel
 *	Data objects. BPMChannelData are indexed by their
 *	associated BPM pointer.
 */
