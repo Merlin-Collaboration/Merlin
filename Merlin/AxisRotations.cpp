@@ -14,9 +14,7 @@
 
 #include "IdentityRotation.h"
 #include "RotationMatrix.h"
-// GeneralRotation
 #include "GeneralRotation.h"
-// AxisRotations
 #include "AxisRotations.h"
 
 double PureAxisRotation::angle () const
@@ -104,7 +102,6 @@ RealMatrix& RotationX::getMatrix (RealMatrix& m) const
 }
 
 // Class RotationY
-
 
 Rot3Drep* RotationY::inv () const
 {

@@ -18,7 +18,6 @@
 #include "merlin_config.h"
 #include <utility>
 
-// Transform3D
 #include "Transform3D.h"
 
 /**
@@ -36,7 +35,7 @@
 * local x- and y-axes are also uniquely determined by the
 * sum of any rotations applied going from the origin to s.
 *
-* The primary responsibilty for an AcceleratorGeometry
+* The primary responsibility for an AcceleratorGeometry
 * object is to supply transformations between coordinate
 * frames defined on that geometry.
 */
@@ -69,8 +68,8 @@ public:
 	* frame at s0 to the frame at s. s and s0 are in the
 	* geometry's s-frame, and must be within the geometry
 	* extents.
-	* @param[in] s0 The location at which the transform should be evalutated from.
-	* @param[in] s The location at which the transform should be evalutated to.
+	* @param[in] s0 The location at which the transform should be evaluated from.
+	* @param[in] s The location at which the transform should be evaluated to.
 	* @exception Throws a BeyondExtent exception if the requested s values are outside the geometry extent.
 	* @return The 3D transformation from the entrance to the exit of this geometry.
 	*/
@@ -80,7 +79,7 @@ public:
 	* Return the three-dimensional transformation from the
 	* local origin to the frame at s. s is in the geometry's
 	* s-frame, and must be within the geometry extents.
-	* @param[in] s The location at which the transform should be evalutated to.
+	* @param[in] s The location at which the transform should be evaluated to.
 	* @exception Throws a BeyondExtent exception if the requested s value is outside the geometry extent.
 	* @return The 3D transformation from the entrance to the exit of this geometry.
 	*/
@@ -90,7 +89,7 @@ public:
 	* Returns the transformation from the geometry origin to
 	* the specified boundary plane.
 	* @param[in] p The chosen BoundaryPlane
-	* @return The 3D transformation from the geometry origin to a specified boundary plane (extrance or exit).
+	* @return The 3D transformation from the geometry origin to a specified boundary plane (entrance or exit).
 	*/
 	virtual Transform3D GetGeometryTransform(BoundaryPlane p) const = 0;
 

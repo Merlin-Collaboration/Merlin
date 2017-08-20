@@ -21,7 +21,7 @@
 #include <cassert>
 
 /*
-*	Template class for managing active diagnotic buffers.
+*	Template class for managing active diagnostic buffers.
 *	The template M should be a diagnostic type defining a
 *	type M::Data and a type M::Buffer. M::Buffer should
 *	supply the following method:
@@ -40,7 +40,7 @@ public:
 	void AddBuffer (B* buf);
 
 	/*
-	*	Remove buf from the buffer list, if it exisits. Returns
+	*	Remove buf from the buffer list, if it exists. Returns
 	*	true if successful.
 	*/
 	bool RemoveBuffer (B* buf);

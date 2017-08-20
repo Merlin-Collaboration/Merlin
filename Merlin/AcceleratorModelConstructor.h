@@ -25,7 +25,7 @@ class SequenceFrame;
 
 /**
 *	Responsible for constructing an AcceleratorModel object.
-*	The nested frame hierachy is constructed internally
+*	The nested frame hierarchy is constructed internally
 *	using a frame stack: each call to NewFrame(aFrame)
 *	pushes the current frame onto the stack, and makes the
 *	new frame the current frame. A subsequent call to End
@@ -90,7 +90,7 @@ public:
 
 	/*
 	* Append an entire SequenceFrame (or derivative) to the current model.
-	* This function allows complex structures (eg. girders) which have
+	* This function allows complex structures (e.g. girders) which have
 	* been externally constructed to placed in the current model
 	*/
 	void AppendFrame(SequenceFrame* aFrame);
@@ -125,7 +125,7 @@ public:
 	void AddModelElement (ModelElement* element);
 
 	/**
-	*	Prints a table to os  containing statistics on the type
+	*	Prints a table to os containing statistics on the type
 	*	and number of ModelElement current contained in the
 	*	model.
 	*/

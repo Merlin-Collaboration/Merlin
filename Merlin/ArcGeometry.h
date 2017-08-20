@@ -24,8 +24,18 @@
 *	defines a curve towards negative x. Transformations
 *	between two points (s1,s2) on an ArcGeometry are
 *	specified by a translation in the x-z plane of
-*	[(cos(phi)-1)/h, 0, sin(phi)/h], and a rotation about
-*	the y-axis of -phi (phi = h*(s2-s1)).
+*/
+// [(cos(phi)-1)/h, 0, sin(phi)/h], and a rotation about
+/*
+*   \f[
+*       [\frac{\cos(\phi-1)}{h}, 0, \frac{\sin(\phi)}{h}]
+*   \f]
+*
+*	and a rotation about the y-axis of
+*/
+//	-phi (phi = h*(s2-s1)).
+/*
+*   /f$ -\phi \quad (\phi=h(s_2-s_1))\f$
 *
 *	An ArcGeometry can have an additional tilt, which is
 *	defined as a rotation about the local z-axis of the

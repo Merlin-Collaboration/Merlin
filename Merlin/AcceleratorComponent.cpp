@@ -12,15 +12,10 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// ComponentTracker
 #include "ComponentTracker.h"
-// EMField
 #include "EMField.h"
-// AcceleratorGeometry
 #include "AcceleratorGeometry.h"
-// Aperture
 #include "Aperture.h"
-// AcceleratorComponent
 #include "AcceleratorComponent.h"
 
 const int AcceleratorComponent::ID = UniqueIndex();

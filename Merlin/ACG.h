@@ -24,6 +24,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #endif
 
 /**
+*   \class ACG
 *
 *	Additive number generator. This method is presented in Volume II
 *	of The Art of Computer Programming by Knuth. I've coded the algorithm
@@ -36,7 +37,7 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 *	the same size (it's based on word size). This is for 32-bit words.
 *
 *	The ``auxillary table'' used by the LCG table varies in size, and
-*	is chosen to be the the smallest power of two which is larger than
+*	is chosen to be the smallest power of two which is larger than
 *	twice the size of the state table.
 *
 */

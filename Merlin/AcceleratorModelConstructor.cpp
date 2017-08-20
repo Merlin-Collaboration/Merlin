@@ -19,11 +19,8 @@
 #include <exception>
 #include <typeinfo>
 
-// Drift
 #include "Drift.h"
-// SequenceFrame
 #include "SequenceFrame.h"
-// AcceleratorModelConstructor
 #include "AcceleratorModelConstructor.h"
 
 namespace
@@ -43,9 +40,11 @@ struct ModelStats
 
 };
 
-// class MEExtractor
-// FrameTraverser implementation used by AppendFrame(SequenceFrame*)
-// to add the specified frame to the accelerator model.
+/**
+* class MEExtractor
+* FrameTraverser implementation used by AppendFrame(SequenceFrame*)
+* to add the specified frame to the accelerator model.
+*/
 
 class MEExtractor : public FrameTraverser
 {
@@ -69,7 +68,7 @@ public:
 		}
 		catch(bad_cast& b)
 		{
-			cerr<<"bad cast cought here!"<<endl;
+			cerr<<"bad cast caught here!"<<endl;
 		}
 		catch(...)
 		{
@@ -158,7 +157,7 @@ void AcceleratorModelConstructor::ReportStatistics (std::ostream& os) const
 
 	os<<"Arc length of beamline:     "<<currentModel->globalFrame->GetGeometryLength()<<" meter"<<endl;
 	os<<"Total number of components: "<<(*currentModel).lattice.size()<<endl;
-	os<<"Total numner of elements:   "<<currentModel->theElements->Size()<<endl;
+	os<<"Total number of elements:   "<<currentModel->theElements->Size()<<endl;
 	os<<endl;
 	os<<"Model Element statistics\n";
 	os<<"------------------------\n\n";

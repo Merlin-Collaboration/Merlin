@@ -16,9 +16,7 @@
 #include <algorithm>
 #include <iomanip>
 
-// RandomNG
 #include "RandomNG.h"
-// ATL2D
 #include "ATL2D.h"
 
 #undef ATL_XY

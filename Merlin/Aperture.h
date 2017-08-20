@@ -42,17 +42,21 @@ public:
 
 	/**
 	* Returns true if the point (x,y,z) is within the aperture.
+	*
 	* @param[in] x The x coordinate of the particle
 	* @param[in] y The y coordinate of the particle
 	* @param[in] z The z coordinate of the particle
-	* @return A bool set to true if the specified point, is within the Aperture. false if it is not.
+	* @retval true If the specified point is within the Aperture
+	* @retval false.
 	*/
 	virtual bool PointInside (double x, double y, double z) const = 0;
 
 	/**
 	* Returns true if the point p is within the aperture.
+	*
 	* @param[in] p 3D point reference to check
-	* @return A bool set to true if the specified point, is within the Aperture. false if it is not.
+	* @retval true If the specified point is within the Aperture
+	* @retval false
 	*/
 	bool PointInside (const Point3D& p) const;
 

@@ -85,7 +85,7 @@ class RotationX : public PureAxisRotation
 public:
 
 	/**
-	*	Contructor taking the rotation angle in radians.
+	*	Constructor taking the rotation angle in radians.
 	*	@param[in] phi Rotation angle (radians)
 	*/
 	RotationX (double phi);

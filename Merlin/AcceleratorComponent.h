@@ -37,7 +37,7 @@ using std::string;
 * object) and a em field (an EMField Region object), which
 * when taken together uniquely define the field properties
 * for the component. Component "tracking" is supported via
-* the funtion PrepareTracker(Tracker&), which sets up a
+* the function PrepareTracker(Tracker&), which sets up a
 * Tracker object to track the component.
 */
 class AcceleratorComponent : public ModelElement
@@ -109,7 +109,7 @@ public:
 	virtual void RotateY180() = 0;
 
 	/**
-	* Set the uniques beamline index for this frame.
+	* Set the unique beamline index for this frame.
 	* @param[in] n The beamline index.
 	*/
 	void SetBeamlineIndex(size_t n);

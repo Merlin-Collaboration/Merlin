@@ -17,21 +17,13 @@
 #include <cassert>
 #include "algorithm.h"
 
-// ComponentFrame
 #include "ComponentFrame.h"
-// TComponentFrame
 #include "TComponentFrame.h"
-// Channels
 #include "Channels.h"
-// ring_iterator
 #include "ring_iterator.h"
-// ChannelServer
 #include "ChannelServer.h"
-// deleters
 #include "deleters.h"
-// AcceleratorModel
 #include "AcceleratorModel.h"
-// SupportStructure
 #include "SupportStructure.h"
 
 using namespace std;
@@ -136,7 +128,7 @@ AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, co
 	BeamlineIterator i1=lattice.end();
 	BeamlineIterator i2=lattice.end();
 	int nn1(0),nn2(0);
-	int ni=0, ni1=0, ni2=0; // initiallise to please gcc. Paths where they don't get set result in throw.
+	int ni=0, ni1=0, ni2=0; // initialise to please gcc. Paths where they don't get set result in throw.
 
 	for(BeamlineIterator i = lattice.begin(); i!=lattice.end() && (nn1!=n1 || nn2!=n2); i++,ni++)
 	{

@@ -151,13 +151,16 @@ void ApertureConfiguration::OutputApertureList(std::ostream& os)
 
 void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 {
-	//Get a list of all elements
+	/**
+	* Get a list of all elements
+	*/
 	std::vector<AcceleratorComponent*> Elements;
 	int nElements = Model->ExtractTypedElements(Elements,"*");
 	std::cout << "Got " << nElements << " elements for aperture configuration" << std::endl;
 	std::cout << "Got " << ApertureList.size() << " Aperture entries" << std::endl;
 
 	Aperture* aper;
+
 	/**
 	* Elements - The container with all AcceleratorComponent entries
 	* comp - Iterator to all AcceleratorComponent entries
@@ -167,7 +170,6 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 	*
 	* ThisElementAperture - The container for the current element Aperture.
 	*/
-
 	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp!=Elements.end(); comp++)
 	{
 		if((*comp)->GetAperture() == nullptr)
@@ -175,7 +177,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 			double ElementLength = (*comp)->GetLength();
 			double Position = (*comp)->GetComponentLatticePosition();
 
-			/**
+			/*
 			* Give magnets and other fixed elements a set aperture.
 			* Give drifts interpolated apertures.
 			*/
@@ -256,7 +258,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							//Deal with the first entry for this element
 							if(itr == ApertureList.begin())
 							{
-								std::cout << "At first element " << (*comp)->GetQualifiedName() << " getting aperture iterpolation from last element" << std::endl;
+								std::cout << "At first element " << (*comp)->GetQualifiedName() << " getting aperture interpolation from last element" << std::endl;
 
 								//got the initial point
 								itr = ApertureList.end()-1;
@@ -305,7 +307,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							//Deal with the very last element entry
 							if(itr == ApertureList.end())
 							{
-								std::cout << "At last element " << (*comp)->GetQualifiedName() << " getting aperture iterpolation from first element" << std::endl;
+								std::cout << "At last element " << (*comp)->GetQualifiedName() << " getting aperture interpolation from first element" << std::endl;
 								itr = ApertureList.begin();
 
 								ap tempAp;
