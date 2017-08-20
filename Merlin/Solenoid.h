@@ -47,6 +47,7 @@ public:
 
 	/**
 	*	Returns the value of the field in Tesla.
+	*   @return Value of the field (T)
 	*/
 	double GetBz () const;
 
@@ -62,6 +63,7 @@ public:
 
 	/**
 	*	Return the type string for the element.
+	*	@return Type string for the element
 	*/
 	virtual const string& GetType () const;
 
@@ -73,6 +75,7 @@ public:
 	/**
 	*	Returns the unique index for this class of accelerator
 	*	components.
+	*	@return Accelerator component class' unique index
 	*/
 	virtual int GetIndex () const;
 

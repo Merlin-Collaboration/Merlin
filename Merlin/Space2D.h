@@ -3,8 +3,6 @@
 
 #include "merlin_config.h"
 
-
-// VectorTags
 #include "VectorTags.h"
 #include "utils.h"
 
@@ -13,10 +11,9 @@
 *	of the form (x,y). The template parameters
 *	are the type of data storage (double, float etc.) and an
 *	additional tag value. The tag class acts as a type-safe
-*	mechanism for distinguising different types of three
+*	mechanism for distinguishing different types of three
 *	vector (see Point2D and Vector2D).
 */
-
 template <class T, class tag>
 class TVec2D
 {

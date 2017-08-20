@@ -44,6 +44,8 @@ public:
 	*	Returns a copy of this ComponentFrame. Note that only
 	*	the reference to the AcceleratorComponent is copied, not
 	*	the AcceleratorComponent itself.
+	*
+	*	@return Copy of the ComponentFrame
 	*/
 	virtual ModelElement* Copy () const;
 };

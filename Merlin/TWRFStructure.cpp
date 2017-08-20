@@ -12,11 +12,8 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// TWRFStructure
 #include "TWRFStructure.h"
-// ComponentTracker
 #include "ComponentTracker.h"
-// TWRFfield
 #include "TWRFfield.h"
 
 const int TWRFStructure::ID = UniqueIndex();

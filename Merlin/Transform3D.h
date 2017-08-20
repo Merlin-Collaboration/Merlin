@@ -32,7 +32,7 @@ public:
 	Transform3D ();
 
 	/**
-	*	Constructor taking explicitely a translation and a
+	*	Constructor taking explicitly a translation and a
 	*	rotation.
 	*/
 	Transform3D (const Point3D& X, const Rotation3D& R);
@@ -68,7 +68,7 @@ public:
 
 	/**
 	*	Multiplication operator form of transformation
-	*	operationon a Point3D.
+	*	operation on a Point3D.
 	*/
 	Point3D operator * (const Point3D& p) const;
 
@@ -139,7 +139,7 @@ public:
 	static Transform3D rotationZ (double angle);
 
 	/**
-	*	Static (factory) method for construcing a pure
+	*	Static (factory) method for constructing a pure
 	*	translation transformation.
 	*/
 	static Transform3D translation (double dx, double dy, double dz);

@@ -27,7 +27,7 @@ using namespace PhysicalConstants;
 using namespace ParticleTracking;
 
 //------------------------------------------------------------------------------------------------------------
-//      the resistive wake potentials  (in MKS ssytem)
+//      the resistive wake potentials  (in MKS system)
 //------------------------------------------------------------------------------------------------------------
 
 class ResistivePotential: public CollimatorWakePotentials

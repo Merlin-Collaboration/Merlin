@@ -85,7 +85,7 @@ public:
 	/**
 	* Calculate the Ez component
 	*/
-	// TODO: TransverseRFfield should not stricty be derived from RFAcceleratingField,
+	// TODO: TransverseRFfield should not strictly be derived from RFAcceleratingField,
 	//       primarily because of this override.
 	virtual double Ez (double z, double t) const
 	{

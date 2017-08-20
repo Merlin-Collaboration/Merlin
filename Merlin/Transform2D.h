@@ -16,7 +16,7 @@ using std::ostream;
 using std::istream;
 
 /**
-*	Represents a simpy X-Y rotoation.
+*	Represents a simpy X-Y rotation.
 */
 class Rotation2D
 {
@@ -76,7 +76,7 @@ public:
 	}
 
 	/**
-	*	Premultipliy *this by R.
+	*	Premultiply *this by R.
 	*/
 	const Rotation2D& operator *= (const Rotation2D& R)
 	{

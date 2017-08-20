@@ -29,7 +29,7 @@
 *	or by two supports at the exit and entrance points.
 *
 *	SupportStructure and its associated Support class are
-*	primarilly intended for application of ground motion and
+*	primarily intended for application of ground motion and
 *	vibration.
 */
 

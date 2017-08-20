@@ -12,13 +12,9 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// Rot3Drep
 #include "Rot3Drep.h"
-// IdentityRotation
 #include "IdentityRotation.h"
-// GeneralRotation
 #include "GeneralRotation.h"
-// AxisRotations
 #include "AxisRotations.h"
 
 Rot3Drep::Rot3Drep ()

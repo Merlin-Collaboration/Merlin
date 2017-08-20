@@ -18,7 +18,7 @@
 #include "RMap.h"
 
 /**
-* class RTMap
+* \class RTMap
 *
 * A second-order TRANSPORT map for a PSvector
 * class RTMap represents both the first-order R and second-order T TRANSPORT

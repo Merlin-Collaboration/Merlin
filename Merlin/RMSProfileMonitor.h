@@ -27,11 +27,11 @@ class Bunch;
 class ComponentTracker;
 
 /**
-*	An RMS profile monitor. A profile monitor which mimicks
+*	An RMS profile monitor. A profile monitor which mimics
 *	the action of a "wire scanner". A profile monitor can
 *	measure the rms beam projection onto three planes:
 *	horizontal (x), vertical (y) and a third so-called
-*	u-wire, which is at a specifid angle to the x plane.
+*	u-wire, which is at a specified angle to the x plane.
 */
 
 class RMSProfileMonitor : public Monitor
@@ -97,6 +97,8 @@ public:
 	/**
 	*	Returns the unique index for this class of accelerator
 	*	components.
+	*
+	*   @return Accelerator component class' unique index
 	*/
 	virtual int GetIndex () const;
 

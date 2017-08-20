@@ -12,7 +12,6 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// SWRFfield
 #include "SWRFfield.h"
 
 Vector3D SWRFfield::GetBFieldAt (const Point3D& x, double t) const

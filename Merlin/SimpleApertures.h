@@ -45,12 +45,17 @@ public:
 	/**
 	* Returns true if the point (x,y,z) is within the
 	* aperture. The z coordinate is ignored.
+	*
+	* @retval true If point is within aperture
+	* @retval false
 	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
 	/**
 	* Returns the radius to the aperture at the angle phi. The
 	* z coordinate is ignored.
+	*
+	* @return Radius to the aperture (at angle phi)
 	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 
@@ -86,11 +91,15 @@ public:
 	/**
 	* Returns true if the point (x,y,z) is within the
 	* aperture. The z coordinate is ignored.
+	*
+	* @retval true If point is within aperture
+	* @retval false
 	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
 	/**
 	* Returns the radius.
+	* @return The radius
 	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 
@@ -179,12 +188,17 @@ public:
 	/**
 	* Returns true if the point (x,y,z) is within the
 	* aperture. The z coordinate is ignored.
+	*
+	* @retval true If point is within aperture
+	* @retval false
 	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
 	/**
 	* Returns the radius to the aperture at the angle phi. The
 	* z coordinate is ignored.
+	*
+	* @return Radius to the aperture (at angle phi)
 	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 
@@ -241,12 +255,17 @@ public:
 	/**
 	* Returns true if the point (x,y,z) is within the
 	* aperture. The z coordinate is ignored.
+	*
+	* @retval true If point is within aperture
+	* @retval false
 	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
 	/**
 	* Returns the radius to the aperture at the angle phi. The
 	* z coordinate is ignored.
+	*
+	* @return Radius to the aperture (at angle phi)
 	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 

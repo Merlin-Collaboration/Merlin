@@ -100,8 +100,9 @@ public:
 
 protected:
 
+	//	Frequency (2*pi*f) in radian/s.
 	/**
-	*	Frequency (2*pi*f) in radian/s.
+	*   Frequency (\f$ 2\pi f \f$) in \f$ \frac{\mathrm{rad}}{s} \f$
 	*/
 	double w;
 
@@ -110,8 +111,10 @@ protected:
 	*/
 	double E0;
 
+
+	//	Arbitrary phase angle (radian)
 	/**
-	*	Arbitrary phase angle (radian)
+	*   Arbitrary phase angle (\f$ \mathrm{rad} \f$)
 	*/
 	double phi;
 

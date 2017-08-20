@@ -27,36 +27,25 @@
  * or implied warranty.
  */
 
-
-
-// SectorBend
 #include "SectorBend.h"
-// ComponentTracker
 #include "ComponentTracker.h"
-
-
 
 #include "PhysicalConstants.h"
 #include <utility>
 
 
-// Class SectorBend::PoleFace
-
-
-
-
+/**
+* \class SectorBend::PoleFace
+*/
 SectorBend::PoleFace::PoleFace (double angle, double f_int, double hg, double face_type)
 	: rot(angle),fint(f_int),hgap(hg),type(face_type)
 {
 }
 
 
-// Class SectorBend::PoleFaceInfo
-
-
-
-
-
+/**
+* \class SectorBend::PoleFaceInfo
+*/
 void SectorBend::PoleFaceInfo::Copy (const PoleFaceInfo& rhs)
 {
 	entrance = rhs.entrance ? new PoleFace(*(rhs.entrance)) : nullptr;
@@ -70,8 +59,9 @@ void SectorBend::PoleFaceInfo::Copy (const PoleFaceInfo& rhs)
 	}
 }
 
-// Class SectorBend
-
+/**
+* \class SectorBend
+*/
 const int SectorBend::ID = UniqueIndex();
 
 
@@ -79,7 +69,6 @@ SectorBend::SectorBend (const string& id, double len, double h, double b0)
 	: TAccCompGF<ArcGeometry,MultipoleField>(id,new ArcGeometry(len,h),new MultipoleField(0,b0,1.0,false))
 {
 }
-
 
 
 int SectorBend::GetIndex () const

@@ -44,7 +44,7 @@ class ComponentTracker;
 *	magnet is hard edged, with the pole-faces perpendicular
 *	to the geometry. Pole faces can be rotated about the
 *	local y-axis, and can also have a constant radius
-*	curvature whioch gives rise to a sextupole component
+*	curvature which gives rise to a sextupole component
 *	(see TRANSPORT or MAD for details). As well as a
 *	vertical B field, sector bends can have an additional
 *	quadrupole and sextupole field component specified.
@@ -62,25 +62,23 @@ public:
 	public:
 		PoleFace (double angle = 0, double f_int = 0, double hg = 0, double type = 1);
 
-		// Data Members for Class Attributes
-
 		/**
-		*	Pole face rotation.
-		*/
+			*	Pole face rotation -- data member for class attributes
+			*/
 		double rot;
 
 		/**
-		*	fringe field integral.
+		*	fringe field integral -- data member for class attributes
 		*/
 		double fint;
 
 		/**
-		*	half gap magnet.
+		*	half gap magnet -- data member for class attributes
 		*/
 		double hgap;
 
 		/**
-		*	Pole face type
+		*	Pole face type -- data member for class attributes
 		*/
 		double type;
 
@@ -136,10 +134,14 @@ public:
 			exit->type = 0;
 		}
 
-		// Data Members for Class Attributes
-
+		/**
+		* Data member for class attributes
+		*/
 		PoleFace* entrance;
 
+		/**
+		* Data member for class attributes
+		*/
 		PoleFace* exit;
 
 	protected:
@@ -208,11 +210,14 @@ public:
 	*	Returns the matched momentum  for the current field and
 	*	geometry for a particle of charge q/e. Note that the
 	*	returned momentum can be negative.
+	*
+	*	@return Matched momentum for current field and geometry
 	*/
 	double GetMatchedMomentum (double q) const;
 
 	/**
 	*	Returns the main dipole field in Tesla.
+	*	@return Main dipole field
 	*/
 	double GetB0 () const
 	{
@@ -221,6 +226,7 @@ public:
 
 	/**
 	*	Returns the quadrupole field component  in Tesla/meter.
+	*	@return Quadrupole field component
 	*/
 	double GetB1 () const;
 

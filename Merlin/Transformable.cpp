@@ -13,7 +13,6 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-// Transformable
 #include "Transformable.h"
 
 // macro for transformations

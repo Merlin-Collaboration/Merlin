@@ -95,7 +95,9 @@ public:
 	*/
 	virtual const string& GetType () const;
 
-	// constucting bealine index list
+	/**
+	* constructing beamline index list
+	*/
 	void AppendBeamlineIndecies(std::vector<size_t>&) const;
 
 protected:
@@ -106,11 +108,15 @@ private:
 	FrameList subFrames;
 	SequenceGeometry* itsSeqGeom;
 
-	//	Copies the subframes from frames.
+	/**
+	*	Copies the subframes from frames.
+	*/
 	void CopySubFrames (const list<LatticeFrame*>& frames);
 
-	//	Returns true if aSubFrame is the first (entrance)
-	//	sub-frame of this frame.
+	/**
+	*	Returns true if aSubFrame is the first (entrance)
+	*	sub-frame of this frame.
+	*/
 	virtual bool IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFrame) const;
 
 	// don't allow copy assignment

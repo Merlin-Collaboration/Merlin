@@ -18,7 +18,7 @@
 
 /**
 * class RMap
-* A linear phase space map. RMap represents a 6x6 matrixs (R matrix) which
+* A linear phase space map. RMap represents a 6x6 matrix (R matrix) which
 * can map either a single PSvector or a SigmaMatrix (2nd-order moments), or
 * a PSmoment object (combination of first- and second-order moments).
 * Efficiency in terms of space and speed are achieved by using a sparse-matrix
@@ -329,7 +329,7 @@ struct map_applicator
 
 /**
 * Functions for apply simple drift spaces.
-* We provide these functions for effeciency: since drift
+* We provide these functions for efficiency: since drift
 * spaces generally make up half the number of elements
 * in a beamline, we provide special 'tuned' routines
 * for speeding the drifts up.

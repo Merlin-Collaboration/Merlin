@@ -32,13 +32,17 @@ namespace
 {
 using namespace SMPTracking;
 
+/**
+* \class RotateMoments
+*
+* Here we assume that the rotations are small, representing
+* typical values of alignment errors. For pure Z rotations the
+* result in exact for any angle. For mixed rotations of pure x and
+* y rotations, the results are not exact, and are only approximately
+* valid for small rotations (angle<<1 radian)
+*/
 void RotateMoments(const R2Map& R, PSmoments4D& S)
 {
-	// Here we assume that the rotations are small, representing
-	// typical values of alignment errors. For pure Z rotations the
-	// result in exact for any angle. For mixed rotations of pure x and
-	// y rotations, the results are not exact, and are only approximately
-	// valid for small rotations (angle<<1 radian)
 
 	// centroid (first-order moments)
 	const double x = R.r11*S.x()+R.r12*S.y();

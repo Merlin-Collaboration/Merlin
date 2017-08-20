@@ -89,7 +89,7 @@ enum EnergyLossMode {SimpleEnergyLoss, FullEnergyLoss};
  * Base class for scattering models
  *
  * The user can customise a ScatteringModel using AddProcess(), or can
- * use the predefiend models such as ScatteringModelMerlin.
+ * use the predefined models such as ScatteringModelMerlin.
  */
 class ScatteringModel
 {

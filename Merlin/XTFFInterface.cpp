@@ -71,7 +71,7 @@ void SkipLines(istream& is, int n)
 	}
 }
 
-// return real value in columnds c1-c2
+// return real value in columns c1-c2
 double RealValue(const string& dat, int c1, int c2)
 {
 	return atof(dat.substr(c1-1,c2-c1+1).c_str());

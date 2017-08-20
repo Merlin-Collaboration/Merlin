@@ -26,7 +26,8 @@ namespace TLAS
 // Class Declarations
 
 /**
-* LUMatrix
+* \class LUMatrix
+*
 * Represents a LU-decomposition of a square matrix. An LUMatrix object
 * can be used to "solve" a system of linear equations with many RHS vectors.
 */
@@ -99,7 +100,8 @@ private:
 };
 
 /**
-* SVDMatrix
+* \class SVDMatrix
+*
 * Represents a Singular-Value Decomposition of a matrix. As with LUMatrix, an
 * SVDMatrix object can be used to solve a system of linear equations with many
 * RHS vectors.
@@ -315,7 +317,7 @@ void ludcmp(Matrix<T>& a, std::vector<int>& indecies, T& d)
 		}
 	}
 
-	// copy the indecies
+	// copy the indices
 	indecies.swap(indx);
 }
 

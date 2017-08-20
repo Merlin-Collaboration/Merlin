@@ -29,7 +29,7 @@ using std::ostream;
 *	of the standard UNIX regular expression syntax.
 *	Currently supported is the single wild-card '*', which
 *	matches any number (including zero) of any character.
-*   StringPatter also supports OR: pat1|pat2|pat3 etc.
+*   StringPattern also supports OR: pat1|pat2|pat3 etc.
 */
 
 class StringPattern

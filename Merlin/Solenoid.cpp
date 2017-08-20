@@ -32,19 +32,15 @@
 
 #include "ComponentTracker.h"
 
-// Solenoid
 #include "Solenoid.h"
 
-
 // Class Solenoid
-
 const int Solenoid::ID = UniqueIndex();
 
 Solenoid::Solenoid (const std::string& id, double len, double Bz)
 	: SimpleSolenoid(id,new RectangularGeometry(len),new BzField(Bz))
 {
 }
-
 
 
 void Solenoid::RotateY180 ()

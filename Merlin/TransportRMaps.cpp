@@ -87,7 +87,7 @@ void SBR(double length, double h, double Kx, RMap& R)
 	// horizontal plane
 	QR2(length,Kx,0,R);
 
-	// vectircal plane
+	// vertical plane
 	QR2(length,Ky,2,R);
 
 	if(h && Kx)

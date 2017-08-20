@@ -6,8 +6,6 @@
 
 #include "merlin_config.h"
 
-
-// VectorTags
 #include "VectorTags.h"
 #include "utils.h"
 
@@ -16,11 +14,9 @@
 *	(Euclidean) of the form (x,y,z). The template parameters
 *	are the type of data storage (double, float etc.) and an
 *	additional tag value. The tag class acts as a type-safe
-*	mechanism for distinguising different types of three
+*	mechanism for distinguishing different types of three
 *	vector (see Point3D and Vector3D).
 */
-
-
 template <class T, class tag>
 class TVec3D
 {
@@ -140,7 +136,6 @@ inline bool TVec3D<T,tag>::operator!=(const TVec3D<T,tag> &right) const
 }
 
 
-
 template <class T, class tag>
 inline const TVec3D<T,tag>& TVec3D<T,tag>::operator = (const TVec3D<T,tag>& v)
 {
@@ -232,12 +227,10 @@ inline TVec3D<T,tag> TVec3D<T,tag>::operator / (T s) const
 	return TVec3D<T,tag>(x/s,y/s,z/s);
 }
 
-// Parameterized Class TVec3D
 
-
-
-
-
+/**
+* Parameterized Class TVec3D
+*/
 template <class T, class tag>
 TVec3D<T,tag> operator * (T s, const TVec3D<T,tag>& v)
 {

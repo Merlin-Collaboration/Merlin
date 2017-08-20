@@ -27,8 +27,7 @@ class RotationY;
 class RotationX;
 
 /**
-*	The abstract representation (letter class) for
-*	Rotation3D.
+*	The abstract representation (letter class) for Rotation3D
 */
 
 class Rot3Drep
