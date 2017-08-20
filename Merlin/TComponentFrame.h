@@ -17,12 +17,12 @@
 
 #include "merlin_config.h"
 #include <iostream>
-// ComponentFrame
 #include "ComponentFrame.h"
 
-//	A Typed ComponentFrame. Used to construct Accelerator
-//	Component type specific ComponentFrame objects.
-
+/**
+*	A Typed ComponentFrame. Used to construct Accelerator
+*	Component type specific ComponentFrame objects.
+*/
 template <class T>
 class TComponentFrame : public ComponentFrame
 {
@@ -30,7 +30,9 @@ public:
 
 	typedef T ComponentType;
 
-	//	Constructor.
+	/**
+	*	Constructor.
+	*/
 	explicit TComponentFrame (T& component);
 
 	T& GetComponent ();
@@ -38,9 +40,13 @@ public:
 	T* operator -> ();
 	const T* operator -> () const;
 
-	//	Returns a copy of this ComponentFrame. Note that only
-	//	the reference to the AcceleratorComponent is copied, not
-	//	the AcceleratorComponent itself.
+	/**
+	*	Returns a copy of this ComponentFrame. Note that only
+	*	the reference to the AcceleratorComponent is copied, not
+	*	the AcceleratorComponent itself.
+	*
+	*	@return Copy of the ComponentFrame
+	*/
 	virtual ModelElement* Copy () const;
 };
 

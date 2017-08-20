@@ -16,7 +16,6 @@
 #include "MerlinIO.h"
 #include <cstdlib>
 
-// MADKeyMap
 #include "MADKeyMap.h"
 using namespace std;
 

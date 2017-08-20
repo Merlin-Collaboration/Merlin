@@ -16,11 +16,8 @@
 #define SMPBunchConstructor_h 1
 
 #include "merlin_config.h"
-// BeamData
 #include "BeamData.h"
-// BunchConstructor
 #include "BunchConstructor.h"
-// SMPBunch
 #include "SMPBunch.h"
 
 namespace SMPTracking
@@ -30,16 +27,20 @@ class SMPBunchConstructor : public BunchConstructor
 {
 public:
 
-	// Constructor taking the beam definition, the number of z slices
-	// (ns) and the number of SMPs per slice. Total number of SMPs
-	// generated will be nsm*ns
+	/**
+	* Constructor taking the beam definition, the number of z slices
+	* (ns) and the number of SMPs per slice. Total number of SMPs
+	* generated will be nsm*ns
+	*/
 	SMPBunchConstructor (const BeamData& beam, size_t ns, size_t nsm);
 
 	~SMPBunchConstructor ();
 
 	virtual Bunch* ConstructBunch (int bunchIndex =0) const;
 
-	//	Returns typed particle bunch.
+	/**
+	*	Returns typed particle bunch.
+	*/
 	SMPBunch* ConstructSMPBunch () const;
 
 private:

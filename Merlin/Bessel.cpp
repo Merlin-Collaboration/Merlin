@@ -15,7 +15,7 @@
 #include "utils.h"
 #include <stdlib.h>
 
-// Error function and complimentry error function
+// Error function and complimentary error function
 // Taken for NRiC (and modified)
 
 double BesselI0(double x)

@@ -20,11 +20,15 @@
 #include "Space2D.h"
 #include "Space3D.h"
 
-//	Represents a single support structure. Support can be
-//	translated in either x, y or z directions. Support is
-//	primarily intended for ground motion application.
+/**
+*	Represents a single support structure. Support can be
+*	translated in either x, y or z directions. Support is
+*	primarily intended for ground motion application.
+*/
 
-//	An array of AcceleratorSupport pointers.
+/*
+*	An array of AcceleratorSupport pointers.
+*/
 class AcceleratorSupport;
 typedef std::vector<AcceleratorSupport*> AcceleratorSupportList;
 
@@ -34,40 +38,64 @@ public:
 
 	AcceleratorSupport ();
 
-	//	Sets the location of the support in the global
-	//	coordinate frame. (x,z) represent the location in the
-	//	accelerator plane, while s is the arc position of the
-	//	support.
+	/**
+	*	Sets the location of the support in the global
+	*	coordinate frame.
+	*	@param[in] x The x position in the accelerator plane
+	*	@param[in] z The z position in the accelerator plane
+	*	@param[in] s The arc position of the support
+	*/
 	void SetPosition (double s, double x, double z);
 
-	//	Returns the arc position.
+	/*
+	*	Returns the arc position.
+	*	@return The arc position
+	*/
 	double GetArcPosition () const;
 
-	//	Returns the location of the support in the accelerator
-	//	plane (x,z). Note that  Point2D::y here refers to the
-	//	z-coordinate.
+	/**
+	*	Returns the location of the support in the accelerator
+	*	plane (x,z). Note that  Point2D::y here refers to the
+	*	z-coordinate.
+	*	@return The location of the support in the accelerator plane
+	*/
 	Point2D GetLocation () const;
 
-	//	Returns the linear distance from this support to a
-	//	Support.
+	/*
+	*	Returns the linear distance from this support to another Support.
+	*	@return The linear distance from this support to another support
+	*/
 	double DistanceTo (const AcceleratorSupport& aSupport) const;
 
-	//	Set the support offset to (x,y,z).
+	/*
+	*	Set the support offset to (x,y,z).
+	*/
 	void SetOffset (double x, double y, double z);
 
-	//	Set the support offset to X
+	/*
+	*	Set the support offset to X
+	*/
 	void SetOffset (const Vector3D& X);
 
-	//	Returns the current offset.
+	/*
+	*	Returns the current offset.
+	*	@return The current offset
+	*/
 	const Vector3D& GetOffset () const;
 
-	//	Increment the current offset by (dx,dy,dz),
+	/*
+	*	Increment the current offset by (dx,dy,dz),
+	*/
 	const Vector3D& IncrementOffset (double dx, double dy, double dz);
 
-	//	Increment the current offset by dX.
+	/*
+	*	Increment the current offset by dX.
+	*/
 	const Vector3D& IncrementOffset (const Vector3D& dX);
 
-	//	Reset the offset to (0,0,0).
+	/*
+	*	Reset the offset to (0,0,0).
+	*/
 	void Reset ();
 
 private:

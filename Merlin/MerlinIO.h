@@ -24,8 +24,9 @@
 #define MERLIN_ERR  MerlinIO::error()
 #define MERLIN_WARN MerlinIO::warning()
 
-//	Interface for the standard Merlin IO streams.
-
+/**
+*	Interface for the standard Merlin IO streams.
+*/
 class MerlinIO
 {
 public:

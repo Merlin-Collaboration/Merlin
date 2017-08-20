@@ -29,13 +29,8 @@
  * or implied warranty.
  */
 
-
-
-// ComponentTracker
 #include "ComponentTracker.h"
-// StandardMultipoles
 #include "StandardMultipoles.h"
-
 
 #define _RMC1(n)  RectMultipole(id,len,n,dnB)
 #define _RMC2(n)  RectMultipole(id,len,n,B,r0)
@@ -47,7 +42,6 @@
 
 
 // Class Quadrupole
-
 const int Quadrupole::ID = UniqueIndex();
 
 Quadrupole::Quadrupole (const string& id, double len, double dnB)

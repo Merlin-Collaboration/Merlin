@@ -20,26 +20,26 @@
 #include "TLAS.h"
 #include <queue>
 #include <list>
-// Channels
 #include "Channels.h"
-// LinearAlgebra
 #include "LinearAlgebra.h"
 
 using namespace TLAS;
 
-//	A simple linear feedback correction algorithm. On each
-//	application, the actuator channels (A) are incremented
-//	using the following linear equation:
-//
-//	A = A-g*(Mi*(S-S0))
-//
-//	where g is the gain, S are the current signal values and
-//	S0 are the desired signal values (set points). Mi is a
-//	speudo-inverse matrix of the response matrix M defined by
-//
-//	S=M*A
-//
-//	Mi is calculated using SVD.
+/**
+*	A simple linear feedback correction algorithm. On each
+*	application, the actuator channels (A) are incremented
+*	using the following linear equation:
+*
+*	A = A-g*(Mi*(S-S0))
+*
+*	where g is the gain, S are the current signal values and
+*	S0 are the desired signal values (set points). Mi is a
+*	pseudo-inverse matrix of the response matrix M defined by
+*
+*	S=M*A
+*
+*	Mi is calculated using SVD.
+*/
 
 class LinearFBSystem
 {

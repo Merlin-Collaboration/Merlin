@@ -1,9 +1,10 @@
 // Modified by D.Kruecker 18.2.2008
 // to be used as base class for other wakefield types (collimator,coupler,...)
-//
+
 //Time for load leveling
 //#include <ctime>
 #include <time.h>
+
 #include <stdexcept>
 #include <sstream>
 #include <iterator>
@@ -137,12 +138,16 @@ size_t WakeFieldProcess::CalculateQdist()
 	return lost;
 }
 
-// Smoothing filter takes the form of a set of coefficients
-// calculated using the Savitzky-Golay technique
-// n gives the width of the window on either side of the reference point
-// m gives the order of the polynomial fitted to the points within the window
-// d gives the order of the derivative required
-// For CSR wake we need the first derivative
+/**
+* Smoothing filter takes the form of a set of coefficients
+* calculated using the Savitzky-Golay technique
+*
+* @param[in] n Width of the window on either side of the reference point
+* @param[in] m Order of the polynomial fitted to the points within the window
+* @param[in] d Order of the derivative required
+*
+* For CSR wake we need the first derivative
+*/
 void WakeFieldProcess::SetFilter(int n, int m, int d)
 {
 	if(filter)

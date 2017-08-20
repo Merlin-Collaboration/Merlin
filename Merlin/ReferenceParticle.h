@@ -19,56 +19,87 @@
 #include "utils.h"
 #include <cassert>
 
-//	A ReferenceParticle represents that particle which sits
-//	on the nominal orbit. It is responsible for maintaining
-//	the reference momentum and time (ct) for the bunch or
-//	map. ReferenceParticle cannot be instantiated, but is
-//	designed as a mixin for bunch or map-like classes.
-
+/**
+*	A ReferenceParticle represents that particle which sits
+*	on the nominal orbit. It is responsible for maintaining
+*	the reference momentum and time (ct) for the bunch or
+*	map. ReferenceParticle cannot be instantiated, but is
+*	designed as a mixin for bunch or map-like classes.
+*/
 class ReferenceParticle
 {
 public:
 	virtual ~ReferenceParticle() {};
 
-	//	Returns the reference momentum in GeV/c.
+	/**
+	*	Returns the reference momentum in GeV/c.
+	*	@return Reference momentum (GeV/c)
+	*/
 	double GetReferenceMomentum () const;
 
-	//	Returns the reference time in ct (meters).
+	/**
+	*	Returns the reference time in ct (meters).
+	*	@return Reference time in ct (m)
+	*/
 	double GetReferenceTime () const;
 
-	//	Returns either +1, 0 or -1.
+	/**
+	*	Returns either +1, 0 or -1.
+	*
+	*	@retval +1
+	*	@retval  0
+	*	@retval -1
+	*/
 	double GetChargeSign () const;
 
-	//	Sets the reference momentum to p GeV/c. p must be
-	//	greater than zero.
+	/**
+	*	Sets the reference momentum to p GeV/c. p must be
+	*	greater than zero.
+	*/
 	void SetReferenceMomentum (double p);
 
-	//	Increments the reference momentum by dp GeV/c, returning
-	//	the new value.
+	/**
+	*	Increments the reference momentum by dp GeV/c, returning
+	*	the new value.
+	*/
 	double IncrReferenceMomentum (double dp);
 
-	//	Sets the reference time in ct (meters).
+	/**
+	*	Sets the reference time in ct (meters).
+	*/
 	void SetReferenceTime (double ct);
 
-	//	Increments the reference time by dct meters.
+	/**
+	*	Increments the reference time by dct meters.
+	*/
 	double IncrReferenceTime (double dct);
 
 protected:
 
 	ReferenceParticle (double p, double q = 1);
 
-	//	Sets the charge sign.
+	/**
+	*	Sets the charge sign.
+	*/
 	void SetChargeSign (double q);
 
-	// Data Members for Class Attributes
+	/**
+	* Data Members for Class Attributes
+	*/
 
-	//	reference momentum in GeV/c
+	/**
+	*	reference momentum in GeV/c
+	*/
 	double p0;
 
-	//	reference time in ct (meters)
+	/**
+	*	reference time in ct (meters)
+	*/
 	double ct0;
 
-	//	The charge sign of the particles.
+	/**
+	*	The charge sign of the particles.
+	*/
 	double qs;
 };
 

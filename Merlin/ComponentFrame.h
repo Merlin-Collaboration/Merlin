@@ -16,23 +16,27 @@
 #define ComponentFrame_h 1
 
 #include "merlin_config.h"
-// AcceleratorComponent
 #include "AcceleratorComponent.h"
-// LatticeFrame
 #include "LatticeFrame.h"
 
-//	An atomic LatticeFrame object which represents a single
-//	instance of an AcceleratorComponent in a beamline.
+/**
+*	An atomic LatticeFrame object which represents a single
+*	instance of an AcceleratorComponent in a beamline.
+*/
 
 class ComponentFrame : public LatticeFrame
 {
 public:
 
-	//	Constructor taking the associated AcceleratorComponent
-	//	object.
+	/**
+	*	Constructor taking the associated AcceleratorComponent
+	*	object.
+	*/
 	explicit ComponentFrame (AcceleratorComponent& ac, const string& id = "");
 
-	//	Copy constructor.
+	/**
+	*	Copy constructor.
+	*/
 	ComponentFrame (const ComponentFrame& rhs);
 
 	virtual ~ComponentFrame ();
@@ -40,14 +44,18 @@ public:
 	AcceleratorComponent& GetComponent ();
 	const AcceleratorComponent& GetComponent () const;
 
-	// Returns true if this is an empty frame
+	/**
+	* Returns true if this is an empty frame
+	*/
 	bool IsComponent() const
 	{
 		return theComponent!=nullptr;
 	}
 
-	// Returns the (design) geometry patches for this component
-	// frame.
+	/**
+	* Returns the (design) geometry patches for this component
+	* frame.
+	*/
 	virtual const Transform3D* GetEntranceGeometryPatch() const
 	{
 		return nullptr;
@@ -57,25 +65,41 @@ public:
 		return nullptr;
 	}
 
-	//	Causes any cached state to be invalidated. The cached
-	//	state should be re-calculated if and when required.
+	/**
+	*	Causes any cached state to be invalidated. The cached
+	*	state should be re-calculated if and when required.
+	*/
 	virtual void Invalidate () const;
 
-	//	Return the name of the element. Returns the name of the
-	//	AcceleratorComponent if the label for this frame has not
-	//	been explicitely set.
+	/**
+	*	Return the name of the element. Returns the name of the
+	*	AcceleratorComponent if the label for this frame has not
+	*	been explicitly set.
+	*/
 	virtual const string& GetName () const;
 
-	//	Returns the type of the referenced AcceleratorComponent.
+	/**
+	*	Returns the type of the referenced AcceleratorComponent.
+	*	@return Referenced AcceleratorComponent type
+	*/
 	virtual const string& GetType () const;
 
-	//	Returns a copy of this ComponentFrame. Note that only
-	//	the reference to the AcceleratorComponent is copied, not
-	//	the AcceleratorComponent itself.
+	/**
+	*	Returns a copy of this ComponentFrame. Note that only
+	*	the reference to the AcceleratorComponent is copied, not
+	*	the AcceleratorComponent itself.
+	*	@return Copy of the ComponentFrame
+	*/
 	virtual ModelElement* Copy () const;
 
-	//  Set/Get the uniques beamline index for this frame
+	/**
+	* Set the unique beamline index for this frame
+	*/
 	void SetBeamlineIndex(size_t n);
+
+	/**
+	* Get the unique beamline index for this frame
+	*/
 	size_t GetBeamlineIndex() const;
 	void AppendBeamlineIndecies(std::vector<size_t>&) const;
 
@@ -90,7 +114,7 @@ protected:
 
 
 private:
-	size_t blI; // beamline index
+	size_t blI; /// beamline index
 
 	//Just need to disable the assignment operator - copy constructor is defined
 	ComponentFrame& operator=(const ComponentFrame& frame);

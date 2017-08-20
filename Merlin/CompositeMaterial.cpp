@@ -95,7 +95,7 @@ double CompositeMaterial::CalculateMeanExcitationEnergy()
 	* Volume 33, Issue 11, November 1982, Pages 1189–1218
 	* http://dx.doi.org/10.1016/0020-708X(82)90244-7
 	* Note eq 10,11
-	* Also note: "The reccomendation in Table 6 is to use I-values for these other constituents which are 13% larger than the correponding I-values for condensed elemental substances in Table 2"
+	* Also note: "The recommendation in Table 6 is to use I-values for these other constituents which are 13% larger than the corresponding I-values for condensed elemental substances in Table 2"
 	* Thus we use I -> 1.13*Ii
 	*
 	* The below is not valid for organic compounds with H,C,N,O,F,Cl.
@@ -124,7 +124,7 @@ double CompositeMaterial::CalculateMeanExcitationEnergy()
 double CompositeMaterial::CalculateSixtrackdEdx()
 {
 	/*
-	* pdg states for a mixture the following is an appoximation:
+	* pdg states for a mixture the following is an approximation:
 	* dE/dx = \sum (w_i * (dE/dx)_i)
 	* where w_i is the mass fraction
 	*/

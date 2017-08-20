@@ -34,13 +34,9 @@
 #include <algorithm>
 #include "utils.h"
 
-// SynchRadParticleProcess
 #include "SynchRadParticleProcess.h"
-// SectorBend
 #include "SectorBend.h"
-// RectMultipole
 #include "RectMultipole.h"
-// RandomNG
 #include "RandomNG.h"
 
 #include "PhysicalUnits.h"

@@ -1,18 +1,11 @@
 
 
-
-
-// Transform3D
 #include "Transform3D.h"
 
 
-
-// Class Transform3D
-
-
-
-
-
+/**
+* Class Transform3D
+*/
 const Transform3D& Transform3D::operator *= (const Transform3D& t)
 {
 	// this operation represents t*this

@@ -20,15 +20,19 @@
 #include "Range.h"
 #include <vector>
 
-// class Interpolation
-// An interpolation functor which interpolates values from a data table.
-// Currenly only linear interpolation is assumed.
+/**
+* class Interpolation
+* An interpolation functor which interpolates values from a data table.
+* Currently only linear interpolation is assumed.
+*/
 
 class Interpolation
 {
 public:
 
-	// exception
+	/**
+	* exception
+	*/
 	class BadRange : public MerlinException
 	{
 	public:
@@ -37,7 +41,9 @@ public:
 		FloatRange valid_range;
 	};
 
-	// Implementation method for interpolation
+	/**
+	* Implementation method for interpolation
+	*/
 	class Method
 	{
 	public:
@@ -45,10 +51,14 @@ public:
 		virtual double ValueAt(double x) const = 0;
 	};
 
-	// Interpolation of equally spaced data points
+	/**
+	* Interpolation of equally spaced data points
+	*/
 	Interpolation(const std::vector<double>& yvals, double xmin, double dx);
 
-	// Interpolation of arbitrary spaced data points
+	/**
+	* Interpolation of arbitrary spaced data points
+	*/
 	Interpolation(const std::vector<double>& xvals, const std::vector<double>& yvals);
 
 	~Interpolation();

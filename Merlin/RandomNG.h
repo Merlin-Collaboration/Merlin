@@ -69,7 +69,7 @@ public:
 	double uniform (double low, double high);
 
 	/**
-	* Generates a poisson random number.
+	* Generates a Poisson random number.
 	*/
 	double poisson (double u);
 

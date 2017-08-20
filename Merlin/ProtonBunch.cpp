@@ -203,7 +203,7 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 		DiffractiveScatter->SetTMin(0.0001);
 		DiffractiveScatter->SetTMax(4);
 		DiffractiveScatter->SetTStepSize(1e-4);
-		DiffractiveScatter->SetXiMin(xi_th);//Threshould at (M_proton + M_pion)^2/s
+		DiffractiveScatter->SetXiMin(xi_th);//Threshold at (M_proton + M_pion)^2/s
 		DiffractiveScatter->SetXiMax(0.12);
 		DiffractiveScatter->SetXiStepSize(1e-6);
 

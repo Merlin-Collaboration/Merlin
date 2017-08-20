@@ -14,9 +14,7 @@
 
 #include <algorithm>
 #include <iomanip>
-// deleters
 #include "deleters.h"
-// Channels
 #include "Channels.h"
 #include <algorithm>
 

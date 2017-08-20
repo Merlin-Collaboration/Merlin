@@ -12,11 +12,8 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// Bunch
 #include "Bunch.h"
-// ComponentTracker
 #include "ComponentTracker.h"
-// Monitor
 #include "Monitor.h"
 
 bool Monitor::all_inactive = false;

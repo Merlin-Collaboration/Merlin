@@ -70,10 +70,10 @@ public:
 	void SetName (const std::string& name);
 
 	/**
-	* Returns in ivec an ordered list of beamline indecies
+	* Returns in ivec an ordered list of beamline indices
 	* associated with this ModelElement. Returns the length
 	* of ivec.
-	* @param[out] ivec The ordered list of beamline indecies associated with this ModelElement.
+	* @param[out] ivec The ordered list of beamline indices associated with this ModelElement.
 	* @return The size of ivec
 	*/
 	size_t GetBeamlineIndecies(std::vector<size_t>& ivec) const;

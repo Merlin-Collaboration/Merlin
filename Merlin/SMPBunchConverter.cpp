@@ -10,14 +10,16 @@
 using namespace ParticleTracking;
 using namespace SMPTracking;
 
-// Given an SPMBunch we construct a ParticleBunch with about N particles.
-// In general the final number of particles is !=N (equal N only on average).
-// For adjust=true (default) the centroid (6d) of the particle bunch is adjusted to the
-// SMP bunch centroid.
-// The discrete ct, dp points in the original SMPBunch are smeared out in the ParticleBunch
-// with gauss(delta/2) where delta is given by the distance in either ct or dp.
-// DK 1.4.2006
-//
+/**
+* Given an SPMBunch we construct a ParticleBunch with about N particles.
+* SimpleATL
+* In general the final number of particles is !=N (equal N only on average).
+* For adjust=true (default) the centroid (6d) of the particle bunch is adjusted to the
+* SMP bunch centroid.
+* The discrete ct, dp points in the original SMPBunch are smeared out in the ParticleBunch
+* with gauss(delta/2) where delta is given by the distance in either ct or dp.
+* DK 1.4.2006
+*/
 ParticleTracking::ParticleBunch* SMPBunchConverter(SMPTracking::SMPBunch*  SB, size_t N, bool adjust)
 {
 
@@ -49,7 +51,7 @@ ParticleTracking::ParticleBunch* SMPBunchConverter(SMPTracking::SMPBunch*  SB, s
 		const SliceMacroParticle& x = (*sp);
 		//x.Write(cout);
 
-		// the 4 dimensinal normal random generator
+		// the 4 dimensional normal random generator
 		MultiNormal<4> MN(x);
 
 		// weight for this slice

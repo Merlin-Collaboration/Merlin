@@ -13,9 +13,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-// PSTypes
 #include "PSTypes.h"
-// MatrixMaps
 #include "MatrixMaps.h"
 
 namespace

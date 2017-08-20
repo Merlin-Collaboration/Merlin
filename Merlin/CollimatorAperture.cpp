@@ -5,7 +5,7 @@
 
 /**********************************************************************
 *
-*	A collimtor jaw, aligned to the beam orbit and beta function changes
+*	A collimator jaw, aligned to the beam orbit and beta function changes
 * 	This does NOT have jaw flatness errors
 *
 **********************************************************************/
@@ -159,7 +159,7 @@ double CollimatorAperture::GetCollimatorTilt() const
 
 /**********************************************************************
 *
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
 *	Still aligned to the beam size! Flat jaws, parallel to the beam pipe,
 *	but touching the beam envelope on each side
@@ -202,7 +202,7 @@ inline bool UnalignedCollimatorAperture::PointInside(double x,double y,double z)
 
 /**********************************************************************
 *
-*	A collimtor jaw, aligned to the beam orbit and beta function changes
+*	A collimator jaw, aligned to the beam orbit and beta function changes
 * 	This has jaw flatness errors
 *
 **********************************************************************/
@@ -227,7 +227,7 @@ inline bool CollimatorApertureWithErrors::PointInside(double x,double y,double z
 
 /**********************************************************************
 *
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This has jaw flatness errors
 *
 **********************************************************************/
@@ -245,7 +245,7 @@ inline bool UnalignedCollimatorApertureWithErrors::PointInside(double x,double y
 
 /**********************************************************************
 *
-*	A one sided collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A one sided collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
 *	Still aligned to the beam size! Flat jaws, parallel to the beam pipe,
 *	but touching the beam envelope on each side

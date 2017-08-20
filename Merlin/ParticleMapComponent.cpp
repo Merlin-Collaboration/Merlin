@@ -29,11 +29,8 @@
 * or implied warranty.
 */
 
-// ParticleBunch
 #include "ParticleBunch.h"
-// ComponentTracker
 #include "ComponentTracker.h"
-// ParticleMapComponent
 #include "ParticleMapComponent.h"
 
 #include <cassert>

@@ -16,29 +16,37 @@
 #define BPMChannelCtor_h 1
 
 #include "merlin_config.h"
-// ChannelServer
 #include "ChannelServer.h"
-// BPMDataBufferServer
 #include "BPMDataBufferServer.h"
 
 class BPMChannel;
 
-//	Specialised constructor for BPM channels. The type of
-//	channel constructed depends on the value of the
-//	inherited key string (='X' or 'Y').
+/**
+*	Specialised constructor for BPM channels. The type of
+*	channel constructed depends on the value of the
+*	inherited key string (='X' or 'Y').
+*/
 
 class BPMChannelCtor : public ChannelServer::ChannelCtor
 {
 public:
 
-	// Constructor taking either 'x' or 'y' to designate
-	// which plane of BPM channel to construct.
+	/**
+	* Constructor taking either 'x' or 'y' to designate
+	* which plane of BPM channel to construct.
+	*/
 	BPMChannelCtor (char xy);
 
-	//	Constructs and returns a BPMChannel.
+	/**
+	*	Constructs and returns a BPMChannel.
+	*	@return Constructed BPMChannel
+	*/
 	virtual ROChannel* ConstructRO (ModelElement* anElement);
 
-	//	Returns a nullptr.
+	/**
+	*	Returns a nullptr.
+	*	@return nullptr
+	*/
 	virtual RWChannel* ConstructRW (ModelElement* anElement);
 
 	static BPMDataBufferServer theServer;

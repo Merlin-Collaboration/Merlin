@@ -33,16 +33,12 @@
 
 #include "merlin_config.h"
 
-
-// TemplateComponents
 #include "TemplateComponents.h"
-// RectangularGeometry
 #include "RectangularGeometry.h"
 
-
-//	A rectangular geometry with no field.
-
-
+/**
+*	A rectangular geometry with no field.
+*/
 typedef TAccCompG< RectangularGeometry > SimpleDrift;
 
 

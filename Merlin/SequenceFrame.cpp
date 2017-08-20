@@ -13,18 +13,16 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include "utils.h"
-// AcceleratorGeometry
 #include "AcceleratorGeometry.h"
-// SequenceFrame
 #include "SequenceFrame.h"
-// deleters
 #include "deleters.h"
 
-//	Implementation of an AcceleratorGeometry class used by
-//	SequenceFrame to construct the required geometry object
-//	to pass to its LatticeFrame base class during
-//	construction (via LatticeFrame::SetGeometry).
-
+/**
+*	Implementation of an AcceleratorGeometry class used by
+*	SequenceFrame to construct the required geometry object
+*	to pass to its LatticeFrame base class during
+*	construction (via LatticeFrame::SetGeometry ).
+*/
 class SequenceGeometry : public AcceleratorGeometry
 {
 public:
@@ -36,30 +34,44 @@ public:
 
 	~SequenceGeometry ();
 
-	//	Return the three-dimensional transformation between the
-	//	frame at s0 and the frame at s. s and s0 are in the
-	//	geometry's s-frame, and must be within the geometry
-	//	extents.
+	/**
+	*	Return the three-dimensional transformation between the
+	*	frame at s0 and the frame at s. s and s0 are in the
+	*	geometry's s-frame, and must be within the geometry
+	*	extents.
+	*/
 	virtual Transform3D GetGeometryTransform (double s0, double s) const;
 
-	//	Returns the transformation from the geometry origin to
-	//	the specified boundary plane.
+	/**
+	*	Returns the transformation from the geometry origin to
+	*	the specified boundary plane.
+	*/
 	virtual Transform3D GetGeometryTransform (BoundaryPlane p) const;
 
-	//	Returns the transformation from the entrance plane frame
-	//	to the exit plane frame.
+	/**
+	*	Returns the transformation from the entrance plane frame
+	*	to the exit plane frame.
+	*/
 	virtual Transform3D GetTotalGeometryTransform () const;
 
-	//	Returns the local extent of this geometry.
+	/**
+	*	Returns the local extent of this geometry.
+	*/
 	virtual AcceleratorGeometry::Extent GetGeometryExtent () const;
 
-	//	Returns the total arc-length of the geometry.
+	/**
+	*	Returns the total arc-length of the geometry.
+	*/
 	virtual double GetGeometryLength () const;
 
-	//	Calculates the cached transform state.
+	/**
+	*	Calculates the cached transform state.
+	*/
 	void CalculateCachedTransforms ();
 
-	//	Calculates the cached transforms for centred origin.
+	/**
+	*	Calculates the cached transforms for centred origin.
+	*/
 	void CalculateCentreCT ();
 
 	double len_t;
@@ -115,7 +127,9 @@ void SequenceFrame::AppendFrame (LatticeFrame& aFrame)
 	subFrames.push_back(&aFrame);
 	aFrame.SetSuperFrame(this);
 
-	// Update the geometry length
+	/**
+	* Update the geometry length
+	*/
 	itsSeqGeom->len_t += aFrame.GetGeometryLength();
 }
 

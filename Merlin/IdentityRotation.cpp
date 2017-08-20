@@ -12,11 +12,8 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// IdentityRotation
 #include "IdentityRotation.h"
-// GeneralRotation
 #include "GeneralRotation.h"
-// AxisRotations
 #include "AxisRotations.h"
 
 Rot3Drep* IdentityRotation::inv () const

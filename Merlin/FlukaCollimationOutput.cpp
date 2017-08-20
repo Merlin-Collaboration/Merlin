@@ -30,7 +30,7 @@ void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double
 		temp.ElementName = currentComponent->GetQualifiedName().c_str();
 		temp.s = currentComponent->GetComponentLatticePosition();
 
-		// For Fluka output pos is the lost position within the element
+		// For FLUKA output pos is the lost position within the element
 		temp.position = pos;
 		temp.length = currentComponent->GetLength();
 		temp.lost = 1;

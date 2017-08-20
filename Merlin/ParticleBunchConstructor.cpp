@@ -14,11 +14,8 @@
 #include <memory>
 
 #include "RandomNG.h"
-
 #include "ParticleBunchConstructor.h"
-
 #include "NormalTransform.h"
-
 #include "NumericalConstants.h"
 
 namespace ParticleTracking

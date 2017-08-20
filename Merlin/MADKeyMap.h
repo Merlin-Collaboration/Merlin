@@ -21,8 +21,10 @@
 #include <iostream>
 #include <map>
 
-//      Implementation class for mapping column keys in optics
-//      listing to element types during construction.
+/**
+*      Implementation class for mapping column keys in optics
+*      listing to element types during construction.
+*/
 
 class MADKeyMap
 {
@@ -31,15 +33,21 @@ public:
 	typedef std::map< std::string , size_t  > key_map;
 	struct bad_key {};
 
-	// Constructs a key map from the optics listing line
-	// containing the column headings.
+	/**
+	* Constructs a key map from the optics listing line
+	* containing the column headings.
+	*/
 	MADKeyMap (const std::string& hstr);
 
-	// Returns the value of the parameter for a specificed key.
-	// Throws BAD_KEY if not present.
+	/**
+	* Returns the value of the parameter for a specified key.
+	* Throws BAD_KEY if not present.
+	*/
 	virtual double GetParameter (const std::string& key, bool warn=true);
 
-	// Reads in the values for the next row.
+	/**
+	* Reads in the values for the next row.
+	*/
 	virtual void ReadRow (std::istream& is);
 
 	bool has_type;

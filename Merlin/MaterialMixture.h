@@ -84,11 +84,13 @@ public:
 
 	/**
 	* Returns a random element and sets CurrentElement to this element also.
+	* @return A random element
 	*/
 	Material* SelectRandomMaterial();
 
 	/**
 	* Returns CurrentElement.
+	* @return CurrentElement
 	*/
 	Material* GetCurrentMaterial();
 
@@ -105,11 +107,14 @@ public:
 	/**
 	* Is this a compound material?
 	* true for compounds, false for elements
+	*
+	* @retval true Corresponds to compounds
+	* @retval false Corresponds to elements
 	*/
 	virtual bool IsMixture() const;
 
 	/**
-	* Return list of constitutent element symbols as strings
+	* Return list of constituent element symbols as strings
 	*/
 	std::vector< std::pair<std::string,double> > GetConstituentElements();
 

@@ -17,12 +17,13 @@
 
 #include "RMap.h"
 
-// class RTMap
-//
-// A second-order TRANSPORT map for a PSvector
-// class RTMap represents both the first-order R and second-order T TRANSPORT
-// matrices. For efficiency, only non-zero terms are stored.
-
+/**
+* \class RTMap
+*
+* A second-order TRANSPORT map for a PSvector
+* class RTMap represents both the first-order R and second-order T TRANSPORT
+* matrices. For efficiency, only non-zero terms are stored.
+*/
 class RTMap : public RMap
 {
 private:
@@ -47,13 +48,17 @@ private:
 
 public:
 
-	// Construction
+	/**
+	* Construction
+	*/
 	RTMap() : RMap(), tterms()
 	{
 		tterms.reserve(8);
 	}
 
-	// Construct linear map from matrix
+	/**
+	* Construct linear map from matrix
+	*/
 	RTMap(const RealMatrix& R) : RMap(R), tterms()
 	{
 		tterms.reserve(8);
@@ -72,10 +77,14 @@ public:
 		return RMap::operator()(i,j);
 	}
 
-	// Operating on a PSvector
+	/**
+	* Operating on a PSvector
+	*/
 	PSvector& Apply(PSvector& p) const;
 
-	// Output
+	/**
+	* Output
+	*/
 	void Print(std::ostream&) const;
 
 private:

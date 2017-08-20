@@ -44,52 +44,83 @@ inline int ComputeIndex(int i)
 	return i*(i+3)/2;
 }
 
-
-//	An NxN matrix representing the full covariance matrix of
-//	an N-variate data sample (including first-order moments,
-//	or means). Variables are indexed from 0-(n-1).
+/**
+*	An NxN matrix representing the full covariance matrix of
+*	an N-variate data sample (including first-order moments,
+*	or means). Variables are indexed from 0-(n-1).
+*/
 
 template <class T, int N>
 class MVCMatrix
 {
 public:
-	//	Default constructor initialises all values to zero.
+	/**
+	*	Default constructor initialises all values to zero.
+	*/
 	MVCMatrix ();
 
-
-	//	Return the mean of the n-th variable.
+	/**
+	*	Return the mean of the n-th variable.
+	*
+	*	@return Mean
+	*/
 	T mean (int n) const;
 
-	//	Return the standard diviation of the n-th variable.
+	/**
+	*	Return the standard deviation of the n-th variable.
+	*
+	*	@return Standard deviation
+	*/
 	T std (int n) const;
 
-	//	Return the variance of the n-th variable.
+	/**
+	*	Return the variance of the n-th variable.
+	*
+	*	@return Variance
+	*/
 	T variance (int n) const;
 
-	//	Return the correlation coefficient of the n-th and m-th
-	//	variables =  s_mn/sqrt(s_mm*s_nn)
+	/**
+	*	Return the correlation coefficient of the n-th and m-th
+	*	variables =  s_mn/sqrt(s_mm*s_nn)
+	*
+	*	@return Correlation coefficient
+	*/
 	T r (int n, int m) const;
 
-	//	Matrix indexing. Returns <xi*xj>. Indexing runs from 0
-	//	to N-1.
+	/**
+	*	Matrix indexing. Returns <xi*xj>. Indexing runs from 0
+	*	to N-1.
+	*
+	*	@return <xi*xj>
+	*/
 	T& operator () (int i, int j);
 
 	const T& operator () (int i, int j) const;
 
-	//	Returns the mean value of the n-th parameter.
+	/**
+	*	Returns the mean value of the n-th parameter.
+	*	@return Mean value of n-th parameter
+	*/
 	T& operator [] (int n);
 
 	const T& operator [] (int n) const;
 
-	//	Sets all elements to zero.
+	/**
+	*	Sets all elements to zero.
+	*/
 	void zero ();
 
-	//	Prints the statistical data in a formatted table. If
-	//	normalise==true, then diagonal terms are printed as
-	//	correlation coefficients rij.
+	/**
+	*	Prints the statistical data in a formatted table. If
+	*	normalise==true, then diagonal terms are printed as
+	*	correlation coefficients rij.
+	*/
 	void printFormatted (ostream& os, bool normalised = true) const;
 
-	// logical comparisons
+	/**
+	* logical comparisons
+	*/
 	bool operator==(const MVCMatrix<T,N>& rhs) const;
 	bool operator!=(const MVCMatrix<T,N>& rhs) const
 	{
@@ -98,23 +129,28 @@ public:
 
 protected:
 private:
-	// Data Members for Class Attributes
+	/**
+	* Data Members for Class Attributes
+	*/
 
-	//	An array of the mean values of the distribution.
+	/**
+	*	An array of the mean values of the distribution.
+	*/
 	T m1[N];
 
-	//	An array of the second-order moments (variances) of the
-	//	distribution.
+	/**
+	*	An array of the second-order moments (variances) of the
+	*	distribution.
+	*/
 	T m2[N*(1+N)/2];
 
 private:
 };
 
 
-
-// Parameterized Class MVCMatrix
-
-
+/**
+* Parameterized Class MVCMatrix
+*/
 template <class T, int N>
 inline T MVCMatrix<T,N>::mean (int n) const
 {
@@ -195,13 +231,9 @@ inline void MVCMatrix<T,N>::zero ()
 }
 
 
-
-
-
-// Parameterized Class MVCMatrix
-
-
-
+/**
+* Parameterized Class MVCMatrix
+*/
 template <class T, int N>
 MVCMatrix<T,N>::MVCMatrix ()
 {

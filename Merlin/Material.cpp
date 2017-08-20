@@ -10,8 +10,8 @@ using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
 /*
-Basic constructor taking the following arguments:
-Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
+* Basic constructor taking the following arguments:
+* Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
 */
 Material::Material(std::string name0, std::string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
 {

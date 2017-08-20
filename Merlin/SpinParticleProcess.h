@@ -54,16 +54,32 @@ class SpinParticleProcess : public ParticleBunchProcess
 {
 public:
 	SpinParticleProcess (int prio, int nstep = 1);
-	//	Sets the current accelerator component.
+
+	/**
+	*	Sets the current accelerator component.
+	*/
 	virtual void SetCurrentComponent (AcceleratorComponent& component);
-	//	Preform the process for the specified step ds.
+
+	/**
+	*	Preform the process for the specified step ds.
+	*/
 	virtual void DoProcess (double ds);
-	//	Returns the current maximum step length for this process.
+
+	/**
+	*	Returns the current maximum step length for this process.
+	*	@return Process current maximum step length
+	*/
 	virtual double GetMaxAllowedStepSize () const;
-	//	Sets the minimum number of equal steps to take through
-	//	the component.
+
+	/**
+	*	Sets the minimum number of equal steps to take through
+	*	the component.
+	*/
 	void SetNumComponentSteps (int n);
-	//  Set a momentum for calculating the spin precession
+
+	/**
+	*  Set a momentum for calculating the spin precession
+	*/
 	void SetSpinMomentum (double p_spin);
 
 private:

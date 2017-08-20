@@ -29,18 +29,18 @@
 #define Collimator_h 1
 
 #include "merlin_config.h"
-
 #include "Drift.h"
-
 #include "Material.h"
 #include "ScatteringModel.h"
 
 class ComponentTracker;
 
-// A collimator represents a scattering element in the beamline. Collimator objects
-// are optically drifts, but when associated with an Aperture, they have the
-// material property of radiation length, which is used by specific scattering
-// process to approximate the interaction of particles with the collimator material.
+/**
+* A collimator represents a scattering element in the beamline. Collimator objects
+* are optically drifts, but when associated with an Aperture, they have the
+* material property of radiation length, which is used by specific scattering
+* process to approximate the interaction of particles with the collimator material.
+*/
 
 class Collimator : public Drift
 {
@@ -52,44 +52,71 @@ public:
 	Collimator (const string& id, double len, Material* pp, double P0);
 	//~ Collimator (const string& id, double len, Material* pp, Collimation::ScatteringModel* s, double P0);
 
-	// Returns the length of the collimator in units of its
-	// radiation length
+	/**
+	* Returns the length of the collimator in units of its
+	* radiation length
+	* @return Collimator length
+	*/
 	double GetNumRadLengths() const
 	{
 		return GetLength()/Xr;
 	}
 
-	// Returns the material radiation length (meter)
+	/**
+	* Returns the material radiation length (meter)
+	* @return Radiation material length (m)
+	*/
 	double GetMaterialRadiationLength() const
 	{
 		return Xr;
 	}
 
-	//	Returns the type string for this component.
+	/**
+	*	Returns the type string for this component.
+	*	@return String type of component
+	*/
 	virtual const string& GetType () const;
 
-	//	Returns the unique index for this class of accelerator
-	//	components.
+	/**
+	*	Returns the unique index for this class of accelerator
+	*	components.
+	*	@return Unique index for the class of accelerator components
+	*/
 	virtual int GetIndex () const;
 
-	//	Primary tracking interface. Prepares the specified
-	//	Tracker object for tracking this component.
+	/**
+	*	Primary tracking interface. Prepares the specified
+	*	Tracker object for tracking this component.
+	*/
 	virtual void PrepareTracker (ComponentTracker& aTracker);
 
-	//	Rotates the component 180 degrees about its local Y axis.
+	/**
+	*	Rotates the component 180 degrees about its local Y axis.
+	*/
 	virtual void RotateY180 ();
 
-	//	Virtual constructor.
+	/**
+	*	Virtual constructor.
+	*/
 	virtual ModelElement* Copy () const;
 
-	//	Unique index for an Accelerator component.
+	/**
+	*	Unique index for an Accelerator component.
+	*/
 	static const int ID;
 
-	// Collimator ID for Fluka output
+	/**
+	* Set collimator ID for Fluka output
+	*/
 	virtual void SetCollID (int n)
 	{
 		Coll_ID = n;
 	}
+
+	/**
+	* Get collimator ID for Fluka output
+	* @return Collimator ID for Fluka output
+	*/
 	virtual int GetCollID()
 	{
 		return Coll_ID;
@@ -97,7 +124,9 @@ public:
 
 	bool scatter_at_this_collimator;
 
-	// Collimator material
+	/**
+	* Collimator material
+	*/
 	Material* p;
 	virtual void SetMaterial(Material* pp)
 	{

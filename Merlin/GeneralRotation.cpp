@@ -18,7 +18,7 @@
 #include "LinearAlgebra.h"
 // rotation matrix construction
 #include "RotationMatrix.h"
-// GeneralRotation
+
 #include "GeneralRotation.h"
 
 GeneralRotation::GeneralRotation (const GeneralRotation& gr)

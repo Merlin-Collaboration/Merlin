@@ -17,11 +17,13 @@
 
 #include "RTMap.h"
 
-// BasicTransportMaps.h
-//
-// Contains declarations of global functions for constructing
-// first- and second-order transport matrices. Both order maps
-// are constructed and returned in a RTMap object.
+/*
+* BasicTransportMaps.h
+*
+* Contains declarations of global functions for constructing
+* first- and second-order transport matrices. Both order maps
+* are constructed and returned in a RTMap object.
+*/
 
 RTMap* DriftTM(double s);
 RTMap* SectorBendTM(double s, double h);

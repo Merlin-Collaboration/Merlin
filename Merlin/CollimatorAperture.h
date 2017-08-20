@@ -8,7 +8,7 @@
 
 /**********************************************************************
 *
-*	A collimtor jaw, aligned to the beam orbit and beta function changes
+*	A collimator jaw, aligned to the beam orbit and beta function changes
 * 	This does NOT have jaw flatness errors
 *
 **********************************************************************/
@@ -26,6 +26,7 @@ protected:
 	double w_exit,h_exit;
 	double cosalpha;
 	double sinalpha;
+
 //bool errors;
 //double e1,e2,e3,e4,e5,e6;
 //double aperture_error;
@@ -67,7 +68,7 @@ public:
 
 /**********************************************************************
 *
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
 *
 **********************************************************************/
@@ -87,12 +88,10 @@ public:
 	bool PointInside(double x,double y,double z) const;
 };
 
-/**********************************************************************
-*
-*	A collimtor jaw, aligned to the beam orbit and beta function changes
+/**
+*	A collimator jaw, aligned to the beam orbit and beta function changes
 * 	This has jaw flatness errors
-*
-**********************************************************************/
+*/
 
 class CollimatorApertureWithErrors: public CollimatorAperture
 {
@@ -100,12 +99,10 @@ class CollimatorApertureWithErrors: public CollimatorAperture
 	bool PointInside(double x,double y,double z) const;
 };
 
-/**********************************************************************
-*
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+/**
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This has jaw flatness errors
-*
-**********************************************************************/
+*/
 
 class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 {
@@ -114,12 +111,10 @@ class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 };
 
 
-/**********************************************************************
-*
-*	A collimtor jaw, unaligned to the beam orbit or beta function changes
+/**
+*	A collimator jaw, unaligned to the beam orbit or beta function changes
 * 	This does NOT have jaw flatness errors
-*
-**********************************************************************/
+*/
 
 class OneSidedUnalignedCollimatorAperture: public CollimatorAperture
 {

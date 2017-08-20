@@ -27,7 +27,7 @@ class Bunch;
 * Responsible for coordinating the tracking of a bunch
 * through a single AcceleratorComponent. Tracking occurs
 * by the application of a series of processes, which
-* effectively intergrate the bunch motion along the
+* effectively integrate the bunch motion along the
 * beamline.
 */
 class ProcessStepManager
@@ -51,6 +51,7 @@ public:
 
 	/**
 	* Returns the total length integrated since the last call to Initialise(Bunch&).
+	* @return Total length integrate since last call to `Initialise(Bunch&)`
 	*/
 	double GetIntegratedLength ();
 
@@ -62,6 +63,9 @@ public:
 	/**
 	* Remove aProcess from the current process table. Returns
 	* true if aProcess was present, otherwise false.
+	*
+	* @retval true If aProcess present
+	* @retval false If aProcess not present
 	*/
 	bool RemoveProcess (BunchProcess* aProcess);
 
@@ -75,7 +79,7 @@ public:
 private:
 
 	/**
-	* The current intgrated length.
+	* The current integrated length.
 	*/
 	double total_s;
 

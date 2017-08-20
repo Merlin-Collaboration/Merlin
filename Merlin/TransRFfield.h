@@ -20,35 +20,59 @@
 #include "RFAcceleratingField.h"
 #include "PhysicalConstants.h"
 
-//	A RF travelling wave transverse electric field .
-//  The field (Er*cos(theta),Er*sin(theta),0) is defined as
-//
+/**
+*	A RF travelling wave transverse electric field .
+*  The field (Er*cos(theta),Er*sin(theta),0) is defined as
+*/
 //	        Er(z,t)=E0 cos(k*z-w*t+phi).
-//
+/*
+* \f[
+*           E_r(z,t) = E_0 \cos(kz - \omega t + \phi)
+* \f]
+*/
 
 class TransverseRFfield : public RFAcceleratingField
 {
 public:
 
-	//	Constructor taking the frequency, peak electric field
-	//	and the phase of the RF. Default orientation is horizontal.
+	/**
+	*	Constructor taking the frequency, peak electric field
+	*	and the phase of the RF. Default orientation is horizontal.
+	*/
 	TransverseRFfield (double f, double Epk, double phase = 0, double theta=0);
 
-	//	Returns the magnetic field at the point x and time t.
+	/**
+	*	Returns the magnetic field at the point x and time t.
+	*	@return \f$ B(x,t) \f$
+	*/
 	virtual Vector3D GetBFieldAt (const Point3D& x, double t = 0) const;
 
-	//	Returns the electric field at the point x and time t
+	/**
+	*	Returns the electric field at the point x and time t
+	*	@return \f$ E(x,t) \f$
+	*/
 	virtual Vector3D GetEFieldAt (const Point3D& x, double t = 0) const;
 
-	//	Returns the force due to this field on a particle of
-	//	charge q with position x and velocity v at time t.
+	/**
+	*	Returns the force due to this field on a particle of
+	*	charge q with position x and velocity v at time t.
+	*
+	*	@return Force acting on charged particle
+	*/
 	virtual Vector3D GetForceAt (const Point3D& x, const Vector3D& v, double q, double t = 0) const;
 
-	//	Calculate the Er component.
+	/**
+	*	Calculate the Er component.
+	*/
 	virtual double Er (double z, double t) const;
 
-	// Returns the field orientation for the transverse cavity.
-	// theta=0 represents a purely horizontal field.
+	/**
+	* Returns the field orientation for the transverse cavity.
+	* theta=0 represents a purely horizontal field.
+	*
+	* @return The transverse cavity's field orientation
+	* @retval 0 A purely horizontal field
+	*/
 	double GetFieldOrientation() const
 	{
 		return theta;
@@ -58,8 +82,10 @@ public:
 		theta=t;
 	}
 
-	// Calculate the Ez component
-	// TODO: TransverseRFfield should not stricty be derived from RFAcceleratingField,
+	/**
+	* Calculate the Ez component
+	*/
+	// TODO: TransverseRFfield should not strictly be derived from RFAcceleratingField,
 	//       primarily because of this override.
 	virtual double Ez (double z, double t) const
 	{

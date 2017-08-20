@@ -14,9 +14,7 @@
 
 #include <algorithm>
 #include <iomanip>
-// RandomNG
 #include "RandomNG.h"
-// SimpleATL
 #include "SimpleATL.h"
 
 #undef ATL_XY

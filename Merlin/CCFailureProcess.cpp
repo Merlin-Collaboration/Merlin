@@ -219,7 +219,7 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 		}
 
 		//Here we check which set of CCs we are using, and count each so that we can know when we have traversed all 16 for beam1
-		//Note that in order to use process this we must inject a gaussian bunch immediately before a set of upstream CCs
+		//Note that in order to use process this we must inject a Gaussian bunch immediately before a set of upstream CCs
 		if 		( (currentComponent->GetComponentLatticePosition() >= 10000) && ((currentComponent->GetComponentLatticePosition() <= 13200)) )
 		{
 			upstream = 1;

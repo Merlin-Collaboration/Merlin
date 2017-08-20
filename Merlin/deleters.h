@@ -17,18 +17,24 @@
 
 #include <utility>
 
-//	Function object for deleting containers of pointers.
+/**
+*	Function object for deleting containers of pointers.
+*/
 
 template <class T>
 class deleter
 {
 public:
-	// Deletes the pointer p.
+	/**
+	* Deletes the pointer p.
+	*/
 	void operator () (T* p);
 };
 
-//	Function object for deleting associative containers
-//	whose value types are pointers.
+/**
+*	Function object for deleting associative containers
+*	whose value types are pointers.
+*/
 
 template <class key, class val>
 class map_deleter

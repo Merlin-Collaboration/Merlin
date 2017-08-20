@@ -17,25 +17,12 @@
 
 #include "merlin_config.h"
 
-// Bunch
 #include "Bunch.h"
-
-// BunchConstructor
 #include "BunchConstructor.h"
-
-// ProcessStepManager
 #include "ProcessStepManager.h"
-
-// BunchProcess
 #include "BunchProcess.h"
-
-// AcceleratorModel
 #include "AcceleratorModel.h"
-
-// ComponentFrame
 #include "ComponentFrame.h"
-
-// MerlinException
 #include "MerlinException.h"
 
 /**

@@ -12,9 +12,7 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// CorrectorDipoles
 #include "CorrectorDipoles.h"
-// ComponentTracker
 #include "ComponentTracker.h"
 
 const int XCor::ID = UniqueIndex();

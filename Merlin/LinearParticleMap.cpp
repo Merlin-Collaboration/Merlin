@@ -13,9 +13,7 @@
 /////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
-// ParticleBunch
 #include "ParticleBunch.h"
-// LinearParticleMap
 #include "LinearParticleMap.h"
 
 namespace ParticleTracking

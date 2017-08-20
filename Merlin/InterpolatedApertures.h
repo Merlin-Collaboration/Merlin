@@ -61,11 +61,15 @@ public:
 	std::vector<ap> ApertureList;
 };
 
-//RectEllipse Aperture
+/**
+* RectEllipse Aperture
+*/
 class InterpolatedRectEllipseAperture : public InterpolatedAperture, public Aperture
 {
 public:
-	//Constructor
+	/**
+	* Constructor
+	*/
 	InterpolatedRectEllipseAperture (std::vector<InterpolatedAperture::ap> ElementApertureList):InterpolatedAperture(ElementApertureList)
 	{
 		//MerlinProfile::AddProcess("APERTURE");
@@ -73,15 +77,22 @@ public:
 		ApertureMaterial = nullptr;
 	}
 
-	//Returns true if the point (x,y,z) is within the aperture.
+	/**
+	* Returns true if the point (x,y,z) is within the aperture.
+	* @retval true If (x,y,z) is within the aperture
+	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
 	//TODO
 	//Returns true if the point p is within the aperture.
 	//bool PointInside (const Point3D& p) const;
 
-	//Returns the radius to the aperture at location z and angle phi.
+	/**
+	* Returns the radius to the aperture at location z and angle phi.
+	* @return Radius to the aperture
+	*/
 	virtual double GetRadiusAt (double phi, double z) const;
+
 	//double GetFullHeight () const;
 	//double GetFullWidth () const;
 
@@ -107,10 +118,16 @@ public:
 	void SetRadius (double r);
 	void SetDiameter (double d);
 
-	//Returns true if the point (x,y,z) is within the aperture.
+	/**
+	* Returns true if the point (x,y,z) is within the aperture.
+	* @retval true If (x,y,z) is within the aperture
+	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
-	//Returns the radius.
+	/**
+	* Returns the radius.
+	* @return Radius
+	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
@@ -134,10 +151,14 @@ public:
 //	void SetRadius (double r);
 //	void SetDiameter (double d);
 
-	//Returns true if the point (x,y,z) is within the aperture.
+	/**
+	* Returns true if the point (x,y,z) is within the aperture.
+	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
-	//Returns the radius.
+	/**
+	* Returns the radius.
+	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
@@ -151,11 +172,15 @@ inline std::string InterpolatedEllipticalAperture::GetApertureType() const
 	return "INTERPOLATEDELLIPTICAL";
 }
 
-//RectEllipse Aperture
+/**
+* RectEllipse Aperture
+*/
 class InterpolatedOctagonalAperture : public InterpolatedAperture, public Aperture
 {
 public:
-	//Constructor
+	/**
+	* Constructor
+	*/
 	InterpolatedOctagonalAperture (std::vector<InterpolatedAperture::ap> ElementApertureList):InterpolatedAperture(ElementApertureList)
 	{
 		//MerlinProfile::AddProcess("APERTURE");
@@ -163,14 +188,20 @@ public:
 		ApertureMaterial = nullptr;
 	}
 
-	//Returns true if the point (x,y,z) is within the aperture.
+	/**
+	* Returns true if the point (x,y,z) is within the aperture.
+	* @retval true If (x,y,z) is within the aperture
+	*/
 	virtual bool PointInside (double x, double y, double z) const;
 
 	//TODO
 	//Returns true if the point p is within the aperture.
 	//bool PointInside (const Point3D& p) const;
 
-	//Returns the radius to the aperture at location z and angle phi.
+	/**
+	* Returns the radius to the aperture at location z and angle phi.
+	* @return Radius to the aperture
+	*/
 	virtual double GetRadiusAt (double phi, double z) const;
 
 	virtual std::string GetApertureType() const;

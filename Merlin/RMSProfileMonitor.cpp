@@ -12,13 +12,9 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// RandomNG
 #include "RandomNG.h"
-// Bunch
 #include "Bunch.h"
-// RMSProfileMonitor
 #include "RMSProfileMonitor.h"
-// ComponentTracker
 #include "ComponentTracker.h"
 
 #include "utils.h"

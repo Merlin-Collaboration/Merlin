@@ -12,9 +12,7 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// RectMultipole
 #include "RectMultipole.h"
-// ComponentTracker
 #include "ComponentTracker.h"
 
 const int RectMultipole::ID = UniqueIndex();

@@ -22,21 +22,13 @@
 #include <string>
 #include "ComponentFrame.h"
 
-// AcceleratorComponent
 #include "AcceleratorComponent.h"
-// ModelElement
 #include "ModelElement.h"
-// ElementRepository
 #include "ElementRepository.h"
-// LatticeFrame
 #include "LatticeFrame.h"
-// StringPattern
 #include "StringPattern.h"
-// ring_iterator
 #include "ring_iterator.h"
-// MerlinException
 #include "MerlinException.h"
-// AcceleratorSupports
 #include "AcceleratorSupport.h"
 
 class ChannelServer;
@@ -52,7 +44,6 @@ using std::vector;
 class AcceleratorModel
 {
 public:
-
 
 	typedef size_t Index;
 
@@ -367,11 +358,11 @@ public:
 	}
 
 	/**
-	* Returns the indecies of components matching par in iarray
+	* Returns the indices of components matching par in iarray
 	* for the entire beamline. iarray is overwritten by this function.
 	* Function returns length of iarray.
 	* @param[in] pat A string containing the pattern of element names to match.
-	* @param[out] iarray A vector array holding the Indecies of the element locations that matched the name pattern.
+	* @param[out] iarray A vector array holding the Indices of the element locations that matched the name pattern.
 	* @return A size_t containing the number of matched elements
 	*/
 	size_t GetIndecies(const std::string& pat, std::vector<Index>& iarray) const;
@@ -380,7 +371,7 @@ public:
 	* Same as above, but limits search to the specified (sub-)beamline.
 	* @param[in] aBeamline The (sub) Beamline to search.
 	* @param[in] pat A string containing the pattern of element names to match.
-	* @param[out] iarray A vector array holding the Indecies of the element locations that matched the name pattern.
+	* @param[out] iarray A vector array holding the Indices of the element locations that matched the name pattern.
 	* @return A size_t containing the number of matched elements.
 	*/
 	size_t GetIndecies(const Beamline& aBeamline, const std::string& pat, std::vector<Index>& iarray) const;
@@ -430,7 +421,7 @@ public:
 	/**
 	* Returns the top-level LatticeFrame (global frame) for
 	* the model. The global frame is the root object of the
-	* lattice frame hierachy.
+	* lattice frame hierarchy.
 	* @return The LatticeFrame containing the globalFrame.
 	*/
 	LatticeFrame& GetGlobalFrame()
@@ -441,7 +432,7 @@ public:
 	/**
 	* Returns the top-level LatticeFrame (global frame) for
 	* the model. The global frame is the root object of the
-	* lattice frame hierachy.
+	* lattice frame hierarchy.
 	* const version.
 	* @return The LatticeFrame containing the globalFrame.
 	*/

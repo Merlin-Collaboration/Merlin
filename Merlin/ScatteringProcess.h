@@ -34,13 +34,13 @@ namespace Collimation
 class ScatteringProcess
 {
 public:
-	double sigma; 			// Integrated cross section for this process
+	double sigma; 			/// Integrated cross section for this process
 
 protected:
-	double E0;				// Reference energy
-	Material* mat; 			// Material of the collimator being hit
-	CrossSections* cs;		// CrossSections object holding all configured cross sections
-	double t;				// Momentum transfer
+	double E0;				/// Reference energy
+	Material* mat; 			/// Material of the collimator being hit
+	CrossSections* cs;		/// CrossSections object holding all configured cross sections
+	double t;				/// Momentum transfer
 
 public:
 	virtual ~ScatteringProcess() {};
@@ -57,7 +57,9 @@ public:
 	}
 };
 
-// Rutherford
+/**
+* Rutherford
+*/
 class Rutherford:public ScatteringProcess
 {
 	double tmin;
@@ -82,10 +84,12 @@ public:
 	}
 };
 
-// Elastic pn
+/**
+* Elastic pn
+*/
 class Elasticpn:public ScatteringProcess
 {
-	double b_pp; //slope
+	double b_pp; /// slope
 public:
 	void Configure(Material* matin, CrossSections* CSin);
 	bool Scatter(PSvector& p, double E);
@@ -97,7 +101,7 @@ public:
 
 class SixTrackElasticpn:public ScatteringProcess
 {
-	double b_pp; //slope
+	double b_pp; /// slope
 public:
 	void Configure(Material* matin, CrossSections* CSin);
 	bool Scatter(PSvector& p, double E);
@@ -107,10 +111,12 @@ public:
 	}
 };
 
-// Elastic pN
+/**
+* Elastic pN
+*/
 class ElasticpN:public ScatteringProcess
 {
-	double b_N; //slope
+	double b_N; /// slope
 public:
 	void Configure(Material* matin, CrossSections* CSin);
 	bool Scatter(PSvector& p, double E);
@@ -122,7 +128,7 @@ public:
 
 class SixTrackElasticpN:public ScatteringProcess
 {
-	double b_N; //slope
+	double b_N; /// slope
 public:
 	void Configure(Material* matin, CrossSections* CSin);
 	bool Scatter(PSvector& p, double E);
@@ -132,10 +138,12 @@ public:
 	}
 };
 
-// Single Diffractive
+/**
+* Single Diffractive
+*/
 class SingleDiffractive:public ScatteringProcess
 {
-	double m_rec; //recoil mass
+	double m_rec; /// recoil mass
 public:
 	void Configure(Material* matin, CrossSections* CSin);
 	bool Scatter(PSvector& p, double E);
@@ -148,7 +156,7 @@ public:
 
 class SixTrackSingleDiffractive:public ScatteringProcess
 {
-	double m_rec; //recoil mass
+	double m_rec; /// recoil mass
 	double dp;
 public:
 	void Configure(Material* matin, CrossSections* CSin);
@@ -160,7 +168,9 @@ public:
 
 };
 
-// Inelastic
+/**
+* Inelastic
+*/
 class Inelastic:public ScatteringProcess
 {
 public:

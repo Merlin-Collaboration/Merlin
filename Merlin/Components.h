@@ -20,35 +20,20 @@
 
 #include "merlin_config.h"
 
-// StandardMultipoles
 #include "StandardMultipoles.h"
-// SectorBend
 #include "SectorBend.h"
-// Drift
 #include "Drift.h"
-// Marker
 #include "Marker.h"
-// TWRFStructure
 #include "TWRFStructure.h"
-// SWRFStructure
 #include "SWRFStructure.h"
-// TransverseRFStructure
 #include "TransverseRFStructure.h"
-// CorrectorDipoles
 #include "CorrectorDipoles.h"
-// RMSProfileMonitor
 #include "RMSProfileMonitor.h"
-// BPM
 #include "BPM.h"
-// Marker
 #include "Marker.h"
-// Solenoid
 #include "Solenoid.h"
-//Collimator
 #include "Collimator.h"
-// HollowElectronLens
 #include "HollowElectronLens.h"
-// CrabMarker
 #include "CrabMarker.h"
 
 #endif

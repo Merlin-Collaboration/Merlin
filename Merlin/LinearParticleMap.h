@@ -16,9 +16,7 @@
 #define LinearParticleMap_h 1
 
 #include "merlin_config.h"
-// MatrixMaps
 #include "MatrixMaps.h"
-// ParticleMap
 #include "ParticleMap.h"
 
 namespace ParticleTracking
@@ -30,7 +28,9 @@ class LinearParticleMap : public ParticleMap
 {
 public:
 
-	//	Applies the map to the specified ParticleBunch.
+	/**
+	*	Applies the map to the specified ParticleBunch.
+	*/
 	virtual ParticleBunch& Apply (ParticleBunch& bunch) const;
 	virtual void Invert ();
 	RMtrx R;

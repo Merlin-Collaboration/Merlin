@@ -23,9 +23,11 @@ using std::string;
 using std::ios_base;
 using std::ostream;
 
-//	Floating Point Format. Utility class for formatting and
-//	outputting floating point numbers to an ostream, without
-//	modifying the state of the ostream.
+/**
+*	Floating Point Format. Utility class for formatting and
+*	outputting floating point numbers to an ostream, without
+*	modifying the state of the ostream.
+*/
 
 class OPFormat
 {

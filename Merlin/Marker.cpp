@@ -12,9 +12,7 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// ComponentTracker
 #include "ComponentTracker.h"
-// Marker
 #include "Marker.h"
 
 const int Marker::ID = UniqueIndex();

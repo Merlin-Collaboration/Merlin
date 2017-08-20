@@ -48,16 +48,24 @@ struct IdentityMatrix;
 class DimensionError {};
 class RangeError {};
 
-// class Subscript
-// Single integer subscript to an array object - size_t is unsigned.
+/**
+* \class Subscript
+*
+* Single integer subscript to an array object - size_t is unsigned.
+*/
 typedef size_t Subscript;
 typedef size_t Dimension;
 
-// class Range
-// A contiguous inclusive range of Subscript values - also unsigned.
+/**
+* \class Range
+*
+* A contiguous inclusive range of Subscript values - also unsigned.
+*/
 typedef std::pair<Subscript,Subscript> Range;
 
-// Dimensions of a matrix.
+/**
+* Dimensions of a matrix.
+*/
 struct MatrixDim
 {
 	Dimension n,m;
@@ -82,8 +90,9 @@ inline MatrixDim swap(const MatrixDim& r)
 	return MatrixDim(r.m,r.n);
 }
 
-
-// Helper class for constructing identity matrix
+/**
+* Helper class for constructing identity matrix
+*/
 struct IdentityMatrix
 {
 	Dimension dim;
@@ -137,7 +146,7 @@ inline void in_range(Range r, Dimension n)
 
 // The following typedef is used to put the typedefs into
 // the scope of each class requiring them. Use of a base class
-// (TMTRX_BASE) which is the correct way to do it is prohbited
+// (TMTRX_BASE) which is the correct way to do it is prohibited
 // because of a bug in GCC 3.1
 
 #define VEC_TYPE_DEFS \
@@ -149,7 +158,9 @@ inline void in_range(Range r, Dimension n)
 		typedef const T* const_iterator
 
 
-// TMTRX_BASE class,
+/**
+* TMTRX_BASE class,
+*/
 template<class T>
 class TMTRX_BASE
 {
@@ -159,7 +170,6 @@ public:
 	VEC_TYPE_DEFS;
 };
 
-// class Vector
 template<class T>
 class Vector /*: public TMTRX_BASE<T>*/
 {
@@ -226,8 +236,8 @@ public:
 	}
 
 	// element access
-	// We provice both C-like [] and FORTRAN-like ()
-	// indexing. Indecies start at 0 (C-like).
+	// We provide both C-like [] and FORTRAN-like ()
+	// indexing. Indices start at 0 (C-like).
 	T& operator[](Subscript i)
 	{
 		in_range(i,array.size());
@@ -400,7 +410,9 @@ Vector<T> operator/(const Vector<T>& u, const Vector<T>& v)
 	return rv/=v;
 }
 
-// dot (inner) product
+/**
+* Dot (inner) product
+*/
 template<class T>
 T operator*(const Vector<T>& u, const Vector<T>& v)
 {
@@ -459,14 +471,16 @@ Vector<T> operator/(const Vector<T>& v, T s)
 	return rv/=s;
 }
 
-// template<class T> SubVector
-// A single (1-dimensional) slice_type (vector)
-// of a Matrix or Vector. SubVector objects have
-// reference semantics to their associated
-// matrix. They cannot be constructed or assigned
-// (except by a Matrix). They are intended as a
-// helper class for accessing rows and columns of
-// Matrices.
+/*
+* template<class T> SubVector
+* A single (1-dimensional) slice_type (vector)
+* of a Matrix or Vector. SubVector objects have
+* reference semantics to their associated
+* matrix. They cannot be constructed or assigned
+* (except by a Matrix). They are intended as a
+* helper class for accessing rows and columns of
+* Matrices.
+*/
 
 template<class T>
 class ConstSubVector /* : public TMTRX_BASE<T> */
@@ -495,13 +509,17 @@ public:
 		return array[sl.start()+i*sl.stride()];
 	}
 
-	// conversion to a Vector
+	/**
+	* Conversion to a Vector
+	*/
 	operator Vector<T> () const
 	{
 		return Vector<T>(array[sl]);
 	}
 
-	// length of the vector
+	/**
+	* Length of the vector
+	*/
 	Dimension size() const
 	{
 		return sl.size();
@@ -568,7 +586,9 @@ public:
 		return array[sl.start()+i*sl.stride()];
 	}
 
-	// assignment to a Vector.
+	/**
+	* Assignment to a Vector.
+	*/
 	SubVector<T>& operator=(const Vector<T>& v)
 	{
 		equal_length(sl.size(),v.size());
@@ -642,19 +662,25 @@ public:
 	//			return Vector<T>(s*array[sl]);
 	//		}
 
-	// conversion to a Vector
+	/**
+	* Conversion to a Vector
+	*/
 	operator Vector<T> () const
 	{
 		return Vector<T>(array[sl]);
 	}
 
-	// convert to a ConstSubVector
+	/**
+	* Convert to a ConstSubVector
+	*/
 	operator ConstSubVector<T> () const
 	{
 		return ConstSubVector<T>(array,sl);
 	}
 
-	// length of the vector
+	/**
+	* Length of the vector
+	*/
 	Dimension size() const
 	{
 		return sl.size();
@@ -662,11 +688,15 @@ public:
 
 private:
 
-	// Constructor only called by Matrix<T> (via friendship)
+	/**
+	* Constructor only called by Matrix<T> (via friendship)
+	*/
 	SubVector(array_type& ar, const slice_type& s)
 		: sl(s),array(ar) {}
 
-	// assignment not allowed.
+	/**
+	* Assignment not allowed.
+	*/
 	SubVector<T>& operator=(const SubVector<T>&)
 	{
 		return *this;
@@ -679,14 +709,16 @@ private:
 	friend class Vector<T>;
 };
 
-// template<class T> SubMatrix
-// A contiguous (2-dimensional) block (sub-matrix)
-// of a Matrix. SubMatrix objects have
-// reference semantics to their associated
-// matrix. They cannot be constructed or assigned
-// (except by a Matrix). They are intended as a
-// helper class for accessing sub-sections of
-// Matrices.
+/**
+* template<class T> SubMatrix
+* A contiguous (2-dimensional) block (sub-matrix)
+* of a Matrix. SubMatrix objects have
+* reference semantics to their associated
+* matrix. They cannot be constructed or assigned
+* (except by a Matrix). They are intended as a
+* helper class for accessing sub-sections of
+* Matrices.
+*/
 
 template<class T>
 class ConstSubMatrix /* : public TMTRX_BASE<T> */
@@ -694,7 +726,9 @@ class ConstSubMatrix /* : public TMTRX_BASE<T> */
 
 	VEC_TYPE_DEFS;
 
-	// private function to calculate index
+	/**
+	* Private function to calculate index
+	*/
 	Subscript index(Subscript i, Subscript j) const
 	{
 		in_range(i,gl.size()[0]);
@@ -708,13 +742,17 @@ public:
 	typedef Vector<T> vector_type;
 	typedef Matrix<T> matrix_type;
 
-	// vector subscripting
+	/**
+	* Vector subscripting
+	*/
 	T operator()(Subscript i, Subscript j) const
 	{
 		return array[index(i,j)];
 	}
 
-	// conversion to Matrix
+	/**
+	* Conversion to Matrix
+	*/
 	operator Matrix<T>() const
 	{
 		return Matrix<T>(gl.size()[0],gl.size()[1],array[gl]);
@@ -736,13 +774,15 @@ public:
 
 private:
 
-	// Constructor only called by Matrix<T> (via friendship)
+	/**
+	* Constructor only called by Matrix<T> (via friendship)
+	*/
 	ConstSubMatrix(const array_type& ar, const gslice_type& s)
 		: gl(s),array(ar) {}
 
 	// copying not allowed
 	ConstSubMatrix(const ConstSubMatrix<T>& t)
-		: gl(t.gl),array(t.array) {}; // needed for explicite instantion
+		: gl(t.gl),array(t.array) {}; // needed for explicit instantiation
 	ConstSubMatrix<T>& operator=(const ConstSubMatrix<T>&)
 	{
 		return *this;
@@ -761,7 +801,9 @@ class SubMatrix /* : public TMTRX_BASE<T> */
 
 	VEC_TYPE_DEFS;
 
-	// private function to calculate index
+	/**
+	* Private function to calculate index
+	*/
 	Subscript index(Subscript i, Subscript j) const
 	{
 		in_range(i,gl.size()[0]);
@@ -786,7 +828,9 @@ public:
 		return array[index(i,j)];
 	}
 
-	// assignment to a Vector.
+	/**
+	* Assignment to a Vector.
+	*/
 	SubMatrix<T>& operator=(const Matrix<T>& m)
 	{
 		equal_dimension(dim(),m.dim());
@@ -883,11 +927,15 @@ public:
 
 private:
 
-	// Constructor only called by Matrix<T> (via friendship)
+	/**
+	* Constructor only called by Matrix<T> (via friendship)
+	*/
 	SubMatrix(array_type& ar, const gslice_type& s)
 		: gl(s),array(ar) {}
 
-	// assignment not allowed.
+	/**
+	* assignment not allowed.
+	*/
 	SubMatrix<T>& operator=(const SubMatrix<T>&)
 	{
 		return *this;
@@ -911,7 +959,9 @@ public:
 	typedef std::valarray<size_t> index_array_type;
 
 private:
-	// private function to calculate index
+	/**
+	* Private function to calculate index
+	*/
 	Subscript index(Subscript i, Subscript j) const
 	{
 		in_range(i,nr);
@@ -941,7 +991,9 @@ public:
 		valid_dimension(cols);
 	}
 
-	// construction of an identity matrix
+	/**
+	* Construction of an identity matrix
+	*/
 	Matrix(IdentityMatrix I)
 		: nr(I.dim),nc(I.dim),array(T(0),I.dim*I.dim)
 	{
@@ -956,7 +1008,7 @@ public:
 	//		{}
 
 	// copy another matrix type
-	// if convertion from U to T allowed
+	// if conversion from U to T allowed
 	template<class U>
 	Matrix(const Matrix<U>& rhs)
 		: nr(rhs.nrows()),nc(rhs.ncols()),array(rhs.nrows()*rhs.ncols())
@@ -1059,7 +1111,10 @@ public:
 		return array[index(i,j)];
 	}
 
-	// return a ranged row vector
+	/**
+	* Return a ranged row vector
+	* @return Ranged row vector
+	*/
 	SubVector<T> operator()(Subscript i, Range col_r)
 	{
 		in_range(i,nr);
@@ -1067,7 +1122,10 @@ public:
 		return SubVector<T>(array,slice_type(nc*i+col_r.first,length(col_r),1));
 	}
 
-	// return a ranged column vector
+	/**
+	* Return a ranged column vector
+	* @return Ranged column vector
+	*/
 	SubVector<T> operator()(Range row_r, Subscript j)
 	{
 		in_range(row_r,nr);
@@ -1075,7 +1133,10 @@ public:
 		return SubVector<T>(array,slice_type(j+row_r.first*nc,length(row_r),nc));
 	}
 
-	// return a sub-matrix
+	/**
+	* Return a sub-matrix
+	* @return Sub-matrix
+	*/
 	SubMatrix<T> operator()(const Range& row_r, const Range& col_r)
 	{
 		in_range(row_r,nr);
@@ -1089,21 +1150,30 @@ public:
 		return SubMatrix<T>(array,gslice_type(index(row_r.first,col_r.first),lengths,strides));
 	}
 
-	// return a row.
+	/**
+	* Return a row.
+	* @return A row
+	*/
 	SubVector<T> row(Subscript i)
 	{
 		in_range(i,nr);
 		return SubVector<T>(array,slice_type(i*nc,nc,1));
 	}
 
-	// return a column
+	/**
+	* Return a column
+	* @return A column
+	*/
 	SubVector<T> column(Subscript j)
 	{
 		in_range(j,nc);
 		return SubVector<T>(array,slice_type(j,nr,nc));
 	}
 
-	// return a ranged row vector
+	/**
+	* Return a ranged row vector
+	* @return Ranged row vector
+	*/
 	ConstSubVector<T> operator()(Subscript i, Range col_r) const
 	{
 		in_range(i,nr);
@@ -1111,7 +1181,10 @@ public:
 		return ConstSubVector<T>(array,slice_type(nc*i+col_r.first,length(col_r),1));
 	}
 
-	// return a ranged column vector
+	/**
+	* Return a ranged column vector
+	* @return Ranged column vector
+	*/
 	ConstSubVector<T> operator()(Range row_r, Subscript j) const
 	{
 		in_range(row_r,nr);
@@ -1119,7 +1192,10 @@ public:
 		return ConstSubVector<T>(array,slice_type(j+row_r.first*nc,length(row_r),nc));
 	}
 
-	// return a sub-matrix
+	/**
+	* Return a sub-matrix
+	* @return Sub-matrix
+	*/
 	ConstSubMatrix<T> operator()(const Range& row_r, const Range& col_r) const
 	{
 		in_range(row_r,nr);
@@ -1133,14 +1209,20 @@ public:
 		return ConstSubMatrix<T>(array,gslice_type(index(row_r.first,col_r.first),lengths,strides));
 	}
 
-	// return a row.
+	/**
+	* Return a row.
+	* @return Row
+	*/
 	ConstSubVector<T> row(Subscript i) const
 	{
 		in_range(i,nr);
 		return ConstSubVector<T>(array,slice_type(i*nc,nc,1));
 	}
 
-	// return a column
+	/**
+	* Return a column
+	* @return Column
+	*/
 	ConstSubVector<T> column(Subscript j) const
 	{
 		in_range(j,nc);
@@ -1270,7 +1352,9 @@ private:
 	friend class SubMatrix<T>;
 	friend class ConstSubMatrix<T>;
 
-	// private constructor for SubMatrix
+	/**
+	* Private constructor for SubMatrix
+	*/
 	Matrix<T>(Dimension rows, Dimension cols, const array_type& gsa)
 		: nr(rows),nc(cols),array(gsa) {}
 };
@@ -1309,8 +1393,9 @@ Matrix<T> operator*(T s, const Matrix<T>& A)
 	return rv*=s;
 }
 
-// matrix multiplication
-
+/**
+* Matrix multiplication
+*/
 template<class T>
 Matrix<T> operator*(const Matrix<T>& A, const Matrix<T> B)
 {
@@ -1320,7 +1405,9 @@ Matrix<T> operator*(const Matrix<T>& A, const Matrix<T> B)
 	return C;
 }
 
-// matrix-vector multiplication
+/**
+* Matrix-vector multiplication
+*/
 template<class T>
 Vector<T> operator*(const Matrix<T>& M, const Vector<T> V)
 {

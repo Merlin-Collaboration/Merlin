@@ -9,10 +9,14 @@
 
 namespace ParticleTracking
 {
-//
-// a particle wakefield process modified for couple wake and rf kicks
+
+/**
+* A particle wakefield process modified for couple wake and rf kicks
+* -- see EUROTeV-2008-003
+*/
+
 // DK 30 May 2008 - see EUROTeV-2008-003
-//
+
 class CouplerWakeFieldProcess : public WakeFieldProcess
 {
 public:

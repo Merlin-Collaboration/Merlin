@@ -57,7 +57,7 @@ Bunch* SMPBunchConstructor::ConstructBunch (int) const
 	double dyp = beamdat.Dyp;
 	PSmoments S = BeamDataToSigmaMtrx(bd);
 
-	// the macroparticles are constructed to represent the
+	// the macro particles are constructed to represent the
 	// total charge in a bin of width 6sigma/ns
 
 	double q0 = beamdat.charge;

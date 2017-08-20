@@ -19,19 +19,25 @@ class ElectronBunch :public ParticleBunch
 
 public:
 
-	//	Constructs an ElectronBunch using the specified momentum,
-	//	total charge and the particle array. Note that on exit,
-	//	particles is empty.
+	/**
+	*	Constructs an ElectronBunch using the specified momentum,
+	*	total charge and the particle array. Note that on exit,
+	*	particles is empty.
+	*/
 	ElectronBunch (double P0, double Q, PSvectorArray& particles)
 		: ParticleBunch(P0, Q, particles) {};
 
-	//	Read phase space vectors from specified input stream.
+	/**
+	*	Read phase space vectors from specified input stream.
+	*/
 	ElectronBunch (double P0, double Q, std::istream& is)
 		: ParticleBunch(P0, Q, is) {};
 
-	//	Constructs an empty ElectronBunch with the specified
-	//	momentum P0 and charge per macro particle Qm (default =
-	//	+1).
+	/**
+	*	Constructs an empty ElectronBunch with the specified
+	*	momentum P0 and charge per macro particle Qm (default =
+	*	+1).
+	*/
 	ElectronBunch (double P0, double Qm = 1)
 		: ParticleBunch(P0, Qm) {};
 

@@ -18,7 +18,7 @@ DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure)
 DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
 DECL_SIMPLE_INTG(MarkerCI,Marker)
 
-// from std intergrators
+// from std integrators
 DECL_SIMPLE_INTG(MonitorCI,Monitor)
 DECL_SIMPLE_INTG(SolenoidCI,Solenoid)
 

@@ -16,28 +16,34 @@
 #define PatchFrame_h 1
 
 #include "merlin_config.h"
-// ComponentFrame
 #include "ComponentFrame.h"
-// PatchGeometry
 #include "GeometryPatch.h"
 
-// A special ComponentFrame which represents a pure geometry patch.
-// There is no AcceleratorComponent associated with this frame.
-//
-// NOTE*** This his is a bit of a kludge, and there is probably a better
-//         way to do this!
+/**
+* A special ComponentFrame which represents a pure geometry patch.
+* There is no AcceleratorComponent associated with this frame.
+*
+* **NOTE** This his is a bit of a kludge, and there is probably a better
+*         way to do this!
+*/
 
 class PatchFrame : public ComponentFrame
 {
 public:
 
-	//	Constructor
+	/**
+	*	Constructor
+	*/
 	explicit PatchFrame (GeometryPatch* pg, const string& id = "");
 
-	//	Copy constructor.
+	/**
+	*	Copy constructor.
+	*/
 	PatchFrame (const PatchFrame& rhs);
 
-	// Destructor
+	/**
+	* Destructor
+	*/
 	virtual ~PatchFrame ();
 	virtual const string& GetType () const
 	{

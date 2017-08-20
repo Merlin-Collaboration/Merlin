@@ -1,19 +1,8 @@
 #ifndef _elasticScatter_h_
 #define _elasticScatter_h_
 
-/**
-* Include for the vector class for storing the cross section tables.
-*/
 #include <vector>
-
-/**
-* Include for complex numbers
-*/
 #include <complex>
-
-/**
-* Include for the interpolation classes, to interpolate cross section values.
-*/
 #include "Interpolation.h"
 
 namespace ParticleTracking
@@ -36,7 +25,7 @@ public:
 
 	~ppElasticScatter();
 	/**
-	* Generates the requried differential cross sections and integrates for the specified energy
+	* Generates the required differential cross sections and integrates for the specified energy
 	*/
 	void GenerateTDistribution(double energy);
 
@@ -47,7 +36,7 @@ public:
 
 	/**
 	* Sets the minimum t value for generation
-	* @param tmin the minumum t value to generate
+	* @param tmin The minimum t value to generate
 	*/
 	void SetTMin(double tmin);
 
@@ -138,13 +127,14 @@ private:
 
 	std::vector<double> *DSigN;
 //std::vector<double> IntSigN;
-	/**
+
+	/*
 	* The Integrated elastic cross section
 	*/
 	double SigElastic;
 	double SigElasticN;
 
-	/**
+	/*
 	* b slope
 	*/
 //double b;

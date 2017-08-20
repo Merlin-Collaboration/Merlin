@@ -7,7 +7,7 @@
 */
 bool RectEllipseAperture::PointInside (double x, double y, double z) const
 {
-	/* Particle is NOT inside the eliptical aperture component */
+	/* Particle is NOT inside the elliptical aperture component */
 	//if( ((x*x*IEHH2) + (y*y*IEHV2)) > 1){return false;}
 	if( (x*x + y*y*HV) > EHH2)
 	{

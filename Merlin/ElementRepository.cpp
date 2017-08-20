@@ -14,11 +14,8 @@
 
 #include "merlin_config.h"
 #include <algorithm>
-// ElementRepository
 #include "ElementRepository.h"
-// deleters
 #include "deleters.h"
-// StringPattern
 #include "StringPattern.h"
 
 using namespace std;

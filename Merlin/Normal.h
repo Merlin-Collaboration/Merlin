@@ -18,9 +18,18 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #ifndef _Normal_h
 #ifdef __GNUG__
 #endif
+
 #define _Normal_h
 
 #include "Random.h"
+
+/**
+*
+*  See Simulation, Modelling & Analysis by Law & Kelton, pp259
+*
+*  This is the ``polar'' method.
+*
+*/
 
 class Normal: public Random
 {

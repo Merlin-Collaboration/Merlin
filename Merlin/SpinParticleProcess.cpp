@@ -141,6 +141,10 @@ ParticleBunch::iterator SpinParticleBunch::erase(ParticleBunch::iterator p)
 	return ParticleBunch::erase(p);
 }
 
+/**
+* Apply transformation to the particle coordinates and apply
+* the required spin vector rotations
+*/
 bool SpinParticleBunch::ApplyTransformation (const Transform3D& t)
 {
 	// First apply the transformation to the particle coordinates

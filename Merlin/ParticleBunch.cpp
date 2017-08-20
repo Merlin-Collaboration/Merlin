@@ -16,11 +16,8 @@
 #include <fstream>
 #include <list>
 #include <iterator>
-// Transform3D
 #include "Transform3D.h"
-// PSvectorTransform3D
 #include "PSvectorTransform3D.h"
-// ParticleBunch
 #include "ParticleBunch.h"
 
 #ifdef MERLIN_PROFILE
@@ -607,7 +604,7 @@ void ParticleBunch::master_send_particles_to_nodes()
 	//Now save the bunch size
 	int particle_count = size();
 
-	//The bunch must now be convered into a format suitable for sending again.
+	//The bunch must now be converted into a format suitable for sending again.
 	//The leftover extra particles can be added to the "local" machine bunch.
 	int particles_per_node = particle_count/MPI_size;
 	int remaining_particles = particle_count % MPI_size;

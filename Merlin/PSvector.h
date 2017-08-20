@@ -21,7 +21,7 @@
 #include <vector>
 #include "LinearAlgebra.h"
 
-// Phase space coordinate indecies
+// Phase space coordinate indices
 typedef int PScoord;
 #define ps_X  0
 #define ps_XP 1
@@ -134,13 +134,17 @@ public:
 		return v[9];
 	}
 
-	//	Array access.
+	/**
+	*	Array access.
+	*/
 	double& operator [] (PScoord coord)
 	{
 		return v[coord];
 	}
 
-	//	Conversion to a RealVector.
+	/**
+	*	Conversion to a RealVector.
+	*/
 	operator RealVector () const
 	{
 		return RealVector(v,PS_LENGTH);
@@ -156,13 +160,17 @@ public:
 		return memcmp(v,psv.v,PS_LENGTH*sizeof(double))!=0;
 	}
 
-	//	Sets the vector to zero.
+	/**
+	*	Sets the vector to zero.
+	*/
 	void zero ()
 	{
 		std::fill(v,v+PS_LENGTH,0.0);
 	}
 
-	//	Arithmetic assignment
+	/**
+	*	Arithmetic assignment
+	*/
 	PSvector& operator += (const PSvector& p)
 	{
 		double *q=v;
@@ -203,7 +211,9 @@ public:
 		return *this;
 	}
 
-	// binary arithmetic operators
+	/**
+	* binary arithmetic operators
+	*/
 	PSvector operator+(const PSvector& rhs) const
 	{
 		PSvector rv(*this);
@@ -216,19 +226,25 @@ public:
 		return rv-=rhs;
 	}
 
-	//	Reads the vector as six floating point numbers,
-	//	separated by spaces and terminated by a newline.
+	/**
+	*	Reads the vector as six floating point numbers,
+	*	separated by spaces and terminated by a newline.
+	*/
 	friend std::ostream& operator<<(std::ostream& os, const PSvector& v);
 
-	//	Outputs the vector in row form, space delimeted with a
-	//	terminating newline.
+	/**
+	*	Outputs the vector in row form, space delimited with a
+	*	terminating newline.
+	*/
 	friend std::istream& operator>>(std::istream& is, PSvector& v);
 
 private:
 	double __attribute__((aligned(16))) v[PS_LENGTH];
 };
 
-//	A linear array of PSvector objects.
+/**
+*	A linear array of PSvector objects.
+*/
 typedef std::vector<PSvector> PSvectorArray;
 
 #endif

@@ -11,8 +11,6 @@
 #include <cmath>
 
 #include "PhysicalUnits.h"
-
-// PhysicalConstants
 #include "PhysicalConstants.h"
 
 

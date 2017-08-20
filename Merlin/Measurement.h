@@ -15,9 +15,10 @@
 #ifndef Measurement_h
 #define Measurement_h 1
 
-//	POD representing a physically measured quantity, which
-//	has a value and an associated error.
-
+/**
+*	POD representing a physically measured quantity, which
+*	has a value and an associated error.
+*/
 struct Measurement
 {
 	Measurement (double v, double err);
@@ -27,8 +28,9 @@ struct Measurement
 	double error;
 };
 
-// Class Measurement
-
+/**
+* Class Measurement
+*/
 inline Measurement::Measurement (double v, double err)
 	: value(v),error(err)
 {}

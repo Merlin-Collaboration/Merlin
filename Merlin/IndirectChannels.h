@@ -16,15 +16,15 @@
 #define IndirectChannels_h 1
 
 #include "merlin_config.h"
-// ChannelServer
 #include "ChannelServer.h"
-// Channels
 #include "Channels.h"
 
 template <class E> class TIRWChannel;
 
-//	Template class for constructing TIRWChannel objects for
-//	specific ModelElement types.
+/**
+*	Template class for constructing TIRWChannel objects for
+*	specific ModelElement types.
+*/
 
 template <class E>
 class TIC_ctor : public ChannelServer::ChannelCtor
@@ -37,10 +37,14 @@ public:
 
 	TIC_ctor (const string& aType, const string& aKey, read_f rmf, write_f wmf = 0);
 
-	//	Constructs a channel for the specified ModelElement.
+	/**
+	*	Constructs a channel for the specified ModelElement.
+	*/
 	virtual ROChannel* ConstructRO (ModelElement* anElement);
 
-	//	Constructs a channel for the specified ModelElement.
+	/**
+	*	Constructs a channel for the specified ModelElement.
+	*/
 	virtual RWChannel* ConstructRW (ModelElement* anElement);
 
 	double ReadFrom (const E* elmnt);
@@ -52,14 +56,16 @@ private:
 	write_f w_f;
 };
 
-//	Template class for constructing a concrete Indirect
-//	RWChannel object. E can be any concrete ModelElement
-//	type, which has set- and get-like member functions to
-//	the associated parameter. The functions must have the
-//	following signiture:
-//
-//	get: double (E::*)() const
-//	set: void (E::*)(double)
+/**
+*	Template class for constructing a concrete Indirect
+*	RWChannel object. E can be any concrete ModelElement
+*	type, which has set- and get-like member functions to
+*	the associated parameter. The functions must have the
+*	following signature:
+*
+*	get: double (E::*)() const
+*	set: void (E::*)(double)
+*/
 
 template <class E>
 class TIRWChannel : public RWChannel
@@ -70,20 +76,33 @@ public:
 
 	TIRWChannel (E* element, TIC_ctor<E>* proto_f);
 
-	//	Returns the ID of the channel (parameter).
+	/**
+	*	Returns the ID of the channel (parameter).
+	*	@return Channel ID
+	*/
 	virtual string GetID () const;
 
-	//	Returns the current value of the parameter/attribute
-	//	associated with the channel.
+	/**
+	*	Returns the current value of the parameter/attribute
+	*	associated with the channel.
+	*
+	*	@return Value of the channel's associated parameter/attribute
+	*/
 	virtual double Read () const;
 
-	//	Sets the current value of the parameter/attribute
-	//	associated with the channel.
+	/**
+	*	Sets the current value of the parameter/attribute
+	*	associated with the channel.
+	*/
 	virtual void Write (double value);
 
-	//	Increments the current value of the parameter/attribute
-	//	associated with the channel. Returns the final
-	//	(incremented) value.
+	/**
+	*	Increments the current value of the parameter/attribute
+	*	associated with the channel. Returns the final
+	*	(incremented) value.
+	*
+	*	@return Final (incremented) value
+	*/
 	virtual double Increment (double delta);
 
 private:

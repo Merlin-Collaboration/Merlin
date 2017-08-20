@@ -33,15 +33,12 @@
 
 #include "merlin_config.h"
 
-
-// AcceleratorComponent
 #include "AcceleratorComponent.h"
 
-
-
-//	Template class for generating general accelerator
-//	components with geometry type G and no field.
-
+/**
+*	Template class for generating general accelerator
+*	components with geometry type G and no field.
+*/
 template <class G>
 class TAccCompG : public AcceleratorComponent
 {
@@ -66,9 +63,10 @@ private:
 private:
 };
 
-//	Template class for generating general accelerator
-//	components with geometry type G and field type F.
-
+/**
+*	Template class for generating general accelerator
+*	components with geometry type G and field type F.
+*/
 template <class G, class F>
 class TAccCompGF : public TAccCompG<G>
 {
@@ -93,7 +91,9 @@ private:
 private:
 };
 
-// This template class does provide a copy mechanism.
+/**
+* This template class does provide a copy mechanism.
+*/
 template <class G, class F>
 class TAccCompGF_NC : public TAccCompG<G>
 {
@@ -113,9 +113,9 @@ private:
 private:
 };
 
-
-// Parameterized Class TAccCompG
-
+/**
+* Parameterized Class TAccCompG
+*/
 template <class G>
 inline TAccCompG<G>::TAccCompG (const string& id, G* geom, EMField* field)
 	: AcceleratorComponent(id,geom,field)
@@ -136,8 +136,9 @@ inline const G& TAccCompG<G>::GetGeometry () const
 	return static_cast<const G&>(*itsGeometry);
 }
 
-// Parameterized Class TAccCompGF
-
+/**
+* Parameterized Class TAccCompGF
+*/
 template <class G, class F>
 inline TAccCompGF<G,F>::TAccCompGF (const string& id, G* geom, F* field)
 	: TAccCompG<G>(id,geom,field)
@@ -156,8 +157,9 @@ inline const F& TAccCompGF<G,F>::GetField () const
 	return static_cast<const F&>(*this->itsField);
 }
 
-// Parameterized Class TAccCompG
-
+/**
+* Parameterized Class TAccCompG
+*/
 template <class G>
 TAccCompG<G>::TAccCompG (const TAccCompG<G>& rhs)
 	: AcceleratorComponent(rhs.GetName(),new G(rhs.GetGeometry()),nullptr)
@@ -177,8 +179,9 @@ TAccCompG<G>& TAccCompG<G>::operator = (const TAccCompG<G>& rhs)
 	return *this;
 }
 
-// Parameterized Class TAccCompGF
-
+/**
+* Parameterized Class TAccCompGF
+*/
 template <class G, class F>
 TAccCompGF<G,F>::TAccCompGF (const TAccCompGF<G,F>& rhs)
 	: TAccCompG<G>(rhs.GetName(),new G(rhs.GetGeometry()), new F(rhs.GetField()))
@@ -198,8 +201,9 @@ TAccCompGF<G,F>& TAccCompGF<G,F>::operator = (const TAccCompGF<G,F>& rhs)
 	return *this;
 }
 
-// Parameterized Class TAccCompGF_NC
-
+/**
+* Parameterized Class TAccCompGF_NC
+*/
 template <class G, class F>
 inline TAccCompGF_NC<G,F>::TAccCompGF_NC (const string& id, G* geom, F* field)
 	: TAccCompG<G>(id,geom,field)

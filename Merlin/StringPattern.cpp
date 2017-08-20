@@ -30,19 +30,11 @@
 #include <algorithm>
 #include <list>
 
-// StringPattern
 #include "StringPattern.h"
-
 
 // Class StringPattern
 
-
-
-
 char StringPattern::wcchar = '*';
-
-
-
 
 StringPattern::StringPattern (const std::string& s)
 	: str(s)

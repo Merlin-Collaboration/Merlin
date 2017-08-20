@@ -20,14 +20,11 @@
 #include <iostream>
 #include "deleters.h"
 #include "utils.h"
-// ComponentIntegrator
 #include "ComponentIntegrator.h"
-// ComponentTracker
 #include "ComponentTracker.h"
-// Marker
 #include "Marker.h"
 
-//	The onlt default integrator supplied is that for a
+//	The only default integrator supplied is that for a
 //	Marker element, which are zero-length pseudo-components.
 //	The default integrator does nothing.
 

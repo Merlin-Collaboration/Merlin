@@ -42,7 +42,9 @@ public:
 
 	SMPTransform3D(const Transform3D& tfrm);
 
-	// Apply (approximate) transformation
+	/**
+	* Apply (approximate) transformation
+	*/
 	SliceMacroParticle& Apply (SliceMacroParticle& p) const;
 	SliceMacroParticle& operator () (SliceMacroParticle& p) const
 	{

@@ -17,15 +17,16 @@
 
 #include <iostream>
 
-// template class basic_echo_ostream
-//
-// Use to create an ostream which re-directs
-// output to two additional ostream objects.
-//
-// Note that these implementation is probably
-// very inefficient, and could be made better
-// by somebody who understands the std lib better.
-//
+/**
+* template class basic_echo_ostream
+*
+* Use to create an ostream which re-directs
+* output to two additional ostream objects.
+*
+* Note that these implementation is probably
+* very inefficient, and could be made better
+* by somebody who understands the std lib better.
+*/
 
 template<class T, class Tr=char_traits<T> >
 class basic_echo_ostream : public std::basic_ostream<T,Tr>
@@ -54,7 +55,9 @@ public:
 		std::basic_ostream<T,Tr>& _os2;
 	};
 
-	// special buffer to redirect output
+	/**
+	* special buffer to redirect output
+	*/
 
 	basic_echo_ostream(std::basic_ostream<T,Tr>& first, std::basic_ostream<T,Tr>& second)
 		: std::basic_ostream<T,Tr>(&buff),buff(first,second)

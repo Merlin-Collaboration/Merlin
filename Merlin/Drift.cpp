@@ -12,9 +12,7 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// Drift
 #include "Drift.h"
-// ComponentTracker
 #include "ComponentTracker.h"
 
 const int Drift::ID = UniqueIndex();

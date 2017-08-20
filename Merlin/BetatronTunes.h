@@ -16,9 +16,7 @@
 #define BetatronTunes_h 1
 
 #include "AcceleratorModel.h"
-
 #include "HollowELensProcess.h"
-
 #include "PSTypes.h"
 
 using namespace ParticleTracking;
