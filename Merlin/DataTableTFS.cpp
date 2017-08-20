@@ -16,7 +16,7 @@ DataTableReaderTFS::DataTableReaderTFS(std::string filename)
 	in = inf.get();
 }
 
-char type_conv(std::string s)
+static char type_conv(std::string s)
 {
 	if (s == "%le")
 	{
@@ -37,9 +37,9 @@ char type_conv(std::string s)
 	throw BadFormatException("Unknown data type'"+s+"'");
 }
 
-const std::string whitespace = " \t\f\v\n\r";
+static const std::string whitespace = " \t\f\v\n\r";
 
-std::vector<std::string> split_line(std::string line)
+static std::vector<std::string> split_line(std::string line)
 {
 	// Read line into vector of strings
 	// split on whitespace unless quoted
