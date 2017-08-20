@@ -15,7 +15,6 @@
 #include <cassert>
 #include "TLASimp.h"
 
-// LinearFBSystem
 #include "LinearFBSystem.h"
 using namespace TLAS;
 

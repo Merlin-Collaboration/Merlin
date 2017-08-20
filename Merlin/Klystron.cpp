@@ -57,7 +57,7 @@ struct scale_cavity
 	const Complex zs;
 };
 
-} // end anonumous namespace
+} // end anonymous namespace
 
 
 

@@ -152,7 +152,7 @@ public:
 	void RotateY180 ();
 
 	/**
-	*	Prints an ascii representation (table) of the field to os.
+	*	Prints an ASCII representation (table) of the field to os.
 	*/
 	void PrintField (std::ostream& os) const;
 

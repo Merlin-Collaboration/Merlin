@@ -16,11 +16,8 @@
 #define IdentityRotation_h 1
 
 #include "merlin_config.h"
-// Space3D
 #include "Space3D.h"
-// RotationType
 #include "RotationType.h"
-// Rot3Drep
 #include "Rot3Drep.h"
 
 class GeneralRotation;

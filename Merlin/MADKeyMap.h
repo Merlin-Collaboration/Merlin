@@ -40,7 +40,7 @@ public:
 	MADKeyMap (const std::string& hstr);
 
 	/**
-	* Returns the value of the parameter for a specificed key.
+	* Returns the value of the parameter for a specified key.
 	* Throws BAD_KEY if not present.
 	*/
 	virtual double GetParameter (const std::string& key, bool warn=true);

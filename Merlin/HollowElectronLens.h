@@ -122,7 +122,7 @@ public:
 	}
 
 	/**
-	* Change electron direction (defualt opposite protons = 1)
+	* Change electron direction (default opposite protons = 1)
 	*/
 	virtual void SetElectronDirection(bool dir);
 
@@ -162,7 +162,7 @@ public:
 	double MinTune;
 
 	bool ACSet;					/// AC mode variable set?
-	bool SimpleProfile;			/// 1 = use perfect HEL profile, 0 = use paramaterisation of measured LHC prototype cathode profile
+	bool SimpleProfile;			/// 1 = use perfect HEL profile, 0 = use parameterisation of measured LHC prototype cathode profile
 	bool AlignedToOrbit;		/// Is the HEL aligned to the closed orbit
 	bool ElectronDirection;		/// 1 = opposite protons (-ve kick), 0 = same as protons (+ve kick)
 	bool LHC_Radial;			/// 1 = use empirically scaled measured radial profile (LHC hardware), 0 = use measured radial HEL profile

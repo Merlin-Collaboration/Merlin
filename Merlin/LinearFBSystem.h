@@ -34,7 +34,7 @@ using namespace TLAS;
 *
 *	where g is the gain, S are the current signal values and
 *	S0 are the desired signal values (set points). Mi is a
-*	speudo-inverse matrix of the response matrix M defined by
+*	pseudo-inverse matrix of the response matrix M defined by
 *
 *	S=M*A
 *

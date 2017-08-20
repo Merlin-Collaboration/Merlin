@@ -28,7 +28,7 @@ class ComponentTracker;
 *	represent generic monitors, a virtual function Make
 *	Measurement() is provided which can be overridden by
 *	derived Monitor classes which represent more specific
-*	diagnotic types.
+*	diagnostic types.
 */
 
 class Monitor : public SimpleDrift
@@ -81,7 +81,7 @@ public:
 	bool IsReflected () const;
 
 	/**
-	*	Sets the rotated status for this diagnositic to rflg.
+	*	Sets the rotated status for this diagnostic to rflg.
 	*	Returns the previous state.
 	*/
 	bool SetReflected (bool rflg);

@@ -10,7 +10,6 @@
 
 #include <sstream>
 
-// OPFormat
 #include "OPFormat.h"
 
 namespace
@@ -70,12 +69,6 @@ string to_string(const OPFormat& fmt, const T& val)
 
 
 // Class OPFormat
-
-
-
-
-
-
 
 
 string OPFormat::operator () (double val) const

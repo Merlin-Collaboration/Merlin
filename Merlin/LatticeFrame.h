@@ -25,7 +25,7 @@
 /**
 * Class FrameTraverser
 * An abstract iterator class that is used to
-* traverse in order the nested frame hierachy
+* traverse in order the nested frame hierarchy
 */
 class LatticeFrame;
 
@@ -41,7 +41,7 @@ public:
 *	coordinate system for a subsection of the accelerator
 *	lattice. A lattice frame is located on the accelerator
 *	geometry at a specified position s. LatticeFrames can be
-*	nested in a frame hierachy, but may not partially
+*	nested in a frame hierarchy, but may not partially
 *	overlap. A LatticeFrame may represent the frame for a
 *	single component (see class ComponentFrame), or may be
 *	constructed from a contiguous sequence of LatticeFrames
@@ -59,7 +59,7 @@ public:
 *	Rotating/translating a LatticeFrame rotates/translates
 *	all the associated sub-frames. LatticeFrame provides
 *	methods for accessing the various coordinate
-*	transformations between various frames in the hierachy.
+*	transformations between various frames in the hierarchy.
 *	Two types of coordinate transformations are
 *	distinguished:
 *
@@ -70,7 +70,7 @@ public:
 *	local coordinate frame, and the coordinate frame defined
 *	on the super-frame's geometry at s. Note that if no
 *	rotations have been applied to any of the frames in the
-*	hierachy (up to the specified super-frame), then the
+*	hierarchy (up to the specified super-frame), then the
 *	frame transformation is always the identity.
 *
 *	- Physical Transformations: The physical transformation
@@ -299,7 +299,7 @@ public:
 
 	/**
 	*	Function called after construction of the Accelerator
-	*	Model is complete. Allows the nested frame hierachy to
+	*	Model is complete. Allows the nested frame hierarchy to
 	*	perform certain state checks and updates, which are only
 	*	possible once the entire model is complete.
 	*/

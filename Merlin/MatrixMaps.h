@@ -98,7 +98,7 @@ public:
 	explicit RMtrx (int ndf = 3, double P = 0);
 
 	/**
-	* Construction from an aribrary matrix. The matrix should
+	* Construction from an arbitrary matrix. The matrix should
 	* be square with dimension 2n, where n is 1,2 or 3.
 	*/
 	RMtrx (const RealMatrix& RR, double P0 = 0);
@@ -227,7 +227,7 @@ public:
 	PSmomentsArray& Apply (PSmomentsArray& sigmaArray, double p0) const;
 
 	/**
-	* Second-order momemtum derivative matrix (T matrix).
+	* Second-order momentum derivative matrix (T matrix).
 	*/
 	RealMatrix T;
 };

@@ -36,7 +36,7 @@
 *
 * balanced:
 *    Sets each associated cavity to the identical phase and
-*    amplitude. If the request phase and ampitude of the klystron
+*    amplitude. If the request phase and amplitude of the klystron
 *    is set to the complex number z, then each of the n cavities
 *    is set to z/n.
 */
@@ -79,7 +79,7 @@ public:
 
 	/**
 	* Virtual constructor. Note a copy of a
-	* Kystron is attached to the same
+	* Klystron is attached to the same
 	* cavities in the model.
 	*/
 	virtual Klystron* Copy () const;

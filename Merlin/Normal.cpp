@@ -16,9 +16,11 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 #ifdef __GNUG__
 #endif
+
 //// #include "builtin.h"
 #include "Random.h"
 #include "Normal.h"
+
 //
 //	See Simulation, Modelling & Analysis by Law & Kelton, pp259
 //

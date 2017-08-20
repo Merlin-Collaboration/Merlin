@@ -27,7 +27,7 @@ class Bunch;
 * Responsible for coordinating the tracking of a bunch
 * through a single AcceleratorComponent. Tracking occurs
 * by the application of a series of processes, which
-* effectively intergrate the bunch motion along the
+* effectively integrate the bunch motion along the
 * beamline.
 */
 class ProcessStepManager
@@ -79,7 +79,7 @@ public:
 private:
 
 	/**
-	* The current intgrated length.
+	* The current integrated length.
 	*/
 	double total_s;
 

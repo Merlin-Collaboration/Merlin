@@ -114,7 +114,7 @@ MultiNormal<N>::~MultiNormal()
 }
 
 template<int N>
-void MultiNormal<N>::CholeskyDecomp()   // copied from John Ellithorpe based on Numerival Recipeces
+void MultiNormal<N>::CholeskyDecomp()   // copied from John Ellithorpe based on Numerical Recipeces
 {
 	double dp[N];
 	long i,j,k;

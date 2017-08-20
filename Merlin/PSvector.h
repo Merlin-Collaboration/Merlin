@@ -233,7 +233,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const PSvector& v);
 
 	/**
-	*	Outputs the vector in row form, space delimeted with a
+	*	Outputs the vector in row form, space delimited with a
 	*	terminating newline.
 	*/
 	friend std::istream& operator>>(std::istream& is, PSvector& v);

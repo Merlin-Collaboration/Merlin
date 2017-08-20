@@ -17,7 +17,6 @@
 #include <cassert>
 #include <iomanip>
 #include <iterator>
-// MultipoleField
 #include "MultipoleField.h"
 
 using namespace std;

@@ -29,7 +29,7 @@ typedef TCovMtrx<double,2> SigmaMatrix2D;
 * template class that stores the first- and second-order
 * phase space moments. The first-order moments are always
 * stored as a six-vector (PSvector), while the template
-* paramter defines the number of degrees of freedom for
+* parameter defines the number of degrees of freedom for
 * the second-order moments.
 */
 

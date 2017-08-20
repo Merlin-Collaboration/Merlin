@@ -32,7 +32,7 @@ template class ConstSubMatrix<double>;
 typedef Vector<double> RealVector;
 typedef Matrix<double> RealMatrix;
 
-// explicit instantion for Complex
+// explicit instantiation for Complex
 template class Vector<Complex>;
 template class Matrix<Complex>;
 template class SubVector<Complex>;

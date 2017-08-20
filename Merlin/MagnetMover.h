@@ -16,9 +16,7 @@
 #define MagnetMover_h 1
 
 #include "merlin_config.h"
-// SequenceFrame
 #include "SequenceFrame.h"
-// Transform2D
 #include "Transform2D.h"
 
 /**

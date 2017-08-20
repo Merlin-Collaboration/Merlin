@@ -64,7 +64,7 @@ bool InterpolatedRectEllipseAperture::PointInside (double x, double y, double z)
 	double ellipse_half_vertical = (g4 * z) + c4;
 
 	//aper_1 = half width rectangle
-	//aper_2 = half heigth rectangle
+	//aper_2 = half height rectangle
 	//aper_3 = half horizontal axis ellipse (or radius if circle)
 	//aper_4 = half vertical axis ellipse
 
