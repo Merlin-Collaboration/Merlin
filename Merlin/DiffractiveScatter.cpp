@@ -1,51 +1,15 @@
-/**
-* Include for the Elastic scattering class
-*/
 #include "DiffractiveScatter.h"
 
-/**
-* Include for the math headers - required for exp, sin, other mathmatical functions
-*/
+
 #include <cmath>
-
-/**
-* Include for io - std::cout etc
-*/
 #include <iostream>
-
-/**
-* Include for file output
-*/
 #include <fstream>
-
-/**
-* Include for the max() algorithm
-*/
 #include <algorithm>
-
-/**
-* Include for make_pair
-*/
 #include <utility>
 
-/**
-* Include for assorted numerial constants
-*/
 #include "NumericalConstants.h"
-
-/**
-* Include for assorted Physical constants
-*/
 #include "PhysicalConstants.h"
-
-/**
-* Include for assorted Physical units
-*/
 #include "PhysicalUnits.h"
-
-/**
-* Include for the random number generator
-*/
 #include "RandomNG.h"
 
 using namespace PhysicalUnits;
