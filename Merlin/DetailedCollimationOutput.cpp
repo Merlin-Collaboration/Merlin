@@ -3,9 +3,8 @@
 namespace ParticleTracking
 {
 
-DetailedCollimationOutput::DetailedCollimationOutput(OutputType ot)
+DetailedCollimationOutput::DetailedCollimationOutput()
 {
-	otype = ot;
 }
 
 void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
@@ -33,10 +32,6 @@ void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, dou
 		temp.p = particle;
 		DeadParticles.push_back(temp);
 	}
-}
-
-void DetailedCollimationOutput::Finalise()
-{
 }
 
 void DetailedCollimationOutput::Output(std::ostream* os)
