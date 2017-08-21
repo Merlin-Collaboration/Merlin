@@ -1,19 +1,9 @@
 #ifndef _DiffractiveScatter_h_
 #define _DiffractiveScatter_h_
 
-/**
-* Include for the vector class for storing the cross section tables.
-*/
 #include <vector>
-
-/**
-* Include for complex numbers
-*/
 #include <complex>
 
-/**
-* Include for the interpolation classes, to interpolate cross section values.
-*/
 #include "Interpolation.h"
 
 namespace ParticleTracking
@@ -21,11 +11,12 @@ namespace ParticleTracking
 
 /**
 * Class for all things relating to proton-proton single diffractive scattering.
-* This includes, generation of differential cross sections.
-* Integration of the differential cross sections.
-* Generation of momentum transfer t values for calculation of scattering angles.
-* Generation of mass loss values for calculation of momentum changes.
-* Multiple scattering models
+* This includes:
+*  + Generation of differential cross sections.
+*  + Integration of the differential cross sections.
+*  + Generation of momentum transfer t values for calculation of scattering angles.
+*  + Generation of mass loss values for calculation of momentum changes.
+*  + Multiple scattering models
 */
 class ppDiffractiveScatter
 {
@@ -36,7 +27,7 @@ public:
 	ppDiffractiveScatter(): Configured(false),Debug(false) {}
 	~ppDiffractiveScatter();
 	/**
-	* Generates the requried differential cross sections and integrates for the specified energy
+	* Generates the required differential cross sections and integrates for the specified energy
 	*/
 	void GenerateDistribution(double energy);
 
@@ -64,7 +55,7 @@ public:
 
 	/**
 	* Sets the minimum t value for generation
-	* @param tmin the minumum t value to generate
+	* @param tmin the minimum t value to generate
 	*/
 	void SetTMin(double tmin);
 
@@ -75,13 +66,13 @@ public:
 
 	/**
 	* Sets the maximum t value for generation
-	* @param tmin the minumum xi value to generate
+	* @param tmin the minimum xi value to generate
 	*/
 	void SetXiMax(double ximax);
 
 	/**
 	* Sets the minimum xi value for generation
-	* @param tmin the minumum xi value to generate
+	* @param tmin the minimum xi value to generate
 	*/
 	void SetXiMin(double ximin);
 
@@ -214,12 +205,6 @@ private:
 	double tarray[N];
 //s of the interaction
 	double ss;
-
-	/**
-	*
-	*	Scattering Functions
-	*
-	*/
 
 };//End class ppDiffractiveScatter
 
