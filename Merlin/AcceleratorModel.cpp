@@ -250,6 +250,13 @@ size_t AcceleratorModel::GetIndecies(const std::string& pat,std::vector<Accelera
 	return GetIndecies(const_cast<AcceleratorModel*>(this)->GetBeamline(),pat,iarray);
 }
 
+std::vector<AcceleratorModel::Index> AcceleratorModel::GetIndecies(const std::string& pat) const
+{
+	std::vector<AcceleratorModel::Index> iarray;
+	GetIndecies(pat,iarray);
+	return iarray;
+}
+
 size_t AcceleratorModel::GetIndecies(const AcceleratorModel::Beamline& bline,const std::string& pat,std::vector<AcceleratorModel::Index>& iarray) const
 {
 	vector<Index> iarray1;

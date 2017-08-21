@@ -10,9 +10,7 @@
 namespace
 {
 
-#ifndef DEBUG
-ofstream debug_os("tlas_debug.dat");
-#endif
+//ofstream debug_os("tlas_debug.dat");
 
 // MSVC++ bug! Compiler should make correct resolution for abs()!!
 inline double ABS(double x)
@@ -247,9 +245,9 @@ void Symplectify(RealMatrix& a)
 	}
 
 	RealMatrix Ipa(I + a);
-#ifndef NDEBUG
-	MatrixForm(Ipa,debug_os);
-#endif
+
+	//MatrixForm(Ipa,debug_os);
+
 	Inverse(Ipa);
 
 	RealMatrix Ima(I - a);

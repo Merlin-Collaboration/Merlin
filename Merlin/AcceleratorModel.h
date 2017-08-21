@@ -358,7 +358,7 @@ public:
 	}
 
 	/**
-	* Returns the indices of components matching par in iarray
+	* Returns the indices of components matching pat in iarray
 	* for the entire beamline. iarray is overwritten by this function.
 	* Function returns length of iarray.
 	* @param[in] pat A string containing the pattern of element names to match.
@@ -366,6 +366,13 @@ public:
 	* @return A size_t containing the number of matched elements
 	*/
 	size_t GetIndecies(const std::string& pat, std::vector<Index>& iarray) const;
+
+	/**
+	* Returns the indecies of components matching pat for the entire beamline.
+	* @param[in] pat A string containing the pattern of element names to match.
+	* @return A vector holding the Indices of the element locations that matched the name pattern.
+	*/
+	std::vector<Index> GetIndecies(const std::string& pat) const;
 
 	/**
 	* Same as above, but limits search to the specified (sub-)beamline.
