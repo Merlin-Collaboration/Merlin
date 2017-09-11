@@ -30,10 +30,10 @@ namespace
 bool KlystronSort(const Klystron* k1, const Klystron* k2)
 {
 	vector<size_t> i;
-	k1->GetBeamlineIndecies(i);
+	k1->GetBeamlineIndexes(i);
 	size_t i1 = i.front();
 	i.clear();
-	k2->GetBeamlineIndecies(i);
+	k2->GetBeamlineIndexes(i);
 	size_t i2 = i.front();
 	return i1<i2;
 }
@@ -120,7 +120,7 @@ void Accelerator::TrackBeam(size_t nstate)
 		// of the beamline.
 		if(currentSegment.first!=0 && cb.location+1!=currentSegment.first)
 		{
-			// Calculate indecies (not location==0 is a special case)
+			// Calculate indexes (not location==0 is a special case)
 			size_t n1 = cb.location == 0 ? 0 : cb.location+1;
 			size_t n2 = currentSegment.first-1;
 			dfs_trace(dfs_trace::level_3)<<"\n  - incrementing beam "<<nstate<<" from "<<n1<<" to "<<n2;
@@ -212,10 +212,10 @@ void Accelerator::InitialiseTracking(size_t nstates, ReferenceParticleArray& ref
 	}
 }
 
-size_t Accelerator::GetBeamlineIndecies(const std::string& cpat, IntegerArray& indecies) const
+size_t Accelerator::GetBeamlineIndexes(const std::string& cpat, IntegerArray& indexes) const
 {
-	indecies.clear();
-	return itsAccModel->GetIndecies(cpat,indecies);
+	indexes.clear();
+	return itsAccModel->GetIndexes(cpat,indexes);
 }
 
 DFS_Segment Accelerator::GetBeamlineRange() const

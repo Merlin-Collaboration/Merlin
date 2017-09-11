@@ -98,7 +98,7 @@ public:
 	/**
 	* constructing beamline index list
 	*/
-	void AppendBeamlineIndecies(std::vector<size_t>&) const;
+	void AppendBeamlineIndexes(std::vector<size_t>&) const;
 
 protected:
 

@@ -106,7 +106,7 @@ void DFSApp::Initialise()
 	dfs_trace(dfs_trace::level_2)<<"beamline range: "<<s<<endl;
 
 	IntegerArray ibpm;
-	refacc->GetBeamlineIndecies("BPM.*",ibpm);
+	refacc->GetBeamlineIndexes("BPM.*",ibpm);
 
 	dfs_trace(dfs_trace::level_1)<<ibpm.size()<<" BPMs in accelerator"<<endl;
 

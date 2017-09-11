@@ -54,7 +54,7 @@ public:
 	*  Get the unique beamline index for this frame
 	*/
 	size_t GetBeamlineIndex() const;
-	void AppendBeamlineIndecies(std::vector<size_t>&) const;
+	void AppendBeamlineIndexes(std::vector<size_t>&) const;
 
 private:
 
@@ -71,9 +71,9 @@ inline size_t CorrectorWinding::GetBeamlineIndex() const
 	return magnet->GetBeamlineIndex();
 }
 
-inline void CorrectorWinding::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
+inline void CorrectorWinding::AppendBeamlineIndexes(std::vector<size_t>& ivec) const
 {
-	magnet->AppendBeamlineIndecies(ivec);
+	magnet->AppendBeamlineIndexes(ivec);
 }
 
 #endif

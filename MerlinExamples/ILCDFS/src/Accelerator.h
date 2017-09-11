@@ -91,12 +91,12 @@ public:
 	// Returns in refplist the reference particles for each initial beam for each state.
 	void InitialiseTracking(size_t nstates, ReferenceParticleArray& refplist);
 
-	// Returns in indecies the beamline indecies of the
-	// components matching cpattern. Returns the length of indecies
+	// Returns in indexes the beamline indexes of the
+	// components matching cpattern. Returns the length of indexes
 	// on exit.
-	size_t GetBeamlineIndecies(const std::string& cpat, IntegerArray& indecies) const;
+	size_t GetBeamlineIndexes(const std::string& cpat, IntegerArray& indexes) const;
 
-	// Returns the beamline indecies for the entire model
+	// Returns the beamline indexes for the entire model
 	DFS_Segment GetBeamlineRange() const;
 
 	// Set the BPM single-shot resolution

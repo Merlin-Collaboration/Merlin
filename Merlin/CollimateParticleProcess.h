@@ -119,7 +119,7 @@ public:
 	*/
 	void IndexParticles (bool index);
 	void IndexParticles (std::list<size_t>& anIndex);
-	const std::list<size_t>& GetIndecies() const;
+	const std::list<size_t>& GetIndexes() const;
 
 	/**
 	* Sets the threshold for particle loss before the process
@@ -232,7 +232,7 @@ inline void CollimateParticleProcess::SetLogStream(std::ostream* anOs)
 	os=anOs;
 }
 
-inline const std::list<size_t>& CollimateParticleProcess::GetIndecies() const
+inline const std::list<size_t>& CollimateParticleProcess::GetIndexes() const
 {
 	return *pindex;
 }

@@ -76,9 +76,9 @@ public:
 	* @param[out] ivec The ordered list of beamline indices associated with this ModelElement.
 	* @return The size of ivec
 	*/
-	size_t GetBeamlineIndecies(std::vector<size_t>& ivec) const;
+	size_t GetBeamlineIndexes(std::vector<size_t>& ivec) const;
 
-	virtual void AppendBeamlineIndecies(std::vector<size_t>& ivec) const =0;
+	virtual void AppendBeamlineIndexes(std::vector<size_t>& ivec) const =0;
 
 protected:
 
@@ -125,10 +125,10 @@ inline void ModelElement::Init(const std::string& aName)
 	id=aName;
 }
 
-inline size_t ModelElement::GetBeamlineIndecies(std::vector<size_t>& ivec) const
+inline size_t ModelElement::GetBeamlineIndexes(std::vector<size_t>& ivec) const
 {
 	ivec.clear();
-	AppendBeamlineIndecies(ivec);
+	AppendBeamlineIndexes(ivec);
 	return ivec.size();
 }
 
