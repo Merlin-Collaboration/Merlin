@@ -78,6 +78,25 @@ set(${PROJECT_NAME}_VERSION_MAJOR "5")
 set(${PROJECT_NAME}_VERSION_MINOR "02")
 set(${PROJECT_NAME}_VERSION_PATCH "0")
 
+configure_file(Merlin/MerlinVersion.cpp.in ${CMAKE_BINARY_DIR}/Merlin/MerlinVersion.cpp)
+AUX_SOURCE_DIRECTORY(${CMAKE_BINARY_DIR}/Merlin sources)
+
+set(GITREV_FILE ${CMAKE_BINARY_DIR}/Merlin/git_rev.h)
+add_custom_command(
+	OUTPUT gitrev_file
+	COMMAND ${CMAKE_COMMAND} -E echo_append "const std::string GIT_REV=\"" > ${GITREV_FILE}.tmp
+	COMMAND git describe  --always  --abbrev=40 --dirty=+ >> ${GITREV_FILE}.tmp || true
+	COMMAND ${CMAKE_COMMAND} -E echo "\";" >> ${GITREV_FILE}.tmp
+	COMMAND tr -d "\\n" < ${GITREV_FILE}.tmp > ${GITREV_FILE}.tmp2 # remove newlines
+	COMMAND ${CMAKE_COMMAND} -E echo >> ${GITREV_FILE}.tmp2
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GITREV_FILE}.tmp2 ${GITREV_FILE}
+	COMMAND ${CMAKE_COMMAND} -E remove ${GITREV_FILE}.tmp ${GITREV_FILE}.tmp2
+	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+	VERBATIM
+)
+add_custom_target(gitrev ALL DEPENDS gitrev_file)
+
+
 # Add the source and includes
 include_directories(${MERLIN_SOURCE_DIR}/Merlin/)
 AUX_SOURCE_DIRECTORY(Merlin sources)
