@@ -118,7 +118,7 @@ Klystron* Klystron::Copy () const
 	return new Klystron(*this);
 }
 
-void Klystron::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
+void Klystron::AppendBeamlineIndexes(std::vector<size_t>& ivec) const
 {
 	for(vector<RFStructure*>::const_iterator c = rf_cavs.begin(); c!=rf_cavs.end(); c++)
 	{

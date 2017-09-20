@@ -36,7 +36,7 @@ void KSEnergyAdjustment::SetActiveBeamlineSegment(DFS_Segment &seg)
 	for(size_t i=0; i<theKlystrons.size(); i++)
 	{
 		std::vector<size_t> ki;
-		theKlystrons[i]->GetBeamlineIndecies(ki);
+		theKlystrons[i]->GetBeamlineIndexes(ki);
 		if(ki.back() >= seg.first)
 		{
 			nk2 = i==0 ? 0 : i-1;

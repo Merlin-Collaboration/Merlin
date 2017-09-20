@@ -120,7 +120,7 @@ public:
 	*/
 	size_t GetBeamlineIndex() const;
 
-	void AppendBeamlineIndecies(std::vector<size_t>&) const;
+	void AppendBeamlineIndexes(std::vector<size_t>&) const;
 
 	/**
 	* Returns the total number of distinct component types in
@@ -291,7 +291,7 @@ inline size_t AcceleratorComponent::GetBeamlineIndex() const
 	return blI;
 }
 
-inline void AcceleratorComponent::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
+inline void AcceleratorComponent::AppendBeamlineIndexes(std::vector<size_t>& ivec) const
 {
 	ivec.push_back(blI);
 }

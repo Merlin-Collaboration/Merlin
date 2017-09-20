@@ -42,7 +42,7 @@ void OneToOneCorrection(Accelerator* acc, Accelerator::Plane pxy, size_t nseg)
 	acc->AllowIncrementalTracking(true);
 
 	IntegerArray ibpm;
-	acc->GetBeamlineIndecies("BPM.*",ibpm);
+	acc->GetBeamlineIndexes("BPM.*",ibpm);
 	DFS_Segment s = acc->GetBeamlineRange();
 
 

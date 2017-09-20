@@ -365,14 +365,14 @@ public:
 	* @param[out] iarray A vector array holding the Indices of the element locations that matched the name pattern.
 	* @return A size_t containing the number of matched elements
 	*/
-	size_t GetIndecies(const std::string& pat, std::vector<Index>& iarray) const;
+	size_t GetIndexes(const std::string& pat, std::vector<Index>& iarray) const;
 
 	/**
-	* Returns the indecies of components matching pat for the entire beamline.
+	* Returns the indexes of components matching pat for the entire beamline.
 	* @param[in] pat A string containing the pattern of element names to match.
 	* @return A vector holding the Indices of the element locations that matched the name pattern.
 	*/
-	std::vector<Index> GetIndecies(const std::string& pat) const;
+	std::vector<Index> GetIndexes(const std::string& pat) const;
 
 	/**
 	* Same as above, but limits search to the specified (sub-)beamline.
@@ -381,7 +381,7 @@ public:
 	* @param[out] iarray A vector array holding the Indices of the element locations that matched the name pattern.
 	* @return A size_t containing the number of matched elements.
 	*/
-	size_t GetIndecies(const Beamline& aBeamline, const std::string& pat, std::vector<Index>& iarray) const;
+	size_t GetIndexes(const Beamline& aBeamline, const std::string& pat, std::vector<Index>& iarray) const;
 
 	/**
 	* Returns in channels all ROChannels matching chID.

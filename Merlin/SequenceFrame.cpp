@@ -459,11 +459,11 @@ void SequenceFrame::Traverse(FrameTraverser &ft)
 	}
 }
 
-void SequenceFrame::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
+void SequenceFrame::AppendBeamlineIndexes(std::vector<size_t>& ivec) const
 {
 	for(SequenceFrame::FrameList::const_iterator fi = subFrames.begin();
 	        fi!=subFrames.end(); fi++)
 	{
-		(*fi)->AppendBeamlineIndecies(ivec);
+		(*fi)->AppendBeamlineIndexes(ivec);
 	}
 }

@@ -78,50 +78,28 @@ set(${PROJECT_NAME}_VERSION_MAJOR "5")
 set(${PROJECT_NAME}_VERSION_MINOR "02")
 set(${PROJECT_NAME}_VERSION_PATCH "0")
 
+configure_file(Merlin/MerlinVersion.cpp.in ${CMAKE_BINARY_DIR}/Merlin/MerlinVersion.cpp)
+AUX_SOURCE_DIRECTORY(${CMAKE_BINARY_DIR}/Merlin sources)
+
+set(GITREV_FILE ${CMAKE_BINARY_DIR}/Merlin/git_rev.h)
+add_custom_command(
+	OUTPUT gitrev_file
+	COMMAND ${CMAKE_COMMAND} -E echo_append "const std::string GIT_REV=\"" > ${GITREV_FILE}.tmp
+	COMMAND git describe  --always  --abbrev=40 --dirty=+ >> ${GITREV_FILE}.tmp || true
+	COMMAND ${CMAKE_COMMAND} -E echo "\";" >> ${GITREV_FILE}.tmp
+	COMMAND tr -d "\\n" < ${GITREV_FILE}.tmp > ${GITREV_FILE}.tmp2 # remove newlines
+	COMMAND ${CMAKE_COMMAND} -E echo >> ${GITREV_FILE}.tmp2
+	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GITREV_FILE}.tmp2 ${GITREV_FILE}
+	COMMAND ${CMAKE_COMMAND} -E remove ${GITREV_FILE}.tmp ${GITREV_FILE}.tmp2
+	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+	VERBATIM
+)
+add_custom_target(gitrev ALL DEPENDS gitrev_file)
+
+
 # Add the source and includes
 include_directories(${MERLIN_SOURCE_DIR}/Merlin/)
-
 AUX_SOURCE_DIRECTORY(Merlin sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/ActiveMonitors sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Apertures sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Construction sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/ControlElements sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Frames sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Implementation sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Implementation/BPMChannels sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Miscellaneous sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/StdComponent sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/StdField sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/StdGeometry sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/Supports sources)
-AUX_SOURCE_DIRECTORY(Merlin/AcceleratorModel/TrackingInterface sources)
-AUX_SOURCE_DIRECTORY(Merlin/BasicTransport sources)
-
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics sources)
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics/CommonUtilities sources)
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics/ParticleTracking sources)
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics/ParticleTracking/Integrators sources)
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics/ParticleTracking/Output sources)
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics/SMPTracking sources)
-AUX_SOURCE_DIRECTORY(Merlin/BeamDynamics/Utilities sources)
-
-AUX_SOURCE_DIRECTORY(Merlin/BeamModel sources)
-AUX_SOURCE_DIRECTORY(Merlin/Channels sources)
-AUX_SOURCE_DIRECTORY(Merlin/Collimators sources)
-AUX_SOURCE_DIRECTORY(Merlin/Collimators/Output sources)
-AUX_SOURCE_DIRECTORY(Merlin/Corrections sources)
-AUX_SOURCE_DIRECTORY(Merlin/EuclideanGeometry sources)
-AUX_SOURCE_DIRECTORY(Merlin/Exception sources)
-AUX_SOURCE_DIRECTORY(Merlin/GroundMotionModels sources)
-AUX_SOURCE_DIRECTORY(Merlin/IO sources)
-AUX_SOURCE_DIRECTORY(Merlin/MADInterface sources)
-AUX_SOURCE_DIRECTORY(Merlin/NumericalUtils sources)
-AUX_SOURCE_DIRECTORY(Merlin/Random sources)
-AUX_SOURCE_DIRECTORY(Merlin/RingDynamics sources)
-AUX_SOURCE_DIRECTORY(Merlin/stdext sources)
-AUX_SOURCE_DIRECTORY(Merlin/TLAS sources)
-AUX_SOURCE_DIRECTORY(Merlin/utility sources)
 
 #Closed orbit debugging
 if(ORBIT_DEBUG)

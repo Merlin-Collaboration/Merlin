@@ -42,9 +42,9 @@ public:
 	* SingularMatrix() if the matrix is singular.
 	*/
 	explicit LUMatrix(const Matrix<T>& M)
-		: lud(M),indecies(),d(1)
+		: lud(M),indexes(),d(1)
 	{
-		ludcmp(lud,indecies,d);
+		ludcmp(lud,indexes,d);
 	}
 
 	/**
@@ -54,11 +54,11 @@ public:
 	*/
 	Vector<T>& operator()(Vector<T>& rhs) const
 	{
-		return lubksb(lud,indecies,rhs);
+		return lubksb(lud,indexes,rhs);
 	}
 	SubVector<T>& operator()(SubVector<T>& rhs) const
 	{
-		return lubksb(lud,indecies,rhs);
+		return lubksb(lud,indexes,rhs);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public:
 
 private:
 	Matrix<T> lud;
-	std::vector<int> indecies;
+	std::vector<int> indexes;
 	T d;
 };
 
@@ -235,7 +235,7 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 // Low level routines (modified from Numerical Recipes in C)
 
 template<class T>
-void ludcmp(Matrix<T>& a, std::vector<int>& indecies, T& d)
+void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 {
 	static const T tiny = numeric_limits<T>::epsilon();
 	size_t imax,i,j,k;
@@ -318,7 +318,7 @@ void ludcmp(Matrix<T>& a, std::vector<int>& indecies, T& d)
 	}
 
 	// copy the indices
-	indecies.swap(indx);
+	indexes.swap(indx);
 }
 
 // lu back substitution

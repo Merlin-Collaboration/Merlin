@@ -93,7 +93,7 @@ protected:
 
 	void AdjustCavities();
 	void AdjustVectorSum(double v, double phi);
-	void AppendBeamlineIndecies(std::vector<size_t>&) const;
+	void AppendBeamlineIndexes(std::vector<size_t>&) const;
 };
 
 /**

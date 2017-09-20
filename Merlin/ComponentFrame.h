@@ -101,7 +101,7 @@ public:
 	* Get the unique beamline index for this frame
 	*/
 	size_t GetBeamlineIndex() const;
-	void AppendBeamlineIndecies(std::vector<size_t>&) const;
+	void AppendBeamlineIndexes(std::vector<size_t>&) const;
 
 protected:
 
@@ -173,7 +173,7 @@ inline size_t ComponentFrame::GetBeamlineIndex() const
 	return blI;
 }
 
-inline void ComponentFrame::AppendBeamlineIndecies(std::vector<size_t>& ivec) const
+inline void ComponentFrame::AppendBeamlineIndexes(std::vector<size_t>& ivec) const
 {
 	ivec.push_back(blI);
 }
