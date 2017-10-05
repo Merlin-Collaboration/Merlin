@@ -119,6 +119,7 @@ int main()
 	basebeam.emit_y = 1;
 	basebeam.beta_x = 1;
 	basebeam.beta_y = 1;
+	basebeam.p0 = 1;
 	beams.push_back(basebeam);
 
 	BeamData abeam(basebeam);
