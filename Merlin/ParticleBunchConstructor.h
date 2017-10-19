@@ -23,6 +23,7 @@
 #include "ParticleBunchTypes.h"
 #include "BunchFilter.h"
 #include <typeinfo>
+#include "PSvector.h"
 
 namespace ParticleTracking
 {
@@ -88,6 +89,7 @@ public:
 	//template <class T_bunch> T_bunch* ConstructParticleBunch () const;
 
 	virtual void ConstructBunchDistribution (int bunchIndex = 0) const;
+	PSvector GenerateFromDistribution() const;
 
 	/**
 	* Sets the filter to be used during bunch construction. A NULL pointer indicates no filter.
