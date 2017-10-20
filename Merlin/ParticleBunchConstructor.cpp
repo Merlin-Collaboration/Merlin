@@ -62,10 +62,7 @@ void ParticleBunchConstructor::SetDistributionCutoff (const PSvector& cut)
 
 void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 {
-	if(force_c)
-	{
-		cout << "force_c not implemented" <<endl;
-	}
+
 
 	// The first particle is *always* the centroid particle
 	PSvector p;
@@ -96,6 +93,11 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 			pbunch.push_back(p);
 			i++;
 		}
+	}
+
+	if(force_c)
+	{
+		DoForceCentroid();
 	}
 }
 
@@ -198,5 +200,23 @@ void ParticleBunchConstructor::ForceCentroid (bool fc)
 {
 	force_c = fc;
 }
+
+void ParticleBunchConstructor::DoForceCentroid () const
+{
+	PSvector xm = pbunch.front();
+	for (auto p = pbunch.begin()+1; p != pbunch.end(); ++p)
+	{
+		xm += *p;
+	}
+
+	xm /= np;
+	xm -= pbunch.front();
+
+	for (auto p = pbunch.begin()+1; p != pbunch.end(); ++p)
+	{
+		(*p) -= xm;
+	}
+}
+
 
 } //end namespace ParticleTracking

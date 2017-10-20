@@ -113,7 +113,9 @@ public:
 	*/
 	void ForceCentroid (bool fc);
 
+
 private:
+	void DoForceCentroid () const;
 
 	size_t np;
 	DistributionType dtype;
