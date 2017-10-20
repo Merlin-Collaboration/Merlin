@@ -214,7 +214,12 @@ void ParticleBunchConstructor::DoForceCentroid () const
 
 	for (auto p = pbunch.begin()+1; p != pbunch.end(); ++p)
 	{
-		(*p) -= xm;
+		p->x() -= xm.x();
+		p->xp() -= xm.xp();
+		p->y() -= xm.y();
+		p->yp() -= xm.yp();
+		p->dp() -= xm.dp();
+		p->ct() -= xm.ct();
 	}
 }
 
