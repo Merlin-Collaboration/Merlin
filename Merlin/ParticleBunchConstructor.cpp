@@ -62,8 +62,6 @@ void ParticleBunchConstructor::SetDistributionCutoff (const PSvector& cut)
 
 void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 {
-
-
 	// The first particle is *always* the centroid particle
 	PSvector p;
 	p.x()=beamdat.x0;
@@ -82,12 +80,25 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	while(i<np)
 	{
 		p = GenerateFromDistribution();
+
+		// apply emittance
+		p.x() *= sqrt(beamdat.emit_x);
+		p.xp() *= sqrt(beamdat.emit_x);
+		p.y() *= sqrt(beamdat.emit_y);
+		p.yp() *= sqrt(beamdat.emit_y);
+		p.dp() *= sqrt(beamdat.sig_dp);
+		p.ct() *= sqrt(beamdat.sig_z);
+
+		// Apply Courant-Snyder
 		M.Apply(p);
+
 		p+=pbunch.front(); // add centroid
+
 		p.type() = -1.0;
 		p.location() = -1.0;
 		p.id() = i;
 		p.sd() = 0.0;
+
 		if(itsFilter==nullptr || itsFilter->Apply(p))
 		{
 			pbunch.push_back(p);
@@ -104,87 +115,75 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 PSvector ParticleBunchConstructor::GenerateFromDistribution() const
 {
 	PSvector p;
-	double rx, ry, u;
+	double u;
 	switch(dtype)
 	{
 	case normalDistribution:
-		p.x()	= RandomGauss(beamdat.emit_x,cutoffs.x());
-		p.xp()	= RandomGauss(beamdat.emit_x,cutoffs.xp());
-		p.y()	= RandomGauss(beamdat.emit_y,cutoffs.y());
-		p.yp()	= RandomGauss(beamdat.emit_y,cutoffs.yp());
-		p.dp()	= RandomGauss(beamdat.sig_dp*beamdat.sig_dp,cutoffs.dp());
-		p.ct()	= RandomGauss(beamdat.sig_z*beamdat.sig_z,cutoffs.ct());
+		p.x()	= RandomGauss(1,cutoffs.x());
+		p.xp()	= RandomGauss(1,cutoffs.xp());
+		p.y()	= RandomGauss(1,cutoffs.y());
+		p.yp()	= RandomGauss(1,cutoffs.yp());
+		p.dp()	= RandomGauss(1,cutoffs.dp());
+		p.ct()	= RandomGauss(1,cutoffs.ct());
 		break;
 	case flatDistribution:
-		rx = sqrt(beamdat.emit_x);
-		ry = sqrt(beamdat.emit_y);
-		p.x()	= RandomNG::uniform(-rx,rx);
-		p.xp()	= RandomNG::uniform(-rx,rx);
-		p.y()	= RandomNG::uniform(-ry,ry);
-		p.yp()	= RandomNG::uniform(-ry,ry);
-		p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-		p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+		p.x()	= RandomNG::uniform(-1,1);
+		p.xp()	= RandomNG::uniform(-1,1);
+		p.y()	= RandomNG::uniform(-1,1);
+		p.yp()	= RandomNG::uniform(-1,1);
+		p.dp()	= RandomNG::uniform(-1,1);
+		p.ct()	= RandomNG::uniform(-1,1);
 		break;
 	case skewHaloDistribution:
 	case ringDistribution:
-		rx = sqrt(beamdat.emit_x);
-		ry = sqrt(beamdat.emit_y);
 		u = RandomNG::uniform(-pi,pi);
-		p.x()	= rx * cos(u);
-		p.xp()	= rx * sin(u);
+		p.x()	= cos(u);
+		p.xp()	= sin(u);
 		u = RandomNG::uniform(-pi,pi);
-		p.y()	= ry * cos(u);
-		p.yp()	= ry * sin(u);
-		p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-		p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+		p.y()	= cos(u);
+		p.yp()	= sin(u);
+		p.dp()	= RandomNG::uniform(-1,1);
+		p.ct()	= RandomNG::uniform(-1,1);
 		break;
 	case horizontalHaloDistribution1:
-		rx = sqrt(beamdat.emit_x);
-		ry = sqrt(beamdat.emit_y);
 		u = RandomNG::uniform(-pi,pi);
-		p.x()	= rx * cos(u);
-		p.xp()	= rx * sin(u);
+		p.x()	= cos(u);
+		p.xp()	= sin(u);
 		u = RandomNG::uniform(-pi,pi);
 		p.y()	= 0.0;
 		p.yp()	= 0.0;
-		p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-		p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+		p.dp()	= RandomNG::uniform(-1,1);
+		p.ct()	= RandomNG::uniform(-1,1);
 		break;
 	case verticalHaloDistribution1:
-		rx = sqrt(beamdat.emit_x);
-		ry = sqrt(beamdat.emit_y);
 		u = RandomNG::uniform(-pi,pi);
 		p.x()	= 0.0;
 		p.xp()	= 0.0;
 		u = RandomNG::uniform(-pi,pi);
-		p.y()	= ry * cos(u);
-		p.yp()	= ry * sin(u);
-		p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-		p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+		p.y()	= cos(u);
+		p.yp()	= sin(u);
+		p.dp()	= RandomNG::uniform(-1,1);
+		p.ct()	= RandomNG::uniform(-1,1);
 		break;
 	case horizontalHaloDistribution2:
-		rx = sqrt(beamdat.emit_x);
-		ry = sqrt(beamdat.emit_y);
 		u = RandomNG::uniform(-pi,pi);
-		p.x()	= rx * cos(u);
-		p.xp()	= rx * sin(u);
+		p.x()	= cos(u);
+		p.xp()	= sin(u);
 		u = RandomNG::uniform(-pi,pi);
-		p.y()	= RandomGauss(beamdat.emit_y,cutoffs.y());
-		p.yp()	= RandomGauss(beamdat.emit_y,cutoffs.yp());
-		p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-		p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+		p.y()	= RandomGauss(1,cutoffs.y());
+		p.yp()	= RandomGauss(1,cutoffs.yp());
+		p.dp()	= RandomNG::uniform(-1,1);
+		p.ct()	= RandomNG::uniform(-1,1);
 		break;
 	case verticalHaloDistribution2:
-		rx = sqrt(beamdat.emit_x);
-		ry = sqrt(beamdat.emit_y);
 		u = RandomNG::uniform(-pi,pi);
-		p.x()	= RandomGauss(beamdat.emit_x,cutoffs.x());
-		p.xp()	= RandomGauss(beamdat.emit_x,cutoffs.xp());
+		p.x()	= RandomGauss(1,cutoffs.x());
+		p.xp()	= RandomGauss(1,cutoffs.xp());
 		u = RandomNG::uniform(-pi,pi);
-		p.y()	= ry * cos(u);
-		p.yp()	= ry * sin(u);
-		p.dp()	= RandomNG::uniform(-beamdat.sig_dp,beamdat.sig_dp);
-		p.ct()	= RandomNG::uniform(-beamdat.sig_z,beamdat.sig_z);
+		p.y()	= cos(u);
+		p.yp()	= sin(u);
+		p.dp()	= RandomNG::uniform(-1,1);
+		p.ct()	= RandomNG::uniform(-1,1);
 		break;
 	}
 	return p;
