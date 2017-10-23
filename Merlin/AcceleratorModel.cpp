@@ -279,6 +279,14 @@ void AcceleratorModel::InstallModelElement(AcceleratorComponent* element, double
 	auto c_drift2 = new TComponentFrame<Drift>(*drift2);
 	auto c_element = new TComponentFrame<AcceleratorComponent>(*element);
 
+	// set lattice positions
+	drift1->SetComponentLatticePosition(at-cut_len1);
+	drift2->SetComponentLatticePosition(at);
+	element->SetComponentLatticePosition(at);
+	c_drift1->SetLocalPosition(at-cut_len1);
+	c_drift2->SetLocalPosition(at);
+	c_element->SetLocalPosition(at);
+
 	// replace the existing drift
 	auto insert_marker = lattice.erase(current_cf);
 	lattice.insert(insert_marker, c_drift2); // in reverse order
