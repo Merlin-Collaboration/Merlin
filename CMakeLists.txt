@@ -152,6 +152,7 @@ if(BUILD_STATIC)
 	add_library(merlin STATIC ${sources})
 endif()
 
+add_dependencies(merlin gitrev)
 
 if(ENABLE_MPI)
 	target_link_libraries(merlin ${MPI_CXX_LIBRARIES})
