@@ -456,6 +456,15 @@ public:
 	void AddModelElement(ModelElement* element);
 
 	/**
+	* Allows clients to install a new ModelElement into the AcceleratorModel.
+	* The new element position must fall within a Drift, which will be split to make
+	* space.
+	* @param[in] element A pointer to the ModelElement to add to the AcceleratorModel.
+	* @param[in] at the location to place the new element.
+	*/
+	void InstallModelElement(AcceleratorComponent* element, double at);
+
+	/**
 	* Prints to the specified stream statistics about the
 	* model.
 	* @param[out] os The stream to output the model statistics to.

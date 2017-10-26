@@ -25,6 +25,9 @@
 #include "deleters.h"
 #include "AcceleratorModel.h"
 #include "SupportStructure.h"
+#include "Drift.h"
+#include "AcceleratorComponent.h"
+#include "TComponentFrame.h"
 
 using namespace std;
 
@@ -220,6 +223,79 @@ void AcceleratorModel::AddModelElement (ModelElement* element)
 	{
 		theElements->Add(element);
 	}
+}
+
+void AcceleratorModel::InstallModelElement(AcceleratorComponent* element, double at)
+{
+	// FIXME: implement element having a length
+	if(element->GetLength() != 0)
+	{
+		std::cout<< "Currently only zero length elements can be added" <<std::endl;
+		exit(1);
+	}
+
+	// Find insert point
+	double s = 0;
+	FlatLattice::iterator current_cf;
+	AcceleratorComponent* current_ac = nullptr;
+	std::string current_name;
+	double cut_len1, cut_len2;
+
+	for(current_cf = lattice.begin(); current_cf < lattice.end(); current_cf++)
+	{
+		AcceleratorComponent* ac = &((*current_cf)->GetComponent());
+		s += ac->GetLength();
+		if(s>at)
+		{
+			std::cout << "Found position in:" << ac->GetQualifiedName()
+			          << " (from:" << s-ac->GetLength() << " to:" << s
+			          << ")" << std::endl;
+			current_ac = ac;
+			current_name = ac->GetName();
+			cut_len1 = at - s + ac->GetLength();
+			cut_len2 = s - at;
+			break;
+		}
+	}
+
+	if(current_cf == lattice.end())
+	{
+		std::cout << "Out of range at: " << at << std::endl;
+		exit(1);
+	}
+
+	// For now only allow splitting of a Drift
+	Drift* current_drift = dynamic_cast<Drift*>(current_ac);
+	if(!current_drift)
+	{
+		std::cout << "Not a drift at: " << at << std::endl;
+		exit(1);
+	}
+
+	// Create new drift sections, and frames to hold them
+	Drift* drift1 = new Drift(current_name+"_part1", cut_len1);
+	Drift* drift2 = new Drift(current_name+"_part2", cut_len2);
+	auto c_drift1 = new TComponentFrame<Drift>(*drift1);
+	auto c_drift2 = new TComponentFrame<Drift>(*drift2);
+	auto c_element = new TComponentFrame<AcceleratorComponent>(*element);
+
+	// set lattice positions
+	drift1->SetComponentLatticePosition(at-cut_len1);
+	drift2->SetComponentLatticePosition(at);
+	element->SetComponentLatticePosition(at);
+	c_drift1->SetLocalPosition(at-cut_len1);
+	c_drift2->SetLocalPosition(at);
+	c_element->SetLocalPosition(at);
+
+	// replace the existing drift
+	auto insert_marker = lattice.erase(current_cf);
+	lattice.insert(insert_marker, c_drift2); // in reverse order
+	lattice.insert(insert_marker, c_element);
+	lattice.insert(insert_marker, c_drift1);
+
+	theElements->Add(c_drift1);
+	theElements->Add(c_drift2);
+	theElements->Add(c_element);
 }
 
 void AcceleratorModel::ReportModelStatistics (std::ostream& os) const
