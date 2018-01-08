@@ -1,5 +1,6 @@
 #include <iostream>
 #include <tuple>
+#include <fstream>
 
 #include "../tests.h"
 #include "ParticleBunchTypes.h"
@@ -97,20 +98,46 @@ bool are_close(PSvector a, double x, double xp, double y, double yp, double ct, 
 	return good;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	size_t npart = (size_t) 1e6;
 
 	int seed = 1;
 	RandomNG::init(seed);
 
+	string ref_file_name = "";
+	ofstream *ref_file;
+	for(int i=1; i<argc-1; i++)
+	{
+		if(strcmp(argv[i], "--reffile") == 0)
+		{
+			ref_file_name = argv[i+1];
+		}
+	}
+
+	if(ref_file_name != "")
+	{
+		ref_file = new ofstream(ref_file_name);
+		if (!ref_file->good())
+		{
+			cerr << "Failed to open reference file:" << ref_file_name << endl;
+		}
+		cout << "Writing reference file: " << ref_file_name <<endl;
+		ref_file->setf(ios::scientific,ios::floatfield);
+		ref_file->precision(16);
+		npart = 100;
+	}
+
 	auto dists = {make_tuple("normal", normalDistribution),
+	              make_tuple("normal_cut", normalDistribution),
+	              make_tuple("normal_cent", normalDistribution),
 	              make_tuple("flat", flatDistribution),
 	              make_tuple("ring", ringDistribution),
 	              make_tuple("horizontalHalo", horizontalHaloDistribution1),
 	              make_tuple("verticalHalo", verticalHaloDistribution1),
 	              make_tuple("horizontalHalo2", horizontalHaloDistribution2),
-	              make_tuple("verticalHalo2", verticalHaloDistribution2)
+	              make_tuple("verticalHalo2", verticalHaloDistribution2),
+	              make_tuple("skewHalo", skewHaloDistribution),
 	             };
 
 	vector<BeamData> beams;
@@ -149,6 +176,8 @@ int main()
 	abeam.yp0 = 3;
 	beams.push_back(abeam);
 
+	double cut = 1.3;
+
 	for(auto & beam: beams)
 	{
 		cout << endl << "x0: " << beam.x0
@@ -161,6 +190,19 @@ int main()
 		     << " beta_y: " << beam.beta_y
 		     << endl;
 
+		if(ref_file_name != "")
+		{
+			*ref_file << endl << "#x0: " << beam.x0
+			          << " xp0: " << beam.xp0
+			          << " y0: " << beam.y0
+			          << " yp0: " << beam.yp0
+			          << " emit_x: " << beam.emit_x
+			          << " emit_y: " << beam.emit_y
+			          << " beta_x:" << beam.beta_x
+			          << " beta_y: " << beam.beta_y
+			          << endl;
+		}
+
 		for (auto& dist :dists)
 		{
 			auto name = get<0>(dist);
@@ -168,7 +210,33 @@ int main()
 
 			cout << "Dist: " << name << endl;
 			ParticleBunchConstructor pbc(beam, npart, dist_type);
+
+			if(name == string("normal_cut"))
+			{
+				pbc.SetDistributionCutoff(cut);
+			}
+
+			if(name == string("normal_cent"))
+			{
+				pbc.ForceCentroid(true);
+			}
+
 			ParticleBunch* myBunch = pbc.ConstructParticleBunch<ParticleBunch>();
+
+			if(ref_file_name != "")
+			{
+				*ref_file << "# Dist: " << name << endl;
+				*ref_file << "#X XP Y YP CT DP TYPE LOCATION ID SD" << endl;
+				for (auto &p: *myBunch)
+				{
+					for(int i=0; i<PS_LENGTH; i++)
+					{
+						*ref_file << std::setw(35)<< p[i];
+					}
+					*ref_file << endl;
+				}
+				continue;
+			}
 
 			assert(myBunch->GetParticles().size() == npart);
 
@@ -180,6 +248,11 @@ int main()
 
 			// check mean
 			assert(are_close(bunch_stats.mean, beam.x0, beam.xp0, beam.y0, beam.yp0, 0, 0, 1e-2));
+
+			if(name == string("normal_cent"))
+			{
+				assert(are_close(bunch_stats.mean, beam.x0, beam.xp0, beam.y0, beam.yp0, 0, 0, 1e-8));
+			}
 
 			// check standard deviations
 			double gamma_x = (1 + beam.alpha_x*beam.alpha_x) / beam.beta_x;
@@ -204,6 +277,12 @@ int main()
 			{
 				assert(are_close(bunch_stats.max, beam.x0+sig_x, beam.xp0+sig_xp, beam.y0+sig_y, beam.yp0+sig_yp, 0, 0, 1e-3));
 				assert(are_close(bunch_stats.min, beam.x0-sig_x, beam.xp0-sig_xp, beam.y0-sig_y, beam.yp0-sig_yp, 0, 0, 1e-3));
+			}
+
+			if (name == string("normal_cut"))
+			{
+				assert(are_close(bunch_stats.max, beam.x0+sig_x*cut, beam.xp0+sig_xp*cut, beam.y0+sig_y*cut, beam.yp0+sig_yp*cut, 0, 0, 1e-3));
+				assert(are_close(bunch_stats.min, beam.x0-sig_x*cut, beam.xp0-sig_xp*cut, beam.y0-sig_y*cut, beam.yp0-sig_yp*cut, 0, 0, 1e-3));
 			}
 
 			delete myBunch;
