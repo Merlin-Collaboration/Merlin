@@ -54,19 +54,19 @@ public:
 	*	total charge and the particle array. Note that on exit,
 	*	particles is empty.
 	*/
-	ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
+	ParticleBunch (double P0, double Q, PSvectorArray& particles);
 
 	/**
 	*	Read phase space vectors from specified input stream.
 	*/
-	ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
+	ParticleBunch (double P0, double Q, std::istream& is);
 
 	/**
 	*	Constructs an empty ParticleBunch with the specified
 	*	momentum P0 and charge per macro particle Qm (default =
 	*	+1).
 	*/
-	ParticleBunch (double P0, double Qm = 1, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
+	ParticleBunch (double P0, double Qm = 1);
 
 	/**
 	*	Returns the total charge (in units of e).

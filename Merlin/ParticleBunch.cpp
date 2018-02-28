@@ -132,16 +132,14 @@ inline void SortArray(std::list<T>& array)
 namespace ParticleTracking
 {
 
-ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles)
 	: Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Q/particles.size()),pArray()
-	  //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
 	pArray.swap(particles);
 }
 
-ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is)
 	: Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0)
-	  //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
 	PSvector p;
 	while(is>>p)
@@ -152,9 +150,8 @@ ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double Part
 	qPerMP = Q/size();
 }
 
-ParticleBunch::ParticleBunch (double P0, double Qm, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+ParticleBunch::ParticleBunch (double P0, double Qm)
 	: Bunch(P0,Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Qm)
-	  //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {}
 
 double ParticleBunch::GetTotalCharge () const
@@ -345,13 +342,11 @@ bool ParticleBunch::IsStable() const
 
 double ParticleBunch::GetParticleMass() const
 {
-//	return ElectronMass;
 	return 0;
 }
 
 double ParticleBunch::GetParticleMassMeV() const
 {
-//	return ElectronMassMeV;
 	return 0;
 }
 
@@ -359,7 +354,6 @@ double ParticleBunch::GetParticleLifetime() const
 {
 	return 0;
 }
-
 
 
 //MPI code
