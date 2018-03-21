@@ -20,6 +20,9 @@
 #include "Bunch.h"
 #include "PhysicalConstants.h"
 #include "Aperture.h"
+#include "ParticleDistributionGenerator.h"
+#include "BeamData.h"
+#include "BunchFilter.h"
 
 #ifdef ENABLE_MPI
 #include <mpi.h>
@@ -67,6 +70,14 @@ public:
 	*	+1).
 	*/
 	ParticleBunch (double P0, double Qm = 1);
+
+	/**
+	* Constructs an ParticleBunch with coordinates generated from a
+	* random distribution matched to a beam. Particles can be filtered
+	* using an optional ParticleBunchFilter.
+	*/
+
+	ParticleBunch (double P0, double Q, size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr);
 
 	/**
 	*	Returns the total charge (in units of e).

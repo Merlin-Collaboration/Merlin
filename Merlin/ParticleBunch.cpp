@@ -19,6 +19,8 @@
 #include "Transform3D.h"
 #include "PSvectorTransform3D.h"
 #include "ParticleBunch.h"
+#include "NormalTransform.h"
+#include "MatrixMaps.h"
 
 #ifdef MERLIN_PROFILE
 #include "MerlinProfile.h"
@@ -153,6 +155,57 @@ ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is)
 ParticleBunch::ParticleBunch (double P0, double Qm)
 	: Bunch(P0,Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Qm)
 {}
+
+ParticleBunch::ParticleBunch (double P0, double Q, size_t np, const ParticleDistributionGenerator& generator, const BeamData& beam, ParticleBunchFilter* filter)
+	:ParticleBunch(P0,Q)
+{
+	RMtrx M;
+	M.R = NormalTransform(beam);
+
+	// The first particle is *always* the centroid particle
+	PSvector p;
+	p.x()=beam.x0;
+	p.xp()=beam.xp0;
+	p.y()=beam.y0;
+	p.yp()=beam.yp0;
+	p.dp()=0;
+	p.ct()=beam.ct0;
+	p.type() = -1.0;
+	p.location() = -1.0;
+	p.id() = 0;
+	p.sd() = 0.0;
+	pArray.push_back(p);
+
+	size_t i = 1;
+	while(i<np)
+	{
+		p = generator.GenerateFromDistribution();
+
+		// apply emittance
+		p.x() *= sqrt(beam.emit_x);
+		p.xp() *= sqrt(beam.emit_x);
+		p.y() *= sqrt(beam.emit_y);
+		p.yp() *= sqrt(beam.emit_y);
+		p.dp() *= sqrt(beam.sig_dp);
+		p.ct() *= sqrt(beam.sig_z);
+
+		// Apply Courant-Snyder
+		M.Apply(p);
+
+		p+=pArray.front(); // add centroid
+
+		p.type() = -1.0;
+		p.location() = -1.0;
+		p.id() = i;
+		p.sd() = 0.0;
+
+		if(filter==nullptr || filter->Apply(p))
+		{
+			pArray.push_back(p);
+			i++;
+		}
+	}
+}
 
 double ParticleBunch::GetTotalCharge () const
 {
