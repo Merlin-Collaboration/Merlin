@@ -19,10 +19,10 @@
 #include "PSTypes.h"
 #include "Bunch.h"
 #include "PhysicalConstants.h"
-#include "Aperture.h"
-#include "ParticleDistributionGenerator.h"
-#include "BeamData.h"
-#include "BunchFilter.h"
+
+class Aperture; //#include "Aperture.h"
+class ParticleDistributionGenerator; //#include "ParticleDistributionGenerator.h"
+class BeamData; //#include "BeamData.h"
 
 #ifdef ENABLE_MPI
 #include <mpi.h>
@@ -34,7 +34,7 @@ using namespace PhysicalConstants;
 
 namespace ParticleTracking
 {
-
+class ParticleBunchFilter; //#include "BunchFilter.h"
 /**
 *	Representation of a particle.
 */

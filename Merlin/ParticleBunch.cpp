@@ -21,6 +21,9 @@
 #include "ParticleBunch.h"
 #include "NormalTransform.h"
 #include "MatrixMaps.h"
+#include "ParticleDistributionGenerator.h"
+#include "BeamData.h"
+#include "BunchFilter.h"
 
 #ifdef MERLIN_PROFILE
 #include "MerlinProfile.h"
