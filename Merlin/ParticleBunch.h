@@ -43,6 +43,8 @@ typedef PSvector Particle;
 /**
 *	A Bunch which is represented by an ensemble of
 *	(macro-)particles.
+*
+*	The first particle in the bunch is the centroid.
 */
 class ParticleBunch : public Bunch
 {
@@ -175,7 +177,14 @@ public:
 	Particle& FirstParticle ();
 
 	/**
-	*	Sets the centroid of the particle bunch to be exactly x0.
+	* Sets the centroid of the particle bunch to be equal to the zeroth
+	* particle, by moving each coordinate by the required amount.
+	*/
+	void SetCentroid ();
+
+	/**
+	* Sets the centroid of the particle bunch to be exactly x0 and updates
+	* the zeroth particle to x0.
 	*/
 	void SetCentroid (const Particle& x0);
 

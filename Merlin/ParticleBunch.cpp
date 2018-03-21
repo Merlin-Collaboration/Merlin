@@ -374,19 +374,27 @@ void ParticleBunch::Input (double Q, std::istream& is)
 	qPerMP = Q/size();
 }
 
-
-
-void ParticleBunch::SetCentroid (const Particle& x0)
+void ParticleBunch::SetCentroid ()
 {
 	PSvector x;
 	GetCentroid(x);
-	x-=x0;
-	for(PSvectorArray::iterator p = begin(); p!=end(); p++)
+	x-=FirstParticle();
+	for(PSvectorArray::iterator p = begin()+1; p!=end(); p++)
 	{
-		*p-=x;
+		p->x() -= x.x();
+		p->xp() -= x.xp();
+		p->y() -= x.y();
+		p->yp() -= x.yp();
+		p->dp() -= x.dp();
+		p->ct() -= x.ct();
 	}
 }
 
+void ParticleBunch::SetCentroid (const Particle& x0)
+{
+	FirstParticle() = x0;
+	SetCentroid();
+}
 
 bool ParticleBunch::IsStable() const
 {
