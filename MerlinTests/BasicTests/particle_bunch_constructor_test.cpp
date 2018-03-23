@@ -1,13 +1,14 @@
 #include <iostream>
-#include <tuple>
+#include <utility>
 #include <fstream>
 
 #include "../tests.h"
 #include "ParticleBunchTypes.h"
-#include "ParticleBunchConstructor.h"
 #include "BeamData.h"
 #include "ParticleBunch.h"
 #include "RandomNG.h"
+#include "ParticleDistributionGenerator.h"
+#include "HaloParticleDistributionGenerator.h"
 
 using namespace std;
 
@@ -128,17 +129,21 @@ int main(int argc, char* argv[])
 		npart = 100;
 	}
 
-	auto dists = {make_tuple("normal", normalDistribution),
-	              make_tuple("normal_cut", normalDistribution),
-	              make_tuple("normal_cent", normalDistribution),
-	              make_tuple("flat", flatDistribution),
-	              make_tuple("ring", ringDistribution),
-	              make_tuple("horizontalHalo", horizontalHaloDistribution1),
-	              make_tuple("verticalHalo", verticalHaloDistribution1),
-	              make_tuple("horizontalHalo2", horizontalHaloDistribution2),
-	              make_tuple("verticalHalo2", verticalHaloDistribution2),
-	              make_tuple("skewHalo", skewHaloDistribution),
-	             };
+	double cut = 1.3;
+
+	vector<pair<string,ParticleDistributionGenerator*>> dists =
+	{
+		{"normal", new NormalParticleDistributionGenerator()},
+		{"normal_cut", new NormalParticleDistributionGenerator(cut)},
+		{"normal_cent", new NormalParticleDistributionGenerator()},
+		{"flat", new UniformParticleDistributionGenerator()},
+		{"ring", new RingParticleDistributionGenerator()},
+		{"horizontalHalo", new HorizonalHalo1ParticleDistributionGenerator()},
+		{"verticalHalo", new VerticalHalo1ParticleDistributionGenerator()},
+		{"horizontalHalo2", new HorizonalHalo2ParticleDistributionGenerator()},
+		{"verticalHalo2", new VerticalHalo2ParticleDistributionGenerator()},
+		{"skewHalo", new RingParticleDistributionGenerator()}, // note ring and skewHalo are identical in old code
+	};
 
 	vector<BeamData> beams;
 	BeamData basebeam;
@@ -176,7 +181,7 @@ int main(int argc, char* argv[])
 	abeam.yp0 = 3;
 	beams.push_back(abeam);
 
-	double cut = 1.3;
+
 
 	for(auto & beam: beams)
 	{
@@ -209,19 +214,13 @@ int main(int argc, char* argv[])
 			auto dist_type = get<1>(dist);
 
 			cout << "Dist: " << name << endl;
-			ParticleBunchConstructor pbc(beam, npart, dist_type);
 
-			if(name == string("normal_cut"))
-			{
-				pbc.SetDistributionCutoff(cut);
-			}
+			ParticleBunch* myBunch = new ParticleBunch(beam.p0, beam.charge, npart, *dist_type, beam);
 
 			if(name == string("normal_cent"))
 			{
-				pbc.ForceCentroid(true);
+				myBunch->SetCentroid();
 			}
-
-			ParticleBunch* myBunch = pbc.ConstructParticleBunch<ParticleBunch>();
 
 			if(ref_file_name != "")
 			{
@@ -287,6 +286,11 @@ int main(int argc, char* argv[])
 
 			delete myBunch;
 		}
+	}
+
+	for (auto& dist :dists)
+	{
+		delete get<1>(dist);
 	}
 	cout << "Done" << endl;
 	return 0;
