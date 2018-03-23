@@ -1,11 +1,8 @@
 #include "ParticleDistributionGenerator.h"
-#include "RandomNG.h"
+
 #include "NumericalConstants.h"
 
-inline double RandomGauss(double variance, double cutoff)
-{
-	return cutoff==0 ? RandomNG::normal(0,variance) :  RandomNG::normal(0,variance,cutoff);
-}
+
 
 PSvector NormalParticleDistributionGenerator::GenerateFromDistribution() const
 {

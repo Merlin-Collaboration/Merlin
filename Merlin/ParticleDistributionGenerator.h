@@ -2,6 +2,12 @@
 #define ParticleDistributionGenerator_h 1
 
 #include "PSvector.h"
+#include "RandomNG.h"
+
+inline double RandomGauss(double variance, double cutoff)
+{
+	return cutoff==0 ? RandomNG::normal(0,variance) :  RandomNG::normal(0,variance,cutoff);
+}
 
 /**
 * Base class for distribution generators. These can be used by
