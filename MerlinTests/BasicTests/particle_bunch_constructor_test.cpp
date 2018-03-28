@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 
 			cout << "Dist: " << name << endl;
 
-			ParticleBunch* myBunch = new ParticleBunch(beam.p0, beam.charge, npart, *dist_type, beam);
+			ParticleBunch* myBunch = new ParticleBunch(npart, *dist_type, beam);
 
 			if(name == string("normal_cent"))
 			{

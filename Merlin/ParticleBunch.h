@@ -79,7 +79,7 @@ public:
 	* using an optional ParticleBunchFilter.
 	*/
 
-	ParticleBunch (double P0, double Q, size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr);
+	ParticleBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr);
 
 	/**
 	*	Returns the total charge (in units of e).

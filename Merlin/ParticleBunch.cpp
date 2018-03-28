@@ -159,8 +159,8 @@ ParticleBunch::ParticleBunch (double P0, double Qm)
 	: Bunch(P0,Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Qm)
 {}
 
-ParticleBunch::ParticleBunch (double P0, double Q, size_t np, const ParticleDistributionGenerator& generator, const BeamData& beam, ParticleBunchFilter* filter)
-	:ParticleBunch(P0,Q)
+ParticleBunch::ParticleBunch (size_t np, const ParticleDistributionGenerator& generator, const BeamData& beam, ParticleBunchFilter* filter)
+	:ParticleBunch(beam.p0,beam.charge)
 {
 	RMtrx M;
 	M.R = NormalTransform(beam);
