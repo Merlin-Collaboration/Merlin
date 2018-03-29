@@ -41,6 +41,9 @@ public:
 	ElectronBunch (double P0, double Qm = 1)
 		: ParticleBunch(P0, Qm) {};
 
+	ElectronBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr)
+		: ParticleBunch(np, generator, beam, filter) {};
+
 	virtual bool IsStable() const;
 	virtual double GetParticleMass() const;
 	virtual double GetParticleMassMeV() const;
