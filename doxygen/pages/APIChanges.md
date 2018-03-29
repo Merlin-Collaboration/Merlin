@@ -9,6 +9,40 @@ user programs.
 
 ## Version 5.02 {#APIChanges502}
 
+### Removal of ParticleBunchConstructor
+
+The ParticleBunchConstructor has been removed and its functionality moved into the constructor of the ParticleBunch class. This simplifies creating bunches and makes it easy to add new distribution types.
+
+For example the previous use of ParticleBunchConstructor:
+
+    ParticleBunchConstructor* constructor = new ParticleBunchConstructor(mybeam, npart, normalDistribution());
+    ProtonBunch* myBunch = constructor->ConstructParticleBunch<ProtonBunch>();
+
+can be replaced by:
+
+    ProtonBunch* myBunch = new ProtonBunch(npart, NormalParticleDistributionGenerator(), mybeamm);
+
+Where the distribution type was previously set by an enumeration, it is now set by passing a ParticleDistributionGenerator. The equivalents are:
+
+    normalDistribution              ->   NormalParticleDistributionGenerator()
+    flatDistribution                ->   UniformParticleDistributionGenerator()
+    ringDistribution                ->   RingParticleDistributionGenerator()
+    skewHaloDistribution            ->   RingParticleDistributionGenerator()
+    horizontalHaloDistribution1     ->   HorizonalHalo1ParticleDistributionGenerator()
+    verticalHaloDistribution1       ->   VerticalHalo1ParticleDistributionGenerator()
+    horizontalHaloDistribution2     ->   HorizonalHalo2ParticleDistributionGenerator()
+    verticalHaloDistribution2       ->   VerticalHalo2ParticleDistributionGenerator()
+
+Instead of using ParticleBunchConstructor::SetFilter(), filters can be passed into ParticleBunch:
+
+    ParticleBunch myBunch(npart, UniformParticleDistributionGenerator(), mybeamm, myfilter);
+
+Additional options beyond the scope of BeamData can be passed as arguments to the ParticleDistributionGenerator. For example 3 sigma cuts in the normal distribution:
+
+    NormalParticleDistributionGenerator(3.0);
+
+See ParticleTracking::ParticleBunch, ParticleDistributionGenerator
+
 ### Indecies -> Indexes
 
 The spelling of several function names was changed:
