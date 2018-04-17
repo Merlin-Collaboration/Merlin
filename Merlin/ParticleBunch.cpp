@@ -19,6 +19,11 @@
 #include "Transform3D.h"
 #include "PSvectorTransform3D.h"
 #include "ParticleBunch.h"
+#include "NormalTransform.h"
+#include "MatrixMaps.h"
+#include "ParticleDistributionGenerator.h"
+#include "BeamData.h"
+#include "BunchFilter.h"
 
 #ifdef MERLIN_PROFILE
 #include "MerlinProfile.h"
@@ -132,16 +137,14 @@ inline void SortArray(std::list<T>& array)
 namespace ParticleTracking
 {
 
-ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles)
 	: Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Q/particles.size()),pArray()
-	  //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
 	pArray.swap(particles);
 }
 
-ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is)
 	: Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0)
-	  //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {
 	PSvector p;
 	while(is>>p)
@@ -152,10 +155,60 @@ ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is, double Part
 	qPerMP = Q/size();
 }
 
-ParticleBunch::ParticleBunch (double P0, double Qm, double ParticleMass, double ParticleMassMeV, double ParticleLifetime)
+ParticleBunch::ParticleBunch (double P0, double Qm)
 	: Bunch(P0,Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Qm)
-	  //, ParticleMass(ParticleMass), ParticleMassMeV(ParticleMassMeV), ParticleLifetime(ParticleLifetime)
 {}
+
+ParticleBunch::ParticleBunch (size_t np, const ParticleDistributionGenerator& generator, const BeamData& beam, ParticleBunchFilter* filter)
+	:ParticleBunch(beam.p0,beam.charge)
+{
+	RMtrx M;
+	M.R = NormalTransform(beam);
+
+	// The first particle is *always* the centroid particle
+	PSvector p;
+	p.x()=beam.x0;
+	p.xp()=beam.xp0;
+	p.y()=beam.y0;
+	p.yp()=beam.yp0;
+	p.dp()=0;
+	p.ct()=beam.ct0;
+	p.type() = -1.0;
+	p.location() = -1.0;
+	p.id() = 0;
+	p.sd() = 0.0;
+	pArray.push_back(p);
+
+	size_t i = 1;
+	while(i<np)
+	{
+		p = generator.GenerateFromDistribution();
+
+		// apply emittance
+		p.x() *= sqrt(beam.emit_x);
+		p.xp() *= sqrt(beam.emit_x);
+		p.y() *= sqrt(beam.emit_y);
+		p.yp() *= sqrt(beam.emit_y);
+		p.dp() *= sqrt(beam.sig_dp);
+		p.ct() *= sqrt(beam.sig_z);
+
+		// Apply Courant-Snyder
+		M.Apply(p);
+
+		p+=pArray.front(); // add centroid
+
+		p.type() = -1.0;
+		p.location() = -1.0;
+		p.id() = i;
+		p.sd() = 0.0;
+
+		if(filter==nullptr || filter->Apply(p))
+		{
+			pArray.push_back(p);
+			i++;
+		}
+	}
+}
 
 double ParticleBunch::GetTotalCharge () const
 {
@@ -324,19 +377,27 @@ void ParticleBunch::Input (double Q, std::istream& is)
 	qPerMP = Q/size();
 }
 
-
-
-void ParticleBunch::SetCentroid (const Particle& x0)
+void ParticleBunch::SetCentroid ()
 {
 	PSvector x;
 	GetCentroid(x);
-	x-=x0;
-	for(PSvectorArray::iterator p = begin(); p!=end(); p++)
+	x-=FirstParticle();
+	for(PSvectorArray::iterator p = begin()+1; p!=end(); p++)
 	{
-		*p-=x;
+		p->x() -= x.x();
+		p->xp() -= x.xp();
+		p->y() -= x.y();
+		p->yp() -= x.yp();
+		p->dp() -= x.dp();
+		p->ct() -= x.ct();
 	}
 }
 
+void ParticleBunch::SetCentroid (const Particle& x0)
+{
+	FirstParticle() = x0;
+	SetCentroid();
+}
 
 bool ParticleBunch::IsStable() const
 {
@@ -345,13 +406,11 @@ bool ParticleBunch::IsStable() const
 
 double ParticleBunch::GetParticleMass() const
 {
-//	return ElectronMass;
 	return 0;
 }
 
 double ParticleBunch::GetParticleMassMeV() const
 {
-//	return ElectronMassMeV;
 	return 0;
 }
 
@@ -359,7 +418,6 @@ double ParticleBunch::GetParticleLifetime() const
 {
 	return 0;
 }
-
 
 
 //MPI code

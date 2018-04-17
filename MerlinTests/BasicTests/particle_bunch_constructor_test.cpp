@@ -1,13 +1,14 @@
 #include <iostream>
-#include <tuple>
+#include <utility>
 #include <fstream>
 
 #include "../tests.h"
 #include "ParticleBunchTypes.h"
-#include "ParticleBunchConstructor.h"
 #include "BeamData.h"
 #include "ParticleBunch.h"
 #include "RandomNG.h"
+#include "ParticleDistributionGenerator.h"
+#include "HaloParticleDistributionGenerator.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ using namespace std;
  * Check the mean is close to the centroid
  * Check the standard deviations for flat and normal
  * Check the extents for flat and ring
+ * Check the ellipse for halo distributions
  *
  */
 
@@ -59,6 +61,11 @@ stats get_stats(ParticleBunch * pb)
 	}
 
 	return bunch_stats;
+}
+
+bool are_close(double a, double b, double tol)
+{
+	return fabs(a - b) < tol;
 }
 
 // compare PSvector to values, with tolerance.
@@ -128,17 +135,21 @@ int main(int argc, char* argv[])
 		npart = 100;
 	}
 
-	auto dists = {make_tuple("normal", normalDistribution),
-	              make_tuple("normal_cut", normalDistribution),
-	              make_tuple("normal_cent", normalDistribution),
-	              make_tuple("flat", flatDistribution),
-	              make_tuple("ring", ringDistribution),
-	              make_tuple("horizontalHalo", horizontalHaloDistribution1),
-	              make_tuple("verticalHalo", verticalHaloDistribution1),
-	              make_tuple("horizontalHalo2", horizontalHaloDistribution2),
-	              make_tuple("verticalHalo2", verticalHaloDistribution2),
-	              make_tuple("skewHalo", skewHaloDistribution),
-	             };
+	double cut = 1.3;
+
+	vector<pair<string,ParticleDistributionGenerator*>> dists =
+	{
+		{"normal", new NormalParticleDistributionGenerator()},
+		{"normal_cut", new NormalParticleDistributionGenerator(cut)},
+		{"normal_cent", new NormalParticleDistributionGenerator()},
+		{"flat", new UniformParticleDistributionGenerator()},
+		{"ring", new RingParticleDistributionGenerator()},
+		{"horizontalHalo", new HorizonalHalo1ParticleDistributionGenerator()},
+		{"verticalHalo", new VerticalHalo1ParticleDistributionGenerator()},
+		{"horizontalHalo2", new HorizonalHalo2ParticleDistributionGenerator()},
+		{"verticalHalo2", new VerticalHalo2ParticleDistributionGenerator()},
+		{"skewHalo", new RingParticleDistributionGenerator()}, // note ring and skewHalo are identical in old code
+	};
 
 	vector<BeamData> beams;
 	BeamData basebeam;
@@ -176,7 +187,7 @@ int main(int argc, char* argv[])
 	abeam.yp0 = 3;
 	beams.push_back(abeam);
 
-	double cut = 1.3;
+
 
 	for(auto & beam: beams)
 	{
@@ -188,6 +199,10 @@ int main(int argc, char* argv[])
 		     << " emit_y: " << beam.emit_y
 		     << " beta_x:" << beam.beta_x
 		     << " beta_y: " << beam.beta_y
+		     << " alpha_x:" << beam.alpha_x
+		     << " alpha_y: " << beam.alpha_y
+		     << " gamma_x:" << beam.gamma_x()
+		     << " gamma_y: " << beam.gamma_y()
 		     << endl;
 
 		if(ref_file_name != "")
@@ -209,19 +224,13 @@ int main(int argc, char* argv[])
 			auto dist_type = get<1>(dist);
 
 			cout << "Dist: " << name << endl;
-			ParticleBunchConstructor pbc(beam, npart, dist_type);
 
-			if(name == string("normal_cut"))
-			{
-				pbc.SetDistributionCutoff(cut);
-			}
+			ParticleBunch* myBunch = new ParticleBunch(npart, *dist_type, beam);
 
 			if(name == string("normal_cent"))
 			{
-				pbc.ForceCentroid(true);
+				myBunch->SetCentroid();
 			}
-
-			ParticleBunch* myBunch = pbc.ConstructParticleBunch<ParticleBunch>();
 
 			if(ref_file_name != "")
 			{
@@ -285,8 +294,33 @@ int main(int argc, char* argv[])
 				assert(are_close(bunch_stats.min, beam.x0-sig_x*cut, beam.xp0-sig_xp*cut, beam.y0-sig_y*cut, beam.yp0-sig_yp*cut, 0, 0, 1e-3));
 			}
 
+			if (name == string("horizontalHalo") || name == string("horizontalHalo2") || name == string("skewHalo"))
+			{
+				for(auto p = myBunch->begin()+1; p != myBunch->end(); ++p)
+				{
+					double x = p->x() - beam.x0, xp = p->xp() - beam.xp0;
+					double rx2 = x*x*gamma_x + xp*xp*beam.beta_x + 2*x*xp*beam.alpha_x;
+					assert(are_close(rx2, beam.emit_x, 1e-8));
+				}
+			}
+
+			if (name == string("verticalHalo") || name == string("verticalHalo2") || name == string("skewHalo"))
+			{
+				for(auto p = myBunch->begin()+1; p != myBunch->end(); ++p)
+				{
+					double y = p->y() - beam.y0, yp = p->yp() - beam.yp0;
+					double ry2 = y*y*gamma_y + yp*yp*beam.beta_y + 2*y*yp*beam.alpha_y;
+					assert(are_close(ry2, beam.emit_y, 1e-8));
+				}
+			}
+
 			delete myBunch;
 		}
+	}
+
+	for (auto& dist :dists)
+	{
+		delete get<1>(dist);
 	}
 	cout << "Done" << endl;
 	return 0;

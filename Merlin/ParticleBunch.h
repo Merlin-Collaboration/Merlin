@@ -19,7 +19,10 @@
 #include "PSTypes.h"
 #include "Bunch.h"
 #include "PhysicalConstants.h"
-#include "Aperture.h"
+
+class Aperture; //#include "Aperture.h"
+class ParticleDistributionGenerator; //#include "ParticleDistributionGenerator.h"
+class BeamData; //#include "BeamData.h"
 
 #ifdef ENABLE_MPI
 #include <mpi.h>
@@ -31,7 +34,7 @@ using namespace PhysicalConstants;
 
 namespace ParticleTracking
 {
-
+class ParticleBunchFilter; //#include "BunchFilter.h"
 /**
 *	Representation of a particle.
 */
@@ -40,6 +43,8 @@ typedef PSvector Particle;
 /**
 *	A Bunch which is represented by an ensemble of
 *	(macro-)particles.
+*
+*	The first particle in the bunch is the centroid.
 */
 class ParticleBunch : public Bunch
 {
@@ -54,19 +59,27 @@ public:
 	*	total charge and the particle array. Note that on exit,
 	*	particles is empty.
 	*/
-	ParticleBunch (double P0, double Q, PSvectorArray& particles, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
+	ParticleBunch (double P0, double Q, PSvectorArray& particles);
 
 	/**
 	*	Read phase space vectors from specified input stream.
 	*/
-	ParticleBunch (double P0, double Q, std::istream& is, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
+	ParticleBunch (double P0, double Q, std::istream& is);
 
 	/**
 	*	Constructs an empty ParticleBunch with the specified
 	*	momentum P0 and charge per macro particle Qm (default =
 	*	+1).
 	*/
-	ParticleBunch (double P0, double Qm = 1, double ParticleMass = ElectronMass, double ParticleMassMeV = ElectronMassMeV, double ParticleLifetime = -1);
+	ParticleBunch (double P0, double Qm = 1);
+
+	/**
+	* Constructs an ParticleBunch with coordinates generated from a
+	* random distribution matched to a beam. Particles can be filtered
+	* using an optional ParticleBunchFilter.
+	*/
+
+	ParticleBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr);
 
 	/**
 	*	Returns the total charge (in units of e).
@@ -164,7 +177,14 @@ public:
 	Particle& FirstParticle ();
 
 	/**
-	*	Sets the centroid of the particle bunch to be exactly x0.
+	* Sets the centroid of the particle bunch to be equal to the zeroth
+	* particle, by moving each coordinate by the required amount.
+	*/
+	void SetCentroid ();
+
+	/**
+	* Sets the centroid of the particle bunch to be exactly x0 and updates
+	* the zeroth particle to x0.
 	*/
 	void SetCentroid (const Particle& x0);
 

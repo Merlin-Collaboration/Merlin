@@ -8,7 +8,9 @@
 #include <ctime>
 
 
-#include "ParticleBunchConstructor.h"
+#include "ParticleDistributionGenerator.h"
+#include "HaloParticleDistributionGenerator.h"
+#include "BunchFilter.h"
 #include "ParticleTracker.h"
 #include "ParticleBunchTypes.h"
 #include "MADInterface.h"
@@ -281,21 +283,7 @@ int main(int argc, char* argv[])
 	delete disp;
 
 	//	BUNCH SETTINGS
-	ProtonBunch* myBunch;
 	int node_particles = npart;
-
-	ParticleBunchConstructor* constructor;
-	// dist 1 is halo in 1 plane, zero in other
-	// dist 2 is halo in 1 plane, gauss in other
-	switch (loss_map_mode)
-	{
-	case HORIZONTAL_LOSS:
-		constructor = new ParticleBunchConstructor(mybeam,node_particles,horizontalHaloDistribution2);
-		break;
-	case VERTICAL_LOSS:
-		constructor = new ParticleBunchConstructor(mybeam,node_particles,verticalHaloDistribution2);
-		break;
-	}
 
 	vector<Collimator*> TCP;
 	int siz = model->ExtractTypedElements(TCP,start_element);
@@ -317,10 +305,19 @@ int main(int argc, char* argv[])
 	HorizontalHaloParticleBunchFilter *hFilter = new HorizontalHaloParticleBunchFilter();
 	hFilter->SetHorizontalLimit(JawPosition);
 	hFilter->SetHorizontalOrbit(h_offset);
-	constructor->SetFilter(hFilter);
 
-	myBunch = constructor->ConstructParticleBunch<ProtonBunch>();
-	delete constructor;
+	// dist 1 is halo in 1 plane, zero in other
+	// dist 2 is halo in 1 plane, gauss in other
+	ProtonBunch* myBunch;
+	switch (loss_map_mode)
+	{
+	case HORIZONTAL_LOSS:
+		myBunch = new ProtonBunch(node_particles, HorizonalHalo2ParticleDistributionGenerator(), mybeam, hFilter);
+		break;
+	case VERTICAL_LOSS:
+		myBunch = new ProtonBunch(node_particles, VerticalHalo2ParticleDistributionGenerator(), mybeam, hFilter);
+		break;
+	}
 
 	myBunch->SetMacroParticleCharge(mybeam.charge);
 

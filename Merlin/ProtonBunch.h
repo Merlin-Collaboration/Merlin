@@ -53,6 +53,11 @@ public:
 		SetUpProfiling();
 	};
 
+	ProtonBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr)
+		:ParticleBunch(np, generator, beam, filter), GotElastic(false),GotDiffractive(false)
+	{
+		SetUpProfiling();
+	}
 	// Proton Bunch Destructor
 	//~ProtonBunch(){delete ElasticScatter; delete DiffractiveScatter;};
 
@@ -110,7 +115,7 @@ public:
 	/**
 	* Select the Scattering physics mode
 	*/
-	enum scatMode { SixTrack , SixTrackIoniz , SixTrackElastic , SixTrackSD , Merlin };
+	enum scatMode { SixTrack, SixTrackIoniz, SixTrackElastic, SixTrackSD, Merlin };
 
 	void EnableScatteringPhysics(scatMode);
 	//void EnableSixtrackPhysics(bool);

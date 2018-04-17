@@ -34,6 +34,8 @@ typedef enum {normalDistribution,flatDistribution,ringDistribution,skewHaloDistr
              } DistributionType;
 
 /**
+* Note this class is deprecated and should no longer be used. See \ref APIChanges .
+*
 * Constructs a particle bunch with random particles taken
 * from a 6D distribution. The phase space moments are
 * supplied as a BeamData struct. The form of the
@@ -55,6 +57,7 @@ public:
 	* Constructor taking the beam data and the number of
 	* particles to generate.
 	*/
+	[[deprecated("Use the ParticleBunch constructor directly.")]]
 	ParticleBunchConstructor (const BeamData& beam, size_t npart, DistributionType dist = normalDistribution);
 
 	~ParticleBunchConstructor ();
