@@ -53,7 +53,7 @@ public:
 		SetUpProfiling();
 	};
 
-	ProtonBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter)
+	ProtonBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr)
 		:ParticleBunch(np, generator, beam, filter), GotElastic(false),GotDiffractive(false)
 	{
 		SetUpProfiling();
