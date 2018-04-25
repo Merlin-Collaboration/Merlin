@@ -9,6 +9,7 @@
 #include "ParticleTracker.h"
 #include "HollowElectronLens.h"
 #include "HollowELensProcess.h"
+#include "NANCheckProcess.h"
 
 /*
  * Test that the deterministic modes of the the Hollow Election Lens
@@ -141,6 +142,11 @@ int main()
 		delete ctor;
 		AcceleratorModel::RingIterator ring = theModel->GetRing();
 		ParticleTracker* tracker = new ParticleTracker(ring,myBunch);
+
+		auto nancheck = new NANCheckProcess;
+		nancheck->SetDetailed(0);
+		nancheck->SetHaltNAN(1);
+		tracker->AddProcess(nancheck);
 
 		HollowELensProcess* myHELProcess = new HollowELensProcess(3);
 		tracker->AddProcess(myHELProcess);
