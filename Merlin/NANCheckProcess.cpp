@@ -17,6 +17,11 @@ void NANCheckProcess::InitialiseProcess (Bunch& bunch)
 	ParticleBunchProcess::InitialiseProcess(bunch);
 }
 
+static bool is_good(const PSvector &p)
+{
+	return std::isfinite(p.x()) && std::isfinite(p.y()) && std::isfinite(p.ct()) && std::isfinite(p.xp()) && std::isfinite(p.yp()) && std::isfinite(p.dp());
+}
+
 void NANCheckProcess::DoProcess (const double ds)
 {
 	ParticleBunch::iterator p;
@@ -28,7 +33,7 @@ void NANCheckProcess::DoProcess (const double ds)
 		{
 			continue;
 		}
-		if(std::isnan(p.x()) || std::isnan(p.y()) ||  std::isnan(p.ct()) || std::isnan(p.xp()) || std::isnan(p.yp()) || std::isnan(p.dp()))
+		if(!is_good(p))
 		{
 			std::cout << "NAN entry found in currentBunch["<< count <<"], p.id = " << p.id() << ", at " << currentComponent->GetQualifiedName() << std::endl;
 			Report(p.id());
@@ -83,7 +88,7 @@ void NANCheckProcess::DoCull ()
 	NewBunch->reserve(currentBunch->size());
 	for(auto &p: *currentBunch)
 	{
-		if(!(std::isnan(p.x()) || std::isnan(p.y()) ||  std::isnan(p.ct()) || std::isnan(p.xp()) || std::isnan(p.yp()) || std::isnan(p.dp())))
+		if(is_good(p))
 		{
 			NewBunch->AddParticle(p);
 		}
