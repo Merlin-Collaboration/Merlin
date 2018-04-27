@@ -5,7 +5,6 @@
 #include <cmath>
 
 #include "ParticleTracker.h"
-#include "ParticleBunchConstructor.h"
 #include "CollimateParticleProcess.h"
 #include "NumericalConstants.h"
 

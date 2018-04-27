@@ -1,7 +1,6 @@
 #ifndef _BUNCHFILTER_H_
 #define _BUNCHFILTER_H_
 
-//#include "ParticleBunchConstructor.h"
 #include "PSvector.h"
 
 namespace ParticleTracking
@@ -14,7 +13,7 @@ public:
 	virtual ~ParticleBunchFilter ();
 
 	/**
-	*	Used by a ParticleBunchConstructor object to select
+	*	Used by the ParticleBunch constructor object to select
 	*	vectors for inclusion in a ParticleBunch.
 	*/
 	virtual bool Apply (const PSvector& v) const = 0;
@@ -25,7 +24,7 @@ class HorizontalHaloParticleBunchFilter : public ParticleBunchFilter
 public:
 
 	/**
-	*	Used by a ParticleBunchConstructor object to select
+	*	Used by the ParticleBunch constructor object to select
 	*	vectors for inclusion in a ParticleBunch.
 	*/
 	bool Apply (const PSvector& v) const;
@@ -44,7 +43,7 @@ class VerticalHaloParticleBunchFilter : public ParticleBunchFilter
 public:
 
 	/**
-	*	Used by a ParticleBunchConstructor object to select
+	*	Used by the ParticleBunch constructor object to select
 	*	vectors for inclusion in a ParticleBunch.
 	*/
 	bool Apply (const PSvector& v) const;

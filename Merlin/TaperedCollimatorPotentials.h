@@ -8,7 +8,6 @@
 #include "Collimator.h"
 
 #include "BeamData.h"
-#include "ParticleBunchConstructor.h"
 #include "ParticleTracker.h"
 
 #include "CollimatorWakeProcess.h"
