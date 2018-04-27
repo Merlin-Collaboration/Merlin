@@ -129,7 +129,6 @@ RealMatrix NormalTransform(const BeamData& t)
 	RealMatrix B=BetaMatrix(t.beta_x,t.beta_y);
 	RealMatrix A=AlphaMatrix(t.alpha_x,t.alpha_y);
 	RealMatrix C=CouplingMatrix(t.c_xy,t.c_xyp,t.c_xpy,t.c_xpyp);
-	RealMatrix E = D*B*A*C;
 	return D*B*A*C;
 }
 
