@@ -5,7 +5,8 @@
 
 #include "RandomNG.h"
 #include "BeamData.h"
-#include "ParticleBunchConstructor.h"
+#include "ParticleBunch.h"
+#include "ParticleDistributionGenerator.h"
 #include "ParticleTracker.h"
 #include "AcceleratorModelConstructor.h"
 #include "Components.h"
@@ -68,10 +69,10 @@ int main()
 //             Construct bunch
 //-----------------------------------------------------
 
-	ParticleBunchConstructor* PBC = new ParticleBunchConstructor(beam,npart,normalDistribution);
-	PBC->ForceCentroid(true); // set centroid to 0
-	ParticleBunch* startBunch1 = PBC->ConstructParticleBunch();
-	ParticleBunch* startBunch2 = PBC->ConstructParticleBunch();
+	ParticleBunch* startBunch1 = new ParticleBunch(npart, NormalParticleDistributionGenerator(), beam);
+	ParticleBunch* startBunch2 = new ParticleBunch(npart, NormalParticleDistributionGenerator(), beam);
+	startBunch1->SetCentroid();
+	startBunch2->SetCentroid();
 
 	PSmoments S;
 	startBunch1->GetMoments(S);

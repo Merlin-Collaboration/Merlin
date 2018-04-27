@@ -22,7 +22,7 @@
 #include "StandardMultipoles.h"
 #include "TComponentFrame.h"
 #include "ParticleBunch.h"
-#include "ParticleBunchConstructor.h"
+#include "ParticleDistributionGenerator.h"
 #include "ParticleTracker.h"
 #include "SpinParticleProcess.h"
 #include "SynchRadParticleProcess.h"
@@ -198,8 +198,7 @@ int main()
 
 SpinParticleBunch* ConstructSpinParticleBunch(const BeamData& beam, const SpinVector& spin, int nparts)
 {
-	ParticleBunchConstructor pbc(beam,nparts,normalDistribution);
-	ParticleBunch* aBunch = pbc.ConstructParticleBunch();
+	ParticleBunch* aBunch = new ParticleBunch(nparts, NormalParticleDistributionGenerator(), beam);
 	SpinParticleBunch* spinBunch = new SpinParticleBunch(BEAMENERGY);
 
 	for(PSvectorArray::iterator it = aBunch->begin(); it!=aBunch->end(); it++)
