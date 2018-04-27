@@ -208,6 +208,7 @@ ParticleBunch::ParticleBunch (size_t np, const ParticleDistributionGenerator& ge
 			i++;
 		}
 	}
+	qPerMP = beam.charge/size();
 }
 
 double ParticleBunch::GetTotalCharge () const
