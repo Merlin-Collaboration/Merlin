@@ -11,7 +11,8 @@
 #include "TWRFStructure.h"
 
 #include "BeamData.h"
-#include "ParticleBunchConstructor.h"
+#include "ParticleBunch.h"
+#include "ParticleDistributionGenerator.h"
 #include "ParticleTracker.h"
 
 #include "CollimatorWakeProcess.h"
@@ -66,9 +67,8 @@ int main()
 //-----------------------------------------------------
 //             Construct bunch
 //-----------------------------------------------------
-	ParticleBunchConstructor* PBC = new ParticleBunchConstructor(mybeam,npart,normalDistribution);
-	PBC->ForceCentroid(true); // set centroid to 0
-	ParticleBunch* startBunch = PBC->ConstructParticleBunch();
+	ParticleBunch* startBunch = new ParticleBunch(npart, NormalParticleDistributionGenerator(), mybeam);
+	startBunch->SetCentroid();
 
 //-----------------------------------------------------
 // the initial mean and sigma values

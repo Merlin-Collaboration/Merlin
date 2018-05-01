@@ -9,6 +9,7 @@
 #include "HollowElectronLens.h"
 #include "HollowELensProcess.h"
 #include "RandomNG.h"
+#include "NANCheckProcess.h"
 
 /*
  * Test that the diffusive modes of the the Hollow Election Lens matches
@@ -75,6 +76,12 @@ int main()
 
 	AcceleratorModel::RingIterator ring = theModel->GetRing();
 	ParticleTracker* diff_tracker = new ParticleTracker(ring, diff_bunch);
+
+	auto nancheck = new NANCheckProcess;
+	nancheck->SetDetailed(0);
+	nancheck->SetHaltNAN(1);
+	diff_tracker->AddProcess(nancheck);
+
 	HollowELensProcess* HELProcess = new HollowELensProcess(3);
 	diff_tracker->AddProcess(HELProcess);
 
@@ -97,6 +104,11 @@ int main()
 	delete ctor;
 	ring = theModel->GetRing();
 	ParticleTracker* ac_tracker = new ParticleTracker(ring, ac_bunch);
+
+	auto nancheck2 = new NANCheckProcess;
+	nancheck2->SetDetailed(0);
+	nancheck2->SetHaltNAN(1);
+	ac_tracker->AddProcess(nancheck2);
 
 	HELProcess = new HollowELensProcess(3);
 	ac_tracker->AddProcess(HELProcess);

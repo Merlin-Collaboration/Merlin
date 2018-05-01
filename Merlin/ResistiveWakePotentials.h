@@ -1,16 +1,8 @@
-#include <typeinfo>
 #include <iostream>
 #include <sstream>
+#include <cmath>
 
-#include "AcceleratorModel.h"
 #include "WakePotentials.h"
-#include "Collimator.h"
-#include "AcceleratorModelConstructor.h"
-#include "Drift.h"
-
-#include "BeamData.h"
-#include "ParticleBunchConstructor.h"
-#include "ParticleTracker.h"
 
 #include "CollimatorWakeProcess.h"
 #include "CollimatorWakePotentials.h"
@@ -18,8 +10,6 @@
 
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
-
-#include "RandomNG.h"
 
 using namespace std;
 using namespace PhysicalUnits;

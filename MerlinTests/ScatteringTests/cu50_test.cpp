@@ -17,6 +17,7 @@
 #include "CollimateProtonProcess.h"
 #include "ScatteringModelsMerlin.h"
 #include "MaterialDatabase.h"
+#include "NANCheckProcess.h"
 
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
@@ -156,6 +157,11 @@ int main(int argc, char* argv[])
 	ProtonBunch* myBunch = new ProtonBunch(beam_energy,1);
 	AcceleratorModel::RingIterator bline = model->GetRing();
 	ParticleTracker* tracker = new ParticleTracker(bline,myBunch);
+
+	auto nancheck = new NANCheckProcess;
+	nancheck->SetDetailed(0);
+	nancheck->SetHaltNAN(1);
+	tracker->AddProcess(nancheck);
 
 	/*********************************************************************
 	**	COLLIMATION SETTINGS

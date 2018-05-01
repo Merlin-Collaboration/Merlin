@@ -27,6 +27,7 @@
 #include "Dispersion.h"
 #include "CollimatorAperture.h"
 #include "LossMapCollimationOutput.h"
+#include "NANCheckProcess.h"
 
 using namespace std;
 using namespace PhysicalUnits;
@@ -334,6 +335,11 @@ int main(int argc, char* argv[])
 	AcceleratorModel::RingIterator bline = model->GetRing(start_element_number);
 	ParticleTracker* tracker = new ParticleTracker(bline,myBunch);
 	tracker->SetLogStream(std::cout);
+
+	auto nancheck = new NANCheckProcess;
+	nancheck->SetDetailed(0);
+	nancheck->SetHaltNAN(1);
+	tracker->AddProcess(nancheck);
 
 	//	COLLIMATION SETTINGS
 	std::ostringstream filename;

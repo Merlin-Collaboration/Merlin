@@ -4,31 +4,98 @@
 #include "ParticleBunch.h"
 #include <string>
 
+
 using namespace ParticleTracking;
 
-NANCheckProcess::NANCheckProcess(const string& aID ,int prio ): ParticleBunchProcess(aID,prio) {}
+NANCheckProcess::NANCheckProcess(const string& aID,int prio ): ParticleBunchProcess(aID,prio), detailed(0), cull(0), halt(0)
+{
+	active = true;
+}
 
 void NANCheckProcess::InitialiseProcess (Bunch& bunch)
 {
 	ParticleBunchProcess::InitialiseProcess(bunch);
-	active = true;
+}
+
+static bool is_good(const PSvector &p)
+{
+	return std::isfinite(p.x()) && std::isfinite(p.y()) && std::isfinite(p.ct()) && std::isfinite(p.xp()) && std::isfinite(p.yp()) && std::isfinite(p.dp());
 }
 
 void NANCheckProcess::DoProcess (const double ds)
 {
 	ParticleBunch::iterator p;
 	size_t count = 0;
-	for(p = currentBunch->begin(); p != currentBunch->end(); p++)
+	bool do_cull = 0;
+	for(auto &p: *currentBunch)
 	{
-		if(std::isnan(p->x()) || std::isnan(p->y()) ||  std::isnan(p->ct()) || std::isnan(p->xp()) || std::isnan(p->yp()) || std::isnan(p->dp()))
+		if (reported.count(p.id()))
 		{
-			std::cout << "FIRST NAN entry found in particle " << count << " at " << currentComponent->GetQualifiedName() << "\t";
-			std::cout << *p << std::endl;
-			active = false;
+			continue;
+		}
+		if(!is_good(p))
+		{
+			std::cout << "NAN entry found in currentBunch["<< count <<"], p.id = " << p.id() << ", at " << currentComponent->GetQualifiedName() << std::endl;
+			Report(p.id());
+			reported.insert(p.id());
+			if(cull)
+			{
+				do_cull = 1;
+			}
+			if(halt)
+			{
+				std::cout << "Halting on NAN coordinate" << std::endl;
+				abort();
+			}
 		}
 		count++;
 	}
+	if(do_cull)
+	{
+		DoCull();
+	}
+}
 
+void NANCheckProcess::Report (int id) const
+{
+	if(detailed)
+	{
+		auto p_prev = find_if (prev_coords.begin(), prev_coords.end(), [&id](const PSvector p)
+		{
+			return p.id() == id;
+		});
+		auto p_start = find_if (start_coords.begin(), start_coords.end(), [&id](const PSvector p)
+		{
+			return p.id() == id;
+		});
+		if (p_prev != prev_coords.end())
+		{
+			std::cout << "prev     " << *p_prev << std::endl;
+		}
+		std::cout << "start    " << *p_start << std::endl;
+	}
+
+	auto p_cur = find_if (currentBunch->begin(), currentBunch->end(), [&id](const PSvector p)
+	{
+		return p.id() == id;
+	});
+	std::cout << "current  " << *p_cur << std::endl;
+}
+
+void NANCheckProcess::DoCull ()
+{
+	ParticleBunch* NewBunch=new ParticleBunch(currentBunch->GetReferenceMomentum(),currentBunch->GetTotalCharge()/currentBunch->size());
+	NewBunch->reserve(currentBunch->size());
+	for(auto &p: *currentBunch)
+	{
+		if(is_good(p))
+		{
+			NewBunch->AddParticle(p);
+		}
+	}
+	currentBunch->clear();
+	currentBunch->swap(*NewBunch);
+	delete NewBunch;
 }
 
 double NANCheckProcess::GetMaxAllowedStepSize() const
@@ -39,4 +106,11 @@ double NANCheckProcess::GetMaxAllowedStepSize() const
 void NANCheckProcess::SetCurrentComponent (AcceleratorComponent& component)
 {
 	currentComponent = &component;
+	if(detailed)
+	{
+		prev_coords.clear();
+		prev_coords = start_coords;
+		start_coords.clear();
+		start_coords = currentBunch->GetParticles();
+	}
 }

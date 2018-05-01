@@ -1,7 +1,8 @@
 #include "ParticleTrackingModel.h"
-#include "ParticleBunchConstructor.h"
 #include "WakeFieldProcess.h"
 #include "ILCDFS_IO.h"
+#include "ParticleBunch.h"
+#include "ParticleDistributionGenerator.h"
 
 using namespace ParticleTracking;
 
@@ -47,7 +48,7 @@ void ParticleTrackingModel::TrackThisBunch(Bunch* b)
 
 ParticleBunch* ParticleTrackingModel::CreateBunch(const BeamData& beam0)
 {
-	return ParticleBunchConstructor(beam0,np).ConstructParticleBunch();
+	return new ParticleBunch(np, NormalParticleDistributionGenerator(), beam0);
 }
 
 void ParticleTrackingModel::IncludeTransverseWakefield(bool flg)
