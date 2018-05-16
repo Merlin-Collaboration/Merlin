@@ -1,17 +1,9 @@
-// ILC Spin Rotator Example
-// -----------------------------------------------------------------------
-// Original implemention: Andy Wolski
-// modified by          : Nick Walker 5/10/2005
-//
-// This application performs particle tracking through a possible ILC
-// spin rotator. Spin tracking is also included.
-//
-// Routines are also provided for studying tolerances (sensitivities) of
-// magnets (in this case quadrupoles)
-//
-// The example also shows the use of a user-defined SimulationOuput class
-// for controlling the recording of results.
-//
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #include "merlin_config.h"
 #include "PhysicalUnits.h"
@@ -33,6 +25,20 @@
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
+
+// ILC Spin Rotator Example
+// -----------------------------------------------------------------------
+// Original implemention: Andy Wolski
+// modified by          : Nick Walker 5/10/2005
+//
+// This application performs particle tracking through a possible ILC
+// spin rotator. Spin tracking is also included.
+//
+// Routines are also provided for studying tolerances (sensitivities) of
+// magnets (in this case quadrupoles)
+//
+// The example also shows the use of a user-defined SimulationOuput class
+// for controlling the recording of results.
 
 // Forward global function declarations
 // (definitions can be found after main()

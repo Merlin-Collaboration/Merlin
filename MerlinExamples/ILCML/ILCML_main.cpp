@@ -1,3 +1,34 @@
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice: (c) a full 6D bunch with wakefields / beam loading
+ */
+
+#include "merlin_config.h"
+
+#include <iostream>
+#include <fstream>
+
+#include "NumericalConstants.h"
+#include "PhysicalConstants.h"
+#include "PhysicalUnits.h"
+#include "RandomNG.h"
+
+#include "SMPTracker.h"
+#include "SMPBunchConstructor.h"
+#include "SMPWakeFieldProcess.h"
+#include "CorrectorDipoles.h"
+#include "TComponentFrame.h"
+#include "model_construction.h"
+#include "TrackingOutput.h"
+#include "QuadReferenceOutput.h"
+
+using namespace std;
+using namespace PhysicalUnits;
+using namespace PhysicalConstants;
+using namespace SMPTracking;
+
 // linac tracking benchmarking
 // ------------------------------------------
 // N. Walker 22.02.2006
@@ -29,30 +60,6 @@
 //         full-bunch-with-WF.data
 //         exercise2.data
 //
-
-#include "merlin_config.h"
-
-#include <iostream>
-#include <fstream>
-
-#include "NumericalConstants.h"
-#include "PhysicalConstants.h"
-#include "PhysicalUnits.h"
-#include "RandomNG.h"
-
-#include "SMPTracker.h"
-#include "SMPBunchConstructor.h"
-#include "SMPWakeFieldProcess.h"
-#include "CorrectorDipoles.h"
-#include "TComponentFrame.h"
-#include "model_construction.h"
-#include "TrackingOutput.h"
-#include "QuadReferenceOutput.h"
-
-using namespace std;
-using namespace PhysicalUnits;
-using namespace PhysicalConstants;
-using namespace SMPTracking;
 
 ///////////////////////////////////////////////////////////
 // forward declarations

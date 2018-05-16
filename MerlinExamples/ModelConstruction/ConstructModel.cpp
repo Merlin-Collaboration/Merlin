@@ -1,5 +1,15 @@
-// ConstructModel.cpp
-//
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
+
+#include "ConstructModel.h"
+#include "MADInterface/MADInterface.h"
+#include <iostream>
+//#include <fstream>
+
 // Merlin 3.0 example code
 // v1.0 Nick Walker 21.10.2004
 //-------------------------------------------------------------------------
@@ -21,11 +31,6 @@
 // Note that MAD elements that are not supported by Merlin 3.0 are treated
 // as drifts by default (a warning message is printed to cout when one is
 // encountered).
-
-#include "ConstructModel.h"
-#include "MADInterface/MADInterface.h"
-#include <iostream>
-//#include <fstream>
 
 AcceleratorModel* ConstructModel(const string& fname, double energyInGeV, const string& logFile)
 {

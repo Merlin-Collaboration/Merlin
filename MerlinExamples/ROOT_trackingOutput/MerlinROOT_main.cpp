@@ -1,13 +1,9 @@
-//------------------------------------------------------------
-//
-// an example how to use ROOT with Merlin
-//
-// We construct an ILC like linac and
-// use the TrackingOutputROOT class
-// to write all kinds of variables and parameters
-//
-// D.K. 14.9.2009
-//
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #include "merlin_config.h"
 #include "Random/RandomNG.h"
@@ -33,6 +29,12 @@ using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
+
+// an example how to use ROOT with Merlin
+//
+// We construct an ILC like linac and
+// use the TrackingOutputROOT class
+// to write all kinds of variables and parameters
 
 pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname);
 

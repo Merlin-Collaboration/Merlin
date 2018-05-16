@@ -1,6 +1,10 @@
-// just a few pedagogical examples
-// dk 15.1.2009
-//
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
+
 void Analyse(){
 
 	TFile *merlin = TFile::Open("merlin.root");

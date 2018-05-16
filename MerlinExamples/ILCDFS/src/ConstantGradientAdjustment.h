@@ -1,18 +1,9 @@
-/////////////////////////////////////////////////////////////////////////
-// class ConstantGradientAdjustment
-// Produces an arbitrary number of energy states by uniformly adjusting
-// the entire gradient of the machine.
-//
-// ILCDFS Application Code
-// Based on the MERLIN class library
-//
-// Copyright: see Merlin/copyright.txt
-//
-// Last CVS revision:
-// $Date: 2006/06/12 14:30:09 $
-// $Revision: 1.1 $
-//
-/////////////////////////////////////////////////////////////////////////
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #ifndef _h_ConstantGradientAdjustment
 #define _h_ConstantGradientAdjustment
@@ -20,6 +11,8 @@
 #include <vector>
 #include "EnergyAdjustmentPolicy.h"
 
+// Produces an arbitrary number of energy states by uniformly adjusting
+// the entire gradient of the machine.
 class ConstantGradientAdjustment : public EnergyAdjustmentPolicy
 {
 public:

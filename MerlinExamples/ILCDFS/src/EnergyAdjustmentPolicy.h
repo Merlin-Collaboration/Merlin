@@ -1,5 +1,15 @@
-/////////////////////////////////////////////////////////////////////////
-// Abstract class EnergyAdjustmentPolicy
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
+
+#ifndef _h_EnergyAdjustmentPolicy
+#define _h_EnergyAdjustmentPolicy
+
+#include "CommonDataStructures.h"
+
 // Encapsulates the method for adjusting the energy of the accelerator for DFS.
 // Each energy measurement is represented by an energy state, of which
 // there can be any number. Each energy state is indexed by an integer ranging
@@ -9,23 +19,6 @@
 // Energy adjustment is possible via adjusting the klystrons (physically
 // realistic method), or by adjusting the tracked beam energy directly
 // (physically unrealistic).
-//
-// ILCDFS Application Code
-// Based on the MERLIN class library
-//
-// Copyright: see Merlin/copyright.txt
-//
-// Last CVS revision:
-// $Date: 2006/06/12 14:30:09 $
-// $Revision: 1.1 $
-//
-/////////////////////////////////////////////////////////////////////////
-
-#ifndef _h_EnergyAdjustmentPolicy
-#define _h_EnergyAdjustmentPolicy
-
-#include "CommonDataStructures.h"
-
 class EnergyAdjustmentPolicy
 {
 
