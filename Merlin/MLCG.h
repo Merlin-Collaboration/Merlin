@@ -17,8 +17,6 @@ Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 #ifndef _MLCG_h
 #define _MLCG_h 1
-#ifdef __GNUG__
-#endif
 
 #include "RNG.h"
 #include <cmath>

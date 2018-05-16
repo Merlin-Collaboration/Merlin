@@ -14,7 +14,6 @@
 
 #include "DFSCorrection.h"
 #include "EnergyAdjustmentPolicy.h"
-//#include "BPMDataFilter.h"
 #include "TLASimp.h"
 #include "ResponseMatrixGenerator.h"
 #include "ILCDFS_IO.h"

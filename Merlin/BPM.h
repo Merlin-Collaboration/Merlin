@@ -18,7 +18,6 @@
 #include "merlin_config.h"
 #include <set>
 
-// Monitor
 #include "Monitor.h"
 #include "AMBufferManager.h"
 #include "Measurement.h"

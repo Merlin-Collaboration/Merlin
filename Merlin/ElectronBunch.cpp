@@ -1,6 +1,5 @@
 #include <cmath>
 #include "ElectronBunch.h"
-//#include "CoulombScatter.h"
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
 #include "MerlinException.h"

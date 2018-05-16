@@ -18,7 +18,6 @@
 namespace
 {
 
-// unit conversion factor for wake potential
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 using namespace SMPTracking;

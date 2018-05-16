@@ -12,14 +12,6 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// Routines to calculate the equilibrium beam distribution
-// in an electron storage ring, using Chao's Method
-// J.Appl.Phys. 50(2), 1979
-// Numerical integration routines from
-// Numerical Recipes in C (Section 4.3: Romberg Integration)
-//
-// A.Wolski, 28 June 2004.
-
 #include <fstream>
 #include "ParticleBunch.h"
 #include "ParticleTracker.h"

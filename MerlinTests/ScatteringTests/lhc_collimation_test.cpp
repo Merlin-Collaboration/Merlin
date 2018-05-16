@@ -17,7 +17,6 @@
 #include "RandomNG.h"
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
-//~ #include "CollimateParticleProcess.h"
 #include "CollimateProtonProcess.h"
 #include "ScatteringProcess.h"
 #include "ScatteringModelsMerlin.h"

@@ -1,8 +1,6 @@
 // Modified by D.Kruecker 18.2.2008
 // to be used as base class for other wakefield types (collimator,coupler,...)
 
-//Time for load leveling
-//#include <ctime>
 #include <time.h>
 
 #include <stdexcept>

@@ -19,7 +19,6 @@
 #include <iostream>
 #include <vector>
 #include "AcceleratorSupport.h"
-// TLASimp
 #include "LinearAlgebra.h"
 
 class RandGenerator;

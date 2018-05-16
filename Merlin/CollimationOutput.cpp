@@ -17,7 +17,6 @@
 #include <sstream>
 
 #include "CollimationOutput.h"
-
 #include "MerlinException.h"
 
 namespace ParticleTracking

@@ -49,7 +49,7 @@ int main()
 	// Construct the halo tracking object.
 	HaloTracker ht(model->GetBeamline(),*beam);
 
-	// set halo limits to ±5 sigma and ±5% in dp/p
+	// set halo limits to Â±5 sigma and Â±5% in dp/p
 	ht.SetHaloLimitsN(5,5,5,5,0.05);
 
 	// We want to hard collimate the halo at apertures,

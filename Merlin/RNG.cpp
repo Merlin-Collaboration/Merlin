@@ -14,10 +14,8 @@ You should have received a copy of the GNU Library General Public
 License along with this library; if not, write to the Free Software
 Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
-#ifdef __GNUG__
-#endif
+
 #include <cassert>
-// #include "builtin.h"
 #include "RNG.h"
 
 // These two static fields get initialized by RNG::RNG().

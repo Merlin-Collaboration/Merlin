@@ -16,7 +16,6 @@
 #define _h_WakeFieldProcess
 
 #ifdef ENABLE_MPI
-//#include <ctime>
 #include <time.h>
 #endif
 

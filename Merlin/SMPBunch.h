@@ -18,7 +18,6 @@
 #include "merlin_config.h"
 #include <iostream>
 
-// ReferenceParticle
 #include "Bunch.h"
 #include "SliceMacroParticle.h"
 #include <vector>

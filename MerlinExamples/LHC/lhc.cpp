@@ -1,4 +1,4 @@
-//#include "BeamModel/BeamData.h"
+#include "BeamModel/BeamData.h"
 #include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
 #include "BeamDynamics/ParticleTracking/ParticleTracker.h"
 #include "Collimators/CollimatorWakeProcess.h"

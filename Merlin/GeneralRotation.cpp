@@ -12,13 +12,9 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// memcpy
 #include <cstring>
-// blas template routines
 #include "LinearAlgebra.h"
-// rotation matrix construction
 #include "RotationMatrix.h"
-
 #include "GeneralRotation.h"
 
 GeneralRotation::GeneralRotation (const GeneralRotation& gr)

@@ -18,7 +18,6 @@
 #include "merlin_config.h"
 #include <utility>
 
-// Transform3D
 #include "Transformable.h"
 #include "AcceleratorGeometry.h"
 

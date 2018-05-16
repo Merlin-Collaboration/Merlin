@@ -12,7 +12,6 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-// BPMDataBuffer
 #include "BPMDataBuffer.h"
 
 void BPMDataBuffer::Record (const BPM& aBPM, const BPM::Data& data)

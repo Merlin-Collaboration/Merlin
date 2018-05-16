@@ -16,7 +16,6 @@
 #define ParticleMapPI_h 1
 
 #include "merlin_config.h"
-// ParticleBunchIntegrator
 #include "ParticleComponentTracker.h"
 #include "ParticleMapComponent.h"
 

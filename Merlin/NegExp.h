@@ -16,10 +16,7 @@ License along with this library; if not, write to the Free Software
 Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 #ifndef _NegativeExpntl_h
-#ifdef __GNUG__
-#endif
 #define _NegativeExpntl_h 1
-
 
 /**
 *	Negative Exponential Random Numbers

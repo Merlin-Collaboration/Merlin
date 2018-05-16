@@ -24,15 +24,11 @@
 * or implied warranty.
 */
 
-
 #ifndef ParticleTracker_h
 #define ParticleTracker_h 1
 
 #include "merlin_config.h"
-
-// TrackingSimulation
 #include "TTrackSim.h"
-// ParticleBunch
 #include "ParticleComponentTracker.h"
 
 /**

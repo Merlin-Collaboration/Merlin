@@ -390,7 +390,6 @@ template<class T> inline T Det(const Matrix<T>& m)
 	return LUMatrix<T>(m).det();
 }
 
-// SVD routines
 #include "svdcmp.h"
 
 } // end namespace TLAS

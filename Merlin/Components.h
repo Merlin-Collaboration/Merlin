@@ -12,8 +12,10 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-//	A single include file which includes all the header
-//	files for the standard accelerator model components.
+/**
+ * A single include file which includes all the header
+ * files for the standard accelerator model components.
+ */
 
 #ifndef Components_h
 #define Components_h 1
