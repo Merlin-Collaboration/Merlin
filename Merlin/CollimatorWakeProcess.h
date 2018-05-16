@@ -1,13 +1,9 @@
-/////////////////////////////////////////////////////////////////////////
-//
-// Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//
-// Class library version 3 (2004)
-//
-// Copyright: see Merlin/copyright.txt
-//
-// Created: June, 2006
-/////////////////////////////////////////////////////////////////////////
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #ifndef _h_CollimatorWakeProcess
 #define _h_CollimatorWakeProcess

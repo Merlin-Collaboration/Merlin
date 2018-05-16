@@ -1,29 +1,9 @@
-
 /*
-* Merlin C++ Class Library for Charged Particle Accelerator Simulations
-*
-* Class library version 2.0 (2000)
-*
-* file Merlin\AcceleratorModel\StdComponent\Collimator.h
-* last modified 04/04/01 15:25:43
-* This file is derived from software bearing the following
-* restrictions:
-*
-* MERLIN C++ class library for
-* Charge Particle Accelerator Simulations
-*
-* Copyright (c) 2000 by The Merlin Collaboration.
-* ALL RIGHTS RESERVED.
-*
-* Permission to use, copy, modify, distribute and sell this
-* software and its documentation for any purpose is hereby
-* granted without fee, provided that the above copyright notice
-* appear in all copies and that both that copyright notice and
-* this permission notice appear in supporting documentation.
-* No representations about the suitability of this software for
-* any purpose is made. It is provided "as is" without express
-* or implied warranty.
-*/
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #ifndef Collimator_h
 #define Collimator_h 1
