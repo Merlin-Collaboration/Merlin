@@ -32,7 +32,7 @@ std::string merlin_version_git()
 std::string merlin_version_info()
 {
 	std::string info;
-	info += "MERLIN version: @MERLIN_VERSION@\n";
+	info += "MERLIN++ version: @MERLIN_VERSION@\n";
 
 	std::string git_tag = merlin_version_git();
 	if(git_tag.size()){

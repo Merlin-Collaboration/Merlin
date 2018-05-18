@@ -1,6 +1,4 @@
-# Merlin Index {#mainpage}
-
-# Introduction {#intro_sec}
+# Introduction {#mainpage}
 
 This is the introduction.
 
@@ -41,14 +39,19 @@ xcodebuild
 which will compile merlin.
 Other options exist such as "xcodebuild clean", which will clear out built files.
 
-\author Nick Walker
-\author Dirk Kruecker
-\author Andy Wolski
+\author Robert Appleby
 \author Roger Barlow
-\author Adina Toader
+\author Adriana Bungau
+\author James Fallon
+\author Dirk Kruecker
 \author James Molson
 \author Haroon Rafique
+\author Scott Rowan
+\author Maurizio Serluca
+\author Adina Toader
 \author Sam Tygier
+\author Nick Walker
+\author Andy Wolski
 
-\date 2001-2016
+\date 2001-2018
 
