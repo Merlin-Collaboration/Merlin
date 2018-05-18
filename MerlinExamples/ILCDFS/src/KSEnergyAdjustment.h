@@ -1,5 +1,15 @@
-/////////////////////////////////////////////////////////////////////////
-// class KSEnergyAdjustment
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
+
+#ifndef _h_KSEnergyAdjustment
+#define _h_KSEnergyAdjustment 1
+
+#include "EnergyAdjustmentPolicy.h"
+
 // Klystron Shunting Energy Adjustment performs a LIAR-like energy
 // modification by turning off a set of klystrons upstream of the
 // current correction segment. The number of klystrons to turn off
@@ -9,23 +19,6 @@
 // energy difference is made up by adjusting the initial beam energy.
 //
 // Note that this method does not support incremental tracking.
-//
-// ILCDFS Application Code
-// Based on the MERLIN class library
-//
-// Copyright: see Merlin/copyright.txt
-//
-// Last CVS revision:
-// $Date: 2006/06/19 10:19:06 $
-// $Revision: 1.1 $
-//
-/////////////////////////////////////////////////////////////////////////
-
-#ifndef _h_KSEnergyAdjustment
-#define _h_KSEnergyAdjustment 1
-
-#include "EnergyAdjustmentPolicy.h"
-
 class KSEnergyAdjustment :public EnergyAdjustmentPolicy
 {
 

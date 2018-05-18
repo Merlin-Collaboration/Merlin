@@ -1,14 +1,9 @@
-// class TeslaCoupler
-//
-// coupler wake fields: - talk and paper(sign and decimal points errors removed)
-//                        I. Zagordnov and M. Dohlus
-//                        ILC/LCWS 07, Hamburg
-//                      - steady state solution:
-//                        M.Dohlus, I.Zagorodnov, E.Gjonaj and T.Weiland,
-//                        EPAC08, Genua, MOPP013
-// + tesla wake fields
-//
-// functions are selected by define statements for better performance
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #ifndef _H_TeslaCoupler
 #define _H_TeslaCoupler
@@ -39,6 +34,15 @@ using namespace std;
 //#define newCouplerRFKick CouplerRFKick
 #define dummyCouplerRFKick CouplerRFKick
 
+// coupler wake fields: - talk and paper(sign and decimal points errors removed)
+//                        I. Zagordnov and M. Dohlus
+//                        ILC/LCWS 07, Hamburg
+//                      - steady state solution:
+//                        M.Dohlus, I.Zagorodnov, E.Gjonaj and T.Weiland,
+//                        EPAC08, Genua, MOPP013
+// + tesla wake fields
+//
+// functions are selected by define statements for better performance
 class TeslaCoupler : public CombinedWakeRF
 {
 public:

@@ -1,12 +1,9 @@
-// Specification for PhysicalConstants
-// last modified: 01/30/98 at 15:26:26
-// This file is part of the MERLIN class library
-// version 1.0beta
-// ---------------------------------------------
-
-// (c) 1997 Nicholas J. Walker (DESY) -- All Rights Reserved --
-// ------------------------------------------------------------
-
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice: (c) 1997 Nicholas J. Walker (DESY) -- All Rights Reserved --
+ */
 
 #ifndef PhysicalConstants_h
 #define PhysicalConstants_h 1

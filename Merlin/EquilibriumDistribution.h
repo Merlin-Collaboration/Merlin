@@ -1,16 +1,9 @@
-/////////////////////////////////////////////////////////////////////////
-//
-// Merlin C++ Class Library for Charged Particle Accelerator Simulations
-//
-// Class library version 3 (2004)
-//
-// Copyright: see Merlin/copyright.txt
-//
-// Last CVS revision:
-// $Date: 2004/12/13 08:38:54 $
-// $Revision: 1.2 $
-//
-/////////////////////////////////////////////////////////////////////////
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #ifndef EquilibriumDistribution_h
 #define EquilibriumDistribution_h 1
@@ -19,6 +12,16 @@
 
 #include "AcceleratorModel.h"
 #include "SectorBend.h"
+
+/**
+ * Routines to calculate the equilibrium beam distribution
+ * in an electron storage ring, using Chao's Method
+ * J.Appl.Phys. 50(2), 1979
+ * Numerical integration routines from
+ * Numerical Recipes in C (Section 4.3: Romberg Integration)
+ *
+ * A.Wolski, 28 June 2004.
+ */
 
 class IntegrateEigenvector
 {

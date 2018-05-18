@@ -1,7 +1,9 @@
-//----------------------------------------------
-//    How to use coupler wakefields
-//    DK 29.11.2008
-//
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #include "RandomNG.h"
 #include "BeamData.h"
@@ -25,6 +27,7 @@ using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
 
+//    How to use coupler wakefields
 
 AcceleratorModel* ConstructLinac(WakePotentials*,BeamData&);
 

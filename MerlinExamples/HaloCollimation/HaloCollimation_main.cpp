@@ -1,3 +1,10 @@
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
+
 // Beam Delivery System Collimator Studies
 // --------------------------------------------------------------------
 //
@@ -15,7 +22,6 @@
 //
 // class HaloTracker also gives an example of how to override the default
 // particle tracking mechanism (see HaloTracker.cpp and QuadIntegrator.[h,cpp]
-//
 
 #include "RandomNG.h"
 
@@ -49,7 +55,7 @@ int main()
 	// Construct the halo tracking object.
 	HaloTracker ht(model->GetBeamline(),*beam);
 
-	// set halo limits to ±5 sigma and ±5% in dp/p
+	// set halo limits to Â±5 sigma and Â±5% in dp/p
 	ht.SetHaloLimitsN(5,5,5,5,0.05);
 
 	// We want to hard collimate the halo at apertures,

@@ -1,14 +1,9 @@
-// GeSynRad.C, GEnerator for SYNchrotron RADiation, distribution version in C++
-// by Helmut Burkhardt, CERN
-// there is also a FORTRAN equivalent (dsynrad.f)
-//
-// reference:
-// H.Burkhardt, Monte Carlo generator for synchrotron radiation
-// CERN-LEP-Note 632 (Dec 1990)
-// available from http://wwwcn.cern.ch/~hbu/Welcome.html
-//
-// Modified by N. Walker (DESY) to use with the Merlin Class Library
-//
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
+ */
 
 #include <cmath>
 #include "NumericalConstants.h"
@@ -45,13 +40,24 @@ double Ran1()
 	return pgen.asDouble();
 }
 
+/**
+ * synchrotron radiation photon spectrum generator
+ * returns photon energy in units of the critical energy
+ * xmin is the lower limit for the photon energy to be generated
+ *
+ * GeSynRad.C, GEnerator for SYNchrotron RADiation, distribution version in C++
+ * by Helmut Burkhardt, CERN
+ * there is also a FORTRAN equivalent (dsynrad.f)
+ *
+ * reference:
+ * H.Burkhardt, Monte Carlo generator for synchrotron radiation
+ * CERN-LEP-Note 632 (Dec 1990)
+ * available from http://wwwcn.cern.ch/~hbu/Welcome.html
+ *
+ * Modified by N. Walker (DESY) to use with the Merlin Class Library
+ */
 
 double SynGenC(double xmin)
-// C++ version
-// synchrotron radiation photon spectrum generator
-// returns photon energy in units of the critical energy
-// xmin is the lower limit for the photon energy to be generated
-//          see H.Burkhardt, LEP Note 632
 {
 	static bool DoInit=true;
 	static double a1,a2,c1,xlow,ratio,LastXmin=-1.;
@@ -110,12 +116,17 @@ double SynGenC(double xmin)
 	return result;               // result now exact spectrum with unity weight
 }
 
-//	x :    energy normalized to the critical energy
-//	returns function value SynRadC   photon spectrum dn/dx
-//	(integral of modified 1/3 order Bessel function)
-//	principal: Chebyshev series see H.H.Umstaetter CERN/PS/SM/81-13 10-3-1981
-//	see also my LEP Note 632 of 12/1990
-//	converted to C++, H.Burkhardt 21-4-1996    */
+/**
+ * x :    energy normalized to the critical energy
+ *
+ * returns function value SynRadC   photon spectrum dn/dx
+ * (integral of modified 1/3 order Bessel function)
+ *
+ * principal: Chebyshev series see H.H.Umstaetter CERN/PS/SM/81-13 10-3-1981
+ * see also my LEP Note 632 of 12/1990
+ *
+ * converted to C++, H.Burkhardt 21-4-1996
+ */
 
 double SynRadC(double x)
 {

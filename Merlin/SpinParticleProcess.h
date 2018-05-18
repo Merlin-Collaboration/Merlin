@@ -1,7 +1,9 @@
-// (c) 2004 Daniel A. Bates (LBNL) -- All Rights Reserved --
-// Part of the Spin Particle Process Package 1.0
-// Modified 02/27/2004
-// Further Modified A.Wolski 04/27/2004 (general tidying up)
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ * This file is derived from software bearing the copyright notice: (c) 2004 Daniel A. Bates (LBNL) -- All Rights Reserved --
+ */
 
 #ifndef SpinParticleProcess_h
 #define SpinParticleProcess_h 1
