@@ -62,7 +62,7 @@ class TPSMoments<1> : public SigmaMatrix2D
 {
 public:
 
-	TPSMoments<1>() : SigmaMatrix2D()
+	TPSMoments() : SigmaMatrix2D()
 	{
 		data[0]=data[1]=0;
 	}

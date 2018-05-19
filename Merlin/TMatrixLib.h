@@ -371,7 +371,7 @@ public:
 private:
 
 	// private constructor for SubVector
-	Vector<T>(const array_type& sla)
+	Vector(const array_type& sla)
 		: array(sla) {}
 
 	array_type array;
@@ -1348,7 +1348,7 @@ private:
 	/**
 	* Private constructor for SubMatrix
 	*/
-	Matrix<T>(Dimension rows, Dimension cols, const array_type& gsa)
+	Matrix(Dimension rows, Dimension cols, const array_type& gsa)
 		: nr(rows),nc(cols),array(gsa) {}
 };
 
