@@ -60,7 +60,7 @@ struct MultipoleKick
 		Complex F = scale*field.GetField2D(x,y)/(1+dp);
 		v.xp() += -F.real();
 		v.yp() +=  F.imag();
-	};
+	}
 };
 
 
@@ -77,7 +77,7 @@ struct ApplyRFdp
 	{
 		cosPhi0=cos(phi0);
 		d0=1+Vn*cosPhi0;
-	};
+	}
 
 	void operator()(PSvector& p) const
 	{

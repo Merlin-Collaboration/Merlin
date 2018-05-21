@@ -26,7 +26,7 @@ public:
 	//take the radius and the conductivity out of WakePotentials
 		: WakePotentials(rad,conduct), nmodes(m) {}
 
-	virtual ~CollimatorWakePotentials () {};
+	virtual ~CollimatorWakePotentials () {}
 
 	virtual double Wlong(double s, int m) const = 0;
 	virtual double Wtrans(double s, int m) const = 0;

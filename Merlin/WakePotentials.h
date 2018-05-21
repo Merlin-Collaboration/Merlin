@@ -25,7 +25,7 @@ public:
 	WakePotentials() : csr(false), expectedProcess(nullptr) {}   // back to the original constructor
 	//WakePotentials() : csr(false) {}   // back to the original constructor
 
-	virtual ~WakePotentials() {};
+	virtual ~WakePotentials() {}
 
 	virtual double Wlong(double z) const = 0;
 	virtual double Wtrans(double z) const = 0;

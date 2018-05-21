@@ -34,7 +34,7 @@ public:
 			}
 		}
 		*/
-	};
+	}
 
 	bool inrange(double x)
 	{

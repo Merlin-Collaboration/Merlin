@@ -130,7 +130,7 @@ void TrackingOutputROOT::Record(const string& id, const Bunch* bunch)
 
 //	data.z     = bunch->GetReferenceTime(); //S - nout unique starts at 0 for each tracker
 	data.z     = zComponent;
-	data.p0    = bunch->GetReferenceMomentum();;
+	data.p0    = bunch->GetReferenceMomentum();
 	data.n     = BunchSize(bunch);
 	data.m_x   = B.x0;
 	data.m_y   = B.y0;

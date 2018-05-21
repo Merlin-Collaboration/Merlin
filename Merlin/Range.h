@@ -17,7 +17,7 @@ class RangeBase
 {
 public:
 	typedef enum {ok,belowlower,aboveupper} Result;
-	virtual ~RangeBase() {};
+	virtual ~RangeBase() {}
 };
 
 /**

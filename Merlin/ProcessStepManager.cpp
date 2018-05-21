@@ -38,7 +38,6 @@ struct InitProc
 	InitProc(Bunch& b) : ibunch(b) {}
 	void operator()(BunchProcess* proc)
 	{
-		//cout<<"Debug: "<<proc->GetID()<<end;;
 		MERLIN_PROFILE_START_TIMER(proc->GetID());
 		proc->InitialiseProcess(ibunch);
 		MERLIN_PROFILE_END_TIMER(proc->GetID());

@@ -21,12 +21,12 @@ private:
 	double dt;
 
 public:
-	ApplyDeltaT(double _dt) : dt(_dt) {};
+	ApplyDeltaT(double _dt) : dt(_dt) {}
 
 	void operator()(PSvector& v)
 	{
 		v.ct() += dt;
-	};
+	}
 };
 
 RingDeltaTProcess::RingDeltaTProcess (int prio)

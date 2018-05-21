@@ -50,7 +50,7 @@ protected:
 	double t;				/// Momentum transfer
 
 public:
-	virtual ~ScatteringProcess() {};
+	virtual ~ScatteringProcess() {}
 	// The first function must be provided for all child classes, and probably the second as well
 	virtual bool Scatter(PSvector& p, double E)=0;
 	virtual void Configure(Material* matin, CrossSections* CSin)

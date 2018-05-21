@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
 	ApertureConfiguration* apc = new ApertureConfiguration(input_data_dir+"LHCB1Aperture.tfs");
 
 	apc->ConfigureElementApertures(model);
-	cout << "aperture load finished" << endl<< "start twiss" << endl;;
+	cout << "aperture load finished" << endl<< "start twiss" << endl;
 	delete apc;
 
 	//Calculate Dispersion

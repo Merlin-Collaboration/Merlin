@@ -24,7 +24,7 @@ class LinMtrxBase
 {
 public:
 
-	virtual ~LinMtrxBase() {};
+	virtual ~LinMtrxBase() {}
 
 	/**
 	* Return the number of degrees of freedom for this matrix (dimension/2).

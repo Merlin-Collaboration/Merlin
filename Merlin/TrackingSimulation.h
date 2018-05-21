@@ -72,7 +72,7 @@ private:
 	class Stepper
 	{
 	public:
-		virtual ~Stepper() {};
+		virtual ~Stepper() {}
 		virtual ComponentFrame* NextFrame () = 0;
 		ComponentFrame* cFrame;
 	};

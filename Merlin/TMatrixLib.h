@@ -775,7 +775,7 @@ private:
 
 	// copying not allowed
 	ConstSubMatrix(const ConstSubMatrix<T>& t)
-		: gl(t.gl),array(t.array) {}; // needed for explicit instantiation
+		: gl(t.gl),array(t.array) {} // needed for explicit instantiation
 	ConstSubMatrix<T>& operator=(const ConstSubMatrix<T>&)
 	{
 		return *this;

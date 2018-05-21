@@ -39,7 +39,7 @@ class RNG
 	static PrivateRNGDoubleType doubleMantissa;	/// mantissa bit vector
 public:
 	RNG();
-	virtual ~RNG() {};
+	virtual ~RNG() {}
 
 	/**
 	* Return a long-words word of random bits

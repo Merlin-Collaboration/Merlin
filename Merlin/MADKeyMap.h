@@ -22,7 +22,7 @@
 class MADKeyMap
 {
 public:
-	virtual ~MADKeyMap() {};
+	virtual ~MADKeyMap() {}
 	typedef std::map< std::string , size_t  > key_map;
 	struct bad_key {};
 

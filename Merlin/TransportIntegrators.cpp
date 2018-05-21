@@ -73,7 +73,7 @@ struct MultipoleKick
 		Complex F = scale*field.GetField2D(x,y)/(1+dp);
 		v.xp() += -F.real();
 		v.yp() +=  F.imag();
-	};
+	}
 };
 
 // Apply a map without dp/p scaling

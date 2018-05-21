@@ -19,13 +19,13 @@ class DataTableHeader;
 class BadFormatException: public std::runtime_error
 {
 public:
-	BadFormatException(const std::string& what_arg): runtime_error(what_arg) {};
+	BadFormatException(const std::string& what_arg): runtime_error(what_arg) {}
 };
 
 class WrongTypeException: public std::runtime_error
 {
 public:
-	WrongTypeException(const std::string& what_arg): runtime_error(what_arg) {};
+	WrongTypeException(const std::string& what_arg): runtime_error(what_arg) {}
 };
 
 /** @brief A data structure for holding named type columns
@@ -73,7 +73,7 @@ protected:
 
 public:
 	/// Construct an empty DataTable.
-	DataTable():length() {};
+	DataTable():length() {}
 
 	/// Add a new column.
 	/// \param type One of 'i' (integer), 'd' (double) or 's' (string)
@@ -196,7 +196,7 @@ public:
 	size_t Length() const
 	{
 		return length;
-	};
+	}
 
 	/// Test if the DataTable has a given column
 	bool HasCol(std::string col_name) const;
@@ -213,7 +213,7 @@ private:
 	template <typename T, typename... Args>
 	void AddRowN(size_t col_n, size_t row_n, T x, Args... arg);
 	/// See AddRow()
-	void AddRowN(size_t, size_t) {}; // Terminating case
+	void AddRowN(size_t, size_t) {} // Terminating case
 
 public:
 	//demo output

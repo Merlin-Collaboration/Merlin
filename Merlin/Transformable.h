@@ -87,7 +87,7 @@ public:
 	virtual void Invalidate() const
 	{
 		/* do nothing */
-	};
+	}
 
 	const Transform3D* GetTransformation() const
 	{

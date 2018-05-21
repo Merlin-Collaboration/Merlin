@@ -1267,7 +1267,7 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 		tcut = tmax;
 
 		//Mott Correction
-		double G = pi*FineStructureConstant*beta/2.0;;
+		double G = pi*FineStructureConstant*beta/2.0;
 		double q = (2*(tmax/MeV)*(ElectronMassMeV) )/(pow((0.843/MeV),2));
 		double S = log(1+q);
 

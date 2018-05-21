@@ -273,7 +273,7 @@ public:
 	class ISetBase
 	{
 	public:
-		virtual ~ISetBase() {};
+		virtual ~ISetBase() {}
 		virtual void Init(TBunchCMPTracker&) const = 0;
 	};
 

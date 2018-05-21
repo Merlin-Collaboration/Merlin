@@ -37,7 +37,7 @@ public:
 	/**
 	 * Not needed for DetailedCollimationOutput, as no binning occurs.
 	 */
-	virtual void Finalise() {};
+	virtual void Finalise() {}
 	virtual void Output(std::ostream* os);
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
 

@@ -31,8 +31,8 @@ public:
 		ApertureClass_t ApType;
 	};
 
-	InterpolatedAperture() {};
-	InterpolatedAperture(std::vector<ap> ApertureListInput) : ApertureList(ApertureListInput) {};
+	InterpolatedAperture() {}
+	InterpolatedAperture(std::vector<ap> ApertureListInput) : ApertureList(ApertureListInput) {}
 
 	std::vector<ap> GetApertureList() const
 	{
@@ -118,7 +118,7 @@ inline std::string InterpolatedRectEllipseAperture::GetApertureType() const
 class InterpolatedCircularAperture : public InterpolatedAperture, public Aperture
 {
 public:
-	InterpolatedCircularAperture (std::vector<ap> ElementApertureList):InterpolatedAperture(ElementApertureList) {};
+	InterpolatedCircularAperture (std::vector<ap> ElementApertureList):InterpolatedAperture(ElementApertureList) {}
 
 	double GetRadius () const;
 	double GetDiameter () const;
@@ -151,7 +151,7 @@ inline std::string InterpolatedCircularAperture::GetApertureType() const
 class InterpolatedEllipticalAperture : public InterpolatedAperture, public Aperture
 {
 public:
-	InterpolatedEllipticalAperture (std::vector<ap> ElementApertureList):InterpolatedAperture(ElementApertureList) {};
+	InterpolatedEllipticalAperture (std::vector<ap> ElementApertureList):InterpolatedAperture(ElementApertureList) {}
 
 //	double GetRadius () const;
 //	double GetDiameter () const;

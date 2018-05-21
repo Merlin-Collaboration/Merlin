@@ -25,7 +25,7 @@
 class MaterialMixture : public Material
 {
 public:
-	MaterialMixture() : Material(),Assembled(false),AssembledByNumber(false),AssembledByMass(false) {};
+	MaterialMixture() : Material(),Assembled(false),AssembledByNumber(false),AssembledByMass(false) {}
 
 	double CalculateElectronDensity();
 	double CalculatePlasmaEnergy();

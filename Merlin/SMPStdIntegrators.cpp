@@ -101,7 +101,7 @@ struct ThinLensKick
 			M.AddTerm(4,3)=-k;
 			M.Apply(p);
 		};
-	};
+	}
 
 	Complex k0;
 	double k1;

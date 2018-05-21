@@ -106,13 +106,13 @@ protected:
 	/**
 	* Function applies entrance field map
 	*/
-	virtual void TrackEntrance() {};
+	virtual void TrackEntrance() {}
 
 	/**
 	* Function applies exit field map
 	*/
 
-	virtual void TrackExit() {};
+	virtual void TrackExit() {}
 
 private:
 

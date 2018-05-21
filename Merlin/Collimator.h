@@ -111,7 +111,7 @@ public:
 	virtual void SetMaterial(Material* pp)
 	{
 		p = pp;
-	};
+	}
 
 	// ScatteringModel contains the relevent ScatteringProcess to use when performing scattering
 	//~ Collimation::ScatteringModel* scatter;

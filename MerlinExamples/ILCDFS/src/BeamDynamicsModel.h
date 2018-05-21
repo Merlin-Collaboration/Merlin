@@ -22,7 +22,7 @@ public:
 
 	BeamDynamicsModel(const std::string& aName) : output(nullptr),itsName(aName) {}
 
-	virtual ~BeamDynamicsModel() {};
+	virtual ~BeamDynamicsModel() {}
 
 	// Sets the beamline to be tracked by all subsequent
 	// TrackBunch() operations.

@@ -670,7 +670,7 @@ void CCFailureProcess::DoProcess (double ds)
 			double fail_interval = 1 / (double)fail_turns;
 			if( upstream && (Turn >= non_fail_turns) && (failure_on) )
 			{
-				V1 = V1 * (1- (((Turn+1)-non_fail_turns) * fail_interval));;
+				V1 = V1 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
 			}
 
 			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
