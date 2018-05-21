@@ -23,4 +23,4 @@ END_INTG_SET
 
 } //end namespace SMPTracking
 
-template<> MAKE_DEF_INTG_SET(SMPTracking::SMPComponentTracker,SMPTracking::StdISet)
+MAKE_DEF_INTG_SET(SMPTracking::SMPComponentTracker,SMPTracking::StdISet)

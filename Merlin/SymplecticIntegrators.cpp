@@ -44,7 +44,7 @@ END_INTG_SET
 
 #define CHK_ZERO(s) if(s==0) return;
 
-//template<> MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::SYMPLECTIC::StdISet)
+//MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::SYMPLECTIC::StdISet)
 
 using namespace ParticleTracking;
 using namespace PhysicalUnits;
