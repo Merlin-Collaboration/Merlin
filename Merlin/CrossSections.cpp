@@ -56,15 +56,10 @@ CrossSections::CrossSections()
 //overloaded constructor
 CrossSections::CrossSections(Material* mat, double E, int scattertype)
 {
-	//~ std::cout << "ScatteringProcess::CrossSections:Constructor start" << endl;
 	Set_sig_pN_tot_ref(mat->GetSixtrackTotalNucleusCrossSection());
-	//~ std::cout << "ScatteringProcess::CrossSections:Constructor sig_pN_tot ="<< Get_sig_pN_tot_ref() << endl;
 	Set_sig_pN_inel_ref(mat->GetSixtrackInelasticNucleusCrossSection());
-	//~ std::cout << "ScatteringProcess::CrossSections:Constructor sig_pN_I ="<< Get_sig_pN_inel_ref() << endl;
 	Set_sig_R_ref(mat->GetSixtrackRutherfordCrossSection());
-	//~ std::cout << "ScatteringProcess::CrossSections:Constructor sig_pN_R ="<< Get_sig_R_ref() << endl;
 
-	//~ std::cout << "ScatteringProcess::CrossSections:Constructor: post Get functions" << endl;
 	Set_sig_R(0.);
 	Set_sig_pp_tot(0.);
 	Set_sig_pp_el(0.);
@@ -85,7 +80,7 @@ CrossSections::CrossSections(Material* mat, double E, int scattertype)
 	ElasticScatter 		= nullptr;
 	DiffractiveScatter 	= nullptr;
 	Set_E0(E);
-	//~ std::cout << "ScatteringProcess::CrossSections: Calling" << endl;
+
 	ConfigureCrossSections(Get_E0());
 	Set_lambda_tot(GetTotalMeanFreePath());
 
@@ -253,15 +248,6 @@ void CrossSections::ConfigureCrossSections(double E0)
 
 		//Rutherford
 		Set_sig_R(sig_R_ref);
-
-		//~ std::cout << "\nScatteringProcess::Configure: sig_pN_tot_ref = " << Get_sig_pN_tot_ref() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_pN_inel_ref = " << Get_sig_pN_inel_ref() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_R_ref = " << Get_sig_R_ref() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_pn_el = " << Get_sig_pn_el() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_pn_sd = " << Get_sig_pn_sd() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_pN_inel = " << Get_sig_pN_inel() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_pN_el = " << Get_sig_pN_el() << endl;
-		//~ std::cout << "ScatteringProcess::Configure: sig_R = " << Get_sig_R() << endl;
 	}
 
 }
@@ -272,21 +258,18 @@ double CrossSections::GetTotalMeanFreePath()
 	if(Get_scat_type() == 4)
 	{
 		Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_atomic_no() * Get_elastic_diff()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
-		//~ std::cout << "\n\tCrossSections::GetTotalMeanFreePath: Merlin config, lambda = " << Get_lambda_tot() << endl;
 		return Get_lambda_tot();
 	}
 	//SixTrack + Advanced Elastic
 	else if (Get_scat_type() == 2)
 	{
 		Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_sig_R()+ Get_elastic_diff()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
-		//~ std::cout << "\n\tCrossSections::GetTotalMeanFreePath: ST + Adv. El config, lambda = " << Get_lambda_tot() << endl;
 		return Get_lambda_tot();
 	}
 	//Sixtrack
 	else
 	{
 		Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_sig_R()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
-		//~ std::cout << "\tCrossSections::GetTotalMeanFreePath: SixTrack config, lambda = " << Get_lambda_tot() << endl;
 		return Get_lambda_tot();
 	}
 }

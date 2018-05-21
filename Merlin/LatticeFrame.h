@@ -245,34 +245,6 @@ public:
 	*	@return Transformation from local exit plane
 	*/
 	Transform3D GetExitPlaneTransform () const;
-	/*
-	    //	Returns true if this frame has been locally transformed.
-	    bool IsTransformed () const;
-
-	    //	Translates the frame by the relative vector (dx,dy,dz).
-	    void Translate (double dx, double dy, double dz);
-
-	    //	Translates the frame by the relative vector X.
-	    void Translate (const Vector3D& X);
-
-	    //	Translates the frame along the current x-axis by dx.
-	    void TranslateX (double dx);
-
-	    //	Translates the frame along the current y-axis by dy.
-	    void TranslateY (double dy);
-
-	    //	Translates the frame along the current z-axis by dz.
-	    void TranslateZ (double dz);
-
-	    //	Rotates the frame about the current x-axis by angle.
-	    void RotateX (double angle);
-
-	    //	Rotates the frame about the current y-axis by angle.
-	    void RotateY (double angle);
-
-	    //	Rotates the frame about the current z-axis by angle.
-	    void RotateZ (double angle);
-	*/
 
 	/**
 	*	Transform the frame (with respect to the current axes)
@@ -471,35 +443,7 @@ inline Transform3D LatticeFrame::GetExitPlaneTransform () const
 {
 	return GetBoundaryPlaneTransform(AcceleratorGeometry::exit).inv();
 }
-/*
-inline bool LatticeFrame::IsTransformed () const
-{
-    return local_T!=0 && !local_T->isIdentity();
-}
 
-inline void LatticeFrame::Translate (const Vector3D& X)
-{
-    Translate(X.x,X.y,X.z);
-}
-
-inline void LatticeFrame::TranslateX (double dx)
-{
-    Translate(dx,0,0);
-}
-
-inline void LatticeFrame::TranslateY (double dy)
-{
-    Translate(0,dy,0);
-}
-
-inline void LatticeFrame::TranslateZ (double dz)
-{
-    Translate(0,0,dz);
-}
-
-inline void LatticeFrame::Invalidate () const
-{}
-*/
 inline void LatticeFrame::ConsolidateConstruction ()
 {}
 
