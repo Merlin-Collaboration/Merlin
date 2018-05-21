@@ -725,7 +725,7 @@ void SectorBendCI::TrackStep (double ds)
 	assert(Pref>0);
 
 	const Complex b0 = field.GetCoefficient(0);
-	const Complex K1 = (np>0) ? q*field.GetKn(1,brho) : Complex(0);
+	const Complex K1 = (np>0) ? q * field.GetKn(1,brho) : Complex(0);
 
 	// We need to split the magnet for a kick if the following is true
 	bool splitMagnet = b0.imag()!=0 || K1.imag()!=0 || np>1;

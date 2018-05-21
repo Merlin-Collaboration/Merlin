@@ -68,7 +68,7 @@ enum loss_map_mode_t {HORIZONTAL_LOSS, VERTICAL_LOSS};
 
 bool SortComponent(const AcceleratorComponent* first, const AcceleratorComponent* last)
 {
-	return (first->GetComponentLatticePosition() < last->GetComponentLatticePosition());
+	return first->GetComponentLatticePosition() < last->GetComponentLatticePosition();
 }
 
 

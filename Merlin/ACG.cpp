@@ -169,7 +169,7 @@ static const _G_uint32_t LC_A = 66049;
 static const _G_uint32_t LC_C = 3907864577;
 static inline _G_uint32_t LCG(_G_uint32_t x)
 {
-	return( x * LC_A + LC_C );
+	return x * LC_A + LC_C;
 }
 
 
@@ -292,5 +292,5 @@ ACG::asLong()
 	result |= *(perm++) & ((auxACG <<  8)
 	                       | ((auxACG >> 24) &   0xff));
 
-	return(result);
+	return result;
 }

@@ -356,7 +356,7 @@ size_t AcceleratorModel::GetAcceleratorSupports(AcceleratorSupportList& supports
 
 static bool SortComponent(const AcceleratorComponent* first, const AcceleratorComponent* last)
 {
-	return (first->GetComponentLatticePosition() < last->GetComponentLatticePosition());
+	return first->GetComponentLatticePosition() < last->GetComponentLatticePosition();
 }
 
 static vector<AcceleratorComponent*> SortAcceleratorModel(AcceleratorModel* model)

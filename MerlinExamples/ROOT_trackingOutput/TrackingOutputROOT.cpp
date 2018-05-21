@@ -119,8 +119,8 @@ void TrackingOutputROOT::Record(const string& id, const Bunch* bunch)
 	double gamma = E/MeV/ElectronMassMeV;
 	double gex   = gamma*ProjectedEmittance(S,ps_X,ps_XP);
 	double gey   = gamma*ProjectedEmittance(S,ps_Y,ps_YP);
-	double gexc  = S.var(ps_DP) != 0 ? gamma*DispersionCorrectedEmittance(S,ps_X,ps_XP) : gex;
-	double geyc  = S.var(ps_DP) != 0 ? gamma*DispersionCorrectedEmittance(S,ps_Y,ps_YP) : gey;
+	double gexc  = S.var(ps_DP) != 0 ? gamma * DispersionCorrectedEmittance(S,ps_X,ps_XP) : gex;
+	double geyc  = S.var(ps_DP) != 0 ? gamma * DispersionCorrectedEmittance(S,ps_Y,ps_YP) : gey;
 
 	size_t n = id.find('.');
 	strncpy(data.type,id.substr(0,n).c_str(),15);

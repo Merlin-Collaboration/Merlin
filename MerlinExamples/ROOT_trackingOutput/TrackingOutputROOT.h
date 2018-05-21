@@ -206,7 +206,7 @@ public:
 	void DoBunch(bool dob=true)
 	{
 		dobunch=dob;
-	};
+	}
 
 	// additional utillities
 	// 6d bunch struct for ROOT

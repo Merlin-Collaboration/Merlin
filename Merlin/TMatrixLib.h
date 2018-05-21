@@ -932,7 +932,7 @@ private:
 	SubMatrix<T>& operator=(const SubMatrix<T>&)
 	{
 		return *this;
-	};
+	}
 
 	gslice_type gl;
 	array_type& array;

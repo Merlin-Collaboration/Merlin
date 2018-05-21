@@ -98,6 +98,6 @@ _G_uint32_t MLCG::asLong()
 	{
 		z += 2147483562;
 	}
-	return( static_cast<unsigned long>(z) );
+	return static_cast<unsigned long>(z);
 }
 

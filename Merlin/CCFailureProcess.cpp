@@ -727,7 +727,7 @@ double CCFailureProcess::CalcM_12(int start, int end, double deltamu, bool horiz
 		beta2 = TwissCC->Value(3,3,2,end);
 	}
 
-	return ( sqrt(beta1 * beta2) * sin(deltamu) );
+	return sqrt(beta1 * beta2) * sin(deltamu);
 }
 
 double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horizontal)
@@ -748,7 +748,7 @@ double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horiz
 
 	//~ cout << "\n\nBeta1 = " << beta1 << ", beta2 = " << beta2 << ", deltamu = " << deltamu*(360/(2*pi));
 
-	return ( sqrt(beta1 / beta2) * cos(deltamu) );
+	return sqrt(beta1 / beta2) * cos(deltamu);
 }
 
 double CCFailureProcess::CalcM_12(int start, int end, bool horizontal)
@@ -771,7 +771,7 @@ double CCFailureProcess::CalcM_12(int start, int end, bool horizontal)
 		beta2 = TwissCC->Value(3,3,2,end);
 	}
 
-	return ( sqrt(beta1 * beta2) * sin(deltamu) );
+	return sqrt(beta1 * beta2) * sin(deltamu);
 }
 
 double CCFailureProcess::CalcM_22(int start, int end, bool horizontal)
@@ -795,7 +795,7 @@ double CCFailureProcess::CalcM_22(int start, int end, bool horizontal)
 		beta2 = TwissCC->Value(3,3,2,end);
 	}
 
-	return ( sqrt(beta1 / beta2) * cos(deltamu) );
+	return sqrt(beta1 / beta2) * cos(deltamu);
 }
 
 pair<double,double> CCFailureProcess::CalcMu(int element)
@@ -820,24 +820,24 @@ pair<double,double> CCFailureProcess::CalcDeltaMu(int element1, int element2)
 
 double CCFailureProcess::CalcV1(double M12)
 {
-	return ( (SpeedOfLight * EnergyCC * tan(theta))/(omega * M12 * n) );
+	return (SpeedOfLight * EnergyCC * tan(theta))/(omega * M12 * n);
 }
 
 double CCFailureProcess::CalcV1(double deltamu, int n1, int n2, bool horizontal)
 {
 	if (horizontal)
 	{
-		return ( (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(1,1,1,n1) * TwissCC->Value(1,1,1,n2)) * sin(deltamu)) );
+		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(1,1,1,n1) * TwissCC->Value(1,1,1,n2)) * sin(deltamu));
 	}
 	else
 	{
-		return ( (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(3,3,2,n1) * TwissCC->Value(3,3,2,n2)) * sin(deltamu)) );
+		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(3,3,2,n1) * TwissCC->Value(3,3,2,n2)) * sin(deltamu));
 	}
 }
 
 double CCFailureProcess::CalcV2(double V1, double M22)
 {
-	return (-1 * M22 * V1);
+	return -1 * M22 * V1;
 }
 
 void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool horizontal)

@@ -38,7 +38,7 @@ inline Random::Random(RNG *gen)
 
 inline RNG *Random::generator()
 {
-	return(pGenerator);
+	return pGenerator;
 }
 
 inline void Random::generator(RNG *p)

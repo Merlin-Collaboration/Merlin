@@ -20,7 +20,7 @@ double Normal::operator()()
 	if (haveCachedNormal == 1)
 	{
 		haveCachedNormal = 0;
-		return(cachedNormal * pStdDev + pMean );
+		return cachedNormal * pStdDev + pMean;
 	}
 	else
 	{
@@ -45,7 +45,7 @@ double Normal::operator()()
 
 				haveCachedNormal = 1;
 				cachedNormal = x2;
-				return(x1 * pStdDev + pMean);
+				return x1 * pStdDev + pMean;
 			}
 		}
 	}

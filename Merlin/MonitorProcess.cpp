@@ -75,5 +75,5 @@ void MonitorProcess::SetCurrentComponent (AcceleratorComponent& component)
 	string name = currentComponent->GetName();
 	// active if current component name in dump_at_elements
 	active = any_of(dump_at_elements.begin(), dump_at_elements.end(),
-	                [&name](string &s){return (s == name);});
+	                [&name](string &s){return s == name;});
 }

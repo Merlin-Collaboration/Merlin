@@ -100,7 +100,7 @@ struct ApplySR
 			dp -= u / P0;
 			px /= (1.0 + u/P0);
 			py /= (1.0 + u/P0);
-		};
+		}
 		n++;
 	}
 

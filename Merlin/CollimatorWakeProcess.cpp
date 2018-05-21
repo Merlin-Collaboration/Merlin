@@ -190,7 +190,7 @@ void CollimatorWakeProcess::ApplyWakefield(double ds)//  int nmodes)
 	}
 	double bload=0;
 
-#define WAKE_GRADIENT(wake) ((wake[currmode][nslice+1]-wake[currmode][nslice])/dz);
+#define WAKE_GRADIENT(wake) ((wake[currmode][nslice+1]-wake[currmode][nslice])/dz)
 
 	for(int currmode=1; currmode<=nmodes; currmode++)
 	{

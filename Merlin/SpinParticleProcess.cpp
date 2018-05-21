@@ -379,7 +379,7 @@ void SpinParticleProcess::DoProcess(double ds)
 			}
 		}
 
-	};
+	}
 
 	intS += ds;
 

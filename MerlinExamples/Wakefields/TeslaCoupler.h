@@ -78,7 +78,7 @@ public:
 	Vector2D oldWxy(double x, double y) const   // kV/nC
 	{
 		return fac*Vector2D( -0.021 + x*4.3 + y*0.07, -0.019 + x*0.03 - y*0.9 );
-	};
+	}
 	// old upstream + downstream coupler
 	// rescaled at (0,0) to match EPAC08, Genua, MOPP013
 	Vector2D oldRescaledWxy(double x, double y) const   // kV/nC
@@ -130,7 +130,7 @@ public:
 	Vector2D newCouplerRFKickUp(double x, double y,double phi) const
 	{
 		return oldCouplerRFKickUp(x,y,phi);
-	};
+	}
 	// new design - no numbers given by IZ&MD
 	// we approx by mirroring downstream fields
 	Vector2D newCouplerRFKickDown(double x, double y,double phi) const
@@ -162,7 +162,7 @@ public:
 		Complex kap_y(-0.000074  + x*0.00049 - y*0.0048, -0.0000087 - x*0.00029 - y*0.0012);
 		return Vector2D(real(kap_x*a),real(kap_y*a));
 		// komplex arithmetic is a bit slow
-	};
+	}
 
 	Vector2D dummyCouplerRFKick(double x, double y,double phi)  const
 	{
