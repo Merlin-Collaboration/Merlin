@@ -332,19 +332,19 @@ double HollowELensProcess::CalcKickRadial (double R)
 	if(!LHC_Radial)
 	{
 		// Tevatron HEL 1.2A, 2m, 5KeV, 4-6.8sig
-		r0 = (const double) 222.5;
-		r1 = (const double) 252.5;
-		r2 = (const double) 287;
-		r3 = (const double) 364.5;
-		r4 = (const double) 426.5;
+		r0 = 222.5;
+		r1 = 252.5;
+		r2 = 287;
+		r3 = 364.5;
+		r4 = 426.5;
 	}
 	else
 	{
 		// LHC HEL 5A, 3m, 10KeV, 4-8sig
-		r1 = (const double) 265;		// 0 - initial rise				(x1.191)
-		r2 = (const double) 315;		// rise - straight section		(x1.248)
-		r3 = (const double) 435;		// straight - left of peak		(x1.193)
-		r4 = (const double) 505;		// left - right of peak			(x1.184)
+		r1 = 265;		// 0 - initial rise				(x1.191)
+		r2 = 315;		// rise - straight section		(x1.248)
+		r3 = 435;		// straight - left of peak		(x1.193)
+		r4 = 505;		// left - right of peak			(x1.184)
 	}
 
 	double elense_r_min = Rmin; //Need to calculate 4 sigma at this point
