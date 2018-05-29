@@ -284,7 +284,7 @@ void WakeFieldProcess::ApplyWakefield(double ds)
 
 	double bload=0;
 
-#define WAKE_GRADIENT(wake) (wake).empty() ? 0 : ((wake[nslice+1]-wake[nslice])/dz);
+#define WAKE_GRADIENT(wake) (wake).empty() ? 0 : ((wake[nslice+1]-wake[nslice])/dz)
 
 	double z=zmin;
 

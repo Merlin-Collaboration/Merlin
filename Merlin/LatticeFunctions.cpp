@@ -90,7 +90,7 @@ void LatticeFunction::Derivative(LatticeFunction* lfnM, LatticeFunction* lfnP, d
 
 		value.push_back( dv );
 		lfnMit++;
-	};
+	}
 }
 
 LatticeFunctionTable::LatticeFunctionTable(AcceleratorModel* aModel, double refMomentum)
@@ -102,11 +102,11 @@ LatticeFunctionTable::LatticeFunctionTable(AcceleratorModel* aModel, double refM
 struct DeleteLatticeFunction
 {
 public:
-	DeleteLatticeFunction() {};
+	DeleteLatticeFunction() {}
 	void operator()(LatticeFunction* lfn)
 	{
 		delete lfn;
-	};
+	}
 };
 
 LatticeFunctionTable::~LatticeFunctionTable()
@@ -181,11 +181,11 @@ void LatticeFunctionTable::RemoveAllFunctions()
 struct ClearLatticeFunction
 {
 public:
-	ClearLatticeFunction() {};
+	ClearLatticeFunction() {}
 	void operator()(LatticeFunction* lfn)
 	{
 		lfn->ClearValues();
-	};
+	}
 };
 
 struct CalculateLatticeFunction
@@ -197,7 +197,7 @@ private:
 
 public:
 	CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N)
-		: s(_s), p(&_p), N(&_N) {};
+		: s(_s), p(&_p), N(&_N) {}
 
 	void operator()(LatticeFunction* lfn)
 	{
@@ -231,7 +231,7 @@ public:
 		}
 
 		lfn->AppendValue(v);
-	};
+	}
 };
 
 void LatticeFunctionTable::Calculate(PSvector* p, RealMatrix* M)
@@ -251,13 +251,13 @@ struct CopyLatticeFunction
 private:
 	vectorlfn* lfncopy;
 public:
-	CopyLatticeFunction(vectorlfn& copy) : lfncopy(&copy) {};
+	CopyLatticeFunction(vectorlfn& copy) : lfncopy(&copy) {}
 
 	void operator()(LatticeFunction* lfn)
 	{
 		LatticeFunction* newlfn = new LatticeFunction(*lfn);
 		lfncopy->push_back(newlfn);
-	};
+	}
 };
 
 void LatticeFunctionTable::CalculateEnergyDerivative()
@@ -279,7 +279,7 @@ void LatticeFunctionTable::CalculateEnergyDerivative()
 	for(vectorlfn::iterator lfnit=lfnlist.begin(); lfnit!=lfnlist.end(); lfnit++,lfnitP++,lfnitM++)
 	{
 		(*lfnit)->Derivative(*lfnitM, *lfnitP, dp);
-	};
+	}
 
 }
 
@@ -377,7 +377,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		Particle q = p;
 		q[row] += delta;
 		particle->push_back(q);
-	};
+	}
 
 	ParticleTracker tracker(theModel->GetBeamline(),particle);
 
@@ -531,12 +531,12 @@ private:
 
 public:
 	PrintLatticeFunction(int r, ostream& _os)
-		: row(r), os(&_os) {};
+		: row(r), os(&_os) {}
 
 	void operator()(LatticeFunction* lfn)
 	{
 		(*os)<<std::setw(30)<<std::setprecision(10)<<lfn->GetValue(row);
-	};
+	}
 
 };
 
@@ -562,7 +562,7 @@ void LatticeFunctionTable::PrintTable(ostream& os, int n1, int n2)
 	{
 		for_each(lfnlist.begin(), lfnlist.end(), PrintLatticeFunction(row,os));
 		os<<endl;
-	};
+	}
 }
 
 int LatticeFunctionTable::GetSPosIndex(double s)
@@ -596,7 +596,7 @@ vectorlfn::iterator LatticeFunctionTable::GetColumn(int i, int j, int k)
 		{
 			return lfnit;
 		}
-	};
+	}
 
 	return lfnit;
 }
@@ -624,7 +624,7 @@ double LatticeFunctionTable::Mean(int i, int j, int k, int n1, int n2)
 		double mv = (*lfnit)->GetValue(row+1) + (*lfnit)->GetValue(row);
 		sums += ds;
 		sumv += 0.5*ds*mv;
-	};
+	}
 
 	return sumv/sums;
 }
@@ -653,7 +653,7 @@ double LatticeFunctionTable::RMS(int i, int j, int k, int n1, int n2)
 		double mv0 = (*lfnit)->GetValue(row);
 		sums += ds;
 		sumv += 0.5*ds*(mv0*mv0 + mv1*mv1);
-	};
+	}
 
 	return sqrt(sumv/sums);
 }

@@ -273,7 +273,7 @@ public:
 	class ISetBase
 	{
 	public:
-		virtual ~ISetBase() {};
+		virtual ~ISetBase() {}
 		virtual void Init(TBunchCMPTracker&) const = 0;
 	};
 
@@ -325,7 +325,7 @@ protected:
 #define DEF_INTG_SET(T,S) void S::Init(T& ct) const {
 #define ADD_INTG(iname) ct.Register(new iname ());
 #define END_INTG_SET }
-#define MAKE_DEF_INTG_SET(T,S) T::ISetBase* T::defIS = new S ();
+#define MAKE_DEF_INTG_SET(T,S) template<> T::ISetBase* T::defIS = new S ();
 
 // implementations
 

@@ -44,7 +44,7 @@ END_INTG_SET
 
 #define CHK_ZERO(s) if(s==0) return;
 
-//template<> MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::SYMPLECTIC::StdISet)
+//MAKE_DEF_INTG_SET(ParticleTracking::ParticleComponentTracker,ParticleTracking::SYMPLECTIC::StdISet)
 
 using namespace ParticleTracking;
 using namespace PhysicalUnits;
@@ -97,7 +97,7 @@ public:
 	{
 		v.xp() += R10 * v.x();
 		v.yp() += R32 * v.y();
-	};
+	}
 };
 
 // Sector Bend Map (no quadrupole gradient)
@@ -416,7 +416,7 @@ public:
 
 		cosPhi = cos(phi);
 		d0     = 1 + Vn*cosPhi;
-	};
+	}
 	void operator()(PSvector& v) const
 	{
 		RM.Apply(v);
@@ -451,7 +451,7 @@ public:
 		VncosPhi = Vn*cosPhi;
 		d0       = 1 + VncosPhi;
 		lnd0     = log(d0);
-	};
+	}
 	void operator()(PSvector& v) const
 	{
 
@@ -516,7 +516,7 @@ public:
 		//~ cout<<std::setw(14)<<m21;
 		//~ cout<<std::setw(14)<<m22<<endl;
 
-	};
+	}
 	void operator()(PSvector& v) const
 	{
 
@@ -558,7 +558,7 @@ public:
 		cosPhi   = cos(phi);
 		VncosPhi = Vn*cosPhi;
 		d0       = 1 + VncosPhi;
-	};
+	}
 	void operator()(PSvector& v) const
 	{
 
@@ -582,7 +582,7 @@ public:
 		v.xp() = xp1*k1;
 		v.y()  = y1;
 		v.yp() = yp1*k1;
-	};
+	}
 };
 
 //RT Map
@@ -592,11 +592,11 @@ private:
 	RTMap* m;
 
 public:
-	ApplyRTMap(RTMap* M) : m(M) {};
+	ApplyRTMap(RTMap* M) : m(M) {}
 	void operator()(PSvector& v) const
 	{
 		m->Apply(v);
-	};
+	}
 };
 
 
@@ -725,7 +725,7 @@ void SectorBendCI::TrackStep (double ds)
 	assert(Pref>0);
 
 	const Complex b0 = field.GetCoefficient(0);
-	const Complex K1 = (np>0) ? q*field.GetKn(1,brho) : Complex(0);
+	const Complex K1 = (np>0) ? q * field.GetKn(1,brho) : Complex(0);
 
 	// We need to split the magnet for a kick if the following is true
 	bool splitMagnet = b0.imag()!=0 || K1.imag()!=0 || np>1;

@@ -449,7 +449,7 @@ double ppElasticScatter::PomeronScatter(double tt, double sqrt_s, bool em)
 	//ac = 0;
 	ppC = (4.0 * pow(pi,2.0) * pow(ac,2.0) + pow(real,2.0) + pow(imag,2.0) + 2.0*(rho+alpha*phi) * 2.0*pi*ac*imag) / (4.0*pi);
 
-	return (ppC/1000.0);	//Convert to barns
+	return ppC/1000.0;	//Convert to barns
 }
 
 /**
@@ -476,7 +476,7 @@ double ppElasticScatter::F1(double tt)
 */
 double ppElasticScatter::a0(double tt, double *par)
 {
-	return (1.0+par[0]-apr0*tt);
+	return 1.0+par[0]-apr0*tt;
 }
 
 /**

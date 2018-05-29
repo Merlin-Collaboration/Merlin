@@ -47,7 +47,7 @@ class TeslaCoupler : public CombinedWakeRF
 {
 public:
 
-	TeslaCoupler() : fac(2e12) {};
+	TeslaCoupler() : fac(2e12) {}
 	// factor to calculate wake field kick
 	// 2 because of kt -> constant ( = purely capacitive) wake
 	// kV/nC -> V/C=V/nC*1e9*1e3
@@ -57,7 +57,7 @@ public:
 	double Wlong(double z)  const
 	{
 		return 38.1e+12*(1.165*exp(-sqrt(z/3.65e-3))-0.165);
-	};
+	}
 	double Wtrans(double z) const
 	{
 
@@ -67,7 +67,7 @@ public:
 		return 1.21e14*(1.0-(1.0+arZ)*exp(-arZ));  //  V/C/m/m (per active length)
 		//  Merlin WakefielsProcess
 		//  does not use component length!
-	};
+	}
 
 	// coupler wake fields
 	//
@@ -78,18 +78,18 @@ public:
 	Vector2D oldWxy(double x, double y) const   // kV/nC
 	{
 		return fac*Vector2D( -0.021 + x*4.3 + y*0.07, -0.019 + x*0.03 - y*0.9 );
-	};
+	}
 	// old upstream + downstream coupler
 	// rescaled at (0,0) to match EPAC08, Genua, MOPP013
 	Vector2D oldRescaledWxy(double x, double y) const   // kV/nC
 	{
 		return fac*0.107*Vector2D( -0.021 + x*4.3 + y*0.07, -0.019 + x*0.03 - y*0.9 );
-	};
+	}
 	// new downstream coupler design (sum of up+down from IZ&MD talk)
 	Vector2D newWxy(double x,double y) const
 	{
 		return fac*Vector2D( -0.0025 + x*2.33 + y*0.04, -0.0002 - x*0.02 + y*1.1 );
-	};
+	}
 	Vector2D dummyWxy(double x, double y) const
 	{
 		return Vector2D(0,0);
@@ -130,7 +130,7 @@ public:
 	Vector2D newCouplerRFKickUp(double x, double y,double phi) const
 	{
 		return oldCouplerRFKickUp(x,y,phi);
-	};
+	}
 	// new design - no numbers given by IZ&MD
 	// we approx by mirroring downstream fields
 	Vector2D newCouplerRFKickDown(double x, double y,double phi) const
@@ -143,7 +143,7 @@ public:
 		Complex kap_y(-0.000032 - x*.0029 - y*.0038, -0.000005 - x*.0005 - y*0.0018);
 
 		return Vector2D(real(kap_x*a),real(kap_y*a));
-	};
+	}
 
 	Vector2D oldCouplerRFKick(double x, double y,double phi)  const
 	{
@@ -162,7 +162,7 @@ public:
 		Complex kap_y(-0.000074  + x*0.00049 - y*0.0048, -0.0000087 - x*0.00029 - y*0.0012);
 		return Vector2D(real(kap_x*a),real(kap_y*a));
 		// komplex arithmetic is a bit slow
-	};
+	}
 
 	Vector2D dummyCouplerRFKick(double x, double y,double phi)  const
 	{

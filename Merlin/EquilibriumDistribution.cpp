@@ -72,7 +72,8 @@ double IntegrateEigenvector::trapzd(double a, double b, int n)
 
 	if (n==1)
 	{
-		return ( s = 0.5*(b-a)*(func(a)+func(b)) );
+		s = 0.5*(b-a)*(func(a)+func(b));
+		return s;
 	}
 	else
 	{

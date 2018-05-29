@@ -92,7 +92,7 @@ int main()
 	cout<<" offset= "<<offset<<" [m])"<<endl<<endl;
 	cout<<"Mean x ="<<xmeani<<' '<<"Sigma x ="<<xsigi<<endl;
 	cout<<"Mean y ="<<ymeani<<' '<<"Sigma y ="<<ysigi<<endl;
-	cout<<"yp angle :"<<startBunch->GetMoments(3).first<<endl<<endl;;
+	cout<<"yp angle :"<<startBunch->GetMoments(3).first<<endl<<endl;
 
 //-----------------------------------------------------
 //             construct the accelerator model

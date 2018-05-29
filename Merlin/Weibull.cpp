@@ -16,5 +16,5 @@
 
 double Weibull::operator()()
 {
-	return( pow(pBeta * ( - log(1 - pGenerator -> asDouble()) ), pInvAlpha) );
+	return pow(pBeta * ( - log(1 - pGenerator -> asDouble()) ), pInvAlpha);
 }

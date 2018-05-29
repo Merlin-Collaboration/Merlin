@@ -26,7 +26,7 @@ void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, dou
 	bool active = any_of(ids.begin(), ids.end(),
 	                     [this](StringPattern &s)
 	{
-		return (s.Match(this->temp.ElementName));
+		return s.Match(this->temp.ElementName);
 	});
 
 	if(active)

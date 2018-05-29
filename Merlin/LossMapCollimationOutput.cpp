@@ -157,7 +157,7 @@ void LossMapCollimationOutput::Finalise()
 			}
 		}
 		break;
-	};
+	}
 
 	std::cout << "CollimationOutput:: OutputLosses.size() = " << OutputLosses.size() << std::endl;
 	std::cout << "CollimationOutput:: Total losses = " << total << std::endl;

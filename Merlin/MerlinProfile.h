@@ -94,8 +94,8 @@ public:
 		Location = StartTime.find(ID);
 		if(Location != StartTime.end())
 		{
-			Time_Total.tv_sec = Time_End.tv_sec - Location->second.tv_sec;;
-			Time_Total.tv_nsec = Time_End.tv_nsec - Location->second.tv_nsec;;
+			Time_Total.tv_sec = Time_End.tv_sec - Location->second.tv_sec;
+			Time_Total.tv_nsec = Time_End.tv_nsec - Location->second.tv_nsec;
 			SetProcessDuration(Time_Total,ID);
 		}
 	}

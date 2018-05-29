@@ -100,8 +100,8 @@ struct ThinLensKick
 			M.AddTerm(2,1)=k;
 			M.AddTerm(4,3)=-k;
 			M.Apply(p);
-		};
-	};
+		}
+	}
 
 	Complex k0;
 	double k1;
@@ -255,7 +255,7 @@ void SectorBendCI::TrackStep(double ds)
 
 	assert(Pref>0);
 
-	const Complex K1 = (np>0)? q*field.GetKn(1,brho) : Complex(0);
+	const Complex K1 = (np>0)? q * field.GetKn(1,brho) : Complex(0);
 
 	RMap M;
 	TransportRMap::SectorBend(ds,h,K1.real(),M);

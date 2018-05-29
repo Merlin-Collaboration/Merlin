@@ -45,7 +45,7 @@ public:
 inline _G_int32_t
 MLCG::seed1()
 {
-	return(seedOne);
+	return seedOne;
 }
 
 inline void
@@ -58,7 +58,7 @@ MLCG::seed1(_G_int32_t s)
 inline _G_int32_t
 MLCG::seed2()
 {
-	return(seedTwo);
+	return seedTwo;
 }
 
 inline void

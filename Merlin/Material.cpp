@@ -88,25 +88,6 @@ double Material::CalculateSixtrackTotalNucleusCrossSection()
 	* Note the different power from the inelastic below
 	*/
 
-	/*
-	const double pref = 450.0; //Sixtrack reference cross sections are at beam momentum of 450 GeV/c
-	const double lnpref = log(pref);
-	const double pn[5] = {47.267,-55.832,68.257,-7.395,0.685};
-	//const double pp[5] = {16.709,-23.464,57.504,-6.077,0.632};
-	//const double Nd[5] = {-10.165,18.901,78.248,-5.094,0.706};
-
-	const double pn_factor = pn[0]*pow(lnpref,-2.0) + (pn[1]/lnpref) + pn[2] + pn[3]*lnpref + pn[4]*pow(lnpref,2);
-	//const double pp_factor = pp[0]*pow(lnpref,-2.0) + (pp[1]/lnpref) + pp[2] + pp[3]*lnpref + pp[4]*pow(lnpref,2);
-	//const double Nd_factor = Nd[0]*pow(lnpref,-2.0) + (Nd[1]/lnpref) + Nd[2] + Nd[3]*lnpref + Nd[4]*pow(lnpref,2);
-	*/
-
-	/*
-	* At p = 450GeV:
-	* pp_factor = 40.5731
-	* pn_factor = 40.7728
-	* So approximately the same. Note this is in mbarn, and thus needs converting into barns
-	*/
-
 	//No to the above, but the following works roughly:
 	return 0.04955 * pow(AtomicMass,0.77);
 }
@@ -135,8 +116,6 @@ double Material::CalculateSixtrackRutherfordCrossSection()
 
 double Material::CalculateSixtrackdEdx(double E)
 {
-
-
 	//Since the numbers in sixtrack make no sense, what can be done here?
 	return 1;
 }
@@ -179,12 +158,7 @@ void Material::SetElectronDensity(double p)
 {
 	ElectronDensity = p;
 }
-/*
-void Material::SetElectronCriticalEnergy(double p)
-{
-	ElectronCriticalEnergy = p;
-}
-*/
+
 void Material::SetMeanExcitationEnergy(double p)
 {
 	MeanExcitationEnergy = p;
@@ -272,12 +246,7 @@ double Material::GetElectronDensity() const
 {
 	return ElectronDensity;
 }
-/*
-double Material::GetElectronCriticalEnergy() const
-{
-	return ElectronCriticalEnergy;
-}
-*/
+
 double Material::GetMeanExcitationEnergy() const
 {
 	return MeanExcitationEnergy;

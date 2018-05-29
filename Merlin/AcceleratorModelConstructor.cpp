@@ -67,7 +67,7 @@ public:
 		{
 			cerr<<"something weird here"<<endl;
 		}
-	};
+	}
 
 private:
 	ElementRepository* erepo;

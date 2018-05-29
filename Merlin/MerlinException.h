@@ -31,7 +31,7 @@ public:
 	/**
 	* Virtual destructor.
 	*/
-	virtual ~MerlinException() {};
+	virtual ~MerlinException() {}
 
 	/**
 	* Gets the exception message.

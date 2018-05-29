@@ -1,6 +1,6 @@
 # force an out of source build to stop clutter
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-	message(STATUS "Merlin requires an out-of-source build.")
+	message(STATUS "Merlin++ requires an out-of-source build.")
 	message(STATUS "Please remove these files from ${CMAKE_BINARY_DIR} first:")
 	message(STATUS "CMakeCache.txt")
 	message(STATUS "CMakeFiles")
@@ -15,16 +15,16 @@ cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 # Set the project name and options
 PROJECT(MERLIN)
 
-OPTION(ENABLE_EXAMPLES "Build the example gslprograms. Default OFF" OFF)
+OPTION(ENABLE_EXAMPLES "Build the example programs. Default ON" ON)
 OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" OFF)
 OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(ENABLE_MPI "Use MPI where possible. Default OFF" OFF)
-OPTION(BUILD_DYNAMIC "Build Merlin as a dynamic library. Default ON" ON)
-OPTION(BUILD_STATIC "Build Merlin as a static library. Default OFF" OFF)
-OPTION(BUILD_DOCUMENTATION "Build doxygen documentation. Default OFF" OFF)
+OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default ON" ON)
+OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default OFF" OFF)
+OPTION(BUILD_DOCUMENTATION "Build doxygen documentation. Default ON" ON)
 OPTION(ORBIT_DEBUG "Enable closed orbit debugging. Default OFF" OFF)
-OPTION(INSTALL_HEADERS "Install the Merlin headers. Default OFF" OFF)
+OPTION(INSTALL_HEADERS "Install the Merlin++ headers. Default OFF" OFF)
 OPTION(LIBNUMA "Link to libnuma. See utility/CPUFeatures.h Default OFF" OFF)
 OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
@@ -175,13 +175,18 @@ install(DIRECTORY Merlin/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATC
 
 # Build doxygen documentation
 # make doxygen
+
+find_package(Doxygen)
+
+if(NOT DOXYGEN_FOUND AND BUILD_DOCUMENTATION)
+	MESSAGE(WARNING "Doxygen not found found! Disabling")
+	set(BUILD_DOCUMENTATION OFF)
+	add_custom_target(doxygen COMMAND ${CMAKE_COMMAND} -E echo Please install doxygen and rerun cmake)
+endif()
+
 if(BUILD_DOCUMENTATION)
-	find_package(Doxygen)
-	if(NOT DOXYGEN_FOUND)
-		MESSAGE(FATAL_ERROR "Doxygen requested but no Doxygen found!")
-	endif()
 	find_file(DOXYFILE_IN "Merlin.Doxyfile.in"
-			PATHS "${MERLIN_SOURCE_DIR}/doxygen"
+			PATHS "${MERLIN_SOURCE_DIR}/MerlinDocumentation"
 			NO_DEFAULT_PATH
 			DOC "Path to the doxygen configuration template file")
 	set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")

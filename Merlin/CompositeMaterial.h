@@ -32,7 +32,7 @@ using namespace std;
 class CompositeMaterial : public Material
 {
 public:
-	CompositeMaterial() : Material(),Assembled(false),AssembledByNumber(false),AssembledByMass(false) {};
+	CompositeMaterial() : Material(),Assembled(false),AssembledByNumber(false),AssembledByMass(false) {}
 
 	double CalculateElectronDensity();
 	double CalculatePlasmaEnergy();

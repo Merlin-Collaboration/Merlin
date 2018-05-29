@@ -838,7 +838,7 @@ double MADInterface::ReadComponent ()
 					rf_drift->SetAperture(ConstructAperture(prmMap->GetParameter("APERTYPE"),prmMap));
 				}
 
-				return(len);
+				return len;
 			}
 			else
 			{

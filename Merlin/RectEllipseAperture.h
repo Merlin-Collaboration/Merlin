@@ -25,8 +25,7 @@ public:
 	RectEllipseAperture (double rhw, double rhh, double ehh, double ehv)
 		: Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),
 		  EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),
-		  EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
-	//: Aperture(),RectHalfWidth(rhw),RectHalfHeight(rhh),EllipseHalfHorizontal(ehh),EllipseHalfVertical(ehv),EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {};
+		  EHH2(ehh*ehh),HV((ehh*ehh)/(ehv*ehv)) {}
 
 	/**
 	* Returns true if the point (x,y,z) is within the

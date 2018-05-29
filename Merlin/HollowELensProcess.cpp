@@ -332,19 +332,19 @@ double HollowELensProcess::CalcKickRadial (double R)
 	if(!LHC_Radial)
 	{
 		// Tevatron HEL 1.2A, 2m, 5KeV, 4-6.8sig
-		r0 = (const double) 222.5;
-		r1 = (const double) 252.5;
-		r2 = (const double) 287;
-		r3 = (const double) 364.5;
-		r4 = (const double) 426.5;
+		r0 = 222.5;
+		r1 = 252.5;
+		r2 = 287;
+		r3 = 364.5;
+		r4 = 426.5;
 	}
 	else
 	{
 		// LHC HEL 5A, 3m, 10KeV, 4-8sig
-		r1 = (const double) 265;		// 0 - initial rise				(x1.191)
-		r2 = (const double) 315;		// rise - straight section		(x1.248)
-		r3 = (const double) 435;		// straight - left of peak		(x1.193)
-		r4 = (const double) 505;		// left - right of peak			(x1.184)
+		r1 = 265;		// 0 - initial rise				(x1.191)
+		r2 = 315;		// rise - straight section		(x1.248)
+		r3 = 435;		// straight - left of peak		(x1.193)
+		r4 = 505;		// left - right of peak			(x1.184)
 	}
 
 	double elense_r_min = Rmin; //Need to calculate 4 sigma at this point
@@ -396,139 +396,7 @@ double HollowELensProcess::CalcKickRadial (double R)
 	return thet;
 }
 
-/* TODO: Should be reimplemented as a HollowElectionLensConfiguration system (like ApertureConfiguration)
-
-void HollowELensProcess::SetRadiiSigma (double rmin, double rmax, AcceleratorModel* model, double emittance_x, double emittance_y, LatticeFunctionTable* twiss, double P0)
-{
-	//How many HELs in lattice?
-	int Hel_no = 0;
-	//Element no of last HEL
-	int Hel_ID = 0;
-
-	bool find_HEL_no = 1;
-	if (find_HEL_no)
-	{
-		vector<AcceleratorComponent*> Elements;
-		size_t n_collimators = model->ExtractTypedElements(Elements,"*");
-		size_t nelm = Elements.size();
-
-		for (size_t n = 0; n < nelm; n++)
-		{
-			if(Elements[n]->GetType() == "HollowElectronLens")
-			{
-				Hel_no++;
-				Hel_ID = n;
-			}
-		}
-
-		if(Hel_no == 0)
-		{
-			cout << "Error: No HEL found in HollowELensProcess::SetRadiiSigma " << endl;
-		}
-		else if(Hel_no == 1)
-		{
-			cout << "HollowELensProcess::SetRadiiSigma : 1 HEL found at element No " << Hel_ID <<  endl;
-		}
-		else if (Hel_no > 1)
-		{
-			cout << "HollowELensProcess::SetRadiiSigma : More than 1 HELs found, last at element No " << Hel_ID <<  endl;
-		}
-	}
-
-	vector<HollowElectronLens*> HELs;
-	size_t n_Hels = model->ExtractTypedElements(HELs,"*");
-
-	cout << " HollowELensProcess::SetRadiiSigma : find_HEL : found " << HELs.size() << " HELs" << endl;
-	//Calculate sigma to adjust radii as required
-
-	double sigma_x = 0;
-	double beta_x = 0;
-	double alpha_x = 0;
-	double gamma_x = 0;
-	double sigma_xp = 0;
-
-	double sigma_y = 0;
-	double beta_y = 0;
-	double alpha_y = 0;
-	double gamma_y = 0;
-	double sigma_yp = 0;
-	double stored_s = 0;
-
-	for (vector<HollowElectronLens*>::iterator it = HELs.begin(); it!= HELs.end(); it++)
-	{
-
-		for(int j = 0; j <= twiss->NumberOfRows(); j++)
-		{
-			if((*it)->GetComponentLatticePosition() == twiss->Value(0,0,0,j))
-			{
-				// Note that for a thin lens (zero length) HEL, this will be true twice
-				// as the element prior to the drift has the same S.
-				// As the HEL will always be the second element with the same S
-				// this doesn't cause any issues. If however there is a zero length element after
-				// the HEL, the values below should be equal as well.
-
-				stored_s = (*it)->GetComponentLatticePosition();
-				cout << " S_HEL = " << (*it)->GetComponentLatticePosition() << "m" << endl;
-				cout << " S_twiss = " << twiss->Value(0,0,0,j) << "m" << endl;
-
-				cout << "HollowELensProcess::SetRadiiSigma : j value = " << j << endl;
-
-				//Note that this is currently only a horizontal HEL
-				beta_x = twiss->Value(1,1,1,j);		//Beta x
-				beta_y = twiss->Value(3,3,2,j);		//Beta y
-
-				XOffset = twiss->Value(1,0,0,j);
-				YOffset = twiss->Value(3,0,0,j);
-				twiss->PrintTable(std::cout,j-1,j);
-				twiss->PrintTable(std::cout,j+1,j+2);
-
-				//~ double sigma_y = sqrt(beta_y * emittance_y);
-				sigma_x = sqrt(beta_x * emittance_x);
-				sigma_y = sqrt(beta_y * emittance_y);
-
-				alpha_x = -1*twiss->Value(1,2,1,j);
-				gamma_x = (1 + (alpha_x*alpha_x) )/ beta_x;
-
-				alpha_y = -1*twiss->Value(3,4,2,j);
-				gamma_y = (1 + (alpha_y*alpha_y) )/ beta_y;
-
-				sigma_xp = sqrt(gamma_x * emittance_x);
-				sigma_yp = sqrt(gamma_y * emittance_y);
-
-			}
-		}
-	}
-
-	cout << "\nHollowELensProcess::SetRadiiSigma : S = " << stored_s << endl;
-	cout << "\nHollowELensProcess::SetRadiiSigma : Beta_x = " << beta_x << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Beta_y = " << beta_y << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Alpha_x = " << -alpha_x << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Alpha_y = " << -alpha_y << endl;
-	cout << "\nHollowELensProcess::SetRadiiSigma : Sigma_x = " << sigma_x << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Sigma_y = " << sigma_y << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Sigma_xp = " << sigma_xp << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Sigma_yp = " << sigma_yp << endl;
-	cout << "\nHollowELensProcess::SetRadiiSigma : Offset_x = " << XOffset << endl;
-	cout << "HollowELensProcess::SetRadiiSigma : Offset_y = " << YOffset << endl;
-
-	if(P0 != 0)
-	{
-		PhaseAdvance PA(model, twiss, P0);
-		double Mux = PA.GetPhaseAdvanceX(Hel_ID);
-		double Muy = PA.GetPhaseAdvanceY(Hel_ID);
-		cout << "\nHollowELensProcess::SetRadiiSigma : mu_x = " << Mux << endl;
-		cout << "HollowELensProcess::SetRadiiSigma : mu_y = " << Muy << endl;
-	}
-
-	Rmin = rmin * sigma_x;
-	Rmax = rmax * sigma_x;
-	Sigma_x = sigma_x;
-	Sigma_y = sigma_y;
-
-	cout << "HollowELensProcess::SetRadiiSigma : RMax = " << Rmax << " RMin= " << Rmin << endl;
-
-}
-*/
+// TODO: Should reimplement a HollowElectionLensConfiguration system (like ApertureConfiguration)
 
 void HollowELensProcess::OutputProfile(std::ostream* os, double E, double min, double max)
 {

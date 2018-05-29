@@ -13,7 +13,7 @@
 
 double BesselI0(double x)
 {
-	double besselI0 = 0;;
+	double besselI0 = 0;
 	static const double p1 = 1.0;
 	static const double p2 = 3.5156229;
 	static const double p3 = 3.0899424;
@@ -47,7 +47,7 @@ double BesselI0(double x)
 
 double BesselI1(double x)
 {
-	double besselI1 = 0;;
+	double besselI1 = 0;
 	static const double p1 = 0.5;
 	static const double p2 = 0.87890594;
 	static const double p3 = 0.51498869;

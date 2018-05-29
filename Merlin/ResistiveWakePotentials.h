@@ -65,11 +65,11 @@ public:
 	double Wlong (double z) const
 	{
 		return 1;
-	};
+	}
 	double Wtrans (double z) const
 	{
 		return 1;
-	};
+	}
 	double Wtrans (double z,int m) const
 	{
 		if(z<0)
@@ -85,12 +85,12 @@ public:
 		E = E/fourpieps; // minus sign should have been in Mathematica
 		E = E/pow(b,2*m+2);
 		return E;
-	};
+	}
 
 	double Wlong (double z,int m) const
 	{
 		return z>0? 1:0;
-	};
+	}
 }; //End of ResistivePotential Class
 
 
@@ -127,20 +127,20 @@ public:
 	double Wlong (double z) const
 	{
 		return 1;
-	};
+	}
 	double Wtrans (double z) const
 	{
 		return 1;
-	};
+	}
 	double Wtrans (double z, int m) const
 	{
 		cout<<" call for "<<m<<endl;
 		return z>0? coeff[m]*sqrt(376.74/(pi*sigma))*length/sqrt(z):0;
-	};
+	}
 	double Wlong (double z, int m) const
 	{
 		return z>0? -coeff[m]*sqrt(1/sigma*376.6)*sqrt(z)*length:0;
-	};
+	}
 
 private:
 

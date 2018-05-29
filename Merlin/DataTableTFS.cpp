@@ -94,7 +94,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	// Lines start with "@". Ends when line starts with "*"
 	while (getline(*in, line))
 	{
-		words = split_line(line);;
+		words = split_line(line);
 		if(words.size() == 0)
 		{
 			continue;

@@ -32,7 +32,7 @@ class CombinedWakeRF : public WakePotentials
 {
 public:
 
-	CombinedWakeRF() {};
+	CombinedWakeRF() {}
 
 	/**
 	* Coupler wake fields -- we need x,y since this is not just a transverse

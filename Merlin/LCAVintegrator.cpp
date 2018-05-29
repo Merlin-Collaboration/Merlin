@@ -98,7 +98,7 @@ struct ApplyRFMap
 	double Vn,k,phi0,d0,ds;
 
 	ApplyRFMap(double Vnorm, double kval, double phase, double len)
-		: Vn(Vnorm),k(kval),phi0(phase),ds(len) {};
+		: Vn(Vnorm),k(kval),phi0(phase),ds(len) {}
 
 	void Apply(PSvector& p) const
 	{
@@ -161,7 +161,7 @@ void LCAVIntegrator::TrackStep (double ds)
 	else
 	{
 		ApplyMap(ApplyRFMap(g*ds/E0,k,phi,ds),currentBunch->GetParticles());
-	};
+	}
 
 	return;
 }

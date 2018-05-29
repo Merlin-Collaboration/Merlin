@@ -77,7 +77,7 @@ public:
 	class Response
 	{
 	public:
-		virtual ~Response() {};
+		virtual ~Response() {}
 		virtual void Apply(Data*) = 0;
 	};
 

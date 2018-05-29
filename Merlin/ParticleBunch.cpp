@@ -687,14 +687,6 @@ void ParticleBunch::master_send_particles_to_nodes()
 		}
 		n++;
 	}
-	/*	for (int n=0; n<particle_count; n++)
-		{
-			for (int j=0; j<coords; j++)
-			{
-				particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
-			}
-		}
-	*/
 
 	//We now have the full bunch in a particle buffer.
 	//This must be sliced, and particles sent to each node
@@ -787,17 +779,6 @@ void ParticleBunch::distribute()
 	MerlinProfile::EndProcessTimer("SCATTER");
 #endif
 
-	/*
-	MPI::COMM_WORLD.Scatterv()
-	if (MPI_rank == 0)
-	{
-		master_send_particles_to_nodes();
-	}
-	else
-	{
-		node_recv_particles_from_master();
-	}
-	*/
 }
 
 void ParticleBunch::SendReferenceMomentum()

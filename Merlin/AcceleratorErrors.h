@@ -39,7 +39,7 @@ public:
 	*/
 	AcceleratorErrors()
 		: vx(0),vy(0),vz(0),mx(0),my(0),mz(0),clear(0),log(nullptr)
-	{};
+	{}
 
 	/**
 	* Set the errors to apply to a Beamline.

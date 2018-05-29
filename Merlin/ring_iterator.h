@@ -39,7 +39,7 @@ public:
 			curr=cont->begin();
 		}
 		return *this;
-	};
+	}
 
 	ring_iterator operator++(int)
 	{
@@ -49,7 +49,7 @@ public:
 			curr = cont->begin();
 		}
 		return tmp;
-	};
+	}
 
 	ring_iterator& operator--()
 	{
@@ -59,7 +59,7 @@ public:
 		}
 		--curr;
 		return *this;
-	};
+	}
 
 	ring_iterator operator--(int)
 	{
@@ -70,7 +70,7 @@ public:
 		}
 		--curr;
 		return tmp;
-	};
+	}
 
 	bool operator==(const ring_iterator<C,I>& rhs) const
 	{

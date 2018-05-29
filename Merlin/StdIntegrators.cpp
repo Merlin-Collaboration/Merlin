@@ -60,7 +60,7 @@ struct MultipoleKick
 		Complex F = scale*field.GetField2D(x,y)/(1+dp);
 		v.xp() += -F.real();
 		v.yp() +=  F.imag();
-	};
+	}
 };
 
 
@@ -75,10 +75,9 @@ struct ApplyRFdp
 	ApplyRFdp(double Vnorm, double f, double phase, const RMtrx& R1, bool full_acc)
 		: Vn(Vnorm),k(twoPi*f/SpeedOfLight),phi0(phase),R(R1),fullacc(full_acc)
 	{
-		//cout << "RF V:" << Vn << "\tFreq: " << f << endl;
 		cosPhi0=cos(phi0);
 		d0=1+Vn*cosPhi0;
-	};
+	}
 
 	void operator()(PSvector& p) const
 	{
@@ -183,9 +182,6 @@ void SectorBendCI::TrackStep (double ds)
 		Rr.Apply(currentBunch->GetParticles());
 	}
 
-	//		if(GetIntegratedLength()==0 && pfi.entrance!=0)
-	//			ApplyPoleFaceRotation(h,*pfi.entrance);
-
 	MultipoleField& field = currentComponent->GetField();
 	const double P0 = currentBunch->GetReferenceMomentum();
 	const double q = currentBunch->GetChargeSign();
@@ -196,7 +192,7 @@ void SectorBendCI::TrackStep (double ds)
 	assert(Pref>0);
 
 	const Complex b0 = field.GetCoefficient(0);
-	const Complex K1 = (np>0)? q*field.GetKn(1,brho) : Complex(0);
+	const Complex K1 = (np>0)? q * field.GetKn(1,brho) : Complex(0);
 
 	// we need to split the magnet for a kick if the
 	// following is true
@@ -229,10 +225,6 @@ void SectorBendCI::TrackStep (double ds)
 		field.SetCoefficient(0,b0);
 		field.SetCoefficient(1,b1);
 	}
-
-	//		double Sr=IncrStep(ds);
-	//		if(Sr==0 && pfi.exit!=0 )
-	//			ApplyPoleFaceRotation(h,*pfi.exit);
 
 	if(tilt!=0)
 	{
@@ -375,85 +367,9 @@ void SWRFStructureCI::TrackStep (double ds)
 	return;
 }
 
-// Class ExactRectMultipoleCI
-/*****************************************************************
-void ExactRectMultipoleCI::TrackStep (double ds)
-{
-
-	// Here we use a matrix to represent the quadrupole term, and a
-	// single kick at the centre of the element for the other multipoles,
-	// including any dipole term.
-	using namespace TLAS;
-
-	CHK_ZERO(ds);
-
-	double P0 = GetBunch().GetReferenceMomentum();
-	double q = GetBunch().GetChargeSign();
-	double brho = P0/eV/SpeedOfLight;
-
-	MultipoleField& field = currentComponent->GetField();
-
-	const Complex cK1 = q*field.GetKn(1,brho);
-
-	bool splitMagnet = field.GetCoefficient(0)!=0.0 || field.HighestMultipole()>1;
-	double len = splitMagnet ? ds/2 : ds;
-
-	if(cK1!=0.0) {
-		double K1 = cK1.imag()==0 ? cK1.real() : abs(cK1);
-		// Now we iterate over all the particles in the bunch,
-		// and calculate the exact map for each
-		for(PSvectorArray::iterator p = GetBunch().begin(); p!=GetBunch().end(); p++) {
-			RMtrx M(2);
-			TransportMatrix::QuadrupoleR(len,K1/(1+p->dp()),M.R);
-			if(cK1.imag()!=0) {
-				// Need to rotate the map
-				double a = arg(cK1);
-				RealMatrix Rr(4,4);
-				TransportMatrix::Srot(a,Rr);
-				M.R = Rr*M.R*Transpose(Rr);
-			}
-			M.Apply(*p);
-		}
-	}
-	else
-		ApplyDrift(GetBunch().GetParticles(),len);
-
-
-	if(splitMagnet) {
-
-		Complex b1 = field.GetCoefficient(1);
-		field.SetCoefficient(1,Complex(0));
-		for_each(GetBunch().begin(),GetBunch().end(),MultipoleKick(field,ds,P0,q));
-		field.SetCoefficient(1,b1);
-
-		// Now repeat linear tracking through second half
-		if(cK1!=0.0) {
-			double K1 = cK1.imag()==0 ? cK1.real() : abs(cK1);
-			for(PSvectorArray::iterator p = GetBunch().begin(); p!=GetBunch().end(); p++) {
-				RMtrx M(2);
-				TransportMatrix::QuadrupoleR(len,K1/(1+p->dp()),M.R);
-				if(cK1.imag()!=0) {
-					// Need to rotate the map
-					double a = arg(cK1);
-					RealMatrix Rr(4,4);
-					TransportMatrix::Srot(a,Rr);
-					M.R = Rr*M.R*Transpose(Rr);
-				}
-				M.Apply(*p);
-			}
-		}
-		else
-			ApplyDrift(GetBunch().GetParticles(),len);
-	}
-
-	return;
-}
-*****************************************************************/
-
 } // end namespace THIN_LENS
 
 // Class MonitorCI
-
 void MonitorCI::TrackStep (double ds)
 {
 
@@ -480,7 +396,6 @@ void MonitorCI::TrackStep (double ds)
 }
 
 // Class SolenoidCI
-
 void SolenoidCI::TrackStep (double ds)
 {
 	const bool linear_map_only = false;

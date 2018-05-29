@@ -42,7 +42,7 @@ public:
 		Zero();
 	}
 
-	virtual ~TCovMtrx() {};
+	virtual ~TCovMtrx() {}
 
 	/**
 	*	Return the standard deviation (RMS) of the n-th variable.

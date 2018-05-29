@@ -33,7 +33,7 @@ public:
 	 * Returns a single PSvector from the distribution
 	 */
 	virtual PSvector GenerateFromDistribution() const = 0;
-	virtual ~ParticleDistributionGenerator() {};
+	virtual ~ParticleDistributionGenerator() {}
 };
 
 /**
@@ -46,11 +46,11 @@ public:
 	 * @param cutoffs_ Vector of cut off points in the distribution in each coordinate.
 	 * Default zero gives no cut off.
 	 */
-	NormalParticleDistributionGenerator(PSvector cutoffs_ = PSvector(0)): cutoffs(cutoffs_) {};
+	NormalParticleDistributionGenerator(PSvector cutoffs_ = PSvector(0)): cutoffs(cutoffs_) {}
 	/**
 	 * @param cutoff Cut off point in distribution, same in each coordinate
 	 */
-	NormalParticleDistributionGenerator(double cutoff): cutoffs(PSvector(cutoff)) {};
+	NormalParticleDistributionGenerator(double cutoff): cutoffs(PSvector(cutoff)) {}
 	virtual PSvector GenerateFromDistribution() const override;
 private:
 	PSvector cutoffs;

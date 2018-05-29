@@ -223,7 +223,7 @@ private:
 public:
 	RotateSpinVector(bool bend)
 		: isBend(bend)
-	{};
+	{}
 
 	void RotateSpin(const Vector3D& bnorm, double ds, SpinVector& spin, double gamma)
 	{
@@ -268,7 +268,7 @@ public:
 		spinx = pX;
 		spiny = pY;
 		spinz = pZ;
-	};
+	}
 
 };
 
@@ -379,7 +379,7 @@ void SpinParticleProcess::DoProcess(double ds)
 			}
 		}
 
-	};
+	}
 
 	intS += ds;
 

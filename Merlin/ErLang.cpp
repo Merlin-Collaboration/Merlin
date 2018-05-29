@@ -16,5 +16,5 @@ double Erlang::operator()()
 	{
 		prod *= pGenerator -> asDouble();
 	}
-	return(-log(prod)/a);
+	return -log(prod)/a;
 }

@@ -52,18 +52,18 @@ public:
 	double Wlong (double z) const
 	{
 		return 0;
-	};
+	}
 	double Wtrans (double z) const
 	{
 		return 0;
-	};
+	}
 	double Wlong (double z,int m) const
 	{
 		return  z>0?-(m/a)*coeff[m]/exp(m*z/a):0;
-	};
+	}
 	double Wtrans (double z,int m) const
 	{
 		return z>0?coeff[m]/exp(m*z/a):0;
-	};
+	}
 };
 

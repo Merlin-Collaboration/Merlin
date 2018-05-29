@@ -421,12 +421,9 @@ void CCFailureProcess::DoProcess (double ds)
 
 //FAILURE
 			double fail_interval = 1 / (double)fail_turns;
-			//~ if( ATLAS && (Turn >= non_fail_turns) && (failure_on) ){
 			if( upstream && ATLAS && (Turn >= non_fail_turns) && (failure_on) )
 			{
 				V1 = V1 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
-				//~ V2 = V2 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
-				//~ cout << "\n(1- (((Turn+1)-non_fail_turns) * fail_interval)) = " << (1- (((Turn+1)-non_fail_turns) * fail_interval)) << endl;
 			}
 
 			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
@@ -454,7 +451,6 @@ void CCFailureProcess::DoProcess (double ds)
 
 			}
 
-			//~ for(PSvectorArray::iterator p = newbunch->begin(); p!=newbunch->end(); p++)
 			for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
 			{
 				if(ATLAS)
@@ -491,7 +487,6 @@ void CCFailureProcess::DoProcess (double ds)
 			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
 			newbunch->clear();
 			newbunch->reserve(currentBunch->size());
-			//~ newbunch->swap(*currentBunch);
 
 			if(Beta_p == 0)
 			{
@@ -499,7 +494,6 @@ void CCFailureProcess::DoProcess (double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			//double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 			double DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 			int n1 (0.), n2(0.);
 
@@ -515,15 +509,12 @@ void CCFailureProcess::DoProcess (double ds)
 			if (upstream)
 			{
 				pair<double,double> DeltaMu = CalcDeltaMu(n1, n2);
-				//DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
 				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
 			}
 			else
 			{
 				pair<double,double> DeltaMu;
 				DeltaMu = CalcMu(n1);
-
-				//DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
 				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi + Atlas_Upstream_deltamu[IP1_down_count-1];
 			}
 
@@ -558,16 +549,12 @@ void CCFailureProcess::DoProcess (double ds)
 //FAILURE
 			double fail_interval = 1 / (double)fail_turns;
 			//~ double fail_interval = (double)fail_turns;
-			//~ if( ATLAS && (Turn >= non_fail_turns) && (failure_on) ){
-			//~ if( upstream && (Turn >= non_fail_turns) && (failure_on) && ((IP1_up_count-1)==1) ){
 			if( !upstream && (Turn >= non_fail_turns) && (failure_on))
 			{
 				//~ V1 = V1 * (1- (((Turn)-non_fail_turns) * fail_interval));
 				//140 degrees is 2.443 radians 140 * (2*pi)/360
 				double phi = 90 * (2*pi)/360;
 				phi_s = (((Turn)-(non_fail_turns-1)) * fail_interval) * phi;
-				//~ V2 = V2 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
-				//~ cout << "\n(1- (((Turn+1)-non_fail_turns) * fail_interval)) = " << (1- (((Turn+1)-non_fail_turns) * fail_interval)) << endl;
 			}
 
 			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
@@ -587,7 +574,6 @@ void CCFailureProcess::DoProcess (double ds)
 
 			}
 
-			//~ for(PSvectorArray::iterator p = newbunch->begin(); p!=newbunch->end(); p++)
 			for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
 			{
 				if(upstream)
@@ -623,7 +609,6 @@ void CCFailureProcess::DoProcess (double ds)
 			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
 			newbunch->clear();
 			newbunch->reserve(currentBunch->size());
-			//~ newbunch->swap(*currentBunch);
 
 			if(Beta_p == 0)
 			{
@@ -631,11 +616,9 @@ void CCFailureProcess::DoProcess (double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			//double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 			double DeltaMuX (0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 
 			int n1 (0.), n2(0.);
-
 
 			++testn;
 			cout << "\n\t CCFAILUREPROCESS Called " << testn << " times " << endl;
@@ -644,19 +627,16 @@ void CCFailureProcess::DoProcess (double ds)
 			n1 = AccModelCC->FindElementLatticePosition(currentComponent->GetName());
 			n2 = AccModelCC->FindElementLatticePosition("IP5") + 1; //+1 as phase is incorrect
 
-
 			//Calc Mu / DeltaMu
 
 			pair<double,double> DeltaMu = CalcDeltaMu(n1, n2);
 			if (upstream)
 			{
 				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
-				//DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
 			}
 			else
 			{
 				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi + CMS_Upstream_deltamu[IP5_down_count-1];
-				//DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
 			}
 
 			//Calc M12 & M22
@@ -667,7 +647,6 @@ void CCFailureProcess::DoProcess (double ds)
 			else
 			{
 				M12 = CalcM_12(n2, n1, DeltaMuX/2, Horizontal_CC);
-				//~ M12 = CMS_Upstream_M12[IP5_down_count-1];
 				M22 = CalcM_22(CMS_Upstream_elno[IP5_down_count-1], n1, DeltaMuX, Horizontal_CC);
 			}
 
@@ -692,8 +671,6 @@ void CCFailureProcess::DoProcess (double ds)
 			if( upstream && (Turn >= non_fail_turns) && (failure_on) )
 			{
 				V1 = V1 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
-				//~ V2 = V2 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
-				//~ cout << "\n(1- (((Turn+1)-non_fail_turns) * fail_interval)) = " << (1- (((Turn+1)-non_fail_turns) * fail_interval)) << endl;
 			}
 
 			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
@@ -750,7 +727,7 @@ double CCFailureProcess::CalcM_12(int start, int end, double deltamu, bool horiz
 		beta2 = TwissCC->Value(3,3,2,end);
 	}
 
-	return ( sqrt(beta1 * beta2) * sin(deltamu) );
+	return sqrt(beta1 * beta2) * sin(deltamu);
 }
 
 double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horizontal)
@@ -771,7 +748,7 @@ double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horiz
 
 	//~ cout << "\n\nBeta1 = " << beta1 << ", beta2 = " << beta2 << ", deltamu = " << deltamu*(360/(2*pi));
 
-	return ( sqrt(beta1 / beta2) * cos(deltamu) );
+	return sqrt(beta1 / beta2) * cos(deltamu);
 }
 
 double CCFailureProcess::CalcM_12(int start, int end, bool horizontal)
@@ -780,8 +757,6 @@ double CCFailureProcess::CalcM_12(int start, int end, bool horizontal)
 	pair<double,double> DeltaMu = CalcDeltaMu(start, end);
 	double DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
 	double DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
-
-	//~ cout << "\nM12_no_delta_mu DMuX = " << DeltaMuX << ", DMuY = " << DeltaMuY << endl;
 
 	if(horizontal)
 	{
@@ -794,10 +769,9 @@ double CCFailureProcess::CalcM_12(int start, int end, bool horizontal)
 		deltamu = DeltaMuY;
 		beta1 = TwissCC->Value(3,3,2,start);
 		beta2 = TwissCC->Value(3,3,2,end);
-		//~ cout << "\n\nM12_no_DeltaMu Beta1 = " << beta1 << ", beta2 = " << beta2 << ", deltamu = " << deltamu*(360/(2*pi));
 	}
 
-	return ( sqrt(beta1 * beta2) * sin(deltamu) );
+	return sqrt(beta1 * beta2) * sin(deltamu);
 }
 
 double CCFailureProcess::CalcM_22(int start, int end, bool horizontal)
@@ -821,10 +795,7 @@ double CCFailureProcess::CalcM_22(int start, int end, bool horizontal)
 		beta2 = TwissCC->Value(3,3,2,end);
 	}
 
-
-	//~ cout << "Beta1 = " << beta1 << ", beta2 = " << beta2 << ", deltamu = " << deltamu*(360/(2*pi)) << endl;
-
-	return ( sqrt(beta1 / beta2) * cos(deltamu) );
+	return sqrt(beta1 / beta2) * cos(deltamu);
 }
 
 pair<double,double> CCFailureProcess::CalcMu(int element)
@@ -840,7 +811,6 @@ pair<double,double> CCFailureProcess::CalcDeltaMu(int element1, int element2)
 	pair<double,double> Mu2 = CalcMu(element2);
 
 	double delta_mu_x = Mu2.first - Mu1.first;
-	//~ double delta_mu_y = Mu1.second - Mu2.second;
 	double delta_mu_y = Mu2.second - Mu1.second;
 
 	pair<double,double> DeltaMu = std::make_pair(delta_mu_x, delta_mu_y);
@@ -850,24 +820,24 @@ pair<double,double> CCFailureProcess::CalcDeltaMu(int element1, int element2)
 
 double CCFailureProcess::CalcV1(double M12)
 {
-	return ( (SpeedOfLight * EnergyCC * tan(theta))/(omega * M12 * n) );
+	return (SpeedOfLight * EnergyCC * tan(theta))/(omega * M12 * n);
 }
 
 double CCFailureProcess::CalcV1(double deltamu, int n1, int n2, bool horizontal)
 {
 	if (horizontal)
 	{
-		return ( (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(1,1,1,n1) * TwissCC->Value(1,1,1,n2)) * sin(deltamu)) );
+		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(1,1,1,n1) * TwissCC->Value(1,1,1,n2)) * sin(deltamu));
 	}
 	else
 	{
-		return ( (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(3,3,2,n1) * TwissCC->Value(3,3,2,n2)) * sin(deltamu)) );
+		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(3,3,2,n1) * TwissCC->Value(3,3,2,n2)) * sin(deltamu));
 	}
 }
 
 double CCFailureProcess::CalcV2(double V1, double M22)
 {
-	return (-1 * M22 * V1);
+	return -1 * M22 * V1;
 }
 
 void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool horizontal)
@@ -877,37 +847,7 @@ void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool ho
 	int n = 4;	//No of CCs
 
 	//Working
-	//~ double kick = (V * sin(p.ct() * omega_ov_c))/( EnergyCC );
 	double kick = (V * sin( phi_s + (p.ct() * omega_ov_c) ))/( EnergyCC );
-
-	//~ double kick = ( M12 * V * sin(p.ct() * omega_ov_c))/( EnergyCC * n);
-
-	//~ double fudge = 0.01;
-	//~ double kick = fudge * (SpeedOfLight * tan(theta) / omega) * sin(p.ct() * omega_ov_c);
-	//~ double kick = fudge * (SpeedOfLight * tan(theta) / omega) * sin(p.ct() * omega_ov_c);
-
-	//~ double kick = ( M12 * V * sin(p.ct() * omega_ov_c))/( EnergyCC );
-	//~ double kick = ( M12 * V * n * sin(p.ct() * omega_ov_c))/( EnergyCC );
-	//~ double kick = ( M12 * V * ElectronCharge * sin(p.ct() * omega_ov_c) )/( EnergyCC );
-	//~ double kick = ( M12 * V * n * ElectronCharge * sin(p.ct() * omega_ov_c) )/( EnergyCC );
-
-	//~ double kick = (SpeedOfLight * tan(theta) / omega) * sin(p.ct() * omega_ov_c);
-
-	//~ cout << "\nPRE IP \nM12 = " << M12<< endl;
-	//~ cout << "V = " << V << endl;
-	//~ cout << "EnergyCC = " << EnergyCC << endl;
-	//~ cout << "sin(omega_ov_c * ct) = " << sin(p.ct() * omega_ov_c) << endl;
-	//~ cout << "kick factor = " << (V)/( EnergyCC ) << endl;
-	//~ cout << "kick = " << kick << endl;
-
-
-	//~ double kick = 3.54E-5 * sin(p.ct() * omega_ov_c);
-
-
-	//~ else if(failure_on){
-	//~ kick = 0;
-	//~ cout << "CCFailure Warning: ApplyCCKick called for Turn > fail_turns" << endl;
-	//~ }
 
 	if(horizontal)
 	{
@@ -926,36 +866,7 @@ void CCFailureProcess::ApplyPostCCKick(PSvector &p, double V, double M12, bool h
 	int n = 4;	//No of CCs
 
 	//Working
-	//~ double kick = (V * sin(p.ct() * omega_ov_c))/( EnergyCC );
 	double kick = (V * sin( phi_s + (p.ct() * omega_ov_c) ))/( EnergyCC );
-
-	//~ double kick = ( M12 * V * sin(p.ct() * omega_ov_c))/( EnergyCC * n);
-
-	//~ double kick = ( M12 * V * sin(p.ct() * omega_ov_c))/( EnergyCC );
-	//~ double kick = ( M12 * V * n * sin(p.ct() * omega_ov_c))/( EnergyCC );
-	//~ double kick = ( M12 * V * ElectronCharge * sin(p.ct() * omega_ov_c) )/( EnergyCC );
-	//~ double kick = ( M12 * V * n * ElectronCharge * sin(p.ct() * omega_ov_c) )/( EnergyCC );
-
-	//~ double kick = (SpeedOfLight * tan(theta) / omega) * sin(p.ct() * omega_ov_c);
-
-	//~ cout << "\nPOST IP \nM12 = " << M12<< endl;
-	//~ cout << "V = " << V << endl;
-	//~ cout << "EnergyCC = " << EnergyCC << endl;
-	//~ cout << "sin(omega_ov_c * ct) = " << sin(p.ct() * omega_ov_c) << endl;
-	//~ cout << "kick factor = " << V/EnergyCC << endl;
-	//~ cout << "kick = " << kick << endl;
-
-	//~ double kick = 3.54E-5 * sin(p.ct() * omega_ov_c);
-
-	//~ double fail_interval = 1 / fail_turns;
-	//~ if(Turn < fail_turns && failure_on){
-	//~ kick = kick * (Turn * fail_interval);
-	//~ cout << "\nFailKick = " << kick << endl;
-	//~ }
-	//~ else if(failure_on){
-	//~ kick = 0;
-	//~ cout << "CCFailure Warning: ApplyCCKick called for Turn > fail_turns" << endl;
-	//~ }
 
 	if(horizontal)
 	{

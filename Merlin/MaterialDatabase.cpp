@@ -37,25 +37,6 @@ MaterialDatabase::MaterialDatabase()
 	Be->SetElectronDensity(Be->CalculateElectronDensity());
 	Be->SetPlasmaEnergy(Be->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Be->GetSymbol(),Be));
-	/*
-		//Obsolete due to constructor
-		Material* Be = new Material();
-		Be->SetAtomicNumber(4);
-		Be->SetAtomicMass(9.012182);
-		Be->SetName("Beryllium");
-		Be->SetSymbol("Be");
-		Be->SetSixtrackInelasticNucleusCrossSection(0.199);
-		Be->SetSixtrackRutherfordCrossSection(0.000035);
-		Be->SetConductivity(3.08E7);
-		Be->SetRadiationLength(651900);
-		Be->SetSixtrackdEdx(0.55);
-		Be->SetDensity(1848);
-	*/
-
-//	Be->rho=1.848;
-//	Be->SetRadiationLength(Be->CalculateRadiationLength());
-//	Be->SetElectronCriticalEnergy(113.70*MeV);
-
 
 	//Carbon (graphite)
 	Material* C = new Material();
@@ -67,15 +48,12 @@ MaterialDatabase::MaterialDatabase()
 	C->SetSixtrackInelasticNucleusCrossSection(0.231);
 	C->SetSixtrackRutherfordCrossSection(0.000076);
 	C->SetSixtrackdEdx(0.68);
-//	C->rho=2.265;		//Check
 	C->SetConductivity(7.14E4);
 	C->SetRadiationLength(427000);
-//	C->SetRadiationLength(C->CalculateRadiationLength());
 	C->SetDensity(2210);
 	C->SetSixtrackNuclearSlope(70.0);
 	C->SetMeanExcitationEnergy(78.0*eV);
 	C->SetElectronDensity(C->CalculateElectronDensity());
-//	C->SetElectronCriticalEnergy(81.74*MeV);
 	C->SetPlasmaEnergy(C->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(C->GetSymbol(),C));
 
@@ -89,7 +67,6 @@ MaterialDatabase::MaterialDatabase()
 	O->SetSymbol("O");
 	O->SetSixtrackTotalNucleusCrossSection(O->CalculateSixtrackTotalNucleusCrossSection());
 	O->SetSixtrackInelasticNucleusCrossSection(O->CalculateSixtrackInelasticNucleusCrossSection());
-	//~ O->SetSixtrackRutherfordCrossSection(O->CalculateSixtrackRutherfordCrossSection());
 	O->SetSixtrackRutherfordCrossSection(0.0133766);
 	O->SetSixtrackdEdx(O->CalculateSixtrackdEdx());
 	O->SetConductivity(1);	//See here
@@ -98,7 +75,6 @@ MaterialDatabase::MaterialDatabase()
 	O->SetSixtrackNuclearSlope(O->CalculateSixtrackNuclearSlope());
 	O->SetMeanExcitationEnergy(95.0*eV);
 	O->SetElectronDensity(O->CalculateElectronDensity());
-//	O->SetElectronCriticalEnergy(66.82*MeV);
 	O->SetPlasmaEnergy(O->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(O->GetSymbol(),O));
 
@@ -112,14 +88,12 @@ MaterialDatabase::MaterialDatabase()
 	Al->SetSixtrackInelasticNucleusCrossSection(0.421);
 	Al->SetSixtrackRutherfordCrossSection(0.00034);
 	Al->SetSixtrackdEdx(0.81);
-//	Al->rho=2.70;
 	Al->SetConductivity(3.564E7);
 	Al->SetRadiationLength(Al->CalculateRadiationLength());
 	Al->SetDensity(2699);
 	Al->SetSixtrackNuclearSlope(120.3);
 	Al->SetMeanExcitationEnergy(166.0*eV);
 	Al->SetElectronDensity(Al->CalculateElectronDensity());
-//	Al->SetElectronCriticalEnergy(42.70*MeV);
 	Al->SetPlasmaEnergy(Al->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Al->GetSymbol(),Al));
 
@@ -133,14 +107,12 @@ MaterialDatabase::MaterialDatabase()
 	Fe->SetSixtrackInelasticNucleusCrossSection(Fe->CalculateSixtrackInelasticNucleusCrossSection());
 	Fe->SetSixtrackRutherfordCrossSection(Fe->CalculateSixtrackRutherfordCrossSection());
 	Fe->SetSixtrackdEdx(Fe->CalculateSixtrackdEdx());
-//	Fe->rho=7.87;
 	Fe->SetConductivity(1.04E7);
 	Fe->SetRadiationLength(Fe->CalculateRadiationLength());
 	Fe->SetDensity(7870);
 	Fe->SetSixtrackNuclearSlope(Fe->CalculateSixtrackNuclearSlope());
 	Fe->SetMeanExcitationEnergy(286.0*eV);
 	Fe->SetElectronDensity(Fe->CalculateElectronDensity());
-//	Fe->SetElectronCriticalEnergy(21.68*MeV);
 	Fe->SetPlasmaEnergy(Fe->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Fe->GetSymbol(),Fe));
 
@@ -154,14 +126,12 @@ MaterialDatabase::MaterialDatabase()
 	Ni->SetSixtrackInelasticNucleusCrossSection(Ni->CalculateSixtrackInelasticNucleusCrossSection());
 	Ni->SetSixtrackRutherfordCrossSection(Ni->CalculateSixtrackRutherfordCrossSection());
 	Ni->SetSixtrackdEdx(Ni->CalculateSixtrackdEdx());
-//	Ni->rho=8.90;
 	Ni->SetConductivity(1.44E7);
 	Ni->SetRadiationLength(Ni->CalculateRadiationLength());
 	Ni->SetDensity(8900);
 	Ni->SetSixtrackNuclearSlope(Ni->CalculateSixtrackNuclearSlope());
 	Ni->SetMeanExcitationEnergy(311.0*eV);
 	Ni->SetElectronDensity(Ni->CalculateElectronDensity());
-//	Ni->SetElectronCriticalEnergy(20.05*MeV);
 	Ni->SetPlasmaEnergy(Ni->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Ni->GetSymbol(),Ni));
 
@@ -175,15 +145,12 @@ MaterialDatabase::MaterialDatabase()
 	Cu->SetSixtrackInelasticNucleusCrossSection(0.782);
 	Cu->SetSixtrackRutherfordCrossSection(0.00153);
 	Cu->SetSixtrackdEdx(2.69);
-//	Cu->SetSixtrackdEdx(1.250776630157339);
-//	Cu->rho=8.96;
 	Cu->SetConductivity(5.98E7);
 	Cu->SetRadiationLength(Cu->CalculateRadiationLength());
 	Cu->SetDensity(8960);
 	Cu->SetSixtrackNuclearSlope(217.8);
 	Cu->SetMeanExcitationEnergy(322.0*eV);
 	Cu->SetElectronDensity(Cu->CalculateElectronDensity());
-//	Cu->SetElectronCriticalEnergy(19.42*MeV);
 	Cu->SetPlasmaEnergy(Cu->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Cu->GetSymbol(),Cu));
 
@@ -195,17 +162,14 @@ MaterialDatabase::MaterialDatabase()
 	Mo->SetSymbol("Mo");
 	Mo->SetSixtrackTotalNucleusCrossSection(Mo->CalculateSixtrackTotalNucleusCrossSection());
 	Mo->SetSixtrackInelasticNucleusCrossSection(Mo->CalculateSixtrackInelasticNucleusCrossSection());
-	//~ Mo->SetSixtrackRutherfordCrossSection(Mo->CalculateSixtrackRutherfordCrossSection());
 	Mo->SetSixtrackRutherfordCrossSection(0.264483);
 	Mo->SetSixtrackdEdx(Mo->CalculateSixtrackdEdx());
-//	Mo->rho=10.2;
 	Mo->SetConductivity(1.87E7);
 	Mo->SetRadiationLength(Mo->CalculateRadiationLength());
 	Mo->SetDensity(10200);
 	Mo->SetSixtrackNuclearSlope(Mo->CalculateSixtrackNuclearSlope());
 	Mo->SetMeanExcitationEnergy(424.0*eV);
 	Mo->SetElectronDensity(Mo->CalculateElectronDensity());
-//	Mo->SetElectronCriticalEnergy(13.85*MeV);
 	Mo->SetPlasmaEnergy(Mo->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Mo->GetSymbol(),Mo));
 
@@ -219,15 +183,12 @@ MaterialDatabase::MaterialDatabase()
 	W->SetSixtrackInelasticNucleusCrossSection(1.65);
 	W->SetSixtrackRutherfordCrossSection(0.00768);
 	W->SetSixtrackdEdx(5.79);
-//	W->rho=19.3;
 	W->SetConductivity(1.77E3);
-	//W->SetRadiationLength(0.003504);
 	W->SetRadiationLength(W->CalculateRadiationLength());
 	W->SetDensity(19300);
 	W->SetSixtrackNuclearSlope(440.3);
 	W->SetMeanExcitationEnergy(727.0*eV);
 	W->SetElectronDensity(W->CalculateElectronDensity());
-//	W->SetElectronCriticalEnergy(7.97*MeV);
 	W->SetPlasmaEnergy(W->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(W->GetSymbol(),W));
 
@@ -241,15 +202,12 @@ MaterialDatabase::MaterialDatabase()
 	Pb->SetSixtrackInelasticNucleusCrossSection(1.77);
 	Pb->SetSixtrackRutherfordCrossSection(0.00907);
 	Pb->SetSixtrackdEdx(3.40);
-//	Pb->rho=11.35;
 	Pb->SetConductivity(4.8077E6);
-//	Pb->SetRadiationLength(0.005612);
 	Pb->SetRadiationLength(Pb->CalculateRadiationLength());
 	Pb->SetDensity(11350);
 	Pb->SetSixtrackNuclearSlope(455.3);
 	Pb->SetMeanExcitationEnergy(823.0*eV);
 	Pb->SetElectronDensity(Pb->CalculateElectronDensity());
-//	Pb->SetElectronCriticalEnergy(7.43*MeV);
 	Pb->SetPlasmaEnergy(Pb->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(Pb->GetSymbol(),Pb));
 
@@ -281,7 +239,6 @@ MaterialDatabase::MaterialDatabase()
 	AC150K->SetSixtrackNuclearSlope(70.0);
 	AC150K->SetMeanExcitationEnergy(78.0*eV);
 	AC150K->SetElectronDensity(AC150K->CalculateElectronDensity());
-//	AC150K->SetElectronCriticalEnergy(81.74*MeV);
 	AC150K->SetPlasmaEnergy(AC150K->CalculatePlasmaEnergy());
 	db.insert(pair<string,Material*>(AC150K->GetSymbol(),AC150K));
 
@@ -327,23 +284,9 @@ MaterialDatabase::MaterialDatabase()
 
 	Glidcop->Assemble();
 
-	//~ Glidcop->VerifyMaterial();
-
-// not needed for composite
-	//~ Glidcop->SetMeanExcitationEnergy(Glidcop->CalculateMeanExcitationEnergy());
-	//~ Glidcop->SetRadiationLength(Glidcop->CalculateRadiationLength());
-	//~ Glidcop->SetElectronDensity(Glidcop->CalculateElectronDensity());
-	//~ Glidcop->SetPlasmaEnergy(Glidcop->CalculatePlasmaEnergy());
-	//~ Glidcop->SetSixtrackdEdx(Glidcop->CalculateSixtrackdEdx());
-
 	// Test Mixture function
 	std::vector< std::pair<std::string,double> > els = Glidcop->GetConstituentElements();
 	std::vector< std::pair<std::string,double> >::iterator el_it;
-	//~ for(el_it = els.begin(); el_it != els.end(); ++el_it){
-	//~ std::cout << "MaterialDatabase::Mixture::Glidcop: Element Symbol = " << el_it->first << ", mass fraction = " << el_it->second << endl;
-	//~ }
-
-	//~ DumpMaterialProperties();
 
 	db.insert(std::pair<std::string,Material*>(Glidcop->GetSymbol(),Glidcop));
 }

@@ -18,6 +18,6 @@ double Binomial::operator()()
 			s++;
 		}
 	}
-	return(double(s));
+	return double(s);
 }
 

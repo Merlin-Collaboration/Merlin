@@ -99,14 +99,14 @@ struct LossData
 		else
 		{
 			std::cout << "Warning: CollimationOutput Class: Cannot operator+ for losses in different elements, returning original LossData object" << std::endl;
-			return (*this);
+			return *this;
 		}
 	}
 
 	LossData operator++()
 	{
 		lost += 1;
-		return (*this);
+		return *this;
 	}
 };
 

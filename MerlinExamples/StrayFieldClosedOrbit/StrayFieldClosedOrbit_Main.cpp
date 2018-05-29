@@ -70,7 +70,7 @@ int main()
 		bpmLog<<std::setw(14)<<(bpm_iter->y).value;
 		bpmLog<<std::setw(14)<<(bpm_iter->y).error;
 		bpmLog<<endl;
-	};
+	}
 
 
 	BPM::SetDefaultBuffer(nullptr);

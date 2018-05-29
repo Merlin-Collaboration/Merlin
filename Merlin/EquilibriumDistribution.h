@@ -26,7 +26,7 @@
 class IntegrateEigenvector
 {
 public:
-	virtual ~IntegrateEigenvector() {};
+	virtual ~IntegrateEigenvector() {}
 	double Integral(ComplexVector& Ek, SectorBend* sb, double p0);
 
 protected:
@@ -43,7 +43,7 @@ protected:
 class IntegrateZeroGradient : public IntegrateEigenvector
 {
 public:
-	virtual ~IntegrateZeroGradient() {};
+	virtual ~IntegrateZeroGradient() {}
 	IntegrateZeroGradient();
 protected:
 	virtual double func(double s);
@@ -52,7 +52,7 @@ protected:
 class IntegrateWithGradient : public IntegrateEigenvector
 {
 public:
-	virtual ~IntegrateWithGradient() {};
+	virtual ~IntegrateWithGradient() {}
 	IntegrateWithGradient();
 protected:
 	virtual double func(double s);

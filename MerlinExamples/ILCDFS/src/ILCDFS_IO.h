@@ -27,7 +27,7 @@ public:
 	static void set_trace_stream(std::ostream& anOs)
 	{
 		os=&anOs;
-	};
+	}
 
 	template<class T>
 	friend dfs_trace operator<<(dfs_trace dfst, const T& t)

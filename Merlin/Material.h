@@ -24,7 +24,7 @@ public:
 	/**
 	* Overloaded constructor
 	*/
-	Material() {};
+	Material() {}
 	Material(std::string name0, std::string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0);
 
 	/*

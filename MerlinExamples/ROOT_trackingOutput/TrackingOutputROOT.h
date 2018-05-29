@@ -133,7 +133,7 @@ public:
 			Twiss=false;
 			BPMCor=false;
 			Cav=false;
-		};
+		}
 	} Output;
 
 	// Create a new TTree
@@ -199,14 +199,14 @@ public:
 	{
 		this->AddIdentifier(ident);
 		dumpAt.push_back(ident);
-	};
+	}
 	int  BunchSize(const Bunch* bunch); // return the # of particles/slices of a bunch
 
 	// switch bunch output on/off
 	void DoBunch(bool dob=true)
 	{
 		dobunch=dob;
-	};
+	}
 
 	// additional utillities
 	// 6d bunch struct for ROOT
@@ -266,7 +266,7 @@ private:
 			}
 		}
 		return false;
-	};
+	}
 	// fills dumpAt -  see usage
 	void DumpBunchAt(const Bunch*, const std::string&);
 
