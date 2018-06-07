@@ -27,7 +27,7 @@ using namespace std;
 // needed by sort algorithm
 inline bool operator<(const PSvector& p1, const PSvector& p2)
 {
-	return p1.ct()<p2.ct();
+	return p1.ct() < p2.ct();
 }
 
 namespace
@@ -41,74 +41,89 @@ struct APSV1
 	V& p;
 	double w;
 
-	APSV1(V& p0, double n) : p(p0),w(0) {}
+	APSV1(V& p0, double n) :
+		p(p0), w(0)
+	{
+	}
 	void operator()(const PSvector& p1)
 	{
 		w++;
-		for(int i=0; i<6; i++)
+		for(int i = 0; i < 6; i++)
 		{
-			p[i]+=(p1[i]-p[i])/w;
+			p[i] += (p1[i] - p[i]) / w;
 		}
 	}
+
 };
 
 struct APSV2
 {
-	const int u,v;
+	const int u, v;
 	Point2D X;
 	const double w;
 
-	APSV2(int i,int j,double n) : u(i),v(j),X(0,0),w(1/n) {}
+	APSV2(int i, int j, double n) :
+		u(i), v(j), X(0, 0), w(1 / n)
+	{
+	}
 	void operator()(const PSvector& p)
 	{
-		X.x+=w*p[u];
-		X.y+=w*p[v];
+		X.x += w * p[u];
+		X.y += w * p[v];
 	}
+
 };
 
 struct PSVVAR1
 {
 	PSmoments& S;
 	double w;
-	PSVVAR1(PSmoments& sig,double n):S(sig),w(0) {}
+	PSVVAR1(PSmoments& sig, double n) :
+		S(sig), w(0)
+	{
+	}
 	void operator()(const PSvector& p)
 	{
 		w++;
-		for(int i=0; i<6; i++)
-			for(int j=0; j<=i; j++)
+		for(int i = 0; i < 6; i++)
+			for(int j = 0; j <= i; j++)
 			{
-				S(i,j)+=((p[i]-S[i])*(p[j]-S[j])-S(i,j))/w;
+				S(i, j) += ((p[i] - S[i]) * (p[j] - S[j]) - S(i, j)) / w;
 			}
 	}
+
 };
 
 struct PSVVAR2
 {
 	PSmoments2D& S;
-	const int u,v;
+	const int u, v;
 	const double w;
 
-	PSVVAR2(int u1, int v1, double n, PSmoments2D& sig)
-		:S(sig),u(u1),v(v1),w(1/n) {}
+	PSVVAR2(int u1, int v1, double n, PSmoments2D& sig) :
+		S(sig), u(u1), v(v1), w(1 / n)
+	{
+	}
 
 	void operator()(const PSvector& p)
 	{
-		double x=p[u]-S[0];
-		double y=p[v]-S[1];
-		S(0,0)+=w*x*x;
-		S(0,1)+=w*x*y;
-		S(1,1)+=w*y*y;
+		double x = p[u] - S[0];
+		double y = p[v] - S[1];
+		S(0, 0) += w * x * x;
+		S(0, 1) += w * x * y;
+		S(1, 1) += w * y * y;
 	}
+
 };
 
 template<class IT>
-double Mean(IT F, IT L,int i)
+double Mean(IT F, IT L, int i)
 {
-	double s=0;
-	double n=0;
-	while(F!=L)
+	double s = 0;
+	double n = 0;
+	while(F != L)
 	{
-		s+=((*F++)[i]-s)/(++n);
+		s += ((*F++)[i] - s) / (++n);
 	}
 	return s;
 }
@@ -116,7 +131,7 @@ double Mean(IT F, IT L,int i)
 template<class T>
 inline void SortArray(std::vector<T>& array)
 {
-	sort(array.begin(),array.end());
+	sort(array.begin(), array.end());
 }
 
 template<class T>
@@ -130,42 +145,45 @@ inline void SortArray(std::list<T>& array)
 namespace ParticleTracking
 {
 
-ParticleBunch::ParticleBunch (double P0, double Q, PSvectorArray& particles)
-	: Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Q/particles.size()),pArray()
+ParticleBunch::ParticleBunch(double P0, double Q, PSvectorArray& particles) :
+	Bunch(P0, Q), init(false), coords((int) sizeof(PSvector) / sizeof(double)), ScatteringPhysicsModel(0), qPerMP(Q
+		/ particles.size()), pArray()
 {
 	pArray.swap(particles);
 }
 
-ParticleBunch::ParticleBunch (double P0, double Q, std::istream& is)
-	: Bunch(P0,Q),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0)
+ParticleBunch::ParticleBunch(double P0, double Q, std::istream& is) :
+	Bunch(P0, Q), init(false), coords((int) sizeof(PSvector) / sizeof(double)), ScatteringPhysicsModel(0)
 {
 	PSvector p;
-	while(is>>p)
+	while(is >> p)
 	{
 		push_back(p);
 	}
 
-	qPerMP = Q/size();
+	qPerMP = Q / size();
 }
 
-ParticleBunch::ParticleBunch (double P0, double Qm)
-	: Bunch(P0,Qm),init(false),coords((int) sizeof(PSvector)/sizeof(double)),ScatteringPhysicsModel(0),qPerMP(Qm)
-{}
+ParticleBunch::ParticleBunch(double P0, double Qm) :
+	Bunch(P0, Qm), init(false), coords((int) sizeof(PSvector) / sizeof(double)), ScatteringPhysicsModel(0), qPerMP(Qm)
+{
+}
 
-ParticleBunch::ParticleBunch (size_t np, const ParticleDistributionGenerator& generator, const BeamData& beam, ParticleBunchFilter* filter)
-	:ParticleBunch(beam.p0,beam.charge)
+ParticleBunch::ParticleBunch(size_t np, const ParticleDistributionGenerator& generator, const BeamData& beam,
+	ParticleBunchFilter* filter) :
+	ParticleBunch(beam.p0, beam.charge)
 {
 	RMtrx M;
 	M.R = NormalTransform(beam);
 
 	// The first particle is *always* the centroid particle
 	PSvector p;
-	p.x()=beam.x0;
-	p.xp()=beam.xp0;
-	p.y()=beam.y0;
-	p.yp()=beam.yp0;
-	p.dp()=0;
-	p.ct()=beam.ct0;
+	p.x() = beam.x0;
+	p.xp() = beam.xp0;
+	p.y() = beam.y0;
+	p.yp() = beam.yp0;
+	p.dp() = 0;
+	p.ct() = beam.ct0;
 	p.type() = -1.0;
 	p.location() = -1.0;
 	p.id() = 0;
@@ -173,7 +191,7 @@ ParticleBunch::ParticleBunch (size_t np, const ParticleDistributionGenerator& ge
 	pArray.push_back(p);
 
 	size_t i = 1;
-	while(i<np)
+	while(i < np)
 	{
 		p = generator.GenerateFromDistribution();
 
@@ -188,110 +206,109 @@ ParticleBunch::ParticleBunch (size_t np, const ParticleDistributionGenerator& ge
 		// Apply Courant-Snyder
 		M.Apply(p);
 
-		p+=pArray.front(); // add centroid
+		p += pArray.front(); // add centroid
 
 		p.type() = -1.0;
 		p.location() = -1.0;
 		p.id() = i;
 		p.sd() = 0.0;
 
-		if(filter==nullptr || filter->Apply(p))
+		if(filter == nullptr || filter->Apply(p))
 		{
 			pArray.push_back(p);
 			i++;
 		}
 	}
-	qPerMP = beam.charge/size();
+	qPerMP = beam.charge / size();
 }
 
-double ParticleBunch::GetTotalCharge () const
+double ParticleBunch::GetTotalCharge() const
 {
-	return qPerMP*size();
+	return qPerMP * size();
 }
 
-PSmoments& ParticleBunch::GetMoments (PSmoments& sigma) const
+PSmoments& ParticleBunch::GetMoments(PSmoments& sigma) const
 {
 	sigma.zero();
-	for_each(begin(),end(),APSV1<PSmoments>(sigma,size()));
-	for_each(begin(),end(),PSVVAR1(sigma,size()));
+	for_each(begin(), end(), APSV1<PSmoments>(sigma, size()));
+	for_each(begin(), end(), PSVVAR1(sigma, size()));
 	return sigma;
 }
 
-PSmoments2D& ParticleBunch::GetProjectedMoments (PScoord u, PScoord v, PSmoments2D& sigma) const
+PSmoments2D& ParticleBunch::GetProjectedMoments(PScoord u, PScoord v, PSmoments2D& sigma) const
 {
-	Point2D X = for_each(begin(),end(),APSV2(u,v,size())).X;
-	sigma[0]=X.x;
-	sigma[1]=X.y;
-	for_each(begin(),end(),PSVVAR2(u,v,size(),sigma));
+	Point2D X = for_each(begin(), end(), APSV2(u, v, size())).X;
+	sigma[0] = X.x;
+	sigma[1] = X.y;
+	for_each(begin(), end(), PSVVAR2(u, v, size(), sigma));
 	return sigma;
 }
 
-PSvector& ParticleBunch::GetCentroid (PSvector& p) const
+PSvector& ParticleBunch::GetCentroid(PSvector& p) const
 {
 	p.zero();
-	for_each(begin(),end(),APSV1<PSvector>(p,size()));
+	for_each(begin(), end(), APSV1<PSvector>(p, size()));
 	return p;
 }
 
-std::pair<double,double> ParticleBunch::GetMoments(PScoord i) const
+std::pair<double, double> ParticleBunch::GetMoments(PScoord i) const
 {
-	double u = Mean(begin(),end(),i);
-	double v=0;
-	double w=0;
-	for(const_iterator p = begin(); p!=end(); p++)
+	double u = Mean(begin(), end(), i);
+	double v = 0;
+	double w = 0;
+	for(const_iterator p = begin(); p != end(); p++)
 	{
-		double x = (*p)[i]-u;
-		v+=(x*x-v)/(++w);
+		double x = (*p)[i] - u;
+		v += (x * x - v) / (++w);
 	}
 
-	return make_pair(u,sqrt(v));
+	return make_pair(u, sqrt(v));
 }
 
-Point2D ParticleBunch::GetProjectedCentroid (PScoord u, PScoord v) const
+Point2D ParticleBunch::GetProjectedCentroid(PScoord u, PScoord v) const
 {
-	return for_each(begin(),end(),APSV2(u,v,size())).X;
+	return for_each(begin(), end(), APSV2(u, v, size())).X;
 }
 
-double ParticleBunch::AdjustRefMomentumToMean ()
+double ParticleBunch::AdjustRefMomentumToMean()
 {
-	return AdjustRefMomentum( Mean(begin(),end(),ps_DP) );
+	return AdjustRefMomentum(Mean(begin(), end(), ps_DP));
 }
 
-double ParticleBunch::AdjustRefMomentum (double dpp)
+double ParticleBunch::AdjustRefMomentum(double dpp)
 {
-	double onePlusDpp = 1+dpp;
+	double onePlusDpp = 1 + dpp;
 
-	for(iterator p=begin(); p!=end(); p++)
+	for(iterator p = begin(); p != end(); p++)
 	{
-		p->dp() = (p->dp()-dpp)/onePlusDpp;
+		p->dp() = (p->dp() - dpp) / onePlusDpp;
 	}
 
-	double P0 = onePlusDpp*GetReferenceMomentum();
+	double P0 = onePlusDpp * GetReferenceMomentum();
 	SetReferenceMomentum(P0);
 	return P0;
 }
 
-double ParticleBunch::AdjustRefTimeToMean ()
+double ParticleBunch::AdjustRefTimeToMean()
 {
-	double meanct = Mean(begin(),end(),ps_CT);
-	for(iterator p=begin(); p!=end(); p++)
+	double meanct = Mean(begin(), end(), ps_CT);
+	for(iterator p = begin(); p != end(); p++)
 	{
-		(*p).ct()-=meanct;
+		(*p).ct() -= meanct;
 	}
 
-	double CT = GetReferenceTime()-meanct;
+	double CT = GetReferenceTime() - meanct;
 	SetReferenceTime(CT);
 	return CT;
 }
 
-Histogram& ParticleBunch::ProjectDistribution (PScoord axis, Histogram& hist) const
+Histogram& ParticleBunch::ProjectDistribution(PScoord axis, Histogram& hist) const
 {
 	// TODO:
 	return hist;
 }
 
-
-bool ParticleBunch::ApplyTransformation (const Transform3D& t)
+bool ParticleBunch::ApplyTransformation(const Transform3D& t)
 {
 	if(!t.isIdentity())
 	{
@@ -300,48 +317,48 @@ bool ParticleBunch::ApplyTransformation (const Transform3D& t)
 	return true;
 }
 
-void ParticleBunch::SortByCT ()
+void ParticleBunch::SortByCT()
 {
 	//	pArray.sort();
 	SortArray(pArray);
 }
 
-void ParticleBunch::Output (std::ostream& os) const
+void ParticleBunch::Output(std::ostream& os) const
 {
 	Output(os, true);
 }
 
-void ParticleBunch::Output (std::ostream& os, bool show_header) const
+void ParticleBunch::Output(std::ostream& os, bool show_header) const
 {
-	int oldp=os.precision(16);
-	ios_base::fmtflags oflg = os.setf(ios::scientific,ios::floatfield);
+	int oldp = os.precision(16);
+	ios_base::fmtflags oflg = os.setf(ios::scientific, ios::floatfield);
 	if(show_header)
 	{
 		os << "#T P0 X XP Y YP CT DP" << std::endl;
 	}
-	for(PSvectorArray::const_iterator p = begin(); p!=end(); p++)
+	for(PSvectorArray::const_iterator p = begin(); p != end(); p++)
 	{
-		os<<std::setw(35)<<GetReferenceTime();
-		os<<std::setw(35)<<GetReferenceMomentum();
-		for(size_t k=0; k<6; k++)
+		os << std::setw(35) << GetReferenceTime();
+		os << std::setw(35) << GetReferenceMomentum();
+		for(size_t k = 0; k < 6; k++)
 		{
-			os<<std::setw(35)<<(*p)[k];
+			os << std::setw(35) << (*p)[k];
 		}
-		os<<endl;
+		os << endl;
 	}
 	os.precision(oldp);
 	os.flags(oflg);
 }
 
-void ParticleBunch::OutputIndexParticle (std::ostream& os, int index) const
+void ParticleBunch::OutputIndexParticle(std::ostream& os, int index) const
 {
 	//cout << "outputting index " << index << " particle" << endl;
 	int oldp = os.precision(16);
-	ios_base::fmtflags oflg = os.setf(ios::scientific,ios::floatfield);
+	ios_base::fmtflags oflg = os.setf(ios::scientific, ios::floatfield);
 
-	PSvectorArray::const_iterator p = begin()+ index;
+	PSvectorArray::const_iterator p = begin() + index;
 
-	for(size_t k=0; k<6; k++)
+	for(size_t k = 0; k < 6; k++)
 	{
 		os << std::setw(35) << (*p)[k];
 	}
@@ -350,33 +367,33 @@ void ParticleBunch::OutputIndexParticle (std::ostream& os, int index) const
 	os.flags(oflg);
 }
 
-void ParticleBunch::Input (double Q, std::istream& is)
+void ParticleBunch::Input(double Q, std::istream& is)
 {
 	double reftime, refmom;
 	PSvector p;
 	string line;
 	while(getline(is, line))
 	{
-		if (line == "" || line[0] == '#')
+		if(line == "" || line[0] == '#')
 		{
 			continue;
 		}
 		istringstream liness(line);
-		liness>>reftime>>refmom>>p;
+		liness >> reftime >> refmom >> p;
 		push_back(p);
 
 		SetReferenceTime(reftime);
 		SetReferenceMomentum(refmom);
 	}
-	qPerMP = Q/size();
+	qPerMP = Q / size();
 }
 
-void ParticleBunch::SetCentroid ()
+void ParticleBunch::SetCentroid()
 {
 	PSvector x;
 	GetCentroid(x);
-	x-=FirstParticle();
-	for(PSvectorArray::iterator p = begin()+1; p!=end(); p++)
+	x -= FirstParticle();
+	for(PSvectorArray::iterator p = begin() + 1; p != end(); p++)
 	{
 		p->x() -= x.x();
 		p->xp() -= x.xp();
@@ -387,7 +404,7 @@ void ParticleBunch::SetCentroid ()
 	}
 }
 
-void ParticleBunch::SetCentroid (const Particle& x0)
+void ParticleBunch::SetCentroid(const Particle& x0)
 {
 	FirstParticle() = x0;
 	SetCentroid();
@@ -413,45 +430,44 @@ double ParticleBunch::GetParticleLifetime() const
 	return 0;
 }
 
-
 //MPI code
 #ifdef ENABLE_MPI
 
 void ParticleBunch::MPI_Initialize()
 {
 	//Check of the MPI runtime has started
-	if (!MPI::Is_initialized())
+	if(!MPI::Is_initialized())
 	{
 		//If not, start it.
 		MPI::Init();
 	}
 
 	/*
-	We want MPI to throw C++ exceptions that we can then deal with. For example:
+	   We want MPI to throw C++ exceptions that we can then deal with. For example:
 
-		try
-		{
-			MPI::something();
-		}
-		catch(MPI::Exception fail)
-		{
-			cout << fail.Get_error_string() << endl;
-			cout << fail.Get_error_code() << endl;
-			MPI::COMM_WORLD.Abort();
-		}
-	*/
+	    try
+	    {
+	        MPI::something();
+	    }
+	    catch(MPI::Exception fail)
+	    {
+	        cout << fail.Get_error_string() << endl;
+	        cout << fail.Get_error_code() << endl;
+	        MPI::COMM_WORLD.Abort();
+	    }
+	 */
 	MPI::COMM_WORLD.Set_errhandler(MPI::ERRORS_THROW_EXCEPTIONS);
 
 	//Total number of processors in the cluster
 	MPI_size = MPI::COMM_WORLD.Get_size();
 	/*
-		//Make sure we have 1 master, 2 nodes until the particle distribution is "fixed"
-		if (MPI_size <= 2)
-		{
-			cout << "At least 2 nodes are currently required." << endl;
-			MPI::COMM_WORLD.Abort(1);
-		}
-	*/
+	    //Make sure we have 1 master, 2 nodes until the particle distribution is "fixed"
+	    if (MPI_size <= 2)
+	    {
+	        cout << "At least 2 nodes are currently required." << endl;
+	        MPI::COMM_WORLD.Abort(1);
+	    }
+	 */
 	//find this processes rank
 	MPI_rank = MPI::COMM_WORLD.Get_rank();
 
@@ -476,7 +492,7 @@ void ParticleBunch::Create_MPI_particle()
 	//We now create the new datatype
 	try
 	{
-		MPI_Particle = MPI::DOUBLE.Create_struct(count,blockcounts,offsets,oldtypes);
+		MPI_Particle = MPI::DOUBLE.Create_struct(count, blockcounts, offsets, oldtypes);
 	}
 	catch(MPI::Exception fail)
 	{
@@ -511,7 +527,7 @@ void ParticleBunch::MPI_Finalize()
 void ParticleBunch::master_recv_particles_from_nodes()
 {
 	PSvector Particle_buffer;
-	for(int n = 1; n<MPI_size; n++)
+	for(int n = 1; n < MPI_size; n++)
 	{
 		//We probe the incomming send to see how many particles we are recieving.
 		MPI::COMM_WORLD.Probe(n, MPI_ANY_TAG, MPI_status);
@@ -522,11 +538,12 @@ void ParticleBunch::master_recv_particles_from_nodes()
 		//We make a suitable buffer
 		try
 		{
-			particle_recv_buffer = new double[recv_count*coords];
+			particle_recv_buffer = new double[recv_count * coords];
 		}
 		catch(std::bad_alloc)
 		{
-			cout << "bad_alloc in master_recv_particles_from_nodes() on node " << MPI_rank << " - recv count: " << recv_count << "\t coords: " << coords << endl;
+			cout << "bad_alloc in master_recv_particles_from_nodes() on node " << MPI_rank << " - recv count: "
+				 << recv_count << "\t coords: " << coords << endl;
 			MPI::COMM_WORLD.Abort(1);
 		}
 
@@ -534,21 +551,20 @@ void ParticleBunch::master_recv_particles_from_nodes()
 		MPI::COMM_WORLD.Recv(particle_recv_buffer, recv_count, MPI_Particle, n, 1, MPI_status);
 
 		//Put the recv buffer into the particle array
-		for (int i = 0; i< recv_count; i++)
+		for(int i = 0; i < recv_count; i++)
 		{
-			for (int j = 0; j < coords; j++)
+			for(int j = 0; j < coords; j++)
 			{
-				Particle_buffer[j] = particle_recv_buffer[(i*coords)+j];
+				Particle_buffer[j] = particle_recv_buffer[(i * coords) + j];
 			}
 			//Push back each particle onto the current master node bunch.
 			push_back(Particle_buffer);
 		}
 
-		delete [] particle_recv_buffer;
+		delete[] particle_recv_buffer;
 		particle_recv_buffer = NULL;
-	}//Merge bunches now finished.
+	} //Merge bunches now finished.
 }
-
 
 void ParticleBunch::node_recv_particles_from_master()
 {
@@ -565,11 +581,12 @@ void ParticleBunch::node_recv_particles_from_master()
 	//We make a suitable buffer
 	try
 	{
-		particle_recv_buffer = new double[recv_count*coords];
+		particle_recv_buffer = new double[recv_count * coords];
 	}
 	catch(std::bad_alloc)
 	{
-		cout << "bad_alloc in node_recv_particles_from_master() on node " << MPI_rank << " - recv count: " << recv_count << "\t coords: " << coords << endl;
+		cout << "bad_alloc in node_recv_particles_from_master() on node " << MPI_rank << " - recv count: "
+			 << recv_count << "\t coords: " << coords << endl;
 		MPI::COMM_WORLD.Abort(1);
 	}
 
@@ -581,18 +598,18 @@ void ParticleBunch::node_recv_particles_from_master()
 	PSvector Particle_buffer;
 
 	//Put the recv buffer into the particle array
-	for (int i = 0; i< recv_count; i++)
+	for(int i = 0; i < recv_count; i++)
 	{
-		for (int j = 0; j < coords; j++)
+		for(int j = 0; j < coords; j++)
 		{
-			Particle_buffer[j] = particle_recv_buffer[(i*coords)+j];
+			Particle_buffer[j] = particle_recv_buffer[(i * coords) + j];
 		}
 
 		//Push back each particle onto the cleared currentBunch
 		push_back(Particle_buffer);
 	}
 
-	delete [] particle_recv_buffer;
+	delete[] particle_recv_buffer;
 	particle_recv_buffer = NULL;
 }
 
@@ -607,11 +624,12 @@ void ParticleBunch::node_send_particles_to_master()
 	//This is crude, but works.
 	try
 	{
-		particle_send_buffer = new double[particle_count*coords];
+		particle_send_buffer = new double[particle_count * coords];
 	}
 	catch(std::bad_alloc)
 	{
-		cout << "bad_alloc in node_send_particles_to_master() on node " << MPI_rank << " - particle count: " << particle_count << "\t coords: " << coords << endl;
+		cout << "bad_alloc in node_send_particles_to_master() on node " << MPI_rank << " - particle count: "
+			 << particle_count << "\t coords: " << coords << endl;
 		MPI::COMM_WORLD.Abort(1);
 	}
 
@@ -621,33 +639,33 @@ void ParticleBunch::node_send_particles_to_master()
 	//for (int n=0; n<particle_count; n++)
 	//{
 
-	int n=0;
-	for (PSvectorArray::iterator ip=begin(); ip!=end(); ip++)
+	int n = 0;
+	for(PSvectorArray::iterator ip = begin(); ip != end(); ip++)
 	{
 		//for (int j=0; j<coords; j++)
-		for (int j=0; j<6; j++)
+		for(int j = 0; j < 6; j++)
 		{
-			particle_send_buffer[(n*coords)+0] = ip->x();
-			particle_send_buffer[(n*coords)+1] = ip->xp();
-			particle_send_buffer[(n*coords)+2] = ip->y();
-			particle_send_buffer[(n*coords)+3] = ip->yp();
-			particle_send_buffer[(n*coords)+4] = ip->ct();
-			particle_send_buffer[(n*coords)+5] = ip->dp();
+			particle_send_buffer[(n * coords) + 0] = ip->x();
+			particle_send_buffer[(n * coords) + 1] = ip->xp();
+			particle_send_buffer[(n * coords) + 2] = ip->y();
+			particle_send_buffer[(n * coords) + 3] = ip->yp();
+			particle_send_buffer[(n * coords) + 4] = ip->ct();
+			particle_send_buffer[(n * coords) + 5] = ip->dp();
 		}
 		n++;
 	}
 	/*
-	for (int j=0; j<coords; j++)
-	{
-		particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
-	}
-	*/
+	   for (int j=0; j<coords; j++)
+	   {
+	    particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
+	   }
+	 */
 	//}
 
 	//Send everything to the master node
 	MPI::COMM_WORLD.Send(&particle_send_buffer[0], particle_count, MPI_Particle, 0, 1);
 
-	delete [] particle_send_buffer;
+	delete[] particle_send_buffer;
 	particle_send_buffer = NULL;
 }
 
@@ -658,32 +676,33 @@ void ParticleBunch::master_send_particles_to_nodes()
 
 	//The bunch must now be converted into a format suitable for sending again.
 	//The leftover extra particles can be added to the "local" machine bunch.
-	int particles_per_node = particle_count/MPI_size;
+	int particles_per_node = particle_count / MPI_size;
 	int remaining_particles = particle_count % MPI_size;
 
 	try
 	{
-		particle_send_buffer = new double[particle_count*coords];
+		particle_send_buffer = new double[particle_count * coords];
 	}
 	catch(std::bad_alloc)
 	{
-		cout << "bad_alloc in master_send_particles_to_nodes() on node " << MPI_rank << "  - particle count: " << particle_count << "\t coords: " << coords << endl;
+		cout << "bad_alloc in master_send_particles_to_nodes() on node " << MPI_rank << "  - particle count: "
+			 << particle_count << "\t coords: " << coords << endl;
 		MPI::COMM_WORLD.Abort(1);
 	}
 
 	//Test new code
-	int n=0;
-	for (PSvectorArray::iterator ip=begin(); ip!=end(); ip++)
+	int n = 0;
+	for(PSvectorArray::iterator ip = begin(); ip != end(); ip++)
 	{
 		//for (int j=0; j<coords; j++)
-		for (int j=0; j<6; j++)
+		for(int j = 0; j < 6; j++)
 		{
-			particle_send_buffer[(n*coords)+0] = ip->x();
-			particle_send_buffer[(n*coords)+1] = ip->xp();
-			particle_send_buffer[(n*coords)+2] = ip->y();
-			particle_send_buffer[(n*coords)+3] = ip->yp();
-			particle_send_buffer[(n*coords)+4] = ip->ct();
-			particle_send_buffer[(n*coords)+5] = ip->dp();
+			particle_send_buffer[(n * coords) + 0] = ip->x();
+			particle_send_buffer[(n * coords) + 1] = ip->xp();
+			particle_send_buffer[(n * coords) + 2] = ip->y();
+			particle_send_buffer[(n * coords) + 3] = ip->yp();
+			particle_send_buffer[(n * coords) + 4] = ip->ct();
+			particle_send_buffer[(n * coords) + 5] = ip->dp();
 		}
 		n++;
 	}
@@ -693,9 +712,10 @@ void ParticleBunch::master_send_particles_to_nodes()
 
 	//Resend
 	// 1 -> total nodes
-	for(int n = 0; n<(MPI_size-1); n++)
+	for(int n = 0; n < (MPI_size - 1); n++)
 	{
-		MPI::COMM_WORLD.Send(&particle_send_buffer[(particles_per_node*n*coords)], particles_per_node, MPI_Particle, (n+1), 1);
+		MPI::COMM_WORLD.Send(&particle_send_buffer[(particles_per_node * n * coords)], particles_per_node, MPI_Particle,
+			(n + 1), 1);
 	}
 
 	//Finally the local bunch must be reconstructed from the remaining particles.
@@ -704,17 +724,17 @@ void ParticleBunch::master_send_particles_to_nodes()
 
 	PSvector Particle_buffer;
 	//And then refilled.
-	for (int i = (particles_per_node*(MPI_size-1)); i<particle_count; i++)
+	for(int i = (particles_per_node * (MPI_size - 1)); i < particle_count; i++)
 	{
-		for (int j = 0; j < coords; j++)
+		for(int j = 0; j < coords; j++)
 		{
-			Particle_buffer[j] = particle_send_buffer[(i*coords)+j];
+			Particle_buffer[j] = particle_send_buffer[(i * coords) + j];
 		}
 
 		//Push back each particle onto the cleared currentBunch
 		push_back(Particle_buffer);
 	}
-	delete [] particle_send_buffer;
+	delete[] particle_send_buffer;
 	particle_send_buffer = NULL;
 
 }
@@ -732,13 +752,13 @@ void ParticleBunch::gather()
 	MerlinProfile::StartProcessTimer("GATHER");
 #endif
 
-	if (init == false)
+	if(init == false)
 	{
 		MPI_Initialize();
 		init = true;
 	}
 	MPI::COMM_WORLD.Barrier();
-	if (MPI_rank == 0)
+	if(MPI_rank == 0)
 	{
 		master_recv_particles_from_nodes();
 	}
@@ -766,7 +786,7 @@ void ParticleBunch::distribute()
 	MPI::COMM_WORLD.Barrier();
 
 	//Set up
-	if (MPI_rank == 0)
+	if(MPI_rank == 0)
 	{
 		master_send_particles_to_nodes();
 	}
@@ -786,7 +806,7 @@ void ParticleBunch::SendReferenceMomentum()
 	Check_MPI_init();
 
 	MPI::COMM_WORLD.Barrier();
-	if (MPI_rank == 0)
+	if(MPI_rank == 0)
 	{
 		//Get reference momentum
 		AdjustRefMomentumToMean();
@@ -813,19 +833,19 @@ void ParticleBunch::SendReferenceMomentum()
 }
 
 //Destructor: Only enabled with MPI - Will clean up and finalize.
-ParticleBunch::~ParticleBunch ()
+ParticleBunch::~ParticleBunch()
 {
 	//MPI_Finalize();
 }
 
 void ParticleBunch::Check_MPI_init()
 {
-	if (init == false)
+	if(init == false)
 	{
 		MPI_Initialize();
 		init = true;
 	}
 }
-#endif	//end MPI code
+#endif  //end MPI code
 
 } // end namespace ParticleTracking

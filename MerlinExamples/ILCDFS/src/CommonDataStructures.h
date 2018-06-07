@@ -16,12 +16,12 @@
 
 typedef std::vector<Klystron*> KlystronArray;
 typedef std::vector<ReferenceParticle*> ReferenceParticleArray;
-typedef std::pair<size_t,size_t> DFS_Segment;
+typedef std::pair<size_t, size_t> DFS_Segment;
 typedef std::vector<size_t> IntegerArray;
 
 inline std::ostream& operator<<(std::ostream& os, const DFS_Segment& seg)
 {
-	return os<<'['<<seg.first<<','<<seg.second<<']';
+	return os << '[' << seg.first << ',' << seg.second << ']';
 }
 
 #endif

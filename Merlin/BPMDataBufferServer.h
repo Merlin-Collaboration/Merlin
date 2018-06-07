@@ -13,16 +13,16 @@
 #include "BPMDataBuffer.h"
 
 /**
-*	Singleton instance of a storage class for BPMChannel
-*	Data objects. BPMChannelData are indexed by their
-*	associated BPM pointer.
-*/
+ *	Singleton instance of a storage class for BPMChannel
+ *	Data objects. BPMChannelData are indexed by their
+ *	associated BPM pointer.
+ */
 
 class BPMDataBufferServer
 {
 public:
 
-	BPMDataBuffer* GetDataBuffer (BPM* bpm, bool create = true);
+	BPMDataBuffer* GetDataBuffer(BPM* bpm, bool create = true);
 	void Dump(ostream& os);
 
 private:

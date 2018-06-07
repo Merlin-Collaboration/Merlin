@@ -11,7 +11,6 @@
 #include "StdIntegrators.h"
 #include "ParticleComponentTracker.h"
 
-
 namespace ParticleTracking
 {
 namespace SYMPLECTIC
@@ -19,18 +18,17 @@ namespace SYMPLECTIC
 
 using namespace ParticleTracking;
 
-DECL_SIMPLE_INTG(DriftCI,Drift)
-DECL_SIMPLE_INTG(TWRFStructureCI,TWRFStructure)
-DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure)
-DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
-DECL_SIMPLE_INTG(MarkerCI,Marker)
+DECL_SIMPLE_INTG(DriftCI, Drift)
+DECL_SIMPLE_INTG(TWRFStructureCI, TWRFStructure)
+DECL_SIMPLE_INTG(SWRFStructureCI, SWRFStructure)
+DECL_SIMPLE_INTG(RectMultipoleCI, RectMultipole)
+DECL_SIMPLE_INTG(MarkerCI, Marker)
 
 // from std integrators
-DECL_SIMPLE_INTG(MonitorCI,Monitor)
-DECL_SIMPLE_INTG(SolenoidCI,Solenoid)
+DECL_SIMPLE_INTG(MonitorCI, Monitor)
+DECL_SIMPLE_INTG(SolenoidCI, Solenoid)
 
-
-class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend>
+class SectorBendCI: public ParticleComponentTracker::Integrator<SectorBend>
 {
 public:
 	void TrackStep(double);
@@ -38,8 +36,7 @@ public:
 	void TrackExit();
 };
 
-
-DECL_INTG_SET(ParticleComponentTracker,StdISet)
+DECL_INTG_SET(ParticleComponentTracker, StdISet)
 
 }  // end namespace SYMPLECTIC
 }

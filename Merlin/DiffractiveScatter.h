@@ -17,176 +17,178 @@ namespace ParticleTracking
 {
 
 /**
-* Class for all things relating to proton-proton single diffractive scattering.
-* This includes:
-*  + Generation of differential cross sections.
-*  + Integration of the differential cross sections.
-*  + Generation of momentum transfer t values for calculation of scattering angles.
-*  + Generation of mass loss values for calculation of momentum changes.
-*  + Multiple scattering models
-*/
+ * Class for all things relating to proton-proton single diffractive scattering.
+ * This includes:
+ *  + Generation of differential cross sections.
+ *  + Integration of the differential cross sections.
+ *  + Generation of momentum transfer t values for calculation of scattering angles.
+ *  + Generation of mass loss values for calculation of momentum changes.
+ *  + Multiple scattering models
+ */
 class ppDiffractiveScatter
 {
 public:
 	/**
-	* class constructor
-	*/
-	ppDiffractiveScatter(): Configured(false),Debug(false) {}
+	 * class constructor
+	 */
+	ppDiffractiveScatter() :
+		Configured(false), Debug(false)
+	{
+	}
 	~ppDiffractiveScatter();
 	/**
-	* Generates the required differential cross sections and integrates for the specified energy
-	*/
+	 * Generates the required differential cross sections and integrates for the specified energy
+	 */
 	void GenerateDistribution(double energy);
 
 	/**
-	* Generates the elastic differential cross section
-	* Places the results into the vectors t and DSig
-	* @param energy sqrt s
-	*/
+	 * Generates the elastic differential cross section
+	 * Places the results into the vectors t and DSig
+	 * @param energy sqrt s
+	 */
 	void GenerateDsigDtDxi(double energy);
 
 	/**
-	* Integrates the elastic differential cross section
-	*/
+	 * Integrates the elastic differential cross section
+	 */
 	void IntegrateDsigDtDxi();
 
 	/**
-	* Picks a t value from the generated distribution (including interpolation)
-	*/
+	 * Picks a t value from the generated distribution (including interpolation)
+	 */
 	double SelectT();
 
 	/**
-	* Picks an xi value from the generated distribution (including interpolation)
-	*/
+	 * Picks an xi value from the generated distribution (including interpolation)
+	 */
 	double SelectXi();
 
 	/**
-	* Sets the minimum t value for generation
-	* @param tmin the minimum t value to generate
-	*/
+	 * Sets the minimum t value for generation
+	 * @param tmin the minimum t value to generate
+	 */
 	void SetTMin(double tmin);
 
 	/**
-	* Sets the maximum t value for generation
-	*/
+	 * Sets the maximum t value for generation
+	 */
 	void SetTMax(double tmax);
 
 	/**
-	* Sets the maximum t value for generation
-	* @param tmin the minimum xi value to generate
-	*/
+	 * Sets the maximum t value for generation
+	 * @param tmin the minimum xi value to generate
+	 */
 	void SetXiMax(double ximax);
 
 	/**
-	* Sets the minimum xi value for generation
-	* @param tmin the minimum xi value to generate
-	*/
+	 * Sets the minimum xi value for generation
+	 * @param tmin the minimum xi value to generate
+	 */
 	void SetXiMin(double ximin);
 
 	/**
-	* Sets the step size in t for the differential cross section generation
-	* @param step The step size to generate
-	*/
+	 * Sets the step size in t for the differential cross section generation
+	 * @param step The step size to generate
+	 */
 	void SetTStepSize(double step);
 
 	/**
-	* Sets the step size in Xi for the differential cross section generation
-	* @param step The step size to generate
-	*/
+	 * Sets the step size in Xi for the differential cross section generation
+	 * @param step The step size to generate
+	 */
 	void SetXiStepSize(double step);
 
 	/**
-	* Gets the currently set minimum t value
-	*/
+	 * Gets the currently set minimum t value
+	 */
 	double GetTMin() const;
 
 	/**
-	* Gets the currently set maximum t value
-	*/
+	 * Gets the currently set maximum t value
+	 */
 	double GetTMax() const;
 
 	/**
-	* Gets the currently set minimum xi value
-	*/
+	 * Gets the currently set minimum xi value
+	 */
 	double GetXiMin() const;
 
 	/**
-	* Gets the currently set maximum xo value
-	*/
+	 * Gets the currently set maximum xo value
+	 */
 	double GetXiMax() const;
 
 	/**
-	* Gets the currently set t step size
-	*/
+	 * Gets the currently set t step size
+	 */
 	double GetTStepSize() const;
 
 	/**
-	* Gets the currently set xi step size
-	*/
+	 * Gets the currently set xi step size
+	 */
 	double GetXiStepSize() const;
 
 	/**
-	* Gets the Integrated Single diffractive cross section
-	*/
+	 * Gets the Integrated Single diffractive cross section
+	 */
 	double GetDiffractiveCrossSection() const;
 
-
 	/**
-	* Debug toggle - set to true or false to enable/disable debugging output
-	* @param debug Turn on and off debugging output
-	*/
+	 * Debug toggle - set to true or false to enable/disable debugging output
+	 * @param debug Turn on and off debugging output
+	 */
 	void EnableDebug(bool debug);
 
 //Get our scattering (roger)
-	std::pair<double,double> Select();
+	std::pair<double, double> Select();
 
 private:
 	/**
-	* Generates the differential cross section at a given t value and energy
-	* The energy is the sqrt(s) of the interaction
-	*/
-	inline double PomeronScatter(const double t_input,const double xi_input,const double energy) const;
-	double PomeronScatter2(double t_input,double xi_input,double energy);
+	 * Generates the differential cross section at a given t value and energy
+	 * The energy is the sqrt(s) of the interaction
+	 */
+	inline double PomeronScatter(const double t_input, const double xi_input, const double energy) const;
+	double PomeronScatter2(double t_input, double xi_input, double energy);
 
 	/**
-	* Interpolation classes for the cross section data
-	*/
+	 * Interpolation classes for the cross section data
+	 */
 	Interpolation *LinearInterpolation;
 	Interpolation *InversionInterpolation;
 
 	/**
-	* bool to check if the cross sections have been generated
-	*/
+	 * bool to check if the cross sections have been generated
+	 */
 	bool Configured;
 
 	/**
-	* double to store the minimum t value to generate
-	*/
+	 * double to store the minimum t value to generate
+	 */
 	double t_min;
 
 	/**
-	* double to store the maximum t value to generate
-	*/
+	 * double to store the maximum t value to generate
+	 */
 	double t_max;
 
 	/**
-	* double to store the minimum xi value to generate
-	*/
+	 * double to store the minimum xi value to generate
+	 */
 	double xi_min;
 
 	/**
-	* double to store the maximum xi value to generate
-	*/
+	 * double to store the maximum xi value to generate
+	 */
 	double xi_max;
 
 	/**
-	* double to store the t step size
-	*/
+	 * double to store the t step size
+	 */
 	double t_step;
 
 	/**
-	* double to store the xi step size
-	*/
+	 * double to store the xi step size
+	 */
 	double xi_step;
 
 	std::vector<double> UniformT;
@@ -196,13 +198,13 @@ private:
 	std::vector<double> Sig;
 
 	/**
-	* The Integrated Single diffractive cross section
-	*/
+	 * The Integrated Single diffractive cross section
+	 */
 	double SigDiffractive;
 
 	/**
-	* Enable Scattering/MC debugging
-	*/
+	 * Enable Scattering/MC debugging
+	 */
 	bool Debug;
 
 //Roger stuff - array size
@@ -213,7 +215,7 @@ private:
 //s of the interaction
 	double ss;
 
-};//End class ppDiffractiveScatter
+}; //End class ppDiffractiveScatter
 
-}//End namespace ParticleTracking
+} //End namespace ParticleTracking
 #endif

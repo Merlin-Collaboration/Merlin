@@ -12,7 +12,7 @@ void DataTable::AddColumn(std::string col_name, char type)
 {
 	if(lookup.count(col_name))
 	{
-		throw std::invalid_argument("Column '"+col_name+"' already exists");
+		throw std::invalid_argument("Column '" + col_name + "' already exists");
 	}
 
 	size_t position;
@@ -37,7 +37,7 @@ void DataTable::AddColumn(std::string col_name, char type)
 		break;
 	}
 	default:
-		throw WrongTypeException(std::string("Unknown type: '")+type+"'");
+		throw WrongTypeException(std::string("Unknown type: '") + type + "'");
 	}
 
 	col_names.push_back(col_name);
@@ -47,15 +47,15 @@ void DataTable::AddColumn(std::string col_name, char type)
 
 size_t DataTable::AddRow()
 {
-	for(auto &a: data_d)
+	for(auto &a : data_d)
 	{
 		a.emplace_back();
 	}
-	for(auto &a: data_i)
+	for(auto &a : data_i)
 	{
 		a.emplace_back();
 	}
-	for(auto &a: data_s)
+	for(auto &a : data_s)
 	{
 		a.emplace_back();
 	}
@@ -63,13 +63,12 @@ size_t DataTable::AddRow()
 	return length - 1;
 }
 
-
 double DataTable::Get_d(const std::string col_name, size_t i) const
 {
 	location l = lookup.at(col_name);
 	if(l.type != 'd')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a double");
+		throw WrongTypeException("Column '" + col_name + "' is not a double");
 	}
 	return data_d.at(l.pos).at(i);
 }
@@ -79,17 +78,17 @@ int DataTable::Get_i(const std::string col_name, size_t i) const
 	location l = lookup.at(col_name);
 	if(l.type != 'i')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a int");
+		throw WrongTypeException("Column '" + col_name + "' is not a int");
 	}
 	return data_i.at(l.pos).at(i);
 }
 
-std::string DataTable::Get_s(const std::string col_name, size_t i)const
+std::string DataTable::Get_s(const std::string col_name, size_t i) const
 {
 	location l = lookup.at(col_name);
 	if(l.type != 's')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a string");
+		throw WrongTypeException("Column '" + col_name + "' is not a string");
 	}
 	return data_s.at(l.pos).at(i);
 }
@@ -99,7 +98,7 @@ void DataTable::Set(const std::string col_name, size_t i, double x)
 	location l = lookup.at(col_name);
 	if(l.type != 'd')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a double");
+		throw WrongTypeException("Column '" + col_name + "' is not a double");
 	}
 	data_d.at(l.pos).at(i) = x;
 }
@@ -109,7 +108,7 @@ void DataTable::Set(const std::string col_name, size_t i, int x)
 	location l = lookup.at(col_name);
 	if(l.type != 'i')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a int");
+		throw WrongTypeException("Column '" + col_name + "' is not a int");
 	}
 	data_i.at(l.pos).at(i) = x;
 }
@@ -119,7 +118,7 @@ void DataTable::Set(const std::string col_name, size_t i, std::string x)
 	location l = lookup.at(col_name);
 	if(l.type != 's')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a string");
+		throw WrongTypeException("Column '" + col_name + "' is not a string");
 	}
 	data_s.at(l.pos).at(i) = x;
 }
@@ -159,12 +158,11 @@ std::string DataTable::GetAsStr(const std::string col_name, size_t i) const
 	}
 }
 
-
 void DataTable::HeaderAddColumn(std::string col_name, char type)
 {
 	if(hlookup.count(col_name))
 	{
-		throw std::invalid_argument("Header '"+col_name+"' already exists");
+		throw std::invalid_argument("Header '" + col_name + "' already exists");
 	}
 
 	size_t position;
@@ -189,7 +187,7 @@ void DataTable::HeaderAddColumn(std::string col_name, char type)
 		break;
 	}
 	default:
-		throw WrongTypeException(std::string("Unknown type: '")+type+"'");
+		throw WrongTypeException(std::string("Unknown type: '") + type + "'");
 	}
 
 	hcol_names.push_back(col_name);
@@ -202,7 +200,7 @@ double DataTable::HeaderGet_d(const std::string col_name) const
 	location l = hlookup.at(col_name);
 	if(l.type != 'd')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a double");
+		throw WrongTypeException("Column '" + col_name + "' is not a double");
 	}
 	return hdata_d.at(l.pos);
 }
@@ -212,17 +210,17 @@ int DataTable::HeaderGet_i(const std::string col_name) const
 	location l = hlookup.at(col_name);
 	if(l.type != 'i')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a int");
+		throw WrongTypeException("Column '" + col_name + "' is not a int");
 	}
 	return hdata_i.at(l.pos);
 }
 
-std::string DataTable::HeaderGet_s(const std::string col_name)const
+std::string DataTable::HeaderGet_s(const std::string col_name) const
 {
 	location l = hlookup.at(col_name);
 	if(l.type != 's')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a string");
+		throw WrongTypeException("Column '" + col_name + "' is not a string");
 	}
 	return hdata_s.at(l.pos);
 }
@@ -232,7 +230,7 @@ void DataTable::HeaderSet(const std::string col_name, double x)
 	location l = hlookup.at(col_name);
 	if(l.type != 'd')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a double");
+		throw WrongTypeException("Column '" + col_name + "' is not a double");
 	}
 	hdata_d.at(l.pos) = x;
 }
@@ -242,7 +240,7 @@ void DataTable::HeaderSet(const std::string col_name, int x)
 	location l = hlookup.at(col_name);
 	if(l.type != 'i')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a int");
+		throw WrongTypeException("Column '" + col_name + "' is not a int");
 	}
 	hdata_i.at(l.pos) = x;
 }
@@ -252,7 +250,7 @@ void DataTable::HeaderSet(const std::string col_name, std::string x)
 	location l = hlookup.at(col_name);
 	if(l.type != 's')
 	{
-		throw WrongTypeException("Column '"+col_name+"' is not a string");
+		throw WrongTypeException("Column '" + col_name + "' is not a string");
 	}
 	hdata_s.at(l.pos) = x;
 }
@@ -292,7 +290,6 @@ std::string DataTable::HeaderGetAsStr(const std::string col_name) const
 	}
 }
 
-
 bool DataTable::HasCol(std::string col_name) const
 {
 	return lookup.count(col_name) == 1;
@@ -315,19 +312,19 @@ bool DataTable::HeaderHasKey(std::string col_name, char type) const
 
 void DataTable::OutputAscii(std::ostream &os) const
 {
-	for(auto &col_name: hcol_names)
+	for(auto &col_name : hcol_names)
 	{
 		os << col_name << "\t" << HeaderGetAsStr(col_name) << std::endl;
 	}
 
-	for(auto &col_name: col_names)
+	for(auto &col_name : col_names)
 	{
 		os << col_name << "\t";
 	}
 	os << std::endl;
 	for(size_t i = 0; i < length; i++)
 	{
-		for(auto &col_name: col_names)
+		for(auto &col_name : col_names)
 		{
 			os << GetAsStr(col_name, i) << "\t";
 		}
@@ -345,50 +342,48 @@ DataTableRowIterator DataTable::end() const
 	return DataTableRowIterator(this, length);
 }
 
-DataTableRow DataTableRowIterator::operator * ()
+DataTableRow DataTableRowIterator::operator *()
 {
 	return DataTableRow(dt, pos);
 }
 
-DataTableRowPtr DataTableRowIterator::operator -> ()
+DataTableRowPtr DataTableRowIterator::operator ->()
 {
 	return DataTableRowPtr(dt, pos);
 }
 
-DataTableRowIterator& DataTableRowIterator::operator++ ()
+DataTableRowIterator& DataTableRowIterator::operator++()
 {
 	++pos;
 	return *this;
 }
 
-DataTableRowIterator DataTableRowIterator::operator++ (int)
+DataTableRowIterator DataTableRowIterator::operator++(int)
 {
 	auto ret = *this;
 	++pos;
 	return ret;
 }
 
-
-DataTableRowIterator& DataTableRowIterator::operator-- ()
+DataTableRowIterator& DataTableRowIterator::operator--()
 {
 	--pos;
 	return *this;
 }
 
-DataTableRowIterator DataTableRowIterator::operator-- (int)
+DataTableRowIterator DataTableRowIterator::operator--(int)
 {
 	auto ret = *this;
 	--pos;
 	return ret;
 }
 
-
-bool DataTableRowIterator::operator== (const DataTableRowIterator &other) const
+bool DataTableRowIterator::operator==(const DataTableRowIterator &other) const
 {
 	return (dt == other.dt) && (pos == other.pos);
 }
 
-bool DataTableRowIterator::operator!= (const DataTableRowIterator &other) const
+bool DataTableRowIterator::operator!=(const DataTableRowIterator &other) const
 {
 	return !(*this == other);
 }

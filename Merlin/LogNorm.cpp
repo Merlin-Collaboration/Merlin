@@ -17,7 +17,5 @@
 
 double LogNormal::operator()()
 {
-	return exp (this->Normal::operator()() );
+	return exp(this->Normal::operator()());
 }
-
-

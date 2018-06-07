@@ -10,6 +10,5 @@
 
 double NegativeExpntl::operator()()
 {
-	return -pMean * log(pGenerator -> asDouble());
+	return -pMean * log(pGenerator->asDouble());
 }
-

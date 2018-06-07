@@ -15,10 +15,10 @@
 namespace ParticleTracking
 {
 
-class ParticleMapCI : public ParticleComponentTracker::Integrator<ParticleMapComponent>
+class ParticleMapCI: public ParticleComponentTracker::Integrator<ParticleMapComponent>
 {
 public:
-	virtual void TrackStep (double ds);
+	virtual void TrackStep(double ds);
 };
 
 } // end namespace ParticleTracking

@@ -13,32 +13,32 @@
 
 class BPMDataBuffer;
 
-class BPMChannel : public ROChannel
+class BPMChannel: public ROChannel
 {
 public:
 
 	/**
-	*	Constructor taking the BPMDataBuffer, and the type of
-	*	channel ('X' or 'Y').
-	*/
-	BPMChannel (char XorY, BPMDataBuffer* dataBuff);
+	 *	Constructor taking the BPMDataBuffer, and the type of
+	 *	channel ('X' or 'Y').
+	 */
+	BPMChannel(char XorY, BPMDataBuffer* dataBuff);
 
 	/**
-	*	Returns the ID of the channel (parameter).
-	*	@return Channel ID
-	*/
-	virtual std::string GetID () const;
+	 *	Returns the ID of the channel (parameter).
+	 *	@return Channel ID
+	 */
+	virtual std::string GetID() const;
 
 	/**
-	*	Returns the current value of the parameter/attribute
-	*	associated with the channel.
-	*	@return Current value of the associated parameter/attribute
-	*/
-	virtual double Read () const;
+	 *	Returns the current value of the parameter/attribute
+	 *	associated with the channel.
+	 *	@return Current value of the associated parameter/attribute
+	 */
+	virtual double Read() const;
 
 	/**
-	* Special function for setting arbitrary offset
-	*/
+	 * Special function for setting arbitrary offset
+	 */
 	void SetBPMOffset(double v);
 
 private:

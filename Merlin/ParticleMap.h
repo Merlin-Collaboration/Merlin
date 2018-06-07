@@ -11,28 +11,26 @@
 
 #include "merlin_config.h"
 
-
 namespace ParticleTracking
 {
 
 class ParticleBunch;
 
 /**
-*	An arbitrary map that can be applied to a ParticleBunch.
-*/
+ *	An arbitrary map that can be applied to a ParticleBunch.
+ */
 class ParticleMap
 {
 public:
 
-	virtual ~ParticleMap ();
+	virtual ~ParticleMap();
 
 	/**
-	*	Applies the map to the specified ParticleBunch.
-	*/
-	virtual ParticleBunch& Apply (ParticleBunch& bunch) const = 0;
+	 *	Applies the map to the specified ParticleBunch.
+	 */
+	virtual ParticleBunch& Apply(ParticleBunch& bunch) const = 0;
 
-
-	virtual void Invert () = 0;
+	virtual void Invert() = 0;
 
 protected:
 private:
@@ -40,16 +38,13 @@ private:
 };
 
 /**
-* Class ParticleMap
-*/
-inline ParticleMap::~ParticleMap ()
+ * Class ParticleMap
+ */
+inline ParticleMap::~ParticleMap()
 {
-
 
 }
 
 } //end namespace ParticleTracking
-
-
 
 #endif

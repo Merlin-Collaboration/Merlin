@@ -72,6 +72,3 @@ extern const double amu;
 }
 
 #endif
-
-
-

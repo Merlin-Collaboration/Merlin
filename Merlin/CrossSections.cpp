@@ -20,7 +20,6 @@
 #include "PhysicalConstants.h"
 #include "NumericalConstants.h"
 
-
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
@@ -48,8 +47,8 @@ CrossSections::CrossSections()
 	Set_density(0.);
 	Set_atomic_mass(0.);
 	Set_atomic_no(0.);
-	ElasticScatter 		= nullptr;
-	DiffractiveScatter 	= nullptr;
+	ElasticScatter      = nullptr;
+	DiffractiveScatter  = nullptr;
 	Set_E0(0.);
 }
 
@@ -73,19 +72,19 @@ CrossSections::CrossSections(Material* mat, double E, int scattertype)
 	Set_lambda_tot(0.);
 	Set_elastic_diff(0.);
 	Set_com_sqd(0.);
-	Set_density(mat->GetDensity()/1E3);
+	Set_density(mat->GetDensity() / 1E3);
 	Set_atomic_mass(mat->GetAtomicMass());
 	Set_atomic_no(mat->GetAtomicNumber());
 	Set_scat_type(scattertype);
-	ElasticScatter 		= nullptr;
-	DiffractiveScatter 	= nullptr;
+	ElasticScatter      = nullptr;
+	DiffractiveScatter  = nullptr;
 	Set_E0(E);
 
 	ConfigureCrossSections(Get_E0());
 	Set_lambda_tot(GetTotalMeanFreePath());
 
 	std::cout << "\nScatteringProcess::CrossSections: dEdx = " << mat->GetSixtrackdEdx() << endl;
-	std::cout << "ScatteringProcess::CrossSections: rho = " << mat->GetDensity()/1000.0 << endl;
+	std::cout << "ScatteringProcess::CrossSections: rho = " << mat->GetDensity() / 1000.0 << endl;
 	std::cout << "ScatteringProcess::CrossSections: A = " << mat->GetAtomicMass() << endl;
 	std::cout << "ScatteringProcess::CrossSections: Z = " << mat->GetAtomicNumber() << endl;
 	std::cout << "ScatteringProcess::CrossSections: X0 = " << mat->GetRadiationLengthInM() << endl;
@@ -108,11 +107,11 @@ CrossSections::CrossSections(Material* mat, double E, int scattertype)
 
 CrossSections::~CrossSections()
 {
-	if (ElasticScatter)
+	if(ElasticScatter)
 	{
 		delete ElasticScatter;
 	}
-	if (DiffractiveScatter)
+	if(DiffractiveScatter)
 	{
 		delete DiffractiveScatter;
 	}
@@ -120,14 +119,16 @@ CrossSections::~CrossSections()
 
 void CrossSections::ConfigureCrossSections(double E0)
 {
-	if (scat_type == 4)  //Merlin
+	if(scat_type == 4)  //Merlin
 	{
-		Set_com_sqd( (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0) + (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV) );
+		Set_com_sqd((2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0) + (2
+			* PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * PhysicalConstants::ProtonMassMeV
+			* PhysicalUnits::MeV));
 		std::cout << "\n\nScatteringProcess::Configure: com_sqd = " << Get_com_sqd() << endl;
 	}
 	else   //SixTrack
 	{
-		Set_com_sqd(2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0);	//ecmsq in SixTrack
+		Set_com_sqd(2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * E0);    //ecmsq in SixTrack
 		std::cout << "\n\nScatteringProcess::Configure: com_sqd = " << Get_com_sqd() << endl;
 	}
 
@@ -139,7 +140,7 @@ void CrossSections::ConfigureCrossSections(double E0)
 	double single_diffractive_const = 0.00068;
 	double pp_tot_ref = 0.04;
 
-	double free_nucleon_count =  free_nucleon_const * pow(atomic_mass,(1./3.));
+	double free_nucleon_count =  free_nucleon_const * pow(atomic_mass, (1. / 3.));
 
 	//SixTrack with Advanced Elastic Scattering
 	double sigma_pp_elasticEM = 0;
@@ -158,14 +159,14 @@ void CrossSections::ConfigureCrossSections(double E0)
 		//~ double sLHC = pow(114.6192348986088,2);
 		double Mproton = 0.938272013;
 		double Mpion = 0.1349766;
-		double sLHC = (2*pow(Mproton,2)+2*Mproton*E0);
-		double Mmin2 = pow(Mproton+Mpion,2);
-		double xi_th = Mmin2/sLHC; // (M_p + M_pion)^2/s
+		double sLHC = (2 * pow(Mproton, 2) + 2 * Mproton * E0);
+		double Mmin2 = pow(Mproton + Mpion, 2);
+		double xi_th = Mmin2 / sLHC; // (M_p + M_pion)^2/s
 		DiffractiveScatter = new ParticleTracking::ppDiffractiveScatter();
 		DiffractiveScatter->SetTMin(0.0001);
 		DiffractiveScatter->SetTMax(4);
 		DiffractiveScatter->SetTStepSize(1e-4);
-		DiffractiveScatter->SetXiMin(xi_th);//Threshould at (M_proton + M_pion)^2/s
+		DiffractiveScatter->SetXiMin(xi_th); //Threshould at (M_proton + M_pion)^2/s
 		DiffractiveScatter->SetXiMax(0.12);
 		DiffractiveScatter->SetXiStepSize(1e-6);
 		DiffractiveScatter->GenerateDistribution(Get_E0());
@@ -181,11 +182,11 @@ void CrossSections::ConfigureCrossSections(double E0)
 		const double Y2_pp = 33.3433e-3;
 		const double eta1 = 0.45817;
 		const double eta2 = 0.545;
-		const double s0 = 28.998225*PhysicalUnits::GeV*PhysicalUnits::GeV;
-		const double s1 =1*PhysicalUnits::GeV*PhysicalUnits::GeV;
+		const double s0 = 28.998225 * PhysicalUnits::GeV * PhysicalUnits::GeV;
+		const double s1 = 1 * PhysicalUnits::GeV * PhysicalUnits::GeV;
 		const double s = com_sqd;
 
-		Set_sig_pp_tot(Z_pp + B_pp*pow(log (s/s0),2.0) + Y1_pp * pow(s1/s,eta1) -Y2_pp * pow(s1/s,eta2));
+		Set_sig_pp_tot(Z_pp + B_pp * pow(log(s / s0), 2.0) + Y1_pp * pow(s1 / s, eta1) - Y2_pp * pow(s1 / s, eta2));
 
 		Set_sig_pp_el(ElasticScatter->GetElasticCrossSectionN());
 		sigma_pp_elasticEM = ElasticScatter->GetElasticCrossSection();
@@ -205,7 +206,6 @@ void CrossSections::ConfigureCrossSections(double E0)
 
 		Set_sig_R(sig_R_ref);
 
-
 	}
 	//SixTrack like scattering
 	else
@@ -222,7 +222,7 @@ void CrossSections::ConfigureCrossSections(double E0)
 		}
 		else
 		{
-			Set_sig_pp_el(pp_elastic_reference * pow((Get_E0()/P_ref), pp_elastic_const));
+			Set_sig_pp_el(pp_elastic_reference * pow((Get_E0() / P_ref), pp_elastic_const));
 		}
 		Set_sig_pn_el(free_nucleon_count * sig_pp_el);
 
@@ -233,7 +233,7 @@ void CrossSections::ConfigureCrossSections(double E0)
 		}
 		else
 		{
-			Set_sig_pp_sd(single_diffractive_const * log(0.15 * Get_com_sqd() ));
+			Set_sig_pp_sd(single_diffractive_const * log(0.15 * Get_com_sqd()));
 		}
 		Set_sig_pn_sd(free_nucleon_count * sig_pp_sd);
 
@@ -257,19 +257,22 @@ double CrossSections::GetTotalMeanFreePath()
 	//Merlin scattering
 	if(Get_scat_type() == 4)
 	{
-		Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_atomic_no() * Get_elastic_diff()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
+		Set_lambda_tot((Get_atomic_mass() * 1E-6 / ((Get_sig_pN_tot() + Get_atomic_no() * Get_elastic_diff())
+			* PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)));
 		return Get_lambda_tot();
 	}
 	//SixTrack + Advanced Elastic
-	else if (Get_scat_type() == 2)
+	else if(Get_scat_type() == 2)
 	{
-		Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_sig_R()+ Get_elastic_diff()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
+		Set_lambda_tot((Get_atomic_mass() * 1E-6 / ((Get_sig_pN_tot() + Get_sig_R() + Get_elastic_diff())
+			* PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)));
 		return Get_lambda_tot();
 	}
 	//Sixtrack
 	else
 	{
-		Set_lambda_tot( (Get_atomic_mass() * 1E-6 / ( (Get_sig_pN_tot() + Get_sig_R()) * PhysicalUnits::barn * Get_density() * PhysicalConstants::Avogadro)) );
+		Set_lambda_tot((Get_atomic_mass() * 1E-6 / ((Get_sig_pN_tot() + Get_sig_R()) * PhysicalUnits::barn
+			* Get_density() * PhysicalConstants::Avogadro)));
 		return Get_lambda_tot();
 	}
 }

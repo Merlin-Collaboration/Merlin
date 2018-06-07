@@ -13,5 +13,5 @@ using namespace std;
 double NormalBin(double x1, double x2)
 {
 	static const double root2 = sqrt(2.0);
-	return 0.5*(erfc(x1/root2)-erfc(x2/root2));
+	return 0.5 * (erfc(x1 / root2) - erfc(x2 / root2));
 }

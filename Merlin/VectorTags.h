@@ -8,17 +8,16 @@
 #ifndef VectorTags_h
 #define VectorTags_h 1
 
-
 /**
-*	Tag class for TVec3D specifying that the instantiated
-*	three vector transforms as a point.
-*/
+ *	Tag class for TVec3D specifying that the instantiated
+ *	three vector transforms as a point.
+ */
 struct PointTag {};
 
 /**
-*	Tag class for TVec3D specifying that the instantiated
-*	three vector transforms as a vector.
-*/
+ *	Tag class for TVec3D specifying that the instantiated
+ *	three vector transforms as a vector.
+ */
 struct VectorTag {};
 
 #endif

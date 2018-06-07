@@ -35,7 +35,7 @@ using namespace std;
 // global functions forward declarations
 // --------------------------------------------------------------------
 
-pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname);
+pair<AcceleratorModel*, BeamData*> ConstructModel(const string& fname);
 
 // --------------------------------------------------------------------
 // Main function
@@ -47,16 +47,16 @@ int main()
 	RandomNG::init();
 
 	// Construct the BDS beamline model
-	pair<AcceleratorModel*,BeamData*> mb = ConstructModel("../lattices/tesla_bds_v8.05.optics");
+	pair<AcceleratorModel*, BeamData*> mb = ConstructModel("../lattices/tesla_bds_v8.05.optics");
 
 	AcceleratorModel* model = mb.first;
 	BeamData* beam = mb.second;
 
 	// Construct the halo tracking object.
-	HaloTracker ht(model->GetBeamline(),*beam);
+	HaloTracker ht(model->GetBeamline(), *beam);
 
 	// set halo limits to ±5 sigma and ±5% in dp/p
-	ht.SetHaloLimitsN(5,5,5,5,0.05);
+	ht.SetHaloLimitsN(5, 5, 5, 5, 0.05);
 
 	// We want to hard collimate the halo at apertures,
 	ht.collimate_halo = true;
@@ -77,4 +77,3 @@ int main()
 
 	return 0;
 }
-

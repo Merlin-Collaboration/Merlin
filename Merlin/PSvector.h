@@ -29,206 +29,207 @@ class PSvector
 {
 public:
 
-	PSvector ()
-	{}
-
-	explicit PSvector (double x)
+	PSvector()
 	{
-		std::fill(v,v+PS_LENGTH,x);
+	}
+
+	explicit PSvector(double x)
+	{
+		std::fill(v, v + PS_LENGTH, x);
 	}
 
 	//	Component accessors.
-	double x ()  const
+	double x() const
 	{
 		return v[0];
 	}
-	double y ()  const
+	double y() const
 	{
 		return v[2];
 	}
-	double ct () const
+	double ct() const
 	{
 		return v[4];
 	}
-	double xp () const
+	double xp() const
 	{
 		return v[1];
 	}
-	double yp () const
+	double yp() const
 	{
 		return v[3];
 	}
-	double dp () const
+	double dp() const
 	{
 		return v[5];
 	}
-	double type () const
+	double type() const
 	{
 		return v[6];
 	}
-	double location () const
+	double location() const
 	{
 		return v[7];
 	}
-	double id () const
+	double id() const
 	{
 		return v[8];
 	}
-	double sd () const
+	double sd() const
 	{
 		return v[9];
 	}
 
 	//	Array access.
-	double operator [] (PScoord coord) const
+	double operator [](PScoord coord) const
 	{
 		return v[coord];
 	}
 
 	//	Component mutators.
-	double& x ()
+	double& x()
 	{
 		return v[0];
 	}
-	double& y ()
+	double& y()
 	{
 		return v[2];
 	}
-	double& ct ()
+	double& ct()
 	{
 		return v[4];
 	}
-	double& xp ()
+	double& xp()
 	{
 		return v[1];
 	}
-	double& yp ()
+	double& yp()
 	{
 		return v[3];
 	}
-	double& dp ()
+	double& dp()
 	{
 		return v[5];
 	}
-	double& type ()
+	double& type()
 	{
 		return v[6];
 	}
-	double& location ()
+	double& location()
 	{
 		return v[7];
 	}
-	double& id ()
+	double& id()
 	{
 		return v[8];
 	}
-	double& sd ()
+	double& sd()
 	{
 		return v[9];
 	}
 
 	/**
-	*	Array access.
-	*/
-	double& operator [] (PScoord coord)
+	 *	Array access.
+	 */
+	double& operator [](PScoord coord)
 	{
 		return v[coord];
 	}
 
 	/**
-	*	Conversion to a RealVector.
-	*/
-	operator RealVector () const
+	 *	Conversion to a RealVector.
+	 */
+	operator RealVector() const
 	{
-		return RealVector(v,PS_LENGTH);
+		return RealVector(v, PS_LENGTH);
 	}
 
-	bool operator == (const PSvector& psv) const
+	bool operator ==(const PSvector& psv) const
 	{
-		return memcmp(v,psv.v,PS_LENGTH*sizeof(double))==0;
+		return memcmp(v, psv.v, PS_LENGTH * sizeof(double)) == 0;
 	}
 
-	bool operator != (const PSvector& psv) const
+	bool operator !=(const PSvector& psv) const
 	{
-		return memcmp(v,psv.v,PS_LENGTH*sizeof(double))!=0;
-	}
-
-	/**
-	*	Sets the vector to zero.
-	*/
-	void zero ()
-	{
-		std::fill(v,v+PS_LENGTH,0.0);
+		return memcmp(v, psv.v, PS_LENGTH * sizeof(double)) != 0;
 	}
 
 	/**
-	*	Arithmetic assignment
-	*/
-	PSvector& operator += (const PSvector& p)
+	 *	Sets the vector to zero.
+	 */
+	void zero()
 	{
-		double *q=v;
-		const double *r=p.v;
-		while(q!=(v+PS_LENGTH))
+		std::fill(v, v + PS_LENGTH, 0.0);
+	}
+
+	/**
+	 *	Arithmetic assignment
+	 */
+	PSvector& operator +=(const PSvector& p)
+	{
+		double *q = v;
+		const double *r = p.v;
+		while(q != (v + PS_LENGTH))
 		{
 			*(q++) += *(r++);
 		}
 		return *this;
 	}
 
-	PSvector& operator -= (const PSvector& p)
+	PSvector& operator -=(const PSvector& p)
 	{
-		double *q=v;
-		const double *r=p.v;
-		while(q!=(v+PS_LENGTH))
+		double *q = v;
+		const double *r = p.v;
+		while(q != (v + PS_LENGTH))
 		{
 			*(q++) -= *(r++);
 		}
 		return *this;
 	}
 
-	PSvector& operator *= (double x)
+	PSvector& operator *=(double x)
 	{
-		for(double *q = v; q!=v+PS_LENGTH; q++)
+		for(double *q = v; q != v + PS_LENGTH; q++)
 		{
-			(*q)*=x;
+			(*q) *= x;
 		}
 		return *this;
 	}
 
-	PSvector& operator /= (double x)
+	PSvector& operator /=(double x)
 	{
-		for(double *q = v; q!=v+PS_LENGTH; q++)
+		for(double *q = v; q != v + PS_LENGTH; q++)
 		{
-			(*q)/=x;
+			(*q) /= x;
 		}
 		return *this;
 	}
 
 	/**
-	* binary arithmetic operators
-	*/
+	 * binary arithmetic operators
+	 */
 	PSvector operator+(const PSvector& rhs) const
 	{
 		PSvector rv(*this);
-		return rv+=rhs;
+		return rv += rhs;
 	}
 
 	PSvector operator-(const PSvector& rhs) const
 	{
 		PSvector rv(*this);
-		return rv-=rhs;
+		return rv -= rhs;
 	}
 
 	/**
-	*	Reads the vector as six floating point numbers,
-	*	separated by spaces and terminated by a newline.
-	*/
+	 *	Reads the vector as six floating point numbers,
+	 *	separated by spaces and terminated by a newline.
+	 */
 	friend std::ostream& operator<<(std::ostream& os, const PSvector& v);
 
 	/**
-	*	Outputs the vector in row form, space delimited with a
-	*	terminating newline.
-	*/
+	 *	Outputs the vector in row form, space delimited with a
+	 *	terminating newline.
+	 */
 	friend std::istream& operator>>(std::istream& is, PSvector& v);
 
 private:
@@ -236,8 +237,8 @@ private:
 };
 
 /**
-*	A linear array of PSvector objects.
-*/
+ *	A linear array of PSvector objects.
+ */
 typedef std::vector<PSvector> PSvectorArray;
 
 #endif

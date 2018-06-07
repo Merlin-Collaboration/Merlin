@@ -37,23 +37,23 @@ typedef Vector<Complex> ComplexVector;
 typedef Matrix<Complex> ComplexMatrix;
 
 /**
-* Matrix Inversion
-*/
+ * Matrix Inversion
+ */
 double Invert(RealMatrix& t);
 
 /**
-* Eigensystem
-*/
+ * Eigensystem
+ */
 void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigenvectors);
 
 /**
-* Matrix symplectification
-*/
+ * Matrix symplectification
+ */
 void Symplectify(RealMatrix& a);
 
 /**
-* Eigensystem of a real symmetric matrix
-*/
+ * Eigensystem of a real symmetric matrix
+ */
 void EigenSystemSymmetricMatrix(RealMatrix& m, RealVector& eigenvalues);
 
 } // end namespace TLAS;

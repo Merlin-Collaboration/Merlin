@@ -10,20 +10,20 @@
 #include "TrackingSimulation.h"
 #include <fstream>
 
-class TrackingOutputAV : public SimulationOutput
+class TrackingOutputAV: public SimulationOutput
 {
 public:
 	TrackingOutputAV(const std::string& filename);
 	~TrackingOutputAV();
 
 	/**
-	* This allows us to refrain from outputting non scattered particles
-	*/
+	 * This allows us to refrain from outputting non scattered particles
+	 */
 	void SuppressUnscattered(const bool s);
 
 	/**
-	* This chooses the s coordinate range in which we want to output particle tracks
-	*/
+	 * This chooses the s coordinate range in which we want to output particle tracks
+	 */
 	void SetSRange(double start, double end)
 	{
 		start_s = start;
@@ -32,8 +32,8 @@ public:
 	}
 
 	/**
-	* This chooses the turn in which we want to output particle tracks
-	*/
+	 * This chooses the turn in which we want to output particle tracks
+	 */
 	void SetTurn(int inturn)
 	{
 		turn = inturn;
@@ -41,8 +41,8 @@ public:
 	}
 
 	/**
-	* This chooses the turns between which we want to output particle tracks
-	*/
+	 * This chooses the turns between which we want to output particle tracks
+	 */
 	void SetTurnRange(int start, int end)
 	{
 		start_turn = start;

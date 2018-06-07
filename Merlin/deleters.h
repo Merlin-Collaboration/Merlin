@@ -11,33 +11,33 @@
 #include <utility>
 
 /**
-*	Function object for deleting containers of pointers.
-*/
+ *	Function object for deleting containers of pointers.
+ */
 
-template <class T>
+template<class T>
 class deleter
 {
 public:
 	/**
-	* Deletes the pointer p.
-	*/
-	void operator () (T* p);
+	 * Deletes the pointer p.
+	 */
+	void operator ()(T* p);
 };
 
 /**
-*	Function object for deleting associative containers
-*	whose value types are pointers.
-*/
+ *	Function object for deleting associative containers
+ *	whose value types are pointers.
+ */
 
-template <class key, class val>
+template<class key, class val>
 class map_deleter
 {
 public:
-	void operator () (std::pair<key,val*>& arg);
+	void operator ()(std::pair<key, val*>& arg);
 };
 
-template <class T>
-inline void deleter<T>::operator () (T* p)
+template<class T>
+inline void deleter<T>::operator ()(T* p)
 {
 	if(p)
 	{
@@ -45,8 +45,8 @@ inline void deleter<T>::operator () (T* p)
 	}
 }
 
-template <class key, class val>
-inline void map_deleter<key,val>::operator () (std::pair<key,val*>& arg)
+template<class key, class val>
+inline void map_deleter<key, val>::operator ()(std::pair<key, val*>& arg)
 {
 	if(arg.second)
 	{

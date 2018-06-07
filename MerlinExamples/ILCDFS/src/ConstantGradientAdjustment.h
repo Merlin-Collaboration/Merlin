@@ -13,7 +13,7 @@
 
 // Produces an arbitrary number of energy states by uniformly adjusting
 // the entire gradient of the machine.
-class ConstantGradientAdjustment : public EnergyAdjustmentPolicy
+class ConstantGradientAdjustment: public EnergyAdjustmentPolicy
 {
 public:
 
@@ -51,12 +51,14 @@ private:
 	{
 		double dEkly;
 		double dEbeam;
-		EnergyState(double dEk, double dEb)
-			: dEkly(dEk),dEbeam(dEb) {}
+		EnergyState(double dEk, double dEb) :
+			dEkly(dEk), dEbeam(dEb)
+		{
+		}
+
 	};
 
 	std::vector<EnergyState> estates;
 };
 
 #endif
-

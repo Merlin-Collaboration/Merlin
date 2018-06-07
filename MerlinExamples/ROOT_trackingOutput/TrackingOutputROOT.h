@@ -64,19 +64,18 @@ using namespace SMPTracking;
 
 //--------------------------------------------------------------------
 
-
-class TrackingOutputROOT : public SimulationOutput
+class TrackingOutputROOT: public SimulationOutput
 {
 public:
-	TrackingOutputROOT(const std::string& treename="", TFile* file=0)
-		: SimulationOutput(),tree(0),dobunch(true)
+	TrackingOutputROOT(const std::string& treename = "", TFile* file = 0) :
+		SimulationOutput(), tree(0), dobunch(true)
 	{
 
 		// create a new ROOT file if necessary
-		if(rootfile==0)
-			if(file==0)
+		if(rootfile == 0)
+			if(file == 0)
 			{
-				rootfile = new TFile("merlin.root","RECREATE");
+				rootfile = new TFile("merlin.root", "RECREATE");
 			}
 			else
 			{
@@ -84,7 +83,7 @@ public:
 			}
 
 		// create a tree
-		if(treename!="")
+		if(treename != "")
 		{
 			NewTree(treename);
 		}
@@ -125,15 +124,16 @@ public:
 		bool Cav;
 		void AllFalse()
 		{
-			base=false;
-			names=false;
-			bunchFirst=false;
-			bunchSecond=false;
-			emittance=false;
-			Twiss=false;
-			BPMCor=false;
-			Cav=false;
+			base = false;
+			names = false;
+			bunchFirst = false;
+			bunchSecond = false;
+			emittance = false;
+			Twiss = false;
+			BPMCor = false;
+			Cav = false;
 		}
+
 	} Output;
 
 	// Create a new TTree
@@ -149,12 +149,12 @@ public:
 	typedef struct
 	{
 
-		Char_t type[16];// multiple of 4!
-		Char_t name[16];// multiple of 4!
+		Char_t type[16]; // multiple of 4!
+		Char_t name[16]; // multiple of 4!
 
 		Double_t z;
 		Double_t p0;
-		Int_t    n;
+		Int_t n;
 
 		Double_t m_x;
 		Double_t m_y;
@@ -203,9 +203,9 @@ public:
 	int  BunchSize(const Bunch* bunch); // return the # of particles/slices of a bunch
 
 	// switch bunch output on/off
-	void DoBunch(bool dob=true)
+	void DoBunch(bool dob = true)
 	{
-		dobunch=dob;
+		dobunch = dob;
 	}
 
 	// additional utillities
@@ -219,33 +219,33 @@ public:
 		Double_t ct;
 		Double_t dp;
 		Double_t Q;  // Q for SMP / Qtot/n for Particle
+
 	} OutputBunch;
 
-	void DumpBunch(const Bunch* SB,const string& treename);
+	void DumpBunch(const Bunch* SB, const string& treename);
 
 protected:
 
 	virtual void Record(const ComponentFrame* frame, const Bunch* bunch);
 	virtual void RecordInitialBunch(const Bunch* bunch)
 	{
-		zComponent=0;
-		Record("INITIAL",bunch);
+		zComponent = 0;
+		Record("INITIAL", bunch);
 	}
 	virtual void RecordFinalBunch(const Bunch* bunch)
 	{
-		Record("FINAL",bunch);
+		Record("FINAL", bunch);
 	}
 
 private:
-	void Record(const string&,const Bunch*);
+	void Record(const string&, const Bunch*);
 
 	static TFile*  rootfile;     // the one and only ROOT file
 	TTree*             tree;     // and tree
 
 	// for transfering data
 	OutputStruct data;
-	OutputBunch  outputBunch;
-
+	OutputBunch outputBunch;
 
 	double zComponent;
 
@@ -258,7 +258,7 @@ private:
 		{
 			return false;
 		}
-		for(vector<StringPattern>::const_iterator p=dumpAt.begin(); p!=dumpAt.end(); p++)
+		for(vector<StringPattern>::const_iterator p = dumpAt.begin(); p != dumpAt.end(); p++)
 		{
 			if(p->Match(id))
 			{
@@ -271,11 +271,10 @@ private:
 	void DumpBunchAt(const Bunch*, const std::string&);
 
 	//map and counters for bunch names
-	map<string,int> bm;
+	map<string, int> bm;
 
 	bool dobunch;
 
 };
 
 #endif
-

@@ -36,6 +36,7 @@ public:
 		x_only,
 		y_only,
 		x_and_y
+
 	};
 
 	Accelerator(const std::string& name, AcceleratorModel*, BeamData*);
@@ -107,13 +108,14 @@ private:
 	public:
 		size_t location;
 		mutable Bunch* bunch;
-		explicit CachedBunch(Bunch* aBunch)
-			: location(0),bunch(aBunch)
-		{}
-		CachedBunch(const CachedBunch& rhs)
-			: location(rhs.location),bunch(rhs.bunch)
+		explicit CachedBunch(Bunch* aBunch) :
+			location(0), bunch(aBunch)
 		{
-			rhs.bunch=nullptr;
+		}
+		CachedBunch(const CachedBunch& rhs) :
+			location(rhs.location), bunch(rhs.bunch)
+		{
+			rhs.bunch = nullptr;
 		}
 
 		~CachedBunch()
@@ -135,4 +137,3 @@ private:
 };
 
 #endif
-

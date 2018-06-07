@@ -17,4 +17,3 @@ class BeamData;
 std::pair<AcceleratorModel*, BeamData*> ConstructModel(const std::string& fname, bool curved);
 
 #endif
-

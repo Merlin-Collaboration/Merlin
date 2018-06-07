@@ -7,8 +7,8 @@
 
 #include "RWChannelState.h"
 
-RWChannelState::RWChannelState(const std::vector<RWChannel*>& channels)
-	: chs(channels), values(channels.size())
+RWChannelState::RWChannelState(const std::vector<RWChannel*>& channels) :
+	chs(channels), values(channels.size())
 {
 	CacheCurrentState();
 }
@@ -22,4 +22,3 @@ void RWChannelState::CacheCurrentState()
 {
 	chs.ReadAll(values);
 }
-

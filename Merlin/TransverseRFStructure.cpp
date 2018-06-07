@@ -10,30 +10,34 @@
 
 const int TransverseRFStructure::ID = UniqueIndex();
 
-TransverseRFStructure::TransverseRFStructure (const string& id, double len, double f, double Epk, double phi, double theta)
-	: RFStructure(id,len,new TransverseRFfield(f,Epk,phi,theta))
-{}
+TransverseRFStructure::TransverseRFStructure(const string& id, double len, double f, double Epk, double phi, double
+	theta) :
+	RFStructure(id, len, new TransverseRFfield(f, Epk, phi, theta))
+{
+}
 
-TransverseRFStructure::TransverseRFStructure (const TransverseRFStructure& rhs)
-	: RFStructure(rhs.GetName(),rhs.GetLength(),new TransverseRFfield(static_cast<const TransverseRFfield&>(rhs.GetField())))
-{}
+TransverseRFStructure::TransverseRFStructure(const TransverseRFStructure& rhs) :
+	RFStructure(rhs.GetName(), rhs.GetLength(), new TransverseRFfield(static_cast<const
+		TransverseRFfield&>(rhs.GetField())))
+{
+}
 
-const string& TransverseRFStructure::GetType () const
+const string& TransverseRFStructure::GetType() const
 {
 	_TYPESTR(TransverseRFStructure)
 }
 
-int TransverseRFStructure::GetIndex () const
+int TransverseRFStructure::GetIndex() const
 {
 	return ID;
 }
 
-void TransverseRFStructure::PrepareTracker (ComponentTracker& aTracker)
+void TransverseRFStructure::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,AcceleratorComponent)
+	_PREPTRACK(aTracker, AcceleratorComponent)
 }
 
-void TransverseRFStructure::RotateY180 ()
+void TransverseRFStructure::RotateY180()
 {
 	double E = GetField().GetAmplitude();
 	double t = GetFieldOrientation();
@@ -41,8 +45,7 @@ void TransverseRFStructure::RotateY180 ()
 	SetFieldOrientation(-t);
 }
 
-ModelElement* TransverseRFStructure::Copy () const
+ModelElement* TransverseRFStructure::Copy() const
 {
 	return new TransverseRFStructure(*this);
 }
-

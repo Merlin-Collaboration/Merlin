@@ -25,34 +25,39 @@ namespace ParticleTracking
 {
 
 /**
-* class WakefieldProcess
-* Implements single-bunch wakefields.
-*
-* Modified by A.Wolski 12/2/2003
-* to include the derivative of the charge distribution
-* for handling CSR wake fields.
-*
-* Modified by D.Kruecker 18.2.2008
-* to be used as base class for other wakefield types (collimator,coupler,...)
-*/
-class WakeFieldProcess : public ParticleBunchProcess
+ * class WakefieldProcess
+ * Implements single-bunch wakefields.
+ *
+ * Modified by A.Wolski 12/2/2003
+ * to include the derivative of the charge distribution
+ * for handling CSR wake fields.
+ *
+ * Modified by D.Kruecker 18.2.2008
+ * to be used as base class for other wakefield types (collimator,coupler,...)
+ */
+class WakeFieldProcess: public ParticleBunchProcess
 {
 public:
 
-	enum ImpulseLocation {atCentre,atExit};
+	enum ImpulseLocation
+	{
+		atCentre,
+		atExit
 
-	WakeFieldProcess (int prio, size_t nb =100, double ns = 3.0, string aID = "WAKEFIELD");
+	};
+
+	WakeFieldProcess(int prio, size_t nb = 100, double ns = 3.0, string aID = "WAKEFIELD");
 
 	~WakeFieldProcess();
 
-	virtual void InitialiseProcess (Bunch& bunch);
-	virtual void SetCurrentComponent (AcceleratorComponent& component);
-	virtual void DoProcess (double ds);
-	virtual double GetMaxAllowedStepSize () const;
+	virtual void InitialiseProcess(Bunch& bunch);
+	virtual void SetCurrentComponent(AcceleratorComponent& component);
+	virtual void DoProcess(double ds);
+	virtual double GetMaxAllowedStepSize() const;
 
 	void ApplyImpulseAt(ImpulseLocation loc)
 	{
-		imploc=loc;
+		imploc = loc;
 	}
 	void IncludeTransverseWake(bool flg)
 	{
@@ -88,7 +93,7 @@ protected:
 	bool recalc;
 	bool inc_tw;
 
-	double zmin,zmax,dz;
+	double zmin, zmax, dz;
 
 	size_t oldBunchLen;
 

@@ -21,7 +21,7 @@ class SMPBunch;
 class WakeFieldProcess;
 }
 
-class SMPTrackingModel : public BeamDynamicsModel
+class SMPTrackingModel: public BeamDynamicsModel
 {
 public:
 

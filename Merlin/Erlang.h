@@ -30,15 +30,15 @@ public:
 
 };
 
-
 inline void Erlang::setState()
 {
-	k = int( (pMean * pMean ) / pVariance + 0.5 );
+	k = int((pMean * pMean) / pVariance + 0.5);
 	k = (k > 0) ? k : 1;
 	a = k / pMean;
 }
 
-inline Erlang::Erlang(double mean, double variance, RNG *gen) : Random(gen)
+inline Erlang::Erlang(double mean, double variance, RNG *gen) :
+	Random(gen)
 {
 	pMean = mean;
 	pVariance = variance;

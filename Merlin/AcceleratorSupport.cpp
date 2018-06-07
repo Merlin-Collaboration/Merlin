@@ -10,9 +10,8 @@
 
 using namespace std;
 
-double AcceleratorSupport::DistanceTo (const AcceleratorSupport& aSupport) const
+double AcceleratorSupport::DistanceTo(const AcceleratorSupport& aSupport) const
 {
-	Point2D dx = aSupport.pos-pos;
-	return sqrt(dx*dx);
+	Point2D dx = aSupport.pos - pos;
+	return sqrt(dx * dx);
 }
-

@@ -19,13 +19,19 @@ class DataTableHeader;
 class BadFormatException: public std::runtime_error
 {
 public:
-	BadFormatException(const std::string& what_arg): runtime_error(what_arg) {}
+	BadFormatException(const std::string& what_arg) :
+		runtime_error(what_arg)
+	{
+	}
 };
 
 class WrongTypeException: public std::runtime_error
 {
 public:
-	WrongTypeException(const std::string& what_arg): runtime_error(what_arg) {}
+	WrongTypeException(const std::string& what_arg) :
+		runtime_error(what_arg)
+	{
+	}
 };
 
 /** @brief A data structure for holding named type columns
@@ -42,7 +48,7 @@ public:
  * type, Set(), or typed versions can be used Set_d(), Set_i() and Set_s().
  *
  * DataTable can also hold a set of values, also with types, in its header.
-*/
+ */
 class DataTable
 {
 protected:
@@ -52,12 +58,13 @@ protected:
 	{
 		char type;
 		size_t pos;
+
 	};
 
 	//data storage
-	std::vector<std::vector<double>> data_d;
-	std::vector<std::vector<int>> data_i;
-	std::vector<std::vector<std::string>> data_s;
+	std::vector<std::vector<double> > data_d;
+	std::vector<std::vector<int> > data_i;
+	std::vector<std::vector<std::string> > data_s;
 
 	//indexing
 	std::vector<std::string> col_names;
@@ -73,7 +80,10 @@ protected:
 
 public:
 	/// Construct an empty DataTable.
-	DataTable():length() {}
+	DataTable() :
+		length()
+	{
+	}
 
 	/// Add a new column.
 	/// \param type One of 'i' (integer), 'd' (double) or 's' (string)
@@ -99,7 +109,6 @@ public:
 	/// Set string value by name and row.
 	void Set(const std::string col_name, size_t i, std::string x);
 
-
 	// set with type in name
 	/// Set double value by name and row.
 	void Set_d(const std::string col_name, size_t i, double x)
@@ -120,13 +129,13 @@ public:
 	void SetWithStr(const std::string col_name, size_t i, std::string x);
 
 	/** @brief Variadic method for setting a whole row.
-	*
-	* Pass a set of values with the correct types for the columns, e.g.:
-	*
-	*     dt.AddRow('x', 1, 2.3, 4.2);
-	*/
-	template <typename... Args>
-	void AddRow(Args... arg);
+	 *
+	 * Pass a set of values with the correct types for the columns, e.g.:
+	 *
+	 *     dt.AddRow('x', 1, 2.3, 4.2);
+	 */
+	template<typename ... Args>
+	void AddRow(Args ... arg);
 
 	DataTableRowIterator begin() const;
 	DataTableRowIterator end() const;
@@ -210,10 +219,12 @@ public:
 
 private:
 	/// See AddRow()
-	template <typename T, typename... Args>
-	void AddRowN(size_t col_n, size_t row_n, T x, Args... arg);
+	template<typename T, typename ... Args>
+	void AddRowN(size_t col_n, size_t row_n, T x, Args ... arg);
 	/// See AddRow()
-	void AddRowN(size_t, size_t) {} // Terminating case
+	void AddRowN(size_t, size_t)
+	{
+	}                               // Terminating case
 
 public:
 	//demo output
@@ -221,22 +232,21 @@ public:
 	void OutputAscii(std::ostream &os) const;
 };
 
-
-template <typename... Args>
-void DataTable::AddRow(Args... arg)
+template<typename ... Args>
+void DataTable::AddRow(Args ... arg)
 {
 	size_t col_n = 0;
 	size_t row_n = AddRow();
-	AddRowN(col_n, row_n, arg...);
+	AddRowN(col_n, row_n, arg ...);
 }
 
-template <typename T, typename... Args>
-void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args... arg)
+template<typename T, typename ... Args>
+void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args ... arg)
 {
 	std::string col_name = col_names.at(col_n);
 
 	Set(col_name, row_n, x);
-	AddRowN(col_n+1, row_n, arg...);
+	AddRowN(col_n + 1, row_n, arg ...);
 }
 
 /** @brief Access individual rows of a DataTable.
@@ -250,7 +260,10 @@ void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args... arg)
 class DataTableRow
 {
 public:
-	DataTableRow(const DataTable *_dt, size_t _pos): dt(_dt), pos(_pos) {}
+	DataTableRow(const DataTable *_dt, size_t _pos) :
+		dt(_dt), pos(_pos)
+	{
+	}
 
 	double Get_d(const std::string col_name) const
 	{
@@ -281,8 +294,11 @@ private:
 class DataTableRowPtr
 {
 public:
-	DataTableRowPtr(const DataTable *_dt, size_t _pos): dtr(_dt, _pos) {}
-	DataTableRow &operator* ()
+	DataTableRowPtr(const DataTable *_dt, size_t _pos) :
+		dtr(_dt, _pos)
+	{
+	}
+	DataTableRow &operator*()
 	{
 		return dtr;
 	}
@@ -295,22 +311,25 @@ private:
 };
 
 /// @brief Row iterator for DataTable.
-class DataTableRowIterator :public std::iterator<std::bidirectional_iterator_tag,
+class DataTableRowIterator: public std::iterator<std::bidirectional_iterator_tag,
 	DataTableRow,
 	std::ptrdiff_t,
 	DataTableRow*,
 	DataTableRow&>
 {
 public:
-	DataTableRowIterator(const DataTable *_dt, size_t _pos): dt(_dt), pos(_pos) {}
-	DataTableRow operator * ();
-	DataTableRowPtr operator -> ();
-	DataTableRowIterator& operator++ ();
-	DataTableRowIterator operator++ (int);
-	DataTableRowIterator& operator-- ();
-	DataTableRowIterator operator-- (int);
-	bool operator== (const DataTableRowIterator &other) const;
-	bool operator!= (const DataTableRowIterator &other) const;
+	DataTableRowIterator(const DataTable *_dt, size_t _pos) :
+		dt(_dt), pos(_pos)
+	{
+	}
+	DataTableRow operator *();
+	DataTableRowPtr operator ->();
+	DataTableRowIterator& operator++();
+	DataTableRowIterator operator++(int);
+	DataTableRowIterator& operator--();
+	DataTableRowIterator operator--(int);
+	bool operator==(const DataTableRowIterator &other) const;
+	bool operator!=(const DataTableRowIterator &other) const;
 
 private:
 	const DataTable * dt;

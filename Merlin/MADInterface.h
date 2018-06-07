@@ -22,101 +22,101 @@ using std::ifstream;
 using std::ostream;
 
 /**
-*      Class used to construct a MERLIN model from a MAD optics
-*      output listing. The class now automatically  identifies
-*      the column parameters, and associates them with the
-*      constructed element types. If an element type is defined
-*      for which a required parameter is not present in the
-*      column headings, the parameter is set to zero and a
-*      warning is issued.
-*/
+ *      Class used to construct a MERLIN model from a MAD optics
+ *      output listing. The class now automatically  identifies
+ *      the column parameters, and associates them with the
+ *      constructed element types. If an element type is defined
+ *      for which a required parameter is not present in the
+ *      column headings, the parameter is set to zero and a
+ *      warning is issued.
+ */
 
 class MADInterface
 {
 public:
 
 	/**
-	*  Constructor taking the name of the MAD optics file, and
-	*  the momentum in GeV/c.
-	*/
-	MADInterface (const std::string& madFileName="", double P0=0);
+	 *  Constructor taking the name of the MAD optics file, and
+	 *  the momentum in GeV/c.
+	 */
+	MADInterface(const std::string& madFileName = "", double P0 = 0);
 	~MADInterface();
 	/**
-	*   Causes the construction of an AcceleratorModel object
-	*   based on the MAD optics file.
-	*/
-	AcceleratorModel* ConstructModel ();
+	 *   Causes the construction of an AcceleratorModel object
+	 *   based on the MAD optics file.
+	 */
+	AcceleratorModel* ConstructModel();
 
 	/**
-	*   Sets the log file stream to os.
-	*/
-	void SetLogFile (ostream& os);
+	 *   Sets the log file stream to os.
+	 */
+	void SetLogFile(ostream& os);
 
 	/**
-	*   Turns logging on.
-	*/
-	void SetLoggingOn ();
+	 *   Turns logging on.
+	 */
+	void SetLoggingOn();
 
 	/**
-	*   Turns logging off.
-	*/
-	void SetLoggingOff ();
+	 *   Turns logging off.
+	 */
+	void SetLoggingOff();
 
 	/**
-	*   If true, all RFCavities will be forced to a length of
-	*   wavelength/2 + a Drift of remaining length (LHC MAD tfs table
-	*	 bugfix).
-	*/
+	 *   If true, all RFCavities will be forced to a length of
+	 *   wavelength/2 + a Drift of remaining length (LHC MAD tfs table
+	 *	 bugfix).
+	 */
 	void SetSingleCellRF(bool scrf)
 	{
 		single_cell_rf = scrf;
 	}
 
 	/**
-	*   If true, all LINE constructs in the MAD optics output
-	*   are constructed in the model. If false, only those
-	*   prefixed X_, where X is M, S, or G are constructed.
-	*/
-	void HonourMadStructure (bool flg);
+	 *   If true, all LINE constructs in the MAD optics output
+	 *   are constructed in the model. If false, only those
+	 *   prefixed X_, where X is M, S, or G are constructed.
+	 */
+	void HonourMadStructure(bool flg);
 
 	/**
-	*   If true, a flat lattice model in constructed, with no
-	*   nested frames.
-	*/
-	void ConstructFlatLattice (bool flg);
+	 *   If true, a flat lattice model in constructed, with no
+	 *   nested frames.
+	 */
+	void ConstructFlatLattice(bool flg);
 
-	void ConstructApertures (bool flg);
-
-	/**
-	*   Components of type madType are ignored during
-	*   construction if their length is zero.
-	*/
-	void IgnoreZeroLengthType (const string& madType);
+	void ConstructApertures(bool flg);
 
 	/**
-	*   If scaleSR == true, then the magnetic fields of the
-	*   magnets are scaled to compensate beam energy losses due
-	*   to synchrotron radiation (default = false.) Note that in
-	*   this case, the beam energy is the initial energy.
-	*/
-	void ScaleForSynchRad (bool scaleSR);
+	 *   Components of type madType are ignored during
+	 *   construction if their length is zero.
+	 */
+	void IgnoreZeroLengthType(const string& madType);
 
 	/**
-	*   Treats the mad type typestr as a drift.
-	*/
-	void TreatTypeAsDrift (const std::string& typestr);
+	 *   If scaleSR == true, then the magnetic fields of the
+	 *   magnets are scaled to compensate beam energy losses due
+	 *   to synchrotron radiation (default = false.) Note that in
+	 *   this case, the beam energy is the initial energy.
+	 */
+	void ScaleForSynchRad(bool scaleSR);
 
 	/**
-	* Functions for constructing a model from several files.
-	* Repeated calls to AppendModel(fname,p) constructs a single
-	* model (beamline) from the respective files. The final
-	* model is returned using GetModel().
-	*/
+	 *   Treats the mad type typestr as a drift.
+	 */
+	void TreatTypeAsDrift(const std::string& typestr);
+
+	/**
+	 * Functions for constructing a model from several files.
+	 * Repeated calls to AppendModel(fname,p) constructs a single
+	 * model (beamline) from the respective files. The final
+	 * model is returned using GetModel().
+	 */
 	void AppendModel(const std::string& fname, double pref);
 	AcceleratorModel* GetModel();
 
-	void ConstructNewFrame (const string& name);
-	void EndFrame (const string& name);
+	void ConstructNewFrame(const string& name);
+	void EndFrame(const string& name);
 
 protected:
 	double energy;
@@ -136,44 +136,44 @@ protected:
 	AcceleratorModelConstructor* ctor;
 	MADKeyMap* prmMap;
 
-	double ReadComponent ();
+	double ReadComponent();
 	void Initialise();
-	double z;	///Distance along the lattice
+	double z;   ///Distance along the lattice
 
 	bool single_cell_rf;
 };
 
-inline void MADInterface::SetLogFile (ostream& os)
+inline void MADInterface::SetLogFile(ostream& os)
 {
-	log=&os;
+	log = &os;
 }
 
-inline void MADInterface::SetLoggingOn ()
+inline void MADInterface::SetLoggingOn()
 {
-	logFlag=true;
+	logFlag = true;
 }
 
-inline void MADInterface::SetLoggingOff ()
+inline void MADInterface::SetLoggingOff()
 {
-	logFlag=false;
+	logFlag = false;
 }
 
-inline void MADInterface::HonourMadStructure (bool flg)
+inline void MADInterface::HonourMadStructure(bool flg)
 {
-	honMadStructs=flg;
+	honMadStructs = flg;
 }
 
-inline void MADInterface::ConstructFlatLattice (bool flg)
+inline void MADInterface::ConstructFlatLattice(bool flg)
 {
-	flatLattice=flg;
+	flatLattice = flg;
 }
 
-inline void MADInterface::ConstructApertures (bool flg)
+inline void MADInterface::ConstructApertures(bool flg)
 {
 	incApertures = flg;
 }
 
-inline void MADInterface::ScaleForSynchRad (bool scaleSR)
+inline void MADInterface::ScaleForSynchRad(bool scaleSR)
 {
 	inc_sr = scaleSR;
 }

@@ -16,14 +16,14 @@
 namespace ParticleTracking
 {
 
-class RingDeltaTProcess : public ParticleBunchProcess
+class RingDeltaTProcess: public ParticleBunchProcess
 {
 public:
-	RingDeltaTProcess (int prio);
-	virtual void SetCurrentComponent (AcceleratorComponent& component);
-	virtual void DoProcess (double ds);
-	virtual double GetMaxAllowedStepSize () const;
-	void SetBendScale (double bendscale);
+	RingDeltaTProcess(int prio);
+	virtual void SetCurrentComponent(AcceleratorComponent& component);
+	virtual void DoProcess(double ds);
+	virtual double GetMaxAllowedStepSize() const;
+	void SetBendScale(double bendscale);
 protected:
 private:
 	double scale;

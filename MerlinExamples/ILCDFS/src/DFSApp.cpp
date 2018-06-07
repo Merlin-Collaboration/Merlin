@@ -24,13 +24,13 @@ DFSApp::~DFSApp()
 
 void DFSApp::SetReferenceModel(AcceleratorModel* accm, BeamData* beam0)
 {
-	Accelerator* acc = new Accelerator("REFERENCE MODEL",accm,beam0);
+	Accelerator* acc = new Accelerator("REFERENCE MODEL", accm, beam0);
 	DFSCorrection::theReferenceModel = acc;
 }
 
 void DFSApp::SetSimulationModel(AcceleratorModel* accm, BeamData* beam0)
 {
-	AcceleratorWithErrors* acc = new AcceleratorWithErrors("SIMULATION MODEL",accm,beam0);
+	AcceleratorWithErrors* acc = new AcceleratorWithErrors("SIMULATION MODEL", accm, beam0);
 	DFSCorrection::theSimulationModel = acc;
 }
 
@@ -80,12 +80,12 @@ void DFSApp::Initialise()
 	Accelerator* refacc = DFSCorrection::theReferenceModel;
 	EnergyAdjustmentPolicy* engyPolicy = DFSCorrection::theEnergyAdjustmentPolicy;
 
-	dfs_trace(dfs_trace::level_1)<<"Initialising DFS"<<endl;
+	dfs_trace(dfs_trace::level_1) << "Initialising DFS" << endl;
 
 	ReferenceParticleArray refpArray;
 	KlystronArray klysArray;
 
-	refacc->InitialiseTracking(engyPolicy->GetNumEnergyStates(),refpArray);
+	refacc->InitialiseTracking(engyPolicy->GetNumEnergyStates(), refpArray);
 	refacc->GetKlystrons(klysArray);
 
 	engyPolicy->SetKlystrons(klysArray);
@@ -95,25 +95,25 @@ void DFSApp::Initialise()
 	refacc->AllowIncrementalTracking(ref_useIT && engyPolicy->SupportsIncrementalTracking());
 
 	DFS_Segment s = refacc->GetBeamlineRange();
-	dfs_trace(dfs_trace::level_2)<<"beamline range: "<<s<<endl;
+	dfs_trace(dfs_trace::level_2) << "beamline range: " << s << endl;
 
 	IntegerArray ibpm;
-	refacc->GetBeamlineIndexes("BPM.*",ibpm);
+	refacc->GetBeamlineIndexes("BPM.*", ibpm);
 
-	dfs_trace(dfs_trace::level_1)<<ibpm.size()<<" BPMs in accelerator"<<endl;
+	dfs_trace(dfs_trace::level_1) << ibpm.size() << " BPMs in accelerator" << endl;
 
-	for(size_t n=0; n<ibpm.size(); n+=nbs-nbo)
+	for(size_t n = 0; n < ibpm.size(); n += nbs - nbo)
 	{
 		DFS_Segment sn;
-		sn.first = n==0 ? s.first : ibpm[n]+1;
-		sn.second = n+nbs<ibpm.size() ? ibpm[n+nbs] : s.second;
-		cachedDFS.push_back(new DFSCorrection(sn,pxy));
+		sn.first = n == 0 ? s.first : ibpm[n] + 1;
+		sn.second = n + nbs < ibpm.size() ? ibpm[n + nbs] : s.second;
+		cachedDFS.push_back(new DFSCorrection(sn, pxy));
 		if(sn.second == s.second)
 		{
 			break;
 		}
 	}
-	dfs_trace(dfs_trace::level_1)<<cachedDFS.size()<<" segments initialised"<<endl;
+	dfs_trace(dfs_trace::level_1) << cachedDFS.size() << " segments initialised" << endl;
 }
 
 void DFSApp::Apply()
@@ -126,7 +126,7 @@ void DFSApp::Apply()
 	ReferenceParticleArray refpArray;
 	KlystronArray klysArray;
 
-	simacc->InitialiseTracking(engyPolicy->GetNumEnergyStates(),refpArray);
+	simacc->InitialiseTracking(engyPolicy->GetNumEnergyStates(), refpArray);
 	simacc->GetKlystrons(klysArray);
 
 	engyPolicy->SetKlystrons(klysArray);
@@ -135,12 +135,12 @@ void DFSApp::Apply()
 
 	simacc->AllowIncrementalTracking(sim_useIT && engyPolicy->SupportsIncrementalTracking());
 
-	for(list<DFSCorrection*>::iterator dfsi = cachedDFS.begin(); dfsi!=cachedDFS.end(); dfsi++)
+	for(list<DFSCorrection*>::iterator dfsi = cachedDFS.begin(); dfsi != cachedDFS.end(); dfsi++)
 	{
 		(*dfsi)->Initialise();
-		for(size_t n = 0; n<nit; n++)
+		for(size_t n = 0; n < nit; n++)
 		{
-			dfs_trace(dfs_trace::level_2)<<"iteration "<<(n+1)<<'/'<<nit<<endl;
+			dfs_trace(dfs_trace::level_2) << "iteration " << (n + 1) << '/' << nit << endl;
 			(*dfsi)->RecordTrajectories();
 			(*dfsi)->CalculateCorrection();
 			(*dfsi)->ApplyCorrection(gain);
@@ -154,7 +154,7 @@ void DFSApp::Apply()
 
 void DFSApp::ClearCachedDFS()
 {
-	for(list<DFSCorrection*>::iterator i = cachedDFS.begin(); i!=cachedDFS.end(); i++)
+	for(list<DFSCorrection*>::iterator i = cachedDFS.begin(); i != cachedDFS.end(); i++)
 	{
 		delete *i;
 	}

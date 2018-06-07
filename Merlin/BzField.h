@@ -12,52 +12,53 @@
 #include "EMField.h"
 
 /**
-*	Represents a constant magnetic field in along the local
-*	z-axis (a solenoidal field.)
-*/
+ *	Represents a constant magnetic field in along the local
+ *	z-axis (a solenoidal field.)
+ */
 
-class BzField : public EMField
+class BzField: public EMField
 {
 public:
 
-	explicit BzField (double B);
+	explicit BzField(double B);
 
-	double GetStrength () const;
-
-	/**
-	*	Returns the magnetic field at the point x and time t.
-	*	@return Magnetic field at point x, time t
-	*/
-	virtual Vector3D GetBFieldAt (const Point3D& x, double t = 0) const;
+	double GetStrength() const;
 
 	/**
-	*	Returns the electric field at the point x and time t
-	*	@return Electric field at point x, time t
-	*/
-	virtual Vector3D GetEFieldAt (const Point3D& x, double t = 0) const;
+	 *	Returns the magnetic field at the point x and time t.
+	 *	@return Magnetic field at point x, time t
+	 */
+	virtual Vector3D GetBFieldAt(const Point3D& x, double t = 0) const;
 
 	/**
-	*	Sets the strength of the field in Tesla.
-	*/
-	void SetStrength (double B);
+	 *	Returns the electric field at the point x and time t
+	 *	@return Electric field at point x, time t
+	 */
+	virtual Vector3D GetEFieldAt(const Point3D& x, double t = 0) const;
+
+	/**
+	 *	Sets the strength of the field in Tesla.
+	 */
+	void SetStrength(double B);
 
 private:
 
 	double Bz;
 };
 
-inline BzField::BzField (double B)
-	: Bz(B)
-{}
+inline BzField::BzField(double B) :
+	Bz(B)
+{
+}
 
-inline double BzField::GetStrength () const
+inline double BzField::GetStrength() const
 {
 	return Bz;
 }
 
-inline void BzField::SetStrength (double B)
+inline void BzField::SetStrength(double B)
 {
-	Bz=B;
+	Bz = B;
 }
 
 #endif

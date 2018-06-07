@@ -19,7 +19,7 @@
 namespace ParticleTracking
 {
 
-class FlukaCollimationOutput : public CollimationOutput
+class FlukaCollimationOutput: public CollimationOutput
 {
 
 public:
@@ -40,4 +40,3 @@ private:
 }
 
 #endif
-

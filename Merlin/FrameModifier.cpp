@@ -7,13 +7,13 @@
 
 #include "FrameModifier.h"
 
-FrameModifier::FrameModifier (LatticeFrame* frame, const std::string& label)
-	: LatticeFrame(label),subFrame(frame)
+FrameModifier::FrameModifier(LatticeFrame* frame, const std::string& label) :
+	LatticeFrame(label), subFrame(frame)
 {
 	LatticeFrame* oldSuperFrame = frame->SetSuperFrame(this);
 	if(oldSuperFrame)
 	{
-		oldSuperFrame->ReplaceSubFrame(frame,this);
+		oldSuperFrame->ReplaceSubFrame(frame, this);
 	}
 
 	SetGeometry(frame->GetGeometry());
@@ -24,33 +24,33 @@ FrameModifier::~FrameModifier()
 	Remove();
 }
 
-ModelElement* FrameModifier::Copy () const
+ModelElement* FrameModifier::Copy() const
 {
 	return subFrame->Copy();
 }
 
-const string& FrameModifier::GetType () const
+const string& FrameModifier::GetType() const
 {
 	return subFrame->GetType();
 }
 
-void FrameModifier::Invalidate () const
+void FrameModifier::Invalidate() const
 {
 	subFrame->Invalidate();
 }
 
-bool FrameModifier::IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFrame) const
+bool FrameModifier::IsBoundaryPlane(BoundaryPlane p, const LatticeFrame* aSubFrame) const
 {
-	assert(aSubFrame==subFrame);
+	assert(aSubFrame == subFrame);
 	return true;
 }
 
-void FrameModifier::ConsolidateConstruction ()
+void FrameModifier::ConsolidateConstruction()
 {
 	subFrame->SetLocalPosition(0);
 }
 
 void FrameModifier::Remove()
 {
-	superFrame->ReplaceSubFrame(this,subFrame);
+	superFrame->ReplaceSubFrame(this, subFrame);
 }

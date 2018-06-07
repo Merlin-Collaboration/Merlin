@@ -7,11 +7,11 @@
 
 #include "ResponseMatrixGenerator.h"
 
-ResponseMatrixGenerator::ResponseMatrixGenerator(Accelerator* acc1, const ROChannelArray& b,
-        RWChannelArray& c, double eps1)
-	: acc(acc1),bpms(b),cors(c),eps(eps1),data0(b.Size()),M(b.Size(),c.Size())
-{}
-
+ResponseMatrixGenerator::ResponseMatrixGenerator(Accelerator* acc1, const ROChannelArray& b, RWChannelArray& c, double
+	eps1) :
+	acc(acc1), bpms(b), cors(c), eps(eps1), data0(b.Size()), M(b.Size(), c.Size())
+{
+}
 
 const RealMatrix& ResponseMatrixGenerator::GetMatrix() const
 {
@@ -29,12 +29,12 @@ const RealMatrix& ResponseMatrixGenerator::Generate(size_t ns)
 	acc->TrackBeam(ns);
 	data0 = bpms;
 
-	for(size_t icor = 0; icor<cors.Size(); icor++)
+	for(size_t icor = 0; icor < cors.Size(); icor++)
 	{
 		double defaultValue = cors.Read(icor);
-		cors.Write(icor,defaultValue+eps);
+		cors.Write(icor, defaultValue + eps);
 		acc->TrackBeam(ns);
-		cors.Write(icor,defaultValue);
+		cors.Write(icor, defaultValue);
 		RealVector data(bpms);
 		data -= data0;
 		data /= eps;

@@ -55,12 +55,12 @@ int main()
 
 	BeamData mybeam;
 	mybeam.charge = 2.0e10;
-	mybeam.beta_x = 3.*meter;
-	mybeam.beta_y = 10.*meter;
-	mybeam.emit_x = 0.36*millimeter;
-	mybeam.emit_y = 0.16*millimeter;
-	mybeam.sig_z  = 0.65*millimeter;
-	mybeam.p0     = 1.19*GeV;
+	mybeam.beta_x = 3. * meter;
+	mybeam.beta_y = 10. * meter;
+	mybeam.emit_x = 0.36 * millimeter;
+	mybeam.emit_y = 0.16 * millimeter;
+	mybeam.sig_z  = 0.65 * millimeter;
+	mybeam.p0     = 1.19 * GeV;
 
 	mybeam.y0 = offset;
 
@@ -81,15 +81,15 @@ int main()
 	double ymeani = startBunch->GetMoments(2).first;
 	double ysigi  = startBunch->GetMoments(2).second;
 
-	cout<<"Initial bunch parameters:"<<endl;
-	cout<<"(beta_x= "<<mybeam.beta_x<<", emit_x="<<mybeam.emit_x<<" => sig_x="
-	    <<sqrt(mybeam.beta_x*mybeam.emit_x)<<" [m]"<<endl;
-	cout<<" beta_y="<<mybeam.beta_y<<", emit_y="<<mybeam.emit_y<<" => sig_y="
-	    <<sqrt(mybeam.beta_y*mybeam.emit_y)<<" [m]"<<endl;
-	cout<<" offset= "<<offset<<" [m])"<<endl<<endl;
-	cout<<"Mean x ="<<xmeani<<' '<<"Sigma x ="<<xsigi<<endl;
-	cout<<"Mean y ="<<ymeani<<' '<<"Sigma y ="<<ysigi<<endl;
-	cout<<"yp angle :"<<startBunch->GetMoments(3).first<<endl<<endl;
+	cout << "Initial bunch parameters:" << endl;
+	cout << "(beta_x= " << mybeam.beta_x << ", emit_x=" << mybeam.emit_x << " => sig_x="
+		 << sqrt(mybeam.beta_x * mybeam.emit_x) << " [m]" << endl;
+	cout << " beta_y=" << mybeam.beta_y << ", emit_y=" << mybeam.emit_y << " => sig_y="
+		 << sqrt(mybeam.beta_y * mybeam.emit_y) << " [m]" << endl;
+	cout << " offset= " << offset << " [m])" << endl << endl;
+	cout << "Mean x =" << xmeani << ' ' << "Sigma x =" << xsigi << endl;
+	cout << "Mean y =" << ymeani << ' ' << "Sigma y =" << ysigi << endl;
+	cout << "yp angle :" << startBunch->GetMoments(3).first << endl << endl;
 
 //-----------------------------------------------------
 //             construct the accelerator model
@@ -99,18 +99,18 @@ int main()
 	AcceleratorModelConstructor* accelerator_model = new AcceleratorModelConstructor();
 	accelerator_model->NewModel();
 
-	double driftlength1 = 1.0*meter;
+	double driftlength1 = 1.0 * meter;
 	Drift* drift1       = new Drift("aDrift1", driftlength1);
 
-	double collimatorlength  = 177.*millimeter;
-	double collimatorthick   = 0.004*meter;
+	double collimatorlength  = 177. * millimeter;
+	double collimatorthick   = 0.004 * meter;
 	Collimator* collimator      = new Collimator("aCollimator", collimatorlength, collimatorthick);
-	double aperturewidth  = 1.9*millimeter;
-	double apertureheight = 1.9*millimeter;
+	double aperturewidth  = 1.9 * millimeter;
+	double apertureheight = 1.9 * millimeter;
 	RectangularAperture* aperture = new RectangularAperture(aperturewidth, apertureheight);
 	collimator->SetAperture(aperture);
 
-	double driftlength2 = 1.0*meter;
+	double driftlength2 = 1.0 * meter;
 	Drift* drift2       = new Drift("aDrift2", driftlength2);
 
 	accelerator_model->AppendComponent(drift1);
@@ -120,7 +120,7 @@ int main()
 	// the collimator needs a CollimateParticleProcess
 	// and we want to have scattering
 	ofstream lossummary("loss_summary.dat");
-	CollimateParticleProcess* collimation = new CollimateParticleProcess(0,COLL_AT_EXIT, &lossummary);
+	CollimateParticleProcess* collimation = new CollimateParticleProcess(0, COLL_AT_EXIT, &lossummary);
 	collimation->ScatterAtCollimator(true);
 
 	AcceleratorModel* model = accelerator_model->GetModel();
@@ -132,7 +132,7 @@ int main()
 
 // apply the geometric wakefields
 	TaperedCollimatorPotentials* collWake
-	    =  new TaperedCollimatorPotentials(modes,aperturewidth/2,apertureheight/2);
+		= new TaperedCollimatorPotentials(modes, aperturewidth / 2, apertureheight / 2);
 	collimator->SetWakePotentials(collWake);
 
 // //another example: a resistive wakefield
@@ -141,9 +141,8 @@ int main()
 // double conductivity = 3.08e7;         //berrilium
 // double conductivity = 6.e4;           //carbon
 // double conductivity = 4.5e6;          //for TiN
-// ResistiveWakePotentials* resWake =  new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, collimatorlength);
+// ResistiveWakePotentials* resWake = new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, collimatorlength);
 // collimator->SetWakePotentials(resWake);
-
 
 //-----------------------------------------------------
 //             Create the WakeProcess
@@ -159,13 +158,12 @@ int main()
 	// of type TaperedCollimatorPotentials
 	collWake->SetExpectedProcess(collWakeProc);
 
-
 //-----------------------------------------------------
 //             Construct Tracker and add
 //             the different processes
 //-----------------------------------------------------
 
-	ParticleTracker* tracker = new ParticleTracker(model->GetBeamline(),startBunch);
+	ParticleTracker* tracker = new ParticleTracker(model->GetBeamline(), startBunch);
 
 	tracker->AddProcess(collimation);
 	tracker->AddProcess(collWakeProc);
@@ -176,14 +174,14 @@ int main()
 
 	ParticleBunch* finalBunch = tracker->Track(startBunch);
 
-	ofstream final("FinalParameters.dat");
+	ofstream final ("FinalParameters.dat");
 	finalBunch->Output(final);
 
-	int i=0;
-	double averageyp=0;
-	for(ParticleBunch::iterator p=finalBunch->begin(); p!=finalBunch->end(); p++)
+	int i = 0;
+	double averageyp = 0;
+	for(ParticleBunch::iterator p = finalBunch->begin(); p != finalBunch->end(); p++)
 	{
-		averageyp+=(p->yp()-averageyp)/(++i);
+		averageyp += (p->yp() - averageyp) / (++i);
 	}
 
 	double xmeanf = finalBunch->GetMoments(0).first;
@@ -191,21 +189,11 @@ int main()
 	double ymeanf = finalBunch->GetMoments(2).first;
 	double ysigf  = finalBunch->GetMoments(2).second;
 
-	cout<<endl<<"Final bunch parameters:"<<endl;
-	cout<<"Mean x ="<<xmeanf<<' '<<"Sigma x ="<<xsigf<<endl;
-	cout<<"Mean y ="<<ymeanf<<' '<<"Sigma y ="<<ysigf<<endl;
-	cout<<"yp angle final:"<<finalBunch->GetMoments(3).first<<endl;
+	cout << endl << "Final bunch parameters:" << endl;
+	cout << "Mean x =" << xmeanf << ' ' << "Sigma x =" << xsigf << endl;
+	cout << "Mean y =" << ymeanf << ' ' << "Sigma y =" << ysigf << endl;
+	cout << "yp angle final:" << finalBunch->GetMoments(3).first << endl;
 
 	return 0;
 
 }
-
-
-
-
-
-
-
-
-
-

@@ -44,27 +44,31 @@ struct ApplySR
 	double meanU;
 	size_t n;
 
-	double PHOTCONST1,PHOTCONST2,ParticleMassMeV;
+	double PHOTCONST1, PHOTCONST2, ParticleMassMeV;
 
-	ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2, const double MassMeV, spec_gen sg = nullptr)
-		: Bf(field),dL(dl),P0(p0),symp(sV),photgen(sg),meanU(0),n(0),PHOTCONST1(PCONST1),PHOTCONST2(PCONST2),ParticleMassMeV(MassMeV) {}
+	ApplySR(const MultipoleField& field, double dl, double p0, bool sV, const double PCONST1, const double PCONST2,
+		const double MassMeV, spec_gen sg = nullptr) :
+		Bf(field), dL(dl), P0(p0), symp(sV), photgen(sg), meanU(0), n(0), PHOTCONST1(PCONST1), PHOTCONST2(PCONST2),
+		ParticleMassMeV(MassMeV)
+	{
+	}
 
 	double MeanEnergyLoss() const
 	{
-		return meanU/n;
+		return meanU / n;
 	}
 
 	void operator()(PSvector& v)
 	{
-		double B  = abs(Bf.GetField2D(v.x(),v.y()));
-		double g  = P0 * (1 + v.dp())/ParticleMassMeV;
+		double B = abs(Bf.GetField2D(v.x(), v.y()));
+		double g = P0 * (1 + v.dp()) / ParticleMassMeV;
 		double uc = PHOTCONST1 * B * g * g;
-		double u  = 0;
+		double u = 0;
 
 		if(photgen)
 		{
-			int nphot = static_cast<int>(RandomNG::poisson( (PHOTCONST2*15.*sqrt(3.)/8.) * B * dL));
-			for(int n=0; n<nphot; n++)
+			int nphot = static_cast<int>(RandomNG::poisson((PHOTCONST2 * 15. * sqrt(3.) / 8.) * B * dL));
+			for(int n = 0; n < nphot; n++)
 			{
 				u += photgen(uc);
 			}
@@ -83,23 +87,23 @@ struct ApplySR
 		if(symp)
 		{
 
-			double ks  = sqrt((1.0+dp)*(1.0+dp) - px*px - py*py);
-			double kx  = px/ks;
-			double ky  = py/ks;
+			double ks = sqrt((1.0 + dp) * (1.0 + dp) - px * px - py * py);
+			double kx = px / ks;
+			double ky = py / ks;
 
 			dp -= u / P0;
 
-			double kz = (1.0 + dp)/sqrt(1.0 + kx*kx + ky*ky);
+			double kz = (1.0 + dp) / sqrt(1.0 + kx * kx + ky * ky);
 
-			px = kx*kz;
-			py = ky*kz;
+			px = kx * kz;
+			py = ky * kz;
 		}
 
 		else
 		{
 			dp -= u / P0;
-			px /= (1.0 + u/P0);
-			py /= (1.0 + u/P0);
+			px /= (1.0 + u / P0);
+			py /= (1.0 + u / P0);
 		}
 		n++;
 	}
@@ -107,20 +111,18 @@ struct ApplySR
 };
 } // end of anonymous namespace
 
-
 // Class SynchRadParticleProcess
 
 namespace ParticleTracking
 {
 
-
 SynchRadParticleProcess::PhotonGenerator SynchRadParticleProcess::pgen = HBSpectrumGen;
 
 bool SynchRadParticleProcess::sympVars = false;
 
-SynchRadParticleProcess::SynchRadParticleProcess (int prio, bool q)
+SynchRadParticleProcess::SynchRadParticleProcess(int prio, bool q)
 
-	: ParticleBunchProcess("SYNCHROTRON RADIATION",prio),ns(1),incQ(false),adjustEref(true),dsMax(0)
+	: ParticleBunchProcess("SYNCHROTRON RADIATION", prio), ns(1), incQ(false), adjustEref(true), dsMax(0)
 
 {
 
@@ -128,21 +130,20 @@ SynchRadParticleProcess::SynchRadParticleProcess (int prio, bool q)
 
 }
 
-
-
-void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& component)
+void SynchRadParticleProcess::SetCurrentComponent(AcceleratorComponent& component)
 {
 
-	PHOTCONST1 = 3*PlanckConstant*eV/2/twoPi/currentBunch->GetParticleMass();
-	PHOTCONST2 = 2*ElectronCharge*ElectronCharge*ElectronCharge*FreeSpacePermeability/9/currentBunch->GetParticleMass()/PlanckConstant;
-	ParticleMassMeV	= currentBunch->GetParticleMassMeV()*MeV;
+	PHOTCONST1 = 3 * PlanckConstant * eV / 2 / twoPi / currentBunch->GetParticleMass();
+	PHOTCONST2 = 2 * ElectronCharge * ElectronCharge * ElectronCharge * FreeSpacePermeability / 9
+		/ currentBunch->GetParticleMass() / PlanckConstant;
+	ParticleMassMeV = currentBunch->GetParticleMassMeV() * MeV;
 
 	SectorBend* bend = nullptr;
 	RectMultipole* rmult = nullptr;
 
 	if((bend = dynamic_cast<SectorBend*>(&component)))
 	{
-		currentField =  &(bend->GetField());
+		currentField = &(bend->GetField());
 	}
 
 	else if(incQ && (rmult = dynamic_cast<RectMultipole*>(&component)))
@@ -154,58 +155,55 @@ void SynchRadParticleProcess::SetCurrentComponent (AcceleratorComponent& compone
 		currentField = nullptr;
 	}
 
-	int ns1 = (ns==0) ? 1 + component.GetLength()/dsMax : ns;
-	dL = component.GetLength()/ns1;
-	nk1=0;
-	intS=0;
+	int ns1 = (ns == 0) ? 1 + component.GetLength() / dsMax : ns;
+	dL = component.GetLength() / ns1;
+	nk1 = 0;
+	intS = 0;
 
 	active = currentField && currentBunch;
 
 }
 
-
-void SynchRadParticleProcess::DoProcess (double ds)
+void SynchRadParticleProcess::DoProcess(double ds)
 {
 
-	if(fequal(intS+=ds,(nk1+1)*dL))
+	if(fequal(intS += ds, (nk1 + 1) * dL))
 	{
 		double E0 = currentBunch->GetReferenceMomentum();
 		double meanU = for_each(
-		                   currentBunch->begin(),
-		                   currentBunch->end(),
-		                   ApplySR(*currentField,dL,E0,sympVars,PHOTCONST1,PHOTCONST2,ParticleMassMeV,quantum)).MeanEnergyLoss();
+			currentBunch->begin(),
+			currentBunch->end(),
+			ApplySR(*currentField, dL, E0, sympVars, PHOTCONST1, PHOTCONST2, ParticleMassMeV,
+			quantum)).MeanEnergyLoss();
 
 		// Finally we adjust the reference of the
 		// bunch to reflect the mean energy loss
 		// of all the particles
 		if(adjustEref)
 		{
-			currentBunch->AdjustRefMomentum(-meanU/E0);
+			currentBunch->AdjustRefMomentum(-meanU / E0);
 		}
 		nk1++;
 	}
-	active = nk1!=ns;
+	active = nk1 != ns;
 
 }
 
-
-double SynchRadParticleProcess::GetMaxAllowedStepSize () const
+double SynchRadParticleProcess::GetMaxAllowedStepSize() const
 {
 
-	return (nk1+1)*dL-intS;
+	return (nk1 + 1) * dL - intS;
 
 }
 
-
-void SynchRadParticleProcess::IncludeQuadRadiation (bool quadsr)
+void SynchRadParticleProcess::IncludeQuadRadiation(bool quadsr)
 {
 
 	incQ = quadsr;
 
 }
 
-
-void SynchRadParticleProcess::SetNumComponentSteps (int n)
+void SynchRadParticleProcess::SetNumComponentSteps(int n)
 {
 
 	ns = n;
@@ -213,7 +211,7 @@ void SynchRadParticleProcess::SetNumComponentSteps (int n)
 
 }
 
-void SynchRadParticleProcess::SetMaxComponentStepSize (double ds_max)
+void SynchRadParticleProcess::SetMaxComponentStepSize(double ds_max)
 {
 
 	ns = 0;
@@ -221,8 +219,7 @@ void SynchRadParticleProcess::SetMaxComponentStepSize (double ds_max)
 
 }
 
-
-void SynchRadParticleProcess::GeneratePhotons (bool gp)
+void SynchRadParticleProcess::GeneratePhotons(bool gp)
 {
 
 	quantum = gp ? pgen : nullptr;

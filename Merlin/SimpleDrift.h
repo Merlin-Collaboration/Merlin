@@ -14,9 +14,8 @@
 #include "RectangularGeometry.h"
 
 /**
-*	A rectangular geometry with no field.
-*/
-typedef TAccCompG< RectangularGeometry > SimpleDrift;
-
+ *	A rectangular geometry with no field.
+ */
+typedef TAccCompG<RectangularGeometry> SimpleDrift;
 
 #endif

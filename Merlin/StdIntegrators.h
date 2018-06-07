@@ -21,28 +21,28 @@
 #include "ParticleComponentTracker.h"
 #include "ParticleMapPI.h"
 
-#define DECL_SIMPLE_INTG(I,C) class I : \
-	public ParticleComponentTracker::Integrator< C > { \
+#define DECL_SIMPLE_INTG(I, C) class I: \
+	public ParticleComponentTracker::Integrator<C> { \
 	public: void TrackStep(double); };
 
 namespace ParticleTracking
 {
 
 // common integrators
-DECL_SIMPLE_INTG(MonitorCI,Monitor)
-DECL_SIMPLE_INTG(MarkerCI,Marker)
-DECL_SIMPLE_INTG(SolenoidCI,Solenoid)
+DECL_SIMPLE_INTG(MonitorCI, Monitor)
+DECL_SIMPLE_INTG(MarkerCI, Marker)
+DECL_SIMPLE_INTG(SolenoidCI, Solenoid)
 //DECL_SIMPLE_INTG(ParticleMapCI,ParticleMapComponent)
 
 namespace THIN_LENS
 {
 
-DECL_SIMPLE_INTG(DriftCI,Drift)
-DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
-DECL_SIMPLE_INTG(TWRFStructureCI,TWRFStructure)
-DECL_SIMPLE_INTG(SWRFStructureCI,SWRFStructure)
+DECL_SIMPLE_INTG(DriftCI, Drift)
+DECL_SIMPLE_INTG(RectMultipoleCI, RectMultipole)
+DECL_SIMPLE_INTG(TWRFStructureCI, TWRFStructure)
+DECL_SIMPLE_INTG(SWRFStructureCI, SWRFStructure)
 
-class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend>
+class SectorBendCI: public ParticleComponentTracker::Integrator<SectorBend>
 {
 public:
 	void TrackStep(double);
@@ -52,16 +52,16 @@ protected:
 	void ApplyPoleFaceRotation(double h, const SectorBend::PoleFace& pf);
 };
 
-DECL_INTG_SET(ParticleComponentTracker,StdISet)
+DECL_INTG_SET(ParticleComponentTracker, StdISet)
 } //end namespace THIN_LENS
 
 namespace TRANSPORT
 {
 
-DECL_SIMPLE_INTG(DriftCI,Drift)
-DECL_SIMPLE_INTG(RectMultipoleCI,RectMultipole)
+DECL_SIMPLE_INTG(DriftCI, Drift)
+DECL_SIMPLE_INTG(RectMultipoleCI, RectMultipole)
 
-class SectorBendCI : public ParticleComponentTracker::Integrator<SectorBend>
+class SectorBendCI: public ParticleComponentTracker::Integrator<SectorBend>
 {
 public:
 	void TrackStep(double);
@@ -71,7 +71,7 @@ protected:
 	void ApplyPoleFaceRotation(const SectorBend::PoleFace* pf);
 };
 
-DECL_INTG_SET(ParticleComponentTracker,StdISet)
+DECL_INTG_SET(ParticleComponentTracker, StdISet)
 } //end namespace TRANSPORT
 
 } // end namespace ParticleTracking

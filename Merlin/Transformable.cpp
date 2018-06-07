@@ -10,10 +10,9 @@
 
 // macro for transformations
 #define _TRNSFM(func) \
-	if(local_T) (*local_T)*=Transform3D::func; \
+	if(local_T) (*local_T) *= Transform3D::func; \
 	else local_T = new Transform3D(Transform3D::func); \
 	Invalidate();
-
 
 Transformable::~Transformable()
 {
@@ -23,32 +22,32 @@ Transformable::~Transformable()
 	}
 }
 
-void Transformable::Translate (double dx, double dy, double dz)
+void Transformable::Translate(double dx, double dy, double dz)
 {
-	_TRNSFM(translation(dx,dy,dz));
+	_TRNSFM(translation(dx, dy, dz));
 }
 
-void Transformable::RotateX (double angle)
+void Transformable::RotateX(double angle)
 {
 	_TRNSFM(rotationX(angle));
 }
 
-void Transformable::RotateY (double angle)
+void Transformable::RotateY(double angle)
 {
 	_TRNSFM(rotationY(angle));
 }
 
-void Transformable::RotateZ (double angle)
+void Transformable::RotateZ(double angle)
 {
 	_TRNSFM(rotationZ(angle));
 }
 
-void Transformable::ClearTransform ()
+void Transformable::ClearTransform()
 {
 	if(local_T)
 	{
 		delete local_T;
-		local_T=nullptr;
+		local_T = nullptr;
 	}
 	Invalidate();
 }

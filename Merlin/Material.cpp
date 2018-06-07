@@ -17,10 +17,11 @@ using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
 /*
-* Basic constructor taking the following arguments:
-* Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
-*/
-Material::Material(std::string name0, std::string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0, double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
+ * Basic constructor taking the following arguments:
+ * Name, Symbol, Atomic Mass, Atomic Number, Sigma_E, Sigma_I, Sigma_R, dEdx, Radiation Length, Density, Conductivity.
+ */
+Material::Material(std::string name0, std::string sym0, double A0, int AtomicNumber0, double Sigma_E0, double Sigma_I0,
+	double Sigma_R0, double dEdx0, double X00, double Density0, double Conductivity0)
 {
 	Name = name0;
 	Symbol = sym0;
@@ -35,26 +36,26 @@ Material::Material(std::string name0, std::string sym0, double A0, int AtomicNum
 	Conductivity = Conductivity0;
 }
 
-
 double Material::CalculateElectronDensity()
 {
-	return AtomicNumber * Avogadro * Density * 0.001 / (AtomicMass * pow(centimeter,3)); // n_e m^-3 (1e6 conversion from cm^3)
+	return AtomicNumber * Avogadro * Density * 0.001 / (AtomicMass * pow(centimeter, 3)); // n_e m^-3 (1e6 conversion from cm^3)
 }
 
 //returns the Plasma energy in GeV
 double Material::CalculatePlasmaEnergy()
 {
-	return (PlanckConstantBar * sqrt((ElectronDensity * pow(ElectronCharge,2)) / (ElectronMass * FreeSpacePermittivity)))/ElectronCharge*eV;
+	return (PlanckConstantBar * sqrt((ElectronDensity * pow(ElectronCharge, 2)) / (ElectronMass
+		   * FreeSpacePermittivity))) / ElectronCharge * eV;
 }
 
 double Material::CalculateMeanExcitationEnergy()
 {
-	return AtomicNumber * 10.0 *eV;
+	return AtomicNumber * 10.0 * eV;
 }
 
 double Material::CalculateSixtrackNuclearSlope()
 {
-	return 14.1*pow(AtomicMass,2.0/3.0);
+	return 14.1 * pow(AtomicMass, 2.0 / 3.0);
 }
 
 double Material::CalculateRadiationLength()
@@ -62,55 +63,55 @@ double Material::CalculateRadiationLength()
 	//Check the required parameters exist!
 
 	//Via the method in the PDG
-	double Prefactor = (4 * FineStructureConstant * pow(ElectronRadius,2) * Avogadro) / GetAtomicMass();
+	double Prefactor = (4 * FineStructureConstant * pow(ElectronRadius, 2) * Avogadro) / GetAtomicMass();
 	double Z = GetAtomicNumber();
 	double a = FineStructureConstant * Z;
-	double a2 = pow(a,2);
+	double a2 = pow(a, 2);
 
-	double L1 = log(184.15*pow(Z,-1.0/3.0));
-	double L2 = log(1194*pow(Z,-2.0/3.0));
+	double L1 = log(184.15 * pow(Z, -1.0 / 3.0));
+	double L2 = log(1194 * pow(Z, -2.0 / 3.0));
 
-	double F = a2 * (pow(1+a2,-1) + 0.20206 - 0.0369*a2 + 0.0083*pow(a,4) - 0.002*pow(a,6));
+	double F = a2 * (pow(1 + a2, -1) + 0.20206 - 0.0369 * a2 + 0.0083 * pow(a, 4) - 0.002 * pow(a, 6));
 
 	//remember to put in the factor of the density later
-	return 1.0 / (Prefactor * ( (Z*Z*(L1-F)) + (Z*L2) ));
+	return 1.0 / (Prefactor * ((Z * Z * (L1 - F)) + (Z * L2)));
 }
 
 double Material::CalculateSixtrackTotalNucleusCrossSection()
 {
 	/*
-	* "Neutron total cross sections on nuclei at Fermilab energies"
-	* P.V.R. Murthy, C.A. Ayre, H.R. Gustafson, L.W. Jones, M.J. Longo
-	* Nuclear Physics B
-	* Volume 92, Issue 3, 16 June 1975, Pages 269–308
-	* http://dx.doi.org/10.1016/0550-3213(75)90182-0
-	* See section 5.3
-	* Note the different power from the inelastic below
-	*/
+	 * "Neutron total cross sections on nuclei at Fermilab energies"
+	 * P.V.R. Murthy, C.A. Ayre, H.R. Gustafson, L.W. Jones, M.J. Longo
+	 * Nuclear Physics B
+	 * Volume 92, Issue 3, 16 June 1975, Pages 269–308
+	 * http://dx.doi.org/10.1016/0550-3213(75)90182-0
+	 * See section 5.3
+	 * Note the different power from the inelastic below
+	 */
 
 	//No to the above, but the following works roughly:
-	return 0.04955 * pow(AtomicMass,0.77);
+	return 0.04955 * pow(AtomicMass, 0.77);
 }
 
 double Material::CalculateSixtrackInelasticNucleusCrossSection()
 {
 	/*
-	* "Neutron-nucleus inelastic cross sections from 160 to 375 GeV/c"
-	* T.J. Roberts, H.R. Gustafson, L.W. Jones, M.J. Longo, M.R. Whalley
-	* Nuclear Physics B
-	* Volume 159, Issues 1–2, 5–12 November 1979, Pages 56–66
-	* http://dx.doi.org/10.1016/0550-3213(79)90326-2
-	* Note eq 5 - this should be what the Sixtrack/K2 source (as in the PhD thesis) got the values from.
-	*/
-	return 0.0412 * pow(AtomicMass,0.711);
+	 * "Neutron-nucleus inelastic cross sections from 160 to 375 GeV/c"
+	 * T.J. Roberts, H.R. Gustafson, L.W. Jones, M.J. Longo, M.R. Whalley
+	 * Nuclear Physics B
+	 * Volume 159, Issues 1–2, 5–12 November 1979, Pages 56–66
+	 * http://dx.doi.org/10.1016/0550-3213(79)90326-2
+	 * Note eq 5 - this should be what the Sixtrack/K2 source (as in the PhD thesis) got the values from.
+	 */
+	return 0.0412 * pow(AtomicMass, 0.711);
 }
 
 double Material::CalculateSixtrackRutherfordCrossSection()
 {
-	double R = 1.2e-15 * pow(AtomicMass,1.0/3.0);
-	double expC = -0.856e-3 * pow(R,2);
-	const double C = pow(PlanckConstantBar*SpeedOfLight / (ElectronCharge*1e9 * 0.001 * 1e-28),2);
-	const double PiAlpha = 4*pi*pow(FineStructureConstant,2);
+	double R = 1.2e-15 * pow(AtomicMass, 1.0 / 3.0);
+	double expC = -0.856e-3 * pow(R, 2);
+	const double C = pow(PlanckConstantBar * SpeedOfLight / (ElectronCharge * 1e9 * 0.001 * 1e-28), 2);
+	const double PiAlpha = 4 * pi * pow(FineStructureConstant, 2);
 	return 0;
 }
 
@@ -200,8 +201,8 @@ void Material::SetSixtrackNuclearSlope(double p)
 }
 
 /*
-* Accessors
-*/
+ * Accessors
+ */
 double Material::GetAtomicNumber() const
 {
 	return AtomicNumber;
@@ -234,7 +235,7 @@ double Material::GetRadiationLength() const
 
 double Material::GetRadiationLengthInM() const
 {
-	return X0*0.001/Density;
+	return X0 * 0.001 / Density;
 }
 
 double Material::GetDensity() const
@@ -295,83 +296,87 @@ double Material::GetSixtrackNuclearSlope() const
 bool Material::VerifyMaterial() const
 {
 	bool verification = true;
-	if(GetName().size() <1)
+	if(GetName().size() < 1)
 	{
 		return false;
 	}
 
-	if(GetSymbol().size() <1)
+	if(GetSymbol().size() < 1)
 	{
 		std::cerr << "Failed to verify Symbol for " << GetName() << ": " << GetSymbol() << std::endl;
 		verification = false;
 	}
-	if(GetAtomicNumber() <1)
+	if(GetAtomicNumber() < 1)
 	{
 		std::cerr << "Failed to verify AtomicNumber for " << GetName() << ": " << GetAtomicNumber() << std::endl;
 		verification = false;
 	}
-	if(GetAtomicMass() <=0)
+	if(GetAtomicMass() <= 0)
 	{
 		std::cerr << "Failed to verify AtomicMass for " << GetName() << ": " << GetAtomicMass() << std::endl;
 		verification = false;
 	}
 
-	if(GetConductivity() <=0)
+	if(GetConductivity() <= 0)
 	{
 		std::cerr << "failed to verify conductivity for " << GetName() << ": " << GetConductivity() << std::endl;
 		verification = false;
 	}
-	if(GetRadiationLength() <=0)
+	if(GetRadiationLength() <= 0)
 	{
 		std::cerr << "Failed to verify RadiationLength for " << GetName() << ": " << GetRadiationLength() << std::endl;
 		verification = false;
 	}
-	if(GetDensity() <=0)
+	if(GetDensity() <= 0)
 	{
 		std::cerr << "Failed to verify Density for " << GetName() << ": " << GetDensity() << std::endl;
 		verification = false;
 	}
-	if(GetElectronDensity() <=0)
+	if(GetElectronDensity() <= 0)
 	{
 		std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl;
 		verification = false;
 	}
-	if(GetMeanExcitationEnergy() <=0)
+	if(GetMeanExcitationEnergy() <= 0)
 	{
-		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy() << std::endl;
+		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy()
+				  << std::endl;
 		verification = false;
 	}
-	if(GetPlasmaEnergy() <=0)
+	if(GetPlasmaEnergy() <= 0)
 	{
 		std::cerr << "Failed to verify PlasmaEnergy for " << GetName() << ": " << GetPlasmaEnergy() << std::endl;
 		verification = false;
 	}
 
-
 	/*
-	* Sixtrack parameters
-	*/
-	if(GetSixtrackTotalNucleusCrossSection() <=0)
+	 * Sixtrack parameters
+	 */
+	if(GetSixtrackTotalNucleusCrossSection() <= 0)
 	{
-		std::cerr << "Failed to verify SixtrackTotalNucleusCrossSection for " << GetName() << ": " << GetSixtrackTotalNucleusCrossSection() << std::endl;
+		std::cerr << "Failed to verify SixtrackTotalNucleusCrossSection for " << GetName() << ": "
+				  << GetSixtrackTotalNucleusCrossSection() << std::endl;
 		verification = false;
 	}
-	if(GetSixtrackInelasticNucleusCrossSection() <=0)
+	if(GetSixtrackInelasticNucleusCrossSection() <= 0)
 	{
-		std::cerr << "Failed to verify SixtrackInelasticNucleusCrossSection for " << GetName() << ": " << GetSixtrackInelasticNucleusCrossSection() << std::endl;
+		std::cerr << "Failed to verify SixtrackInelasticNucleusCrossSection for " << GetName() << ": "
+				  << GetSixtrackInelasticNucleusCrossSection() << std::endl;
 		verification = false;
 	}
-	if(GetSixtrackRutherfordCrossSection() <=0)
+	if(GetSixtrackRutherfordCrossSection() <= 0)
 	{
-		std::cerr << "Failed to verify SixtrackRutherfordCrossSection for " << GetName() << ": " << GetSixtrackRutherfordCrossSection() << std::endl;
+		std::cerr << "Failed to verify SixtrackRutherfordCrossSection for " << GetName() << ": "
+				  << GetSixtrackRutherfordCrossSection() << std::endl;
 		verification = false;
 	}
-	if(GetSixtrackNuclearSlope() <=0)
+	if(GetSixtrackNuclearSlope() <= 0)
 	{
-		std::cerr << "Failed to verify SixtrackNuclearSlope for " << GetName() << ": " << GetSixtrackNuclearSlope() << std::endl;
+		std::cerr << "Failed to verify SixtrackNuclearSlope for " << GetName() << ": " << GetSixtrackNuclearSlope()
+				  << std::endl;
 		verification = false;
 	}
-	if(GetSixtrackdEdx() <=0)
+	if(GetSixtrackdEdx() <= 0)
 	{
 		std::cerr << "Failed to verify SixtrackdEdx for " << GetName() << ": " << GetSixtrackdEdx() << std::endl;
 		verification = false;

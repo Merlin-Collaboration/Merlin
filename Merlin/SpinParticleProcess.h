@@ -32,10 +32,10 @@ private:
 
 typedef vector<SpinVector> SpinVectorArray;
 
-class SpinParticleBunch : public ParticleBunch
+class SpinParticleBunch: public ParticleBunch
 {
 public:
-	SpinParticleBunch(double P0, double Qm=1);
+	SpinParticleBunch(double P0, double Qm = 1);
 	virtual ParticleBunch::iterator erase(ParticleBunch::iterator p);
 	virtual size_t AddParticle(const Particle& p);
 	size_t AddParticle(const Particle& p, const SpinVector& spin);
@@ -43,46 +43,45 @@ public:
 	virtual void SortByCT();
 	SpinVectorArray::iterator beginSpinArray();
 	SpinVectorArray::iterator endSpinArray();
-	virtual void Output (std::ostream& os) const;
+	virtual void Output(std::ostream& os) const;
 	SpinVector GetAverageSpin() const;
-	virtual bool ApplyTransformation (const Transform3D& t);
+	virtual bool ApplyTransformation(const Transform3D& t);
 
 private:
 	SpinVectorArray spinArray;
 };
 
-
-class SpinParticleProcess : public ParticleBunchProcess
+class SpinParticleProcess: public ParticleBunchProcess
 {
 public:
-	SpinParticleProcess (int prio, int nstep = 1);
+	SpinParticleProcess(int prio, int nstep = 1);
 
 	/**
-	*	Sets the current accelerator component.
-	*/
-	virtual void SetCurrentComponent (AcceleratorComponent& component);
+	 *	Sets the current accelerator component.
+	 */
+	virtual void SetCurrentComponent(AcceleratorComponent& component);
 
 	/**
-	*	Preform the process for the specified step ds.
-	*/
-	virtual void DoProcess (double ds);
+	 *	Preform the process for the specified step ds.
+	 */
+	virtual void DoProcess(double ds);
 
 	/**
-	*	Returns the current maximum step length for this process.
-	*	@return Process current maximum step length
-	*/
-	virtual double GetMaxAllowedStepSize () const;
+	 *	Returns the current maximum step length for this process.
+	 *	@return Process current maximum step length
+	 */
+	virtual double GetMaxAllowedStepSize() const;
 
 	/**
-	*	Sets the minimum number of equal steps to take through
-	*	the component.
-	*/
-	void SetNumComponentSteps (int n);
+	 *	Sets the minimum number of equal steps to take through
+	 *	the component.
+	 */
+	void SetNumComponentSteps(int n);
 
 	/**
-	*  Set a momentum for calculating the spin precession
-	*/
-	void SetSpinMomentum (double p_spin);
+	 *  Set a momentum for calculating the spin precession
+	 */
+	void SetSpinMomentum(double p_spin);
 
 private:
 	int ns;

@@ -21,16 +21,16 @@ namespace ParticleTracking
 {
 
 /**
-* Class for calculating the longitudinal and
-* transverse single-bunch wakefields
-* for Collimators with modes
-*/
-class CollimatorWakeProcess : public WakeFieldProcess
+ * Class for calculating the longitudinal and
+ * transverse single-bunch wakefields
+ * for Collimators with modes
+ */
+class CollimatorWakeProcess: public WakeFieldProcess
 {
 public:
 
 	CollimatorWakeProcess(int, int, size_t, double);
-	~CollimatorWakeProcess ();
+	~CollimatorWakeProcess();
 
 	virtual void ApplyWakefield(double);
 	virtual void CalculateWakeT(double, int);
@@ -38,8 +38,8 @@ public:
 
 private:
 
-	double CalculateSm (int, int);
-	double CalculateCm (int, int);
+	double CalculateSm(int, int);
+	double CalculateCm(int, int);
 
 	int nmodes;
 
@@ -57,8 +57,8 @@ private:
 
 	CollimatorWakePotentials* collimator_wake;
 
-	using  WakeFieldProcess::CalculateWakeT;
-	using  WakeFieldProcess::CalculateWakeL;
+	using WakeFieldProcess::CalculateWakeT;
+	using WakeFieldProcess::CalculateWakeL;
 };
 
 }

@@ -16,11 +16,11 @@ int main(int argc, char* argv[])
 	double beam_mom = 100;
 	double charge = 1;
 
-	ProtonBunch* myBunch_p = new ProtonBunch(beam_mom,charge);
-	ElectronBunch* myBunch_e = new ElectronBunch(beam_mom,charge);
+	ProtonBunch* myBunch_p = new ProtonBunch(beam_mom, charge);
+	ElectronBunch* myBunch_e = new ElectronBunch(beam_mom, charge);
 
-	assert_close( myBunch_p->GetParticleMass(), 1.67262e-27 , 1e-31);
-	assert_close( myBunch_e->GetParticleMass(), 9.10938215e-31 , 1e-38);
+	assert_close(myBunch_p->GetParticleMass(), 1.67262e-27, 1e-31);
+	assert_close(myBunch_e->GetParticleMass(), 9.10938215e-31, 1e-38);
 
 	assert(myBunch_p->size() == 0);
 	Particle p(0);
@@ -33,7 +33,3 @@ int main(int argc, char* argv[])
 	delete myBunch_e;
 	return 0;
 }
-
-
-
-

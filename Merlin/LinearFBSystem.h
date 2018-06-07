@@ -19,42 +19,42 @@
 using namespace TLAS;
 
 /**
-*	A simple linear feedback correction algorithm. On each
-*	application, the actuator channels (A) are incremented
-*	using the following linear equation:
-*
-*	A = A-g*(Mi*(S-S0))
-*
-*	where g is the gain, S are the current signal values and
-*	S0 are the desired signal values (set points). Mi is a
-*	pseudo-inverse matrix of the response matrix M defined by
-*
-*	S=M*A
-*
-*	Mi is calculated using SVD.
-*/
+ *	A simple linear feedback correction algorithm. On each
+ *	application, the actuator channels (A) are incremented
+ *	using the following linear equation:
+ *
+ *	A = A-g*(Mi*(S-S0))
+ *
+ *	where g is the gain, S are the current signal values and
+ *	S0 are the desired signal values (set points). Mi is a
+ *	pseudo-inverse matrix of the response matrix M defined by
+ *
+ *	S=M*A
+ *
+ *	Mi is calculated using SVD.
+ */
 
 class LinearFBSystem
 {
 public:
 
-	LinearFBSystem (std::vector<ROChannel*>& sigs, std::vector<RWChannel*>& acts, const RealMatrix& M);
-	LinearFBSystem (ROChannelArray& sigs, RWChannelArray& acts, const RealMatrix& M);
+	LinearFBSystem(std::vector<ROChannel*>& sigs, std::vector<RWChannel*>& acts, const RealMatrix& M);
+	LinearFBSystem(ROChannelArray& sigs, RWChannelArray& acts, const RealMatrix& M);
 
-	~LinearFBSystem ();
+	~LinearFBSystem();
 
-	void SignalsToSetpoints ();
-	void StoreActuators () const;
-	void RestoreActuators ();
-	void SetResponseMatrix (const RealMatrix& M);
-	void SetGain (double g);
-	double GetGain () const;
-	void Apply ();
-	void SetSetpoints (const RealVector& S0);
-	double GetActuatorRMS () const;
-	double GetSignalRMS () const;
-	int GetNumSignals () const;
-	int GetNumActuators () const;
+	void SignalsToSetpoints();
+	void StoreActuators() const;
+	void RestoreActuators();
+	void SetResponseMatrix(const RealMatrix& M);
+	void SetGain(double g);
+	double GetGain() const;
+	void Apply();
+	void SetSetpoints(const RealVector& S0);
+	double GetActuatorRMS() const;
+	double GetSignalRMS() const;
+	int GetNumSignals() const;
+	int GetNumActuators() const;
 	void SetPulseDelay(int n);
 
 private:
@@ -69,7 +69,7 @@ private:
 
 	mutable RealVector* cached_actuators;
 
-	SVDMatrix< double >* Mi;
+	SVDMatrix<double>* Mi;
 	// to allow for possible actuator pulse delays, we use a queue
 	mutable std::queue<RealVector>* actuatorQueue;
 };

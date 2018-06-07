@@ -11,8 +11,8 @@
 #include "Random.h"
 
 /**
-*	The interval [lo..hi]
-*/
+ *	The interval [lo..hi]
+ */
 class Uniform: public Random
 {
 	double pLow;
@@ -29,8 +29,8 @@ public:
 	virtual double operator()();
 };
 
-
-inline Uniform::Uniform(double low, double high, RNG *gen) : Random(gen)
+inline Uniform::Uniform(double low, double high, RNG *gen) :
+	Random(gen)
 {
 	pLow = (low < high) ? low : high;
 	pHigh = (low < high) ? high : low;

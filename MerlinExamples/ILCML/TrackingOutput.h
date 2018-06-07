@@ -11,12 +11,11 @@
 #include <string>
 #include "StringPattern.h"
 
-
-class TrackingOutput : public SimulationOutput
+class TrackingOutput: public SimulationOutput
 {
 public:
-	TrackingOutput(const std::string& fname)
-		: SimulationOutput(),fosptr(nullptr)
+	TrackingOutput(const std::string& fname) :
+		SimulationOutput(), fosptr(nullptr)
 	{
 		NewFile(fname);
 	}
@@ -35,22 +34,15 @@ protected:
 	virtual void Record(const ComponentFrame* frame, const Bunch* bunch);
 	virtual void RecordInitialBunch(const Bunch* bunch)
 	{
-		Record("INITIAL",bunch);
+		Record("INITIAL", bunch);
 	}
 	virtual void RecordFinalBunch(const Bunch* bunch)
 	{
-		Record("FINAL",bunch);
+		Record("FINAL", bunch);
 	}
 
 private:
 
 	std::ofstream* fosptr;
-	void Record(const string&,const Bunch*);
+	void Record(const string&, const Bunch*);
 };
-
-
-
-
-
-
-

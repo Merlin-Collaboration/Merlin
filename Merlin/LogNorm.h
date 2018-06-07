@@ -25,18 +25,17 @@ public:
 	virtual double operator()();
 };
 
-
 inline void LogNormal::setState()
 {
 	double m2 = logMean * logMean;
-	pMean = log(m2 / sqrt(logVariance + m2) );
+	pMean = log(m2 / sqrt(logVariance + m2));
 	// from ch@heike.informatik.uni-dortmund.de:
 	// (was   pVariance = log((sqrt(logVariance + m2)/m2 )); )
-	pStdDev = sqrt(log((logVariance + m2)/m2 ));
+	pStdDev = sqrt(log((logVariance + m2) / m2));
 }
 
-inline LogNormal::LogNormal(double mean, double variance, RNG *gen)
-	: Normal(mean, variance, gen)
+inline LogNormal::LogNormal(double mean, double variance, RNG *gen) :
+	Normal(mean, variance, gen)
 {
 	logMean = mean;
 	logVariance = variance;
@@ -50,7 +49,7 @@ inline double LogNormal::mean()
 
 inline double LogNormal::mean(double x)
 {
-	double t=logMean;
+	double t = logMean;
 	logMean = x;
 	setState();
 	return t;
@@ -63,7 +62,7 @@ inline double LogNormal::variance()
 
 inline double LogNormal::variance(double x)
 {
-	double t=logVariance;
+	double t = logVariance;
 	logVariance = x;
 	setState();
 	return t;

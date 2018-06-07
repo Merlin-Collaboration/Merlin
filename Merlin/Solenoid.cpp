@@ -12,35 +12,33 @@
 // Class Solenoid
 const int Solenoid::ID = UniqueIndex();
 
-Solenoid::Solenoid (const std::string& id, double len, double Bz)
-	: SimpleSolenoid(id,new RectangularGeometry(len),new BzField(Bz))
+Solenoid::Solenoid(const std::string& id, double len, double Bz) :
+	SimpleSolenoid(id, new RectangularGeometry(len), new BzField(Bz))
 {
 }
 
-
-void Solenoid::RotateY180 ()
+void Solenoid::RotateY180()
 {
 	BzField& field = GetField();
 	field.SetStrength(-field.GetStrength());
 }
 
-const string& Solenoid::GetType () const
+const string& Solenoid::GetType() const
 {
 	_TYPESTR(Solenoid);
 }
 
-ModelElement* Solenoid::Copy () const
+ModelElement* Solenoid::Copy() const
 {
 	return new Solenoid(*this);
 }
 
-int Solenoid::GetIndex () const
+int Solenoid::GetIndex() const
 {
 	return Solenoid::ID;
 }
 
-void Solenoid::PrepareTracker (ComponentTracker& aTracker)
+void Solenoid::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,AcceleratorComponent);
+	_PREPTRACK(aTracker, AcceleratorComponent);
 }
-

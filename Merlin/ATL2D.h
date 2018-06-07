@@ -38,63 +38,69 @@ class ATL2D
 {
 public:
 
-	enum ATLMode {increment, absolute};
+	enum ATLMode
+	{
+		increment,
+		absolute
+
+	};
 
 	/**
-	*	Constructor taking the A constant and the list of
-	*	support structures.
-	*/
-	ATL2D (double anA, const AcceleratorSupportList& supports, const Point2D refPoint=Point2D(0,0), ifstream* evecTFile=nullptr, ifstream* evalFile=nullptr);
+	 *	Constructor taking the A constant and the list of
+	 *	support structures.
+	 */
+	ATL2D(double anA, const AcceleratorSupportList& supports, const Point2D refPoint = Point2D(0, 0),
+		ifstream* evecTFile = nullptr, ifstream* evalFile = nullptr);
 
-	~ATL2D ();
-
-	/**
-	*	Reset the ground motion to zero Note this resets the
-	*	offset of all the AcceleratorSupports, and resets the
-	*	internal clock to zero.
-	*/
-	void Reset ();
+	~ATL2D();
 
 	/**
-	*	Perform a single step of dt seconds. Returns the current
-	*	simulated time.
-	*	@return Current simulated time (s)
-	*/
-	double DoStep (double dt);
+	 *	Reset the ground motion to zero Note this resets the
+	 *	offset of all the AcceleratorSupports, and resets the
+	 *	internal clock to zero.
+	 */
+	void Reset();
 
 	/**
-	*	Record the (x,y,z) offset of all the supports to the
-	*	specified stream.
-	*/
-	void RecordOffsets (std::ostream& os) const;
+	 *	Perform a single step of dt seconds. Returns the current
+	 *	simulated time.
+	 *	@return Current simulated time (s)
+	 */
+	double DoStep(double dt);
 
 	/**
-	*	Returns the current simulated time (in seconds).
-	*	@return Current simulated time (s)
-	*/
-	double GetTime () const;
+	 *	Record the (x,y,z) offset of all the supports to the
+	 *	specified stream.
+	 */
+	void RecordOffsets(std::ostream& os) const;
 
 	/**
-	*	Sets the random seed to nseed.
-	*/
-	void SetRandomSeed (unsigned int nseed);
+	 *	Returns the current simulated time (in seconds).
+	 *	@return Current simulated time (s)
+	 */
+	double GetTime() const;
 
 	/**
-	*	Returns the current random seed
-	*	@return Current random seed
-	*/
-	unsigned int GetRandomSeed () const;
+	 *	Sets the random seed to nseed.
+	 */
+	void SetRandomSeed(unsigned int nseed);
 
 	/**
-	*	Resets the random generator with the current random seed.
-	*/
-	void ResetRandomSeed ();
+	 *	Returns the current random seed
+	 *	@return Current random seed
+	 */
+	unsigned int GetRandomSeed() const;
 
-	bool SetATLMode (const ATLMode mode);
+	/**
+	 *	Resets the random generator with the current random seed.
+	 */
+	void ResetRandomSeed();
 
-	bool SetVibration (const double vrms);
+	bool SetATLMode(const ATLMode mode);
 
-	void RecordEigenSystem (ofstream* evecTFile, ofstream* evalFile);
+	bool SetVibration(const double vrms);
+
+	void RecordEigenSystem(ofstream* evecTFile, ofstream* evalFile);
 
 private:
 

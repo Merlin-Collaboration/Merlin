@@ -40,6 +40,7 @@ struct JawImpactData
 	double ct;
 	double dp;
 	string name;
+
 };
 
 struct ScatterPlotData
@@ -55,7 +56,7 @@ struct ScatterPlotData
 
 	inline bool operator==(const ScatterPlotData& rhs)
 	{
-		if( (this->z != rhs.z) )
+		if((this->z != rhs.z))
 		{
 			return 0;
 		}
@@ -67,7 +68,7 @@ struct ScatterPlotData
 
 	inline bool operator>(const ScatterPlotData& rhs)
 	{
-		if( (this->z > rhs.z) )
+		if((this->z > rhs.z))
 		{
 			return 0;
 		}
@@ -79,7 +80,7 @@ struct ScatterPlotData
 
 	inline bool operator<(const ScatterPlotData& rhs)
 	{
-		if( (this->z < rhs.z) )
+		if((this->z < rhs.z))
 		{
 			return 0;
 		}
@@ -88,9 +89,15 @@ struct ScatterPlotData
 			return 1;
 		}
 	}
+
 };
 
-enum EnergyLossMode {SimpleEnergyLoss, FullEnergyLoss};
+enum EnergyLossMode
+{
+	SimpleEnergyLoss,
+	FullEnergyLoss
+
+};
 
 /**
  * Base class for scattering models
@@ -104,35 +111,35 @@ class ScatteringModel
 public:
 
 	/**
-	* Constructor
-	*/
+	 * Constructor
+	 */
 	ScatteringModel();
 	virtual ~ScatteringModel();
 
 	/**
-	* Collimation Functions
-	* Set ScatterType
-	*/
+	 * Collimation Functions
+	 * Set ScatterType
+	 */
 	void SetScatterType(int st);
 
 	/**
-	* Calculate the particle path length in given material using scattering processes
-	*/
+	 * Calculate the particle path length in given material using scattering processes
+	 */
 	double PathLength(Material* mat, double E0);
 
 	/**
-	* Dispatches to EnergyLossSimple or EnergyLossFull
-	*/
+	 * Dispatches to EnergyLossSimple or EnergyLossFull
+	 */
 	void EnergyLoss(PSvector& p, double x, Material* mat, double E0);
 
 	/**
-	* Multiple Coulomb scattering
-	*/
+	 * Multiple Coulomb scattering
+	 */
 	void Straggle(PSvector& p, double x, Material* mat, double E1, double E2);
 
 	/**
-	* Function performs scattering and returns true if inelastic scatter
-	*/
+	 * Function performs scattering and returns true if inelastic scatter
+	 */
 	bool ParticleScatter(PSvector& p, Material* mat, double E);
 
 // Other Functions
@@ -156,7 +163,7 @@ public:
 	void OutputScatterPlot(std::string directory, int seed = 0);
 	std::vector<std::string> ScatterPlotNames;
 	bool ScatterPlot_on;
-	std::vector <ScatterPlotData*> StoredScatterPlotData;
+	std::vector<ScatterPlotData*> StoredScatterPlotData;
 
 	// Jaw impact
 	void JawImpact(ParticleTracking::Particle& p, int turn, std::string name);
@@ -164,7 +171,7 @@ public:
 	void OutputJawImpact(std::string directory, int seed = 0);
 	std::vector<std::string> JawImpactNames;
 	bool JawImpact_on;
-	std::vector <JawImpactData*> StoredJawImpactData;
+	std::vector<JawImpactData*> StoredJawImpactData;
 
 	int GetScatteringPhysicsModel()
 	{
@@ -173,32 +180,32 @@ public:
 
 protected:
 	/**
-	* vector holding all scattering processes
-	*/
-	std::vector <Collimation::ScatteringProcess*> Processes;
+	 * vector holding all scattering processes
+	 */
+	std::vector<Collimation::ScatteringProcess*> Processes;
 
 	/**
-	* vector with fractions of the total scattering cross section assigned to each ScatteringProcess
-	*/
-	std::vector <double> fraction;
+	 * vector with fractions of the total scattering cross section assigned to each ScatteringProcess
+	 */
+	std::vector<double> fraction;
 
 	/**
-	* Store calculated CrossSections data to save time
-	*/
-	std::map< std::string, Collimation::CrossSections* > stored_cross_sections;
-	std::map< std::string, Collimation::CrossSections* >::iterator CS_iterator;
+	 * Store calculated CrossSections data to save time
+	 */
+	std::map<std::string, Collimation::CrossSections*> stored_cross_sections;
+	std::map<std::string, Collimation::CrossSections*>::iterator CS_iterator;
 	EnergyLossMode energy_loss_mode;
 
 private:
 
 	/**
-	* Energy loss via ionisation
-	*/
+	 * Energy loss via ionisation
+	 */
 	void EnergyLossSimple(PSvector& p, double x, Material* mat, double E0);
 
 	/**
-	* Advanced energy loss via ionisation
-	*/
+	 * Advanced energy loss via ionisation
+	 */
 
 	void EnergyLossFull(PSvector& p, double x, Material* mat, double E0);
 	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN

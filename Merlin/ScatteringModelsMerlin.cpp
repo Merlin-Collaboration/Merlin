@@ -9,17 +9,17 @@
 #include "ScatteringModelsMerlin.h"
 #include "ScatteringProcess.h"
 
-
 namespace Collimation
 {
 
-ScatteringModelFixed::ScatteringModelFixed(): is_fixed(false)
+ScatteringModelFixed::ScatteringModelFixed() :
+	is_fixed(false)
 {
 }
 
 void ScatteringModelFixed::AddProcess(Collimation::ScatteringProcess* S)
 {
-	if (!is_fixed)
+	if(!is_fixed)
 	{
 		ScatteringModel::AddProcess(S);
 	}
@@ -34,12 +34,11 @@ ScatteringModelFixed::~ScatteringModelFixed()
 {
 	// Processes can only be added by the class itself (as long as the constructor
 	// sets is_fixed=true) so they can be safely deleted by the class.
-	for(auto& sp: Processes)
+	for(auto& sp : Processes)
 	{
 		delete sp;
 	}
 }
-
 
 ScatteringModelMerlin::ScatteringModelMerlin()
 {

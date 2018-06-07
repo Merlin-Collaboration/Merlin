@@ -37,8 +37,8 @@ bool ElectronBunch::IsStable() const
 	return true;
 }
 /*
-int ElectronBunch::Scatter(PSvector& p,double x,double E0,const Aperture* ap)
-{
-	return 0;
-} //End of ScatterElectron
-*/
+   int ElectronBunch::Scatter(PSvector& p,double x,double E0,const Aperture* ap)
+   {
+    return 0;
+   } //End of ScatterElectron
+ */

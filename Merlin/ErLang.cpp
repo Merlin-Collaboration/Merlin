@@ -12,9 +12,9 @@ double Erlang::operator()()
 {
 	double prod = 1.0;
 
-	for (int i = 0; i < k; i++)
+	for(int i = 0; i < k; i++)
 	{
-		prod *= pGenerator -> asDouble();
+		prod *= pGenerator->asDouble();
 	}
-	return -log(prod)/a;
+	return -log(prod) / a;
 }

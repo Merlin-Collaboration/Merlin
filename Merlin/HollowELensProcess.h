@@ -17,64 +17,64 @@
 namespace ParticleTracking
 {
 
-class HollowELensProcess : public ParticleBunchProcess
+class HollowELensProcess: public ParticleBunchProcess
 {
 public:
 	/**
-	*	Constructor
-	*/
-	HollowELensProcess (int priority);
+	 *	Constructor
+	 */
+	HollowELensProcess(int priority);
 
 	/**
-	*	Initialise this process with the specified Bunch. If
-	*	bunch is not a ParticleBunch object, the process becomes
-	*	inactive.
-	*/
-	virtual void InitialiseProcess (Bunch& bunch);
+	 *	Initialise this process with the specified Bunch. If
+	 *	bunch is not a ParticleBunch object, the process becomes
+	 *	inactive.
+	 */
+	virtual void InitialiseProcess(Bunch& bunch);
 
 	/**
-	*	Sets the current accelerator component.
-	*/
-	virtual void SetCurrentComponent (AcceleratorComponent& component);
+	 *	Sets the current accelerator component.
+	 */
+	virtual void SetCurrentComponent(AcceleratorComponent& component);
 
 	/**
-	*	Preform the process for the specified step ds.
-	*/
-	virtual void DoProcess (double ds);
+	 *	Preform the process for the specified step ds.
+	 */
+	virtual void DoProcess(double ds);
 
 	/**
-	*	Returns the current maximum step length for this process.
-	*	@return Current process maximum step length
-	*/
-	virtual double GetMaxAllowedStepSize () const;
+	 *	Returns the current maximum step length for this process.
+	 *	@return Current process maximum step length
+	 */
+	virtual double GetMaxAllowedStepSize() const;
 
 	/**
-	* Calculates the theta kick given by the e- lens
-	*/
-	virtual double CalcThetaMax (double r);
+	 * Calculates the theta kick given by the e- lens
+	 */
+	virtual double CalcThetaMax(double r);
 
 	/**
-	* Use simple profile to calculate kick
-	*/
-	virtual double CalcKickSimple (Particle &p);
+	 * Use simple profile to calculate kick
+	 */
+	virtual double CalcKickSimple(Particle &p);
 	/**
-	* Need this to output profiles
-	*/
-	virtual double CalcKickSimple (double R);
+	 * Need this to output profiles
+	 */
+	virtual double CalcKickSimple(double R);
 
 	/**
-	* Use radial (measured) profile to calculate kick
-	*/
-	virtual double CalcKickRadial (Particle &p);
+	 * Use radial (measured) profile to calculate kick
+	 */
+	virtual double CalcKickRadial(Particle &p);
 	/**
-	* Need this to output profiles
-	*/
-	virtual double CalcKickRadial (double R);
+	 * Need this to output profiles
+	 */
+	virtual double CalcKickRadial(double R);
 
 	/**
-	* Output the HEL radial profile in x y phase space (assumes circular HEL)
-	*/
-	virtual void OutputProfile(std::ostream* os, double E=7000, double min=0, double max=10);
+	 * Output the HEL radial profile in x y phase space (assumes circular HEL)
+	 */
+	virtual void OutputProfile(std::ostream* os, double E = 7000, double min = 0, double max = 10);
 
 private:
 	// Data Members for Class Attributes

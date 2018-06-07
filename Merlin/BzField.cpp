@@ -7,13 +7,12 @@
 
 #include "BzField.h"
 
-Vector3D BzField::GetBFieldAt (const Point3D& x, double t) const
+Vector3D BzField::GetBFieldAt(const Point3D& x, double t) const
 {
-	return Vector3D(0,0,Bz);
+	return Vector3D(0, 0, Bz);
 }
 
-Vector3D BzField::GetEFieldAt (const Point3D& x, double t) const
+Vector3D BzField::GetEFieldAt(const Point3D& x, double t) const
 {
-	return Vector3D(0,0,0);
+	return Vector3D(0, 0, 0);
 }
-

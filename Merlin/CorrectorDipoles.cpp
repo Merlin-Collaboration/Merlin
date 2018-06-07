@@ -11,43 +11,42 @@
 const int XCor::ID = UniqueIndex();
 const int YCor::ID = UniqueIndex();
 
-ModelElement* XCor::Copy () const
+ModelElement* XCor::Copy() const
 {
 	return new XCor(*this);
 }
 
-int XCor::GetIndex () const
+int XCor::GetIndex() const
 {
 	return ID;
 }
 
-const string& XCor::GetType () const
+const string& XCor::GetType() const
 {
 	_TYPESTR(XCor)
 }
 
-void XCor::PrepareTracker (ComponentTracker& aTracker)
+void XCor::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,RectMultipole)
+	_PREPTRACK(aTracker, RectMultipole)
 }
 
-ModelElement* YCor::Copy () const
+ModelElement* YCor::Copy() const
 {
 	return new YCor(*this);
 }
 
-int YCor::GetIndex () const
+int YCor::GetIndex() const
 {
 	return ID;
 }
 
-const string& YCor::GetType () const
+const string& YCor::GetType() const
 {
 	_TYPESTR(YCor)
 }
 
-void YCor::PrepareTracker (ComponentTracker& aTracker)
+void YCor::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,RectMultipole)
+	_PREPTRACK(aTracker, RectMultipole)
 }
-

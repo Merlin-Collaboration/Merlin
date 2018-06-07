@@ -15,7 +15,7 @@
 class AcceleratorModel;
 class BeamData;
 
-class ParticleTrackingModel : public BeamDynamicsModel
+class ParticleTrackingModel: public BeamDynamicsModel
 {
 public:
 

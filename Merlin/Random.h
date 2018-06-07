@@ -17,7 +17,9 @@ protected:
 	RNG *pGenerator;
 
 public:
-	virtual ~Random() {}
+	virtual ~Random()
+	{
+	}
 	Random(RNG *generator);
 	virtual double operator()() = 0;
 
@@ -29,7 +31,6 @@ private:
 	Random(const Random& rhs);
 	Random& operator=(const Random& rhs);
 };
-
 
 inline Random::Random(RNG *gen)
 {

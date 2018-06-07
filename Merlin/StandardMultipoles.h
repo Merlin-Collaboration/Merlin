@@ -17,48 +17,48 @@ class ComponentTracker;
 // type strings for template parameter instantiation
 
 /**
-*	A standard quadrupole magnet.
-*/
-class Quadrupole : public RectMultipole
+ *	A standard quadrupole magnet.
+ */
+class Quadrupole: public RectMultipole
 {
 public:
 	/**
-	*	Constructor. The primary field component is specified as
-	*	the quadrupole gradient. Units are Tesla/meter.
-	*/
-	Quadrupole (const string& id, double len, double dnB);
+	 *	Constructor. The primary field component is specified as
+	 *	the quadrupole gradient. Units are Tesla/meter.
+	 */
+	Quadrupole(const string& id, double len, double dnB);
 
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a field B (in Tesla) at a specific radius r0 (in meter).
-	*/
-	Quadrupole (const string& id, double len, double B, double r0);
+	 *	Constructor. The primary field component is specified as
+	 *	a field B (in Tesla) at a specific radius r0 (in meter).
+	 */
+	Quadrupole(const string& id, double len, double B, double r0);
 
 	/**
-	*	Initialise aTracker with *this.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Initialise aTracker with *this.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Returns the unique index for a Quadrupole
-	*	@return Quadrupole unique index
-	*/
-	virtual int GetIndex () const;
+	 *	Returns the unique index for a Quadrupole
+	 *	@return Quadrupole unique index
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Returns the type string "Quadrupole"
-	*	@return Type string "Quadrupole"
-	*/
-	virtual const string& GetType () const;
+	 *	Returns the type string "Quadrupole"
+	 *	@return Type string "Quadrupole"
+	 */
+	virtual const string& GetType() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	/**
-	* Data Members for Class Attributes
-	*/
+	 * Data Members for Class Attributes
+	 */
 	static const int ID;
 
 protected:
@@ -68,48 +68,44 @@ private:
 
 //	A standard sextupole magnet.
 
-
-
-
-class Sextupole : public RectMultipole
+class Sextupole: public RectMultipole
 {
 public:
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a sextupole gradient. Units are Tesla/meter^2.
-	*/
-	Sextupole (const string& id, double len, double dnB);
+	 *	Constructor. The primary field component is specified as
+	 *	a sextupole gradient. Units are Tesla/meter^2.
+	 */
+	Sextupole(const string& id, double len, double dnB);
 
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a field B (in Tesla) at a specific radius r0 (in meter).
-	*/
-	Sextupole (const string& id, double len, double B, double r0);
-
-
-	/**
-	*	Primary tracking interface. Prepares the specified
-	*	Tracker object for tracking this component.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Constructor. The primary field component is specified as
+	 *	a field B (in Tesla) at a specific radius r0 (in meter).
+	 */
+	Sextupole(const string& id, double len, double B, double r0);
 
 	/**
-	*	Returns the unique index for a Sextupole
-	*	@return Sextupole unique index
-	*/
-
-	virtual int GetIndex () const;
-
-	/**
-	*	Returns the type string "Sextupole".
-	*	@return Type string sextupole
-	*/
-	virtual const string& GetType () const;
+	 *	Primary tracking interface. Prepares the specified
+	 *	Tracker object for tracking this component.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Returns the unique index for a Sextupole
+	 *	@return Sextupole unique index
+	 */
+
+	virtual int GetIndex() const;
+
+	/**
+	 *	Returns the type string "Sextupole".
+	 *	@return Type string sextupole
+	 */
+	virtual const string& GetType() const;
+
+	/**
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	// Data Members for Class Attributes
 
@@ -121,45 +117,44 @@ private:
 };
 
 /**
-*	 A standard skew-quadrupole magnet.
-*/
-class SkewQuadrupole : public RectMultipole
+ *	 A standard skew-quadrupole magnet.
+ */
+class SkewQuadrupole: public RectMultipole
 {
 public:
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a quadrupole gradient. Units are Tesla/meter.
-	*/
-	SkewQuadrupole (const string& id, double len, double dnB);
+	 *	Constructor. The primary field component is specified as
+	 *	a quadrupole gradient. Units are Tesla/meter.
+	 */
+	SkewQuadrupole(const string& id, double len, double dnB);
 
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a field B (in Tesla) at a speciific radius r0 (in meter).
-	*/
-	SkewQuadrupole (const string& id, double len, double B, double r0);
-
-
-	/**
-	*	Initialise aTracker to track *this.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Constructor. The primary field component is specified as
+	 *	a field B (in Tesla) at a speciific radius r0 (in meter).
+	 */
+	SkewQuadrupole(const string& id, double len, double B, double r0);
 
 	/**
-	*	Return the index for a SkewQuadrupole.
-	*	@return Index for a SkewQuadrupole
-	*/
-	virtual int GetIndex () const;
+	 *	Initialise aTracker to track *this.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Returns the type string "SkewQuadrupole".
-	*	@return Type string SkewQuadrupole
-	*/
-	virtual const string& GetType () const;
+	 *	Return the index for a SkewQuadrupole.
+	 *	@return Index for a SkewQuadrupole
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Returns the type string "SkewQuadrupole".
+	 *	@return Type string SkewQuadrupole
+	 */
+	virtual const string& GetType() const;
+
+	/**
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	// Data Members for Class Attributes
 
@@ -171,45 +166,44 @@ private:
 };
 
 /**
-*	A standard Octupole magnet.
-*/
-class Octupole : public RectMultipole
+ *	A standard Octupole magnet.
+ */
+class Octupole: public RectMultipole
 {
 public:
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a octupole gradient. Units are Tesla/meter^3.
-	*/
-	Octupole (const string& id, double len, double dnB);
+	 *	Constructor. The primary field component is specified as
+	 *	a octupole gradient. Units are Tesla/meter^3.
+	 */
+	Octupole(const string& id, double len, double dnB);
 
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a field B (in Tesla) at a specific radius r0 (in meter).
-	*/
-	Octupole (const string& id, double len, double B, double r0);
-
-
-	/**
-	*	Initialise aTracker to track *this.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Constructor. The primary field component is specified as
+	 *	a field B (in Tesla) at a specific radius r0 (in meter).
+	 */
+	Octupole(const string& id, double len, double B, double r0);
 
 	/**
-	*	Returns the index for an Octupole.
-	*	@return Index for an Octupole
-	*/
-	virtual int GetIndex () const;
+	 *	Initialise aTracker to track *this.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Returns the type string "Octupole".
-	*   @return Type string Octupole
-	*/
-	virtual const string& GetType () const;
+	 *	Returns the index for an Octupole.
+	 *	@return Index for an Octupole
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Returns the type string "Octupole".
+	 *   @return Type string Octupole
+	 */
+	virtual const string& GetType() const;
+
+	/**
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	// Data Members for Class Attributes
 
@@ -220,47 +214,43 @@ private:
 private:
 };
 
-
-
-
-class SkewSextupole : public RectMultipole
+class SkewSextupole: public RectMultipole
 {
 public:
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a sextupole gradient. Units are Tesla/meter^2.
-	*/
-	SkewSextupole (const string& id, double len, double dnB);
+	 *	Constructor. The primary field component is specified as
+	 *	a sextupole gradient. Units are Tesla/meter^2.
+	 */
+	SkewSextupole(const string& id, double len, double dnB);
 
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a field B (in Tesla) at a specific radius r0 (in meter).
-	*/
-	SkewSextupole (const string& id, double len, double B, double r0);
-
-
-	/**
-	*	Primary tracking interface. Prepares the specified
-	*	Tracker object for tracking this component.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Constructor. The primary field component is specified as
+	 *	a field B (in Tesla) at a specific radius r0 (in meter).
+	 */
+	SkewSextupole(const string& id, double len, double B, double r0);
 
 	/**
-	*	Returns the index for a "SkewSextupole".
-	*	@return Index for an SkewSextupole
-	*/
-	virtual int GetIndex () const;
+	 *	Primary tracking interface. Prepares the specified
+	 *	Tracker object for tracking this component.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Returns the type string "Skewsextupole".
-	*   @return Type string Skewsextupole
-	*/
-	virtual const string& GetType () const;
+	 *	Returns the index for a "SkewSextupole".
+	 *	@return Index for an SkewSextupole
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Returns the type string "Skewsextupole".
+	 *   @return Type string Skewsextupole
+	 */
+	virtual const string& GetType() const;
+
+	/**
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	// Data Members for Class Attributes
 
@@ -272,45 +262,44 @@ private:
 };
 
 /**
-*	A standard (normal) decapole magnet.
-*/
-class Decapole : public RectMultipole
+ *	A standard (normal) decapole magnet.
+ */
+class Decapole: public RectMultipole
 {
 public:
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a octupole gradient. Units are Tesla/meter^4.
-	*/
-	Decapole (const string& id, double len, double dnB);
+	 *	Constructor. The primary field component is specified as
+	 *	a octupole gradient. Units are Tesla/meter^4.
+	 */
+	Decapole(const string& id, double len, double dnB);
 
 	/**
-	*	Constructor. The primary field component is specified as
-	*	a field B (in Tesla) at a specific radius r0 (in meter).
-	*/
-	Decapole (const string& id, double len, double B, double r0);
-
-
-	/**
-	*	Initialise aTracker to track *this.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Constructor. The primary field component is specified as
+	 *	a field B (in Tesla) at a specific radius r0 (in meter).
+	 */
+	Decapole(const string& id, double len, double B, double r0);
 
 	/**
-	*	Returns the index for a decapole.
-	*	@return Index for a decapole
-	*/
-	virtual int GetIndex () const;
+	 *	Initialise aTracker to track *this.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Returns the type string "Decapole".
-	*	@return Type string Decapole
-	*/
-	virtual const string& GetType () const;
+	 *	Returns the index for a decapole.
+	 *	@return Index for a decapole
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Returns the type string "Decapole".
+	 *	@return Type string Decapole
+	 */
+	virtual const string& GetType() const;
+
+	/**
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	static const int ID;
 
@@ -330,7 +319,5 @@ private:
 // Class SkewSextupole
 
 // Class Decapole
-
-
 
 #endif

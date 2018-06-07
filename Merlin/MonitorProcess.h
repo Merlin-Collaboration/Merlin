@@ -21,7 +21,7 @@ namespace ParticleTracking
  * Can be attached to the tracker to record particle coordinates at all
  * or specific elements to files.
  */
-class MonitorProcess : public ParticleBunchProcess
+class MonitorProcess: public ParticleBunchProcess
 {
 private:
 	vector<string> dump_at_elements;
@@ -37,17 +37,17 @@ public:
 	 * \param prefix Output file name prefix
 	 *
 	 */
-	MonitorProcess(const string& aID = "MONITOR",  int prio=0, const string& prefix = "");
+	MonitorProcess(const string& aID = "MONITOR", int prio = 0, const string& prefix = "");
 
 	/// Set the output file name prefix
 	void SetPrefix(const string& prefix);
 
 	/// Add element at which to record
 	void AddElement(const string e);
-	void InitialiseProcess (Bunch&  bunch);
-	void DoProcess (const double ds);
+	void InitialiseProcess(Bunch&  bunch);
+	void DoProcess(const double ds);
 	double GetMaxAllowedStepSize() const;
-	void SetCurrentComponent (AcceleratorComponent& component);
+	void SetCurrentComponent(AcceleratorComponent& component);
 
 };
 

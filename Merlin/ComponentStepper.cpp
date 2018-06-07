@@ -9,22 +9,21 @@
 #include "AcceleratorComponent.h"
 #include "ComponentStepper.h"
 
-ComponentDivider::ComponentDivider (int ns, double min_step)
-	:s(0),next_s(0),delta_s(0),minStep(min_step),nstep(ns)
+ComponentDivider::ComponentDivider(int ns, double min_step) :
+	s(0), next_s(0), delta_s(0), minStep(min_step), nstep(ns)
 {
 }
 
-
-void ComponentDivider::SetComponent (AcceleratorComponent& cmp)
+void ComponentDivider::SetComponent(AcceleratorComponent& cmp)
 {
 	double l = cmp.GetLength();
-	if(l!=0)
+	if(l != 0)
 	{
-		delta_s = l/nstep;
-		if(delta_s<minStep)
+		delta_s = l / nstep;
+		if(delta_s < minStep)
 		{
-			int ns = (l/minStep)+1;
-			delta_s = l/ns;
+			int ns = (l / minStep) + 1;
+			delta_s = l / ns;
 		}
 		next_s = delta_s;
 	}
@@ -32,21 +31,21 @@ void ComponentDivider::SetComponent (AcceleratorComponent& cmp)
 	{
 		next_s = 0;
 	}
-	s=0;
+	s = 0;
 }
 
-bool ComponentDivider::Increment (double ds)
+bool ComponentDivider::Increment(double ds)
 {
-	s+=ds;
-	if(fequal(s,next_s))
+	s += ds;
+	if(fequal(s, next_s))
 	{
-		next_s+=delta_s;
+		next_s += delta_s;
 		return true;
 	}
 	return false;
 }
 
-double ComponentDivider::DistanceToStepBoundary () const
+double ComponentDivider::DistanceToStepBoundary() const
 {
-	return next_s-s;
+	return next_s - s;
 }

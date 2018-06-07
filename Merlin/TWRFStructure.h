@@ -14,53 +14,52 @@
 class ComponentTracker;
 
 /**
-*	A travelling wave accelerating structure.
-*/
-class TWRFStructure : public RFStructure
+ *	A travelling wave accelerating structure.
+ */
+class TWRFStructure: public RFStructure
 {
 public:
 
 	/**
-	*	Constructor taking the label for this cavity (id), the
-	*	cavity length (len) in meters, the frequency (f) in MHz,
-	*	and gradient (Epk) in MV/m and the phase (phi) in
-	*	radians.
-	*/
-	TWRFStructure (const string& id, double len, double f, double Epk, double phi = 0);
-	TWRFStructure (const TWRFStructure&);
+	 *	Constructor taking the label for this cavity (id), the
+	 *	cavity length (len) in meters, the frequency (f) in MHz,
+	 *	and gradient (Epk) in MV/m and the phase (phi) in
+	 *	radians.
+	 */
+	TWRFStructure(const string& id, double len, double f, double Epk, double phi = 0);
+	TWRFStructure(const TWRFStructure&);
 
 	/**
-	*	Returns the type string "TWRFStructure".
-	*	@return Type string TWRFStructure
-	*/
-	virtual const string& GetType () const;
+	 *	Returns the type string "TWRFStructure".
+	 *	@return Type string TWRFStructure
+	 */
+	virtual const string& GetType() const;
 
 	/**
-	*	Returns the unique index for this class of accelerator
-	*	components.
-	*
-	*	@return Accelerator component class unique index
-	*/
-	virtual int GetIndex () const;
+	 *	Returns the unique index for this class of accelerator
+	 *	components.
+	 *
+	 *	@return Accelerator component class unique index
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Primary tracking interface. Prepares the specified
-	*	Tracker object for tracking this component.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Primary tracking interface. Prepares the specified
+	 *	Tracker object for tracking this component.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	*	Rotates the component 180 degrees about its local Y axis.
-	*/
-	virtual void RotateY180 ();
+	 *	Rotates the component 180 degrees about its local Y axis.
+	 */
+	virtual void RotateY180();
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	static const int ID;
 };
-
 
 #endif

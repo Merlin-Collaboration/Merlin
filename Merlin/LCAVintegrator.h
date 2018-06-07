@@ -14,7 +14,7 @@
 namespace ParticleTracking
 {
 
-class LCAVIntegrator : public ParticleComponentTracker::Integrator<TWRFStructure>
+class LCAVIntegrator: public ParticleComponentTracker::Integrator<TWRFStructure>
 {
 protected:
 

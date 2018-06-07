@@ -28,7 +28,8 @@ using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
 
-ScatteringModel::ScatteringModel(): energy_loss_mode(FullEnergyLoss)
+ScatteringModel::ScatteringModel() :
+	energy_loss_mode(FullEnergyLoss)
 {
 	ScatterPlot_on = 0;
 	JawImpact_on = 0;
@@ -36,7 +37,7 @@ ScatteringModel::ScatteringModel(): energy_loss_mode(FullEnergyLoss)
 
 ScatteringModel::~ScatteringModel()
 {
-	for (auto it: stored_cross_sections)
+	for(auto it : stored_cross_sections)
 	{
 		delete it.second;
 	}
@@ -50,12 +51,13 @@ double ScatteringModel::PathLength(Material* mat, double E0)
 	CS_iterator = stored_cross_sections.find(mat->GetSymbol());
 
 	// If find gets to the end of the stored_cross_sections map, there is no value stored
-	if (CS_iterator == stored_cross_sections.end() )
+	if(CS_iterator == stored_cross_sections.end())
 	{
 		//No previously calculated CrossSections, start from scratch
 		CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
 
-		stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), CurrentCS));
+		stored_cross_sections.insert(std::map<string, Collimation::CrossSections*>::value_type(mat->GetSymbol(),
+			CurrentCS));
 
 		//Set iterator to correct position
 		CS_iterator = stored_cross_sections.find(mat->GetSymbol());
@@ -65,17 +67,17 @@ double ScatteringModel::PathLength(Material* mat, double E0)
 		int i = 0;
 		std::vector<ScatteringProcess*>::iterator p;
 
-		std::cout << "ScatteringModel::PathLength: MATERIAL = " << mat->GetSymbol()  << std::endl;
+		std::cout << "ScatteringModel::PathLength: MATERIAL = " << mat->GetSymbol() << std::endl;
 		for(p = Processes.begin(); p != Processes.end(); p++)
 		{
 			(*p)->Configure(mat, CurrentCS);
 			fraction[i] = (*p)->sigma;
 			std::cout << (*p)->GetProcessType() << "\t\t sigma = " << (*p)->sigma << " barns" << std::endl;
-			sigma+= fraction[i];
+			sigma += fraction[i];
 			++i;
 		}
 
-		for(unsigned int j=0; j<fraction.size(); j++)
+		for(unsigned int j = 0; j < fraction.size(); j++)
 		{
 			std::cout << " Process " << j << " total sigma " << setw(10) << setprecision(4) << sigma << "barns";
 			fraction[j] /= sigma;
@@ -88,15 +90,18 @@ double ScatteringModel::PathLength(Material* mat, double E0)
 		CurrentCS = CS_iterator->second;
 
 		//Make sure that the CrossSections are for the same case (scattering etc)
-		if (CurrentCS == CS_iterator->second)
+		if(CurrentCS == CS_iterator->second)
 		{
 
 		}
 		else
 		{
-			std::cout <<  std::endl << "\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections" << std::endl;
+			std::cout << std::endl
+					  << "\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections"
+					  << std::endl;
 			CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
-			stored_cross_sections.insert(std::map< string, Collimation::CrossSections* >::value_type(mat->GetSymbol(), CurrentCS));
+			stored_cross_sections.insert(std::map<string, Collimation::CrossSections*>::value_type(mat->GetSymbol(),
+				CurrentCS));
 
 			//Set iterator to correct position
 			CS_iterator = stored_cross_sections.find(mat->GetSymbol());
@@ -107,12 +112,12 @@ double ScatteringModel::PathLength(Material* mat, double E0)
 	//Calculate mean free path
 	lambda = CurrentCS->GetTotalMeanFreePath();
 	//~ std::cout << "ScatteringModel::PathLength: lambda = " << lambda << endl;
-	return -(lambda)*log(RandomNG::uniform(0,1));
+	return -(lambda) * log(RandomNG::uniform(0, 1));
 }
 
 void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0)
 {
-	switch (energy_loss_mode)
+	switch(energy_loss_mode)
 	{
 	case SimpleEnergyLoss:
 		EnergyLossSimple(p, x, mat, E0);
@@ -135,23 +140,24 @@ void ScatteringModel::EnergyLossSimple(PSvector& p, double x, Material* mat, dou
 void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, double E0)
 {
 	double E1 = E0 * (1 + p.dp());
-	double gamma = E1/(ProtonMassMeV*MeV);
-	double beta = sqrt(1 - ( 1 / (gamma*gamma)));
-	double I = mat->GetMeanExcitationEnergy()/eV;
+	double gamma = E1 / (ProtonMassMeV * MeV);
+	double beta = sqrt(1 - (1 / (gamma * gamma)));
+	double I = mat->GetMeanExcitationEnergy() / eV;
 
 	double land = RandomNG::landau();
 
-	double tmax = (2*ElectronMassMeV * beta * beta * gamma * gamma ) / (1 + (2 * gamma * (ElectronMassMeV/ProtonMassMeV)) + pow((ElectronMassMeV/ProtonMassMeV),2))*MeV;
+	double tmax = (2 * ElectronMassMeV * beta * beta * gamma * gamma) / (1 + (2 * gamma * (ElectronMassMeV
+		/ ProtonMassMeV)) + pow((ElectronMassMeV / ProtonMassMeV), 2)) * MeV;
 
-	static const double xi1 = 2.0 * pi * pow(ElectronRadius,2) * ElectronMass * pow(SpeedOfLight,2);
+	static const double xi1 = 2.0 * pi * pow(ElectronRadius, 2) * ElectronMass * pow(SpeedOfLight, 2);
 	double xi0 = xi1 * mat->GetElectronDensity();
-	double xi = (xi0 * x /(beta*beta)) / ElectronCharge * (eV/MeV);
+	double xi = (xi0 * x / (beta * beta)) / ElectronCharge * (eV / MeV);
 
-	double C = 1 + 2*log(I/(mat->GetPlasmaEnergy()/eV));
+	double C = 1 + 2 * log(I / (mat->GetPlasmaEnergy() / eV));
 	double C1 = 0;
 	double C0 = 0;
 
-	if((I/eV) < 100)
+	if((I / eV) < 100)
 	{
 		if(C <= 3.681)
 		{
@@ -160,11 +166,11 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, doubl
 		}
 		else
 		{
-			C0 = 0.326*C - 1.0;
+			C0 = 0.326 * C - 1.0;
 			C1 = 2.0;
 		}
 	}
-	else	//I >= 100eV
+	else    //I >= 100eV
 	{
 		if(C <= 5.215)
 		{
@@ -173,24 +179,24 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, doubl
 		}
 		else
 		{
-			C0 = 0.326*C - 1.5;
+			C0 = 0.326 * C - 1.5;
 			C1 = 3.0;
 		}
 	}
 	double delta = 0;
 
 	//Density correction
-	double ddx = log10(beta*gamma);
+	double ddx = log10(beta * gamma);
 	if(ddx > C1)
 	{
-		delta = 4.606*ddx - C;
+		delta = 4.606 * ddx - C;
 	}
 	else if(ddx >= C0 && ddx <= C1)
 	{
 		double m = 3.0;
-		double xa = C /4.606;
-		double a = 4.606 * (xa - C0) / pow((C1-C0),m);
-		delta = 4.606*ddx -C + a*pow((C1 - ddx),m);
+		double xa = C / 4.606;
+		double a = 4.606 * (xa - C0) / pow((C1 - C0), m);
+		delta = 4.606 * ddx - C + a * pow((C1 - ddx), m);
 	}
 	else
 	{
@@ -201,67 +207,67 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, doubl
 	//tcut = tmax;
 
 	//Mott Correction
-	double G = pi*FineStructureConstant*beta/2.0;
-	double q = (2*(tmax/MeV)*(ElectronMassMeV) )/(pow((0.843/MeV),2));
-	double S = log(1+q);
+	double G = pi * FineStructureConstant * beta / 2.0;
+	double q = (2 * (tmax / MeV) * (ElectronMassMeV)) / (pow((0.843 / MeV), 2));
+	double S = log(1 + q);
 	double L1 = 0.0;
-	double yL2 = FineStructureConstant/beta;
+	double yL2 = FineStructureConstant / beta;
 
-	double L2sum = 1.202001688211;	//Sequence limit calculated with mathematica
-	double L2 = -yL2*yL2*L2sum;
+	double L2sum = 1.202001688211;  //Sequence limit calculated with mathematica
+	double L2 = -yL2 * yL2 * L2sum;
 
-	double F = G - S + 2*(L1 + L2);
+	double F = G - S + 2 * (L1 + L2);
 	//double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F - 1.0 - euler);
-	double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * xi /pow(I/MeV,2)) - (beta*beta) - delta + F + 0.20);
+	double deltaE = xi * (log(2 * ElectronMassMeV * beta * beta * gamma * gamma * xi / pow(I / MeV, 2)) - (beta
+		* beta) - delta + F + 0.20);
 
 	double dp = ((xi * land) - deltaE) * MeV;
 
 	p.dp() = ((E1 - dp) - E0) / E0;
 }
 
-
 //HR 29Aug13
 void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, double E2)
 {
 	static const double root12 = sqrt(12.0);
-	double scaledx=x/mat->GetRadiationLengthInM();
-	double Eav = (E1+E2)/2.0;
-	double theta0 = 13.6*MeV * sqrt (scaledx) * (1.0 + 0.038 * log(scaledx)) / Eav;
+	double scaledx = x / mat->GetRadiationLengthInM();
+	double Eav = (E1 + E2) / 2.0;
+	double theta0 = 13.6 * MeV * sqrt(scaledx) * (1.0 + 0.038 * log(scaledx)) / Eav;
 
-	double theta_plane_x = RandomNG::normal(0,1) * theta0;
-	double theta_plane_y = RandomNG::normal(0,1) * theta0;
+	double theta_plane_x = RandomNG::normal(0, 1) * theta0;
+	double theta_plane_y = RandomNG::normal(0, 1) * theta0;
 
-	double x_plane = RandomNG::normal(0,1) * x * theta0 / root12 + x * theta_plane_x / 2;
-	double y_plane = RandomNG::normal(0,1) * x * theta0 / root12 + x * theta_plane_y / 2;
+	double x_plane = RandomNG::normal(0, 1) * x * theta0 / root12 + x * theta_plane_x / 2;
+	double y_plane = RandomNG::normal(0, 1) * x * theta0 / root12 + x * theta_plane_y / 2;
 
-	p.x ()  += x_plane;
-	p.xp () += theta_plane_x;
-	p.y ()  += y_plane;
-	p.yp () += theta_plane_y;
+	p.x() += x_plane;
+	p.xp() += theta_plane_x;
+	p.y() += y_plane;
+	p.yp() += theta_plane_y;
 }
-
 
 bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E)
 {
-	if (fraction.size() == 0)
+	if(fraction.size() == 0)
 	{
 		cerr << "ScatteringModel has no ScatteringProcesses. Use AddProcess() or "
-		     << "one of the inbuilt ScatteringModels such as ScatteringModelMerlin." <<endl;
+			 << "one of the inbuilt ScatteringModels such as ScatteringModelMerlin." << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	double r = RandomNG::uniform(0,1);
+	double r = RandomNG::uniform(0, 1);
 
-	for(unsigned int i = 0; i<fraction.size(); i++)
+	for(unsigned int i = 0; i < fraction.size(); i++)
 	{
 		r -= fraction[i];
-		if(r<0)
+		if(r < 0)
 		{
 			return Processes[i]->Scatter(p, E);
 		}
 	}
 
-	cerr << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = " << r << endl;
+	cerr << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = "
+		 << r << endl;
 
 	exit(EXIT_FAILURE);
 }
@@ -302,7 +308,6 @@ void ScatteringModel::JawImpact(Particle& p, int turn, string name)
 	StoredJawImpactData.push_back(temp);
 }
 
-
 void ScatteringModel::SetScatterPlot(string name, int single_turn)
 {
 	ScatterPlotNames.push_back(name);
@@ -326,27 +331,29 @@ void ScatteringModel::OutputScatterPlot(string directory, int seed)
 		std::ofstream* os = new std::ofstream(scatter_plot_file.str().c_str());
 		if(!os->good())
 		{
-			std::cerr << "ScatteringModel::OutputJawImpact: Could not open ScatterPlot file for collimator " << (*name) << std::endl;
+			std::cerr << "ScatteringModel::OutputJawImpact: Could not open ScatterPlot file for collimator "
+					  << (*name) << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
 		//~ (*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << endl;
 		(*os) << "#\tparticle_id\tz\ty\tturn" << endl;
 
-		for(std::vector <ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its != StoredScatterPlotData.end(); ++its)
+		for(std::vector<ScatterPlotData*>::iterator its = StoredScatterPlotData.begin(); its !=
+			StoredScatterPlotData.end(); ++its)
 		{
-			if( (*its)->name == (*name) )
+			if((*its)->name == (*name))
 			{
 				(*os) << setw(10) << setprecision(10) << left << (*its)->ID;
 				(*os) << setw(30) << setprecision(20) << left << (*its)->z;
-				(*os) << setw(30)<< setprecision(20) << left << (*its)->x;
+				(*os) << setw(30) << setprecision(20) << left << (*its)->x;
 				(*os) << setw(30) << setprecision(20) << left << (*its)->y;
 				//~ (*os) << setw(10)<< setprecision(20) << left << (*its)->ID;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->xp;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->y;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->yp;
 				//~ (*os) << setw(20)<< setprecision(20) << left << (*its)->z;
-				(*os) << setw(10)<< setprecision(10) << left << (*its)->turn;
+				(*os) << setw(10) << setprecision(10) << left << (*its)->turn;
 				(*os) << endl;
 			}
 		}
@@ -365,24 +372,26 @@ void ScatteringModel::OutputJawImpact(string directory, int seed)
 		std::ofstream* os = new std::ofstream(jaw_impact_file.str().c_str());
 		if(!os->good())
 		{
-			std::cerr << "ScatteringModel::OutputJawImpact: Could not open JawImpact file for collimator " << (*name) << std::endl;
+			std::cerr << "ScatteringModel::OutputJawImpact: Could not open JawImpact file for collimator " << (*name)
+					  << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
 		(*os) << "#\tparticle_id\tx\tx'\ty\ty'\tct\tdpctturn" << std::endl;
 
-		for(std::vector <JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end(); ++its)
+		for(std::vector<JawImpactData*>::iterator its = StoredJawImpactData.begin(); its != StoredJawImpactData.end();
+			++its)
 		{
-			if( (*its)->name == (*name) )
+			if((*its)->name == (*name))
 			{
-				(*os) << setw(10) << left << setprecision(10) <<  (*its)->ID;
+				(*os) << setw(10) << left << setprecision(10) << (*its)->ID;
 				(*os) << setw(30) << left << setprecision(20) << (*its)->x;
-				(*os) << setw(30) << left << setprecision(20) <<  (*its)->xp;
-				(*os) << setw(30) << left << setprecision(20) <<  (*its)->y;
-				(*os) << setw(30) << left << setprecision(20) <<  (*its)->yp;
+				(*os) << setw(30) << left << setprecision(20) << (*its)->xp;
+				(*os) << setw(30) << left << setprecision(20) << (*its)->y;
+				(*os) << setw(30) << left << setprecision(20) << (*its)->yp;
 				(*os) << setw(30) << left << setprecision(20) << (*its)->ct;
 				(*os) << setw(30) << left << setprecision(20) << (*its)->dp;
-				(*os) << setw(10) << left << setprecision(10) <<  (*its)->turn;
+				(*os) << setw(10) << left << setprecision(10) << (*its)->turn;
 				(*os) << endl;
 			}
 		}
@@ -390,4 +399,3 @@ void ScatteringModel::OutputJawImpact(string directory, int seed)
 
 	StoredJawImpactData.clear();
 }
-

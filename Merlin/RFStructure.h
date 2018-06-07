@@ -15,66 +15,66 @@
 #include "RFAcceleratingField.h"
 
 /**
-*	Takes a field which is derived from RFAcceleratingField.
-*/
+ *	Takes a field which is derived from RFAcceleratingField.
+ */
 
-class RFStructure : public TAccCompGF_NC<RectangularGeometry,RFAcceleratingField>
+class RFStructure: public TAccCompGF_NC<RectangularGeometry, RFAcceleratingField>
 {
 public:
 
 	/**
-	*	Returns the frequency.
-	*	@return Frequency
-	*/
-	double GetFrequency () const;
+	 *	Returns the frequency.
+	 *	@return Frequency
+	 */
+	double GetFrequency() const;
 
 	/**
-	*	Access the peak amplitude (gradient).
-	*/
-	void SetAmplitude (double Epk);
-	double GetAmplitude () const;
+	 *	Access the peak amplitude (gradient).
+	 */
+	void SetAmplitude(double Epk);
+	double GetAmplitude() const;
 
 	/**
-	* Accessing the voltage and phase
-	*/
+	 * Accessing the voltage and phase
+	 */
 	void SetVoltage(double v);
-	void SetPhase (double phase);
+	void SetPhase(double phase);
 	void SetVoltagePhasor(const Complex& z);
 
 	double GetVoltage() const;
-	double GetPhase () const;
+	double GetPhase() const;
 	Complex GetVoltagePhasor() const;
 
 	/**
-	* Calculate the nominal energy gain
-	*/
+	 * Calculate the nominal energy gain
+	 */
 	double GetBeamVoltage() const;
 
 	/**
-	*	Returns the wavelength of the RF (in meter).
-	*	@return Wavelength of RF (m)
-	*/
-	double GetWavelength () const;
+	 *	Returns the wavelength of the RF (in meter).
+	 *	@return Wavelength of RF (m)
+	 */
+	double GetWavelength() const;
 
 	/**
-	*	Returns the k value (=2pi/wavelength) for the field.
-	*	@return Wavenumber k (\f$ 2\pi/\lambda \f$) for the field
-	*/
-	double GetK () const;
+	 *	Returns the k value (=2pi/wavelength) for the field.
+	 *	@return Wavenumber k (\f$ 2\pi/\lambda \f$) for the field
+	 */
+	double GetK() const;
 
 	/**
-	*	Modify the frequency
-	*/
-	void SetFrequency (double f);
-	void SetWavelength (double lambda);
-	void SetK (double k);
+	 *	Modify the frequency
+	 */
+	void SetFrequency(double f);
+	void SetWavelength(double lambda);
+	void SetK(double k);
 
 protected:
 
 	/**
-	* Protected constructor prevents instantiation of this class.
-	*/
-	RFStructure (const string& id, double len, RFAcceleratingField* aField);
+	 * Protected constructor prevents instantiation of this class.
+	 */
+	RFStructure(const string& id, double len, RFAcceleratingField* aField);
 };
 
 #endif

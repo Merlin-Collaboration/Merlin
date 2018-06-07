@@ -13,10 +13,10 @@
 #include "ParticleComponentTracker.h"
 
 /**
-*	A Particle Tracking simulation. ParticleTracker is a
-*	TrackingSimulation whose primary Transport process is
-*	particle tracking.
-*/
+ *	A Particle Tracking simulation. ParticleTracker is a
+ *	TrackingSimulation whose primary Transport process is
+ *	particle tracking.
+ */
 namespace ParticleTracking
 {
 typedef TTrackSim<ParticleComponentTracker> ParticleTracker;

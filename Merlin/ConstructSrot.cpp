@@ -12,7 +12,7 @@ ComponentFrame* ConstructSrot(double angle, const std::string& name)
 {
 	GeometryPatch* gp = new GeometryPatch;
 	gp->RotateZ(angle);
-	return new PatchFrame(gp,name);
+	return new PatchFrame(gp, name);
 }
 
 ComponentFrame* ConstructXrot(double angle, const std::string& name)
@@ -21,10 +21,10 @@ ComponentFrame* ConstructXrot(double angle, const std::string& name)
 	{
 		GeometryPatch* gp = new GeometryPatch;
 		gp->RotateX(angle);
-		return new PatchFrame(gp,name);
+		return new PatchFrame(gp, name);
 	}
 	else
 	{
-		return new PatchFrame(nullptr,name);
+		return new PatchFrame(nullptr, name);
 	}
 }

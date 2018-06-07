@@ -18,21 +18,20 @@ class AcceleratorComponent;
 class ComponentStepper
 {
 public:
-	virtual void SetComponent (AcceleratorComponent& cmp) = 0;
+	virtual void SetComponent(AcceleratorComponent& cmp) = 0;
 
 	/// Increments the step distance and returns true if on a step boundary, otherwise false.
-	virtual bool Increment (double ds) = 0;
+	virtual bool Increment(double ds) = 0;
 
 	/// Returns the distance to the next step boundary.
-	virtual double DistanceToStepBoundary () const = 0;
+	virtual double DistanceToStepBoundary() const = 0;
 
 };
-
 
 /** A class of stepper which divides a non-zero length
  * component into number of equal steps.
  */
-class ComponentDivider : public ComponentStepper
+class ComponentDivider: public ComponentStepper
 {
 public:
 	/** Constructor taking the number of steps to take per
@@ -42,15 +41,15 @@ public:
 	 * is adjusted to give the closest number of integral steps
 	 * to match min_step.
 	 */
-	ComponentDivider (int ns, double min_step = 0);
+	ComponentDivider(int ns, double min_step = 0);
 
-	virtual void SetComponent (AcceleratorComponent& cmp);
+	virtual void SetComponent(AcceleratorComponent& cmp);
 
 	/// Increments the step distance and returns true if on a step boundary, otherwise false.
-	virtual bool Increment (double ds);
+	virtual bool Increment(double ds);
 
 	/// Returns the distance to the next step boundary.
-	virtual double DistanceToStepBoundary () const;
+	virtual double DistanceToStepBoundary() const;
 
 private:
 	// Data Members for Class Attributes

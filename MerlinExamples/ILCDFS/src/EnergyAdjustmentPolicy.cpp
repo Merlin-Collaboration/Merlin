@@ -11,7 +11,7 @@ void EnergyAdjustmentPolicy::SetKlystrons(const KlystronArray& klys)
 {
 	theKlystrons = klys;
 	defkvals.clear();
-	for(size_t k=0; k<theKlystrons.size(); k++)
+	for(size_t k = 0; k < theKlystrons.size(); k++)
 	{
 		defkvals.push_back(theKlystrons[k]->GetVoltagePhasor());
 	}
@@ -19,7 +19,7 @@ void EnergyAdjustmentPolicy::SetKlystrons(const KlystronArray& klys)
 
 void EnergyAdjustmentPolicy::RestoreKlystrons()
 {
-	for(size_t k=0; k<theKlystrons.size(); k++)
+	for(size_t k = 0; k < theKlystrons.size(); k++)
 	{
 		theKlystrons[k]->SetVoltagePhasor(defkvals[k]);
 	}

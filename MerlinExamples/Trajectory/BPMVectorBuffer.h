@@ -7,21 +7,22 @@
 
 #include "BPM.h"
 
-class BPMVectorBuffer : public BPM::Buffer
+class BPMVectorBuffer: public BPM::Buffer
 {
 public:
-	BPMVectorBuffer () {}
+	BPMVectorBuffer()
+	{
+	}
 
 	vector<BPM::Data> BPMReading;
 
-	void Record (const BPM& aBPM, const BPM::Data& data)
+	void Record(const BPM& aBPM, const BPM::Data& data)
 	{
 		BPMReading.push_back(data);
 	}
 
-	void Clear ()
+	void Clear()
 	{
 		BPMReading.clear();
 	}
 };
-

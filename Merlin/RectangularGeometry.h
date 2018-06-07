@@ -12,46 +12,47 @@
 #include "CenteredGeometry.h"
 
 /**
-*	Represents a straight line segment. Transformations from
-*	points on a RectangularGeometry are pure translations
-*	along the z-axis.
-*/
+ *	Represents a straight line segment. Transformations from
+ *	points on a RectangularGeometry are pure translations
+ *	along the z-axis.
+ */
 
-class RectangularGeometry : public CenteredGeometry
+class RectangularGeometry: public CenteredGeometry
 {
 public:
 
 	/**
-	*	Constructor taking the length of the rectangular
-	*	geometry (total z extent).
-	*/
-	RectangularGeometry (double l);
+	 *	Constructor taking the length of the rectangular
+	 *	geometry (total z extent).
+	 */
+	RectangularGeometry(double l);
 
 	/**
-	*	Returns a translation along the z-axis of (s-s0).
-	*	@return Translation along z of \f$ s-s_0 \f$
-	*/
-	virtual Transform3D GetGeometryTransform (double s0, double s) const;
+	 *	Returns a translation along the z-axis of (s-s0).
+	 *	@return Translation along z of \f$ s-s_0 \f$
+	 */
+	virtual Transform3D GetGeometryTransform(double s0, double s) const;
 
 	/**
-	*	Returns a translation along the z-axis of either +l/2 or
-	*	-l/2 for the entrance and exit boundary planes
-	*	respectively.
-	*
-	*	@return Translation along z of \f$ \pm\frac{1}{2} \f$ corresponding to
-	*	the entrance/exit boundary planes respectively
-	*/
-	virtual Transform3D GetGeometryTransform (BoundaryPlane p) const;
+	 *	Returns a translation along the z-axis of either +l/2 or
+	 *	-l/2 for the entrance and exit boundary planes
+	 *	respectively.
+	 *
+	 *	@return Translation along z of \f$ \pm\frac{1}{2} \f$ corresponding to
+	 *	the entrance/exit boundary planes respectively
+	 */
+	virtual Transform3D GetGeometryTransform(BoundaryPlane p) const;
 
 	/**
-	*	Returns a translation along the z-axis of +l.
-	*	@return Translation along z of \f$ +1 \f$
-	*/
-	virtual Transform3D GetTotalGeometryTransform () const;
+	 *	Returns a translation along the z-axis of +l.
+	 *	@return Translation along z of \f$ +1 \f$
+	 */
+	virtual Transform3D GetTotalGeometryTransform() const;
 };
 
-inline RectangularGeometry::RectangularGeometry (double l)
-	:CenteredGeometry(l)
-{}
+inline RectangularGeometry::RectangularGeometry(double l) :
+	CenteredGeometry(l)
+{
+}
 
 #endif

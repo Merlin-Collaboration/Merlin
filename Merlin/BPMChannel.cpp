@@ -9,18 +9,18 @@
 #include "BPMDataBuffer.h"
 #include "BPMChannel.h"
 
-BPMChannel::BPMChannel (char XorY, BPMDataBuffer* dataBuff)
-	: xy(XorY),itsData(dataBuff)
+BPMChannel::BPMChannel(char XorY, BPMDataBuffer* dataBuff) :
+	xy(XorY), itsData(dataBuff)
 {
-	assert((xy=='X'||xy=='Y')&&(dataBuff!=0));
+	assert((xy == 'X' || xy == 'Y') && (dataBuff != 0));
 }
 
-std::string BPMChannel::GetID () const
+std::string BPMChannel::GetID() const
 {
-	return std::string("BPM."+itsData->id+'.'+xy);
+	return std::string("BPM." + itsData->id + '.' + xy);
 }
 
-double BPMChannel::Read () const
+double BPMChannel::Read() const
 {
 	if(xy == 'X')
 	{
@@ -36,11 +36,10 @@ void BPMChannel::SetBPMOffset(double x)
 {
 	if(xy == 'X')
 	{
-		itsData->SetOffsets(x,0);
+		itsData->SetOffsets(x, 0);
 	}
 	else
 	{
-		itsData->SetOffsets(0,x);
+		itsData->SetOffsets(0, x);
 	}
 }
-

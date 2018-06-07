@@ -19,19 +19,21 @@
 #include "MerlinException.h"
 
 /**
-* Abstract class used to record bunch and frame information after every component frame tracked
-*/
+ * Abstract class used to record bunch and frame information after every component frame tracked
+ */
 class SimulationOutput
 {
 public:
-	virtual ~SimulationOutput() {}
+	virtual ~SimulationOutput()
+	{
+	}
 
 	void DoRecord(const ComponentFrame* frame, const Bunch* bunch);
 	void DoRecordInitialBunch(const Bunch* bunch);
 	void DoRecordFinalBunch(const Bunch* bunch);
 
 	// Output control
-	void AddIdentifier(const std::string& pattern, size_t nocc =1);
+	void AddIdentifier(const std::string& pattern, size_t nocc = 1);
 
 	// Public output flags
 	bool output_all;
@@ -40,9 +42,9 @@ public:
 
 protected:
 
-	virtual void Record(const ComponentFrame* frame, const Bunch* bunch)=0;
-	virtual void RecordInitialBunch(const Bunch* bunch)=0;
-	virtual void RecordFinalBunch(const Bunch* bunch)=0;
+	virtual void Record(const ComponentFrame* frame, const Bunch* bunch) = 0;
+	virtual void RecordInitialBunch(const Bunch* bunch) = 0;
+	virtual void RecordFinalBunch(const Bunch* bunch) = 0;
 
 private:
 
@@ -51,41 +53,49 @@ private:
 };
 
 /**
-* A beam dynamics simulation. TrackingSimulation tracks a
-* Bunch object through a specified Beamline (single pass).
-* Tracking is performed by one or more BunchProcess
-* objects, one of which is generally a transport process
-* which is responsible for "tracking" the concrete Bunch
-* implementation through the Beamline components. The
-* initial Bunch is generated on each Run using the
-* supplied BunchConstructor.
-*/
+ * A beam dynamics simulation. TrackingSimulation tracks a
+ * Bunch object through a specified Beamline (single pass).
+ * Tracking is performed by one or more BunchProcess
+ * objects, one of which is generally a transport process
+ * which is responsible for "tracking" the concrete Bunch
+ * implementation through the Beamline components. The
+ * initial Bunch is generated on each Run using the
+ * supplied BunchConstructor.
+ */
 class TrackingSimulation
 {
 private:
 
-	typedef enum {beamline, ring, undefined} lattice_type;
+	typedef enum
+	{
+		beamline,
+		ring,
+		undefined
+
+	} lattice_type;
 
 	/**
-	* Base class for stepping (iterating) through a beamline or ring.
-	*/
+	 * Base class for stepping (iterating) through a beamline or ring.
+	 */
 	class Stepper
 	{
 	public:
-		virtual ~Stepper() {}
-		virtual ComponentFrame* NextFrame () = 0;
+		virtual ~Stepper()
+		{
+		}
+		virtual ComponentFrame* NextFrame() = 0;
 		ComponentFrame* cFrame;
 	};
 
 	/**
-	* Stepper implementation to take either a ring or a beamline iterator.
-	*/
-	template <class I>
-	class TStepper : public Stepper
+	 * Stepper implementation to take either a ring or a beamline iterator.
+	 */
+	template<class I>
+	class TStepper: public Stepper
 	{
 	public:
-		TStepper (I f, I l);
-		virtual ComponentFrame* NextFrame ();
+		TStepper(I f, I l);
+		virtual ComponentFrame* NextFrame();
 	private:
 		I first;
 		I last;
@@ -94,92 +104,92 @@ private:
 
 public:
 
-	typedef TStepper< AcceleratorModel::BeamlineIterator  > BeamlineStepper;
-	typedef TStepper< AcceleratorModel::RingIterator  > RingStepper;
+	typedef TStepper<AcceleratorModel::BeamlineIterator> BeamlineStepper;
+	typedef TStepper<AcceleratorModel::RingIterator> RingStepper;
 
 	// Construct a TrackingSimulation without specifying a beamline
 	TrackingSimulation();
-	TrackingSimulation (const AcceleratorModel::Beamline& bline);
-	TrackingSimulation (const AcceleratorModel::RingIterator& aRing);
+	TrackingSimulation(const AcceleratorModel::Beamline& bline);
+	TrackingSimulation(const AcceleratorModel::RingIterator& aRing);
 
-	virtual ~TrackingSimulation ();
+	virtual ~TrackingSimulation();
 
 	// Set the beamline or ring to be used by the tracker
 	void SetBeamline(const AcceleratorModel::Beamline& bline);
 	void SetRing(const AcceleratorModel::RingIterator& aRing);
 
 	/**
-	* Run the simulation. A new bunch is constructed using
-	* the current BunchConstructor object, and all the
-	* processes are initialised.
-	*/
+	 * Run the simulation. A new bunch is constructed using
+	 * the current BunchConstructor object, and all the
+	 * processes are initialised.
+	 */
 	virtual Bunch& Run();
 
 	/**
-	* Run the simulation again without constructing a new bunch
-	* or (re-)initialising the BunchProcesses. This function can
-	* only be called after an initial Run() method is called.
-	*/
+	 * Run the simulation again without constructing a new bunch
+	 * or (re-)initialising the BunchProcesses. This function can
+	 * only be called after an initial Run() method is called.
+	 */
 	virtual Bunch& Continue();
 
 	/**
-	* Add a BunchProcess to the simulation.
-	*/
-	void AddProcess (BunchProcess* proc);
+	 * Add a BunchProcess to the simulation.
+	 */
+	void AddProcess(BunchProcess* proc);
 
 	/**
-	* Remove the specified BunchProcess from the simulation.
-	* Returns true if successful.
-	*/
-	bool RemoveProcess (BunchProcess* proc);
+	 * Remove the specified BunchProcess from the simulation.
+	 * Returns true if successful.
+	 */
+	bool RemoveProcess(BunchProcess* proc);
 
 	/**
-	* if flat is true, the simulation ignores all coordinate
-	* transformations between lattice components. If flat is
-	* false (default), the simulation applies all necessary
-	* in- and out-transformations for each component in the
-	* beamline.
-	*/
-	void AssumeFlatLattice (bool flat);
+	 * if flat is true, the simulation ignores all coordinate
+	 * transformations between lattice components. If flat is
+	 * false (default), the simulation applies all necessary
+	 * in- and out-transformations for each component in the
+	 * beamline.
+	 */
+	void AssumeFlatLattice(bool flat);
 
 	/**
-	* If onAxis is true, tracking simulation ignores any coordination
-	* transformation for the first component frame tracked. This effectively
-	* injects the 'beam' on the local components axis, irrespective of its
-	* alignment state.
-	*/
+	 * If onAxis is true, tracking simulation ignores any coordination
+	 * transformation for the first component frame tracked. This effectively
+	 * injects the 'beam' on the local components axis, irrespective of its
+	 * alignment state.
+	 */
 	void InjectBeamOnAxis(bool onAxis)
 	{
 		injOnAxis = onAxis;
 	}
 
 	/**
-	* Sets the initial bunch constructor.
-	*/
-	void SetInitialBunchCtor (BunchConstructor* bctor);
+	 * Sets the initial bunch constructor.
+	 */
+	void SetInitialBunchCtor(BunchConstructor* bctor);
 
-	void SetLogStream (ostream& os)
+	void SetLogStream(ostream& os)
 	{
 		log = &os;
 	}
 
-	void SetLoggingOn ()
+	void SetLoggingOn()
 	{
 		stepper.SetLogStream(log);
 	}
 
-	void SetLoggingOff ()
+	void SetLoggingOff()
 	{
 		stepper.SetLogStream(nullptr);
 	}
 
 	/**
-	* If handle==true, then any MerlinException thrown while
-	* the simulation is running is handled locally, and Run()
-	* command exits normally. If false, any exception is
-	* re-thrown.
-	*/
-	void HandleExceptions (bool handle)
+	 * If handle==true, then any MerlinException thrown while
+	 * the simulation is running is handled locally, and Run()
+	 * command exits normally. If false, any exception is
+	 * re-thrown.
+	 */
+	void HandleExceptions(bool handle)
 	{
 		handle_me = handle;
 	}
@@ -188,39 +198,39 @@ public:
 	//	the beamline.
 
 	/**
-	* Initialise a new bunch object for tracking, and resets
-	* the current frame to the first frame of the beamline.
-	*/
-	void InitStepper (bool genNewBunch = true);
+	 * Initialise a new bunch object for tracking, and resets
+	 * the current frame to the first frame of the beamline.
+	 */
+	void InitStepper(bool genNewBunch = true);
 
 	/**
-	* Sets the specified bunch for tracking, and resets
-	* the current frame to the first frame of the beamline.
-	*/
-	void InitStepper (Bunch* aBunch);
+	 * Sets the specified bunch for tracking, and resets
+	 * the current frame to the first frame of the beamline.
+	 */
+	void InitStepper(Bunch* aBunch);
 
 	/**
-	* Track the bunch though the next ComponentFrame in the
-	* beamline. Returns false if that component is the last in
-	* the beamline.
-	*/
-	bool StepComponent ();
+	 * Track the bunch though the next ComponentFrame in the
+	 * beamline. Returns false if that component is the last in
+	 * the beamline.
+	 */
+	bool StepComponent();
 
 	/**
-	* Returns the current frame, i.e. that frame that is about
-	* to be tracked by a call to StepComponent().
-	*/
-	ComponentFrame& GetCurrentFrame ()
+	 * Returns the current frame, i.e. that frame that is about
+	 * to be tracked by a call to StepComponent().
+	 */
+	ComponentFrame& GetCurrentFrame()
 	{
 		assert(cstepper);
 		return *(cstepper->cFrame);
 	}
 
 	/**
-	* Returns the current component, i.e. that component that
-	* is about to be tracked by a call to StepComponent().
-	*/
-	AcceleratorComponent& GetCurrentComponent ()
+	 * Returns the current component, i.e. that component that
+	 * is about to be tracked by a call to StepComponent().
+	 */
+	AcceleratorComponent& GetCurrentComponent()
 	{
 		assert(cstepper);
 		return cstepper->cFrame->GetComponent();
@@ -251,15 +261,15 @@ private:
 };
 
 /**
-* A template class which is used to implement a bunch
-* implementation specific TrackingSimulation. P must be a
-* bunch specific transport process which has only a
-* default constructor. It must also define P::bunch_type
-* which specifies the type of bunch implementation to be
-* tracked.
-*/
-template <class P>
-class BunchTracker : public TrackingSimulation
+ * A template class which is used to implement a bunch
+ * implementation specific TrackingSimulation. P must be a
+ * bunch specific transport process which has only a
+ * default constructor. It must also define P::bunch_type
+ * which specifies the type of bunch implementation to be
+ * tracked.
+ */
+template<class P>
+class BunchTracker: public TrackingSimulation
 {
 public:
 
@@ -267,33 +277,33 @@ public:
 	typedef P transport_process;
 
 	/**
-	* Constructor taking the beamline to be tracked. The
-	* initial bunch must be specified by supplying a concrete
-	* BunchConstructor via SetInitialBunchCtor.
-	*/
-	explicit BunchTracker (const AcceleratorModel::Beamline& bline)
-		: TrackingSimulation(bline)
+	 * Constructor taking the beamline to be tracked. The
+	 * initial bunch must be specified by supplying a concrete
+	 * BunchConstructor via SetInitialBunchCtor.
+	 */
+	explicit BunchTracker(const AcceleratorModel::Beamline& bline) :
+		TrackingSimulation(bline)
 	{
 		AddProcess(new P());
 	}
 
 	/**
-	* Constructs a BunchTracker taking the beamline to be
-	* tracked and the initial bunch to be used.
-	*/
-	BunchTracker (const AcceleratorModel::Beamline& bline, bunch_type* bunch0)
-		: TrackingSimulation(bline)
+	 * Constructs a BunchTracker taking the beamline to be
+	 * tracked and the initial bunch to be used.
+	 */
+	BunchTracker(const AcceleratorModel::Beamline& bline, bunch_type* bunch0) :
+		TrackingSimulation(bline)
 	{
 		AddProcess(new P());
 		SetInitialBunchCtor(new StaticBunchCtor<bunch_type>(bunch0));
 	}
 
-	bunch_type& GetBunch ()
+	bunch_type& GetBunch()
 	{
 		return static_cast<bunch_type&>(*bunch);
 	}
 
-	transport_process& GetTransportProcess ()
+	transport_process& GetTransportProcess()
 	{
 		return *transport;
 	}
@@ -304,4 +314,3 @@ private:
 };
 
 #endif
-

@@ -40,7 +40,7 @@ public:
 	void Initialise();
 	void RecordTrajectories();
 	void CalculateCorrection();
-	void ApplyCorrection(double g=1.0);
+	void ApplyCorrection(double g = 1.0);
 
 	// Set the BPM data filter for this segment.
 	// A NULL pointer indicates no filter is to
@@ -61,4 +61,3 @@ private:
 };
 
 #endif
-

@@ -13,26 +13,26 @@
 #include "utils.h"
 
 //#define _ADDNOISE(var) if((var).error!=0) (var).value+=RandomNG::normal(0.0,(var).error*(var).error)
-#define _ADDNOISE(var) if(!fequal((var).error,0.0)) (var).value+=RandomNG::normal(0.0,(var).error*(var).error)
+#define _ADDNOISE(var) if(!fequal((var).error, 0.0)) (var).value += RandomNG::normal(0.0, (var).error * (var).error)
 
 const int RMSProfileMonitor::ID = UniqueIndex();
 
-int RMSProfileMonitor::GetIndex () const
+int RMSProfileMonitor::GetIndex() const
 {
 	return ID;
 }
 
-const string& RMSProfileMonitor::GetType () const
+const string& RMSProfileMonitor::GetType() const
 {
 	_TYPESTR(RMSProfileMonitor)
 }
 
-void RMSProfileMonitor::MakeMeasurement (const Bunch& aBunch)
+void RMSProfileMonitor::MakeMeasurement(const Bunch& aBunch)
 {
 	if(!buffers.empty() && IsActive())
 	{
 		PSmoments2D profile;
-		aBunch.GetProjectedMoments(ps_X,ps_Y,profile);
+		aBunch.GetProjectedMoments(ps_X, ps_Y, profile);
 
 		Data mdat;
 
@@ -46,12 +46,12 @@ void RMSProfileMonitor::MakeMeasurement (const Bunch& aBunch)
 		mdat.yrms.error = res_y;
 
 		// angled measurement
-		if(fequal(uangle,0.0))
+		if(fequal(uangle, 0.0))
 		{
 			mdat.u0.value = mdat.x0.value;
 			mdat.urms.value = mdat.xrms.value;
 		}
-		else if(fequal(uangle,pi/2))
+		else if(fequal(uangle, pi / 2))
 		{
 			mdat.u0.value = mdat.y0.value;
 			mdat.urms.value = mdat.yrms.value;
@@ -60,8 +60,8 @@ void RMSProfileMonitor::MakeMeasurement (const Bunch& aBunch)
 		{
 			double cosu = cos(uangle);
 			double sinu = sin(uangle);
-			mdat.u0.value = cosu*profile.mean(0)-sinu*profile.mean(1);
-			mdat.urms.value = cosu*profile.std(0)-sinu*profile.std(1);
+			mdat.u0.value = cosu * profile.mean(0) - sinu * profile.mean(1);
+			mdat.urms.value = cosu * profile.std(0) - sinu * profile.std(1);
 		}
 
 		mdat.u0.error = res_u;
@@ -76,17 +76,16 @@ void RMSProfileMonitor::MakeMeasurement (const Bunch& aBunch)
 		_ADDNOISE(mdat.yrms);
 		_ADDNOISE(mdat.urms);
 
-		buffers.SendToBuffers(*this,mdat);
+		buffers.SendToBuffers(*this, mdat);
 	}
 }
 
-void RMSProfileMonitor::PrepareTracker (ComponentTracker& aTracker)
+void RMSProfileMonitor::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,Monitor)
+	_PREPTRACK(aTracker, Monitor)
 }
 
-ModelElement* RMSProfileMonitor::Copy () const
+ModelElement* RMSProfileMonitor::Copy() const
 {
 	return new RMSProfileMonitor(*this);
 }
-

@@ -31,11 +31,11 @@ public:
 	// bunch charge is specified, the constructor uses the ELOSS information
 	// for the cavities to calculate the reference (matched) energy for the
 	// magnet strengths.
-	XTFFInterface_1(const std::string& fname, double nb=0, ostream* log=nullptr);
+	XTFFInterface_1(const std::string& fname, double nb = 0, ostream* log = nullptr);
 	~XTFFInterface_1();
 
-	pair<AcceleratorModel*,BeamData*> Parse();
-	pair<AcceleratorModel*,BeamData*> Parse(double P_ref);
+	pair<AcceleratorModel*, BeamData*> Parse();
+	pair<AcceleratorModel*, BeamData*> Parse(double P_ref);
 
 	// Construct apertures if flag is true (default)
 	void IncludeApertures(bool flag)
@@ -59,7 +59,7 @@ private:
 
 	void ConstructComponent(XTFF_Data&);
 	int ParseHeader();
-	pair<AcceleratorModel*,BeamData*> Parse1(int);
+	pair<AcceleratorModel*, BeamData*> Parse1(int);
 
 	std::set<string> driftTypes;
 
@@ -76,4 +76,3 @@ private:
 };
 
 #endif
-

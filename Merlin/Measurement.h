@@ -9,27 +9,30 @@
 #define Measurement_h 1
 
 /**
-*	POD representing a physically measured quantity, which
-*	has a value and an associated error.
-*/
+ *	POD representing a physically measured quantity, which
+ *	has a value and an associated error.
+ */
 struct Measurement
 {
-	Measurement (double v, double err);
-	Measurement ();
+	Measurement(double v, double err);
+	Measurement();
 
 	double value;
 	double error;
+
 };
 
 /**
-* Class Measurement
-*/
-inline Measurement::Measurement (double v, double err)
-	: value(v),error(err)
-{}
+ * Class Measurement
+ */
+inline Measurement::Measurement(double v, double err) :
+	value(v), error(err)
+{
+}
 
-inline Measurement::Measurement ()
-	: value(0),error(0)
-{}
+inline Measurement::Measurement() :
+	value(0), error(0)
+{
+}
 
 #endif

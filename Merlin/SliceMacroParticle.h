@@ -18,35 +18,34 @@ namespace SMPTracking
 
 typedef TPSMoments<2> PSmoments4D;
 
-class SliceMacroParticle : public PSmoments4D
+class SliceMacroParticle: public PSmoments4D
 {
 public:
 
-	explicit SliceMacroParticle(double q=0);
+	explicit SliceMacroParticle(double q = 0);
 	SliceMacroParticle(const PSmoments& sigma, double ct, double dp, double q);
 
 	/**
-	* Macroparticle charge
-	*/
+	 * Macroparticle charge
+	 */
 	double Q() const
 	{
 		return q;
 	}
 
-
 	// weighted centroid values
 	double GetChargeWeightedCentroid(PScoord i) const
 	{
-		return q*mean(i);
+		return q * mean(i);
 	}
 	Point2D GetChargeWeightedCentroid(PScoord i, PScoord j) const
 	{
-		return Point2D(q*mean(i),q*mean(j));
+		return Point2D(q * mean(i), q * mean(j));
 	}
 	PSvector GetChargeWeightedCentroid() const
 	{
 		PSvector x(*this);
-		x*=q;
+		x *= q;
 		return x;
 	}
 
@@ -65,7 +64,7 @@ public:
 
 	friend bool operator<(const SliceMacroParticle& p1, const SliceMacroParticle& p2)
 	{
-		return p1.ct()<p2.ct();
+		return p1.ct() < p2.ct();
 	}
 
 private:

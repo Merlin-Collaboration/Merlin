@@ -23,10 +23,10 @@ public:
 	SMPTransform3D(const Transform3D& tfrm);
 
 	/**
-	* Apply (approximate) transformation
-	*/
-	SliceMacroParticle& Apply (SliceMacroParticle& p) const;
-	SliceMacroParticle& operator () (SliceMacroParticle& p) const
+	 * Apply (approximate) transformation
+	 */
+	SliceMacroParticle& Apply(SliceMacroParticle& p) const;
+	SliceMacroParticle& operator ()(SliceMacroParticle& p) const
 	{
 		return Apply(p);
 	}
@@ -34,7 +34,7 @@ public:
 private:
 
 	R2Map R;
-	double delta_x,delta_y,theta_x,theta_y;
+	double delta_x, delta_y, theta_x, theta_y;
 	bool bNoRot;
 	bool nullRotation;
 };

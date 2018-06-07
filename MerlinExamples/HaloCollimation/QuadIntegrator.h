@@ -21,7 +21,7 @@
 namespace ParticleTracking
 {
 
-class QuadIntegrator : public ParticleComponentTracker::Integrator<Quadrupole>
+class QuadIntegrator: public ParticleComponentTracker::Integrator<Quadrupole>
 {
 public:
 	void TrackStep(double ds);

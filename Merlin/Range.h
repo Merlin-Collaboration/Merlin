@@ -16,94 +16,107 @@
 class RangeBase
 {
 public:
-	typedef enum {ok,belowlower,aboveupper} Result;
-	virtual ~RangeBase() {}
+	typedef enum
+	{
+		ok,
+		belowlower,
+		aboveupper
+
+	} Result;
+	virtual ~RangeBase()
+	{
+	}
 };
 
 /**
-*	Represents an allowed contiguous range of a floating
-*	point number.
-*/
+ *	Represents an allowed contiguous range of a floating
+ *	point number.
+ */
 struct UnboundedRange {};
 
-template <class T, class C = std::less<T> >
-class NumericalRange : public RangeBase
+template<class T, class C = std::less<T> >
+class NumericalRange: public RangeBase
 {
 public:
 
 	/**
-	*	Constructor taking the range (lo,hi>
-	*/
-	NumericalRange (const T& lo, const T& hi);
+	 *	Constructor taking the range (lo,hi>
+	 */
+	NumericalRange(const T& lo, const T& hi);
 
 	/**
-	*    Construct an unbounded range
-	*/
-	NumericalRange (UnboundedRange) : lower(1),upper(-1) {}
-
-	/**
-	*    Construct a fixed point (zero range)
-	*/
-	explicit NumericalRange (const T& fp) : lower(fp),upper(fp) {}
-
-	/**
-	*	Returns true if this range is unbounded (i.e. represents
-	*	+/-infinity).
-	*
-	*	@retval true If range unbounded (i.e. \f$\pm\infty\f$)
-	*	@retval false If range bounded
-	*/
-	bool IsUnbounded () const;
-	bool IsFixedPoint () const
+	 *    Construct an unbounded range
+	 */
+	NumericalRange(UnboundedRange) :
+		lower(1), upper(-1)
 	{
-		return lower==upper;
 	}
 
 	/**
-	*	Returns true if lower<=x<=upper.
-	*
-	*	@retval true If \f$ \mathrm{lower} \le x \le \mathrm{upper} \f$
-	*/
-	bool operator () (const T& x) const;
-	bool operator == (const NumericalRange& rhs) const;
-	bool operator != (const NumericalRange& rhs) const;
+	 *    Construct a fixed point (zero range)
+	 */
+	explicit NumericalRange(const T& fp) :
+		lower(fp), upper(fp)
+	{
+	}
 
 	/**
-	*	Checks id x is within the range. Returns belowlower, ok or
-	*	aboveupper.
-	*/
-	RangeBase::Result Check (const T& x) const;
+	 *	Returns true if this range is unbounded (i.e. represents
+	 *	+/-infinity).
+	 *
+	 *	@retval true If range unbounded (i.e. \f$\pm\infty\f$)
+	 *	@retval false If range bounded
+	 */
+	bool IsUnbounded() const;
+	bool IsFixedPoint() const
+	{
+		return lower == upper;
+	}
 
 	/**
-	*	The lowerimum value of the range.
-	*/
+	 *	Returns true if lower<=x<=upper.
+	 *
+	 *	@retval true If \f$ \mathrm{lower} \le x \le \mathrm{upper} \f$
+	 */
+	bool operator ()(const T& x) const;
+	bool operator ==(const NumericalRange& rhs) const;
+	bool operator !=(const NumericalRange& rhs) const;
+
+	/**
+	 *	Checks id x is within the range. Returns belowlower, ok or
+	 *	aboveupper.
+	 */
+	RangeBase::Result Check(const T& x) const;
+
+	/**
+	 *	The lowerimum value of the range.
+	 */
 	T lower;
 
 	/**
-	*	The upperimum value of the range.
-	*/
+	 *	The upperimum value of the range.
+	 */
 	T upper;
 };
 
-
-template <class T, class C>
-inline NumericalRange<T,C>::NumericalRange (const T& lo, const T& hi)
-	: lower(lo),upper(hi)
+template<class T, class C>
+inline NumericalRange<T, C>::NumericalRange(const T& lo, const T& hi) :
+	lower(lo), upper(hi)
 {
-	if(C()(upper,lower))
+	if(C()(upper, lower))
 	{
-		std::swap(lower,upper);
+		std::swap(lower, upper);
 	}
 }
 
-template <class T, class C>
-inline bool NumericalRange<T,C>::IsUnbounded () const
+template<class T, class C>
+inline bool NumericalRange<T, C>::IsUnbounded() const
 {
-	return fequal(lower,1.0) && fequal(upper,-1.0);
+	return fequal(lower, 1.0) && fequal(upper, -1.0);
 }
 
-template <class T, class C>
-inline bool NumericalRange<T,C>::operator () (const T& x) const
+template<class T, class C>
+inline bool NumericalRange<T, C>::operator ()(const T& x) const
 {
 	if(IsUnbounded())
 	{
@@ -111,35 +124,35 @@ inline bool NumericalRange<T,C>::operator () (const T& x) const
 	}
 	else
 	{
-		return x>=lower && x<=upper;
+		return x >= lower && x <= upper;
 	}
 }
 
-template <class T, class C>
-inline bool NumericalRange<T,C>::operator == (const NumericalRange& rhs) const
+template<class T, class C>
+inline bool NumericalRange<T, C>::operator ==(const NumericalRange& rhs) const
 {
-	return lower==rhs.lower && upper==rhs.upper;
+	return lower == rhs.lower && upper == rhs.upper;
 }
 
-template <class T, class C>
-inline bool NumericalRange<T,C>::operator != (const NumericalRange& rhs) const
+template<class T, class C>
+inline bool NumericalRange<T, C>::operator !=(const NumericalRange& rhs) const
 {
-	return lower!=rhs.lower || upper!=rhs.upper;
+	return lower != rhs.lower || upper != rhs.upper;
 }
 
-template <class T, class C>
-inline RangeBase::Result NumericalRange<T,C>::Check (const T& x) const
+template<class T, class C>
+inline RangeBase::Result NumericalRange<T, C>::Check(const T& x) const
 {
 //dk    if(isUnbounded())
 	if(IsUnbounded())
 	{
 		return ok;
 	}
-	else if(x<lower)
+	else if(x < lower)
 	{
 		return belowlower;
 	}
-	else if(x<=upper)
+	else if(x <= upper)
 	{
 		return ok;
 	}
@@ -150,7 +163,6 @@ inline RangeBase::Result NumericalRange<T,C>::Check (const T& x) const
 }
 
 // float numerical range
-typedef NumericalRange< double > FloatRange;
-
+typedef NumericalRange<double> FloatRange;
 
 #endif

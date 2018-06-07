@@ -10,66 +10,64 @@
 #include "LatticeFrame.h"
 
 #define VALID_SFRAME(sframe) \
-assert(sframe==this || sframe==GLOBAL_FRAME || superFrame!=GLOBAL_FRAME)
+	assert(sframe == this || sframe == GLOBAL_FRAME || superFrame != GLOBAL_FRAME)
 
-Transform3D LatticeFrame::GetFrameTransform (const LatticeFrame* sframe) const
+Transform3D LatticeFrame::GetFrameTransform(const LatticeFrame* sframe) const
 {
 
-	if(sframe==GLOBAL_FRAME)
+	if(sframe == GLOBAL_FRAME)
 	{
 		sframe = GetGlobalFrame();
 	}
 
 	// The frame transformation to itself is the identity
-	if(sframe==this)
+	if(sframe == this)
 	{
 		return Transform3D();
 	}
 
-	if(sframe==superFrame)
+	if(sframe == superFrame)
 	{
 		return GetLocalFrameTransform();
 	}
 
-
 	Transform3D t1 = GetPhysicalTransform(sframe);
 	double s = GetPosition(sframe);
 
-
 	Transform3D t2 = sframe->GetGeometryTransform(s);
 
-	return t1*t2.inv();
+	return t1 * t2.inv();
 }
 
-Transform3D LatticeFrame::GetPhysicalTransform (const LatticeFrame* sframe) const
+Transform3D LatticeFrame::GetPhysicalTransform(const LatticeFrame* sframe) const
 {
 	VALID_SFRAME(sframe);
 
 	// The frame transformation to itself is the identity.
-	if(sframe==this)
+	if(sframe == this)
 	{
 		return Transform3D();
 	}
 
 	Transform3D t0 = GetLocalFrameTransform();
 
-	if(superFrame!=GLOBAL_FRAME)
+	if(superFrame != GLOBAL_FRAME)
 	{
-		Transform3D t1 = superFrame->GetGeometryTransform(0,s_0);
+		Transform3D t1 = superFrame->GetGeometryTransform(0, s_0);
 		Transform3D t2 = superFrame->GetPhysicalTransform(sframe);
-		t0=t0*t1*t2;
+		t0 = t0 * t1 * t2;
 	}
 
 	return t0;
 }
 
-double LatticeFrame::GetPosition (const LatticeFrame* sframe) const
+double LatticeFrame::GetPosition(const LatticeFrame* sframe) const
 {
 	VALID_SFRAME(sframe);
-	return sframe==superFrame ? s_0 : s_0 + superFrame->GetPosition(sframe);
+	return sframe == superFrame ? s_0 : s_0 + superFrame->GetPosition(sframe);
 }
 
-AcceleratorGeometry::Extent LatticeFrame::GetGeometryExtent (const LatticeFrame* sframe) const
+AcceleratorGeometry::Extent LatticeFrame::GetGeometryExtent(const LatticeFrame* sframe) const
 {
 	AcceleratorGeometry::Extent extent = GetLocalGeometryExtent();
 	double s = GetPosition(sframe);
@@ -78,44 +76,44 @@ AcceleratorGeometry::Extent LatticeFrame::GetGeometryExtent (const LatticeFrame*
 	return extent;
 }
 
-Transform3D LatticeFrame::GetBoundaryPlaneTransform (BoundaryPlane p) const
+Transform3D LatticeFrame::GetBoundaryPlaneTransform(BoundaryPlane p) const
 {
 	// we ignore any global transformations of the top-level frame
-	if(superFrame==GLOBAL_FRAME)
+	if(superFrame == GLOBAL_FRAME)
 	{
 		return Transform3D();
 	}
 
-	Transform3D t0=LocalBoundaryPlaneTransform(p);
-	if(superFrame!=nullptr && superFrame->IsBoundaryPlane(p,this))
+	Transform3D t0 = LocalBoundaryPlaneTransform(p);
+	if(superFrame != nullptr && superFrame->IsBoundaryPlane(p, this))
 	{
-		t0=t0*(superFrame->GetBoundaryPlaneTransform(p));
+		t0 = t0 * (superFrame->GetBoundaryPlaneTransform(p));
 	}
 	return t0;
 }
 /****
-void LatticeFrame::Translate (double dx, double dy, double dz)
-{
+   void LatticeFrame::Translate (double dx, double dy, double dz)
+   {
     _TRNSFM(translation(dx,dy,dz));
-}
+   }
 
-void LatticeFrame::RotateX (double angle)
-{
+   void LatticeFrame::RotateX (double angle)
+   {
     _TRNSFM(rotationX(angle));
-}
+   }
 
-void LatticeFrame::RotateY (double angle)
-{
+   void LatticeFrame::RotateY (double angle)
+   {
     _TRNSFM(rotationY(angle));
-}
+   }
 
-void LatticeFrame::RotateZ (double angle)
-{
+   void LatticeFrame::RotateZ (double angle)
+   {
     _TRNSFM(rotationZ(angle));
-}
-***/
+   }
+ ***/
 
-void LatticeFrame::ApplyLocalFrameTransform (const Transform3D& t)
+void LatticeFrame::ApplyLocalFrameTransform(const Transform3D& t)
 {
 	if(!local_T)
 	{
@@ -123,13 +121,13 @@ void LatticeFrame::ApplyLocalFrameTransform (const Transform3D& t)
 	}
 	else
 	{
-		(*local_T)*=t;
+		(*local_T) *= t;
 	}
 
 	Invalidate();
 }
 
-void LatticeFrame::SetLocalFrameTransform (const Transform3D& t)
+void LatticeFrame::SetLocalFrameTransform(const Transform3D& t)
 {
 	if(!local_T)
 	{
@@ -137,29 +135,29 @@ void LatticeFrame::SetLocalFrameTransform (const Transform3D& t)
 	}
 	else
 	{
-		(*local_T)=t;
+		(*local_T) = t;
 	}
 
 	Invalidate();
 }
 
-void LatticeFrame::ClearLocalFrameTransform ()
+void LatticeFrame::ClearLocalFrameTransform()
 {
 	ClearTransform();
 }
 
-LatticeFrame* LatticeFrame::GetGlobalFrame () const
+LatticeFrame* LatticeFrame::GetGlobalFrame() const
 {
-	return superFrame==nullptr ? const_cast<LatticeFrame*>(this) : superFrame->GetGlobalFrame();
+	return superFrame == nullptr ? const_cast<LatticeFrame*>(this) : superFrame->GetGlobalFrame();
 }
 
-Transform3D LatticeFrame::LocalBoundaryPlaneTransform (BoundaryPlane p) const
+Transform3D LatticeFrame::LocalBoundaryPlaneTransform(BoundaryPlane p) const
 {
 	Transform3D t0 = GetLocalFrameTransform();
 	if(!t0.isIdentity())
 	{
 		Transform3D t = GetGeometryTransform(p);
-		return t*t0*t.inv();
+		return t * t0 * t.inv();
 	}
 	return t0;
 }

@@ -13,9 +13,9 @@
 #include "SMPBunch.h"
 
 /**
-*	A ComponentTracker class which tracks a
-*  SliceMacroParticle (SMP) object.
-*/
+ *	A ComponentTracker class which tracks a
+ *  SliceMacroParticle (SMP) object.
+ */
 
 namespace SMPTracking
 {
@@ -23,11 +23,10 @@ namespace SMPTracking
 typedef TBunchCMPTracker<SMPBunch> SMPComponentTracker;
 
 /**
-* Standard integrator set
-*/
-DECL_INTG_SET(SMPComponentTracker,StdISet)
+ * Standard integrator set
+ */
+DECL_INTG_SET(SMPComponentTracker, StdISet)
 
 } // end namespace SMPTracking
-
 
 #endif

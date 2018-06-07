@@ -11,4 +11,3 @@ std::istream* MerlinIO::std_in = &std::cin;
 std::ostream* MerlinIO::std_out = &std::cout;
 std::ostream* MerlinIO::std_err = &std::cerr;
 std::ostream* MerlinIO::std_warn = &std::cerr;
-

@@ -20,7 +20,6 @@
 #include "PhysicalConstants.h"
 #include "NumericalConstants.h"
 
-
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace std;
@@ -28,8 +27,8 @@ using namespace std;
 namespace ParticleTracking
 {
 
-CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* model, LatticeFunctionTable* twiss)
-	: ParticleBunchProcess("CRAB CAVITY FAILURE", priority), AccModelCC(model), TwissCC(twiss)
+CCFailureProcess::CCFailureProcess(int priority, int mode, AcceleratorModel* model, LatticeFunctionTable* twiss) :
+	ParticleBunchProcess("CRAB CAVITY FAILURE", priority), AccModelCC(model), TwissCC(twiss)
 {
 	ATLAS_on = 1;
 	CMS_on = 1;
@@ -48,7 +47,7 @@ CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* mo
 	failure_on = 1;
 	testn = 0;
 
-	for (int i=0; i<4; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		Atlas_Upstream_V1[i] = 0.;
 		CMS_Upstream_V1[i] = 0.;
@@ -61,16 +60,18 @@ CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* mo
 	}
 
 	EnergyCC = 7E12;
-	theta = 590e-6/2;			// Crossing angle
-	omega = 400.79E6 * 2 * pi;	// Freq of CC
-	phi_s = 0.0;				// CC phase - usually 0.0
+	theta = 590e-6 / 2;           // Crossing angle
+	omega = 400.79E6 * 2 * pi;  // Freq of CC
+	phi_s = 0.0;                // CC phase - usually 0.0
 	n = 4;
 	fail_turns = 3;
 	non_fail_turns = 10;
 }
 
-CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* model, LatticeFunctionTable* twiss, double freq, double crossing, double phase)
-	: ParticleBunchProcess("CRAB CAVITY FAILURE", priority), AccModelCC(model), TwissCC(twiss), omega(freq), theta(crossing), phi_s(phase)
+CCFailureProcess::CCFailureProcess(int priority, int mode, AcceleratorModel* model, LatticeFunctionTable* twiss, double
+	freq, double crossing, double phase) :
+	ParticleBunchProcess("CRAB CAVITY FAILURE", priority), AccModelCC(model), TwissCC(twiss), omega(freq), theta(
+		crossing), phi_s(phase)
 {
 	ATLAS_on = 1;
 	CMS_on = 1;
@@ -91,7 +92,7 @@ CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* mo
 	failure_on = 1;
 	testn = 0;
 
-	for (int i=0; i<4; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		Atlas_Upstream_V1[i] = 0.;
 		CMS_Upstream_V1[i] = 0.;
@@ -105,8 +106,10 @@ CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* mo
 	non_fail_turns = 10;
 }
 
-CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* model, LatticeFunctionTable* twiss, double freq, double crossing, double phase, int non_fail_turn, int fail_turn)
-	: ParticleBunchProcess("CRAB CAVITY FAILURE", priority), AccModelCC(model), TwissCC(twiss), omega(freq), theta(crossing), phi_s(phase), non_fail_turns(non_fail_turn), fail_turns(fail_turn)
+CCFailureProcess::CCFailureProcess(int priority, int mode, AcceleratorModel* model, LatticeFunctionTable* twiss, double
+	freq, double crossing, double phase, int non_fail_turn, int fail_turn) :
+	ParticleBunchProcess("CRAB CAVITY FAILURE", priority), AccModelCC(model), TwissCC(twiss), omega(freq), theta(
+		crossing), phi_s(phase), non_fail_turns(non_fail_turn), fail_turns(fail_turn)
 {
 	ATLAS_on = 1;
 	CMS_on = 1;
@@ -127,7 +130,7 @@ CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* mo
 	failure_on = 1;
 	testn = 0;
 
-	for (int i=0; i<4; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		Atlas_Upstream_V1[i] = 0.;
 		CMS_Upstream_V1[i] = 0.;
@@ -138,7 +141,7 @@ CCFailureProcess::CCFailureProcess (int priority, int mode, AcceleratorModel* mo
 	}
 }
 
-void CCFailureProcess::InitialiseProcess (Bunch& bunch)
+void CCFailureProcess::InitialiseProcess(Bunch& bunch)
 {
 	ParticleBunchProcess::InitialiseProcess(bunch);
 	if(!currentBunch)
@@ -147,10 +150,10 @@ void CCFailureProcess::InitialiseProcess (Bunch& bunch)
 	}
 }
 
-void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
+void CCFailureProcess::SetCurrentComponent(AcceleratorComponent& component)
 {
 	CrabMarker* aCrabMarker = dynamic_cast<CrabMarker*>(&component);
-	active = (currentBunch!=nullptr) && (aCrabMarker);
+	active = (currentBunch != nullptr) && (aCrabMarker);
 
 	if(active)
 	{
@@ -158,7 +161,8 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 
 		if(!ATLAS_on && !CMS_on)
 		{
-			cout << "CCFailureProcess: Warning: Both ATLAS and CMS switches are off. Failure Process does nothing" << endl;
+			cout << "CCFailureProcess: Warning: Both ATLAS and CMS switches are off. Failure Process does nothing"
+				 << endl;
 		}
 
 		else if(ATLAS_on && CMS_on)
@@ -199,7 +203,7 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 		else if(ATLAS_on && !CMS_on)
 		{
 			// This checks if we have made a full turn of the machine in terms of Crab Cavities
-			if(IP1_up && IP1_down )
+			if(IP1_up && IP1_down)
 			{
 				Turn++;
 				cout << "CrabFailureProcess ++TURN, Turn = " << Turn << endl;
@@ -214,7 +218,8 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 
 		//Here we check which set of CCs we are using, and count each so that we can know when we have traversed all 16 for beam1
 		//Note that in order to use process this we must inject a Gaussian bunch immediately before a set of upstream CCs
-		if 		( (currentComponent->GetComponentLatticePosition() >= 10000) && ((currentComponent->GetComponentLatticePosition() <= 13200)) )
+		if((currentComponent->GetComponentLatticePosition() >= 10000) &&
+			((currentComponent->GetComponentLatticePosition() <= 13200)))
 		{
 			upstream = 1;
 			ATLAS = 0;
@@ -230,7 +235,8 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 				IP5_up = 0;
 			}
 		}
-		else if ( (currentComponent->GetComponentLatticePosition() >= 13300) && ((currentComponent->GetComponentLatticePosition() <= 15000)) )
+		else if((currentComponent->GetComponentLatticePosition() >= 13300) &&
+			((currentComponent->GetComponentLatticePosition() <= 15000)))
 		{
 			upstream = 0;
 			ATLAS = 0;
@@ -246,7 +252,7 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 				IP5_down = 0;
 			}
 		}
-		else if (currentComponent->GetComponentLatticePosition() <= 200 )
+		else if(currentComponent->GetComponentLatticePosition() <= 200)
 		{
 			upstream = 0;
 			ATLAS = 1;
@@ -262,13 +268,13 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 				IP1_down = 0;
 			}
 		}
-		else if ( (currentComponent->GetComponentLatticePosition() >= 20000) && ((currentComponent->GetComponentLatticePosition() <= 30000)) )
+		else if((currentComponent->GetComponentLatticePosition() >= 20000) &&
+			((currentComponent->GetComponentLatticePosition() <= 30000)))
 		{
 			upstream = 1;
 			ATLAS = 1;
 			Horizontal_CC = 0;
 			IP1_up_count++;
-
 
 			if(IP1_up_count == 4)
 			{
@@ -280,7 +286,6 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 			}
 		}
 
-
 		Gamma_p = LorentzGamma(currentBunch->GetReferenceMomentum(), ProtonMass);
 		Beta_p = LorentzBeta(Gamma_p);
 	}
@@ -290,21 +295,24 @@ void CCFailureProcess::SetCurrentComponent (AcceleratorComponent& component)
 	}
 }
 
-double CCFailureProcess::GetMaxAllowedStepSize () const
+double CCFailureProcess::GetMaxAllowedStepSize() const
 {
 	return currentComponent->GetLength();
 }
 
-void CCFailureProcess::DoProcess (double ds)
+void CCFailureProcess::DoProcess(double ds)
 {
 
-	if(!ATLAS_on && !CMS_on) {}
+	if(!ATLAS_on && !CMS_on)
+	{
+	}
 
-	else if (ATLAS_on && CMS_on)
+	else if(ATLAS_on && CMS_on)
 	{
 		if(Turn < (non_fail_turns + fail_turns))
 		{
-			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
+			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(),
+				currentBunch->GetTotalCharge() / currentBunch->size());
 			newbunch->clear();
 			newbunch->reserve(currentBunch->size());
 			//~ newbunch->swap(*currentBunch);
@@ -315,9 +323,8 @@ void CCFailureProcess::DoProcess (double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuX (0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
-			int n1 (0.), n2(0.);
-
+			double DeltaMuX(0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			int n1(0.), n2(0.);
 
 			++testn;
 			cout << "\n\t CCFAILUREPROCESS Called " << testn << " times " << endl;
@@ -334,28 +341,28 @@ void CCFailureProcess::DoProcess (double ds)
 			}
 
 			//Calc Mu / DeltaMu
-			if (upstream)
+			if(upstream)
 			{
-				pair<double,double> DeltaMu = CalcDeltaMu(n1, n2);
-				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
-				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+				pair<double, double> DeltaMu = CalcDeltaMu(n1, n2);
+				DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi;
+				DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi;
 			}
 			else
 			{
-				pair<double,double> DeltaMu;
-				if(ATLAS) 		//Vertical
+				pair<double, double> DeltaMu;
+				if(ATLAS)       //Vertical
 				{
 					DeltaMu = CalcMu(n1);
 
-					DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
-					DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi + Atlas_Upstream_deltamu[IP1_down_count-1];
+					DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi;
+					DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi + Atlas_Upstream_deltamu[IP1_down_count - 1];
 				}
-				else 			//Horizontal
+				else            //Horizontal
 				{
 					DeltaMu = CalcDeltaMu(n1, n2);
 
-					DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi + CMS_Upstream_deltamu[IP1_down_count-1];
-					DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+					DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi + CMS_Upstream_deltamu[IP1_down_count - 1];
+					DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi;
 
 					//~ DeltaMu = CalcDeltaMu(n2, n1);
 					//~ DeltaMu = CalcDeltaMu(n1-152, n1);
@@ -373,8 +380,8 @@ void CCFailureProcess::DoProcess (double ds)
 				}
 				else
 				{
-					M12 = CalcM_12(n2, n1, DeltaMuX/2, Horizontal_CC);
-					M22 = CalcM_22(CMS_Upstream_elno[IP5_down_count-1], n1, DeltaMuX, Horizontal_CC);
+					M12 = CalcM_12(n2, n1, DeltaMuX / 2, Horizontal_CC);
+					M22 = CalcM_22(CMS_Upstream_elno[IP5_down_count - 1], n1, DeltaMuX, Horizontal_CC);
 				}
 			}
 			else  //ATLAS
@@ -385,8 +392,8 @@ void CCFailureProcess::DoProcess (double ds)
 				}
 				else
 				{
-					M12 = CalcM_12(n2, n1, DeltaMuY/2, Horizontal_CC);
-					M22 = CalcM_22(Atlas_Upstream_elno[IP1_down_count-1], n1, DeltaMuY, Horizontal_CC);
+					M12 = CalcM_12(n2, n1, DeltaMuY / 2, Horizontal_CC);
+					M22 = CalcM_22(Atlas_Upstream_elno[IP1_down_count - 1], n1, DeltaMuY, Horizontal_CC);
 				}
 			}
 
@@ -395,63 +402,68 @@ void CCFailureProcess::DoProcess (double ds)
 			{
 				V1 = CalcV1(M12);
 
-				Atlas_Upstream_elno[IP1_up_count-1] = n1;
-				Atlas_Upstream_V1[IP1_up_count-1] = V1;
-				Atlas_Upstream_deltamu[IP1_up_count-1] = DeltaMuY;
-				Atlas_Upstream_M12[IP1_up_count-1] = M12;
+				Atlas_Upstream_elno[IP1_up_count - 1] = n1;
+				Atlas_Upstream_V1[IP1_up_count - 1] = V1;
+				Atlas_Upstream_deltamu[IP1_up_count - 1] = DeltaMuY;
+				Atlas_Upstream_M12[IP1_up_count - 1] = M12;
 			}
-			else if (upstream)
+			else if(upstream)
 			{
 				V1 = CalcV1(M12);
 
-				CMS_Upstream_elno[IP5_up_count-1] = n1;
-				CMS_Upstream_V1[IP5_up_count-1] = V1;
-				CMS_Upstream_deltamu[IP5_up_count-1] = DeltaMuX;
-				CMS_Upstream_M12[IP5_up_count-1] = M12;
+				CMS_Upstream_elno[IP5_up_count - 1] = n1;
+				CMS_Upstream_V1[IP5_up_count - 1] = V1;
+				CMS_Upstream_deltamu[IP5_up_count - 1] = DeltaMuX;
+				CMS_Upstream_M12[IP5_up_count - 1] = M12;
 			}
 			//Load V1s
 			if(ATLAS && !upstream)
 			{
-				V2 = CalcV2(Atlas_Upstream_V1[IP1_down_count-1], M22);
+				V2 = CalcV2(Atlas_Upstream_V1[IP1_down_count - 1], M22);
 			}
-			else if (!upstream)
+			else if(!upstream)
 			{
-				V2 = CalcV2(CMS_Upstream_V1[IP5_down_count-1], M22);
+				V2 = CalcV2(CMS_Upstream_V1[IP5_down_count - 1], M22);
 			}
 
 //FAILURE
-			double fail_interval = 1 / (double)fail_turns;
-			if( upstream && ATLAS && (Turn >= non_fail_turns) && (failure_on) )
+			double fail_interval = 1 / (double) fail_turns;
+			if(upstream && ATLAS && (Turn >= non_fail_turns) && (failure_on))
 			{
-				V1 = V1 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
+				V1 = V1 * (1 - (((Turn + 1) - non_fail_turns) * fail_interval));
 			}
 
-			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
+			cout << "\nElement = " << currentComponent->GetName() << ", position = "
+				 << currentComponent->GetComponentLatticePosition() << endl;
 			if(upstream)
 			{
 				if(ATLAS)
 				{
-					cout << "Upstream ATLAS V1 = " << V1 << " \nDeltaMuY = " << DeltaMuY*(360/(2*pi)) << " M12 = " << M12 << endl;
+					cout << "Upstream ATLAS V1 = " << V1 << " \nDeltaMuY = " << DeltaMuY * (360 / (2 * pi))
+						 << " M12 = " << M12 << endl;
 				}
 				else
 				{
-					cout << "Upstream CMS V1 = " << V1 << " \nDeltaMuX = " << DeltaMuX*(360/(2*pi)) << " M12 = " << M12 << endl;
+					cout << "Upstream CMS V1 = " << V1 << " \nDeltaMuX = " << DeltaMuX * (360 / (2 * pi))
+						 << " M12 = " << M12 << endl;
 				}
 			}
 			else
 			{
 				if(ATLAS && (Atlas_Upstream_V1[3] != 0.))
 				{
-					cout << "Downstream ATLAS V2 = " << V2 << "\nDeltaMuY = " << DeltaMuY*(360/(2*pi)) << " M12 = " << M12 << " M22 = " << M22 << endl;
+					cout << "Downstream ATLAS V2 = " << V2 << "\nDeltaMuY = " << DeltaMuY * (360 / (2 * pi))
+						 << " M12 = " << M12 << " M22 = " << M22 << endl;
 				}
-				else if (!ATLAS && (CMS_Upstream_V1[3] != 0.))
+				else if(!ATLAS && (CMS_Upstream_V1[3] != 0.))
 				{
-					cout << "Downstream CMS V2 = " << V2 << "\nDeltaMuX = " << DeltaMuX*(360/(2*pi)) << " M12 = " << M12 << " M22 = " << M22 << endl;
+					cout << "Downstream CMS V2 = " << V2 << "\nDeltaMuX = " << DeltaMuX * (360 / (2 * pi))
+						 << " M12 = " << M12 << " M22 = " << M22 << endl;
 				}
 
 			}
 
-			for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
+			for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 			{
 				if(ATLAS)
 				{
@@ -464,7 +476,8 @@ void CCFailureProcess::DoProcess (double ds)
 						ApplyPostCCKick(*p, V2, M12, Horizontal_CC);
 					}
 				}
-				if( std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(p->ct()) || std::isnan(p->dp()) )
+				if(std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(
+						p->ct()) || std::isnan(p->dp()))
 				{
 					cout << "CC Particle Lost" << endl;
 				}
@@ -480,11 +493,12 @@ void CCFailureProcess::DoProcess (double ds)
 		}
 	}
 
-	else if (ATLAS_on && !CMS_on && ATLAS)
+	else if(ATLAS_on && !CMS_on && ATLAS)
 	{
 		if(Turn < (non_fail_turns + fail_turns))
 		{
-			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
+			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(),
+				currentBunch->GetTotalCharge() / currentBunch->size());
 			newbunch->clear();
 			newbunch->reserve(currentBunch->size());
 
@@ -495,8 +509,7 @@ void CCFailureProcess::DoProcess (double ds)
 			}
 
 			double DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
-			int n1 (0.), n2(0.);
-
+			int n1(0.), n2(0.);
 
 			++testn;
 			cout << "\n\t CCFAILUREPROCESS Called " << testn << " times " << endl;
@@ -506,16 +519,16 @@ void CCFailureProcess::DoProcess (double ds)
 			n2 = AccModelCC->FindElementLatticePosition("IP1.L1");
 
 			//Calc Mu / DeltaMu
-			if (upstream)
+			if(upstream)
 			{
-				pair<double,double> DeltaMu = CalcDeltaMu(n1, n2);
-				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+				pair<double, double> DeltaMu = CalcDeltaMu(n1, n2);
+				DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi;
 			}
 			else
 			{
-				pair<double,double> DeltaMu;
+				pair<double, double> DeltaMu;
 				DeltaMu = CalcMu(n1);
-				DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi + Atlas_Upstream_deltamu[IP1_down_count-1];
+				DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi + Atlas_Upstream_deltamu[IP1_down_count - 1];
 			}
 
 			//Calc M12 & M22
@@ -525,8 +538,8 @@ void CCFailureProcess::DoProcess (double ds)
 			}
 			else
 			{
-				M12 = CalcM_12(n2, n1, DeltaMuY/2, Horizontal_CC);
-				M22 = CalcM_22(Atlas_Upstream_elno[IP1_down_count-1], n1, DeltaMuY, Horizontal_CC);
+				M12 = CalcM_12(n2, n1, DeltaMuY / 2, Horizontal_CC);
+				M22 = CalcM_22(Atlas_Upstream_elno[IP1_down_count - 1], n1, DeltaMuY, Horizontal_CC);
 			}
 
 			//Store V1s
@@ -534,47 +547,49 @@ void CCFailureProcess::DoProcess (double ds)
 			{
 				V1 = CalcV1(M12);
 
-				Atlas_Upstream_elno[IP1_up_count-1] = n1;
-				Atlas_Upstream_V1[IP1_up_count-1] = V1;
-				Atlas_Upstream_deltamu[IP1_up_count-1] = DeltaMuY;
-				Atlas_Upstream_M12[IP1_up_count-1] = M12;
+				Atlas_Upstream_elno[IP1_up_count - 1] = n1;
+				Atlas_Upstream_V1[IP1_up_count - 1] = V1;
+				Atlas_Upstream_deltamu[IP1_up_count - 1] = DeltaMuY;
+				Atlas_Upstream_M12[IP1_up_count - 1] = M12;
 			}
 			//Load V1s
 			else if(!upstream)
 			{
-				V2 = CalcV2(Atlas_Upstream_V1[IP1_down_count-1], M22);
+				V2 = CalcV2(Atlas_Upstream_V1[IP1_down_count - 1], M22);
 			}
 
-
 //FAILURE
-			double fail_interval = 1 / (double)fail_turns;
+			double fail_interval = 1 / (double) fail_turns;
 			//~ double fail_interval = (double)fail_turns;
-			if( !upstream && (Turn >= non_fail_turns) && (failure_on))
+			if(!upstream && (Turn >= non_fail_turns) && (failure_on))
 			{
 				//~ V1 = V1 * (1- (((Turn)-non_fail_turns) * fail_interval));
 				//140 degrees is 2.443 radians 140 * (2*pi)/360
-				double phi = 90 * (2*pi)/360;
-				phi_s = (((Turn)-(non_fail_turns-1)) * fail_interval) * phi;
+				double phi = 90 * (2 * pi) / 360;
+				phi_s = (((Turn) - (non_fail_turns - 1)) * fail_interval) * phi;
 			}
 
-			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
+			cout << "\nElement = " << currentComponent->GetName() << ", position = "
+				 << currentComponent->GetComponentLatticePosition() << endl;
 			if(upstream)
 			{
 				if(ATLAS)
 				{
-					cout << "Upstream ATLAS V1 = " << V1 << " \nDeltaMuY = " << DeltaMuY*(360/(2*pi)) << " M12 = " << M12 << " Phi = " << phi_s << endl;
+					cout << "Upstream ATLAS V1 = " << V1 << " \nDeltaMuY = " << DeltaMuY * (360 / (2 * pi))
+						 << " M12 = " << M12 << " Phi = " << phi_s << endl;
 				}
 			}
 			else
 			{
 				if(ATLAS && (Atlas_Upstream_V1[3] != 0.))
 				{
-					cout << "Downstream ATLAS V2 = " << V2 << "\nDeltaMuY = " << DeltaMuY*(360/(2*pi)) << " M12 = " << M12 << " M22 = " << M22 << " Phi = " << phi_s << endl;
+					cout << "Downstream ATLAS V2 = " << V2 << "\nDeltaMuY = " << DeltaMuY * (360 / (2 * pi))
+						 << " M12 = " << M12 << " M22 = " << M22 << " Phi = " << phi_s << endl;
 				}
 
 			}
 
-			for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
+			for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 			{
 				if(upstream)
 				{
@@ -585,7 +600,8 @@ void CCFailureProcess::DoProcess (double ds)
 					ApplyPostCCKick(*p, V2, M12, Horizontal_CC);
 				}
 
-				if( std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(p->ct()) || std::isnan(p->dp()) )
+				if(std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(
+						p->ct()) || std::isnan(p->dp()))
 				{
 					cout << "CC Particle Lost" << endl;
 				}
@@ -602,11 +618,12 @@ void CCFailureProcess::DoProcess (double ds)
 		}
 	}
 
-	else if (!ATLAS_on && CMS_on && !ATLAS)
+	else if(!ATLAS_on && CMS_on && !ATLAS)
 	{
 		if(Turn < (non_fail_turns + fail_turns))
 		{
-			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(), currentBunch->GetTotalCharge()/currentBunch->size());
+			ParticleBunch* newbunch = new ParticleBunch(currentBunch->GetReferenceMomentum(),
+				currentBunch->GetTotalCharge() / currentBunch->size());
 			newbunch->clear();
 			newbunch->reserve(currentBunch->size());
 
@@ -616,9 +633,9 @@ void CCFailureProcess::DoProcess (double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuX (0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			double DeltaMuX(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 
-			int n1 (0.), n2(0.);
+			int n1(0.), n2(0.);
 
 			++testn;
 			cout << "\n\t CCFAILUREPROCESS Called " << testn << " times " << endl;
@@ -629,14 +646,14 @@ void CCFailureProcess::DoProcess (double ds)
 
 			//Calc Mu / DeltaMu
 
-			pair<double,double> DeltaMu = CalcDeltaMu(n1, n2);
-			if (upstream)
+			pair<double, double> DeltaMu = CalcDeltaMu(n1, n2);
+			if(upstream)
 			{
-				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
+				DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi;
 			}
 			else
 			{
-				DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi + CMS_Upstream_deltamu[IP5_down_count-1];
+				DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi + CMS_Upstream_deltamu[IP5_down_count - 1];
 			}
 
 			//Calc M12 & M22
@@ -646,45 +663,48 @@ void CCFailureProcess::DoProcess (double ds)
 			}
 			else
 			{
-				M12 = CalcM_12(n2, n1, DeltaMuX/2, Horizontal_CC);
-				M22 = CalcM_22(CMS_Upstream_elno[IP5_down_count-1], n1, DeltaMuX, Horizontal_CC);
+				M12 = CalcM_12(n2, n1, DeltaMuX / 2, Horizontal_CC);
+				M22 = CalcM_22(CMS_Upstream_elno[IP5_down_count - 1], n1, DeltaMuX, Horizontal_CC);
 			}
 
 			//Store V1s
-			if (upstream)
+			if(upstream)
 			{
 				V1 = CalcV1(M12);
 
-				CMS_Upstream_elno[IP5_up_count-1] = n1;
-				CMS_Upstream_V1[IP5_up_count-1] = V1;
-				CMS_Upstream_deltamu[IP5_up_count-1] = DeltaMuX;
-				CMS_Upstream_M12[IP5_up_count-1] = M12;
+				CMS_Upstream_elno[IP5_up_count - 1] = n1;
+				CMS_Upstream_V1[IP5_up_count - 1] = V1;
+				CMS_Upstream_deltamu[IP5_up_count - 1] = DeltaMuX;
+				CMS_Upstream_M12[IP5_up_count - 1] = M12;
 			}
 			//Load V1s
 			else
 			{
-				V2 = CalcV2(CMS_Upstream_V1[IP5_down_count-1], M22);
+				V2 = CalcV2(CMS_Upstream_V1[IP5_down_count - 1], M22);
 			}
 
 //FAILURE
-			double fail_interval = 1 / (double)fail_turns;
-			if( upstream && (Turn >= non_fail_turns) && (failure_on) )
+			double fail_interval = 1 / (double) fail_turns;
+			if(upstream && (Turn >= non_fail_turns) && (failure_on))
 			{
-				V1 = V1 * (1- (((Turn+1)-non_fail_turns) * fail_interval));
+				V1 = V1 * (1 - (((Turn + 1) - non_fail_turns) * fail_interval));
 			}
 
-			cout << "\nElement = " << currentComponent->GetName() << ", position = " << currentComponent->GetComponentLatticePosition() << endl;
+			cout << "\nElement = " << currentComponent->GetName() << ", position = "
+				 << currentComponent->GetComponentLatticePosition() << endl;
 			if(upstream)
 			{
-				cout << "Upstream CMS V1 = " << V1 << " \nDeltaMuX = " << DeltaMuX*(360/(2*pi)) << " M12 = " << M12 << endl;
+				cout << "Upstream CMS V1 = " << V1 << " \nDeltaMuX = " << DeltaMuX * (360 / (2 * pi)) << " M12 = "
+					 << M12 << endl;
 			}
 			else
 			{
-				cout << "Downstream CMS V2 = " << V2 << "\nDeltaMuX = " << DeltaMuX*(360/(2*pi)) << " M12 = " << M12 << " M22 = " << M22 << endl;
+				cout << "Downstream CMS V2 = " << V2 << "\nDeltaMuX = " << DeltaMuX * (360 / (2 * pi)) << " M12 = "
+					 << M12 << " M22 = " << M22 << endl;
 			}
 
 			//~ for(PSvectorArray::iterator p = newbunch->begin(); p!=newbunch->end(); p++)
-			for(PSvectorArray::iterator p = currentBunch->begin(); p!=currentBunch->end(); p++)
+			for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 			{
 				if(upstream)
 				{
@@ -695,7 +715,8 @@ void CCFailureProcess::DoProcess (double ds)
 					ApplyPostCCKick(*p, V2, M12, Horizontal_CC);
 				}
 
-				if( std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(p->ct()) || std::isnan(p->dp()) )
+				if(std::isnan(p->x()) || std::isnan(p->xp()) || std::isnan(p->y()) || std::isnan(p->yp()) || std::isnan(
+						p->ct()) || std::isnan(p->dp()))
 				{
 					cout << "CC Particle Lost" << endl;
 				}
@@ -718,13 +739,13 @@ double CCFailureProcess::CalcM_12(int start, int end, double deltamu, bool horiz
 
 	if(horizontal)
 	{
-		beta1 = TwissCC->Value(1,1,1,start);
-		beta2 = TwissCC->Value(1,1,1,end);
+		beta1 = TwissCC->Value(1, 1, 1, start);
+		beta2 = TwissCC->Value(1, 1, 1, end);
 	}
 	else
 	{
-		beta1 = TwissCC->Value(3,3,2,start);
-		beta2 = TwissCC->Value(3,3,2,end);
+		beta1 = TwissCC->Value(3, 3, 2, start);
+		beta2 = TwissCC->Value(3, 3, 2, end);
 	}
 
 	return sqrt(beta1 * beta2) * sin(deltamu);
@@ -737,13 +758,13 @@ double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horiz
 
 	if(horizontal)
 	{
-		beta1 = TwissCC->Value(1,1,1,start);
-		beta2 = TwissCC->Value(1,1,1,end);
+		beta1 = TwissCC->Value(1, 1, 1, start);
+		beta2 = TwissCC->Value(1, 1, 1, end);
 	}
 	else
 	{
-		beta1 = TwissCC->Value(3,3,2,start);
-		beta2 = TwissCC->Value(3,3,2,end);
+		beta1 = TwissCC->Value(3, 3, 2, start);
+		beta2 = TwissCC->Value(3, 3, 2, end);
 	}
 
 	//~ cout << "\n\nBeta1 = " << beta1 << ", beta2 = " << beta2 << ", deltamu = " << deltamu*(360/(2*pi));
@@ -754,21 +775,21 @@ double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horiz
 double CCFailureProcess::CalcM_12(int start, int end, bool horizontal)
 {
 	double beta1(0.), beta2(0.), deltamu(0.);
-	pair<double,double> DeltaMu = CalcDeltaMu(start, end);
-	double DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
-	double DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+	pair<double, double> DeltaMu = CalcDeltaMu(start, end);
+	double DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi;
+	double DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi;
 
 	if(horizontal)
 	{
 		deltamu = DeltaMuX;
-		beta1 = TwissCC->Value(1,1,1,start);
-		beta2 = TwissCC->Value(1,1,1,end);
+		beta1 = TwissCC->Value(1, 1, 1, start);
+		beta2 = TwissCC->Value(1, 1, 1, end);
 	}
 	else
 	{
 		deltamu = DeltaMuY;
-		beta1 = TwissCC->Value(3,3,2,start);
-		beta2 = TwissCC->Value(3,3,2,end);
+		beta1 = TwissCC->Value(3, 3, 2, start);
+		beta2 = TwissCC->Value(3, 3, 2, end);
 	}
 
 	return sqrt(beta1 * beta2) * sin(deltamu);
@@ -778,60 +799,62 @@ double CCFailureProcess::CalcM_22(int start, int end, bool horizontal)
 {
 	//Simplified calculation omitting Alpha_2*sin(deltamu) term
 	double beta1(0.), beta2(0.), deltamu(0.);
-	pair<double,double> DeltaMu = CalcDeltaMu(start, end);
-	double DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi;
-	double DeltaMuY = sqrt(pow(DeltaMu.second,2)) *2*pi;
+	pair<double, double> DeltaMu = CalcDeltaMu(start, end);
+	double DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi;
+	double DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi;
 
 	if(horizontal)
 	{
 		deltamu = DeltaMuX;
-		beta1 = TwissCC->Value(1,1,1,start);
-		beta2 = TwissCC->Value(1,1,1,end);
+		beta1 = TwissCC->Value(1, 1, 1, start);
+		beta2 = TwissCC->Value(1, 1, 1, end);
 	}
 	else
 	{
 		deltamu = DeltaMuY;
-		beta1 = TwissCC->Value(3,3,2,start);
-		beta2 = TwissCC->Value(3,3,2,end);
+		beta1 = TwissCC->Value(3, 3, 2, start);
+		beta2 = TwissCC->Value(3, 3, 2, end);
 	}
 
 	return sqrt(beta1 / beta2) * cos(deltamu);
 }
 
-pair<double,double> CCFailureProcess::CalcMu(int element)
+pair<double, double> CCFailureProcess::CalcMu(int element)
 {
 	PhaseAdvance* PA = new PhaseAdvance(AccModelCC, TwissCC, EnergyCC);
-	pair<double,double> Mu = PA->CalcIntegerPart(element);
+	pair<double, double> Mu = PA->CalcIntegerPart(element);
 	return Mu;
 }
 
-pair<double,double> CCFailureProcess::CalcDeltaMu(int element1, int element2)
+pair<double, double> CCFailureProcess::CalcDeltaMu(int element1, int element2)
 {
-	pair<double,double> Mu1 = CalcMu(element1);
-	pair<double,double> Mu2 = CalcMu(element2);
+	pair<double, double> Mu1 = CalcMu(element1);
+	pair<double, double> Mu2 = CalcMu(element2);
 
 	double delta_mu_x = Mu2.first - Mu1.first;
 	double delta_mu_y = Mu2.second - Mu1.second;
 
-	pair<double,double> DeltaMu = std::make_pair(delta_mu_x, delta_mu_y);
+	pair<double, double> DeltaMu = std::make_pair(delta_mu_x, delta_mu_y);
 
 	return DeltaMu;
 }
 
 double CCFailureProcess::CalcV1(double M12)
 {
-	return (SpeedOfLight * EnergyCC * tan(theta))/(omega * M12 * n);
+	return (SpeedOfLight * EnergyCC * tan(theta)) / (omega * M12 * n);
 }
 
 double CCFailureProcess::CalcV1(double deltamu, int n1, int n2, bool horizontal)
 {
-	if (horizontal)
+	if(horizontal)
 	{
-		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(1,1,1,n1) * TwissCC->Value(1,1,1,n2)) * sin(deltamu));
+		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6) / (omega * sqrt(TwissCC->Value(1, 1, 1, n1)
+			   * TwissCC->Value(1, 1, 1, n2)) * sin(deltamu));
 	}
 	else
 	{
-		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6)/(omega * sqrt(TwissCC->Value(3,3,2,n1) * TwissCC->Value(3,3,2,n2)) * sin(deltamu));
+		return (SpeedOfLight * EnergyCC * tan(theta) * 1E-6) / (omega * sqrt(TwissCC->Value(3, 3, 2, n1)
+			   * TwissCC->Value(3, 3, 2, n2)) * sin(deltamu));
 	}
 }
 
@@ -842,12 +865,12 @@ double CCFailureProcess::CalcV2(double V1, double M22)
 
 void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool horizontal)
 {
-	double omega_ov_c = omega/SpeedOfLight;
+	double omega_ov_c = omega / SpeedOfLight;
 	double tantheta = tan(theta);
-	int n = 4;	//No of CCs
+	int n = 4;  //No of CCs
 
 	//Working
-	double kick = (V * sin( phi_s + (p.ct() * omega_ov_c) ))/( EnergyCC );
+	double kick = (V * sin(phi_s + (p.ct() * omega_ov_c))) / (EnergyCC);
 
 	if(horizontal)
 	{
@@ -861,12 +884,12 @@ void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool ho
 
 void CCFailureProcess::ApplyPostCCKick(PSvector &p, double V, double M12, bool horizontal)
 {
-	double omega_ov_c = omega/SpeedOfLight;
+	double omega_ov_c = omega / SpeedOfLight;
 	double tantheta = tan(theta);
-	int n = 4;	//No of CCs
+	int n = 4;  //No of CCs
 
 	//Working
-	double kick = (V * sin( phi_s + (p.ct() * omega_ov_c) ))/( EnergyCC );
+	double kick = (V * sin(phi_s + (p.ct() * omega_ov_c))) / (EnergyCC);
 
 	if(horizontal)
 	{
@@ -878,6 +901,4 @@ void CCFailureProcess::ApplyPostCCKick(PSvector &p, double V, double M12, bool h
 	}
 }
 
-
 } //End namespace ParticleTracking
-

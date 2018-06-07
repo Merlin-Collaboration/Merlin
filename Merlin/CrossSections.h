@@ -41,7 +41,8 @@ public:
 
 	inline bool operator==(const CrossSections& rhs)
 	{
-		if( (this->sig_pN_tot_ref != rhs.sig_pN_tot_ref) || (this->scat_type != rhs.scat_type) || (this->lambda_tot != rhs.lambda_tot ))
+		if((this->sig_pN_tot_ref != rhs.sig_pN_tot_ref) || (this->scat_type != rhs.scat_type) || (this->lambda_tot !=
+			rhs.lambda_tot))
 		{
 			return 0;
 		}
@@ -54,7 +55,6 @@ public:
 	void ConfigureCrossSections(double E0);
 
 	double GetTotalMeanFreePath();
-
 
 	void Set_E0(double a)
 	{

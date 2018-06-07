@@ -14,10 +14,10 @@
 #include "RectangularGeometry.h"
 
 /**
-*	A magnetic multipole field referenced to a rectangular
-*	geometry.
-*/
+ *	A magnetic multipole field referenced to a rectangular
+ *	geometry.
+ */
 
-typedef TAccCompGF< RectangularGeometry,MultipoleField > RectMultipoleField;
+typedef TAccCompGF<RectangularGeometry, MultipoleField> RectMultipoleField;
 
 #endif

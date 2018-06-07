@@ -19,4 +19,3 @@ typedef TTrackSim<SMPComponentTracker> SMPTracker;
 }
 
 #endif
-

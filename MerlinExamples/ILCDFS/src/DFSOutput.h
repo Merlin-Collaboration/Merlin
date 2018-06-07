@@ -13,11 +13,14 @@
 #include <fstream>
 
 // Used to define output for final (emittance) tracking.
-class DFSOutput : public SimulationOutput
+class DFSOutput: public SimulationOutput
 {
 public:
 
-	DFSOutput() : fos(nullptr) {}
+	DFSOutput() :
+		fos(nullptr)
+	{
+	}
 
 	// Close any existing file stream and open
 	// a new output file.
@@ -35,9 +38,3 @@ private:
 };
 
 #endif
-
-
-
-
-
-

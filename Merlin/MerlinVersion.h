@@ -8,8 +8,8 @@
 #include <string>
 
 /** \file MerlinVersion.h
-*Get information about the Merlin version
-*/
+ * Get information about the Merlin version
+ */
 
 /// Get the full Merlin version number
 std::string merlin_version();

@@ -13,57 +13,57 @@
 #include "SimpleSolenoid.h"
 
 /**
-*	A simple solenoid with field Bz.
-*/
-class Solenoid : public SimpleSolenoid
+ *	A simple solenoid with field Bz.
+ */
+class Solenoid: public SimpleSolenoid
 {
 public:
-	Solenoid (const std::string& id, double len, double Bz);
+	Solenoid(const std::string& id, double len, double Bz);
 
 	/**
-	*	Returns the value of the field in Tesla.
-	*   @return Value of the field (T)
-	*/
-	double GetBz () const;
+	 *	Returns the value of the field in Tesla.
+	 *   @return Value of the field (T)
+	 */
+	double GetBz() const;
 
 	/**
-	*	Sets the value of the field in Tesla.
-	*/
-	void SetBz (double B);
+	 *	Sets the value of the field in Tesla.
+	 */
+	void SetBz(double B);
 
 	/**
-	*	Rotates the component 180 degrees about its local Y axis.
-	*/
-	virtual void RotateY180 ();
+	 *	Rotates the component 180 degrees about its local Y axis.
+	 */
+	virtual void RotateY180();
 
 	/**
-	*	Return the type string for the element.
-	*	@return Type string for the element
-	*/
-	virtual const string& GetType () const;
+	 *	Return the type string for the element.
+	 *	@return Type string for the element
+	 */
+	virtual const string& GetType() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	/**
-	*	Returns the unique index for this class of accelerator
-	*	components.
-	*	@return Accelerator component class' unique index
-	*/
-	virtual int GetIndex () const;
+	 *	Returns the unique index for this class of accelerator
+	 *	components.
+	 *	@return Accelerator component class' unique index
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Primary tracking interface. Prepares the specified
-	*	Tracker object for tracking this component.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	 *	Primary tracking interface. Prepares the specified
+	 *	Tracker object for tracking this component.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	* The following field access function added for
-	* compatibility with other magnets
-	*/
+	 * The following field access function added for
+	 * compatibility with other magnets
+	 */
 	void SetFieldStrength(double b)
 	{
 		SetBz(b);
@@ -74,8 +74,8 @@ public:
 	}
 
 	/**
-	* Data Members for Class Attributes
-	*/
+	 * Data Members for Class Attributes
+	 */
 
 	static const int ID;
 
@@ -85,18 +85,16 @@ private:
 };
 
 /**
-* Class Solenoid
-*/
-inline double Solenoid::GetBz () const
+ * Class Solenoid
+ */
+inline double Solenoid::GetBz() const
 {
 	return GetField().GetStrength();
 }
 
-inline void Solenoid::SetBz (double B)
+inline void Solenoid::SetBz(double B)
 {
 	GetField().SetStrength(B);
 }
-
-
 
 #endif

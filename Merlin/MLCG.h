@@ -12,12 +12,12 @@
 #include <cmath>
 
 /**
-*
-*	Multiplicative Linear Congruential Generator
-*
-*/
+ *
+ *	Multiplicative Linear Congruential Generator
+ *
+ */
 
-class MLCG : public RNG
+class MLCG: public RNG
 {
 	_G_int32_t initialSeedOne;
 	_G_int32_t initialSeedTwo;
@@ -29,10 +29,10 @@ protected:
 public:
 	MLCG(_G_int32_t seed1 = 0, _G_int32_t seed2 = 1);
 	/**
-	*
-	* Return a long-words word of random bits
-	*
-	*/
+	 *
+	 * Return a long-words word of random bits
+	 *
+	 */
 	virtual _G_uint32_t asLong();
 	virtual void reset();
 	_G_int32_t seed1();
@@ -42,34 +42,29 @@ public:
 	void reseed(_G_int32_t, _G_int32_t);
 };
 
-inline _G_int32_t
-MLCG::seed1()
+inline _G_int32_t MLCG::seed1()
 {
 	return seedOne;
 }
 
-inline void
-MLCG::seed1(_G_int32_t s)
+inline void MLCG::seed1(_G_int32_t s)
 {
 	initialSeedOne = s;
 	reset();
 }
 
-inline _G_int32_t
-MLCG::seed2()
+inline _G_int32_t MLCG::seed2()
 {
 	return seedTwo;
 }
 
-inline void
-MLCG::seed2(_G_int32_t s)
+inline void MLCG::seed2(_G_int32_t s)
 {
 	initialSeedTwo = s;
 	reset();
 }
 
-inline void
-MLCG::reseed(_G_int32_t s1, _G_int32_t s2)
+inline void MLCG::reseed(_G_int32_t s1, _G_int32_t s2)
 {
 	initialSeedOne = s1;
 	initialSeedTwo = s2;

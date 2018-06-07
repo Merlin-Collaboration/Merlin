@@ -13,53 +13,53 @@
 #include <cstdlib>
 
 /**
-* Rectangular Aperture Functions
-*/
+ * Rectangular Aperture Functions
+ */
 
-double RectangularAperture::GetRadiusAt (double phi, double z) const
+double RectangularAperture::GetRadiusAt(double phi, double z) const
 {
-	if(fequal(hh,0.0) || fequal(hw,0.0))
+	if(fequal(hh, 0.0) || fequal(hw, 0.0))
 	{
 		return 0;
 	}
 
-	const double phi0=atan(hh/hw);
-	const double piOverTwo = pi/2.0;
+	const double phi0 = atan(hh / hw);
+	const double piOverTwo = pi / 2.0;
 
-	phi=fmod(phi,piOverTwo)*piOverTwo;
+	phi = fmod(phi, piOverTwo) * piOverTwo;
 
-	return phi<phi0 ? hw/cos(phi) : hh/sin(phi);
+	return phi < phi0 ? hw / cos(phi) : hh / sin(phi);
 }
 
 void RectangularAperture::printout(std::ostream& out) const
 {
-	out << GetApertureType() << "(" << hw << ", " << hh <<")";
+	out << GetApertureType() << "(" << hw << ", " << hh << ")";
 }
 
 /**
-* Circular Aperture Functions
-*/
+ * Circular Aperture Functions
+ */
 
-double CircularAperture::GetRadiusAt (double phi, double z) const
+double CircularAperture::GetRadiusAt(double phi, double z) const
 {
 	return GetRadius();
 }
 
 void CircularAperture::printout(std::ostream& out) const
 {
-	out << GetApertureType() << "(" << GetRadius () <<")";
+	out << GetApertureType() << "(" << GetRadius() << ")";
 }
 
 /**
-* Elliptical Aperture Functions
-*/
+ * Elliptical Aperture Functions
+ */
 
-double EllipticalAperture::GetRadiusAt (double phi, double z) const
+double EllipticalAperture::GetRadiusAt(double phi, double z) const
 {
-	double rr = hw*hh / sqrt(pow(hh*cos(phi),2) + pow(hw*sin(phi),2));
-	double ellipse_x = rr*cos(phi);
-	double ellipse_y = rr*sin(phi);
-	return sqrt((ellipse_x*ellipse_x) + (ellipse_y*ellipse_y));
+	double rr = hw * hh / sqrt(pow(hh * cos(phi), 2) + pow(hw * sin(phi), 2));
+	double ellipse_x = rr * cos(phi);
+	double ellipse_y = rr * sin(phi);
+	return sqrt((ellipse_x * ellipse_x) + (ellipse_y * ellipse_y));
 }
 
 void EllipticalAperture::printout(std::ostream& out) const
@@ -68,10 +68,10 @@ void EllipticalAperture::printout(std::ostream& out) const
 }
 
 /**
-* Octagonal Aperture Functions
-*/
+ * Octagonal Aperture Functions
+ */
 
-double OctagonalAperture::GetRadiusAt (double phi, double z) const
+double OctagonalAperture::GetRadiusAt(double phi, double z) const
 {
 	std::cerr << "OctagonalAperture::GetRadiusAt() - not yet implemented" << std::endl;
 	exit(EXIT_FAILURE);
@@ -79,6 +79,6 @@ double OctagonalAperture::GetRadiusAt (double phi, double z) const
 
 void OctagonalAperture::printout(std::ostream& out) const
 {
-	out << GetApertureType() << "(" << GetHalfWidth() << ", " << GetHalfHeight() << ", " << GetAngle1() << ", " << GetAngle2() << ")";
+	out << GetApertureType() << "(" << GetHalfWidth() << ", " << GetHalfHeight() << ", " << GetAngle1() << ", "
+		<< GetAngle2() << ")";
 }
-

@@ -12,27 +12,27 @@
 #include <cmath>
 
 /**
-*   \class ACG
-*
-*	Additive number generator. This method is presented in Volume II
-*	of The Art of Computer Programming by Knuth. I've coded the algorithm
-*	and have added the extensions by Andres Nowatzyk of CMU to randomize
-*	the result of algorithm M a bit	by using an LCG & a spatial
-*	permutation table.
-*
-*	The version presented uses the same constants for the LCG that Andres
-*	uses (chosen by trial & error). The spatial permutation table is
-*	the same size (it's based on word size). This is for 32-bit words.
-*
-*	The ``auxillary table'' used by the LCG table varies in size, and
-*	is chosen to be the smallest power of two which is larger than
-*	twice the size of the state table.
-*
-*/
+ *   \class ACG
+ *
+ *	Additive number generator. This method is presented in Volume II
+ *	of The Art of Computer Programming by Knuth. I've coded the algorithm
+ *	and have added the extensions by Andres Nowatzyk of CMU to randomize
+ *	the result of algorithm M a bit	by using an LCG & a spatial
+ *	permutation table.
+ *
+ *	The version presented uses the same constants for the LCG that Andres
+ *	uses (chosen by trial & error). The spatial permutation table is
+ *	the same size (it's based on word size). This is for 32-bit words.
+ *
+ *	The ``auxillary table'' used by the LCG table varies in size, and
+ *	is chosen to be the smallest power of two which is larger than
+ *	twice the size of the state table.
+ *
+ */
 
 typedef unsigned int _G_uint32_t;
 
-class ACG : public RNG
+class ACG: public RNG
 {
 
 	/**
@@ -56,9 +56,9 @@ public:
 	virtual ~ACG();
 
 	/**
-	* Return a long-words word of random bits
-	* @return A long-words type of random bits
-	*/
+	 * Return a long-words word of random bits
+	 * @return A long-words type of random bits
+	 */
 	virtual unsigned int asLong();
 	virtual void reset();
 

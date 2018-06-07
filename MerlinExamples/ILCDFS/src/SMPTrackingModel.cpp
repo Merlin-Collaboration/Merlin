@@ -13,10 +13,10 @@
 
 using namespace SMPTracking;
 
-SMPTrackingModel::SMPTrackingModel(size_t nslice, size_t mpps)
-	: BeamDynamicsModel("SMP TRACKING"),ns(nslice),nps(mpps),cBunch0(nullptr)
+SMPTrackingModel::SMPTrackingModel(size_t nslice, size_t mpps) :
+	BeamDynamicsModel("SMP TRACKING"), ns(nslice), nps(mpps), cBunch0(nullptr)
 {
-	dfs_trace(dfs_trace::level_1)<<"SMP TRACKING initialised with n_slice = "<<ns<<", n_mp = "<<nps<<endl;
+	dfs_trace(dfs_trace::level_1) << "SMP TRACKING initialised with n_slice = " << ns << ", n_mp = " << nps << endl;
 	tracker = new SMPTracker();
 	wfp = new WakeFieldProcess(1);
 	wfp->ApplyImpulseAt(WakeFieldProcess::atCentre);
@@ -58,11 +58,11 @@ void SMPTrackingModel::TrackThisBunch(Bunch* b)
 
 SMPBunch* SMPTrackingModel::CreateBunch(const BeamData& beam0)
 {
-	return SMPBunchConstructor(beam0,ns,nps).ConstructSMPBunch();
+	return SMPBunchConstructor(beam0, ns, nps).ConstructSMPBunch();
 }
 
 void SMPTrackingModel::IncludeTransverseWakefield(bool flg)
 {
-	dfs_trace(dfs_trace::level_2)<<"including transverse wakes: "<<flg<<endl;
+	dfs_trace(dfs_trace::level_2) << "including transverse wakes: " << flg << endl;
 	wfp->IncludeTransverseWake(flg);
 }
