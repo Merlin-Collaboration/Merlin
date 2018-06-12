@@ -12,7 +12,8 @@
 #include <vector>
 #include <utility>
 #include <iostream>
-#include "Complex.h"
+#include <complex>
+typedef std::complex<double> Complex;
 #include "Space3D.h"
 #include "EMField.h"
 #include "utils.h"

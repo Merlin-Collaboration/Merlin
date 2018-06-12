@@ -242,20 +242,5 @@ private:
 
 }; //End class ppElasticScatter
 
-//typedef std::complex<double> std::complex<double>;
-
-//std::complex<double> Cadd(std::complex<double> a, std::complex<double> b);	//Complex addition
-//std::complex<double> Csub(std::complex<double> a, std::complex<double> b);	//Complex subtraction
-//std::complex<double> Cmul(std::complex<double> a, std::complex<double> b);	//Complex multiplation
-//std::complex<double> Complex_t(double re, double im);				//Constructor
-//std::complex<double> Conjg(std::complex<double> z);				//Conjugate
-//std::complex<double> Cdiv(std::complex<double> a, std::complex<double> b);	//Complex division
-//double Cabs(std::complex<double> z);						//Absolute
-//std::complex<double> Csqrt(std::complex<double> z);				//Square root
-//std::complex<double> RCmul(double x, std::complex<double> a);			//Real*complex
-std::complex<double> RCdiv(double x, std::complex<double> a);           //Real/complex?
-//std::complex<double> Cexp(std::complex<double> a);
-//std::complex<double> RCadd(double x, std::complex<double> a);
-
 } //End namespace ParticleTracking
 #endif

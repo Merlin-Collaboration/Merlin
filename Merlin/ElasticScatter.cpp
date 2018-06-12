@@ -5,55 +5,18 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-/**
- * Include for the Elastic scattering class
- */
-#include "ElasticScatter.h"
-
-/**
- * Include for the math headers - required for exp, sin, other mathmatical functions
- */
 #include <cmath>
-
-/**
- * Include for io - std::cout etc
- */
 #include <iostream>
-
-/**
- * Include for file output
- */
 #include <fstream>
-
-/**
- * Include for the max() algorithm
- */
 #include <algorithm>
+#include <complex>
+typedef std::complex<double> Complex;
 
-/**
- * Include for assorted numerial constants
- */
+#include "ElasticScatter.h"
 #include "NumericalConstants.h"
-
-/**
- * Include for assorted Physical constants
- */
 #include "PhysicalConstants.h"
-
-/**
- * Include for assorted Physical units
- */
 #include "PhysicalUnits.h"
-
-/**
- * Include for the random number generator
- */
 #include "RandomNG.h"
-
-/**
- * Pulls in <complex> and Complex std::complex<double> typedef
- */
-#include "Complex.h"
 
 namespace ParticleTracking
 {
@@ -552,7 +515,7 @@ std::complex<double> ppElasticScatter::twopom(double tnu, double tt, double *par
 					W = U / V;
 					W *= -tt;
 					W = exp(W);
-					Z = RCdiv(Q[i] * Q[j], V);
+					Z = (Q[i] * Q[j]) / V;
 					Z *= W;
 					T = X[u] * X[v] / (16.0 * pi * tnu);
 					Z *= T;
@@ -610,7 +573,7 @@ std::complex<double> ppElasticScatter::twopombar(double tnu, double tt, double *
 					W = U / V;
 					W *= -tt;
 					W = exp(W);
-					Z = RCdiv(Q[i] * Q[j], V);
+					Z = (Q[i] * Q[j]) / V;
 					Z *= W;
 					T = X[u] * X[v] / (16.0 * pi * tnu);
 					Z *= T;
@@ -668,13 +631,6 @@ double ppElasticScatter::ggg(double tt, double *par)
 	{
 		return CCC * exp(4.0 - 4.0 * tt / par[9]) / pow(par[9], 4.0);
 	}
-}
-
-std::complex<double> RCdiv(double x, std::complex<double> a)
-{
-	double den = (a.real()) * (a.real()) + (a.imag()) * (a.imag());
-	std::complex<double> c(x * (a.real()) / den, -x * (a.imag()) / den);
-	return c;
 }
 
 } //End namespace ParticleTracking

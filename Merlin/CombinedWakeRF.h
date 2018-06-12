@@ -8,8 +8,10 @@
 #ifndef _H_CombinedWakeRF
 #define _H_CombinedWakeRF
 
+#include <complex>
+typedef std::complex<double> Complex;
+
 #include "WakePotentials.h"
-#include "Complex.h"
 #include "Transform2D.h"
 #include "PhysicalConstants.h"
 

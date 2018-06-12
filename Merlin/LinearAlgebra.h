@@ -8,8 +8,10 @@
 #ifndef _h_LinearAlgebra
 #define _h_LinearAlgebra
 
+#include <complex>
+typedef std::complex<double> Complex;
+
 #include "TLAS.h"
-#include "Complex.h"
 
 namespace TLAS
 {

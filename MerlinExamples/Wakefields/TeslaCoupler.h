@@ -8,8 +8,10 @@
 #ifndef _H_TeslaCoupler
 #define _H_TeslaCoupler
 
+#include <complex>
+typedef std::complex<double> Complex;
+
 #include "CombinedWakeRF.h"
-#include "Complex.h"
 #include "Transform2D.h"
 #include "PhysicalConstants.h"
 

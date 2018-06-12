@@ -10,10 +10,11 @@
 
 #include <string>
 #include <vector>
+#include <complex>
+typedef std::complex<double> Complex;
 
 #include "merlin_config.h"
 #include "ModelElement.h"
-#include "Complex.h"
 
 /**
  * Represents a Klystron, which can be connected to one or
