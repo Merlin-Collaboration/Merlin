@@ -315,7 +315,6 @@ void CCFailureProcess::DoProcess(double ds)
 				currentBunch->GetTotalCharge() / currentBunch->size());
 			newbunch->clear();
 			newbunch->reserve(currentBunch->size());
-			//~ newbunch->swap(*currentBunch);
 
 			if(Beta_p == 0)
 			{
@@ -363,10 +362,6 @@ void CCFailureProcess::DoProcess(double ds)
 
 					DeltaMuX = sqrt(pow(DeltaMu.first, 2)) * 2 * pi + CMS_Upstream_deltamu[IP1_down_count - 1];
 					DeltaMuY = sqrt(pow(DeltaMu.second, 2)) * 2 * pi;
-
-					//~ DeltaMu = CalcDeltaMu(n2, n1);
-					//~ DeltaMu = CalcDeltaMu(n1-152, n1);
-					//~ DeltaMuX = sqrt(pow(DeltaMu.first,2)) *2*pi + Atlas_Upstream_deltamu[IP1_down_count-1];
 				}
 			}
 
@@ -376,7 +371,6 @@ void CCFailureProcess::DoProcess(double ds)
 				if(upstream)
 				{
 					M12 = CalcM_12(n1, n2, Horizontal_CC);
-					//~ M22 = CalcM_22(Atlas_Upstream_elno[IP1_down_count-1], n1, DeltaMuX, Horizontal_CC);
 				}
 				else
 				{
@@ -560,10 +554,8 @@ void CCFailureProcess::DoProcess(double ds)
 
 //FAILURE
 			double fail_interval = 1 / (double) fail_turns;
-			//~ double fail_interval = (double)fail_turns;
 			if(!upstream && (Turn >= non_fail_turns) && (failure_on))
 			{
-				//~ V1 = V1 * (1- (((Turn)-non_fail_turns) * fail_interval));
 				//140 degrees is 2.443 radians 140 * (2*pi)/360
 				double phi = 90 * (2 * pi) / 360;
 				phi_s = (((Turn) - (non_fail_turns - 1)) * fail_interval) * phi;
@@ -703,7 +695,6 @@ void CCFailureProcess::DoProcess(double ds)
 					 << M12 << " M22 = " << M22 << endl;
 			}
 
-			//~ for(PSvectorArray::iterator p = newbunch->begin(); p!=newbunch->end(); p++)
 			for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 			{
 				if(upstream)
@@ -766,8 +757,6 @@ double CCFailureProcess::CalcM_22(int start, int end, double deltamu, bool horiz
 		beta1 = TwissCC->Value(3, 3, 2, start);
 		beta2 = TwissCC->Value(3, 3, 2, end);
 	}
-
-	//~ cout << "\n\nBeta1 = " << beta1 << ", beta2 = " << beta2 << ", deltamu = " << deltamu*(360/(2*pi));
 
 	return sqrt(beta1 / beta2) * cos(deltamu);
 }

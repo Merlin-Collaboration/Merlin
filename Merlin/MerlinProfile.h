@@ -68,15 +68,12 @@ public:
 
 	static void StartProcessTimer(std::string ID)
 	{
-		//AddProcess(ID);
 		std::map<std::string, timespec>::iterator Location = StartTime.begin();
 		Location = StartTime.find(ID);
 		if(Location != StartTime.end())
 		{
-			//std::cout << "Adding Profile for: " << ID << std::endl;
 			timespec Start_Time;
 			clock_gettime(CLOCK_REALTIME, &Start_Time);
-			//StartTime.insert(std::pair<std::string,timespec>(ID,Start_Time));
 			Location->second.tv_nsec = Start_Time.tv_nsec;
 			Location->second.tv_sec = Start_Time.tv_sec;
 		}

@@ -319,7 +319,6 @@ bool ParticleBunch::ApplyTransformation(const Transform3D& t)
 
 void ParticleBunch::SortByCT()
 {
-	//	pArray.sort();
 	SortArray(pArray);
 }
 
@@ -352,7 +351,6 @@ void ParticleBunch::Output(std::ostream& os, bool show_header) const
 
 void ParticleBunch::OutputIndexParticle(std::ostream& os, int index) const
 {
-	//cout << "outputting index " << index << " particle" << endl;
 	int oldp = os.precision(16);
 	ios_base::fmtflags oflg = os.setf(ios::scientific, ios::floatfield);
 
@@ -636,9 +634,6 @@ void ParticleBunch::node_send_particles_to_master()
 	//Alternate method - will only work with a vector
 	//memcpy(particle_send_buffer,&input[0],sizeof(double)*coords*size());
 
-	//for (int n=0; n<particle_count; n++)
-	//{
-
 	int n = 0;
 	for(PSvectorArray::iterator ip = begin(); ip != end(); ip++)
 	{
@@ -654,13 +649,6 @@ void ParticleBunch::node_send_particles_to_master()
 		}
 		n++;
 	}
-	/*
-	   for (int j=0; j<coords; j++)
-	   {
-	    particle_send_buffer[(n*coords)+j] = GetParticles()[n][j];
-	   }
-	 */
-	//}
 
 	//Send everything to the master node
 	MPI::COMM_WORLD.Send(&particle_send_buffer[0], particle_count, MPI_Particle, 0, 1);

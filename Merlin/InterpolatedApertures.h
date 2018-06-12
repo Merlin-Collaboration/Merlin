@@ -107,9 +107,6 @@ public:
 	 */
 	virtual double GetRadiusAt(double phi, double z) const;
 
-	//double GetFullHeight () const;
-	//double GetFullWidth () const;
-
 	virtual std::string GetApertureType() const;
 
 	void EnablePrint();
@@ -166,11 +163,6 @@ public:
 	{
 	}
 
-//	double GetRadius () const;
-//	double GetDiameter () const;
-//	void SetRadius (double r);
-//	void SetDiameter (double d);
-
 	/**
 	 * Returns true if the point (x,y,z) is within the aperture.
 	 */
@@ -183,8 +175,6 @@ public:
 
 	virtual std::string GetApertureType() const;
 	virtual void printout(std::ostream& out) const;
-private:
-	//double r2;
 };
 
 inline std::string InterpolatedEllipticalAperture::GetApertureType() const
@@ -204,7 +194,6 @@ public:
 	InterpolatedOctagonalAperture(std::vector<InterpolatedAperture::ap> ElementApertureList) :
 		InterpolatedAperture(ElementApertureList)
 	{
-		//MerlinProfile::AddProcess("APERTURE");
 		Print = false;
 		ApertureMaterial = nullptr;
 	}

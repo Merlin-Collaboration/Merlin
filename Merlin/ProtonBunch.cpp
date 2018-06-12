@@ -684,8 +684,6 @@ void ProtonBunch::ConfigureScatterSixtrack(const Aperture* ap)
 
 	const double free_nucleon_constant = 1.618;     //free nucleon constant						(freeco)
 
-	//const double free_nucleon_constant = 1.0218;		//free nucleon constant						(freeco)
-
 	t_low_cut = 0.0009982;                  //Rutherford scattering cut scale (GeV^2)			(tlcut)
 	//emr - material atomic size for Rutherford - see NCL thesis for correct term FIXME
 	//ppsd = sdcoe * log(0.15d0 * ecmsq)
@@ -1063,8 +1061,6 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedIonization(const Aperture* ap)
 
 	const double free_nucleon_constant = 1.618;     //free nucleon constant						(freeco)
 
-	//const double free_nucleon_constant = 1.0218;		//free nucleon constant						(freeco)
-
 	t_low_cut = 0.0009982;                  //Rutherford scattering cut scale (GeV^2)			(tlcut)
 	//emr - material atomic size for Rutherford - see NCL thesis for correct term FIXME
 
@@ -1322,7 +1318,6 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 		p.y() += s.first;
 		p.yp() += s.second;
 
-//		if(std::isnan(p.xp()) || std::isnan(p.yp())){cout << p << endl; cout <<"cscatter\t" << s.first << "\t" << s.second <<"\t" << step_size << "\t" <<zstep <<  endl;}
 		if(E2 < (E0 / 100.0))
 		{
 			return 4;
@@ -1542,10 +1537,6 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedElastic(const Aperture* ap)
 
 	double sigma_pp_total = pp_total_reference * pow((E0 / p_reference), pp_total_constant);     //(pptot)
 
-	//Next we also scale the elastic proton-nucleon cross section to the current energy
-	//Remember this is for a single nucleon, when applying to a nucleus
-	//const double sigma_pp_elastic = pp_elastic_reference * pow((E0 / p_reference),pp_elastic_constant);	// demolaize equation 1.21 / catalan 3.7
-
 	/**
 	 * The total elastic cross section
 	 */
@@ -1705,7 +1696,6 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 		p.y() += s.first;
 		p.yp() += s.second;
 
-//		if(std::isnan(p.xp()) || std::isnan(p.yp())){cout << p << endl; cout <<"cscatter\t" << s.first << "\t" << s.second <<"\t" << step_size << "\t" <<zstep <<  endl;}
 		if(E2 < (E0 / 100.0))
 		{
 			return 4;
@@ -2088,7 +2078,6 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 		p.y() += s.first;
 		p.yp() += s.second;
 
-//		if(std::isnan(p.xp()) || std::isnan(p.yp())){cout << p << endl; cout <<"cscatter\t" << s.first << "\t" << s.second <<"\t" << step_size << "\t" <<zstep <<  endl;}
 		if(E2 < (E0 / 100.0))
 		{
 			return 4;

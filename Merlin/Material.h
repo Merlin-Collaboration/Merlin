@@ -52,7 +52,6 @@ public:
 	virtual void SetRadiationLength(double);
 	virtual void SetDensity(double);
 	virtual void SetElectronDensity(double);
-//	virtual void SetElectronCriticalEnergy(double);
 	virtual void SetMeanExcitationEnergy(double);
 	virtual void SetPlasmaEnergy(double);
 
@@ -75,7 +74,6 @@ public:
 	virtual double GetRadiationLengthInM() const;
 	virtual double GetDensity() const;
 	virtual double GetElectronDensity() const;
-//	virtual double GetElectronCriticalEnergy() const;
 	virtual double GetMeanExcitationEnergy() const;
 	virtual double GetPlasmaEnergy() const;
 
@@ -107,17 +105,14 @@ public:
 protected:
 
 	//selected Sixtrack variable names in quotes
-	//~ size_t AtomicNumber;		/// Atomic number (Z) -- allow doubles for CompositeMaterials
 	double AtomicNumber;            /// Atomic number (Z)
 	double AtomicMass;              /// Atomic mass (A)
 	std::string Name;               /// Element/compound name
 	std::string Symbol;             /// Elemental symbol: what input file will check for
-//	double rho;						/// Material Density, g/cm^3
 	double Conductivity;            /// electrical conductivity (sigma) = 1/electrical resisitivity (Ohm*m)e-1 (@ stp)
 	double X0;                      /// Radiation Length
 	double Density;                 /// Material density, kg/m^3
 	double ElectronDensity;         /// Electron density: calculated from other input data
-//	double ElectronCriticalEnergy;
 	double MeanExcitationEnergy;
 	double PlasmaEnergy;
 

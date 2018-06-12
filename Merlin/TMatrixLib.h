@@ -676,10 +676,6 @@ public:
 		return *this;
 	}
 
-	//		Vector<T> operator*(const T& s) const {
-	//			return Vector<T>(s*array[sl]);
-	//		}
-
 	/**
 	 * Conversion to a Vector
 	 */
@@ -1030,11 +1026,6 @@ public:
 		array[slice_type(0, I.dim, I.dim + 1)] = T(1);
 	}
 
-	// copy construction (default would work here)
-	//		Matrix(const Matrix<T>& rhs)
-	//			: nr(rhs.nr),nc(rhs.nc),array(rhs.array)
-	//		{}
-
 	// copy another matrix type
 	// if conversion from U to T allowed
 	template<class U>
@@ -1269,7 +1260,6 @@ public:
 	}
 
 	// arithmetic assignment operations (s)
-
 	Matrix<T>& operator+=(const T& val)
 	{
 		array += val;
@@ -1341,33 +1331,6 @@ public:
 	{
 		return const_cast<Matrix<T>*>(this)->end();
 	}
-
-	// arithmetic assignment operations (sub-matrix)
-	/****
-	   Matrix<T>& operator+=(const SubMatrix<T>& m) {
-	   equal_dimension(dim(),m.dim());
-	   array+=m;
-	   return *this;
-	   }
-
-	   Matrix<T>& operator-=(const SubMatrix<T>& m) {
-	   equal_dimension(dim(),m.dim());
-	   array-=m;
-	   return *this;
-	   }
-
-	    Matrix<T>& operator*=(const SubMatrix<T>& m) {
-	    equal_dimension(dim(),m.dim());
-	    array*=m;
-	    return *this;
-	    }
-
-	      Matrix<T>& operator/=(const SubMatrix<T>& m) {
-	      equal_dimension(dim(),m.dim());
-	      array/=m;
-	      return *this;
-	      }
-	 *****/
 
 private:
 

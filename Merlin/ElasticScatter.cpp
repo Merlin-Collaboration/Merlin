@@ -153,23 +153,10 @@ void ppElasticScatter::GenerateTDistribution(double energy)
 		Uniformt = new std::vector<double>;
 		DSig = new std::vector<double>;
 		DSigN = new std::vector<double>;
-		/*
-		   std::cout << "*******************************************************************************" << std::endl;
-		   std::cout << "*******   Generating pp elastic differential cross section   ******************" << std::endl;
-		   std::cout << "*******************************************************************************" << std::endl;
-		 */
+
 		GenerateDsigDt(energy);
-		/*
-		   std::cout << "*******************************************************************************" << std::endl;
-		   std::cout << "*************   Integrating differential cross section   **********************" << std::endl;
-		   std::cout << "*******************************************************************************" << std::endl;
-		 */
 		IntegrateDsigDt();
-		/*
-		   std::cout << "*******************************************************************************" << std::endl;
-		   std::cout << "*************   Configuration generation done!   ******************************" << std::endl;
-		   std::cout << "*******************************************************************************" << std::endl;
-		 */
+
 		Configured = true;
 		delete Uniformt;
 		delete DSig;
@@ -223,12 +210,6 @@ void ppElasticScatter::GenerateDsigDt(double energy)
 	double s = (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * energy) + (2 * pow(
 			PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV, 2));
 
-	//double ppel = 0.007 * pow((energy / 450.0),0.04792);
-	//std::cout << "Sixtrack elastic cross section: " << ppel * 1000.0 << " mb" << std::endl;
-
-	//b = 8.5 + 1.086 * log(sqrt(s));
-	//std::cout << "sixtrack b slope gradient: " << b << std::endl;
-
 	double sqrts = sqrt(s);
 	std::cout << "Using " << nSteps << " bins and sqrt s: " << sqrts << std::endl;
 
@@ -239,9 +220,6 @@ void ppElasticScatter::GenerateDsigDt(double energy)
 			Uniformt->push_back((static_cast<double>(n) * step) + t_min);
 			DSig->push_back(PomeronScatter((*Uniformt)[n], sqrts, true));
 			DSigN->push_back(PomeronScatter((*Uniformt)[n], sqrts, false));
-			//Old function
-			//DSig.push_back((ppel*b)*exp(-b*Uniformt[n]));
-			//std::cout << DSig[n] << "\t" << Uniformt[n] << std::endl;
 		}
 	}
 	else
@@ -401,19 +379,11 @@ double ppElasticScatter::SelectT()
 {
 	double SigValue = RandomNG::uniform(0, 1.0);
 	double t = (*LinearInterpolation)(SigValue);
-	/*
-	    if(Debug)
-	    {
-	        std::ofstream *out = new std::ofstream("GeneratedTValues",std::ios_base::app);
-	        (*out) << SigValue << "\t" << t << std::endl;
-	    }
-	 */
 	return t;
 }
 
 double ppElasticScatter::PomeronScatter(double tt, double sqrt_s, bool em)
 {
-	//std::cout << "Call PomeronScatter elastic " << std::endl;
 	apr1 = par[10];
 	apr0 = par[11];
 	double mu = 0.93827203;
@@ -438,7 +408,7 @@ double ppElasticScatter::PomeronScatter(double tt, double sqrt_s, bool em)
 	double gamma = 0.577215664901532861;
 	double bslope = bs1 + bs2 * log(sqrt_s);
 	double ppC;
-	//double phi = -(gamma + log(0.5*bslope));
+
 	double phi = -(gamma + log(tt * bslope / 2) + log(1 +  8 / (bslope * 0.71)) + ((4 * tt / 0.71) * log((4 * tt)
 		/ 0.71)) + (2 * tt / 0.71));
 	real = (hardpomre(tnu, tt, par) + pomre(tnu, tt, par) + plusre(tnu, tt, par) + minusre(tnu, tt, par) + par[8]
@@ -666,29 +636,21 @@ std::complex<double> ppElasticScatter::twopombar(double tnu, double tt, double *
 //______________________________________________________________________________
 double ppElasticScatter::twopomre(double tnu, double tt, double *par)
 {
-	//std::complex<double> res = twopom(tnu,tt,par);
-	//return res.real();
 	return twopom(tnu, tt, par).real();
 }
 //______________________________________________________________________________
 double ppElasticScatter::twopomim(double tnu, double tt, double *par)
 {
-//	std::complex<double> res = twopom(tnu,tt,par);
-//	return res.imag();
 	return twopom(tnu, tt, par).imag();
 }
 //______________________________________________________________________________
 double ppElasticScatter::twopombarre(double tnu, double tt, double *par)
 {
-//	std::complex<double> res = twopombar(tnu,tt,par);
-//	return res.real();
 	return twopombar(tnu, tt, par).real();
 }
 //______________________________________________________________________________
 double ppElasticScatter::twopombarim(double tnu, double tt, double *par)
 {
-	//std::complex<double> res = twopombar(tnu,tt,par);
-	//return res.imag();
 	return twopombar(tnu, tt, par).imag();
 }
 
@@ -708,14 +670,11 @@ double ppElasticScatter::ggg(double tt, double *par)
 	}
 }
 
-// complex.c
 std::complex<double> RCdiv(double x, std::complex<double> a)
 {
 	double den = (a.real()) * (a.real()) + (a.imag()) * (a.imag());
 	std::complex<double> c(x * (a.real()) / den, -x * (a.imag()) / den);
 	return c;
 }
-
-/* (C) Copr. 1986-92 Numerical Recipes Software 06,. */
 
 } //End namespace ParticleTracking

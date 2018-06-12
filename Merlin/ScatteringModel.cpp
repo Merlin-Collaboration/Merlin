@@ -111,7 +111,6 @@ double ScatteringModel::PathLength(Material* mat, double E0)
 
 	//Calculate mean free path
 	lambda = CurrentCS->GetTotalMeanFreePath();
-	//~ std::cout << "ScatteringModel::PathLength: lambda = " << lambda << endl;
 	return -(lambda) * log(RandomNG::uniform(0, 1));
 }
 
@@ -217,7 +216,6 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, doubl
 	double L2 = -yL2 * yL2 * L2sum;
 
 	double F = G - S + 2 * (L1 + L2);
-	//double deltaE = xi * (log(2 * ElectronMassMeV * beta*beta * gamma*gamma * (tcut/MeV)/pow(I/MeV,2)) - (beta*beta)*(1 + ((tcut/MeV)/(tmax/MeV))) - delta + F - 1.0 - euler);
 	double deltaE = xi * (log(2 * ElectronMassMeV * beta * beta * gamma * gamma * xi / pow(I / MeV, 2)) - (beta
 		* beta) - delta + F + 0.20);
 
@@ -362,7 +360,6 @@ void ScatteringModel::OutputScatterPlot(string directory, int seed)
 	StoredScatterPlotData.clear();
 }
 
-//~ void ScatteringModel::OutputJawImpact(std::ostream* os){
 void ScatteringModel::OutputJawImpact(string directory, int seed)
 {
 	for(std::vector<std::string>::iterator name = JawImpactNames.begin(); name != JawImpactNames.end(); ++name)

@@ -96,46 +96,37 @@ void MADKeyMap::ReadRow(std::istream& is)
 		//Are we dealing with the aperture column in the input file?
 		if(i == apertype_column && has_apertype == true)
 		{
-			//~ cout << "MADKeyMap ReadRow() entering has apertype conditional = " << vals[i] << endl;
 			is >> buf;
 			if(buf == "\"CIRCLE\"")
 			{
-				//cout << "Have CIRCLE aperture"  << endl;
 				vals[i] = 1.0;
 			}
 			else if(buf == "\"ELLIPSE\"")
 			{
-				//cout << "Have ELLIPSE aperture"  << endl;
 				vals[i] = 2.0;
 			}
 			else if(buf == "\"RECTANGLE\"")
 			{
-				//cout << "Have RECTANGLE aperture"  << endl;
 				vals[i] = 3.0;
 			}
 			else if(buf == "\"LHCSCREEN\"")
 			{
-				//cout << "Have LHCSCREEN aperture"  << endl;
 				vals[i] = 4.0;
 			}
 			else if(buf == "\"MARGUERITE\"")
 			{
-				//cout << "Have MARGUERITE aperture"  << endl;
 				vals[i] = 5.0;
 			}
 			else if(buf == "\"RECTELLIPSE\"")
 			{
-				//cout << "Have RECTELLIPSE aperture"  << endl;
 				vals[i] = 6.0;
 			}
 			else if(buf == "\"RACETRACK\"")
 			{
-				//cout << "Have RACETRACK aperture"  << endl;
 				vals[i] = 7.0;
 			}
 			else if(buf == "\"NONE\"")
 			{
-				//cout << "Have no aperture!"  << endl;
 				vals[i] = 0.0;
 			}
 

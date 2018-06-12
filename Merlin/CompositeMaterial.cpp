@@ -205,12 +205,7 @@ void CompositeMaterial::SetElectronDensity(double p)
 {
 	ElectronDensity = p;
 }
-/*
-   void CompositeMaterial::SetElectronCriticalEnergy(double p)
-   {
-    ElectronCriticalEnergy = p;
-   }
- */
+
 void CompositeMaterial::SetMeanExcitationEnergy(double p)
 {
 	MeanExcitationEnergy = p;
@@ -263,12 +258,7 @@ double CompositeMaterial::GetElectronDensity() const
 {
 	return ElectronDensity;
 }
-/*
-   double CompositeMaterial::GetElectronCriticalEnergy() const
-   {
-    return ElectronCriticalEnergy;
-   }
- */
+
 double CompositeMaterial::GetMeanExcitationEnergy() const
 {
 	return MeanExcitationEnergy;
@@ -287,42 +277,36 @@ double CompositeMaterial::GetSixtrackdEdx() const
 //Random element
 double CompositeMaterial::GetAtomicNumber() const
 {
-	//~ return CurrentMaterial->GetAtomicNumber();
 	return AtomicNumber;
 }
 
 //Random element
 double CompositeMaterial::GetAtomicMass() const
 {
-	//~ return CurrentMaterial->GetAtomicMass();
 	return AtomicMass;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackTotalNucleusCrossSection() const
 {
-	//~ return CurrentMaterial->GetSixtrackTotalNucleusCrossSection();
 	return sigma_pN_total;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackInelasticNucleusCrossSection() const
 {
-	//~ return CurrentMaterial->GetSixtrackInelasticNucleusCrossSection();
 	return sigma_pN_inelastic;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackRutherfordCrossSection() const
 {
-	//~ return CurrentMaterial->GetSixtrackRutherfordCrossSection();
 	return sigma_Rutherford;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackNuclearSlope() const
 {
-	//~ return CurrentMaterial->GetSixtrackNuclearSlope();
 	return b_N;
 }
 
@@ -388,7 +372,7 @@ bool CompositeMaterial::VerifyMaterial() const
 		std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl;
 		verification = false;
 	}
-	//if(GetElectronCriticalEnergy() <=0){std::cerr << "Failed to verify ElectronCriticalEnergy for " << GetName() << ": " << GetElectronCriticalEnergy() << std::endl; verification = false;}
+
 	if(GetMeanExcitationEnergy() <= 0)
 	{
 		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy()
@@ -429,10 +413,6 @@ bool CompositeMaterial::Assemble()
 	FractionVector.reserve(count);
 
 	double CurrentFraction, Total = 0.0;
-	/*
-	 * MassFraction = NumberFraction * AtomicNumber
-	 * NumberFraction = MassFraction / AtomicNumber
-	 */
 
 	if(AssembledByMass)
 	{
@@ -492,7 +472,6 @@ Material* CompositeMaterial::SelectRandomMaterial()
 			MaterialIt++;
 		}
 	}
-	//std::cout << "x = " << x << "\t material first =" << MaterialIt->first->GetName() << "\t material second =" << MaterialIt->second.first << std::endl;
 	CurrentMaterial = MaterialIt->first;
 	return CurrentMaterial;
 }
@@ -538,8 +517,6 @@ void CompositeMaterial::CalculateAllWeightedVariables()
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
-		//value += mass_fraction (MaterialIt->second.second) * element_value
-		//~ value += (MaterialIt->second.second * MaterialIt->first->GetValue());
 		wA += (MaterialIt->second.second * MaterialIt->first->GetAtomicMass());
 		wZ += (MaterialIt->second.second * MaterialIt->first->GetAtomicNumber());
 		wb_n += (MaterialIt->second.second * MaterialIt->first->GetSixtrackNuclearSlope());

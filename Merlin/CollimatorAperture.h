@@ -34,18 +34,9 @@ protected:
 	double cosalpha;
 	double sinalpha;
 
-//bool errors;
-//double e1,e2,e3,e4,e5,e6;
-//double aperture_error;
-//void EnableErrors(bool);
-//void SetErrors(double, double);
-
 public:
-//~ double alpha;
 	CollimatorAperture(double w, double h, double t, Material* m, double length, double x_offset_entry = 0.0, double
 		y_offset_entry = 0.0);
-
-//void SetJawLength(double);
 
 	void SetExitWidth(double);  //Horizontal
 	void SetExitHeight(double); //Vertical
@@ -66,9 +57,6 @@ public:
 
 	double GetCollimatorTilt() const;
 
-//Also need to know the collimator length for interpolation
-//void SetCollimatorLength(double);
-
 	virtual bool PointInside(double x, double y, double z) const;
 };
 
@@ -81,13 +69,6 @@ public:
 
 class UnalignedCollimatorAperture: public CollimatorAperture
 {
-	/*
-	   protected:
-	   double alpha;
-	   double CollimatorLength;
-	   double jaw_length;
-	   double x_offset,y_offset;
-	 */
 public:
 	UnalignedCollimatorAperture(double w, double h, double t, Material* m, double length, double x_offset_entry = 0.0,
 		double y_offset_entry = 0.0);
@@ -124,13 +105,6 @@ class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 
 class OneSidedUnalignedCollimatorAperture: public CollimatorAperture
 {
-	/*
-	   protected:
-	   double alpha;
-	   double CollimatorLength;
-	   double jaw_length;
-	   double x_offset,y_offset;
-	 */
 public:
 	OneSidedUnalignedCollimatorAperture(double w, double h, double t, Material* m, double length, double
 		x_offset_entry = 0.0, double y_offset_entry = 0.0);

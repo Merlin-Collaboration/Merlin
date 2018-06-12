@@ -203,14 +203,7 @@ void RotateBunchAboutZ(SMPBunch& b, double phi)
 	TransportRMap::Srot(phi, M);
 	ApplyMap(M, b);
 }
-/*
-   void ApplyDrift(double s, SMPBunch& bunch)
-   {
-   RMap M;
-   TransportRMap::Drift(s,M);
-   ApplyMap(M,bunch);
-   }
- */
+
 void ApplyDrift(double s, SMPBunch& bunch)
 {
 	ApplyMap(ApplySimpleDrift(s), bunch);
@@ -469,12 +462,10 @@ void TWRFStructureCI::ApplyEndField(double gsgn)
 
 void TWRFStructureCI::TrackEntrance()
 {
-	//		ApplyEndField(1.0);
 }
 
 void TWRFStructureCI::TrackExit()
 {
-	//		ApplyEndField(-1.0);
 }
 
 void SWRFStructureCI::TrackStep(double ds)

@@ -167,7 +167,6 @@ void __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveScat
 	ss = s;
 	std::cout << "s =" << s << std::endl;
 	const int NN = 10 * N;
-	//std::cout << "s =" << s << std::endl;
 	t_step = (t_max - t_min) / NN;
 
 	xi_step = (xi_max - xi_min) / NN;
@@ -182,7 +181,6 @@ void __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveScat
 	for(int i = 0; i < NN; i++)
 	{
 		const double t = t_min + i * t_step;
-		//std::cout << "t " << t << std::endl;
 		for(int j = 0; j < NN; j++)
 		{
 			const double x = xi_min + j * xi_step;
@@ -334,10 +332,8 @@ double ppDiffractiveScatter::PomeronScatter2(double tt, double x, double s)
 {
 	double sigma_xi = 0.1;
 	double sigma_t = 0.1;
-	//double t= - tt;
 	double gausx = exp(-pow(x, 2) / (2 * sigma_xi));
 	double gaust = exp(-pow(tt, 2) / (2 * sigma_t));
-	//std::cout << gausx << "\t " << gaust << std::endl;
 	return pow(x, 2);
 
 }

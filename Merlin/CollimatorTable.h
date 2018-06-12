@@ -23,17 +23,6 @@ public:
 	~collimatortable()
 	{
 		delete[] coeff;
-		/*
-		   array = new double**[n1];
-		   for (size_t ii = 0; ii < n1; ii++)
-		   {
-		    array[ii] = new double*[n2];
-		    for (size_t jj = 0; jj < n2; jj++)
-		    {
-		        array[ii][jj] = new double[n3];
-		    }
-		   }
-		 */
 	}
 
 	bool inrange(double x)
@@ -104,8 +93,6 @@ public:
 			}
 		}
 
-		//double array[n1][n2][n3];
-
 		while(f.get() != '{')
 			;
 		for(int i1 = 0; i1 < n1; i1++)
@@ -118,9 +105,7 @@ public:
 					;
 				for(int i3 = 0; i3 < n3; i3++)
 				{
-//         cout<<i1<<" "<<i2<<" "<<i3<<flush;
 					f >> array[i1][i2][i3];
-					//       cout<<" "<<f<<endl;
 					if(i3 < n3 - 1)
 						while(f.get() != ',')
 							;
@@ -139,7 +124,6 @@ public:
 		}
 		while(f.get() != '}')
 			;
-		// cout<<" Table read OK "<<endl;
 
 		if((Gamma == 0) && (xi == 0))   // In principle the interpolation should
 		{
@@ -272,20 +256,11 @@ public:
 				double fggc = (app - amp + apm - amm) / 4.;
 				double fgcc = (app + amp - apm - amm) / 4.;
 				double fggcc = (apm + app + amp + amm) / 4.;
-				//  cout<<" check "<<f0<<" "<<array[ig1][i][ic1]<<endl;
-				//  cout<<" check "<<f0+fg+fgg<<" "<<array[ig1+1][i][ic1]<<endl;
-				//   cout<<" check "<<f0-fg+fgg<<" "<<array[ig1-1][i][ic1]<<endl;
-				//   cout<<" check "<<f0-fc+fcc<<" "<<array[ig1][i][ic1-1]<<endl;
-				//   cout<<" check "<<f0+fc+fcc<<" "<<array[ig1][i][ic1+1]<<endl;
-				//   cout<<" check "<<f0+fc+fcc+fg+fgg+fgc+fggc+fgcc+fggcc<<" "<<array[ig1+1][i][ic1+1]<<endl;
-				//   cout<<" check "<<f0-fc+fcc-fg+fgg+fgc-fggc-fgcc+fggcc<<" "<<array[ig1-1][i][ic1-1]<<endl;
 
 				coeff[i] = f0 + dg * fg + dc * fc + dg * dg * fgg + dc * dc * fcc + dg * dc * fgc + dg * dg * dc * fggc
 					+ dg * dc * dc * fgcc + dg * dg * dc * dc * fggcc;
 			}
 		}
-
-//cout<<" File "<<file<<" read and table calculated for Gamma of "<<Gamma<<" and xi of "<<xi<<endl;
 	}
 };
 

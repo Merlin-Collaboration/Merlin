@@ -221,11 +221,6 @@ protected:
 	 */
 	int Coll_ID;
 
-private:
-
-	//Copy protection
-	//AcceleratorComponent(const AcceleratorComponent& rhs);
-	//AcceleratorComponent& operator=(const AcceleratorComponent& rhs);
 };
 
 inline AcceleratorComponent::AcceleratorComponent(const string& aName) :

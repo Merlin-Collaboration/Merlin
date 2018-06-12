@@ -316,8 +316,6 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		co.FindClosedOrbit(p);
 	}
 
-//cout << p << endl;
-
 	RealMatrix M(6);
 	if(MInit)
 	{
@@ -330,7 +328,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		tm.ScaleBendPathLength(cscale);
 		tm.FindTM(M, p);
 	}
-//	cout << "Matrix 00 " << M(0,0) << endl;
+
 	ComplexVector eigenvalues(3);
 	ComplexMatrix eigenvectors(3, 6);
 	if(symplectify)
@@ -340,11 +338,6 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	EigenSystem(M, eigenvalues, eigenvectors);
 
 	int row, col;
-//cout << "eigenvalues" << endl;
-//cout << eigenvalues(0) << endl;
-//cout << eigenvalues(1) << endl;
-//cout << eigenvalues(2) << endl;
-//cout << endl;
 
 	RealMatrix N(6);
 	RealMatrix R(6);
@@ -352,9 +345,6 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	{
 		for(col = 0; col < 3; col++)
 		{
-			//cout << sqrt(2.)*eigenvectors(col,row).real() << endl;
-			//cout << sqrt(2.)*eigenvectors(col,row).imag() << endl;
-
 			N(row, 2 * col)   = sqrt(2.) * eigenvectors(col, row).real();
 			N(row, 2 * col + 1) = sqrt(2.) * eigenvectors(col, row).imag();
 			R(row, 2 * col)   = 0.0;
@@ -423,8 +413,6 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		e1 = tracker.GetTrackedBunch().GetReferenceMomentum();
 
 		if(e1 != e0)
-//			for(int row=0; row<3; row++)
-//				pref2[2*row+1] *= e1/e0;
 			for(int row = 0; row < 6; row++)
 			{
 				pref2[row] *= sqrt(e1 / e0);
@@ -434,8 +422,6 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		{
 
 			if(e1 != e0)
-//				for(int row=0; row<3; row++)
-//					(*ip)[2*row+1] *= e1/e0;
 				for(int row = 0; row < 6; row++)
 				{
 					(*ip)[row] *= sqrt(e1 / e0);
@@ -465,9 +451,6 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		{
 			s += tracker.GetCurrentComponent().GetLength();
 			isMore = tracker.StepComponent();
-			//cout << tracker.GetCurrentComponent().GetQualifiedName() << endl;
-			//MatrixForm(N,std::cout,OPFormat().precision(6).fixed());
-			//cout << endl;
 		}
 		else
 		{

@@ -109,7 +109,6 @@ public:
 			 */
 			std::for_each(begin(), end(), TRK<T>(tobj));
 			return tobj;
-			// return std::for_each(begin(),end(),tobj);
 		}
 
 		/**

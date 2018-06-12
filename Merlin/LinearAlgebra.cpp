@@ -195,13 +195,7 @@ void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 				ynorm += y(n) * y(n);
 				ydotb += y(n) * b(n);
 			}
-//	cout << "ynorm" << ynorm << "\t" << sqrt(ynorm) << "\t" << endl;
-			/*
-			    for(int rr=0; rr<6; rr++)
-			    {
-			        cout << "y: " << rr << "\t" << y(rr) << endl;
-			    }
-			 */
+
 			b = y / sqrt(ynorm);
 			lambda += 1.0 / ydotb;
 			iter++;
@@ -252,8 +246,6 @@ void Symplectify(RealMatrix& a)
 	}
 
 	RealMatrix Ipa(I + a);
-
-	//MatrixForm(Ipa,debug_os);
 
 	Inverse(Ipa);
 

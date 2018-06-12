@@ -41,12 +41,9 @@ public:
 	{
 		double Z0 = 377;
 		scale = pow(2 * b * b / (Z0 * sigma), 1. / 3.);
-#ifndef DNDEBUG
-		//cout << "Resistive collimator radius: " << b << "\tLength: " << leng << "\tConductivity: " << sigma << "\tScale length: " << scale << endl;
-#endif
+
 		double xi = pow(scale / b, 2);
 		double Gamma = SpeedOfLight * tau / scale;
-		//cout<<"xi: " << xi << "\tGamma: " << Gamma << endl;
 		Transverse = new collimatortable*[m + 1];
 		Longitudinal = new collimatortable*[m + 1];
 		for(int mode = 0; mode <= m; mode++)
@@ -81,7 +78,6 @@ public:
 		double fourpieps = 1; // pu in later
 		double Chao = -2 * (1 / (sqrt(2 * pi))) * sqrt(scale / z);
 		double E = Transverse[m]->inrange(s) ? Transverse[m]->interpolate(s) : Chao;
-		// cout<<m<<" "<<s<<" "<<E1<<" "<<Chao<<endl;
 		E = scale * leng * E; // minus sign should have been in Mathematica
 		E = E / fourpieps; // minus sign should have been in Mathematica
 		E = E / pow(b, 2 * m + 2);
@@ -141,7 +137,5 @@ public:
 	{
 		return z > 0 ? -coeff[m] * sqrt(1 / sigma * 376.6) * sqrt(z) * length : 0;
 	}
-
-private:
 
 };

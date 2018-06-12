@@ -114,7 +114,6 @@ size_t WakeFieldProcess::CalculateQdist()
 	double sigz = v.second;
 
 	// calculate binning ranges
-//    cout << nsig << "\t" << sigz << "\t" << z0 << endl;
 	zmin = -nsig * sigz + z0;
 	zmax = nsig * sigz + z0;
 	dz = (zmax - zmin) / nbins;
@@ -124,15 +123,12 @@ size_t WakeFieldProcess::CalculateQdist()
 	Qdp.clear();
 
 	// Qdp contains the slope of the charge distribution, smoothed using a filter
-//    cout << "size 1: " << currentBunch->size() << endl;
 	size_t lost = ParticleBinList(*currentBunch, zmin, zmax, nbins, bunchSlices, Qd, Qdp, filter);
-//    cout << "size 2: " << currentBunch->size() << endl;
 #ifndef NDEBUG
 	ofstream os("qdist.dat");
 	os << zmin << ' ' << zmax << ' ' << dz << endl;
 	copy(Qd.begin(), Qd.end(), ostream_iterator<double>(os, "\n"));
 #endif
-//cout << "Rank: " << MPI::COMM_WORLD.Get_rank() << "\tQDIST: " << lost << endl;
 	return lost;
 }
 
@@ -163,9 +159,6 @@ void WakeFieldProcess::SetFilter(int n, int m, int d)
 
 void WakeFieldProcess::SetCurrentComponent(AcceleratorComponent& component)
 {
-	//	TWRFStructure* cavity = dynamic_cast<TWRFStructure*>(&component);
-	//	WakePotentials* wake = cavity!=0 ? cavity->GetWakePotentials() : 0;
-
 	WakePotentials* wake = component.GetWakePotentials();
 
 	// if not initialize(=0) we assume that WakeFieldProcess is responsible - for backward compatibility
@@ -174,8 +167,6 @@ void WakeFieldProcess::SetCurrentComponent(AcceleratorComponent& component)
 	{
 		wake = nullptr;
 	}
-
-	//if(wake!=0) cout<<GetID()<<endl;
 
 	if(currentBunch != nullptr && wake != nullptr)
 	{

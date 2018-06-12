@@ -32,10 +32,6 @@ class ComponentTracker;
 class BPM: public Monitor
 {
 private:
-	/**
-	 * Copy protection
-	 * BPM(const BPM& rhs);
-	 */
 	BPM& operator=(const BPM& rhs);
 public:
 

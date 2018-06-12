@@ -56,10 +56,6 @@ public:
 
 	};
 
-	//	typedef std::vector<Rij> LinearTermArray;
-	//	typedef LinearTermArray::iterator itor;
-	//	typedef LinearTermArray::const_iterator const_itor;
-
 	struct LinearTermArray
 	{
 

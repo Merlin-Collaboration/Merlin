@@ -179,8 +179,6 @@ void Quadrupole(double length, double Kx, RMap& R)
 {
 	QR2(length, Kx, 0, R);
 	QR2(length, -Kx, 2, R);
-	//		R.AddTerm(5,5,1.0);
-	//		R.AddTerm(6,6,1.0);
 }
 
 void Srot(double cosphi, double sinphi, RMap& R)
@@ -324,36 +322,7 @@ void TWRFCavity(double length, double g, double f, double phi, double E0, bool e
 	const double E1 = E0 + dEcosPhi;
 	const double Er = E0 / E1;
 	const double logEr = LogOnePlusX(dEcosPhi / E0);
-	/****
-	        if(dEcosPhi==0)
-	        Drift(length,R);
-	    else {
-	        if(entr_field && !exit_field) {
-	            R.r11= 1-0.5*logEr/cosphi;
-	            R.r12= E0*logEr/g/cosphi;
-	            R.r21=-0.5*g/E1;
-	            R.r22= Er;
-	        }
-	        else if(!entr_field && exit_field) {
-	            R.r11= 1;
-	            R.r12= E0*logEr/g/cosphi;
-	            R.r21= 0.5*g/E1;
-	            R.r22= Er*(1+0.5*logEr/cosphi);
-	        }
-	        else if(entr_field && exit_field) {
-	            R.r11= 1-0.5*logEr/cosphi;
-	            R.r12= E0*logEr/g/cosphi;
-	            R.r21= -0.25*g*logEr/E1/cosphi;
-	            R.r22= Er*(1+0.5*logEr/cosphi);
-	        }
-	        else { // no fringe fields
-	            R.r11= 1.0;
-	            R.r12= E0*logEr/g/cosphi;
-	            R.r21= 0;
-	            R.r22= Er;
-	        }
-	    }
-	 ****/
+
 	if(dEcosPhi == 0)
 	{
 		Drift(length, R);

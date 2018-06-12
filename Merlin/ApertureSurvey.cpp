@@ -167,7 +167,6 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, S
 		for(size_t zi = 0; zi < zs.size(); zi++)
 		{
 			double z = zs[zi];
-			//cout << "call check_aperture(" << z << ")" << endl;
 			if(ap != NULL)
 			{
 				CheckAperture(ap, z, lims);

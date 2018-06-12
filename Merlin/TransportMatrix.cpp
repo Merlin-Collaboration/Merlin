@@ -383,33 +383,6 @@ RealMatrix& TransportMatrix::Solenoid(double length, double K0, double K1, bool 
 	InitR(R);
 	SolR(length, K0, R);
 	return R;
-
-	/**********
-	   double K = K0/2.0;
-	   double phi = K*length;
-	   double C = cos(phi);
-	   double S = sin(phi);
-
-	   R(0,0)=R(1,1)=R(2,2)=R(3,3)=C*C;
-
-	   R(0,1)= S*C/K;
-	   R(0,2)= S*C;
-	   R(0,3)= S*S/K;
-
-	   R(1,0)=-K*S*C;
-	   R(1,2)=-K*S*S;
-	   R(1,3)= S*C;
-
-	   R(2,0)=-S*C;
-	   R(2,1)=-S*S/K;
-	   R(2,3)= S*C/K;
-
-	   R(3,0)= K*S*S;
-	   R(3,1)=-S*C;
-	   R(3,2)=-K*S*C;
-
-	   return R;
-	 ***/
 }
 
 RealMatrix& TransportMatrix::TWRFCavity(double length, double g, double f, double phi, double E0, bool inc_end_fields,

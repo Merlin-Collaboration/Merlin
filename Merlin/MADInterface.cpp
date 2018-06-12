@@ -421,7 +421,6 @@ void MADInterface::ConstructNewFrame(const string& name)
 			break;
 
 		case 'G':
-			//newFrame = new SimpleMount(name.substr(2));
 			newFrame = new GirderMount(name.substr(2));
 			break;
 
