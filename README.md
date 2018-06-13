@@ -1,8 +1,8 @@
-# Merlin `cmake`
+# Merlin+
 
-This is the `cmake` branch of Merlin. An eclipse orientated branch also exists. Both branches should share the same Merlin library files (in the directory `Merlin`).
+Welcome to Merlin++!! We hope you enjoy your stay. THe current version of Merlin++ is 5.02.
 
-## Building with cmake
+## Building Merlin++
 
 Create a build directory, and cd into it.
 
@@ -10,48 +10,39 @@ To configure, run:
 
     cmake -DCMAKE_BUILD_TYPE=Release $PATH_TO_MERLIN_DIR
 
-for example if you created the build directory inside the Merlin directory,
+for example, if you created the build directory inside the Merlin directory,
 
     cmake -DCMAKE_BUILD_TYPE=Release ..
 
-To interactivly configure, run:
+To interactivly configure with more options, run:
 
     ccmake $PATH_TO_MERLIN_DIR
 
 To build run:
 
-    make
+    make OR make -jN
 
-or, to build with multiple threads, e.g. 4 threads
+where 'N' is the number of CPUs available for parallel builds, e.g.
 
     make -j4
 
 The libmerlin.so library will be built in the build directory.
 
+To run a test script to confirm successfull installation run
+
+    make test
+    
+Success!! Have fun with Merlin++!
+
 ## Merlin Documentation
 
-Enable documentation:
+You can find user information and other documentation in the `MerlinDocumentation` directory.
 
-    cmake -DBUILD_DOCUMENTATION=ON ..
-
-Then run
+For a full class library definitions and corresponding descriptions, run
 
     make doxygen
 
-You can find `doxygen` generated documentation in the `generated-docs` directory, and opening the webpage `generated-docs/html/index.html`.
-
-## Running Tests
-
-Enable tests with
-
-    cmake -DBUILD_TESTING=ON ..
-
-Then run:
-
-    make
-    make test
-
-
+You can now find the generated 'doxygen' information in the current build directory. 
 
 
 
