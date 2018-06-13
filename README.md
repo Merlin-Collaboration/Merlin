@@ -1,4 +1,4 @@
-# Merlin++
+# Merlin++ 5.02
 
 Welcome to Merlin++!! We hope you enjoy your stay. The current version of Merlin++ is 5.02.
 
