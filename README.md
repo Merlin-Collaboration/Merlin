@@ -34,7 +34,7 @@ To run a test script to confirm successfull installation run
     
 Success!! Have fun with Merlin++!
 
-## Merlin Documentation
+## Merlin++ Documentation
 
 You can find user information and other documentation in the `MerlinDocumentation` directory.
 
