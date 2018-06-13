@@ -10,7 +10,6 @@
 //	SEED_TABLE_SIZE must be a power of 2
 //
 
-
 #define SEED_TABLE_SIZE 32
 
 static _G_int32_t seedTable[SEED_TABLE_SIZE] =
@@ -32,8 +31,7 @@ MLCG::MLCG(_G_int32_t seed1, _G_int32_t seed2)
 	reset();
 }
 
-void
-MLCG::reset()
+void MLCG::reset()
 {
 	_G_int32_t seed1 = initialSeedOne;
 	_G_int32_t seed2 = initialSeedTwo;
@@ -43,34 +41,34 @@ MLCG::reset()
 	//	bits. In this case, if they pick a small seed number, we
 	//	map that to a specific seed.
 	//
-	if (seed1 < 0)
+	if(seed1 < 0)
 	{
 		seed1 = (seed1 + 2147483561);
 		seed1 = (seed1 < 0) ? -seed1 : seed1;
 	}
 
-	if (seed2 < 0)
+	if(seed2 < 0)
 	{
 		seed2 = (seed2 + 2147483561);
 		seed2 = (seed2 < 0) ? -seed2 : seed2;
 	}
 
-	if (seed1 > -1 && seed1 < SEED_TABLE_SIZE)
+	if(seed1 > -1 && seed1 < SEED_TABLE_SIZE)
 	{
 		seedOne = seedTable[seed1];
 	}
 	else
 	{
-		seedOne = seed1 ^ seedTable[seed1 & (SEED_TABLE_SIZE-1)];
+		seedOne = seed1 ^ seedTable[seed1 & (SEED_TABLE_SIZE - 1)];
 	}
 
-	if (seed2 > -1 && seed2 < SEED_TABLE_SIZE)
+	if(seed2 > -1 && seed2 < SEED_TABLE_SIZE)
 	{
 		seedTwo = seedTable[seed2];
 	}
 	else
 	{
-		seedTwo = seed2 ^ seedTable[ seed2 & (SEED_TABLE_SIZE-1) ];
+		seedTwo = seed2 ^ seedTable[seed2 & (SEED_TABLE_SIZE - 1)];
 	}
 	seedOne = (seedOne % 2147483561) + 1;
 	seedTwo = (seedTwo % 2147483397) + 1;
@@ -80,24 +78,23 @@ _G_uint32_t MLCG::asLong()
 {
 	_G_int32_t k = seedOne % 53668;
 
-	seedOne = 40014 * (seedOne-k * 53668) - k * 12211;
-	if (seedOne < 0)
+	seedOne = 40014 * (seedOne - k * 53668) - k * 12211;
+	if(seedOne < 0)
 	{
 		seedOne += 2147483563;
 	}
 
 	k = seedTwo % 52774;
 	seedTwo = 40692 * (seedTwo - k * 52774) - k * 3791;
-	if (seedTwo < 0)
+	if(seedTwo < 0)
 	{
 		seedTwo += 2147483399;
 	}
 
 	_G_int32_t z = seedOne - seedTwo;
-	if (z < 1)
+	if(z < 1)
 	{
 		z += 2147483562;
 	}
 	return static_cast<unsigned long>(z);
 }
-

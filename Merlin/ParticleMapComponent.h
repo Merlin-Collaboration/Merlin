@@ -18,82 +18,82 @@ namespace ParticleTracking
 class ParticleBunch;
 
 /**
-*	A special AcceleratorComponent that allows an arbitrary
-*	map (ParticleMap) to be placed into the accelerator
-*	model.
-*/
-class ParticleMapComponent : public AcceleratorComponent
+ *	A special AcceleratorComponent that allows an arbitrary
+ *	map (ParticleMap) to be placed into the accelerator
+ *	model.
+ */
+class ParticleMapComponent: public AcceleratorComponent
 {
 public:
 
-	ParticleMapComponent (const std::string& id, ParticleMap* pmap, double intB2ds = 0);
+	ParticleMapComponent(const std::string& id, ParticleMap* pmap, double intB2ds = 0);
 
 	/**
-	*	Return the type string for the element.
-	*	@return Element type string
-	*/
-	virtual const string& GetType () const;
+	 *	Return the type string for the element.
+	 *	@return Element type string
+	 */
+	virtual const string& GetType() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
 
 	/**
-	*	Returns the unique index for this class of accelerator
-	*	components.
-	*
-	*	@return Unique index of accelerator component class
-	*/
-	virtual int GetIndex () const;
+	 *	Returns the unique index for this class of accelerator
+	 *	components.
+	 *
+	 *	@return Unique index of accelerator component class
+	 */
+	virtual int GetIndex() const;
 
 	/**
-	*	Rotates the component 180 degrees about its local Y axis.
-	*/
-	virtual void RotateY180 ();
+	 *	Rotates the component 180 degrees about its local Y axis.
+	 */
+	virtual void RotateY180();
 
-	ParticleBunch& Apply (ParticleBunch& bunch) const;
-
-	/**
-	*	Primary tracking interface. Prepares the specified
-	*	Tracker object for tracking this component.
-	*/
-	virtual void PrepareTracker (ComponentTracker& aTracker);
+	ParticleBunch& Apply(ParticleBunch& bunch) const;
 
 	/**
-	*	Returns the integral of B^2 for synchrotron radiation
-	*	applications
-	*
-	*	@return The integral \f$ \int B^2 \mathrm{d} s \f$ for synchrotron
-	*	radiation applications
-	*/
-	double GetIntB2ds () const;
+	 *	Primary tracking interface. Prepares the specified
+	 *	Tracker object for tracking this component.
+	 */
+	virtual void PrepareTracker(ComponentTracker& aTracker);
 
 	/**
-	* Data Members for Class Attributes
-	*	Unique index for an Accelerator component.
-	*/
+	 *	Returns the integral of B^2 for synchrotron radiation
+	 *	applications
+	 *
+	 *	@return The integral \f$ \int B^2 \mathrm{d} s \f$ for synchrotron
+	 *	radiation applications
+	 */
+	double GetIntB2ds() const;
+
+	/**
+	 * Data Members for Class Attributes
+	 *	Unique index for an Accelerator component.
+	 */
 	static const int ID;
 
 private:
 	/**
-	* Data Members for Associations
-	*/
+	 * Data Members for Associations
+	 */
 	ParticleMap* itsMap;
 
 	/**
-	* Data Members for Class Attributes
-	*/
+	 * Data Members for Class Attributes
+	 */
 	double ib2;
 
-};// Class ParticleMapComponent
+}; // Class ParticleMapComponent
 
-inline ParticleBunch& ParticleMapComponent::Apply (ParticleBunch& bunch) const
+inline ParticleBunch& ParticleMapComponent::Apply(ParticleBunch& bunch) const
 {
 	return itsMap->Apply(bunch);
 }
 
-inline double ParticleMapComponent::GetIntB2ds () const
+inline double ParticleMapComponent::GetIntB2ds() const
 {
 	return ib2;
 }

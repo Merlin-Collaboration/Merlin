@@ -19,37 +19,46 @@ using namespace PhysicalConstants;
 namespace ParticleTracking
 {
 
-class ElectronBunch :public ParticleBunch
+class ElectronBunch: public ParticleBunch
 {
-	static const int ntally=6;
+	static const int ntally = 6;
 	int tally[ntally];
 
 public:
 
 	/**
-	*	Constructs an ElectronBunch using the specified momentum,
-	*	total charge and the particle array. Note that on exit,
-	*	particles is empty.
-	*/
-	ElectronBunch (double P0, double Q, PSvectorArray& particles)
-		: ParticleBunch(P0, Q, particles) {}
+	 *	Constructs an ElectronBunch using the specified momentum,
+	 *	total charge and the particle array. Note that on exit,
+	 *	particles is empty.
+	 */
+	ElectronBunch(double P0, double Q, PSvectorArray& particles) :
+		ParticleBunch(P0, Q, particles)
+	{
+	}
 
 	/**
-	*	Read phase space vectors from specified input stream.
-	*/
-	ElectronBunch (double P0, double Q, std::istream& is)
-		: ParticleBunch(P0, Q, is) {}
+	 *	Read phase space vectors from specified input stream.
+	 */
+	ElectronBunch(double P0, double Q, std::istream& is) :
+		ParticleBunch(P0, Q, is)
+	{
+	}
 
 	/**
-	*	Constructs an empty ElectronBunch with the specified
-	*	momentum P0 and charge per macro particle Qm (default =
-	*	+1).
-	*/
-	ElectronBunch (double P0, double Qm = 1)
-		: ParticleBunch(P0, Qm) {}
+	 *	Constructs an empty ElectronBunch with the specified
+	 *	momentum P0 and charge per macro particle Qm (default =
+	 *	+1).
+	 */
+	ElectronBunch(double P0, double Qm = 1) :
+		ParticleBunch(P0, Qm)
+	{
+	}
 
-	ElectronBunch (size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam, ParticleBunchFilter* filter = nullptr)
-		: ParticleBunch(np, generator, beam, filter) {}
+	ElectronBunch(size_t np, const ParticleDistributionGenerator & generator, const BeamData& beam,
+		ParticleBunchFilter* filter = nullptr) :
+		ParticleBunch(np, generator, beam, filter)
+	{
+	}
 
 	virtual bool IsStable() const;
 	virtual double GetParticleMass() const;
@@ -61,14 +70,18 @@ public:
 
 	void set()
 	{
-		for(int i=0; i<ntally; tally[i++]=0) {}
+		for(int i = 0; i < ntally; tally[i++] = 0)
+		{
+		}
 	}
 
 	void report()
 	{
 		cout << "Electron Scatter tallies ";
-		for(int i=0; i<ntally; cout << tally[i++] << " ") {}
-		cout<<endl;
+		for(int i = 0; i < ntally; cout << tally[i++] << " ")
+		{
+		}
+		cout << endl;
 	}
 }; // end ElectronBunch class
 } // end namespace ParticleTracking

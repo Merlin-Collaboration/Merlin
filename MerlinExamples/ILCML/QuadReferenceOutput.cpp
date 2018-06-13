@@ -16,8 +16,7 @@ using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 
-
-#define WRITE_FOS(w,p,data) (*fosptr)<<scientific<<setw(w)<<setprecision(p)<<(data)
+#define WRITE_FOS(w, p, data) (*fosptr) << scientific << setw(w) << setprecision(p) << (data)
 
 void QuadReferenceOutput::Record(const ComponentFrame* frame, const Bunch* bunch)
 {
@@ -30,9 +29,9 @@ void QuadReferenceOutput::Record(const ComponentFrame* frame, const Bunch* bunch
 	if(cavity)
 	{
 		// need to update the reference energy
-		refEnergy += (cavity->GetVoltage())/GeV;
-		double q = (bunch->GetTotalCharge())*ElectronCharge;
-		refEnergy-= eloss*q*Volt;
+		refEnergy += (cavity->GetVoltage()) / GeV;
+		double q = (bunch->GetTotalCharge()) * ElectronCharge;
+		refEnergy -= eloss * q * Volt;
 	}
 	else   // must be a quadrupole
 	{
@@ -41,14 +40,14 @@ void QuadReferenceOutput::Record(const ComponentFrame* frame, const Bunch* bunch
 		PSvector S;
 		bunch->GetCentroid(S);
 		double p0 = bunch->GetReferenceMomentum();
-		p0*=1+S.dp();
+		p0 *= 1 + S.dp();
 
-		(*fosptr)<<setw(10)<<left<<quad.GetName()<<right;
-		WRITE_FOS(17,8,frame->GetPosition()/1000.0);
-		WRITE_FOS(17,8,refEnergy);
-		WRITE_FOS(17,8,p0);
-		WRITE_FOS(17,8,quad.GetFieldStrength());
-		(*fosptr)<<endl;
+		(*fosptr) << setw(10) << left << quad.GetName() << right;
+		WRITE_FOS(17, 8, frame->GetPosition() / 1000.0);
+		WRITE_FOS(17, 8, refEnergy);
+		WRITE_FOS(17, 8, p0);
+		WRITE_FOS(17, 8, quad.GetFieldStrength());
+		(*fosptr) << endl;
 	}
 }
 

@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include <cstdlib>
 
-
 #include "ACG.h"
 using namespace std;
 
@@ -26,12 +25,11 @@ using namespace std;
  *
  */
 
-
 int main(int argc, char* argv[])
 {
 	unsigned int seed = 0;
 
-	if (argc >=2)
+	if(argc >= 2)
 	{
 		seed = atoi(argv[1]);
 	}
@@ -44,8 +42,7 @@ int main(int argc, char* argv[])
 	while(1)
 	{
 		int x = rng.asLong();
-		cout.write((char*)&x, sizeof(x));
+		cout.write((char *) &x, sizeof(x));
 	}
-
 
 }

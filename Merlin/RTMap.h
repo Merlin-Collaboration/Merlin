@@ -11,25 +11,27 @@
 #include "RMap.h"
 
 /**
-* \class RTMap
-*
-* A second-order TRANSPORT map for a PSvector
-* class RTMap represents both the first-order R and second-order T TRANSPORT
-* matrices. For efficiency, only non-zero terms are stored.
-*/
-class RTMap : public RMap
+ * \class RTMap
+ *
+ * A second-order TRANSPORT map for a PSvector
+ * class RTMap represents both the first-order R and second-order T TRANSPORT
+ * matrices. For efficiency, only non-zero terms are stored.
+ */
+class RTMap: public RMap
 {
 private:
 
-	class Tijk : public RMap::Rij
+	class Tijk: public RMap::Rij
 	{
 	public:
-		Tijk(int i1, int j1, int k1, double val =0)
-			: Rij(i1,j1,val),k(k1) {}
-
-		void Apply(const PSvector& orig,PSvector& res) const
+		Tijk(int i1, int j1, int k1, double val = 0) :
+			Rij(i1, j1, val), k(k1)
 		{
-			res[i]+=val*orig[j]*orig[k];
+		}
+
+		void Apply(const PSvector& orig, PSvector& res) const
+		{
+			res[i] += val * orig[j] * orig[k];
 		}
 
 		int k;
@@ -42,17 +44,19 @@ private:
 public:
 
 	/**
-	* Construction
-	*/
-	RTMap() : RMap(), tterms()
+	 * Construction
+	 */
+	RTMap() :
+		RMap(), tterms()
 	{
 		tterms.reserve(8);
 	}
 
 	/**
-	* Construct linear map from matrix
-	*/
-	RTMap(const RealMatrix& R) : RMap(R), tterms()
+	 * Construct linear map from matrix
+	 */
+	RTMap(const RealMatrix& R) :
+		RMap(R), tterms()
 	{
 		tterms.reserve(8);
 	}
@@ -62,28 +66,27 @@ public:
 	// not been added more than once.
 	double& operator()(int i, int j, int k)
 	{
-		tterms.push_back(Tijk(i-1,j-1,k-1));
+		tterms.push_back(Tijk(i - 1, j - 1, k - 1));
 		return tterms.back().val;
 	}
 	double& operator()(int i, int j)
 	{
-		return RMap::operator()(i,j);
+		return RMap::operator()(i, j);
 	}
 
 	/**
-	* Operating on a PSvector
-	*/
+	 * Operating on a PSvector
+	 */
 	PSvector& Apply(PSvector& p) const;
 
 	/**
-	* Output
-	*/
+	 * Output
+	 */
 	void Print(std::ostream&) const;
 
 private:
 
 	NonLinearTermList tterms;
 };
-
 
 #endif

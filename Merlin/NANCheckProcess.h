@@ -33,15 +33,15 @@ namespace ParticleTracking
  * halt: stops the simulation when an invalid particle is found.
  *
  */
-class NANCheckProcess : public ParticleBunchProcess
+class NANCheckProcess: public ParticleBunchProcess
 {
 public:
 
-	NANCheckProcess(const string& aID = "NAN Check",  int prio=-1);
-	void InitialiseProcess (Bunch&  bunch);
-	void DoProcess (const double ds);
+	NANCheckProcess(const string& aID = "NAN Check", int prio = -1);
+	void InitialiseProcess(Bunch&  bunch);
+	void DoProcess(const double ds);
 	double GetMaxAllowedStepSize() const;
-	void SetCurrentComponent (AcceleratorComponent& component);
+	void SetCurrentComponent(AcceleratorComponent& component);
 
 	/// Enable or disable detailed mode
 	void SetDetailed(bool enable = true)
@@ -63,8 +63,8 @@ private:
 	bool cull;
 	bool halt;
 
-	void Report (int id) const;
-	void DoCull ();
+	void Report(int id) const;
+	void DoCull();
 	PSvectorArray start_coords; // particles at start of element
 	PSvectorArray prev_coords; // particles at start of element
 	std::set<double> reported;

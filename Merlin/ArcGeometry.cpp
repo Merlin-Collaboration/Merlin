@@ -12,26 +12,24 @@ namespace
 
 inline Transform3D MakeTransform(double phi, double h)
 {
-	return Transform3D(Point3D((cos(phi)-1)/h,0,sin(phi)/h),Rotation3D::rotationY(-phi));
+	return Transform3D(Point3D((cos(phi) - 1) / h, 0, sin(phi) / h), Rotation3D::rotationY(-phi));
 }
 
 } // end anonymous namespace
 
-
-Transform3D ArcGeometry::GetGeometryTransform (double s0, double s) const
+Transform3D ArcGeometry::GetGeometryTransform(double s0, double s) const
 {
-	CheckBounds(s,s0);
-	return MakeTransform((s-s0)*h,h);
+	CheckBounds(s, s0);
+	return MakeTransform((s - s0) * h, h);
 }
 
-Transform3D ArcGeometry::GetGeometryTransform (BoundaryPlane p) const
+Transform3D ArcGeometry::GetGeometryTransform(BoundaryPlane p) const
 {
-	double phi = p==entrance ? -GetAngle()/2 : GetAngle()/2;
-	return MakeTransform(phi,h);
+	double phi = p == entrance ? -GetAngle() / 2 : GetAngle() / 2;
+	return MakeTransform(phi, h);
 }
 
-Transform3D ArcGeometry::GetTotalGeometryTransform () const
+Transform3D ArcGeometry::GetTotalGeometryTransform() const
 {
-	return MakeTransform(GetAngle(),h);
+	return MakeTransform(GetAngle(), h);
 }
-

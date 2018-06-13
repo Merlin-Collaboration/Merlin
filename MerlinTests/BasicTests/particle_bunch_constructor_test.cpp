@@ -37,6 +37,7 @@ struct stats
 	PSvector std;
 	PSvector min;
 	PSvector max;
+
 };
 
 // Calculate min, max, mean and std deviation
@@ -49,22 +50,22 @@ stats get_stats(ParticleBunch * pb)
 	PSvector sum(0);
 	PSvector sum_sqs(0);
 
-	for (auto & p: *pb)
+	for(auto & p : *pb)
 	{
-		for(int i=0; i<PS_LENGTH ; i++)
+		for(int i = 0; i < PS_LENGTH; i++)
 		{
 			bunch_stats.min[i] = min(p[i], bunch_stats.min[i]);
 			bunch_stats.max[i] = max(p[i], bunch_stats.max[i]);
 			sum[i] += p[i];
-			sum_sqs[i] += p[i]*p[i];
+			sum_sqs[i] += p[i] * p[i];
 		}
 	}
 
 	int npart = pb->GetParticles().size();
-	for(int i=0; i<PS_LENGTH ; i++)
+	for(int i = 0; i < PS_LENGTH; i++)
 	{
-		bunch_stats.mean[i] = sum[i]/ npart;
-		bunch_stats.std[i] = sqrt((sum_sqs[i]  - sum[i]*sum[i]/npart)/ npart);
+		bunch_stats.mean[i] = sum[i] / npart;
+		bunch_stats.std[i] = sqrt((sum_sqs[i]  - sum[i] * sum[i] / npart) / npart);
 	}
 
 	return bunch_stats;
@@ -79,32 +80,32 @@ bool are_close(double a, double b, double tol)
 bool are_close(PSvector a, double x, double xp, double y, double yp, double ct, double dp, double tol)
 {
 	bool good = true;
-	if (fabs(a.x() - x) > tol)
+	if(fabs(a.x() - x) > tol)
 	{
 		cout << "are_close() x: " << a.x() << "!=" << x << endl;
 		good = false;
 	}
-	if (fabs(a.xp() - xp) > tol)
+	if(fabs(a.xp() - xp) > tol)
 	{
 		cout << "are_close() xp: " << a.xp() << "!=" << xp << endl;
 		good = false;
 	}
-	if (fabs(a.y() - y) > tol)
+	if(fabs(a.y() - y) > tol)
 	{
 		cout << "are_close() y: " << a.y() << "!=" << y << endl;
 		good = false;
 	}
-	if (fabs(a.yp() - yp) > tol)
+	if(fabs(a.yp() - yp) > tol)
 	{
 		cout << "are_close() yp: " << a.yp() << "!=" << yp << endl;
 		good = false;
 	}
-	if (fabs(a.ct() - ct) > tol)
+	if(fabs(a.ct() - ct) > tol)
 	{
 		cout << "are_close() ct: " << a.ct() << "!=" << ct << endl;
 		good = false;
 	}
-	if (fabs(a.dp() - dp) > tol)
+	if(fabs(a.dp() - dp) > tol)
 	{
 		cout << "are_close() dp: " << a.dp() << "!=" << dp << endl;
 		good = false;
@@ -121,30 +122,30 @@ int main(int argc, char* argv[])
 
 	string ref_file_name = "";
 	ofstream *ref_file;
-	for(int i=1; i<argc-1; i++)
+	for(int i = 1; i < argc - 1; i++)
 	{
 		if(strcmp(argv[i], "--reffile") == 0)
 		{
-			ref_file_name = argv[i+1];
+			ref_file_name = argv[i + 1];
 		}
 	}
 
 	if(ref_file_name != "")
 	{
 		ref_file = new ofstream(ref_file_name);
-		if (!ref_file->good())
+		if(!ref_file->good())
 		{
 			cerr << "Failed to open reference file:" << ref_file_name << endl;
 		}
-		cout << "Writing reference file: " << ref_file_name <<endl;
-		ref_file->setf(ios::scientific,ios::floatfield);
+		cout << "Writing reference file: " << ref_file_name << endl;
+		ref_file->setf(ios::scientific, ios::floatfield);
 		ref_file->precision(16);
 		npart = 100;
 	}
 
 	double cut = 1.3;
 
-	vector<pair<string,ParticleDistributionGenerator*>> dists =
+	vector<pair<string, ParticleDistributionGenerator*> > dists =
 	{
 		{"normal", new NormalParticleDistributionGenerator()},
 		{"normal_cut", new NormalParticleDistributionGenerator(cut)},
@@ -194,38 +195,36 @@ int main(int argc, char* argv[])
 	abeam.yp0 = 3;
 	beams.push_back(abeam);
 
-
-
-	for(auto & beam: beams)
+	for(auto & beam : beams)
 	{
 		cout << endl << "x0: " << beam.x0
-		     << " xp0: " << beam.xp0
-		     << " y0: " << beam.y0
-		     << " yp0: " << beam.yp0
-		     << " emit_x: " << beam.emit_x
-		     << " emit_y: " << beam.emit_y
-		     << " beta_x:" << beam.beta_x
-		     << " beta_y: " << beam.beta_y
-		     << " alpha_x:" << beam.alpha_x
-		     << " alpha_y: " << beam.alpha_y
-		     << " gamma_x:" << beam.gamma_x()
-		     << " gamma_y: " << beam.gamma_y()
-		     << endl;
+			 << " xp0: " << beam.xp0
+			 << " y0: " << beam.y0
+			 << " yp0: " << beam.yp0
+			 << " emit_x: " << beam.emit_x
+			 << " emit_y: " << beam.emit_y
+			 << " beta_x:" << beam.beta_x
+			 << " beta_y: " << beam.beta_y
+			 << " alpha_x:" << beam.alpha_x
+			 << " alpha_y: " << beam.alpha_y
+			 << " gamma_x:" << beam.gamma_x()
+			 << " gamma_y: " << beam.gamma_y()
+			 << endl;
 
 		if(ref_file_name != "")
 		{
 			*ref_file << endl << "#x0: " << beam.x0
-			          << " xp0: " << beam.xp0
-			          << " y0: " << beam.y0
-			          << " yp0: " << beam.yp0
-			          << " emit_x: " << beam.emit_x
-			          << " emit_y: " << beam.emit_y
-			          << " beta_x:" << beam.beta_x
-			          << " beta_y: " << beam.beta_y
-			          << endl;
+					  << " xp0: " << beam.xp0
+					  << " y0: " << beam.y0
+					  << " yp0: " << beam.yp0
+					  << " emit_x: " << beam.emit_x
+					  << " emit_y: " << beam.emit_y
+					  << " beta_x:" << beam.beta_x
+					  << " beta_y: " << beam.beta_y
+					  << endl;
 		}
 
-		for (auto& dist :dists)
+		for(auto& dist :dists)
 		{
 			auto name = get<0>(dist);
 			auto dist_type = get<1>(dist);
@@ -243,11 +242,11 @@ int main(int argc, char* argv[])
 			{
 				*ref_file << "# Dist: " << name << endl;
 				*ref_file << "#X XP Y YP CT DP TYPE LOCATION ID SD" << endl;
-				for (auto &p: *myBunch)
+				for(auto &p : *myBunch)
 				{
-					for(int i=0; i<PS_LENGTH; i++)
+					for(int i = 0; i < PS_LENGTH; i++)
 					{
-						*ref_file << std::setw(35)<< p[i];
+						*ref_file << std::setw(35) << p[i];
 					}
 					*ref_file << endl;
 				}
@@ -271,52 +270,56 @@ int main(int argc, char* argv[])
 			}
 
 			// check standard deviations
-			double gamma_x = (1 + beam.alpha_x*beam.alpha_x) / beam.beta_x;
-			double gamma_y = (1 + beam.alpha_y*beam.alpha_y) / beam.beta_y;
+			double gamma_x = (1 + beam.alpha_x * beam.alpha_x) / beam.beta_x;
+			double gamma_y = (1 + beam.alpha_y * beam.alpha_y) / beam.beta_y;
 			double sig_x = sqrt(beam.emit_x * beam.beta_x);
 			double sig_xp = sqrt(beam.emit_x * gamma_x);
 			double sig_y = sqrt(beam.emit_y * beam.beta_y);
 			double sig_yp = sqrt(beam.emit_y * gamma_y);
 
-			if (name == string("flat"))
+			if(name == string("flat"))
 			{
-				double c = sqrt(1.0/12.0)*2; // std of a uniform dist
-				assert(are_close(bunch_stats.std, c*sig_x, c*sig_xp, c*sig_y, c*sig_yp, 0, 0, 1e-2));
+				double c = sqrt(1.0 / 12.0) * 2; // std of a uniform dist
+				assert(are_close(bunch_stats.std, c * sig_x, c * sig_xp, c * sig_y, c * sig_yp, 0, 0, 1e-2));
 			}
-			if (name == string("normal"))
+			if(name == string("normal"))
 			{
 				assert(are_close(bunch_stats.std, sig_x, sig_xp, sig_y, sig_yp, 0, 0, 1e-2));
 			}
 
 			// check extents
-			if ((name == string("flat")) || (name == string("ring")))
+			if((name == string("flat")) || (name == string("ring")))
 			{
-				assert(are_close(bunch_stats.max, beam.x0+sig_x, beam.xp0+sig_xp, beam.y0+sig_y, beam.yp0+sig_yp, 0, 0, 1e-3));
-				assert(are_close(bunch_stats.min, beam.x0-sig_x, beam.xp0-sig_xp, beam.y0-sig_y, beam.yp0-sig_yp, 0, 0, 1e-3));
+				assert(are_close(bunch_stats.max, beam.x0 + sig_x, beam.xp0 + sig_xp, beam.y0 + sig_y, beam.yp0
+					+ sig_yp, 0, 0, 1e-3));
+				assert(are_close(bunch_stats.min, beam.x0 - sig_x, beam.xp0 - sig_xp, beam.y0 - sig_y, beam.yp0
+					- sig_yp, 0, 0, 1e-3));
 			}
 
-			if (name == string("normal_cut"))
+			if(name == string("normal_cut"))
 			{
-				assert(are_close(bunch_stats.max, beam.x0+sig_x*cut, beam.xp0+sig_xp*cut, beam.y0+sig_y*cut, beam.yp0+sig_yp*cut, 0, 0, 1e-3));
-				assert(are_close(bunch_stats.min, beam.x0-sig_x*cut, beam.xp0-sig_xp*cut, beam.y0-sig_y*cut, beam.yp0-sig_yp*cut, 0, 0, 1e-3));
+				assert(are_close(bunch_stats.max, beam.x0 + sig_x * cut, beam.xp0 + sig_xp * cut, beam.y0 + sig_y * cut,
+					beam.yp0 + sig_yp * cut, 0, 0, 1e-3));
+				assert(are_close(bunch_stats.min, beam.x0 - sig_x * cut, beam.xp0 - sig_xp * cut, beam.y0 - sig_y * cut,
+					beam.yp0 - sig_yp * cut, 0, 0, 1e-3));
 			}
 
-			if (name == string("horizontalHalo") || name == string("horizontalHalo2") || name == string("skewHalo"))
+			if(name == string("horizontalHalo") || name == string("horizontalHalo2") || name == string("skewHalo"))
 			{
-				for(auto p = myBunch->begin()+1; p != myBunch->end(); ++p)
+				for(auto p = myBunch->begin() + 1; p != myBunch->end(); ++p)
 				{
 					double x = p->x() - beam.x0, xp = p->xp() - beam.xp0;
-					double rx2 = x*x*gamma_x + xp*xp*beam.beta_x + 2*x*xp*beam.alpha_x;
+					double rx2 = x * x * gamma_x + xp * xp * beam.beta_x + 2 * x * xp * beam.alpha_x;
 					assert(are_close(rx2, beam.emit_x, 1e-8));
 				}
 			}
 
-			if (name == string("verticalHalo") || name == string("verticalHalo2") || name == string("skewHalo"))
+			if(name == string("verticalHalo") || name == string("verticalHalo2") || name == string("skewHalo"))
 			{
-				for(auto p = myBunch->begin()+1; p != myBunch->end(); ++p)
+				for(auto p = myBunch->begin() + 1; p != myBunch->end(); ++p)
 				{
 					double y = p->y() - beam.y0, yp = p->yp() - beam.yp0;
-					double ry2 = y*y*gamma_y + yp*yp*beam.beta_y + 2*y*yp*beam.alpha_y;
+					double ry2 = y * y * gamma_y + yp * yp * beam.beta_y + 2 * y * yp * beam.alpha_y;
 					assert(are_close(ry2, beam.emit_y, 1e-8));
 				}
 			}
@@ -325,7 +328,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	for (auto& dist :dists)
+	for(auto& dist :dists)
 	{
 		delete get<1>(dist);
 	}

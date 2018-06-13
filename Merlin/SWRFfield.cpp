@@ -7,18 +7,17 @@
 
 #include "SWRFfield.h"
 
-Vector3D SWRFfield::GetBFieldAt (const Point3D& x, double t) const
+Vector3D SWRFfield::GetBFieldAt(const Point3D& x, double t) const
 {
-	return Vector3D(0,0,0);
+	return Vector3D(0, 0, 0);
 }
 
-Vector3D SWRFfield::GetEFieldAt (const Point3D& x, double t) const
+Vector3D SWRFfield::GetEFieldAt(const Point3D& x, double t) const
 {
-	return Vector3D(0,0,SWRFfield::Ez(x.z,t));
+	return Vector3D(0, 0, SWRFfield::Ez(x.z, t));
 }
 
-Vector3D SWRFfield::GetForceAt (const Point3D& x, const Vector3D& v, double q, double t) const
+Vector3D SWRFfield::GetForceAt(const Point3D& x, const Vector3D& v, double q, double t) const
 {
-	return Vector3D(0,0,q*SWRFfield::Ez(x.z,t));
+	return Vector3D(0, 0, q * SWRFfield::Ez(x.z, t));
 }
-

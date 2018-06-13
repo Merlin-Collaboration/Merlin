@@ -13,25 +13,24 @@
 #include <limits>
 #include <cmath>
 
-inline bool fequal(double x, double y,
-                   double tol=std::numeric_limits<double>::epsilon())
+inline bool fequal(double x, double y, double tol = std::numeric_limits<double>::epsilon())
 {
-	return fabs(x-y)<=tol;
+	return fabs(x - y) <= tol;
 }
 
 inline int Round(double x)
 {
-	return static_cast<int>(x+0.5);
+	return static_cast<int>(x + 0.5);
 }
 
 /**
-* TIMING macro. Used to output the real time used (in seconds)
-* by a function call. The result is output to OS, which must
-* be an ostream.
-*/
-#define TIMING(FUNC,OS) \
-{time_t start_t = time(0);FUNC;	\
-OS<<"done: real time: "<<int(difftime(time(0),start_t))<<" seconds"<<endl;}
+ * TIMING macro. Used to output the real time used (in seconds)
+ * by a function call. The result is output to OS, which must
+ * be an ostream.
+ */
+#define TIMING(FUNC, OS) \
+	{time_t start_t = time(0); FUNC; \
+	 OS << "done: real time: " << int(difftime(time(0), start_t)) << " seconds" << endl;}
 
 // special function definitions
 // ----------------------------

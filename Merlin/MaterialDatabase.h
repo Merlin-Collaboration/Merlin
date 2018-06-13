@@ -19,23 +19,23 @@ class MaterialDatabase
 
 public:
 	/**
-	* Constructor
-	*/
+	 * Constructor
+	 */
 	MaterialDatabase();
 
 	/**
-	* Storage for pointers to material types.
-	*/
-	std::map<std::string,Material*> db;
+	 * Storage for pointers to material types.
+	 */
+	std::map<std::string, Material*> db;
 
 	/**
-	* Find the material we are interested in
-	*/
+	 * Find the material we are interested in
+	 */
 	Material* FindMaterial(std::string symbol);
 
 	/**
-	* Check all the materials in the database are doing something sensible
-	*/
+	 * Check all the materials in the database are doing something sensible
+	 */
 	bool VerifyMaterials();
 
 	void DumpMaterialProperties();

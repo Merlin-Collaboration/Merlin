@@ -7,20 +7,19 @@
 
 #include "RectangularGeometry.h"
 
-Transform3D RectangularGeometry::GetGeometryTransform (double s0, double s) const
+Transform3D RectangularGeometry::GetGeometryTransform(double s0, double s) const
 {
-	CheckBounds(s,s0);
-	return Transform3D::translation(0,0,s-s0);
+	CheckBounds(s, s0);
+	return Transform3D::translation(0, 0, s - s0);
 }
 
-Transform3D RectangularGeometry::GetGeometryTransform (BoundaryPlane p) const
+Transform3D RectangularGeometry::GetGeometryTransform(BoundaryPlane p) const
 {
-	double s = p==entrance ? -len/2 : len/2;
-	return Transform3D::translation(0,0,s);
+	double s = p == entrance ? -len / 2 : len / 2;
+	return Transform3D::translation(0, 0, s);
 }
 
-Transform3D RectangularGeometry::GetTotalGeometryTransform () const
+Transform3D RectangularGeometry::GetTotalGeometryTransform() const
 {
-	return Transform3D::translation(0,0,len);
+	return Transform3D::translation(0, 0, len);
 }
-

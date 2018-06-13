@@ -19,44 +19,44 @@ namespace TLAS
 // Class Declarations
 
 /**
-* \class LUMatrix
-*
-* Represents a LU-decomposition of a square matrix. An LUMatrix object
-* can be used to "solve" a system of linear equations with many RHS vectors.
-*/
+ * \class LUMatrix
+ *
+ * Represents a LU-decomposition of a square matrix. An LUMatrix object
+ * can be used to "solve" a system of linear equations with many RHS vectors.
+ */
 template<class T>
 class LUMatrix
 {
 public:
 
 	/**
-	* Construction from an arbitrary (square) matrix.
-	* Throws DimensionError() if the matrix is not square, or
-	* SingularMatrix() if the matrix is singular.
-	*/
-	explicit LUMatrix(const Matrix<T>& M)
-		: lud(M),indexes(),d(1)
+	 * Construction from an arbitrary (square) matrix.
+	 * Throws DimensionError() if the matrix is not square, or
+	 * SingularMatrix() if the matrix is singular.
+	 */
+	explicit LUMatrix(const Matrix<T>& M) :
+		lud(M), indexes(), d(1)
 	{
-		ludcmp(lud,indexes,d);
+		ludcmp(lud, indexes, d);
 	}
 
 	/**
-	* Solve the RHS vector using this LU-decomposition.
-	* Note that rhs is over-written with the result.
-	* Returns rhs.
-	*/
+	 * Solve the RHS vector using this LU-decomposition.
+	 * Note that rhs is over-written with the result.
+	 * Returns rhs.
+	 */
 	Vector<T>& operator()(Vector<T>& rhs) const
 	{
-		return lubksb(lud,indexes,rhs);
+		return lubksb(lud, indexes, rhs);
 	}
 	SubVector<T>& operator()(SubVector<T>& rhs) const
 	{
-		return lubksb(lud,indexes,rhs);
+		return lubksb(lud, indexes, rhs);
 	}
 
 	/**
-	* These functions are provided for acting on const. rhs vectors.
-	*/
+	 * These functions are provided for acting on const. rhs vectors.
+	 */
 	Vector<T> operator()(const Vector<T>& rhs) const
 	{
 		Vector<T> v(rhs);
@@ -74,14 +74,14 @@ public:
 	}
 
 	/**
-	* Return the determinant of the original matrix
-	*/
+	 * Return the determinant of the original matrix
+	 */
 	T det() const
 	{
-		double dt=d;
-		for(int i=0; i<lud.ncols(); i++)
+		double dt = d;
+		for(int i = 0; i < lud.ncols(); i++)
 		{
-			dt*=lud(i,i);
+			dt *= lud(i, i);
 		}
 		return dt;
 	}
@@ -93,12 +93,12 @@ private:
 };
 
 /**
-* \class SVDMatrix
-*
-* Represents a Singular-Value Decomposition of a matrix. As with LUMatrix, an
-* SVDMatrix object can be used to solve a system of linear equations with many
-* RHS vectors.
-*/
+ * \class SVDMatrix
+ *
+ * Represents a Singular-Value Decomposition of a matrix. As with LUMatrix, an
+ * SVDMatrix object can be used to solve a system of linear equations with many
+ * RHS vectors.
+ */
 
 template<class T>
 class SVDMatrix
@@ -106,37 +106,37 @@ class SVDMatrix
 public:
 
 	/**
-	* Construction from an arbitrary matrix. If M.nrows()<M.ncols(), then M is first
-	* made square by the addition of M.ncols()-M.nrows() zero rows. threshold specifies
-	* the relative (to the largest singular value) threshold value below which the
-	* singular values are set to zero.
-	*/
+	 * Construction from an arbitrary matrix. If M.nrows()<M.ncols(), then M is first
+	 * made square by the addition of M.ncols()-M.nrows() zero rows. threshold specifies
+	 * the relative (to the largest singular value) threshold value below which the
+	 * singular values are set to zero.
+	 */
 	explicit SVDMatrix(const Matrix<T>& M, T threshold = T(1e-06));
 	SVDMatrix(const Matrix<T>& M, const Vector<T>& wts, T threshold = T(1e-06));
 
 	/**
-	* Solve the RHS vector using this SVD.
-	*/
+	 * Solve the RHS vector using this SVD.
+	 */
 	Vector<T> operator()(const Vector<T>& rhs) const
 	{
 		Vector<T> x(w.size());
 		Vector<T> y(rhs);
-		y*=wts;
-		return svbksb(u,w,v,y,x);
+		y *= wts;
+		return svbksb(u, w, v, y, x);
 	}
 	Vector<T> operator()(const SubVector<T>& rhs) const
 	{
 		Vector<T> x(w.size());
 		Vector<T> y(rhs);
-		y*=wts;
-		return svbksb(u,w,v,y,x);
+		y *= wts;
+		return svbksb(u, w, v, y, x);
 	}
 	Vector<T> operator()(const ConstSubVector<T>& rhs) const
 	{
 		Vector<T> x(w.size());
 		Vector<T> y(rhs);
-		y*=wts;
-		return svbksb(u,w,v,y,x);
+		y *= wts;
+		return svbksb(u, w, v, y, x);
 	}
 	const std::vector<bool>& wflags() const
 	{
@@ -144,8 +144,8 @@ public:
 	}
 
 	/**
-	* Decomposed matrices
-	*/
+	 * Decomposed matrices
+	 */
 	const Matrix<T>& U() const
 	{
 		return u;
@@ -163,35 +163,35 @@ private:
 
 	void Init(const Matrix<T>& M, T threshold);
 
-	Matrix<T> u,v;
+	Matrix<T> u, v;
 	Vector<T> w;
 	Vector<T> wts;
 	std::vector<bool> wflgs;
 };
 
 template<class T>
-SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, T threshold)
-	: wts(M.nrows())
+SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, T threshold) :
+	wts(M.nrows())
 {
-	wts=T(1);
-	Init(M,threshold);
+	wts = T(1);
+	Init(M, threshold);
 }
 
 template<class T>
-SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, const Vector<T>& wts1, T threshold)
-	: wts(M.nrows())
+SVDMatrix<T>::SVDMatrix(const Matrix<T>& M, const Vector<T>& wts1, T threshold) :
+	wts(M.nrows())
 {
-	wts=wts1;
-	Init(M,threshold);
+	wts = wts1;
+	Init(M, threshold);
 }
 
 template<class T>
 void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 {
-	if(M.nrows()<M.ncols())
+	if(M.nrows() < M.ncols())
 	{
-		u.redim(M.ncols(),M.ncols());
-		u(Range(0,M.nrows()-1),Range(0,M.ncols()-1))=M;
+		u.redim(M.ncols(), M.ncols());
+		u(Range(0, M.nrows() - 1), Range(0, M.ncols() - 1)) = M;
 	}
 	else
 	{
@@ -199,27 +199,27 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 	}
 
 	// adjust for weights: multiply each column vector by wts
-	for(Subscript ir=0; ir<u.ncols(); ir++)
+	for(Subscript ir = 0; ir < u.ncols(); ir++)
 	{
 		u.column(ir) *= wts;
 	}
 
 	w.redim(u.ncols());
-	wflgs = std::vector<bool>(u.ncols(),true);
+	wflgs = std::vector<bool>(u.ncols(), true);
 
-	v.redim(u.ncols(),u.ncols());
-	svdcmp(u,w,v);
+	v.redim(u.ncols(), u.ncols());
+	svdcmp(u, w, v);
 
-	T wmin = threshold!=T(0) ? threshold*(*max_element(w.begin(),w.end())) : threshold;
-	int zerocount=0;
-	for(size_t i=0; i<w.size(); i++)
-		if(w[i]<=wmin)
+	T wmin = threshold != T(0) ? threshold * (*max_element(w.begin(), w.end())) : threshold;
+	int zerocount = 0;
+	for(size_t i = 0; i < w.size(); i++)
+		if(w[i] <= wmin)
 		{
-			w[i]=T(0);
-			wflgs[i]=false;
+			w[i] = T(0);
+			wflgs[i] = false;
 			zerocount++;
 		}
-	if(zerocount==static_cast<int>(w.size()))
+	if(zerocount == static_cast<int>(w.size()))
 	{
 		throw SingularValuesAllZero();
 	}
@@ -231,10 +231,10 @@ template<class T>
 void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 {
 	static const T tiny = numeric_limits<T>::epsilon();
-	size_t imax,i,j,k;
+	size_t imax, i, j, k;
 	const size_t n = a.ncols();
 
-	if(n!=a.nrows())
+	if(n != a.nrows())
 	{
 		throw DimensionError();
 	}
@@ -242,68 +242,68 @@ void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 	std::vector<T> vv(n);
 	std::vector<int> indx(n);
 
-	d=1.0;
-	for (i=0; i<n; i++)
+	d = 1.0;
+	for(i = 0; i < n; i++)
 	{
-		double big=0.0;
-		for (j=0; j<n; j++)
+		double big = 0.0;
+		for(j = 0; j < n; j++)
 		{
-			big = _MAX(fabs(a[i][j]),big);
+			big = _MAX(fabs(a[i][j]), big);
 		}
-		if (big == 0.0)
+		if(big == 0.0)
 		{
 			throw SingularMatrix();
 		}
 
-		vv[i]=1.0/big;
+		vv[i] = 1.0 / big;
 	}
-	for (j=0; j<n; j++)
+	for(j = 0; j < n; j++)
 	{
-		for (i=0; i<j; i++)
+		for(i = 0; i < j; i++)
 		{
-			double sum=a[i][j];
-			for (k=0; k<i; k++)
+			double sum = a[i][j];
+			for(k = 0; k < i; k++)
 			{
-				sum -= a[i][k]*a[k][j];
+				sum -= a[i][k] * a[k][j];
 			}
-			a[i][j]=sum;
+			a[i][j] = sum;
 		}
-		double big=0.0;
-		for (i=j; i<n; i++)
+		double big = 0.0;
+		for(i = j; i < n; i++)
 		{
-			double sum=a[i][j];
-			for (k=0; k<j; k++)
+			double sum = a[i][j];
+			for(k = 0; k < j; k++)
 			{
-				sum -= a[i][k]*a[k][j];
+				sum -= a[i][k] * a[k][j];
 			}
-			a[i][j]=sum;
+			a[i][j] = sum;
 			double dum;
-			if ((dum=vv[i]*fabs(sum)) >= big)
+			if((dum = vv[i] * fabs(sum)) >= big)
 			{
-				big=dum;
-				imax=i;
+				big = dum;
+				imax = i;
 			}
 		}
-		if (j != imax)
+		if(j != imax)
 		{
-			for (k=0; k<n; k++)
+			for(k = 0; k < n; k++)
 			{
-				double dum=a[imax][k];
-				a[imax][k]=a[j][k];
-				a[j][k]=dum;
+				double dum = a[imax][k];
+				a[imax][k] = a[j][k];
+				a[j][k] = dum;
 			}
-			d*=-1;
-			vv[imax]=vv[j];
+			d *= -1;
+			vv[imax] = vv[j];
 		}
-		indx[j]=imax;
-		if (a[j][j] == 0.0)
+		indx[j] = imax;
+		if(a[j][j] == 0.0)
 		{
 			a[j][j] = tiny;
 		}
-		if (j<n)
+		if(j < n)
 		{
-			double dum=1.0/(a[j][j]);
-			for (i=j+1; i<n; i++)
+			double dum = 1.0 / (a[j][j]);
+			for(i = j + 1; i < n; i++)
 			{
 				a[i][j] *= dum;
 			}
@@ -319,36 +319,36 @@ void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 template<class T, class V>
 V& lubksb(const Matrix<T>& a, const std::vector<int>& indx, V& b)
 {
-	int i,ii=-1,ip,j;
+	int i, ii = -1, ip, j;
 	const int n = a.ncols();
 	T sum;
 
-	for(i=0; i<n; i++)
+	for(i = 0; i < n; i++)
 	{
-		ip=indx[i];
-		sum=b[ip];
-		b[ip]=b[i];
-		if(ii!=-1)
+		ip = indx[i];
+		sum = b[ip];
+		b[ip] = b[i];
+		if(ii != -1)
 		{
-			for (j=ii; j<=i-1; j++)
+			for(j = ii; j <= i - 1; j++)
 			{
-				sum -= a[i][j]*b[j];
+				sum -= a[i][j] * b[j];
 			}
 		}
-		else if(sum!=0)
+		else if(sum != 0)
 		{
-			ii=i;
+			ii = i;
 		}
-		b[i]=sum;
+		b[i] = sum;
 	}
-	for (i=n-1; i>=0; i--)
+	for(i = n - 1; i >= 0; i--)
 	{
-		sum=b[i];
-		for (j=i+1; j<n; j++)
+		sum = b[i];
+		for(j = i + 1; j < n; j++)
 		{
-			sum -= a[i][j]*b[j];
+			sum -= a[i][j] * b[j];
 		}
-		b[i]=sum/a[i][i];
+		b[i] = sum / a[i][i];
 	}
 	return b;
 }
@@ -356,17 +356,17 @@ V& lubksb(const Matrix<T>& a, const std::vector<int>& indx, V& b)
 template<class T>
 Matrix<T>& InvertMatrix(Matrix<T>& m)
 {
-	if(m.nrows()!=m.ncols())
+	if(m.nrows() != m.ncols())
 	{
 		throw NonSquareMatrix();
 	}
 
 	LUMatrix<T> lu(m);
-	for(int i = 0; i<m.ncols(); i++)
+	for(int i = 0; i < m.ncols(); i++)
 	{
 		SubVector<T>& col = m.column(i);
-		col=T(0);
-		col[i]=T(1);
+		col = T(0);
+		col[i] = T(1);
 		lu(col);
 	}
 	return m;

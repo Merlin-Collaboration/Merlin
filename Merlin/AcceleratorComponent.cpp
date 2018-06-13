@@ -13,7 +13,7 @@
 
 const int AcceleratorComponent::ID = UniqueIndex();
 
-AcceleratorComponent::~AcceleratorComponent ()
+AcceleratorComponent::~AcceleratorComponent()
 {
 	if(itsGeometry)
 	{
@@ -26,27 +26,26 @@ AcceleratorComponent::~AcceleratorComponent ()
 	}
 }
 
-int AcceleratorComponent::GetIndex () const
+int AcceleratorComponent::GetIndex() const
 {
 	return ID;
 }
 
-double AcceleratorComponent::GetLength () const
+double AcceleratorComponent::GetLength() const
 {
 	return itsGeometry ? itsGeometry->GetGeometryLength() : 0;
 }
 
-void AcceleratorComponent::PrepareTracker (ComponentTracker& aTracker)
+void AcceleratorComponent::PrepareTracker(ComponentTracker& aTracker)
 {
-	if(!aTracker.SelectIntegrator(AcceleratorComponent::ID,*this))
+	if(!aTracker.SelectIntegrator(AcceleratorComponent::ID, *this))
 	{
 		throw ComponentTracker::UnknownComponent();
 	}
 }
 
-int AcceleratorComponent::UniqueIndex ()
+int AcceleratorComponent::UniqueIndex()
 {
 	static int ID_count = 0;
 	return ID_count++;
 }
-

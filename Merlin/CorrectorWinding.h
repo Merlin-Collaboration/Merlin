@@ -13,39 +13,39 @@
 #include "ModelElement.h"
 
 /**
-*	Represents a dipole corrector winding that can be added
-*	to any RectMultipole component. The Bx and By field
-*	values are in integrated strengths (Tesla.meter).
-*/
+ *	Represents a dipole corrector winding that can be added
+ *	to any RectMultipole component. The Bx and By field
+ *	values are in integrated strengths (Tesla.meter).
+ */
 
-class CorrectorWinding : public ModelElement
+class CorrectorWinding: public ModelElement
 {
 public:
-	CorrectorWinding (RectMultipole& aMagnet);
+	CorrectorWinding(RectMultipole& aMagnet);
 
-	void SetBx (double value);
-	void SetBy (double value);
-	double GetBx () const;
-	double GetBy () const;
-
-	/**
-	*	Return the name of the element.
-	*/
-	virtual const string& GetName () const;
+	void SetBx(double value);
+	void SetBy(double value);
+	double GetBx() const;
+	double GetBy() const;
 
 	/**
-	*	Return the type string for the element.
-	*/
-	virtual const string& GetType () const;
+	 *	Return the name of the element.
+	 */
+	virtual const string& GetName() const;
 
 	/**
-	*	Virtual constructor.
-	*/
-	virtual ModelElement* Copy () const;
+	 *	Return the type string for the element.
+	 */
+	virtual const string& GetType() const;
 
 	/**
-	*  Get the unique beamline index for this frame
-	*/
+	 *	Virtual constructor.
+	 */
+	virtual ModelElement* Copy() const;
+
+	/**
+	 *  Get the unique beamline index for this frame
+	 */
 	size_t GetBeamlineIndex() const;
 	void AppendBeamlineIndexes(std::vector<size_t>&) const;
 
@@ -54,7 +54,7 @@ private:
 	RectMultipole* magnet;
 };
 
-inline const string& CorrectorWinding::GetName () const
+inline const string& CorrectorWinding::GetName() const
 {
 	return magnet->GetName();
 }

@@ -30,9 +30,9 @@ int main()
 	theDFSapp.SetCorrectionGain(1.0);
 	theDFSapp.SetCorrectionPlane(Accelerator::y_only);
 	theDFSapp.SetIteration(1.0);
-	theDFSapp.SetSegmentation(40,20);
-	theDFSapp.SetFitWeights(1/(360.0*micrometer),1/(sqrt(2.0)*5*micrometer));
-	theDFSapp.UseIncrementalTracking(true,true);
+	theDFSapp.SetSegmentation(40, 20);
+	theDFSapp.SetFitWeights(1 / (360.0 * micrometer), 1 / (sqrt(2.0) * 5 * micrometer));
+	theDFSapp.UseIncrementalTracking(true, true);
 
 //	theDFSapp.SetFitWeights(1,0); // 1-1 steering
 //	theDFSapp.SetFitWeights(0,1); // dispersion correction
@@ -49,11 +49,11 @@ int main()
 	const string modelFile = "../lattices/ilc_linac_15_250.xtff";
 	const bool constructCurvedLinac = true;
 
-	pair<AcceleratorModel*,BeamData*> mb;
-	mb = ConstructModel(modelFile,constructCurvedLinac);
-	theDFSapp.SetReferenceModel(mb.first,mb.second);
-	mb = ConstructModel(modelFile,constructCurvedLinac);
-	theDFSapp.SetSimulationModel(mb.first,mb.second);
+	pair<AcceleratorModel*, BeamData*> mb;
+	mb = ConstructModel(modelFile, constructCurvedLinac);
+	theDFSapp.SetReferenceModel(mb.first, mb.second);
+	mb = ConstructModel(modelFile, constructCurvedLinac);
+	theDFSapp.SetSimulationModel(mb.first, mb.second);
 
 	// Tracking
 	// --------------------------------------------------------------------
@@ -68,7 +68,7 @@ int main()
 	// Simulation model uses SMPTracking for emittance estimation after
 	// DFS application.
 	// 31 slices with 11 macro-particles per slice.
-	SMPTrackingModel* smpTracker = new SMPTrackingModel(31,11);
+	SMPTrackingModel* smpTracker = new SMPTrackingModel(31, 11);
 	smpTracker->IncludeTransverseWakefield(true);
 	theDFSapp.SetSimulationModelBeamDynamicsForEmittance(smpTracker);
 
@@ -84,24 +84,24 @@ int main()
 	// --------------------------------------------------------------------
 	AcceleratorWithErrors* accWE = theDFSapp.GetSimulationModel();
 
-	accWE->TransverseErrors("ComponentFrame.Quadrupole.*",0,300*micrometer, true);
-	accWE->RotationErrors("ComponentFrame.Quadrupole.*",0,0,300*microradian, false);
-	accWE->TransverseErrors("ComponentFrame.BPM.*",0,200*micrometer, true);
-	accWE->TransverseErrors("ComponentFrame.TWRFStructure.*",0,300*micrometer, true);
-	accWE->RotationErrors("ComponentFrame.TWRFStructure.*",300*microradian,0,0, false);
-	accWE->TransverseErrors("SequenceFrame.CM",0,200*micrometer, true); // Cryomodule
-	accWE->MagnetScaleError("YCor.*",0.01);
-	accWE->KlystronErrors("*",0.01,0.0);
-	accWE->BPMresolution(5.0*micrometer);
+	accWE->TransverseErrors("ComponentFrame.Quadrupole.*", 0, 300 * micrometer, true);
+	accWE->RotationErrors("ComponentFrame.Quadrupole.*", 0, 0, 300 * microradian, false);
+	accWE->TransverseErrors("ComponentFrame.BPM.*", 0, 200 * micrometer, true);
+	accWE->TransverseErrors("ComponentFrame.TWRFStructure.*", 0, 300 * micrometer, true);
+	accWE->RotationErrors("ComponentFrame.TWRFStructure.*", 300 * microradian, 0, 0, false);
+	accWE->TransverseErrors("SequenceFrame.CM", 0, 200 * micrometer, true); // Cryomodule
+	accWE->MagnetScaleError("YCor.*", 0.01);
+	accWE->KlystronErrors("*", 0.01, 0.0);
+	accWE->BPMresolution(5.0 * micrometer);
 	accWE->BPMlinearError(0.05);
-	accWE->InitialBeamJitterInSigma(1.0,1.0);
+	accWE->InitialBeamJitterInSigma(1.0, 1.0);
 
 	// Energy modification for DFS
 	// --------------------------------------------------------------------
 	ConstantGradientAdjustment* engyPolicy = new ConstantGradientAdjustment();
 //	engyPolicy->AddEnergyState(0,-0.2); // state 1: -20% reduction in initial beam energy
 //	engyPolicy->AddEnergyState(-0.2,0); // state 2: -20% reduction in linac gradient
-	engyPolicy->AddEnergyState(-0.2,-0.2); // D. Schulte's approach.
+	engyPolicy->AddEnergyState(-0.2, -0.2); // D. Schulte's approach.
 	theDFSapp.SetEnergyAdjustmentPolicy(engyPolicy);
 
 	// Simulation loop
@@ -113,19 +113,19 @@ int main()
 	// and response matrices
 	if(constructCurvedLinac)
 	{
-		OneToOneCorrection(theDFSapp.GetReferenceModel(),Accelerator::y_only);
+		OneToOneCorrection(theDFSapp.GetReferenceModel(), Accelerator::y_only);
 	}
 
 	theDFSapp.Initialise(); // one-time initialisation for all seeds.
 	theDFSapp.SetOutput(&dfso);
-	dfs_trace(dfs_trace::level_1)<<"\n\n\n\nBeginning simulations with "<<nseed<<" seeds"<<endl;
+	dfs_trace(dfs_trace::level_1) << "\n\n\n\nBeginning simulations with " << nseed << " seeds" << endl;
 
-	for(size_t ns = 0; ns<nseed; ns++)
+	for(size_t ns = 0; ns < nseed; ns++)
 	{
-		dfs_trace(dfs_trace::level_1)<<"\nRunning seed #"<<ns;
+		dfs_trace(dfs_trace::level_1) << "\nRunning seed #" << ns;
 		ostringstream oss;
-		oss<<filePrefix<<'.'<<ns<<".dat";
-		dfs_trace(dfs_trace::level_1)<<" file: "<<oss.str()<<endl;
+		oss << filePrefix << '.' << ns << ".dat";
+		dfs_trace(dfs_trace::level_1) << " file: " << oss.str() << endl;
 		dfso.NewFile(oss.str());
 		accWE->ApplyStaticErrors();
 		theDFSapp.Apply();
@@ -133,4 +133,3 @@ int main()
 
 	return 0;
 }
-

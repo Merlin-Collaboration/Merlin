@@ -10,41 +10,43 @@
 #include "GeneralRotation.h"
 #include "AxisRotations.h"
 
-Rot3Drep::Rot3Drep ()
-	: refc(0)
-{}
+Rot3Drep::Rot3Drep() :
+	refc(0)
+{
+}
 
-Rot3Drep::~Rot3Drep ()
-{}
+Rot3Drep::~Rot3Drep()
+{
+}
 
-bool Rot3Drep::isIdentity () const
+bool Rot3Drep::isIdentity() const
 {
 	return false;
 }
 
-bool Rot3Drep::isXrot () const
+bool Rot3Drep::isXrot() const
 {
 	return false;
 }
 
-bool Rot3Drep::isYrot () const
+bool Rot3Drep::isYrot() const
 {
 	return false;
 }
 
-bool Rot3Drep::isZrot () const
+bool Rot3Drep::isZrot() const
 {
 	return false;
 }
 
-Rot3Drep* Rot3Drep::identity ()
+Rot3Drep* Rot3Drep::identity()
 {
 	return new IdentityRotation;
 }
 
-Rot3Drep* Rot3Drep::rotationX (double angle)
+Rot3Drep* Rot3Drep::rotationX(double angle)
 {
-	if(angle==0)
+	if(angle == 0)
 	{
 		return new IdentityRotation;
 	}
@@ -54,9 +56,9 @@ Rot3Drep* Rot3Drep::rotationX (double angle)
 	}
 }
 
-Rot3Drep* Rot3Drep::rotationY (double angle)
+Rot3Drep* Rot3Drep::rotationY(double angle)
 {
-	if(angle==0)
+	if(angle == 0)
 	{
 		return new IdentityRotation;
 	}
@@ -66,9 +68,9 @@ Rot3Drep* Rot3Drep::rotationY (double angle)
 	}
 }
 
-Rot3Drep* Rot3Drep::rotationZ (double angle)
+Rot3Drep* Rot3Drep::rotationZ(double angle)
 {
-	if(angle==0)
+	if(angle == 0)
 	{
 		return new IdentityRotation;
 	}

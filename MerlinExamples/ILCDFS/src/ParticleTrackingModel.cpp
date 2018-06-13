@@ -13,10 +13,10 @@
 
 using namespace ParticleTracking;
 
-ParticleTrackingModel::ParticleTrackingModel(size_t npart)
-	: BeamDynamicsModel("PARTICLE TRACKING"),np(npart),cBunch0(nullptr)
+ParticleTrackingModel::ParticleTrackingModel(size_t npart) :
+	BeamDynamicsModel("PARTICLE TRACKING"), np(npart), cBunch0(nullptr)
 {
-	dfs_trace(dfs_trace::level_1)<<"PARTICLE TRACKING initialised with "<<npart<<" particles"<<endl;
+	dfs_trace(dfs_trace::level_1) << "PARTICLE TRACKING initialised with " << npart << " particles" << endl;
 	tracker = new ParticleTracker();
 }
 

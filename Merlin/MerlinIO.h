@@ -18,16 +18,16 @@
 #define MERLIN_WARN MerlinIO::warning()
 
 /**
-*	Interface for the standard Merlin IO streams.
-*/
+ *	Interface for the standard Merlin IO streams.
+ */
 class MerlinIO
 {
 public:
 
-	static std::istream& in ();
-	static std::ostream& out ();
-	static std::ostream& error ();
-	static std::ostream& warning ();
+	static std::istream& in();
+	static std::ostream& out();
+	static std::ostream& error();
+	static std::ostream& warning();
 
 	static std::istream* std_in;
 	static std::ostream* std_out;
@@ -35,22 +35,22 @@ public:
 	static std::ostream* std_warn;
 };
 
-inline std::istream& MerlinIO::in ()
+inline std::istream& MerlinIO::in()
 {
 	return *std_in;
 }
 
-inline std::ostream& MerlinIO::out ()
+inline std::ostream& MerlinIO::out()
 {
 	return *std_out;
 }
 
-inline std::ostream& MerlinIO::error ()
+inline std::ostream& MerlinIO::error()
 {
 	return *std_err;
 }
 
-inline std::ostream& MerlinIO::warning ()
+inline std::ostream& MerlinIO::warning()
 {
 	return *std_warn;
 }

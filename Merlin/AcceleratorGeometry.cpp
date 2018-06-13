@@ -7,9 +7,8 @@
 
 #include "AcceleratorGeometry.h"
 
-Transform3D AcceleratorGeometry::GetTotalGeometryTransform () const
+Transform3D AcceleratorGeometry::GetTotalGeometryTransform() const
 {
 	Extent extnt = GetGeometryExtent();
-	return GetGeometryTransform(extnt.first,extnt.second);
+	return GetGeometryTransform(extnt.first, extnt.second);
 }
-

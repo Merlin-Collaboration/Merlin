@@ -18,17 +18,18 @@
 
 #include "ApertureConfiguration.h"
 
-ApertureConfiguration::ApertureConfiguration(std::string InputFileName) : logFlag(false), DefaultAperture(nullptr), DefaultApertureFlag(false)
+ApertureConfiguration::ApertureConfiguration(std::string InputFileName) :
+	logFlag(false), DefaultAperture(nullptr), DefaultApertureFlag(false)
 
 {
 	LoadApertureConfiguration(InputFileName);
 }
 /*
-ApertureConfiguration::ApertureConfiguration(std::string InputFileName, bool are) : logFlag(false), allRectEllipse(are)
-{
-	LoadApertureConfiguration(InputFileName);
-}
-*/
+   ApertureConfiguration::ApertureConfiguration(std::string InputFileName, bool are) : logFlag(false), allRectEllipse(are)
+   {
+    LoadApertureConfiguration(InputFileName);
+   }
+ */
 
 void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 {
@@ -41,8 +42,8 @@ void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 		exit(EXIT_FAILURE);
 	}
 
-	std::string key,name,parent,aptype;
-	double s,l,ap1,ap2,ap3,ap4;
+	std::string key, name, parent, aptype;
+	double s, l, ap1, ap2, ap3, ap4;
 
 	//Lets assume we have the correct file layout
 	if(input->good())
@@ -50,19 +51,19 @@ void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 		char getlinebuf[1024];
 		for(size_t n = 47; n > 0; n--)
 		{
-			input->getline(getlinebuf,1023);
+			input->getline(getlinebuf, 1023);
 		}
 	}
 
 	while(input->good())
 	{
 		//				* KEYWORD	NAME	PARENT	S	L	APER_1	APER_2	APER_3	APER_4  APTYPE
-		(*input) >> 	key >> 		name >>	parent >> s >> 	l >> 	ap1 >> 	ap2 >> 	ap3 >> 	ap4 >> aptype;
+		(*input) >>     key >>      name >> parent >> s >>  l >>    ap1 >>  ap2 >>  ap3 >>  ap4 >> aptype;
 
-		if( ( ap1 !=0) || (ap2 !=0) || (ap3 != 0) || (ap4 !=0) )
+		if((ap1 != 0) || (ap2 != 0) || (ap3 != 0) || (ap4 != 0))
 		{
 			//Assume refer = EXIT (if not we are in trouble)
-			ApertureEntry.s = s-l;
+			ApertureEntry.s = s - l;
 			ApertureEntry.ap1 = ap1;
 			ApertureEntry.ap2 = ap2;
 			ApertureEntry.ap3 = ap3;
@@ -100,7 +101,8 @@ void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 			else
 			{
 				//Unknown type
-				std::cerr << "Unknown Aperture type found in Aperture input file: " << aptype << " - Exiting!" << std::endl;
+				std::cerr << "Unknown Aperture type found in Aperture input file: " << aptype << " - Exiting!"
+						  << std::endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -121,9 +123,10 @@ void ApertureConfiguration::LoadApertureConfiguration(std::string InputFileName)
 
 void ApertureConfiguration::OutputApertureList(std::ostream& os)
 {
-	for(size_t n=0; n < ApertureList.size(); n++)
+	for(size_t n = 0; n < ApertureList.size(); n++)
 	{
-		os << ApertureList[n].s << "\t" << ApertureList[n].ap1 << "\t" << ApertureList[n].ap2 << "\t" << ApertureList[n].ap3 << "\t" << ApertureList[n].ap4 << "\t";
+		os << ApertureList[n].s << "\t" << ApertureList[n].ap1 << "\t" << ApertureList[n].ap2 << "\t"
+		   << ApertureList[n].ap3 << "\t" << ApertureList[n].ap4 << "\t";
 		if(ApertureList[n].ApType == RECTELLIPSE)
 		{
 			os << "RECTELLIPSE";
@@ -159,25 +162,25 @@ void ApertureConfiguration::OutputApertureList(std::ostream& os)
 void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 {
 	/**
-	* Get a list of all elements
-	*/
+	 * Get a list of all elements
+	 */
 	std::vector<AcceleratorComponent*> Elements;
-	int nElements = Model->ExtractTypedElements(Elements,"*");
+	int nElements = Model->ExtractTypedElements(Elements, "*");
 	std::cout << "Got " << nElements << " elements for aperture configuration" << std::endl;
 	std::cout << "Got " << ApertureList.size() << " Aperture entries" << std::endl;
 
 	Aperture* aper;
 
 	/**
-	* Elements - The container with all AcceleratorComponent entries
-	* comp - Iterator to all AcceleratorComponent entries
-	*
-	* ApertureList - The container with all Aperture entries
-	* itr - Iterator to all Aperture entries.
-	*
-	* ThisElementAperture - The container for the current element Aperture.
-	*/
-	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp!=Elements.end(); comp++)
+	 * Elements - The container with all AcceleratorComponent entries
+	 * comp - Iterator to all AcceleratorComponent entries
+	 *
+	 * ApertureList - The container with all Aperture entries
+	 * itr - Iterator to all Aperture entries.
+	 *
+	 * ThisElementAperture - The container for the current element Aperture.
+	 */
+	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp != Elements.end(); comp++)
 	{
 		if((*comp)->GetAperture() == nullptr)
 		{
@@ -185,9 +188,9 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 			double Position = (*comp)->GetComponentLatticePosition();
 
 			/*
-			* Give magnets and other fixed elements a set aperture.
-			* Give drifts interpolated apertures.
-			*/
+			 * Give magnets and other fixed elements a set aperture.
+			 * Give drifts interpolated apertures.
+			 */
 
 			//Get the Type of Element this is.
 			std::string ElementType = (*comp)->GetType();
@@ -200,12 +203,12 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 				{
 					//std::cout << (*comp)->GetQualifiedName() << " run" << std::endl;
 					//Loop over all aperture entries
-					for(std::vector<ap>::iterator itr = ApertureList.begin(); itr!=ApertureList.end(); itr++)
+					for(std::vector<ap>::iterator itr = ApertureList.begin(); itr != ApertureList.end(); itr++)
 					{
 						//If the aperture entry is > the element start position and less than the exit
 						//if(( itr->s >= Position && itr->s <= (Position + ElementLength) ) || fequal(itr->s, (Position + ElementLength),1e-6) )
 						//if(( itr->s >= Position)  || fequal(itr->s, (Position + ElementLength),1e-6) )
-						if( itr->s >= Position )
+						if(itr->s >= Position)
 						{
 							//	std::cout << (*comp)->GetQualifiedName() << " hit" << std::endl;
 							//Add the appropriate aperture type
@@ -235,40 +238,41 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 								exit(EXIT_FAILURE);
 							}
 							(*comp)->SetAperture(aper);
-							itr=ApertureList.end();
+							itr = ApertureList.end();
 							break;
 						}
-						if(itr==ApertureList.end())
+						if(itr == ApertureList.end())
 						{
 							std::cerr << (*comp)->GetQualifiedName() << " hit end" << std::endl;
 						}
 					}
-				}//End of fixed elements
+				} //End of fixed elements
 				else //Deal with drifts
 				{
 					//std::cout << (*comp)->GetQualifiedName() << std::endl;
 					//Loop over all aperture entries
-					for(std::vector<ap>::iterator itr = ApertureList.begin(); itr!=ApertureList.end(); itr++)
+					for(std::vector<ap>::iterator itr = ApertureList.begin(); itr != ApertureList.end(); itr++)
 					{
 						//If the aperture entry is >= the element position
 						//or if we have reach the end of the aperture entries i.e. the left overs at the end of the ring past the last marker
-						if(itr->s >= Position || itr==(ApertureList.end()-1))
+						if(itr->s >= Position || itr == (ApertureList.end() - 1))
 						{
 							/**
-							* 3 possible cases
-							* 1: First entry in the element (or accelerator)
-							* 2: Entries within an element
-							* 3: Final entry within an element (or accelerator)
-							*/
+							 * 3 possible cases
+							 * 1: First entry in the element (or accelerator)
+							 * 2: Entries within an element
+							 * 3: Final entry within an element (or accelerator)
+							 */
 							std::vector<ap> ThisElementAperture;
 
 							//Deal with the first entry for this element
 							if(itr == ApertureList.begin())
 							{
-								std::cout << "At first element " << (*comp)->GetQualifiedName() << " getting aperture interpolation from last element" << std::endl;
+								std::cout << "At first element " << (*comp)->GetQualifiedName()
+										  << " getting aperture interpolation from last element" << std::endl;
 
 								//got the initial point
-								itr = ApertureList.end()-1;
+								itr = ApertureList.end() - 1;
 
 								ap tempAp;
 								tempAp.s = 0;
@@ -297,8 +301,8 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							}
 
 							//Now add in all entries that exist within the length of the element
-							while(itr->s <= (Position + ElementLength) )
-								//while(itr->s <= (Position + ElementLength))
+							while(itr->s <= (Position + ElementLength))
+							//while(itr->s <= (Position + ElementLength))
 							{
 								ThisElementAperture.push_back(*itr);
 
@@ -314,7 +318,8 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							//Deal with the very last element entry
 							if(itr == ApertureList.end())
 							{
-								std::cout << "At last element " << (*comp)->GetQualifiedName() << " getting aperture interpolation from first element" << std::endl;
+								std::cout << "At last element " << (*comp)->GetQualifiedName()
+										  << " getting aperture interpolation from first element" << std::endl;
 								itr = ApertureList.begin();
 
 								ap tempAp;
@@ -334,8 +339,8 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							}
 
 							/**
-							* Now move on to assigning the correct type of aperture.
-							*/
+							 * Now move on to assigning the correct type of aperture.
+							 */
 
 							bool ZeroEntry = false;
 							size_t NegativeCount = 0;
@@ -343,42 +348,42 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							//If we have an entry at 0 (or very close to), and also an entry at negative values, we can discard the negative entry
 							for(size_t itAp = 0; itAp < ThisElementAperture.size(); itAp++)
 							{
-								if( fequal(ThisElementAperture[itAp].s - Position, 0.0, 1e-7) )
+								if(fequal(ThisElementAperture[itAp].s - Position, 0.0, 1e-7))
 								{
 									ZeroEntry = true;
 									ThisElementAperture[itAp].s = Position;
 								}
 
-								if( ThisElementAperture[itAp].s - Position < 0 )
+								if(ThisElementAperture[itAp].s - Position < 0)
 								{
 									NegativeCount++;
 								}
 							}
 
-							if(NegativeCount!=0 && ZeroEntry)
+							if(NegativeCount != 0 && ZeroEntry)
 							{
 								//Delete the first entry (negative)
 								ThisElementAperture.erase(ThisElementAperture.begin());
 								NegativeCount--;
 							}
 
-							while(NegativeCount > 1 )
+							while(NegativeCount > 1)
 							{
 								//Delete the first entry (negative)
 								ThisElementAperture.erase(ThisElementAperture.begin());
 								NegativeCount--;
 							}
 
-							if( fequal(ThisElementAperture[0].s - Position, 0.0, 5e-7) )
+							if(fequal(ThisElementAperture[0].s - Position, 0.0, 5e-7))
 							{
 								ThisElementAperture[0].s = Position;
 							}
 
 							/**
-							* Check if all values are constant
-							*/
-							bool ap1=true,ap2=true,ap3=true,ap4=true,circle=true;
-							double ap1p=0,ap2p=0,ap3p=0,ap4p=0;
+							 * Check if all values are constant
+							 */
+							bool ap1 = true, ap2 = true, ap3 = true, ap4 = true, circle = true;
+							double ap1p = 0, ap2p = 0, ap3p = 0, ap4p = 0;
 							bool ApTypeChange = false;
 							ApertureClass_t ApTypeToAdd;
 
@@ -429,7 +434,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							{
 								InterpolatedAperture* apInterpolated = new InterpolatedAperture();
 
-								for(size_t n=0; n < ThisElementAperture.size(); n++ )
+								for(size_t n = 0; n < ThisElementAperture.size(); n++)
 								{
 									//ThisElementAperture[n].s -= Position;
 									apInterpolated->ApertureEntry.s = ThisElementAperture[n].s - Position;
@@ -468,8 +473,13 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 									}
 									else
 									{
-										std::cerr << "Drift: constant type aperture Class bug: " << (*comp)->GetQualifiedName() << " at " << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
-										std::cerr << "Trying to make an INTERPOLATED APERTURE class of a type that does not exist currently!" << std::endl;
+										std::cerr << "Drift: constant type aperture Class bug: "
+												  << (*comp)->GetQualifiedName() << " at "
+												  << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
+										std::cerr
+											<<
+											"Trying to make an INTERPOLATED APERTURE class of a type that does not exist currently!"
+											<< std::endl;
 										exit(EXIT_FAILURE);
 									}
 									(*comp)->SetAperture(aper);
@@ -485,7 +495,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 									bool octagon = false;
 									bool rectellipse = false;
 
-									for(size_t n=0; n < ThisElementAperture.size(); n++ )
+									for(size_t n = 0; n < ThisElementAperture.size(); n++)
 									{
 										ThisElementAperture[n].s -= Position;
 
@@ -533,8 +543,13 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 										}
 										else
 										{
-											std::cerr << "Drift: changing type interpolated aperture Class bug: " << (*comp)->GetQualifiedName() << " at " << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
-											std::cerr << "Trying to make an INTERPOLATED APERTURE class of a type that does not exist currently!: " << ThisElementAperture[n].ApType << std::endl;
+											std::cerr << "Drift: changing type interpolated aperture Class bug: "
+													  << (*comp)->GetQualifiedName() << " at "
+													  << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
+											std::cerr
+												<<
+												"Trying to make an INTERPOLATED APERTURE class of a type that does not exist currently!: "
+												<< ThisElementAperture[n].ApType << std::endl;
 											exit(EXIT_FAILURE);
 										}
 
@@ -546,8 +561,13 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 											}
 											else
 											{
-												std::cerr << "Drift: changing type interpolated aperture Class bug: " << (*comp)->GetQualifiedName() << " at " << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
-												std::cerr << "Trying to connect octagon apertures with types that are not compatible and no default aperture class is set." << std::endl;
+												std::cerr << "Drift: changing type interpolated aperture Class bug: "
+														  << (*comp)->GetQualifiedName() << " at "
+														  << (*comp)->GetComponentLatticePosition() << "m" << std::endl;
+												std::cerr
+													<<
+													"Trying to connect octagon apertures with types that are not compatible and no default aperture class is set."
+													<< std::endl;
 												exit(EXIT_FAILURE);
 											}
 										}
@@ -585,7 +605,8 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 								}
 								else
 								{
-									std::cerr << "Trying to create an unknown aperture type! ApTypeToAdd = "<< ApTypeToAdd << std::endl;
+									std::cerr << "Trying to create an unknown aperture type! ApTypeToAdd = "
+											  << ApTypeToAdd << std::endl;
 									exit(EXIT_FAILURE);
 								}
 								(*comp)->SetAperture(aper);
@@ -595,7 +616,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 						}
 					}
 
-				}//End of drifts
+				} //End of drifts
 			}
 		}
 
@@ -606,7 +627,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 			*log << std::setw(10) << std::left << (*comp)->GetLength();
 			*log << std::setw(10) << std::left << (*comp)->GetComponentLatticePosition();
 
-			if ((*comp)->GetAperture() != nullptr)
+			if((*comp)->GetAperture() != nullptr)
 			{
 				(*comp)->GetAperture()->printout(*log);
 			}
@@ -616,10 +637,9 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 	}
 }
 
-
-void ApertureConfiguration::SetLogFile (ostream& os)
+void ApertureConfiguration::SetLogFile(ostream& os)
 {
-	log=&os;
+	log = &os;
 }
 
 void ApertureConfiguration::EnableLogging(bool flg)
@@ -630,9 +650,9 @@ void ApertureConfiguration::EnableLogging(bool flg)
 void ApertureConfiguration::DeleteAllApertures(AcceleratorModel* Model)
 {
 	std::vector<AcceleratorComponent*> Elements;
-	int nElements = Model->ExtractTypedElements(Elements,"*");
+	int nElements = Model->ExtractTypedElements(Elements, "*");
 
-	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp!=Elements.end(); comp++)
+	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp != Elements.end(); comp++)
 	{
 		if((*comp)->GetAperture() != nullptr)
 		{

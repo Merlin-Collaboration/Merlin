@@ -22,47 +22,51 @@ using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
 /*
-* This function adds materials by mass fraction
-* i.e. if 5% of the material by mass is element x, the double here is 0.05, etc.
-*/
-bool CompositeMaterial::AddMaterialByMassFraction(Material* m ,double f)
+ * This function adds materials by mass fraction
+ * i.e. if 5% of the material by mass is element x, the double here is 0.05, etc.
+ */
+bool CompositeMaterial::AddMaterialByMassFraction(Material* m, double f)
 {
 	if(AssembledByNumber)
 	{
-		std::cerr << "Already added a material to this mixture by number fraction. Adding by Mass fraction will break things." << std::endl;
+		std::cerr
+			<< "Already added a material to this mixture by number fraction. Adding by Mass fraction will break things."
+			<< std::endl;
 		return false;
 	}
 	/*
-	* Internally we want to keep track of the number density in order to generate a random nucleus for scattering
-	* The other parameters are constant for the material.
-	*/
-	std::pair<double,double> p;
-	p.first = 0.0;	//Number fraction (currently unknown)
-	p.second = f;	//Mass fraction
+	 * Internally we want to keep track of the number density in order to generate a random nucleus for scattering
+	 * The other parameters are constant for the material.
+	 */
+	std::pair<double, double> p;
+	p.first = 0.0;  //Number fraction (currently unknown)
+	p.second = f;   //Mass fraction
 
-	std::pair<std::map<Material*,std::pair<double,double> >::iterator,bool> test;
-	test = MixtureMap.insert(std::pair<Material*,std::pair<double,double> >(m,p));
+	std::pair<std::map<Material*, std::pair<double, double> >::iterator, bool> test;
+	test = MixtureMap.insert(std::pair<Material*, std::pair<double, double> >(m, p));
 	AssembledByMass = true;
 	return test.second;
 }
 
 /*
-* This function adds materials by number density fraction
-* i.e. if 5% of the component atoms are element m, the double here is 0.05, etc.
-*/
-bool CompositeMaterial::AddMaterialByNumberFraction(Material* m,double f)
+ * This function adds materials by number density fraction
+ * i.e. if 5% of the component atoms are element m, the double here is 0.05, etc.
+ */
+bool CompositeMaterial::AddMaterialByNumberFraction(Material* m, double f)
 {
 	if(AssembledByMass)
 	{
-		std::cerr << "Already added a material to this mixture by mass fraction. Adding by number fraction will break things." << std::endl;
+		std::cerr
+			<< "Already added a material to this mixture by mass fraction. Adding by number fraction will break things."
+			<< std::endl;
 		return false;
 	}
-	std::pair<double,double> p;
-	p.first = f;	//Number fraction
-	p.second = 0.0;	//Mass fraction (currently unknown)
+	std::pair<double, double> p;
+	p.first = f;    //Number fraction
+	p.second = 0.0; //Mass fraction (currently unknown)
 
-	std::pair<std::map<Material*,std::pair<double,double> >::iterator,bool> test;
-	test = MixtureMap.insert(std::pair<Material*, std::pair<double,double> >(m,p));
+	std::pair<std::map<Material*, std::pair<double, double> >::iterator, bool> test;
+	test = MixtureMap.insert(std::pair<Material*, std::pair<double, double> >(m, p));
 	AssembledByNumber = true;
 	return test.second;
 }
@@ -70,13 +74,13 @@ bool CompositeMaterial::AddMaterialByNumberFraction(Material* m,double f)
 double CompositeMaterial::CalculateElectronDensity()
 {
 	/*
-	* 1: Get weighted mean of the AtomicNumber
-	* 2: Get weighted mean of the AtomicMass
-	*/
+	 * 1: Get weighted mean of the AtomicNumber
+	 * 2: Get weighted mean of the AtomicMass
+	 */
 	double Z = 0.0;
 	double A = 0.0;
 
-	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
@@ -84,35 +88,36 @@ double CompositeMaterial::CalculateElectronDensity()
 		A += MaterialIt->second.first * MaterialIt->first->GetAtomicMass();
 		MaterialIt++;
 	}
-	return Z * Avogadro * GetDensity() * 0.001 / (A * pow(centimeter,3)); // n_e m^-3 (1e6 conversion from cm^3)
+	return Z * Avogadro * GetDensity() * 0.001 / (A * pow(centimeter, 3)); // n_e m^-3 (1e6 conversion from cm^3)
 }
 
 //returns the Plasma energy in GeV
 double CompositeMaterial::CalculatePlasmaEnergy()
 {
-	return (PlanckConstantBar * sqrt((ElectronDensity * pow(ElectronCharge,2)) / (ElectronMass * FreeSpacePermittivity)))/ElectronCharge*eV;
+	return (PlanckConstantBar * sqrt((ElectronDensity * pow(ElectronCharge, 2)) / (ElectronMass
+		   * FreeSpacePermittivity))) / ElectronCharge * eV;
 }
 
 double CompositeMaterial::CalculateMeanExcitationEnergy()
 {
 	/*
-	* Here we follow the form given in:
-	* "Evaluation of the collision stopping power of elements and compounds for electrons and positrons, Stephen M. Seltzer, Martin J. Berger"
-	* The International Journal of Applied Radiation and Isotopes
-	* Volume 33, Issue 11, November 1982, Pages 1189–1218
-	* http://dx.doi.org/10.1016/0020-708X(82)90244-7
-	* Note eq 10,11
-	* Also note: "The recommendation in Table 6 is to use I-values for these other constituents which are 13% larger than the corresponding I-values for condensed elemental substances in Table 2"
-	* Thus we use I -> 1.13*Ii
-	*
-	* The below is not valid for organic compounds with H,C,N,O,F,Cl.
-	* Look at the values in Table 6 of the above paper instead.
-	*/
+	 * Here we follow the form given in:
+	 * "Evaluation of the collision stopping power of elements and compounds for electrons and positrons, Stephen M. Seltzer, Martin J. Berger"
+	 * The International Journal of Applied Radiation and Isotopes
+	 * Volume 33, Issue 11, November 1982, Pages 1189–1218
+	 * http://dx.doi.org/10.1016/0020-708X(82)90244-7
+	 * Note eq 10,11
+	 * Also note: "The recommendation in Table 6 is to use I-values for these other constituents which are 13% larger than the corresponding I-values for condensed elemental substances in Table 2"
+	 * Thus we use I -> 1.13*Ii
+	 *
+	 * The below is not valid for organic compounds with H,C,N,O,F,Cl.
+	 * Look at the values in Table 6 of the above paper instead.
+	 */
 
 	double ISum = 0.0;
 	double ZA = 0.0;
 
-	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
@@ -120,25 +125,25 @@ double CompositeMaterial::CalculateMeanExcitationEnergy()
 		double Z = MaterialIt->first->GetAtomicNumber();
 		double I_el = 1.13 * MaterialIt->first->GetMeanExcitationEnergy();
 		double w = MaterialIt->second.second;
-		ZA += w * Z/A;
-		ISum += w * (Z/A) * log(I_el);
+		ZA += w * Z / A;
+		ISum += w * (Z / A) * log(I_el);
 
 		MaterialIt++;
 	}
-	return exp(ISum/ZA);
+	return exp(ISum / ZA);
 }
 
 double CompositeMaterial::CalculateSixtrackdEdx()
 {
 	/*
-	* pdg states for a mixture the following is an approximation:
-	* dE/dx = \sum (w_i * (dE/dx)_i)
-	* where w_i is the mass fraction
-	*/
+	 * pdg states for a mixture the following is an approximation:
+	 * dE/dx = \sum (w_i * (dE/dx)_i)
+	 * where w_i is the mass fraction
+	 */
 
 	double dEdx = 0.0;
 
-	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
@@ -151,26 +156,26 @@ double CompositeMaterial::CalculateSixtrackdEdx()
 double CompositeMaterial::CalculateRadiationLength()
 {
 	/*
-	* pdg states for a mixture the following is an appoximation:
-	* 1/X_0 = \sum (w_i / X_i)
-	* where w_i is the mass fraction
-	*/
+	 * pdg states for a mixture the following is an appoximation:
+	 * 1/X_0 = \sum (w_i / X_i)
+	 * where w_i is the mass fraction
+	 */
 
 	double X0 = 0.0;
 
-	std::map<Material*, std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
 		X0 += (MaterialIt->second.second / MaterialIt->first->GetRadiationLength());
 		MaterialIt++;
 	}
-	return 1.0/X0;
+	return 1.0 / X0;
 }
 
 /*
-* Set parameters
-*/
+ * Set parameters
+ */
 void CompositeMaterial::SetName(string p)
 {
 	Name = p;
@@ -200,12 +205,7 @@ void CompositeMaterial::SetElectronDensity(double p)
 {
 	ElectronDensity = p;
 }
-/*
-void CompositeMaterial::SetElectronCriticalEnergy(double p)
-{
-	ElectronCriticalEnergy = p;
-}
-*/
+
 void CompositeMaterial::SetMeanExcitationEnergy(double p)
 {
 	MeanExcitationEnergy = p;
@@ -222,8 +222,8 @@ void CompositeMaterial::SetSixtrackdEdx(double p)
 }
 
 /*
-* Accessors
-*/
+ * Accessors
+ */
 string CompositeMaterial::GetName() const
 {
 	return Name;
@@ -246,7 +246,7 @@ double CompositeMaterial::GetRadiationLength() const
 
 double CompositeMaterial::GetRadiationLengthInM() const
 {
-	return X0*0.001/Density;
+	return X0 * 0.001 / Density;
 }
 
 double CompositeMaterial::GetDensity() const
@@ -258,12 +258,7 @@ double CompositeMaterial::GetElectronDensity() const
 {
 	return ElectronDensity;
 }
-/*
-double CompositeMaterial::GetElectronCriticalEnergy() const
-{
-	return ElectronCriticalEnergy;
-}
-*/
+
 double CompositeMaterial::GetMeanExcitationEnergy() const
 {
 	return MeanExcitationEnergy;
@@ -282,42 +277,36 @@ double CompositeMaterial::GetSixtrackdEdx() const
 //Random element
 double CompositeMaterial::GetAtomicNumber() const
 {
-	//~ return CurrentMaterial->GetAtomicNumber();
 	return AtomicNumber;
 }
 
 //Random element
 double CompositeMaterial::GetAtomicMass() const
 {
-	//~ return CurrentMaterial->GetAtomicMass();
 	return AtomicMass;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackTotalNucleusCrossSection() const
 {
-	//~ return CurrentMaterial->GetSixtrackTotalNucleusCrossSection();
 	return sigma_pN_total;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackInelasticNucleusCrossSection() const
 {
-	//~ return CurrentMaterial->GetSixtrackInelasticNucleusCrossSection();
 	return sigma_pN_inelastic;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackRutherfordCrossSection() const
 {
-	//~ return CurrentMaterial->GetSixtrackRutherfordCrossSection();
 	return sigma_Rutherford;
 }
 
 //Random element
 double CompositeMaterial::GetSixtrackNuclearSlope() const
 {
-	//~ return CurrentMaterial->GetSixtrackNuclearSlope();
 	return b_N;
 }
 
@@ -331,11 +320,11 @@ bool CompositeMaterial::VerifyMaterial() const
 	bool verification = true;
 
 	//Check the mixture related bits
-	if(GetName().size() <1)
+	if(GetName().size() < 1)
 	{
 		return false;
 	}
-	if(GetSymbol().size() <1)
+	if(GetSymbol().size() < 1)
 	{
 		return false;
 	}
@@ -345,50 +334,52 @@ bool CompositeMaterial::VerifyMaterial() const
 	double MassFraction = 0;
 	double NumberFraction = 0;
 
-	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
 		//Pull the number and mass fractions
-		NumberFraction+=MaterialIt->second.first;
-		MassFraction+=MaterialIt->second.second;
+		NumberFraction += MaterialIt->second.first;
+		MassFraction += MaterialIt->second.second;
 
 		bool test = MaterialIt->first->VerifyMaterial();
 		if(test == false)
 		{
 			verification = false;
-			std::cerr << "Material " << GetName() << " subcomponent: "  << MaterialIt->first->GetName() << " failed to verify." << std::endl;
+			std::cerr << "Material " << GetName() << " subcomponent: "  << MaterialIt->first->GetName()
+					  << " failed to verify." << std::endl;
 		}
 		MaterialIt++;
 	}
 
-	if(GetConductivity() <=0)
+	if(GetConductivity() <= 0)
 	{
 		std::cerr << "Failed to verify Conductivity for " << GetName() << ": " << GetConductivity() << std::endl;
 		verification = false;
 	}
-	if(GetRadiationLength() <=0)
+	if(GetRadiationLength() <= 0)
 	{
 		std::cerr << "Failed to verify RadiationLength for " << GetName() << ": " << GetRadiationLength() << std::endl;
 		verification = false;
 	}
-	if(GetDensity() <=0)
+	if(GetDensity() <= 0)
 	{
 		std::cerr << "Failed to verify Density for " << GetName() << ": " << GetDensity() << std::endl;
 		verification = false;
 	}
-	if(GetElectronDensity() <=0)
+	if(GetElectronDensity() <= 0)
 	{
 		std::cerr << "Failed to verify ElectronDensity for " << GetName() << ": " << GetConductivity() << std::endl;
 		verification = false;
 	}
-	//if(GetElectronCriticalEnergy() <=0){std::cerr << "Failed to verify ElectronCriticalEnergy for " << GetName() << ": " << GetElectronCriticalEnergy() << std::endl; verification = false;}
-	if(GetMeanExcitationEnergy() <=0)
+
+	if(GetMeanExcitationEnergy() <= 0)
 	{
-		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy() << std::endl;
+		std::cerr << "Failed to verify MeanExcitationEnergy for " << GetName() << ": " << GetMeanExcitationEnergy()
+				  << std::endl;
 		verification = false;
 	}
-	if(GetPlasmaEnergy() <=0)
+	if(GetPlasmaEnergy() <= 0)
 	{
 		std::cerr << "Failed to verify PlasmaEnergy for " << GetName() << ": " << GetPlasmaEnergy() << std::endl;
 		verification = false;
@@ -413,7 +404,7 @@ bool CompositeMaterial::VerifyMaterial() const
 
 bool CompositeMaterial::Assemble()
 {
-	std::map<Material*,std::pair<double,double> >::iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	unsigned int count = MixtureMap.size();
 
@@ -421,11 +412,7 @@ bool CompositeMaterial::Assemble()
 	std::vector<double> FractionVector;
 	FractionVector.reserve(count);
 
-	double CurrentFraction,Total = 0.0;
-	/*
-	* MassFraction = NumberFraction * AtomicNumber
-	* NumberFraction = MassFraction / AtomicNumber
-	*/
+	double CurrentFraction, Total = 0.0;
 
 	if(AssembledByMass)
 	{
@@ -474,18 +461,17 @@ bool CompositeMaterial::Assemble()
 
 Material* CompositeMaterial::SelectRandomMaterial()
 {
-	double x = RandomNG::uniform(0,1);
-	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	double x = RandomNG::uniform(0, 1);
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(x > 0)
 	{
-		x-= MaterialIt->second.first;
+		x -= MaterialIt->second.first;
 		if(x > 0)
 		{
 			MaterialIt++;
 		}
 	}
-	//std::cout << "x = " << x << "\t material first =" << MaterialIt->first->GetName() << "\t material second =" << MaterialIt->second.first << std::endl;
 	CurrentMaterial = MaterialIt->first;
 	return CurrentMaterial;
 }
@@ -500,12 +486,12 @@ bool CompositeMaterial::IsMixture() const
 	return true;
 }
 
-vector< pair<string,double> > CompositeMaterial::GetConstituentElements()
+vector<pair<string, double> > CompositeMaterial::GetConstituentElements()
 {
-	std::map< Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 
-	vector< pair<string,double> > elements;
-	std::pair<string,double> test;
+	vector<pair<string, double> > elements;
+	std::pair<string, double> test;
 
 	for(MaterialIt = MixtureMap.begin(); MaterialIt != MixtureMap.end(); ++MaterialIt)
 	{
@@ -527,12 +513,10 @@ void CompositeMaterial::CalculateAllWeightedVariables()
 
 	double wb_n = 0.0, wsig_R = 0.0, wsig_tot = 0.0, wsig_E = 0.0, wsig_I = 0.0, wA = 0.0, wZ = 0.0;
 
-	std::map<Material*,std::pair<double,double> >::const_iterator MaterialIt;
+	std::map<Material*, std::pair<double, double> >::const_iterator MaterialIt;
 	MaterialIt = MixtureMap.begin();
 	while(MaterialIt != MixtureMap.end())
 	{
-		//value += mass_fraction (MaterialIt->second.second) * element_value
-		//~ value += (MaterialIt->second.second * MaterialIt->first->GetValue());
 		wA += (MaterialIt->second.second * MaterialIt->first->GetAtomicMass());
 		wZ += (MaterialIt->second.second * MaterialIt->first->GetAtomicNumber());
 		wb_n += (MaterialIt->second.second * MaterialIt->first->GetSixtrackNuclearSlope());

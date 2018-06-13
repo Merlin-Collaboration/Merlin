@@ -26,7 +26,9 @@
 class IntegrateEigenvector
 {
 public:
-	virtual ~IntegrateEigenvector() {}
+	virtual ~IntegrateEigenvector()
+	{
+	}
 	double Integral(ComplexVector& Ek, SectorBend* sb, double p0);
 
 protected:
@@ -40,19 +42,23 @@ protected:
 	virtual double func(double s) = 0;
 };
 
-class IntegrateZeroGradient : public IntegrateEigenvector
+class IntegrateZeroGradient: public IntegrateEigenvector
 {
 public:
-	virtual ~IntegrateZeroGradient() {}
+	virtual ~IntegrateZeroGradient()
+	{
+	}
 	IntegrateZeroGradient();
 protected:
 	virtual double func(double s);
 };
 
-class IntegrateWithGradient : public IntegrateEigenvector
+class IntegrateWithGradient: public IntegrateEigenvector
 {
 public:
-	virtual ~IntegrateWithGradient() {}
+	virtual ~IntegrateWithGradient()
+	{
+	}
 	IntegrateWithGradient();
 protected:
 	virtual double func(double s);
@@ -67,7 +73,7 @@ public:
 	double DampingConstant(int n);
 	double Tune(int n);
 	double SynchronousTime();
-	double BeamMoment(int i, int j, int ncpt=0);
+	double BeamMoment(int i, int j, int ncpt = 0);
 
 	void CalculateDampingConstants();
 	void CalculateEmittance();
@@ -83,4 +89,3 @@ private:
 };
 
 #endif
-

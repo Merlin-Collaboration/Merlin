@@ -13,42 +13,42 @@
 #include "GeometryPatch.h"
 
 /**
-* A special ComponentFrame which represents a pure geometry patch.
-* There is no AcceleratorComponent associated with this frame.
-*
-* **NOTE** This his is a bit of a kludge, and there is probably a better
-*         way to do this!
-*/
+ * A special ComponentFrame which represents a pure geometry patch.
+ * There is no AcceleratorComponent associated with this frame.
+ *
+ * **NOTE** This his is a bit of a kludge, and there is probably a better
+ *         way to do this!
+ */
 
-class PatchFrame : public ComponentFrame
+class PatchFrame: public ComponentFrame
 {
 public:
 
 	/**
-	*	Constructor
-	*/
-	explicit PatchFrame (GeometryPatch* pg, const string& id = "");
+	 *	Constructor
+	 */
+	explicit PatchFrame(GeometryPatch* pg, const string& id = "");
 
 	/**
-	*	Copy constructor.
-	*/
-	PatchFrame (const PatchFrame& rhs);
+	 *	Copy constructor.
+	 */
+	PatchFrame(const PatchFrame& rhs);
 
 	/**
-	* Destructor
-	*/
-	virtual ~PatchFrame ();
-	virtual const string& GetType () const
+	 * Destructor
+	 */
+	virtual ~PatchFrame();
+	virtual const string& GetType() const
 	{
 		_TYPESTR(PatchFrame)
 	}
 
-	virtual const string& GetName () const
+	virtual const string& GetName() const
 	{
 		return LatticeFrame::GetName();
 	}
 
-	virtual ModelElement* Copy () const
+	virtual ModelElement* Copy() const
 	{
 		return new PatchFrame(*this);
 	}
@@ -73,14 +73,14 @@ private:
 	GeometryPatch* itsPatch;
 };
 
-inline PatchFrame::PatchFrame (GeometryPatch* pg, const string& id)
-	: ComponentFrame(nullptr,id), itsPatch(pg)
+inline PatchFrame::PatchFrame(GeometryPatch* pg, const string& id) :
+	ComponentFrame(nullptr, id), itsPatch(pg)
 {
 	SetGeometry(itsPatch);
 }
 
-inline PatchFrame::PatchFrame (const PatchFrame& rhs)
-	: ComponentFrame(rhs)
+inline PatchFrame::PatchFrame(const PatchFrame& rhs) :
+	ComponentFrame(rhs)
 {
 	itsPatch = rhs.itsPatch ? new GeometryPatch(*rhs.itsPatch) : nullptr;
 	SetGeometry(itsPatch);

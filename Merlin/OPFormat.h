@@ -17,78 +17,79 @@ using std::ios_base;
 using std::ostream;
 
 /**
-*	Floating Point Format. Utility class for formatting and
-*	outputting floating point numbers to an ostream, without
-*	modifying the state of the ostream.
-*/
+ *	Floating Point Format. Utility class for formatting and
+ *	outputting floating point numbers to an ostream, without
+ *	modifying the state of the ostream.
+ */
 
 class OPFormat
 {
 public:
 
-	explicit OPFormat (int p = 16)
-		:prc(p),wdt(0),fmt(),adjust(ios_base::right),allowovf(true)
-	{}
-
-	OPFormat& scientific ()
+	explicit OPFormat(int p = 16) :
+		prc(p), wdt(0), fmt(), adjust(ios_base::right), allowovf(true)
 	{
-		fmt=ios_base::scientific;
+	}
+
+	OPFormat& scientific()
+	{
+		fmt = ios_base::scientific;
 		return *this;
 	}
 
-	OPFormat& fixed ()
+	OPFormat& fixed()
 	{
-		fmt=ios_base::fixed;
+		fmt = ios_base::fixed;
 		return *this;
 	}
 
-	OPFormat& general ()
+	OPFormat& general()
 	{
 		fmt &= ~(ios_base::scientific & ios_base::fixed);
 		return *this;
 	}
 
-	OPFormat& precision (int p)
+	OPFormat& precision(int p)
 	{
-		prc=p;
+		prc = p;
 		return *this;
 	}
 
-	OPFormat& width (int w)
+	OPFormat& width(int w)
 	{
-		wdt=w;
+		wdt = w;
 		return *this;
 	}
 
-	OPFormat& left ()
+	OPFormat& left()
 	{
-		adjust=ios_base::left;
+		adjust = ios_base::left;
 		return *this;
 	}
 
-	OPFormat& right ()
+	OPFormat& right()
 	{
-		adjust=ios_base::right;
+		adjust = ios_base::right;
 		return *this;
 	}
 
-	OPFormat& internal ()
+	OPFormat& internal()
 	{
-		adjust=ios_base::internal;
+		adjust = ios_base::internal;
 		return *this;
 	}
 
-	OPFormat& overflow (bool flg)
+	OPFormat& overflow(bool flg)
 	{
-		allowovf=flg;
+		allowovf = flg;
 		return *this;
 	}
 
-	string operator () (double val) const;
-	string operator () (int val) const;
-	string operator () (const string& val) const;
+	string operator ()(double val) const;
+	string operator ()(int val) const;
+	string operator ()(const string& val) const;
 
-	friend ostream& operator << (ostream& os, const OPFormat& fmt);
+	friend ostream& operator <<(ostream& os, const OPFormat& fmt);
 
 	int prc;
 	int wdt;

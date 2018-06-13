@@ -36,9 +36,3 @@ bool MuonBunch::IsStable() const
 {
 	return false;
 }
-/*
-int MuonBunch::Scatter(PSvector& p,double x,double E0,const Aperture* ap)
-{
-	return 0;
-} //End of ScatterMuon
-*/

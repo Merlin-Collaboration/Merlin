@@ -10,7 +10,7 @@
 #include "ParticleBunch.h"
 #include "ParticleTracker.h"
 
-#define BEAMENERGY 5.0*GeV
+#define BEAMENERGY 5.0 * GeV
 
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
@@ -27,7 +27,6 @@ int main()
 
 	AcceleratorModel* theModel = madi.ConstructModel();
 
-
 	// Construct a bunch of particles
 	// to track through the lattice.
 	// Here we just set up a bunch of 20 particles
@@ -35,23 +34,21 @@ int main()
 	ParticleBunch* theBunch = new ParticleBunch(BEAMENERGY);
 
 	PSvector p(0);
-	for(int xi=1; xi<=20; xi++)
+	for(int xi = 1; xi <= 20; xi++)
 	{
 		p.x() = xi * 0.003;
 		theBunch->AddParticle(p);
 	}
 
-
 	// Construct a ParticleTracker to perform the tracking
 	ParticleTracker tracker(theModel->GetBeamline(), theBunch);
-
 
 	// Do the tracking, writing the phase-space co-ordinates
 	// of each particle in the bunch to a file after each turn
 	ofstream trackingLog("Tracking.dat");
-	for(int turn=0; turn<200; turn++)
+	for(int turn = 0; turn < 200; turn++)
 	{
-		if(turn==0)
+		if(turn == 0)
 		{
 			tracker.Run();
 		}
@@ -66,7 +63,7 @@ int main()
 	delete theBunch;
 	delete theModel;
 
-	cout<<"Finished!"<<endl;
+	cout << "Finished!" << endl;
 
 	return 0;
 }

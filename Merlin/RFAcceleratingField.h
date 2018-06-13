@@ -14,154 +14,154 @@
 #include "EMField.h"
 
 /**
-*	An RF accelerating field. An RF accelerating field is
-*	characterised by a sinusoidal electric field,
-*	which is completely defined by its frequency, amplitude
-*	and phase. RFAcceleratingField implements the basic
-*	defining attributes for sinusoidal RF fields.
-*/
+ *	An RF accelerating field. An RF accelerating field is
+ *	characterised by a sinusoidal electric field,
+ *	which is completely defined by its frequency, amplitude
+ *	and phase. RFAcceleratingField implements the basic
+ *	defining attributes for sinusoidal RF fields.
+ */
 
-class RFAcceleratingField : public EMField
+class RFAcceleratingField: public EMField
 {
 public:
 
 	/**
-	*	Constructor taking the amplitude (Epk), the frequency
-	*	(f) and the phase of the field.
-	*/
-	RFAcceleratingField (double Epk, double f, double phase = 0);
+	 *	Constructor taking the amplitude (Epk), the frequency
+	 *	(f) and the phase of the field.
+	 */
+	RFAcceleratingField(double Epk, double f, double phase = 0);
 
 	/**
-	*	Set the frequency.
-	*/
-	void SetFrequency (double f);
+	 *	Set the frequency.
+	 */
+	void SetFrequency(double f);
 
 	/**
-	*	Returns the frequency.
-	*	@return Frequency
-	*/
-	double GetFrequency () const;
+	 *	Returns the frequency.
+	 *	@return Frequency
+	 */
+	double GetFrequency() const;
 
 	/**
-	*	Set the phase.
-	*/
-	void SetPhase (double phase);
+	 *	Set the phase.
+	 */
+	void SetPhase(double phase);
 
 	/**
-	*	Returns the phase.
-	*	@return Phase
-	*/
-	double GetPhase () const;
+	 *	Returns the phase.
+	 *	@return Phase
+	 */
+	double GetPhase() const;
 
 	/**
-	*	Set the amplitude.
-	*/
-	void SetAmplitude (double Epk);
+	 *	Set the amplitude.
+	 */
+	void SetAmplitude(double Epk);
 
 	/**
-	*	Returns the amplitude.
-	*	@return Amplitude
-	*/
-	double GetAmplitude () const;
+	 *	Returns the amplitude.
+	 *	@return Amplitude
+	 */
+	double GetAmplitude() const;
 
 	/**
-	*	Calculate the Ez component.
-	*/
-	virtual double Ez (double z, double t) const = 0;
+	 *	Calculate the Ez component.
+	 */
+	virtual double Ez(double z, double t) const = 0;
 
 	/**
-	*	Returns the wavelength of the RF (in meter).
-	*	@return Wavelength of RF (m)
-	*/
-	double GetWavelength () const;
+	 *	Returns the wavelength of the RF (in meter).
+	 *	@return Wavelength of RF (m)
+	 */
+	double GetWavelength() const;
 
 	/**
-	*	Returns the k value (=2pi/wavelength) for the field.
-	*	@return Wavenumber k (\f$ 2\pi/\lambda \f$) for the field
-	*/
-	double GetK () const;
+	 *	Returns the k value (=2pi/wavelength) for the field.
+	 *	@return Wavenumber k (\f$ 2\pi/\lambda \f$) for the field
+	 */
+	double GetK() const;
 
 	/**
-	* Set acceleration mode
-	*/
-	void SetFullAcceleration (bool full_acceln);
+	 * Set acceleration mode
+	 */
+	void SetFullAcceleration(bool full_acceln);
 
 	/**
-	* Get acceleration mode
-	*/
-	bool FullAcceleration () const;
+	 * Get acceleration mode
+	 */
+	bool FullAcceleration() const;
 
 protected:
 
 	//	Frequency (2*pi*f) in radian/s.
 	/**
-	*   Frequency (\f$ 2\pi f \f$) in \f$ \frac{\mathrm{rad}}{s} \f$
-	*/
+	 *   Frequency (\f$ 2\pi f \f$) in \f$ \frac{\mathrm{rad}}{s} \f$
+	 */
 	double w;
 
 	/**
-	*	Peak electric field.
-	*/
+	 *	Peak electric field.
+	 */
 	double E0;
-
 
 	//	Arbitrary phase angle (radian)
 	/**
-	*   Arbitrary phase angle (\f$ \mathrm{rad} \f$)
-	*/
+	 *   Arbitrary phase angle (\f$ \mathrm{rad} \f$)
+	 */
 	double phi;
 
 	bool full_acceleration;
 };
 
 /**
-* Class RFAcceleratingField
-*/
+ * Class RFAcceleratingField
+ */
 
-inline RFAcceleratingField::RFAcceleratingField (double Epk, double f, double phase)
-	: w(twoPi*f),E0(Epk),phi(phase),full_acceleration(true)
-{}
-
-inline void RFAcceleratingField::SetFrequency (double f)
+inline RFAcceleratingField::RFAcceleratingField(double Epk, double f, double phase) :
+	w(twoPi * f), E0(Epk), phi(phase), full_acceleration(true)
 {
-	w=twoPi*f;
 }
 
-inline double RFAcceleratingField::GetFrequency () const
+inline void RFAcceleratingField::SetFrequency(double f)
 {
-	return w/twoPi;
+	w = twoPi * f;
 }
 
-inline void RFAcceleratingField::SetPhase (double phase)
+inline double RFAcceleratingField::GetFrequency() const
 {
-	phi=phase;
+	return w / twoPi;
 }
 
-inline double RFAcceleratingField::GetPhase () const
+inline void RFAcceleratingField::SetPhase(double phase)
+{
+	phi = phase;
+}
+
+inline double RFAcceleratingField::GetPhase() const
 {
 	return phi;
 }
 
-inline void RFAcceleratingField::SetAmplitude (double Epk)
+inline void RFAcceleratingField::SetAmplitude(double Epk)
 {
-	E0=Epk;
+	E0 = Epk;
 }
 
-inline double RFAcceleratingField::GetAmplitude () const
+inline double RFAcceleratingField::GetAmplitude() const
 {
 	return E0;
 }
 
-inline double RFAcceleratingField::GetWavelength () const
+inline double RFAcceleratingField::GetWavelength() const
 {
 	using PhysicalConstants::SpeedOfLight;
-	return twoPi*SpeedOfLight/w;
+	return twoPi * SpeedOfLight / w;
 }
 
-inline double RFAcceleratingField::GetK () const
+inline double RFAcceleratingField::GetK() const
 {
 	using PhysicalConstants::SpeedOfLight;
-	return w/SpeedOfLight;
+	return w / SpeedOfLight;
 }
 
 inline void RFAcceleratingField::SetFullAcceleration(bool full_acceln)

@@ -13,20 +13,24 @@
 #include "WakePotentials.h"
 
 /**
-* Abstract class for calculating the longitudinal and
-* transverse single-bunch wakefield potentials (Greens
-* functions) with modes
-*/
-class CollimatorWakePotentials : public WakePotentials
+ * Abstract class for calculating the longitudinal and
+ * transverse single-bunch wakefield potentials (Greens
+ * functions) with modes
+ */
+class CollimatorWakePotentials: public WakePotentials
 {
 
 public:
 
-	CollimatorWakePotentials(int m, double rad=0, double conduct=0)
+	CollimatorWakePotentials(int m, double rad = 0, double conduct = 0)
 	//take the radius and the conductivity out of WakePotentials
-		: WakePotentials(rad,conduct), nmodes(m) {}
+		: WakePotentials(rad, conduct), nmodes(m)
+	{
+	}
 
-	virtual ~CollimatorWakePotentials () {}
+	virtual ~CollimatorWakePotentials()
+	{
+	}
 
 	virtual double Wlong(double s, int m) const = 0;
 	virtual double Wtrans(double s, int m) const = 0;
@@ -43,4 +47,3 @@ private:
 };
 
 #endif
-

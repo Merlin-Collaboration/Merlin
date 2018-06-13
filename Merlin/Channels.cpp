@@ -11,112 +11,111 @@
 #include "Channels.h"
 #include <algorithm>
 
-ROChannelArray::~ROChannelArray ()
+ROChannelArray::~ROChannelArray()
 {
 	DestroyChannels();
 }
 
 void ROChannelArray::DestroyChannels()
 {
-	for_each(channels.begin(),channels.end(),deleter<ROChannel>());
+	for_each(channels.begin(), channels.end(), deleter<ROChannel>());
 }
 
-void ROChannelArray::ReadAll (RealVector& vec) const
+void ROChannelArray::ReadAll(RealVector& vec) const
 {
-	assert(vec.size()==Size());
-	for(size_t i=0; i<Size(); i++)
+	assert(vec.size() == Size());
+	for(size_t i = 0; i < Size(); i++)
 	{
-		vec[i]=channels[i]->Read();
+		vec[i] = channels[i]->Read();
 	}
 }
 
-ROChannelArray::operator RealVector () const
+ROChannelArray::operator RealVector() const
 {
 	RealVector v(Size());
 	ReadAll(v);
 	return v;
 }
 
-void ROChannelArray::Print (std::ostream& os) const
+void ROChannelArray::Print(std::ostream& os) const
 {
 	vector<string> idlist(Size());
 	vector<double> vallist(Size());
-	size_t n=0;
+	size_t n = 0;
 	size_t i;
 
-	for(i=0; i<Size(); i++)
+	for(i = 0; i < Size(); i++)
 	{
-		idlist[i]=channels[i]->GetID();
-		vallist[i]=channels[i]->Read();
-		if(n<idlist[i].length())
+		idlist[i] = channels[i]->GetID();
+		vallist[i] = channels[i]->Read();
+		if(n < idlist[i].length())
 		{
-			n=idlist[i].length();
+			n = idlist[i].length();
 		}
 	}
 
-	for(i=0; i<Size(); i++)
+	for(i = 0; i < Size(); i++)
 	{
-		os<<std::setw(n)<<left<<idlist[i].c_str()<<" = ";
-		os<<vallist[i]<<endl;
+		os << std::setw(n) << left << idlist[i].c_str() << " = ";
+		os << vallist[i] << endl;
 	}
 }
 
-
-RWChannelArray::RWChannelArray (const std::vector<RWChannel*>& chnls)
-	: ROChannelArray(chnls.size())
+RWChannelArray::RWChannelArray(const std::vector<RWChannel*>& chnls) :
+	ROChannelArray(chnls.size())
 {
-	std::copy(chnls.begin(),chnls.end(),channels.begin());
+	std::copy(chnls.begin(), chnls.end(), channels.begin());
 }
 
-RWChannelArray::RWChannelArray(RWChannelArray& rhs)
-	: ROChannelArray(rhs.Size())
+RWChannelArray::RWChannelArray(RWChannelArray& rhs) :
+	ROChannelArray(rhs.Size())
 {
-	std::copy(rhs.channels.begin(),rhs.channels.end(),channels.begin());
+	std::copy(rhs.channels.begin(), rhs.channels.end(), channels.begin());
 	rhs.channels.clear();
 }
 
-RWChannelArray::RWChannelArray ()
-{}
+RWChannelArray::RWChannelArray()
+{
+}
 
-size_t RWChannelArray::SetChannels (const std::vector<RWChannel*>& chnls)
+size_t RWChannelArray::SetChannels(const std::vector<RWChannel*>& chnls)
 {
 	DestroyChannels();
 	channels.resize(chnls.size());
-	std::copy(chnls.begin(),chnls.end(),channels.begin());
+	std::copy(chnls.begin(), chnls.end(), channels.begin());
 	return channels.size();
 }
 
-void RWChannelArray::WriteAll (double value)
+void RWChannelArray::WriteAll(double value)
 {
-	for(size_t i=0; i<Size(); i++)
+	for(size_t i = 0; i < Size(); i++)
 	{
 		RWCh(i)->Write(value);
 	}
 }
 
-void RWChannelArray::WriteAll (const RealVector& values)
+void RWChannelArray::WriteAll(const RealVector& values)
 {
-	assert(values.size()==Size());
-	for(size_t i=0; i<Size(); i++)
+	assert(values.size() == Size());
+	for(size_t i = 0; i < Size(); i++)
 	{
 		RWCh(i)->Write(values[i]);
 	}
 }
 
-void RWChannelArray::IncrementAll (double value)
+void RWChannelArray::IncrementAll(double value)
 {
-	for(size_t i=0; i<Size(); i++)
+	for(size_t i = 0; i < Size(); i++)
 	{
 		RWCh(i)->Increment(value);
 	}
 }
 
-void RWChannelArray::IncrementAll (const RealVector& values)
+void RWChannelArray::IncrementAll(const RealVector& values)
 {
-	assert(values.size()==Size());
-	for(size_t i=0; i<Size(); i++)
+	assert(values.size() == Size());
+	for(size_t i = 0; i < Size(); i++)
 	{
 		RWCh(i)->Increment(values[i]);
 	}
 }
-

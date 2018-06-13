@@ -40,12 +40,11 @@ public: // flags
 private:
 
 	bool use_struct_dist;
-	double n1x,n2x,n1y,n2y;
+	double n1x, n2x, n1y, n2y;
 
-	double x,xp,y,yp,dp;
+	double x, xp, y, yp, dp;
 	BeamData bdat;
 	AcceleratorModel::Beamline bline;
 };
-
 
 #endif

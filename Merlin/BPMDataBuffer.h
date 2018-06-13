@@ -12,35 +12,34 @@
 #include "BPM.h"
 
 /**
-*	A BPM buffer which stores a single (x,y) pair from a
-*	BPM. The cached data is updated on each call to Record().
-*   A BPMbuffer can contain an additional offset.
-*/
+ *	A BPM buffer which stores a single (x,y) pair from a
+ *	BPM. The cached data is updated on each call to Record().
+ *   A BPMbuffer can contain an additional offset.
+ */
 
-
-class BPMDataBuffer : public BPM::Buffer
+class BPMDataBuffer: public BPM::Buffer
 {
 public:
 
 	/**
-	*	Constructor
-	*/
-	BPMDataBuffer ();
+	 *	Constructor
+	 */
+	BPMDataBuffer();
 
 	/**
-	* Record the data to the buffer.
-	*/
-	virtual void Record (const BPM& aBPM, const BPM::Data& data);
+	 * Record the data to the buffer.
+	 */
+	virtual void Record(const BPM& aBPM, const BPM::Data& data);
 
 	/**
-	* Set the ID of the buffer.
-	*/
-	void SetID (const string& anID);
+	 * Set the ID of the buffer.
+	 */
+	void SetID(const string& anID);
 
 	/**
-	* Set buffer offsets (note: this is a temporary solution
-	* to setting arbitrary offsets to BPMs)
-	*/
+	 * Set buffer offsets (note: this is a temporary solution
+	 * to setting arbitrary offsets to BPMs)
+	 */
 	void SetOffsets(double x, double y);
 
 private:
@@ -56,13 +55,14 @@ private:
 	friend class BPMChannel;
 };
 
-inline BPMDataBuffer::BPMDataBuffer ()
-	:x(0),x_off(0),y(0),y_off(0),id()
-{}
-
-inline void BPMDataBuffer::SetID (const string& anID)
+inline BPMDataBuffer::BPMDataBuffer() :
+	x(0), x_off(0), y(0), y_off(0), id()
 {
-	id=anID;
+}
+
+inline void BPMDataBuffer::SetID(const string& anID)
+{
+	id = anID;
 }
 
 inline void BPMDataBuffer::SetOffsets(double x, double y)

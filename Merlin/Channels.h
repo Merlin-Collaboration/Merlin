@@ -14,111 +14,110 @@
 #include <iostream>
 #include "LinearAlgebra.h"
 
-
 /**
-*	A Read-Only Channel representing a constant floating
-*	point attribute or parameter.
-*/
+ *	A Read-Only Channel representing a constant floating
+ *	point attribute or parameter.
+ */
 
 class ROChannel
 {
 public:
 
-	virtual ~ROChannel ();
+	virtual ~ROChannel();
 
 	/**
-	*	Returns the ID of the channel (parameter).
-	*	@return Channel ID
-	*/
-	virtual std::string GetID () const = 0;
+	 *	Returns the ID of the channel (parameter).
+	 *	@return Channel ID
+	 */
+	virtual std::string GetID() const = 0;
 
 	/**
-	*	Returns the current value of the parameter/attribute
-	*	associated with the channel.
-	*/
-	virtual double Read () const = 0;
+	 *	Returns the current value of the parameter/attribute
+	 *	associated with the channel.
+	 */
+	virtual double Read() const = 0;
 };
 
 /**
-*	A Read-Write Channel,  representing a single
-*	floating-point attribute or parameter that can be
-*	accessed (Read) or modified (Write).
-*/
+ *	A Read-Write Channel, representing a single
+ *	floating-point attribute or parameter that can be
+ *	accessed (Read) or modified (Write).
+ */
 
-class RWChannel : public ROChannel
+class RWChannel: public ROChannel
 {
 public:
 
 	/**
-	*	Sets the current value of the parameter/attribute
-	*	associated with the channel.
-	*/
-	virtual void Write (double value) = 0;
+	 *	Sets the current value of the parameter/attribute
+	 *	associated with the channel.
+	 */
+	virtual void Write(double value) = 0;
 
 	/**
-	*	Increments the current value of the parameter/attribute
-	*	associated with the channel. Returns the final
-	*	(incremented) value.
-	*/
-	virtual double Increment (double delta);
+	 *	Increments the current value of the parameter/attribute
+	 *	associated with the channel. Returns the final
+	 *	(incremented) value.
+	 */
+	virtual double Increment(double delta);
 };
 
 /**
-*	A linear array (vector) of ROChannels. On destruction,
-*	an ROChannelArray object will destroy its associated
-*	channels.
-*/
+ *	A linear array (vector) of ROChannels. On destruction,
+ *	an ROChannelArray object will destroy its associated
+ *	channels.
+ */
 
 class ROChannelArray
 {
 public:
 	/**
-	*	Constructor taking a vector of ROChannel objects.
-	*/
-	explicit ROChannelArray (const std::vector<ROChannel*>& chnls);
+	 *	Constructor taking a vector of ROChannel objects.
+	 */
+	explicit ROChannelArray(const std::vector<ROChannel*>& chnls);
 
 	ROChannelArray(ROChannelArray& rhs);
-	ROChannelArray ();
+	ROChannelArray();
 
-	~ROChannelArray ();
-
-	/**
-	*	Reads the n-th channel.
-	*/
-	double Read (size_t n) const;
+	~ROChannelArray();
 
 	/**
-	*	Reads all the channels and returns the results in vec.
-	*	@param[out] Result of reading channels
-	*/
-	void ReadAll (RealVector& vec) const;
+	 *	Reads the n-th channel.
+	 */
+	double Read(size_t n) const;
 
 	/**
-	*	Conversion to a RealVector (containing the current
-	*	values of the channels).
-	*/
-	operator RealVector () const;
+	 *	Reads all the channels and returns the results in vec.
+	 *	@param[out] Result of reading channels
+	 */
+	void ReadAll(RealVector& vec) const;
 
 	/**
-	*	Prints the vector as a two column table. Column 1
-	*	contains the ID's of the channels; column 2 contains the
-	*	current values.
-	*/
-	void Print (std::ostream& os) const;
+	 *	Conversion to a RealVector (containing the current
+	 *	values of the channels).
+	 */
+	operator RealVector() const;
 
 	/**
-	*	Returns the size of the array.
-	*/
-	size_t Size () const;
+	 *	Prints the vector as a two column table. Column 1
+	 *	contains the ID's of the channels; column 2 contains the
+	 *	current values.
+	 */
+	void Print(std::ostream& os) const;
 
 	/**
-	* Initialisation
-	*/
+	 *	Returns the size of the array.
+	 */
+	size_t Size() const;
+
+	/**
+	 * Initialisation
+	 */
 	size_t SetChannels(const std::vector<ROChannel*>& chnls);
 
 	/**
-	* channel access
-	*/
+	 * channel access
+	 */
 	const ROChannel& operator[](size_t n) const
 	{
 		return *(channels[n]);
@@ -131,96 +130,100 @@ public:
 protected:
 
 	/**
-	*	Protected constructing taking the size of the array.
-	*/
-	explicit ROChannelArray (size_t n);
+	 *	Protected constructing taking the size of the array.
+	 */
+	explicit ROChannelArray(size_t n);
 
 	void DestroyChannels();
 
 	std::vector<ROChannel*> channels;
 };
 
-class RWChannelArray : public ROChannelArray
+class RWChannelArray: public ROChannelArray
 {
 public:
 
 	/**
-	*	Constructor taking a vector of RWChannels.
-	*/
-	explicit RWChannelArray (const std::vector<RWChannel*>& chnls);
-	RWChannelArray (RWChannelArray& rhs);
-	RWChannelArray ();
+	 *	Constructor taking a vector of RWChannels.
+	 */
+	explicit RWChannelArray(const std::vector<RWChannel*>& chnls);
+	RWChannelArray(RWChannelArray& rhs);
+	RWChannelArray();
 
-	size_t SetChannels (const std::vector<RWChannel*>& chnls);
-
-	/**
-	*	Write a value to the n-th channel.
-	*/
-	void Write (size_t n, double value);
+	size_t SetChannels(const std::vector<RWChannel*>& chnls);
 
 	/**
-	*	Write the same value as **Write** to all the channels.
-	*/
-	void WriteAll (double value);
+	 *	Write a value to the n-th channel.
+	 */
+	void Write(size_t n, double value);
 
 	/**
-	*	Copy the vector to the channels.
-	*/
-	void WriteAll (const RealVector& values);
+	 *	Write the same value as **Write** to all the channels.
+	 */
+	void WriteAll(double value);
 
 	/**
-	*	Increments the value of the n-th channel.
-	*/
-	void Increment (size_t n, double value);
+	 *	Copy the vector to the channels.
+	 */
+	void WriteAll(const RealVector& values);
 
 	/**
-	*	Increments  all the channels by the same value.
-	*/
-	void IncrementAll (double value);
+	 *	Increments the value of the n-th channel.
+	 */
+	void Increment(size_t n, double value);
 
 	/**
-	*	Increments the channels by the corresponding values in
-	*	the supplied vector.
-	*/
-	void IncrementAll (const RealVector& values);
+	 *	Increments  all the channels by the same value.
+	 */
+	void IncrementAll(double value);
 
 	/**
-	*	Copy assignment from a RealVector.
-	*/
-	void operator = (const RealVector& v);
+	 *	Increments the channels by the corresponding values in
+	 *	the supplied vector.
+	 */
+	void IncrementAll(const RealVector& values);
+
+	/**
+	 *	Copy assignment from a RealVector.
+	 */
+	void operator =(const RealVector& v);
 
 private:
 
-	RWChannel* RWCh (size_t n);
-	const RWChannel* RWCh (size_t n) const;
+	RWChannel* RWCh(size_t n);
+	const RWChannel* RWCh(size_t n) const;
 };
 
-inline ROChannel::~ROChannel ()
-{}
-
-inline double RWChannel::Increment (double delta)
+inline ROChannel::~ROChannel()
 {
-	double v=Read()+delta;
+}
+
+inline double RWChannel::Increment(double delta)
+{
+	double v = Read() + delta;
 	Write(v);
 	return v;
 }
 
-inline ROChannelArray::ROChannelArray (const std::vector<ROChannel*>& chnls)
-	: channels(chnls)
-{}
+inline ROChannelArray::ROChannelArray(const std::vector<ROChannel*>& chnls) :
+	channels(chnls)
+{
+}
 
-inline ROChannelArray::ROChannelArray(ROChannelArray& rhs)
-	: channels()
+inline ROChannelArray::ROChannelArray(ROChannelArray& rhs) :
+	channels()
 {
 	channels.swap(rhs.channels);
 }
 
-inline ROChannelArray::ROChannelArray (size_t n)
-	: channels(n)
-{}
+inline ROChannelArray::ROChannelArray(size_t n) :
+	channels(n)
+{
+}
 
-inline ROChannelArray::ROChannelArray ()
-{}
+inline ROChannelArray::ROChannelArray()
+{
+}
 
 inline size_t ROChannelArray::SetChannels(const std::vector<ROChannel*>& chnls)
 {
@@ -229,37 +232,37 @@ inline size_t ROChannelArray::SetChannels(const std::vector<ROChannel*>& chnls)
 	return channels.size();
 }
 
-inline double ROChannelArray::Read (size_t n) const
+inline double ROChannelArray::Read(size_t n) const
 {
 	return channels[n]->Read();
 }
 
-inline size_t ROChannelArray::Size () const
+inline size_t ROChannelArray::Size() const
 {
 	return channels.size();
 }
 
-inline void RWChannelArray::Write (size_t n, double value)
+inline void RWChannelArray::Write(size_t n, double value)
 {
 	RWCh(n)->Write(value);
 }
 
-inline void RWChannelArray::Increment (size_t n, double value)
+inline void RWChannelArray::Increment(size_t n, double value)
 {
 	RWCh(n)->Increment(value);
 }
 
-inline void RWChannelArray::operator = (const RealVector& v)
+inline void RWChannelArray::operator =(const RealVector& v)
 {
 	WriteAll(v);
 }
 
-inline RWChannel* RWChannelArray::RWCh (size_t n)
+inline RWChannel* RWChannelArray::RWCh(size_t n)
 {
 	return static_cast<RWChannel*>(channels[n]);
 }
 
-inline const RWChannel* RWChannelArray::RWCh (size_t n) const
+inline const RWChannel* RWChannelArray::RWCh(size_t n) const
 {
 	return static_cast<const RWChannel*>(channels[n]);
 }

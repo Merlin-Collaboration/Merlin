@@ -12,14 +12,14 @@
 #include "ComponentTracker.h"
 
 /**
-* Transport process template function.
-* Defines a transport BunchProcess which uses a concrete ComponentTracker
-* class to track provide the tracking.
-*
-* Template argument T must be a valid concrete ComponentTracker class.
-*/
+ * Transport process template function.
+ * Defines a transport BunchProcess which uses a concrete ComponentTracker
+ * class to track provide the tracking.
+ *
+ * Template argument T must be a valid concrete ComponentTracker class.
+ */
 template<class T>
-class TTrnsProc : public TBunchProc<__TYPENAME__ T::bunch_type>
+class TTrnsProc: public TBunchProc<__TYPENAME__ T::bunch_type>
 {
 public:
 
@@ -28,36 +28,40 @@ public:
 	typedef __TYPENAME__ T::ISetBase integrator_set_base;
 
 	/**
-	* Construct process using the default integrator set
-	*/
-	TTrnsProc()
-		: TBunchProc<__TYPENAME__ T::bunch_type>("TRANSPORT",0), ctracker() {}
+	 * Construct process using the default integrator set
+	 */
+	TTrnsProc() :
+		TBunchProc<__TYPENAME__ T::bunch_type>("TRANSPORT", 0), ctracker()
+	{
+	}
 
 	/**
-	* Construct process using an explicit integrator set
-	*/
-	TTrnsProc(const integrator_set_base& iset)
-		: TBunchProc<__TYPENAME__ T::bunch_type>("TRANSPORT",0), ctracker(iset) {}
+	 * Construct process using an explicit integrator set
+	 */
+	TTrnsProc(const integrator_set_base& iset) :
+		TBunchProc<__TYPENAME__ T::bunch_type>("TRANSPORT", 0), ctracker(iset)
+	{
+	}
 
 	/**
-	* Register an addition (or override) integrator.
-	*/
+	 * Register an addition (or override) integrator.
+	 */
 	bool RegisterIntegrator(integrator_type* intg)
 	{
 		return ctracker.Register(intg);
 	}
 
-	void InitialiseProcess (Bunch& bunch)
+	void InitialiseProcess(Bunch& bunch)
 	{
 		TBunchProc<bunch_type>::InitialiseProcess(bunch);
-		if(this->currentBunch!=nullptr)
+		if(this->currentBunch != nullptr)
 		{
-			this->active=true;
+			this->active = true;
 			ctracker.SetBunch(*this->currentBunch);
 		}
 	}
 
-	void SetCurrentComponent (AcceleratorComponent& component)
+	void SetCurrentComponent(AcceleratorComponent& component)
 	{
 		if(this->active)
 		{
@@ -66,7 +70,7 @@ public:
 		}
 		else
 		{
-			this->currentComponent=nullptr;
+			this->currentComponent = nullptr;
 		}
 	}
 
@@ -95,14 +99,14 @@ private:
 };
 
 /**
-* template class to instantiate a TrackingSimulation class which
-* uses a specific concrete ComponentTracker to track the
-* associated bunch representation through a beamline.
-*
-* Template parameter T must be a valid concrete ComponentTracker class
-*/
+ * template class to instantiate a TrackingSimulation class which
+ * uses a specific concrete ComponentTracker to track the
+ * associated bunch representation through a beamline.
+ *
+ * Template parameter T must be a valid concrete ComponentTracker class
+ */
 template<class T>
-class TTrackSim : public TrackingSimulation
+class TTrackSim: public TrackingSimulation
 {
 public:
 
@@ -113,85 +117,81 @@ public:
 	typedef __TYPENAME__ T::ISetBase integrator_set_base;
 
 	/**
-	* Constructor taking the beamline to be tracked and a
-	* pointer to the initial ParticleBunch. If bunch0=0
-	* (default) the initial beam must be specified by either a
-	* call to SetInitialBeam(), or to SetInitialBeamCtor (from
-	* TrackingSimulation).
-	*/
-	explicit TTrackSim (const AcceleratorModel::Beamline& bline,
-	                    bunch_type* bunch0 = nullptr, bool del = false);
+	 * Constructor taking the beamline to be tracked and a
+	 * pointer to the initial ParticleBunch. If bunch0=0
+	 * (default) the initial beam must be specified by either a
+	 * call to SetInitialBeam(), or to SetInitialBeamCtor (from
+	 * TrackingSimulation).
+	 */
+	explicit TTrackSim(const AcceleratorModel::Beamline& bline, bunch_type* bunch0 = nullptr, bool del = false);
 
 	/**
-	* Constructor used for single particle tracking. The
-	* constructor takes the beamline to be tracked, and the
-	* initial particle.
-	*/
-	TTrackSim (const AcceleratorModel::Beamline& bline,
-	           const particle_type& p, double Pref);
+	 * Constructor used for single particle tracking. The
+	 * constructor takes the beamline to be tracked, and the
+	 * initial particle.
+	 */
+	TTrackSim(const AcceleratorModel::Beamline& bline, const particle_type& p, double Pref);
 
 	/**
-	* Constructor taking the beamline to be tracked and a
-	* pointer to the initial ParticleBunch. If bunch0=0
-	* (default) the initial beam must be specified by either a
-	* call to SetInitialBeam(), or to SetInitialBeamCtor (from
-	* TrackingSimulation).
-	*/
-	explicit TTrackSim (const AcceleratorModel::RingIterator& ring,
-	                    bunch_type* bunch0 = nullptr, bool del = false);
+	 * Constructor taking the beamline to be tracked and a
+	 * pointer to the initial ParticleBunch. If bunch0=0
+	 * (default) the initial beam must be specified by either a
+	 * call to SetInitialBeam(), or to SetInitialBeamCtor (from
+	 * TrackingSimulation).
+	 */
+	explicit TTrackSim(const AcceleratorModel::RingIterator& ring, bunch_type* bunch0 = nullptr, bool del = false);
 
 	/**
-	* Constructor used for single particle tracking. The
-	* constructor takes the beamline to be tracked, and the
-	* initial particle.
-	*/
-	TTrackSim (const AcceleratorModel::RingIterator& ring,
-	           const particle_type& p, double Pref);
+	 * Constructor used for single particle tracking. The
+	 * constructor takes the beamline to be tracked, and the
+	 * initial particle.
+	 */
+	TTrackSim(const AcceleratorModel::RingIterator& ring, const particle_type& p, double Pref);
 
 	/**
-	* Default constructor
-	*/
-	TTrackSim ();
+	 * Default constructor
+	 */
+	TTrackSim();
 
 	/**
-	* Register an additional (or override) integrator.
-	*/
+	 * Register an additional (or override) integrator.
+	 */
 	bool RegisterIntegrator(integrator_type* intg)
 	{
 		return transportProc->RegisterIntegrator(intg);
 	}
 
 	/**
-	* Sets the initial ParticleBunch for future tracking operations.
-	*/
-	void SetInitialBunch (bunch_type* pbunch0, bool del = false)
+	 * Sets the initial ParticleBunch for future tracking operations.
+	 */
+	void SetInitialBunch(bunch_type* pbunch0, bool del = false)
 	{
-		if(pbunch0!=nullptr)
+		if(pbunch0 != nullptr)
 		{
-			SetInitialBunchCtor(MakeBunchCtor(pbunch0,del));
+			SetInitialBunchCtor(MakeBunchCtor(pbunch0, del));
 		}
 	}
 
 	/**
-	* Overrides the current bunch constructor and
-	* tracks the supplied bunch.
-	*/
+	 * Overrides the current bunch constructor and
+	 * tracks the supplied bunch.
+	 */
 	bunch_type* Track(bunch_type*);
 
 	/**
-	* Sets the initial particle for single-particle tracking.
-	*/
-	void SetInitialParticle (const particle_type& p, double Pref);
+	 * Sets the initial particle for single-particle tracking.
+	 */
+	void SetInitialParticle(const particle_type& p, double Pref);
 
 	/**
-	* Returns a reference to the current tracked bunch.
-	*/
-	const bunch_type& GetTrackedBunch () const
+	 * Returns a reference to the current tracked bunch.
+	 */
+	const bunch_type& GetTrackedBunch() const
 	{
 		return static_cast<const bunch_type&>(*bunch);
 	}
 
-	bunch_type& GetTrackedBunch ()
+	bunch_type& GetTrackedBunch()
 	{
 		return static_cast<bunch_type&>(*bunch);
 	}
@@ -212,84 +212,78 @@ private:
 
 // template implementation
 /**
-* Standard tracker constructor
-*/
+ * Standard tracker constructor
+ */
 template<class T>
-TTrackSim<T>::TTrackSim (const AcceleratorModel::Beamline& bline,
-                         bunch_type* bunch0, bool del)
-	: TrackingSimulation(bline),transportProc(new transport_process())
+TTrackSim<T>::TTrackSim(const AcceleratorModel::Beamline& bline, bunch_type* bunch0, bool del) :
+	TrackingSimulation(bline), transportProc(new transport_process())
 {
-	SetInitialBunch(bunch0,del);
+	SetInitialBunch(bunch0, del);
 	AddProcess(transportProc);
 }
 
 template<class T>
-TTrackSim<T>::TTrackSim (const AcceleratorModel::Beamline& bline,
-                         const particle_type& p, double Pref)
-	: TrackingSimulation(bline),transportProc(new transport_process())
+TTrackSim<T>::TTrackSim(const AcceleratorModel::Beamline& bline, const particle_type& p, double Pref) :
+	TrackingSimulation(bline), transportProc(new transport_process())
 {
-	SetInitialParticle(p,Pref);
+	SetInitialParticle(p, Pref);
 	AddProcess(transportProc);
 }
 
 template<class T>
-TTrackSim<T>::TTrackSim (const AcceleratorModel::RingIterator& ring,
-                         bunch_type* bunch0, bool del)
-	: TrackingSimulation(ring),transportProc(new transport_process())
+TTrackSim<T>::TTrackSim(const AcceleratorModel::RingIterator& ring, bunch_type* bunch0, bool del) :
+	TrackingSimulation(ring), transportProc(new transport_process())
 {
-	SetInitialBunch(bunch0,del);
+	SetInitialBunch(bunch0, del);
 	AddProcess(transportProc);
 }
 
 template<class T>
-TTrackSim<T>::TTrackSim (const AcceleratorModel::RingIterator& ring,
-                         const particle_type& p, double Pref)
-	: TrackingSimulation(ring),transportProc(new transport_process())
+TTrackSim<T>::TTrackSim(const AcceleratorModel::RingIterator& ring, const particle_type& p, double Pref) :
+	TrackingSimulation(ring), transportProc(new transport_process())
 {
-	SetInitialParticle(p,Pref);
+	SetInitialParticle(p, Pref);
 	AddProcess(transportProc);
 }
 
 template<class T>
-TTrackSim<T>::TTrackSim ()
-	: TrackingSimulation(),transportProc(new transport_process())
+TTrackSim<T>::TTrackSim() :
+	TrackingSimulation(), transportProc(new transport_process())
 {
 	AddProcess(transportProc);
 }
 
-
 template<class T>
-void TTrackSim<T>::SetInitialParticle (const particle_type& p, double Pref)
+void TTrackSim<T>::SetInitialParticle(const particle_type& p, double Pref)
 {
 	bunch_type* b = new bunch_type(Pref);
 	b->AddParticle(p);
-	SetInitialBunch(b,true);
+	SetInitialBunch(b, true);
 }
 /**
-* Standard Track "Tracker"
-*/
+ * Standard Track "Tracker"
+ */
 template<class T>
-__TYPENAME__ TTrackSim<T>::bunch_type* TTrackSim<T>::Track(bunch_type* aBunch)
+__TYPENAME__ TTrackSim<T>::bunch_type * TTrackSim<T>::Track(bunch_type * aBunch)
 {
-	if(bunch!=nullptr)
+	if(bunch != nullptr)
 	{
 		delete bunch;
 	}
 
-	bunch=aBunch;
+	bunch = aBunch;
 	try
 	{
-		DoRun(false,true);
+		DoRun(false, true);
 	}
 	catch(...)
 	{
-		bunch=nullptr;
+		bunch = nullptr;
 		throw;
 	}
 
-	bunch=nullptr;
+	bunch = nullptr;
 	return aBunch;
 }
 
 #endif
-

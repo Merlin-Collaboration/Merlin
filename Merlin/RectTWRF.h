@@ -13,10 +13,10 @@
 #include "RFStructure.h"
 
 /**
-*	A travelling-wave RF accelerating field referenced to a
-*	rectangular geometry.
-*/
+ *	A travelling-wave RF accelerating field referenced to a
+ *	rectangular geometry.
+ */
 
-typedef RFStructure< TWRFfield > RectTWRF;
+typedef RFStructure<TWRFfield> RectTWRF;
 
 #endif

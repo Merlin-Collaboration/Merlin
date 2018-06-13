@@ -15,9 +15,9 @@
 DataTableReaderTFS::DataTableReaderTFS(std::string filename)
 {
 	inf = std::make_shared<std::ifstream>(filename);
-	if (!inf->good())
+	if(!inf->good())
 	{
-		std::cerr << "Could not open file "<< filename << std::endl;
+		std::cerr << "Could not open file " << filename << std::endl;
 		exit(1);
 	}
 	in = inf.get();
@@ -25,23 +25,23 @@ DataTableReaderTFS::DataTableReaderTFS(std::string filename)
 
 static char type_conv(std::string s)
 {
-	if (s == "%le")
+	if(s == "%le")
 	{
 		return 'd';
 	}
-	else if (s == "%d")
+	else if(s == "%d")
 	{
 		return 'i';
 	}
-	else if (s == "%s")
+	else if(s == "%s")
 	{
 		return 's';
 	}
-	else if (s.size()>2 && s[s.size()-1] == 's')
+	else if(s.size() > 2 && s[s.size() - 1] == 's')
 	{
 		return 's';
 	}
-	throw BadFormatException("Unknown data type'"+s+"'");
+	throw BadFormatException("Unknown data type'" + s + "'");
 }
 
 static const std::string whitespace = " \t\f\v\n\r";
@@ -55,18 +55,18 @@ static std::vector<std::string> split_line(std::string line)
 	current.reserve(64);
 	bool double_quote_on = false;
 
-	for(auto c: line)
+	for(auto c : line)
 	{
 		if(c == '"')
 		{
-			double_quote_on = ! double_quote_on;
+			double_quote_on = !double_quote_on;
 		}
 		else if(!double_quote_on && whitespace.find(c) != std::string::npos)
 		{
-			if (current.length())
+			if(current.length())
 			{
 				sl.push_back(current);
-				current =  "";
+				current = "";
 			}
 		}
 		else
@@ -74,7 +74,7 @@ static std::vector<std::string> split_line(std::string line)
 			current += c;
 		}
 	}
-	if (current.length())
+	if(current.length())
 	{
 		sl.push_back(current);
 	}
@@ -92,7 +92,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 
 	// Read header
 	// Lines start with "@". Ends when line starts with "*"
-	while (getline(*in, line))
+	while(getline(*in, line))
 	{
 		words = split_line(line);
 		if(words.size() == 0)
@@ -117,7 +117,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	{
 		throw BadFormatException("Expected line starting with '*' or '@'");
 	}
-	for(auto w = words.begin()+1; w < words.end(); w++)
+	for(auto w = words.begin() + 1; w < words.end(); w++)
 	{
 		col_names.push_back(*w);
 	}
@@ -129,7 +129,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	{
 		throw BadFormatException("Expected line starting with '$'");
 	}
-	for(auto w = words.begin()+1; w != words.end(); w++)
+	for(auto w = words.begin() + 1; w != words.end(); w++)
 	{
 		col_types.push_back(type_conv(*w));
 	}
@@ -179,12 +179,13 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	return dt;
 }
 
-DataTableWriterTFS::DataTableWriterTFS(std::string filename):DataTableWriterTFS()
+DataTableWriterTFS::DataTableWriterTFS(std::string filename) :
+	DataTableWriterTFS()
 {
 	outf = std::make_shared<std::ofstream>(filename);
-	if (!outf->good())
+	if(!outf->good())
 	{
-		std::cerr << "Could not open file "<< filename << std::endl;
+		std::cerr << "Could not open file " << filename << std::endl;
 		exit(1);
 	}
 	out = outf.get();
@@ -196,7 +197,7 @@ void DataTableWriterTFS::Write(DataTable & dt)
 	init.copyfmt(*out);
 	*out << std::setprecision(prec_float);
 
-	for(auto &header_name: dt.HeaderNames())
+	for(auto &header_name : dt.HeaderNames())
 	{
 		*out << "@ " << std::setw(16) << std::left << header_name << " ";
 		char head_type = dt.GetHeaderType(header_name);
@@ -204,40 +205,40 @@ void DataTableWriterTFS::Write(DataTable & dt)
 		{
 		case 'd':
 			*out << "%le ";
-			*out << std::setw(width_float) << dt.HeaderGet_d(header_name) <<std::endl;
+			*out << std::setw(width_float) << dt.HeaderGet_d(header_name) << std::endl;
 			break;
 		case 'i':
 			*out << "%d ";
-			*out << std::setw(width_int) << dt.HeaderGet_i(header_name) <<std::endl;
+			*out << std::setw(width_int) << dt.HeaderGet_i(header_name) << std::endl;
 			break;
 		case 's':
-			*out << "%" << dt.HeaderGet_s(header_name).size() <<"s ";
-			*out << '"' << dt.HeaderGet_s(header_name) << '"' <<std::endl;
+			*out << "%" << dt.HeaderGet_s(header_name).size() << "s ";
+			*out << '"' << dt.HeaderGet_s(header_name) << '"' << std::endl;
 			break;
 		}
 	}
 
 	*out << "* " << std::left;
-	for(auto &col_name: dt.ColumnNames())
+	for(auto &col_name : dt.ColumnNames())
 	{
 		*out << col_name << " ";
 	}
 	*out << std::endl;
 
 	*out << "$ ";
-	for(auto &col_name: dt.ColumnNames())
+	for(auto &col_name : dt.ColumnNames())
 	{
 		char col_type = dt.GetColumnType(col_name);
 		switch(col_type)
 		{
 		case 'd':
-			*out  <<"%le ";
+			*out << "%le ";
 			break;
 		case 'i':
-			*out  <<"%d ";
+			*out << "%d ";
 			break;
 		case 's':
-			*out  <<"%s ";
+			*out << "%s ";
 			break;
 
 		}
@@ -245,9 +246,9 @@ void DataTableWriterTFS::Write(DataTable & dt)
 	*out << std::endl;
 
 	auto col_names = dt.ColumnNames();
-	for(auto drow: dt)
+	for(auto drow : dt)
 	{
-		for(auto &col_name: col_names)
+		for(auto &col_name : col_names)
 		{
 			char col_type = dt.GetColumnType(col_name);
 			*out << " ";

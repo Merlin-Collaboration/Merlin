@@ -14,19 +14,19 @@
 #include <vector>
 
 /**
-* class Interpolation
-* An interpolation functor which interpolates values from a data table.
-* Currently only linear interpolation is assumed.
-*/
+ * class Interpolation
+ * An interpolation functor which interpolates values from a data table.
+ * Currently only linear interpolation is assumed.
+ */
 
 class Interpolation
 {
 public:
 
 	/**
-	* exception
-	*/
-	class BadRange : public MerlinException
+	 * exception
+	 */
+	class BadRange: public MerlinException
 	{
 	public:
 		BadRange(double x, const FloatRange& r);
@@ -35,23 +35,25 @@ public:
 	};
 
 	/**
-	* Implementation method for interpolation
-	*/
+	 * Implementation method for interpolation
+	 */
 	class Method
 	{
 	public:
-		virtual ~Method() {}
+		virtual ~Method()
+		{
+		}
 		virtual double ValueAt(double x) const = 0;
 	};
 
 	/**
-	* Interpolation of equally spaced data points
-	*/
+	 * Interpolation of equally spaced data points
+	 */
 	Interpolation(const std::vector<double>& yvals, double xmin, double dx);
 
 	/**
-	* Interpolation of arbitrary spaced data points
-	*/
+	 * Interpolation of arbitrary spaced data points
+	 */
 	Interpolation(const std::vector<double>& xvals, const std::vector<double>& yvals);
 
 	~Interpolation();
@@ -67,4 +69,3 @@ private:
 };
 
 #endif
-

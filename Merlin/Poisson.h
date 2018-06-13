@@ -23,9 +23,8 @@ public:
 	virtual double operator()();
 };
 
-
-inline Poisson::Poisson(double mean, RNG *gen)
-	: Random(gen)
+inline Poisson::Poisson(double mean, RNG *gen) :
+	Random(gen)
 {
 	pMean = mean;
 }

@@ -11,8 +11,10 @@
 #include "CollimateParticleProcess.h"
 #include "StableOrbits.h"
 
-StableOrbits::StableOrbits(AcceleratorModel* aModel)
-	: theModel(aModel), nturns(1), obspnt(0) {}
+StableOrbits::StableOrbits(AcceleratorModel* aModel) :
+	theModel(aModel), nturns(1), obspnt(0)
+{
+}
 
 int StableOrbits::SetTurns(int turns)
 {
@@ -33,13 +35,13 @@ void StableOrbits::SelectStable(ParticleBunch& bunch, list<size_t>* index)
 	ParticleTracker tracker(theModel->GetRing(obspnt), &bunch, false);
 
 	ofstream collimlog("DataFiles/CollimationLog.dat");
-	CollimateParticleProcess* collimate = new CollimateParticleProcess(1,COLL_AT_CENTER,&collimlog);
+	CollimateParticleProcess* collimate = new CollimateParticleProcess(1, COLL_AT_CENTER, &collimlog);
 	collimate->IndexParticles(*index);
 	tracker.AddProcess(collimate);
 
-	for(int turn_count=1; turn_count<=nturns; turn_count++)
+	for(int turn_count = 1; turn_count <= nturns; turn_count++)
 	{
-		if(turn_count==1)
+		if(turn_count == 1)
 		{
 			tracker.Run();
 		}
@@ -49,9 +51,9 @@ void StableOrbits::SelectStable(ParticleBunch& bunch, list<size_t>* index)
 		}
 
 		ParticleBunch& tracked_bunch = tracker.GetTrackedBunch();
-		cout<<"Tracked turn "<<turn_count<<": ";
-		cout<<tracked_bunch.size()<<" particles remaining.    "<<char(13);
+		cout << "Tracked turn " << turn_count << ": ";
+		cout << tracked_bunch.size() << " particles remaining.    " << char(13);
 	}
 
-	cout<<endl;
+	cout << endl;
 }

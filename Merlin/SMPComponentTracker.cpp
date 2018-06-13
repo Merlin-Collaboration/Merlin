@@ -11,7 +11,7 @@
 namespace SMPTracking
 {
 
-DEF_INTG_SET(SMPComponentTracker,StdISet)
+DEF_INTG_SET(SMPComponentTracker, StdISet)
 ADD_INTG(DriftCI)
 ADD_INTG(SectorBendCI)
 ADD_INTG(RectMultipoleCI)
@@ -23,4 +23,4 @@ END_INTG_SET
 
 } //end namespace SMPTracking
 
-MAKE_DEF_INTG_SET(SMPTracking::SMPComponentTracker,SMPTracking::StdISet)
+MAKE_DEF_INTG_SET(SMPTracking::SMPComponentTracker, SMPTracking::StdISet)

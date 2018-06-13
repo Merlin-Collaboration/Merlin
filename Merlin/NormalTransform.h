@@ -27,13 +27,13 @@ PSmoments& BeamDataToSigmaMtrx(const BeamData& t, PSmoments& S);
 inline PSmoments BeamDataToSigmaMtrx(const BeamData& t)
 {
 	PSmoments S;
-	return BeamDataToSigmaMtrx(t,S);
+	return BeamDataToSigmaMtrx(t, S);
 }
 
 BeamData& SigmaMatrixToBeamData(const PSmoments& S0, BeamData& t);
 
 double ProjectedEmittance(const PSmoments& s, PScoord x1, PScoord x2);
 
-pair<double,double> NormalModeEmittance(const PSmoments& S);
+pair<double, double> NormalModeEmittance(const PSmoments& S);
 
 #endif

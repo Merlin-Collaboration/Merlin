@@ -20,26 +20,31 @@ namespace SMPTracking
 {
 
 /**
-* Applies single-bunch long. and trans. wakefields to a SliceMacroParticles
-*/
+ * Applies single-bunch long. and trans. wakefields to a SliceMacroParticles
+ */
 
-class WakeFieldProcess : public SMPBunchProcess
+class WakeFieldProcess: public SMPBunchProcess
 {
 public:
 
-	enum ImpulseLocation {atCentre,atExit};
+	enum ImpulseLocation
+	{
+		atCentre,
+		atExit
 
-	WakeFieldProcess (int prio, double slice_width =1.0e-6,string aID="SMP WAKEFIELD");
+	};
+
+	WakeFieldProcess(int prio, double slice_width = 1.0e-6, string aID = "SMP WAKEFIELD");
 	~WakeFieldProcess();
 
-	virtual void InitialiseProcess (Bunch& bunch);
-	virtual void SetCurrentComponent (AcceleratorComponent& component);
-	virtual void DoProcess (double ds);
-	virtual double GetMaxAllowedStepSize () const;
+	virtual void InitialiseProcess(Bunch& bunch);
+	virtual void SetCurrentComponent(AcceleratorComponent& component);
+	virtual void DoProcess(double ds);
+	virtual double GetMaxAllowedStepSize() const;
 
 	void ApplyImpulseAt(ImpulseLocation loc)
 	{
-		imploc=loc;
+		imploc = loc;
 	}
 
 	void IncludeTransverseWake(bool flg)
@@ -55,7 +60,6 @@ private:
 	double current_s;
 	double impulse_s;
 	double clen;
-
 
 	void Init();
 	void PrepLWake();

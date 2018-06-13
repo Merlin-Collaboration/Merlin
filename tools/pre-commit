@@ -2,22 +2,15 @@
 # Check that modified files meet style requirements 
 # Place in .git/hooks
 
-ASTYLE_ARGS="--style=allman --add-brackets --indent=tab --lineend=linux"
 
-ASTYLE=$(which astyle 2> /dev/null )
-if [ $? -ne 0 ]; then
-	echo "AStyle not found."
-	echo "Please install it from your package manager or http://astyle.sourceforge.net/."
-	echo "Or bypass check with 'git commit --no-verify'"
-	exit 1
-fi
+STYLE_SCRIPT="tools/style_wrapper.py"
 
 FILES=`git diff --cached --name-only --diff-filter=ACMR | grep -E "\.(cpp|h)$"`
 BAD_FILES=""
 
 for FILE in $FILES;
 do
-	if ! $ASTYLE $ASTYLE_ARGS < $FILE | cmp -s $FILE -
+	if ! $STYLE_SCRIPT check $FILE
 	then 
 		echo $FILE "failed style check"
 		BAD_FILES="$BAD_FILES $FILE"
@@ -26,10 +19,12 @@ done
 
 if [ -n "$BAD_FILES" ]
 then
-	echo "Please run:"
-	echo "astyle --suffix=none" $ASTYLE_ARGS $BAD_FILES
+	echo "To see require changes run:"
+	echo $STYLE_SCRIPT diff $BAD_FILES
+	echo "To fix:"
+	echo $STYLE_SCRIPT fix $BAD_FILES
+	echo git add $BAD_FILES
 	echo "Or bypass check with 'git commit --no-verify'"
 	exit 1
 fi
-
 

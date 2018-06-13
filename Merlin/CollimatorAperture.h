@@ -14,11 +14,11 @@
 #include <iostream>
 
 /**********************************************************************
-*
-*	A collimator jaw, aligned to the beam orbit and beta function changes
-* 	This does NOT have jaw flatness errors
-*
-**********************************************************************/
+ *
+ *	A collimator jaw, aligned to the beam orbit and beta function changes
+ *   This does NOT have jaw flatness errors
+ *
+ **********************************************************************/
 
 class CollimatorAperture: public RectangularAperture
 {
@@ -26,31 +26,22 @@ protected:
 	double alpha;
 	double CollimatorLength;
 	double jaw_length;
-	double x_offset_entry,y_offset_entry;
+	double x_offset_entry, y_offset_entry;
 
 //Add jaw parameters at exit as well
-	double x_offset_exit,y_offset_exit;
-	double w_exit,h_exit;
+	double x_offset_exit, y_offset_exit;
+	double w_exit, h_exit;
 	double cosalpha;
 	double sinalpha;
 
-//bool errors;
-//double e1,e2,e3,e4,e5,e6;
-//double aperture_error;
-//void EnableErrors(bool);
-//void SetErrors(double, double);
-
-
 public:
-//~ double alpha;
-	CollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
+	CollimatorAperture(double w, double h, double t, Material* m, double length, double x_offset_entry = 0.0, double
+		y_offset_entry = 0.0);
 
-//void SetJawLength(double);
-
-	void SetExitWidth(double);	//Horizontal
-	void SetExitHeight(double);	//Vertical
-	void SetExitXOffset(double);	//Horizontal
-	void SetExitYOffset(double);	//Vertical
+	void SetExitWidth(double);  //Horizontal
+	void SetExitHeight(double); //Vertical
+	void SetExitXOffset(double);    //Horizontal
+	void SetExitYOffset(double);    //Vertical
 
 	double GetFullEntranceHeight() const;
 	double GetFullEntranceWidth() const;
@@ -66,76 +57,59 @@ public:
 
 	double GetCollimatorTilt() const;
 
-//Also need to know the collimator length for interpolation
-//void SetCollimatorLength(double);
-
-	virtual bool PointInside(double x,double y,double z) const;
+	virtual bool PointInside(double x, double y, double z) const;
 };
 
-
 /**********************************************************************
-*
-*	A collimator jaw, unaligned to the beam orbit or beta function changes
-* 	This does NOT have jaw flatness errors
-*
-**********************************************************************/
+ *
+ *	A collimator jaw, unaligned to the beam orbit or beta function changes
+ *   This does NOT have jaw flatness errors
+ *
+ **********************************************************************/
 
 class UnalignedCollimatorAperture: public CollimatorAperture
 {
-	/*
-	protected:
-	double alpha;
-	double CollimatorLength;
-	double jaw_length;
-	double x_offset,y_offset;
-	*/
 public:
-	UnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
+	UnalignedCollimatorAperture(double w, double h, double t, Material* m, double length, double x_offset_entry = 0.0,
+		double y_offset_entry = 0.0);
 
-	bool PointInside(double x,double y,double z) const;
+	bool PointInside(double x, double y, double z) const;
 };
 
 /**
-*	A collimator jaw, aligned to the beam orbit and beta function changes
-* 	This has jaw flatness errors
-*/
+ *	A collimator jaw, aligned to the beam orbit and beta function changes
+ *  This has jaw flatness errors
+ */
 
 class CollimatorApertureWithErrors: public CollimatorAperture
 {
 	double ApertureError;
-	bool PointInside(double x,double y,double z) const;
+	bool PointInside(double x, double y, double z) const;
 };
 
 /**
-*	A collimator jaw, unaligned to the beam orbit or beta function changes
-* 	This has jaw flatness errors
-*/
+ *	A collimator jaw, unaligned to the beam orbit or beta function changes
+ *  This has jaw flatness errors
+ */
 
 class UnalignedCollimatorApertureWithErrors: public UnalignedCollimatorAperture
 {
 	double ApertureError;
-	bool PointInside(double x,double y,double z) const;
+	bool PointInside(double x, double y, double z) const;
 };
 
-
 /**
-*	A collimator jaw, unaligned to the beam orbit or beta function changes
-* 	This does NOT have jaw flatness errors
-*/
+ *	A collimator jaw, unaligned to the beam orbit or beta function changes
+ *  This does NOT have jaw flatness errors
+ */
 
 class OneSidedUnalignedCollimatorAperture: public CollimatorAperture
 {
-	/*
-	protected:
-	double alpha;
-	double CollimatorLength;
-	double jaw_length;
-	double x_offset,y_offset;
-	*/
 public:
-	OneSidedUnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_offset_entry=0.0, double y_offset_entry=0.0);
+	OneSidedUnalignedCollimatorAperture(double w, double h, double t, Material* m, double length, double
+		x_offset_entry = 0.0, double y_offset_entry = 0.0);
 
-	bool PointInside(double x,double y,double z) const;
+	bool PointInside(double x, double y, double z) const;
 	bool PositiveSide;
 	void SetJawSide(bool);
 };

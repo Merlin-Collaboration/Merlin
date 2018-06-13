@@ -10,29 +10,28 @@
 
 const int Marker::ID = UniqueIndex();
 
-void Marker::PrepareTracker (ComponentTracker& aTracker)
+void Marker::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,AcceleratorComponent);
+	_PREPTRACK(aTracker, AcceleratorComponent);
 }
 
-int Marker::GetIndex () const
+int Marker::GetIndex() const
 {
 	return ID;
 }
 
-const string& Marker::GetType () const
+const string& Marker::GetType() const
 {
 	_TYPESTR(Marker)
 }
 
 //FIXME
-ModelElement* Marker::Copy () const
+ModelElement* Marker::Copy() const
 {
 	return new Marker(*this);
 }
 
-void Marker::RotateY180 ()
+void Marker::RotateY180()
 {
 	// Nothing to do
 }
-

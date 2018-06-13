@@ -20,7 +20,7 @@
 #include "SynchRadParticleProcess.h"
 #include "NormalTransform.h"
 
-#define BEAMENERGY 5.0*GeV
+#define BEAMENERGY 5.0 * GeV
 
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
@@ -48,7 +48,7 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData&, const SpinVector&
 // Output class declaration
 // Here we define a class which we will use to output information that we need
 
-class SpinTrackingOutput : public SimulationOutput
+class SpinTrackingOutput: public SimulationOutput
 {
 public:
 	SpinTrackingOutput(const std::string& fname);
@@ -60,11 +60,11 @@ protected:
 	void Record(const ComponentFrame* frame, const Bunch* bunch);
 	void RecordInitialBunch(const Bunch* bunch)
 	{
-		Output("INITIAL",*bunch);
+		Output("INITIAL", *bunch);
 	}
 	void RecordFinalBunch(const Bunch* bunch)
 	{
-		Output("FINAL",*bunch);
+		Output("FINAL", *bunch);
 	}
 
 private:
@@ -102,10 +102,10 @@ int main()
 		// Define the initial beam parameters
 		BeamData beam;
 
-		double gamma = (BEAMENERGY/MeV)/ElectronMassMeV;
+		double gamma = (BEAMENERGY / MeV) / ElectronMassMeV;
 		beam.p0      = BEAMENERGY;
-		beam.emit_x  = 8.00e-6/gamma;
-		beam.emit_y  = 0.02e-6/gamma;
+		beam.emit_x  = 8.00e-6 / gamma;
+		beam.emit_y  = 0.02e-6 / gamma;
 		beam.sig_z   = 6.00e-3;
 		beam.sig_dp  = 1.50e-3;
 
@@ -113,7 +113,7 @@ int main()
 		beam.beta_y  = 20.012435560926;
 
 		// Construct a bunch of 10^4 particles, where each particle has vertical spin.
-		SpinParticleBunch* spinBunch0 = ConstructSpinParticleBunch(beam,SpinVector(0,1,0),10000);
+		SpinParticleBunch* spinBunch0 = ConstructSpinParticleBunch(beam, SpinVector(0, 1, 0), 10000);
 
 		// Construct a ParticleTracker to perform the tracking
 		// including the spin tracking process
@@ -122,7 +122,7 @@ int main()
 
 		if(inc_synch_rad)
 		{
-			SynchRadParticleProcess* srp = new SynchRadParticleProcess(2,true);
+			SynchRadParticleProcess* srp = new SynchRadParticleProcess(2, true);
 			srp->IncludeQuadRadiation(false); // only model SR in dipoles
 			srp->SetNumComponentSteps(1);     // make one step though elements
 			tracker.AddProcess(srp);
@@ -165,18 +165,18 @@ int main()
 		spOut->output_all = false;
 		tracker.SetOutput(spOut);
 
-		std::vector< TComponentFrame<Quadrupole>* > quads;
+		std::vector<TComponentFrame<Quadrupole>*> quads;
 		theModel->ExtractTypedComponents(quads);
-		cout<<quads.size()<<" Quadrupoles in lattice"<<endl;
+		cout << quads.size() << " Quadrupoles in lattice" << endl;
 
-		const double dy = 1.0*micrometer;
+		const double dy = 1.0 * micrometer;
 
-		for(size_t i = 0; i<quads.size(); i++)
+		for(size_t i = 0; i < quads.size(); i++)
 		{
 			string quadID = (quads[i]->GetComponent()).GetQualifiedName();
-			cout<<"  adjusting "<<quadID<<"..."<<flush;
+			cout << "  adjusting " << quadID << "..." << flush;
 
-			(spOut->os())<<setw(20)<<left<<quadID;
+			(spOut->os()) << setw(20) << left << quadID;
 
 			quads[i]->TranslateY(dy);
 			spinBunch = new SpinParticleBunch(*spinBunch0);
@@ -184,17 +184,17 @@ int main()
 			delete spinBunch;
 			quads[i]->ClearLocalFrameTransform();
 
-			cout<<"done"<<endl;
+			cout << "done" << endl;
 		}
 
 		// Clean up and quit
 		delete theModel;
-		cout<<"Finished!"<<endl;
+		cout << "Finished!" << endl;
 
 	}
 	catch(MerlinException& error)
 	{
-		cerr<<error.Msg()<<endl;
+		cerr << error.Msg() << endl;
 		return -99;
 	}
 	return 0;
@@ -207,10 +207,10 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData& beam, const SpinVe
 	ParticleBunch* aBunch = new ParticleBunch(nparts, NormalParticleDistributionGenerator(), beam);
 	SpinParticleBunch* spinBunch = new SpinParticleBunch(BEAMENERGY);
 
-	for(PSvectorArray::iterator it = aBunch->begin(); it!=aBunch->end(); it++)
+	for(PSvectorArray::iterator it = aBunch->begin(); it != aBunch->end(); it++)
 	{
-		PSvector p=*it;
-		spinBunch->AddParticle(p,spin);
+		PSvector p = *it;
+		spinBunch->AddParticle(p, spin);
 	}
 
 	delete aBunch; // No longer needed.
@@ -219,22 +219,22 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData& beam, const SpinVe
 
 // class SpinTrackingOutput definitions
 
-SpinTrackingOutput::SpinTrackingOutput(const std::string& fname)
-	:fos(fname.c_str())
+SpinTrackingOutput::SpinTrackingOutput(const std::string& fname) :
+	fos(fname.c_str())
 {
 	if(!fos)
 	{
-		throw MerlinException(string("Probem openning output file: ")+fname);
+		throw MerlinException(string("Probem openning output file: ") + fname);
 	}
 }
 
 void SpinTrackingOutput::Record(const ComponentFrame* frame, const Bunch* bunch)
 {
-	Output((*frame).GetComponent().GetQualifiedName(),*bunch);
+	Output((*frame).GetComponent().GetQualifiedName(), *bunch);
 }
 
 // simple macro to output floating point number
-#define WRITE_OS(os,w,p,data) (os)<<scientific<<setw(w)<<setprecision(p)<<(data)
+#define WRITE_OS(os, w, p, data) (os) << scientific << setw(w) << setprecision(p) << (data)
 
 void SpinTrackingOutput::Output(const std::string& label, const Bunch& bunch)
 {
@@ -247,11 +247,11 @@ void SpinTrackingOutput::Output(const std::string& label, const Bunch& bunch)
 	spinBunch.GetMoments(S);
 
 	double p0 = spinBunch.GetReferenceMomentum();
-	p0*=1+S.mean(ps_DP);
+	p0 *= 1 + S.mean(ps_DP);
 
-	double gamma = p0/MeV/ElectronMassMeV;
-	double gex = gamma*ProjectedEmittance(S,ps_X,ps_XP);
-	double gey = gamma*ProjectedEmittance(S,ps_Y,ps_YP);
+	double gamma = p0 / MeV / ElectronMassMeV;
+	double gex = gamma * ProjectedEmittance(S, ps_X, ps_XP);
+	double gey = gamma * ProjectedEmittance(S, ps_Y, ps_YP);
 	double z = spinBunch.GetReferenceTime();
 
 	// Remove the <ydp> and <y'dp> correlations and
@@ -260,30 +260,29 @@ void SpinTrackingOutput::Output(const std::string& label, const Bunch& bunch)
 	double geyc = gey;
 	if(S.var(ps_DP) != 0)
 	{
-		double s36 = S(ps_Y,ps_DP);
-		double s46 = S(ps_YP,ps_DP);
+		double s36 = S(ps_Y, ps_DP);
+		double s46 = S(ps_YP, ps_DP);
 		double dp2 = S.var(ps_DP);
-		double s33 = S.var(ps_Y)-s36*s36/dp2;
-		double s34 = S(ps_Y,ps_YP)-s36*s46/dp2;
-		double s44 = S.var(ps_YP)-s46*s46/dp2;
-		geyc = gamma*sqrt(s33*s44-s34*s34);
+		double s33 = S.var(ps_Y) - s36 * s36 / dp2;
+		double s34 = S(ps_Y, ps_YP) - s36 * s46 / dp2;
+		double s44 = S.var(ps_YP) - s46 * s46 / dp2;
+		geyc = gamma * sqrt(s33 * s44 - s34 * s34);
 	}
 
 	SpinVector pa = spinBunch.GetAverageSpin();
-	double spinMag = sqrt(pa.x()*pa.x()+pa.y()*pa.y()+pa.z()*pa.z());
+	double spinMag = sqrt(pa.x() * pa.x() + pa.y() * pa.y() + pa.z() * pa.z());
 
-	fos<<setw(20)<<left<<label<<right;	// element label
-	WRITE_OS(fos,12,3,z);				// beamline location (m)
-	WRITE_OS(fos,12,3,p0);				// mean momentum (GeV/c)
-	WRITE_OS(fos,12,3,gey);				// normalised vertical emittance (m)
-	WRITE_OS(fos,12,3,geyc);			//      "        "         "      "  dispersion-corrected
-	WRITE_OS(fos,12,3,gex);				// normalised horizontal emittance (m)
-	WRITE_OS(fos,12,3,S.mean(ps_Y));    // vertical beam centroid displacement (m)
-	WRITE_OS(fos,12,3,S.std(ps_Y));     // vertical RMS beam size (m)
-	WRITE_OS(fos,12,3,pa.x());          // average spin vector components
-	WRITE_OS(fos,12,3,pa.y());
-	WRITE_OS(fos,12,3,pa.z());
-	WRITE_OS(fos,12,3,spinMag);         // average spin vector magnetude
-	fos<<endl;
+	fos << setw(20) << left << label << right;  // element label
+	WRITE_OS(fos, 12, 3, z);               // beamline location (m)
+	WRITE_OS(fos, 12, 3, p0);              // mean momentum (GeV/c)
+	WRITE_OS(fos, 12, 3, gey);             // normalised vertical emittance (m)
+	WRITE_OS(fos, 12, 3, geyc);            //      "        "         "      "  dispersion-corrected
+	WRITE_OS(fos, 12, 3, gex);             // normalised horizontal emittance (m)
+	WRITE_OS(fos, 12, 3, S.mean(ps_Y));    // vertical beam centroid displacement (m)
+	WRITE_OS(fos, 12, 3, S.std(ps_Y));     // vertical RMS beam size (m)
+	WRITE_OS(fos, 12, 3, pa.x());          // average spin vector components
+	WRITE_OS(fos, 12, 3, pa.y());
+	WRITE_OS(fos, 12, 3, pa.z());
+	WRITE_OS(fos, 12, 3, spinMag);         // average spin vector magnetude
+	fos << endl;
 }
-

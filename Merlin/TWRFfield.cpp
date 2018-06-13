@@ -7,18 +7,17 @@
 
 #include "TWRFfield.h"
 
-Vector3D TWRFfield::GetBFieldAt (const Point3D& x, double t) const
+Vector3D TWRFfield::GetBFieldAt(const Point3D& x, double t) const
 {
-	return Vector3D(0,0,0);
+	return Vector3D(0, 0, 0);
 }
 
-Vector3D TWRFfield::GetEFieldAt (const Point3D& x, double t) const
+Vector3D TWRFfield::GetEFieldAt(const Point3D& x, double t) const
 {
-	return Vector3D(0,0,TWRFfield::Ez(x.z,t));
+	return Vector3D(0, 0, TWRFfield::Ez(x.z, t));
 }
 
-Vector3D TWRFfield::GetForceAt (const Point3D& x, const Vector3D& v, double q, double t) const
+Vector3D TWRFfield::GetForceAt(const Point3D& x, const Vector3D& v, double q, double t) const
 {
-	return Vector3D(0,0,q*TWRFfield::Ez(x.z,t));
+	return Vector3D(0, 0, q * TWRFfield::Ez(x.z, t));
 }
-

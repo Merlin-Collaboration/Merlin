@@ -15,4 +15,3 @@ ComponentFrame* ConstructSrot(double angle, const std::string& name);
 ComponentFrame* ConstructXrot(double angle, const std::string& name);
 
 #endif
-

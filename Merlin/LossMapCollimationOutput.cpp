@@ -12,7 +12,7 @@ namespace ParticleTracking
 
 void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
 {
-	if (currentComponent != &currcomponent)
+	if(currentComponent != &currcomponent)
 	{
 		currentComponent = &currcomponent;
 	}
@@ -33,7 +33,7 @@ void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, doub
 
 	do
 	{
-		if ( (pos >= inter) && (pos < (inter+0.1)) )
+		if((pos >= inter) && (pos < (inter + 0.1)))
 		{
 			temp.interval = inter;
 			fin = true;
@@ -42,11 +42,10 @@ void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, doub
 		{
 			inter += 0.1;
 		}
-	}
-	while(fin == false);
+	} while(fin == false);
 
 	//For Loss Maps
-	if(currentComponent->GetType() =="Collimator")
+	if(currentComponent->GetType() == "Collimator")
 	{
 		temp.temperature = LossData::Collimator;
 	}
@@ -56,9 +55,11 @@ void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, doub
 	}
 
 	//Now check for warm regions.
-	for(std::vector<std::pair<double, double> >::const_iterator WarmRegionsIterator = WarmRegions.begin(); WarmRegionsIterator!=WarmRegions.end(); WarmRegionsIterator++)
+	for(std::vector<std::pair<double, double> >::const_iterator WarmRegionsIterator = WarmRegions.begin();
+		WarmRegionsIterator != WarmRegions.end(); WarmRegionsIterator++)
 	{
-		if(currentComponent->GetType() !="Collimator" && temp.s >= WarmRegionsIterator->first && temp.s <= WarmRegionsIterator->second)
+		if(currentComponent->GetType() != "Collimator" && temp.s >= WarmRegionsIterator->first && temp.s <=
+			WarmRegionsIterator->second)
 		{
 			temp.temperature = LossData::Warm;
 		}
@@ -80,7 +81,7 @@ void LossMapCollimationOutput::Finalise()
 	//First sort DeadParticles according to s
 	sort(DeadParticles.begin(), DeadParticles.end(), Compare_LossData);
 
-	std::cout << "CollimationOutput:: DeadParticles.size() = " <<  DeadParticles.size() << std::endl;
+	std::cout << "CollimationOutput:: DeadParticles.size() = " << DeadParticles.size() << std::endl;
 
 	int outit = 0;
 	int total = 0;
@@ -92,15 +93,15 @@ void LossMapCollimationOutput::Finalise()
 		{
 			++total;
 			// Start at s = min and push back the first LossData
-			if (OutputLosses.size() == 0)
+			if(OutputLosses.size() == 0)
 			{
 				OutputLosses.push_back(*it);
 			}
 
 			// If old element ++loss
-			if (it->ElementName == OutputLosses[outit].ElementName)
+			if(it->ElementName == OutputLosses[outit].ElementName)
 			{
-				OutputLosses[outit].lost +=1;
+				OutputLosses[outit].lost += 1;
 			}
 			// If new element OutputLosses.push_back
 			else
@@ -115,15 +116,15 @@ void LossMapCollimationOutput::Finalise()
 		{
 			++total;
 			// Start at s = min and push back the first LossData
-			if (OutputLosses.size() == 0)
+			if(OutputLosses.size() == 0)
 			{
 				OutputLosses.push_back(*it);
 			}
 
 			// If position is equal
-			if (it->position == OutputLosses[outit].position)
+			if(it->position == OutputLosses[outit].position)
 			{
-				OutputLosses[outit].lost +=1;
+				OutputLosses[outit].lost += 1;
 			}
 			// If new element outit.push_back
 			else
@@ -138,22 +139,23 @@ void LossMapCollimationOutput::Finalise()
 		{
 			++total;
 			//if no losses are yet stored
-			if (OutputLosses.size() == 0)
+			if(OutputLosses.size() == 0)
 			{
 				OutputLosses.push_back(*it);
 				OutputLosses[outit].lost = 1;
 			}
 			// If in the same bin ++loss
-			else if ((it->ElementName == OutputLosses[outit].ElementName) && (it->interval == OutputLosses[outit].interval))
+			else if((it->ElementName == OutputLosses[outit].ElementName) && (it->interval ==
+				OutputLosses[outit].interval))
 			{
-				OutputLosses[outit].lost +=1;
+				OutputLosses[outit].lost += 1;
 			}
 			// If new element outit.push_back and set loss to 1
 			else
 			{
 				OutputLosses.push_back(*it);
 				outit++;
-				OutputLosses[outit].lost =1;
+				OutputLosses[outit].lost = 1;
 			}
 		}
 		break;
@@ -174,7 +176,7 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 		(*os) << std::setw(16) << std::left << "temperature";
 		(*os) << std::setw(16) << std::left << "length" << std::endl;
 
-		for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector<LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << std::setw(34) << std::left << its->ElementName;
 			(*os) << std::setw(34) << std::left << its->s;
@@ -192,7 +194,7 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 		(*os) << std::setw(16) << std::left << "loss";
 		(*os) << std::setw(16) << std::left << "temperature" << std::endl;
 
-		for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector<LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << std::setw(34) << std::left << its->ElementName;
 			(*os) << std::setw(34) << std::left << its->s;
@@ -212,7 +214,7 @@ void LossMapCollimationOutput::Output(std::ostream* os)
 		(*os) << std::setw(16) << std::left << "temperature";
 		(*os) << std::setw(16) << std::left << "length" << std::endl;
 
-		for(std::vector <LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
+		for(std::vector<LossData>::const_iterator its = OutputLosses.begin(); its != OutputLosses.end(); ++its)
 		{
 			(*os) << std::setw(34) << std::left << its->ElementName;
 			(*os) << std::setw(34) << std::setprecision(15) << std::left << its->s + its->interval;
@@ -238,10 +240,9 @@ void LossMapCollimationOutput::ClearWarmRegions()
 	WarmRegions.clear();
 }
 
-std::vector<std::pair<double,double> > LossMapCollimationOutput::GetWarmRegions() const
+std::vector<std::pair<double, double> > LossMapCollimationOutput::GetWarmRegions() const
 {
 	return WarmRegions;
 }
 
 } //End namespace ParticleTracking
-

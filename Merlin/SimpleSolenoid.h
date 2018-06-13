@@ -14,7 +14,6 @@
 #include "RectangularGeometry.h"
 #include "BzField.h"
 
-
-typedef TAccCompGF< RectangularGeometry , BzField  > SimpleSolenoid;
+typedef TAccCompGF<RectangularGeometry, BzField> SimpleSolenoid;
 
 #endif

@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	Collimator_Database* collimator_db = new Collimator_Database("collimator.db", mat);
 
 	int seed = 0;
-	if (argc >=2)
+	if(argc >= 2)
 	{
 		seed = atoi(argv[1]);
 	}
@@ -57,12 +57,12 @@ int main(int argc, char* argv[])
 	int nlaps = 10;
 
 	/*********************************************************************
-	**
-	**
-	**	BEAM SETTINGS
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	BEAM SETTINGS
+	 *
+	 *
+	 *********************************************************************/
 
 	//Create a beam
 	BeamData mybeam;
@@ -73,43 +73,42 @@ int main(int argc, char* argv[])
 	//  <0 for electrons, >0 for positrons/protons.
 	mybeam.charge = 1.11e11;
 
-
 	//TWISS beam parameters
-	mybeam.beta_x = 0.5500005011*meter;
-	mybeam.beta_y = 0.5499999849*meter;
-	mybeam.alpha_x = -7.115569055e-7*meter;
-	mybeam.alpha_y = +1.797781918e-7*meter;
-	mybeam.emit_x = 5.026457122e-10*meter;
-	mybeam.emit_y = 5.026457122e-10*meter;
+	mybeam.beta_x = 0.5500005011 * meter;
+	mybeam.beta_y = 0.5499999849 * meter;
+	mybeam.alpha_x = -7.115569055e-7 * meter;
+	mybeam.alpha_y = +1.797781918e-7 * meter;
+	mybeam.emit_x = 5.026457122e-10 * meter;
+	mybeam.emit_y = 5.026457122e-10 * meter;
 
 	//Beam length.
-	mybeam.sig_z = 75.5*millimeter;
+	mybeam.sig_z = 75.5 * millimeter;
 
 	//Relative energy spread of beam.
 	mybeam.sig_dp = 0.000113;
 
 	//Beam centroid
-	mybeam.x0=0;
-	mybeam.xp0=0;
-	mybeam.y0=0;
-	mybeam.yp0=0;
-	mybeam.ct0=0.0;
+	mybeam.x0 = 0;
+	mybeam.xp0 = 0;
+	mybeam.y0 = 0;
+	mybeam.yp0 = 0;
+	mybeam.ct0 = 0.0;
 
 	//Beam energy (momentum).
-	mybeam.p0 = 7000*GeV;
+	mybeam.p0 = 7000 * GeV;
 	//cout << "Energy = " << mybeam.p0 <<endl;
 
 	//X-Y coupling
-	mybeam.c_xy=0.0;
-	mybeam.c_xyp=0.0;
-	mybeam.c_xpy=0.0;
-	mybeam.c_xpyp=0.0;
+	mybeam.c_xy = 0.0;
+	mybeam.c_xyp = 0.0;
+	mybeam.c_xpy = 0.0;
+	mybeam.c_xpyp = 0.0;
 
 	//Dispersion
-	mybeam.Dx=0.0;
-	mybeam.Dxp=0.0;
-	mybeam.Dy=0.0;
-	mybeam.Dyp=0.0;
+	mybeam.Dx = 0.0;
+	mybeam.Dxp = 0.0;
+	mybeam.Dy = 0.0;
+	mybeam.Dyp = 0.0;
 
 	//Check if beam parameters are ok.
 	if(!mybeam.ok())
@@ -120,14 +119,14 @@ int main(int argc, char* argv[])
 	cout << "Beam parameters ok." << endl;
 
 	/*********************************************************************
-	**
-	**
-	**	BUNCH SETTINGS
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	BUNCH SETTINGS
+	 *
+	 *
+	 *********************************************************************/
 
-	ParticleBunch* myBunch = ParticleBunchConstructor(mybeam,npart,normalDistribution).ConstructParticleBunch();
+	ParticleBunch* myBunch = ParticleBunchConstructor(mybeam, npart, normalDistribution).ConstructParticleBunch();
 	//ParticleBunch* myBunch = ParticleBunchConstructor(mybeam,npart,pencilDistribution).ConstructParticleBunch();
 
 	//Output the initial input bunch
@@ -137,15 +136,15 @@ int main(int argc, char* argv[])
 	delete bunchbeforefile;
 
 	/*********************************************************************
-	**
-	**
-	**	ACCELERATOR MODEL LOADING
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	ACCELERATOR MODEL LOADING
+	 *
+	 *
+	 *********************************************************************/
 
 	//Load accelerator optics file.
-	MADInterface* myMADinterface = new MADInterface("Input/lhc.tfs",7000.0*GeV);
+	MADInterface* myMADinterface = new MADInterface("Input/lhc.tfs", 7000.0 * GeV);
 	//MADInterface* myMADinterface = new MADInterface("Input/LHCB19.tfs",7000.0*GeV);
 	cout << "Got MADInterface" << endl;
 
@@ -171,24 +170,23 @@ int main(int argc, char* argv[])
 	model->ReportModelStatistics(myoutfile);
 
 	/*********************************************************************
-	**
-	**
-	**	PARTICLE TRACKER
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	PARTICLE TRACKER
+	 *
+	 *
+	 *********************************************************************/
 
-
-	ParticleTracker* tracker = new ParticleTracker(model->GetBeamline(),myBunch);
+	ParticleTracker* tracker = new ParticleTracker(model->GetBeamline(), myBunch);
 	//ParticleTracker* tracker = new ParticleTracker(model->GetRing(),myBunch);
 
 	/*********************************************************************
-	**
-	**
-	**	COLLIMATION SETTINGS
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	COLLIMATION SETTINGS
+	 *
+	 *
+	 *********************************************************************/
 
 	//Output stream for collimator losses
 	ofstream* myout = new ofstream("Output/loss.txt");
@@ -199,7 +197,7 @@ int main(int argc, char* argv[])
 	}
 
 	//New Collimation process
-	CollimateParticleProcess* myCollimateProcess=new CollimateParticleProcess(2,7,myout);
+	CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2, 7, myout);
 
 	//Enable scattering
 	myCollimateProcess->ScatterAtCollimator(true);
@@ -219,29 +217,28 @@ int main(int argc, char* argv[])
 	//Add Collimation process to the tracker.
 	tracker->AddProcess(myCollimateProcess);
 
-
 	/*********************************************************************
-	**
-	**
-	**	WAKEFIELD SETTINGS
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	WAKEFIELD SETTINGS
+	 *
+	 *
+	 *********************************************************************/
 
 	// apply the resistive wakefields
 	// modes, priority, nbins, nsigma
 	CollimatorWakeProcess* myWakeProcess = new CollimatorWakeProcess(modes, 1, 10, 3);
 
 	//Enable the Wakefield process
-	tracker ->AddProcess(myWakeProcess);
+	tracker->AddProcess(myWakeProcess);
 
 	/*********************************************************************
-	**
-	**
-	**	SYNCHROTRON RADIATION SETTINGS
-	**
-	**
-	*********************************************************************/
+	 *
+	 *
+	 *	SYNCHROTRON RADIATION SETTINGS
+	 *
+	 *
+	 *********************************************************************/
 
 	//SynchRadParticleProcess* mySynchRadParticleProcess = new SynchRadParticleProcess(10, 1);
 
@@ -258,24 +255,23 @@ int main(int argc, char* argv[])
 	//tracker ->AddProcess(mySynchRadParticleProcess);
 
 	// Do the loop for nlaps times
-	for (int iii=1; iii<=nlaps; iii++)
+	for(int iii = 1; iii <= nlaps; iii++)
 	{
 		PSvectorArray testarray = myBunch->GetParticles();
-		cout << "Lap " << iii <<"\tParticle number: " << testarray.size() << endl;
+		cout << "Lap " << iii << "\tParticle number: " << testarray.size() << endl;
 		ostringstream lapprefix;
 		lapprefix << "Output/loss_lap_" << setw(4) << setfill('0') << iii << "_";
-		myCollimateProcess->CreateParticleLossFiles(true, lapprefix.str().c_str() );
+		myCollimateProcess->CreateParticleLossFiles(true, lapprefix.str().c_str());
 		tracker->Track(myBunch);
 	}
 
-	cout << "Laps done"<< endl;
+	cout << "Laps done" << endl;
 	ofstream *bunchafterfile = new ofstream("Output/bunch1.dat");
 	myBunch->Output(*bunchafterfile);
 	delete bunchafterfile;
 
 	return EXIT_SUCCESS;
 }
-
 
 //mybeam.beta_x = 0.5495121695*meter;
 //mybeam.beta_y = 0.5498820579*meter;
@@ -285,14 +281,13 @@ int main(int argc, char* argv[])
 //mybeam.alpha_y = -0.0004654580947*meter;
 
 /*	double benergy;
-	ofstream energy_out("Output/Energy.txt");
-	energy_out.precision(100);
-	cout.precision(100);
-*/
+    ofstream energy_out("Output/Energy.txt");
+    energy_out.precision(100);
+    cout.precision(100);
+ */
 //	simp << testarray[1].x() << "\t" << testarray[1].xp() << endl;
 //		benergy = myBunch->AdjustRefMomentumToMean();
 //		energy_out << iii << "\t" << benergy << endl;
-
 
 //Cleaning up
 //delete myWakeProcess;

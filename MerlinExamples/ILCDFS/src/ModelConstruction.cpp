@@ -25,32 +25,31 @@ using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 
-pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcurv)
+pair<AcceleratorModel*, BeamData*> ConstructModel(const string& fname, bool addcurv)
 {
 	// Charge per bunch needed to estimate beam loading
 	const double Qb = 2.0e+10;
 
-	dfs_trace(dfs_trace::level_1)<<"Constructing model from "<<fname;
+	dfs_trace(dfs_trace::level_1) << "Constructing model from " << fname;
 	if(addcurv)
 	{
-		dfs_trace(dfs_trace::level_1)<<" with Earth curvature";
+		dfs_trace(dfs_trace::level_1) << " with Earth curvature";
 	}
-	dfs_trace(dfs_trace::level_1)<<endl;
-
+	dfs_trace(dfs_trace::level_1) << endl;
 
 	ofstream logs("construction.log");
-	XTFFInterface_1 mc(fname,Qb,&logs);
+	XTFFInterface_1 mc(fname, Qb, &logs);
 	mc.ConstructGirders(true);
 
-	pair<AcceleratorModel*,BeamData*> mb = mc.Parse();
+	pair<AcceleratorModel*, BeamData*> mb = mc.Parse();
 	BeamData* beam0 = mb.second;
 	AcceleratorModel* model = mb.first;
 
 	// The following quantities are not
 	// int the TAPE file
-	double gamma = beam0->p0/MeV/ElectronMassMeV;
-	beam0->emit_x = 8.0e-06/gamma;
-	beam0->emit_y = 0.02e-06/gamma;
+	double gamma = beam0->p0 / MeV / ElectronMassMeV;
+	beam0->emit_x = 8.0e-06 / gamma;
+	beam0->emit_y = 0.02e-06 / gamma;
 	beam0->charge = Qb;
 	beam0->sig_dp = 0.0107; // from PT's bunch compressor
 	beam0->sig_z  = 300.0e-06;
@@ -58,16 +57,16 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 	// Now add wakefields to cavities
 
 	vector<TComponentFrame<TWRFStructure>*> cavities;
-	model->ExtractTypedComponents(cavities,"*"); // linac cavities only
+	model->ExtractTypedComponents(cavities, "*"); // linac cavities only
 
 	TeslaWakePotentials* wake = new TeslaWakePotentials;
 	CircularAperture* iris = new CircularAperture(0.035); // TESLA iris aperture
 
 	size_t nCavsPerKlystron = 24;
-	size_t nKlys=0;
+	size_t nKlys = 0;
 	vector<RFStructure*> kcavs;
 
-	for(size_t n=0; n<cavities.size(); n++)
+	for(size_t n = 0; n < cavities.size(); n++)
 	{
 
 		TWRFStructure& cav = cavities[n]->GetComponent();
@@ -75,12 +74,12 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 		cav.SetAperture(iris);
 
 		kcavs.push_back(&cav);
-		if(kcavs.size()==nCavsPerKlystron)
+		if(kcavs.size() == nCavsPerKlystron)
 		{
 			nKlys++;
 			ostringstream ss;
-			ss<<"KLYS_"<<nKlys;
-			model->AddModelElement(new Klystron(ss.str(),kcavs));
+			ss << "KLYS_" << nKlys;
+			model->AddModelElement(new Klystron(ss.str(), kcavs));
 			kcavs.clear();
 		}
 	}
@@ -90,8 +89,8 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 	{
 		nKlys++;
 		ostringstream ss;
-		ss<<"KLYS_"<<nKlys;
-		model->AddModelElement(new Klystron(ss.str(),kcavs));
+		ss << "KLYS_" << nKlys;
+		model->AddModelElement(new Klystron(ss.str(), kcavs));
 		kcavs.clear();
 	}
 
@@ -108,7 +107,7 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 		double totalDist = 0.0;
 		size_t npatches = 0;
 
-		for(AcceleratorModel::BeamlineIterator ci = let.begin(); ci!=let.end(); ci++)
+		for(AcceleratorModel::BeamlineIterator ci = let.begin(); ci != let.end(); ci++)
 		{
 
 			PatchFrame* vpatch = dynamic_cast<PatchFrame*>(*ci);
@@ -117,7 +116,7 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 			{
 				npatches++;
 
-				if(vpatch0==nullptr)
+				if(vpatch0 == nullptr)
 				{
 					vpatch0 = vpatch;    // first vpatch
 				}
@@ -125,12 +124,12 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 				{
 
 					double dist = (*vpatch).GetPosition() - (*vpatch0).GetPosition();
-					double angle = dist/earthRho;
+					double angle = dist / earthRho;
 					GeometryPatch* gp = new GeometryPatch;
 					gp->RotateX(angle);
 					vpatch->SetGeometryPatch(gp); // rotates down
-					totalAngle+=angle;
-					totalDist +=dist;
+					totalAngle += angle;
+					totalDist += dist;
 					vpatch0 = vpatch;
 				}
 			}
@@ -146,4 +145,3 @@ pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname, bool addcu
 	}
 	return mb;
 }
-

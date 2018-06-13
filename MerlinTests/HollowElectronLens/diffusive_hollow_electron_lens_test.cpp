@@ -24,20 +24,20 @@
  * diffusive mode fires on approximately 50% of passes (2 sigma check).
  * Note that this is just a single HEL, so no phase advance between turns.
  *
-*/
+ */
 
 using namespace std;
 using namespace PhysicalUnits;
 
 int main()
 {
-	HollowElectronLens *diff_hel = new HollowElectronLens("hel1",0, 2, 5, 0.195, 2.334948339E4, 3.0);
+	HollowElectronLens *diff_hel = new HollowElectronLens("hel1", 0, 2, 5, 0.195, 2.334948339E4, 3.0);
 	diff_hel->SetElectronDirection(1);
-	diff_hel->SetRadii(2*millimeter, 5*millimeter);
+	diff_hel->SetRadii(2 * millimeter, 5 * millimeter);
 
-	HollowElectronLens *ac_hel = new HollowElectronLens("hel1",0, 0, 5, 0.195, 2.334948339E4, 3.0);
+	HollowElectronLens *ac_hel = new HollowElectronLens("hel1", 0, 0, 5, 0.195, 2.334948339E4, 3.0);
 	ac_hel->SetElectronDirection(1);
-	ac_hel->SetRadii(2*millimeter, 5*millimeter);
+	ac_hel->SetRadii(2 * millimeter, 5 * millimeter);
 
 	const double beam_energy = 7000.0;
 	const size_t npart = 400;
@@ -48,9 +48,9 @@ int main()
 
 	// Test bunch with particles along x, y and diagonals
 	vector<Particle> pcoords;
-	for(size_t i=0; i<npart; i++)
+	for(size_t i = 0; i < npart; i++)
 	{
-		double pos = (double(i)-(npart/2)) * 0.1 * millimeter;
+		double pos = (double(i) - (npart / 2)) * 0.1 * millimeter;
 		Particle p1(0);
 		p1.x() = pos;
 		pcoords.push_back(p1);
@@ -72,8 +72,8 @@ int main()
 
 	// first track diff_turns turns though the diffusive mode
 
-	vector<Particle> diff_coords{pcoords};
-	ProtonBunch* diff_bunch = new ProtonBunch(beam_energy,1, diff_coords);
+	vector<Particle> diff_coords {pcoords};
+	ProtonBunch* diff_bunch = new ProtonBunch(beam_energy, 1, diff_coords);
 
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
@@ -92,7 +92,7 @@ int main()
 	HollowELensProcess* HELProcess = new HollowELensProcess(3);
 	diff_tracker->AddProcess(HELProcess);
 
-	for(int n=0; n < diff_turns; n++)
+	for(int n = 0; n < diff_turns; n++)
 	{
 		diff_tracker->Track(diff_bunch);
 	}
@@ -101,8 +101,8 @@ int main()
 	delete diff_tracker;
 
 	// then track though the DC mode, until the bunch matches the diffusive
-	vector<Particle> ac_coords{pcoords};
-	ProtonBunch* ac_bunch = new ProtonBunch(beam_energy,1, ac_coords);
+	vector<Particle> ac_coords {pcoords};
+	ProtonBunch* ac_bunch = new ProtonBunch(beam_energy, 1, ac_coords);
 
 	ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
@@ -121,43 +121,42 @@ int main()
 	ac_tracker->AddProcess(HELProcess);
 
 	int found_match = -1;
-	for(int n=0; n < diff_turns; n++)
+	for(int n = 0; n < diff_turns; n++)
 	{
 		ac_tracker->Track(ac_bunch);
 
 		bool match = true;
 		size_t i = 0;
-		for (auto ipd=diff_bunch->begin(), ipa=ac_bunch->begin(); ipd!=diff_bunch->end(); ipd++, ipa++, i++)
+		for(auto ipd = diff_bunch->begin(), ipa = ac_bunch->begin(); ipd != diff_bunch->end(); ipd++, ipa++, i++)
 		{
 			//cout << " " << i << " " <<   ipd->x() << " " << ipd->xp() << " " <<   ipd->y() << " " << ipd->yp() <<endl;
 			//cout << " " << i << " " <<   ipa->x() << " " << ipa->xp() << " " <<   ipa->y() << " " << ipa->yp() <<endl;
 
-			if (ipd->x() != ipa->x()
-			        || ipd->xp() != ipa->xp()
-			        || ipd->y() != ipa->y()
-			        || ipd->yp() != ipa->yp()
-			   )
+			if(ipd->x() != ipa->x()
+				|| ipd->xp() != ipa->xp()
+				|| ipd->y() != ipa->y()
+				|| ipd->yp() != ipa->yp()
+				)
 			{
 				match = false;
 			}
 		}
-		if (match)
+		if(match)
 		{
 			found_match = n;
 			break;
 		}
 	}
 
-
 	delete ac_tracker;
 	delete diff_bunch;
 	delete ac_bunch;
 	delete theModel;
 
-	if (found_match != -1)
+	if(found_match != -1)
 	{
 		cout << "Found match on turn " << found_match << endl;
-		cout << "(Expected  " << diff_turns/2.0 << ")" << endl;
+		cout << "(Expected  " << diff_turns / 2.0 << ")" << endl;
 	}
 	else
 	{
@@ -165,7 +164,7 @@ int main()
 		return 1;
 	}
 	// check within 2 sigma
-	if (fabs(found_match - diff_turns/2.0) < 2*sqrt(diff_turns/2.0))
+	if(fabs(found_match - diff_turns / 2.0) < 2 * sqrt(diff_turns / 2.0))
 	{
 		cout << "Pass" << endl;
 		return 0;

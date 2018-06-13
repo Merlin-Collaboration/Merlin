@@ -26,25 +26,25 @@ struct CHPath
 
 	string typekey() const
 	{
-		return type+'.'+key;
+		return type + '.' + key;
 	}
 	string eid() const
 	{
-		return type+'.'+id;
+		return type + '.' + id;
 	}
+
 };
 
 CHPath::CHPath(const string& cid)
 {
-	int n1=cid.find('.');
-	type=cid.substr(0,n1);
+	int n1 = cid.find('.');
+	type = cid.substr(0, n1);
 
-	int n2=cid.find('.',n1+1);
-	id=cid.substr(n1+1,n2-n1-1);
+	int n2 = cid.find('.', n1 + 1);
+	id = cid.substr(n1 + 1, n2 - n1 - 1);
 
-	key=cid.substr(n2+1);
+	key = cid.substr(n2 + 1);
 }
-
 
 struct TYPE_CMP
 {
@@ -52,6 +52,7 @@ struct TYPE_CMP
 	{
 		return (*e1).GetType() < (*e2).GetType();
 	}
+
 };
 
 struct FindType
@@ -59,56 +60,59 @@ struct FindType
 	string type;
 	bool neg;
 
-	FindType(const string& aType, bool negate=false)
-		: type(aType),neg(negate) {}
+	FindType(const string& aType, bool negate = false) :
+		type(aType), neg(negate)
+	{
+	}
 
 	bool operator()(const ChannelServer::CtorTable::value_type& ctor)
 	{
 		bool ok = (ctor.second)->GetType() == type;
 		return neg ? !ok : ok;
 	}
+
 };
 
 } // end anonymous namespace
 
-std::string ChannelServer::ChannelCtor::GetID ()
+std::string ChannelServer::ChannelCtor::GetID()
 {
-	return type+'.'+key;
+	return type + '.' + key;
 }
 
-size_t ChannelServer::GetROChannels (const string& chID, std::vector<ROChannel*>& channels)
+size_t ChannelServer::GetROChannels(const string& chID, std::vector<ROChannel*>& channels)
 {
 	CHPath chpath(chID);
 	vector<ModelElement*> elements;
 	elements.reserve(8);
 
-	FindElements(chpath.eid(),elements);
+	FindElements(chpath.eid(), elements);
 	if(elements.empty())
 	{
-		MerlinIO::warning()<<"ChannelServer: No elements matching "<<chpath.eid()<<" found"<<endl;
+		MerlinIO::warning() << "ChannelServer: No elements matching " << chpath.eid() << " found" << endl;
 		return 0;
 	}
 
 	set<ChannelCtor*> ctors;
-	string etype="";
-	int count=0;
-	for(vector<ModelElement*>::iterator ei = elements.begin(); ei!=elements.end(); ei++)
+	string etype = "";
+	int count = 0;
+	for(vector<ModelElement*>::iterator ei = elements.begin(); ei != elements.end(); ei++)
 	{
 
 		// If we have a new type, get the corresponding constructors
-		if(etype!=(*ei)->GetType())
+		if(etype != (*ei)->GetType())
 		{
-			etype=(*ei)->GetType();
-			FindCtors(etype,chpath.key,ctors);
+			etype = (*ei)->GetType();
+			FindCtors(etype, chpath.key, ctors);
 			if(ctors.empty())
 			{
-				MerlinIO::warning()<<"ChannelServer: No channel constructors for "<<chpath.type<<" found"<<endl;
+				MerlinIO::warning() << "ChannelServer: No channel constructors for " << chpath.type << " found" << endl;
 				break;
 			}
 		}
 
 		// Now construct the channels
-		for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci!=ctors.end(); ci++)
+		for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci != ctors.end(); ci++)
 		{
 			channels.push_back((*ci)->ConstructRO(*ei));
 			count++;
@@ -118,42 +122,42 @@ size_t ChannelServer::GetROChannels (const string& chID, std::vector<ROChannel*>
 	return count;
 }
 
-size_t ChannelServer::GetRWChannels (const string& chID, std::vector<RWChannel*>& channels)
+size_t ChannelServer::GetRWChannels(const string& chID, std::vector<RWChannel*>& channels)
 {
 	CHPath chpath(chID);
 	vector<ModelElement*> elements;
 	elements.reserve(8);
 
-	FindElements(chpath.eid(),elements);
+	FindElements(chpath.eid(), elements);
 	if(elements.empty())
 	{
-		MerlinIO::warning()<<"ChannelServer: No elements matching "<<chpath.eid()<<" found"<<endl;
+		MerlinIO::warning() << "ChannelServer: No elements matching " << chpath.eid() << " found" << endl;
 		return 0;
 	}
 
 	set<ChannelCtor*> ctors;
-	string etype="";
-	int count=0;
-	for(vector<ModelElement*>::iterator ei = elements.begin(); ei!=elements.end(); ei++)
+	string etype = "";
+	int count = 0;
+	for(vector<ModelElement*>::iterator ei = elements.begin(); ei != elements.end(); ei++)
 	{
 
 		// If we have a new type, get the corresponding constructors
-		if(etype!=(*ei)->GetType())
+		if(etype != (*ei)->GetType())
 		{
-			etype=(*ei)->GetType();
-			FindCtors(etype,chpath.key,ctors);
+			etype = (*ei)->GetType();
+			FindCtors(etype, chpath.key, ctors);
 			if(ctors.empty())
 			{
-				MerlinIO::warning()<<"ChannelServer: No channel constructors for "<<chpath.type<<" found"<<endl;
+				MerlinIO::warning() << "ChannelServer: No channel constructors for " << chpath.type << " found" << endl;
 				break;
 			}
 		}
 
 		// Now construct the channels
-		for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci!=ctors.end(); ci++)
+		for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci != ctors.end(); ci++)
 		{
 			RWChannel* ch = (*ci)->ConstructRW(*ei);
-			assert(ch!=0); // if(ch==0) throw ChannelIsRO(ch->GetID());
+			assert(ch != 0); // if(ch==0) throw ChannelIsRO(ch->GetID());
 			channels.push_back(ch);
 			count++;
 		}
@@ -162,13 +166,14 @@ size_t ChannelServer::GetRWChannels (const string& chID, std::vector<RWChannel*>
 	return count;
 }
 
-size_t ChannelServer::GetROChannels (AcceleratorModel::Beamline& aBeamline, const std::string& chid, std::vector<ROChannel*>& channels)
+size_t ChannelServer::GetROChannels(AcceleratorModel::Beamline& aBeamline, const std::string& chid,
+	std::vector<ROChannel*>& channels)
 {
 	CHPath chpath(chid);
 	StringPattern idpat(chpath.eid());
 	size_t count = 0;
 
-	for(AcceleratorModel::BeamlineIterator cmpi = aBeamline.begin(); cmpi!=aBeamline.end(); cmpi++)
+	for(AcceleratorModel::BeamlineIterator cmpi = aBeamline.begin(); cmpi != aBeamline.end(); cmpi++)
 	{
 
 		if((*cmpi)->IsComponent())
@@ -179,13 +184,13 @@ size_t ChannelServer::GetROChannels (AcceleratorModel::Beamline& aBeamline, cons
 			{
 
 				set<ChannelCtor*> ctors;
-				FindCtors(component.GetType(),chpath.key,ctors);
+				FindCtors(component.GetType(), chpath.key, ctors);
 
 				// Now construct the channels for the current component
-				for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci!=ctors.end(); ci++)
+				for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci != ctors.end(); ci++)
 				{
 					ROChannel* ch = (*ci)->ConstructRO(&component);
-					assert(ch!=0);
+					assert(ch != 0);
 					channels.push_back(ch);
 					count++;
 				}
@@ -196,13 +201,14 @@ size_t ChannelServer::GetROChannels (AcceleratorModel::Beamline& aBeamline, cons
 	return count;
 }
 
-size_t ChannelServer::GetRWChannels (AcceleratorModel::Beamline& aBeamline, const std::string& chid, std::vector<RWChannel*>& channels)
+size_t ChannelServer::GetRWChannels(AcceleratorModel::Beamline& aBeamline, const std::string& chid,
+	std::vector<RWChannel*>& channels)
 {
 	CHPath chpath(chid);
 	StringPattern idpat(chpath.eid());
 	size_t count = 0;
 
-	for(AcceleratorModel::BeamlineIterator cmpi = aBeamline.begin(); cmpi!=aBeamline.end(); cmpi++)
+	for(AcceleratorModel::BeamlineIterator cmpi = aBeamline.begin(); cmpi != aBeamline.end(); cmpi++)
 	{
 		if((*cmpi)->IsComponent())
 		{
@@ -213,13 +219,13 @@ size_t ChannelServer::GetRWChannels (AcceleratorModel::Beamline& aBeamline, cons
 			{
 
 				set<ChannelCtor*> ctors;
-				FindCtors(component.GetType(),chpath.key,ctors);
+				FindCtors(component.GetType(), chpath.key, ctors);
 
 				// Now construct the channels for the current component
-				for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci!=ctors.end(); ci++)
+				for(set<ChannelCtor*>::iterator ci = ctors.begin(); ci != ctors.end(); ci++)
 				{
 					RWChannel* ch = (*ci)->ConstructRW(&component);
-					assert(ch!=0);
+					assert(ch != 0);
 					channels.push_back(ch);
 					count++;
 				}
@@ -230,35 +236,34 @@ size_t ChannelServer::GetRWChannels (AcceleratorModel::Beamline& aBeamline, cons
 	return count;
 }
 
-void ChannelServer::RegisterCtor (ChannelCtor* chctor)
+void ChannelServer::RegisterCtor(ChannelCtor* chctor)
 {
-	pair<CtorTable::iterator,bool> rv = chCtors.insert(
-	                                        CtorTable::value_type(chctor->GetID(),chctor));
+	pair<CtorTable::iterator, bool> rv = chCtors.insert(CtorTable::value_type(chctor->GetID(), chctor));
 	assert(rv.second); // Check that ConstructChannelServer does not make duplicates
 	(void) rv.second; // assert not needed in release mode, avoid warning
 }
 
-void ChannelServer::SetRepository (ElementRepository* me_repo)
+void ChannelServer::SetRepository(ElementRepository* me_repo)
 {
 	theElements = me_repo;
 }
 
-void ChannelServer::FindCtors (const string& type, const string& keypat, std::set<ChannelCtor*>& ctors)
+void ChannelServer::FindCtors(const string& type, const string& keypat, std::set<ChannelCtor*>& ctors)
 {
 	ctors.clear();
 
-	CtorTable::iterator c1 = find_if(chCtors.begin(),chCtors.end(),FindType(type));
+	CtorTable::iterator c1 = find_if(chCtors.begin(), chCtors.end(), FindType(type));
 
-	if(c1==chCtors.end())
+	if(c1 == chCtors.end())
 	{
 		return;
 	}
 
-	CtorTable::iterator c2 = find_if(c1,chCtors.end(),FindType(type,true));
+	CtorTable::iterator c2 = find_if(c1, chCtors.end(), FindType(type, true));
 
 	// Now find those ctors that match the key pattern
 	StringPattern keyp(keypat);
-	for(CtorTable::iterator ci = c1; ci!=c2; ci++)
+	for(CtorTable::iterator ci = c1; ci != c2; ci++)
 	{
 		if(keyp((ci->second)->GetKey()))
 		{
@@ -267,10 +272,10 @@ void ChannelServer::FindCtors (const string& type, const string& keypat, std::se
 	}
 }
 
-void ChannelServer::FindElements (const std::string& id_pat, std::vector<ModelElement*>& elements)
+void ChannelServer::FindElements(const std::string& id_pat, std::vector<ModelElement*>& elements)
 {
-	theElements->Find(id_pat,elements);
-	sort(elements.begin(),elements.end(),TYPE_CMP());
+	theElements->Find(id_pat, elements);
+	sort(elements.begin(), elements.end(), TYPE_CMP());
 }
 
 ChannelServer::~ChannelServer()

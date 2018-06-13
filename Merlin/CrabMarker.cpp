@@ -10,39 +10,39 @@
 
 const int CrabMarker::ID = UniqueIndex();
 
-CrabMarker::CrabMarker (const string& id, double len)
-	: Drift(id,len)
-{}
+CrabMarker::CrabMarker(const string& id, double len) :
+	Drift(id, len)
+{
+}
 
-CrabMarker::CrabMarker (const string& id, double len, double mux, double muy)
-	: Drift(id,len)
+CrabMarker::CrabMarker(const string& id, double len, double mux, double muy) :
+	Drift(id, len)
 {
 	SetMuX(mux);
 	SetMuY(muy);
 }
 
-const string& CrabMarker::GetType () const
+const string& CrabMarker::GetType() const
 {
 	_TYPESTR(CrabMarker);
 }
 
-int CrabMarker::GetIndex () const
+int CrabMarker::GetIndex() const
 {
-	return  ID;
+	return ID;
 }
 
-void CrabMarker::PrepareTracker (ComponentTracker& aTracker)
+void CrabMarker::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,Drift);
+	_PREPTRACK(aTracker, Drift);
 }
 
-void CrabMarker::RotateY180 ()
+void CrabMarker::RotateY180()
 {
 	// nothing to do
 }
 
-ModelElement* CrabMarker::Copy () const
+ModelElement* CrabMarker::Copy() const
 {
 	return new CrabMarker(*this);
 }
-

@@ -16,18 +16,16 @@ DetailedCollimationOutput::DetailedCollimationOutput()
 
 void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
 {
-	if (currentComponent != &currcomponent)
+	if(currentComponent != &currcomponent)
 	{
 		currentComponent = &currcomponent;
 	}
 	temp.reset();
 	temp.ElementName = currentComponent->GetName();
 
-	bool active = any_of(ids.begin(), ids.end(),
-	                     [this](StringPattern &s)
-	{
-		return s.Match(this->temp.ElementName);
-	});
+	bool active = any_of(ids.begin(), ids.end(), [this](StringPattern &s){
+			return s.Match(this->temp.ElementName);
+		});
 
 	if(active)
 	{
@@ -66,5 +64,4 @@ void DetailedCollimationOutput::AddIdentifier(const std::string e)
 	ids.push_back(e);
 }
 
-}//End namespace
-
+} //End namespace

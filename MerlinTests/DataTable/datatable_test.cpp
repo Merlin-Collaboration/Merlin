@@ -13,7 +13,7 @@ using namespace std;
 /*
  * Test some of the basic features of DataTable
  *
-*/
+ */
 
 DataTable make_example_dt()
 {
@@ -36,9 +36,9 @@ DataTable make_example_dt2()
 	dt.AddRow("alpha", 1.1, 1);
 	dt.AddRow("beta", 2.1, -2);
 	dt.AddRow("gamma", 3.1, 100);
-	dt.HeaderAddColumn("x",'d');
-	dt.HeaderAddColumn("y",'i');
-	dt.HeaderAddColumn("z",'s');
+	dt.HeaderAddColumn("x", 'd');
+	dt.HeaderAddColumn("y", 'i');
+	dt.HeaderAddColumn("z", 's');
 	dt.HeaderSet("x", 9.9);
 	dt.HeaderSet("y", 9);
 	dt.HeaderSet("z", "test");
@@ -47,7 +47,7 @@ DataTable make_example_dt2()
 
 void test1()
 {
-	cout << "test1()" <<endl;
+	cout << "test1()" << endl;
 	DataTable dt1;
 	dt1.AddColumn("name", 's');
 	dt1.AddColumn("x", 'd');
@@ -85,7 +85,7 @@ void test1()
 
 void test_get_wrong_col_type(DataTable &dt)
 {
-	cout << "test_get_wrong_col_type()" <<endl;
+	cout << "test_get_wrong_col_type()" << endl;
 	assert_throws(dt.Get_d("a", 0), WrongTypeException);
 	assert_throws(dt.Get_d("a", 1), WrongTypeException);
 	assert_throws(dt.Get_d("c", 0), WrongTypeException);
@@ -107,7 +107,7 @@ void test_get_wrong_col_type(DataTable &dt)
 
 void test_range_errors(DataTable &dt)
 {
-	cout << "test_range_errors()" <<endl;
+	cout << "test_range_errors()" << endl;
 	assert_throws(dt.Get_s("a", 3), std::out_of_range);
 	assert_throws(dt.Get_d("b", 3), std::out_of_range);
 	assert_throws(dt.Get_i("c", 3), std::out_of_range);
@@ -116,7 +116,7 @@ void test_range_errors(DataTable &dt)
 
 void test_bad_add_col()
 {
-	cout << "test_bad_add_col()" <<endl;
+	cout << "test_bad_add_col()" << endl;
 	DataTable dt1;
 	dt1.AddColumn("a", 's');
 	dt1.AddColumn("b", 'd');
@@ -127,7 +127,7 @@ void test_bad_add_col()
 
 void test_add_col(DataTable dt)
 {
-	cout << "test_add_col()" <<endl;
+	cout << "test_add_col()" << endl;
 
 	dt.AddColumn("d", 'd');
 	dt.AddColumn("e", 'i');
@@ -139,7 +139,7 @@ void test_add_col(DataTable dt)
 
 void test_const(const DataTable dt)
 {
-	cout << "test_const()" <<endl;
+	cout << "test_const()" << endl;
 	assert(dt.Get_d("b", 0) == 1.1);
 	dt.OutputAscii(std::cout);
 	assert(dt.HeaderGet_s("z") == "test");
@@ -147,7 +147,7 @@ void test_const(const DataTable dt)
 
 void test_has_key()
 {
-	cout << "test_has_key()" <<endl;
+	cout << "test_has_key()" << endl;
 	const auto dt2 = make_example_dt2();
 	assert(dt2.HasCol("a") == true);
 	assert(dt2.HasCol("d") == false);

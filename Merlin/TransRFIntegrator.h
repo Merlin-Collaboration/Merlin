@@ -14,7 +14,7 @@
 namespace ParticleTracking
 {
 
-class TransRFIntegrator : public ParticleComponentTracker::Integrator<TransverseRFStructure>
+class TransRFIntegrator: public ParticleComponentTracker::Integrator<TransverseRFStructure>
 {
 protected:
 

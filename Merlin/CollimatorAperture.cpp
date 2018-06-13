@@ -10,13 +10,15 @@
 #include "RandomNG.h"
 
 /**********************************************************************
-*
-*	A collimator jaw, aligned to the beam orbit and beta function changes
-* 	This does NOT have jaw flatness errors
-*
-**********************************************************************/
-CollimatorAperture::CollimatorAperture(double w,double h, double t, Material* m, double length, double x_off, double y_off)
-	:RectangularAperture(w,h), alpha(t), CollimatorLength(length), x_offset_entry(x_off), y_offset_entry(y_off),cosalpha(cos(-t)),sinalpha(sin(-t))
+ *
+ *	A collimator jaw, aligned to the beam orbit and beta function changes
+ *   This does NOT have jaw flatness errors
+ *
+ **********************************************************************/
+CollimatorAperture::CollimatorAperture(double w, double h, double t, Material* m, double length, double x_off, double
+	y_off) :
+	RectangularAperture(w, h), alpha(t), CollimatorLength(length), x_offset_entry(x_off), y_offset_entry(y_off),
+	cosalpha(cos(-t)), sinalpha(sin(-t))
 {
 	SetMaterial(m);
 	x_offset_exit = 0;
@@ -27,33 +29,31 @@ CollimatorAperture::CollimatorAperture(double w,double h, double t, Material* m,
 }
 
 //Checks if particle is in or outside a defined aperture
-inline bool CollimatorAperture::PointInside(double x,double y,double z) const
+inline bool CollimatorAperture::PointInside(double x, double y, double z) const
 {
 	/*
-	We need to calculate several variables:
-	1: The x,y offsets at the z position of the particle.
-	2: The width and hight of the jaw at the z position of the particle.
+	   We need to calculate several variables:
+	   1: The x,y offsets at the z position of the particle.
+	   2: The width and hight of the jaw at the z position of the particle.
 
-	Lets start with the x and y offsets;
-	*/
+	   Lets start with the x and y offsets;
+	 */
 
 	//y = mx + c
 	//m = dy/dx
 
-	double x_off = (z * ( x_offset_entry - x_offset_exit ) / CollimatorLength) - x_offset_entry;
-	double y_off = (z * ( y_offset_entry - y_offset_exit ) / CollimatorLength) - y_offset_entry;
-
+	double x_off = (z * (x_offset_entry - x_offset_exit) / CollimatorLength) - x_offset_entry;
+	double y_off = (z * (y_offset_entry - y_offset_exit) / CollimatorLength) - y_offset_entry;
 
 	//These will give the jaw width and heights to be used. * 0.5 to convert to half width.
-	double x_jaw = (z * ( w_exit - GetFullWidth() )  / CollimatorLength) + GetFullWidth();
-	double y_jaw = (z * ( h_exit - GetFullHeight() ) / CollimatorLength) + GetFullHeight();
+	double x_jaw = (z * (w_exit - GetFullWidth()) / CollimatorLength) + GetFullWidth();
+	double y_jaw = (z * (h_exit - GetFullHeight()) / CollimatorLength) + GetFullHeight();
 
-	double x1 = ((x+x_off) * cosalpha) - ((y+y_off) * sinalpha);
-	double y1 = ((x+x_off) * sinalpha) + ((y+y_off) * cosalpha);
+	double x1 = ((x + x_off) * cosalpha) - ((y + y_off) * sinalpha);
+	double y1 = ((x + x_off) * sinalpha) + ((y + y_off) * cosalpha);
 
-	return fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2);
+	return fabs(x1) < (x_jaw / 2) && fabs(y1) < (y_jaw / 2);
 }
-
 
 //Sets the jaw width at the exit of the collimator
 void CollimatorAperture::SetExitWidth(double width)
@@ -124,83 +124,83 @@ double CollimatorAperture::GetCollimatorTilt() const
 	return alpha;
 }
 
-
 /**********************************************************************
-*
-*	A collimator jaw, unaligned to the beam orbit or beta function changes
-* 	This does NOT have jaw flatness errors
-*	Still aligned to the beam size! Flat jaws, parallel to the beam pipe,
-*	but touching the beam envelope on each side
-*	This is the LHC configuration
-*
-**********************************************************************/
-UnalignedCollimatorAperture::UnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_off, double y_off)
-	:CollimatorAperture(w,h,t,m,length,x_off,y_off)
+ *
+ *	A collimator jaw, unaligned to the beam orbit or beta function changes
+ *   This does NOT have jaw flatness errors
+ *	Still aligned to the beam size! Flat jaws, parallel to the beam pipe,
+ *	but touching the beam envelope on each side
+ *	This is the LHC configuration
+ *
+ **********************************************************************/
+UnalignedCollimatorAperture::UnalignedCollimatorAperture(double w, double h, double t, Material* m, double length,
+	double x_off, double y_off) :
+	CollimatorAperture(w, h, t, m, length, x_off, y_off)
 {
 	SetMaterial(m);
 }
 
-inline bool UnalignedCollimatorAperture::PointInside(double x,double y,double z) const
+inline bool UnalignedCollimatorAperture::PointInside(double x, double y, double z) const
 {
-	double x1 = ((x-x_offset_entry) * cosalpha) - ((y-y_offset_entry) * sinalpha);
-	double y1 = ((x-x_offset_entry) * sinalpha) + ((y-y_offset_entry) * cosalpha);
+	double x1 = ((x - x_offset_entry) * cosalpha) - ((y - y_offset_entry) * sinalpha);
+	double y1 = ((x - x_offset_entry) * sinalpha) + ((y - y_offset_entry) * cosalpha);
 
-	return fabs(x1) < GetFullWidth()/2 && fabs(y1) < GetFullHeight()/2;
+	return fabs(x1) < GetFullWidth() / 2 && fabs(y1) < GetFullHeight() / 2;
 }
 
-
 /**********************************************************************
-*
-*	A collimator jaw, aligned to the beam orbit and beta function changes
-* 	This has jaw flatness errors
-*
-**********************************************************************/
+ *
+ *	A collimator jaw, aligned to the beam orbit and beta function changes
+ *   This has jaw flatness errors
+ *
+ **********************************************************************/
 
-inline bool CollimatorApertureWithErrors::PointInside(double x,double y,double z) const
+inline bool CollimatorApertureWithErrors::PointInside(double x, double y, double z) const
 {
-	double x_off = (z * ( x_offset_entry - x_offset_exit ) / CollimatorLength) - x_offset_entry;
-	double y_off = (z * ( y_offset_entry - y_offset_exit ) / CollimatorLength) - y_offset_entry;
+	double x_off = (z * (x_offset_entry - x_offset_exit) / CollimatorLength) - x_offset_entry;
+	double y_off = (z * (y_offset_entry - y_offset_exit) / CollimatorLength) - y_offset_entry;
 
 	//These will give the jaw width and heights to be used. * 0.5 to convert to half width.
-	double x_jaw = (z * ( w_exit - GetFullWidth() )  / CollimatorLength) + GetFullWidth();
-	double y_jaw = (z * ( h_exit - GetFullHeight() ) / CollimatorLength) + GetFullHeight();
+	double x_jaw = (z * (w_exit - GetFullWidth()) / CollimatorLength) + GetFullWidth();
+	double y_jaw = (z * (h_exit - GetFullHeight()) / CollimatorLength) + GetFullHeight();
 
-	double x1 = ((x+x_off) * cosalpha) - ((y+y_off) * sinalpha);
-	double y1 = ((x+x_off) * sinalpha) + ((y+y_off) * cosalpha);
-	return fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2);
-	x1 += ApertureError * ((pow(z,2)/jaw_length)-z);
-	y1 += ApertureError * ((pow(z,2)/jaw_length)-z);
+	double x1 = ((x + x_off) * cosalpha) - ((y + y_off) * sinalpha);
+	double y1 = ((x + x_off) * sinalpha) + ((y + y_off) * cosalpha);
+	return fabs(x1) < (x_jaw / 2) && fabs(y1) < (y_jaw / 2);
+	x1 += ApertureError * ((pow(z, 2) / jaw_length) - z);
+	y1 += ApertureError * ((pow(z, 2) / jaw_length) - z);
 
-	return fabs(x1) < (x_jaw/2) && fabs(y1) < (y_jaw/2);
+	return fabs(x1) < (x_jaw / 2) && fabs(y1) < (y_jaw / 2);
 }
 
 /**********************************************************************
-*
-*	A one sided collimator jaw, unaligned to the beam orbit or beta function changes
-* 	This does NOT have jaw flatness errors
-*	Still aligned to the beam size! Flat jaws, parallel to the beam pipe,
-*	but touching the beam envelope on each side
-*	This is the LHC configuration
-*
-**********************************************************************/
-OneSidedUnalignedCollimatorAperture::OneSidedUnalignedCollimatorAperture(double w,double h, double t, Material* m, double length, double x_off, double y_off)
-	:CollimatorAperture(w,h,t,m,length,x_off,y_off),PositiveSide(true)
+ *
+ *	A one sided collimator jaw, unaligned to the beam orbit or beta function changes
+ *   This does NOT have jaw flatness errors
+ *	Still aligned to the beam size! Flat jaws, parallel to the beam pipe,
+ *	but touching the beam envelope on each side
+ *	This is the LHC configuration
+ *
+ **********************************************************************/
+OneSidedUnalignedCollimatorAperture::OneSidedUnalignedCollimatorAperture(double w, double h, double t, Material* m,
+	double length, double x_off, double y_off) :
+	CollimatorAperture(w, h, t, m, length, x_off, y_off), PositiveSide(true)
 {
 	SetMaterial(m);
 }
 
-inline bool OneSidedUnalignedCollimatorAperture::PointInside(double x,double y,double z) const
+inline bool OneSidedUnalignedCollimatorAperture::PointInside(double x, double y, double z) const
 {
-	double x1 = ((x-x_offset_entry) * cosalpha) - ((y-y_offset_entry) * sinalpha);
-	double y1 = ((x-x_offset_entry) * sinalpha) + ((y-y_offset_entry) * cosalpha);
+	double x1 = ((x - x_offset_entry) * cosalpha) - ((y - y_offset_entry) * sinalpha);
+	double y1 = ((x - x_offset_entry) * sinalpha) + ((y - y_offset_entry) * cosalpha);
 
 	if(PositiveSide)
 	{
-		return x1 < GetFullWidth()/2 && fabs(y1) < GetFullHeight()/2;
+		return x1 < GetFullWidth() / 2 && fabs(y1) < GetFullHeight() / 2;
 	}
 	else
 	{
-		return (-x1) < GetFullWidth()/2 && fabs(y1) < GetFullHeight()/2;
+		return (-x1) < GetFullWidth() / 2 && fabs(y1) < GetFullHeight() / 2;
 	}
 }
 

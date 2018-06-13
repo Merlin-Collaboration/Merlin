@@ -9,8 +9,8 @@
 #define _NegativeExpntl_h 1
 
 /**
-*	Negative Exponential Random Numbers
-*/
+ *	Negative Exponential Random Numbers
+ */
 
 #include "Random.h"
 
@@ -26,9 +26,8 @@ public:
 	virtual double operator()();
 };
 
-
-inline NegativeExpntl::NegativeExpntl(double xmean, RNG *gen)
-	: Random(gen)
+inline NegativeExpntl::NegativeExpntl(double xmean, RNG *gen) :
+	Random(gen)
 {
 	pMean = xmean;
 }

@@ -11,7 +11,7 @@
 double Geometric::operator()()
 {
 	int samples;
-	for (samples = 1; pGenerator -> asDouble() < pMean; samples++);
+	for(samples = 1; pGenerator->asDouble() < pMean; samples++)
+		;
 	return (double) samples;
 }
-

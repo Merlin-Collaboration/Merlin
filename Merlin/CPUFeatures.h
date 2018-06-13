@@ -24,16 +24,15 @@ unsigned int GetCPUFeatures2();
 std::string GetCPUName();
 
 /**
-* NUMA features (Non Uniform Memory Access)
-*
-* @see `man numa` on linux for details
-*/
+ * NUMA features (Non Uniform Memory Access)
+ *
+ * @see `man numa` on linux for details
+ */
 #ifdef LIBNUMA
 bool CheckNUMA();
 void PrintNUMAInfo();
 #endif
 
-}//End namespace
+} //End namespace
 
 #endif
-

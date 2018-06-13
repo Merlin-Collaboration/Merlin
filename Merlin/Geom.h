@@ -24,12 +24,11 @@ public:
 
 };
 
-
-inline Geometric::Geometric(double mean, RNG *gen) : Random(gen)
+inline Geometric::Geometric(double mean, RNG *gen) :
+	Random(gen)
 {
 	pMean = mean;
 }
-
 
 inline double Geometric::mean()
 {
@@ -41,6 +40,5 @@ inline double Geometric::mean(double x)
 	pMean = x;
 	return tmp;
 }
-
 
 #endif

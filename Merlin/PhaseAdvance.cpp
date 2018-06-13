@@ -22,8 +22,8 @@
 
 using namespace ParticleTracking;
 
-PhaseAdvance::PhaseAdvance(AcceleratorModel* aModel, LatticeFunctionTable* aTwiss, double refMomentum)
-	: theModel(aModel), theTwiss(aTwiss), p0(refMomentum), delta(1.0E-8), bendscale(1E-16)
+PhaseAdvance::PhaseAdvance(AcceleratorModel* aModel, LatticeFunctionTable* aTwiss, double refMomentum) :
+	theModel(aModel), theTwiss(aTwiss), p0(refMomentum), delta(1.0E-8), bendscale(1E-16)
 {
 	//~ std::cout << "\n\tPhaseAdvance Class created" << std::endl;
 	//~ std::cout << "please note that the following functions must be added to your LatticeFunctionTable: (0,0,1), (0,0,2), (0,0,3), using the following function:" << std::endl;
@@ -47,8 +47,8 @@ double PhaseAdvance::PhaseAdvanceBetween(int n1, int n2, bool horizontal)
 
 	double deltamu;
 
-	pair<double,double> element1 = CalcIntegerPart(n1);
-	pair<double,double> element2 = CalcIntegerPart(n2);
+	pair<double, double> element1 = CalcIntegerPart(n1);
+	pair<double, double> element2 = CalcIntegerPart(n2);
 
 	if(horizontal)
 	{
@@ -61,7 +61,6 @@ double PhaseAdvance::PhaseAdvanceBetween(int n1, int n2, bool horizontal)
 
 	//OBSOLETE/NOT WORKING
 	//~ RealMatrix M = TransferMapBetween(n1,n2);
-
 
 	//~ if(horizontal){
 	//~ deltamu = asin( M(1,0) / (sqrt(theTwiss->Value(1,1,1,n1) * theTwiss->Value(1,1,1,n2))) );
@@ -101,9 +100,12 @@ RealMatrix PhaseAdvance::TransferMapBetween(int n1, int n2)
 {
 	Particle p2(0.);
 
-	if(n1>n2)
+	if(n1 > n2)
 	{
-		std::cout << "\n\tPhaseAdvance::TransferMapBetween: WARNING: n1>n2, tracker cannot compute \nt Use GetPhaseAdvanceX(n2, n1)" << endl;
+		std::cout
+			<<
+			"\n\tPhaseAdvance::TransferMapBetween: WARNING: n1>n2, tracker cannot compute \nt Use GetPhaseAdvanceX(n2, n1)"
+			<< endl;
 	}
 
 	ClosedOrbit co(theModel, p0);
@@ -118,7 +120,7 @@ RealMatrix PhaseAdvance::TransferMapBetween(int n1, int n2)
 
 	co.FindClosedOrbit(p2);
 	//~ std::cout << "PhaseAdvance::TransferMapBetween: ClosedOrbit done" << endl;
-	tm.FindTM(M,p2,n1,n2);
+	tm.FindTM(M, p2, n1, n2);
 	//~ std::cout << "PhaseAdvance::TransferMapBetween: TransferMatrix done" << endl;
 
 	return M;
@@ -134,7 +136,7 @@ double PhaseAdvance::GetPhaseAdvanceY(int n2, int n1)
 	return PhaseAdvanceBetween(n1, n2, 0);
 }
 
-pair<double,double> PhaseAdvance::CalcIntegerPart(int n)
+pair<double, double> PhaseAdvance::CalcIntegerPart(int n)
 {
 	//Fractional Phase Advance stored in Twiss
 	//MuX = theTwiss->Value(0,0,1,n)
@@ -144,34 +146,38 @@ pair<double,double> PhaseAdvance::CalcIntegerPart(int n)
 	double last_mux(0.), last_muy(0.);
 
 	//Iterate through all elements to sum integer parts
-	for (int i = 1; i<n; ++i)
+	for(int i = 1; i < n; ++i)
 	{
-		if( (theTwiss->Value(0,0,1,i) == last_mux) || (theTwiss->Value(0,0,1,i) <= 0.)) {}
-		else if( (theTwiss->Value(0,0,1,i) < last_mux) )
+		if((theTwiss->Value(0, 0, 1, i) == last_mux) || (theTwiss->Value(0, 0, 1, i) <= 0.))
+		{
+		}
+		else if((theTwiss->Value(0, 0, 1, i) < last_mux))
 		{
 			//~ if( (theTwiss->Value(0,0,1,i)/last_mux) < 0.9999999999){ //to stop iteration for small fluctuations
-			if( (theTwiss->Value(0,0,1,i)/last_mux) < 0.9999)  //to stop iteration for small fluctuations
+			if((theTwiss->Value(0, 0, 1, i) / last_mux) < 0.9999)  //to stop iteration for small fluctuations
 			{
 				++intmux;
 			}
 		}
-		if( theTwiss->Value(0,0,2,i) == last_muy || (theTwiss->Value(0,0,2,i) <= 0.)) {}
-		else if( theTwiss->Value(0,0,2,i) < last_muy)
+		if(theTwiss->Value(0, 0, 2, i) == last_muy || (theTwiss->Value(0, 0, 2, i) <= 0.))
+		{
+		}
+		else if(theTwiss->Value(0, 0, 2, i) < last_muy)
 		{
 			//~ if( (theTwiss->Value(0,0,2,i)/last_muy) < 0.9999999999){ //to stop iteration for small fluctuations
-			if( (theTwiss->Value(0,0,2,i)/last_muy) < 0.9999)  //to stop iteration for small fluctuations
+			if((theTwiss->Value(0, 0, 2, i) / last_muy) < 0.9999)  //to stop iteration for small fluctuations
 			{
 				++intmuy;
 			}
 		}
-		last_mux = theTwiss->Value(0,0,1,i);
-		last_muy = theTwiss->Value(0,0,2,i);
+		last_mux = theTwiss->Value(0, 0, 1, i);
+		last_muy = theTwiss->Value(0, 0, 2, i);
 	}
 
-	mux = intmux + theTwiss->Value(0,0,1,n);
-	muy = intmuy + theTwiss->Value(0,0,2,n);
+	mux = intmux + theTwiss->Value(0, 0, 1, n);
+	muy = intmuy + theTwiss->Value(0, 0, 2, n);
 	//~ cout << "mux = " << mux << endl;
 	//~ cout << "muy = " << muy << endl;
 
-	return make_pair(mux,muy);
+	return make_pair(mux, muy);
 }

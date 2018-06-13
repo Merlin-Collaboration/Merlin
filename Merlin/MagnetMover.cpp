@@ -7,20 +7,19 @@
 
 #include "MagnetMover.h"
 
-const string& MagnetMover::GetType () const
+const string& MagnetMover::GetType() const
 {
 	_TYPESTR(MagnetMover);
 }
 
-ModelElement* MagnetMover::Copy () const
+ModelElement* MagnetMover::Copy() const
 {
 	// Not sure what to do here!
 	assert(false);
 	return nullptr;
 }
 
-Transform3D MagnetMover::GetLocalFrameTransform () const
+Transform3D MagnetMover::GetLocalFrameTransform() const
 {
-	return Transform3D(t)*LatticeFrame::GetLocalFrameTransform();
+	return Transform3D(t) * LatticeFrame::GetLocalFrameTransform();
 }
-

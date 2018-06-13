@@ -12,29 +12,29 @@
 void RTMap::Print(std::ostream& os) const
 {
 	// Print linear matrix first
-	os<<"R:"<<endl;
+	os << "R:" << endl;
 	RMap::MatrixForm(os);
 
-	os<<"\nT:\n";
-	for(int n=0; n<6; n++)
+	os << "\nT:\n";
+	for(int n = 0; n < 6; n++)
 	{
-		RealMatrix M(6,6,0.0);
-		for(const_itor t = tterms.begin(); t!=tterms.end(); t++)
+		RealMatrix M(6, 6, 0.0);
+		for(const_itor t = tterms.begin(); t != tterms.end(); t++)
 		{
-			if((t->i)==n)
+			if((t->i) == n)
 			{
 				if(t->j != t->k)
 				{
-					M(t->k,t->j) = M(t->j,t->k) = t->val/2;
+					M(t->k, t->j) = M(t->j, t->k) = t->val / 2;
 				}
 				else
 				{
-					M(t->j,t->k) = t->val;
+					M(t->j, t->k) = t->val;
 				}
 			}
 		}
-		::MatrixForm(M,os);
-		os<<endl;
+		::MatrixForm(M, os);
+		os << endl;
 	}
 }
 
@@ -43,12 +43,12 @@ PSvector& RTMap::Apply(PSvector& X) const
 	PSvector Y(0);
 
 	// linear map
-	RMap::Apply(X,Y);
+	RMap::Apply(X, Y);
 
 	// non-linear map
-	for(const_itor t = tterms.begin(); t!=tterms.end(); t++)
+	for(const_itor t = tterms.begin(); t != tterms.end(); t++)
 	{
-		t->Apply(X,Y);
+		t->Apply(X, Y);
 	}
 
 	Y.location() = X.location();
@@ -56,5 +56,5 @@ PSvector& RTMap::Apply(PSvector& X) const
 	Y.id() = X.id();
 	Y.sd() = X.sd();
 
-	return X=Y;
+	return X = Y;
 }

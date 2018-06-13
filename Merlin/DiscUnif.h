@@ -30,9 +30,8 @@ public:
 	virtual double operator()();
 };
 
-
-inline DiscreteUniform::DiscreteUniform(long low, long high, RNG *gen)
-	: Random(gen)
+inline DiscreteUniform::DiscreteUniform(long low, long high, RNG *gen) :
+	Random(gen)
 {
 	pLow = (low < high) ? low : high;
 	pHigh = (low < high) ? high : low;

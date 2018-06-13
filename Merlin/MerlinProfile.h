@@ -8,8 +8,6 @@
 #ifndef _MerlinProfile_hpp_
 #define _MerlinProfile_hpp_ 1
 
-
-
 // Macros that do nothing if profiling not enabled
 #ifdef MERLIN_PROFILE
 #define MERLIN_PROFILE_ADD_PROCESS(s) MerlinProfile::AddProcess(s)
@@ -32,7 +30,6 @@
 #include <algorithm>
 #include <iomanip>
 
-
 class MerlinProfile
 {
 
@@ -53,8 +50,8 @@ public:
 			timespec pTime;
 			pTime.tv_nsec = 0;
 			pTime.tv_sec = 0;
-			pData.insert(std::pair<std::string,timespec>(ID,pTime));
-			StartTime.insert(std::pair<std::string,timespec>(ID,pTime));
+			pData.insert(std::pair<std::string, timespec>(ID, pTime));
+			StartTime.insert(std::pair<std::string, timespec>(ID, pTime));
 		}
 	}
 
@@ -71,15 +68,12 @@ public:
 
 	static void StartProcessTimer(std::string ID)
 	{
-		//AddProcess(ID);
 		std::map<std::string, timespec>::iterator Location = StartTime.begin();
 		Location = StartTime.find(ID);
 		if(Location != StartTime.end())
 		{
-			//std::cout << "Adding Profile for: " << ID << std::endl;
 			timespec Start_Time;
 			clock_gettime(CLOCK_REALTIME, &Start_Time);
-			//StartTime.insert(std::pair<std::string,timespec>(ID,Start_Time));
 			Location->second.tv_nsec = Start_Time.tv_nsec;
 			Location->second.tv_sec = Start_Time.tv_sec;
 		}
@@ -96,7 +90,7 @@ public:
 		{
 			Time_Total.tv_sec = Time_End.tv_sec - Location->second.tv_sec;
 			Time_Total.tv_nsec = Time_End.tv_nsec - Location->second.tv_nsec;
-			SetProcessDuration(Time_Total,ID);
+			SetProcessDuration(Time_Total, ID);
 		}
 	}
 
@@ -129,7 +123,7 @@ public:
 
 	static void GetProfileData()
 	{
-		if (!IsEnabled())
+		if(!IsEnabled())
 		{
 			std::cout << "Profiling disabled in libmerlin. Build Merlin with -DMERLIN_PROFILE to enable" << std::endl;
 		}
@@ -139,13 +133,14 @@ public:
 		Location = pData.find("TOTAL");
 		if(Location != pData.end())
 		{
-			total_t = ((double)Location->second.tv_nsec/1.0e9) + (double)Location->second.tv_sec;
+			total_t = ((double) Location->second.tv_nsec / 1.0e9) + (double) Location->second.tv_sec;
 		}
 		Location = pData.begin();
-		while(Location !=pData.end())
+		while(Location != pData.end())
 		{
-			double time = ((double)Location->second.tv_nsec/1.0e9) + (double)Location->second.tv_sec;
-			std::cout << std::setw(24) << std::left << Location->first << "\t" << time << "\t" << time*100.0/total_t << "%" << std::endl;
+			double time = ((double) Location->second.tv_nsec / 1.0e9) + (double) Location->second.tv_sec;
+			std::cout << std::setw(24) << std::left << Location->first << "\t" << time << "\t" << time * 100.0
+				/ total_t << "%" << std::endl;
 			Location++;
 		}
 	}
@@ -162,12 +157,24 @@ private:
 class MerlinProfile
 {
 public:
-	static void AddProcess(std::string ID) {}
-	static void RemoveProcess(std::string ID) {}
-	static void StartProcessTimer(std::string ID) {}
-	static void EndProcessTimer(std::string ID) {}
-	static void SetProcessDuration(timespec t, std::string ID) {}
-	static void ClearTime() {}
+	static void AddProcess(std::string ID)
+	{
+	}
+	static void RemoveProcess(std::string ID)
+	{
+	}
+	static void StartProcessTimer(std::string ID)
+	{
+	}
+	static void EndProcessTimer(std::string ID)
+	{
+	}
+	static void SetProcessDuration(timespec t, std::string ID)
+	{
+	}
+	static void ClearTime()
+	{
+	}
 	static void GetProfileData()
 	{
 		std::cout << "Profiling disabled. Build Merlin with -DMERLIN_PROFILE to enable" << std::endl;

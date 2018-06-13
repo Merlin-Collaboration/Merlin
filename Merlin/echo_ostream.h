@@ -11,50 +11,53 @@
 #include <iostream>
 
 /**
-* template class basic_echo_ostream
-*
-* Use to create an ostream which re-directs
-* output to two additional ostream objects.
-*
-* Note that these implementation is probably
-* very inefficient, and could be made better
-* by somebody who understands the std lib better.
-*/
+ * template class basic_echo_ostream
+ *
+ * Use to create an ostream which re-directs
+ * output to two additional ostream objects.
+ *
+ * Note that these implementation is probably
+ * very inefficient, and could be made better
+ * by somebody who understands the std lib better.
+ */
 
-template<class T, class Tr=char_traits<T> >
-class basic_echo_ostream : public std::basic_ostream<T,Tr>
+template<class T, class Tr = char_traits<T> >
+class basic_echo_ostream: public std::basic_ostream<T, Tr>
 {
 public:
 
-	class echo_streambuf : public std::basic_streambuf<T,Tr>
+	class echo_streambuf: public std::basic_streambuf<T, Tr>
 	{
 	public:
 
-		echo_streambuf(std::basic_ostream<T,Tr>& os1, std::basic_ostream<T,Tr>& os2)
-			: _os1(os1),_os2(os2) {}
+		echo_streambuf(std::basic_ostream<T, Tr>& os1, std::basic_ostream<T, Tr>& os2) :
+			_os1(os1), _os2(os2)
+		{
+		}
 
 	protected:
 
 		virtual int_type overflow(int_type c)
 		{
-			_os1<<T(c);
-			_os2<<T(c);
+			_os1 << T(c);
+			_os2 << T(c);
 			return char_traits<T>::not_eof(c);
 		}
 
 	private:
 
-		std::basic_ostream<T,Tr>& _os1;
-		std::basic_ostream<T,Tr>& _os2;
+		std::basic_ostream<T, Tr>& _os1;
+		std::basic_ostream<T, Tr>& _os2;
 	};
 
 	/**
-	* special buffer to redirect output
-	*/
+	 * special buffer to redirect output
+	 */
 
-	basic_echo_ostream(std::basic_ostream<T,Tr>& first, std::basic_ostream<T,Tr>& second)
-		: std::basic_ostream<T,Tr>(&buff),buff(first,second)
-	{}
+	basic_echo_ostream(std::basic_ostream<T, Tr>& first, std::basic_ostream<T, Tr>& second) :
+		std::basic_ostream<T, Tr>(&buff), buff(first, second)
+	{
+	}
 
 private:
 

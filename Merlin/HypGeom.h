@@ -29,15 +29,14 @@ public:
 	virtual double operator()();
 };
 
-
 inline void HyperGeometric::setState()
 {
 	double z = pVariance / (pMean * pMean);
-	pP = 0.5 * (1.0 - sqrt((z - 1.0) / ( z + 1.0 )));
+	pP = 0.5 * (1.0 - sqrt((z - 1.0) / (z + 1.0)));
 }
 
-inline HyperGeometric::HyperGeometric(double mean, double variance, RNG *gen)
-	: Random(gen)
+inline HyperGeometric::HyperGeometric(double mean, double variance, RNG *gen) :
+	Random(gen)
 {
 	pMean = mean;
 	pVariance = variance;

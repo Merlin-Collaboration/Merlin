@@ -19,8 +19,10 @@
 using namespace std;
 using namespace ParticleTracking;
 
-BetatronTunes::BetatronTunes(AcceleratorModel* aModel, double refMomentum)
-	: theModel(aModel), p0(refMomentum), myHELProcess(nullptr) {}
+BetatronTunes::BetatronTunes(AcceleratorModel* aModel, double refMomentum) :
+	theModel(aModel), p0(refMomentum), myHELProcess(nullptr)
+{
+}
 
 void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 {
@@ -36,7 +38,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 	vector<double> yData2;
 	yData2.reserve(ntrack * 2);
 
-	ParticleBunch* bunch = new ParticleBunch(p0,1.0);
+	ParticleBunch* bunch = new ParticleBunch(p0, 1.0);
 	bunch->push_back(particle);
 
 	ParticleTracker* tracker = new ParticleTracker(theModel->GetBeamline(), bunch, false);
@@ -52,13 +54,13 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 	vector<double>* yData = &yData1;
 
 	bool stable = true;
-	int trackn = diffusion ? ntrack*2 : ntrack;
+	int trackn = diffusion ? ntrack * 2 : ntrack;
 
-	for(int nturn=0; nturn<trackn; nturn++)
+	for(int nturn = 0; nturn < trackn; nturn++)
 	{
 		tracker->Track(bunch);
 
-		if(bunch->size()==0)
+		if(bunch->size() == 0)
 		{
 			stable = false;
 			break;
@@ -68,9 +70,9 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 		Particle& p1 = *pp;
 
 #ifdef _MSV_VER
-		if( _isnan(p1.x()) || _isnan(p1.y()) )
+		if(_isnan(p1.x()) || _isnan(p1.y()))
 #else
-		if( fabs(p1.x())>1.0e+10 || fabs(p1.y())>1.0e+10 )
+		if(fabs(p1.x()) > 1.0e+10 || fabs(p1.y()) > 1.0e+10)
 #endif
 		{
 			stable = false;
@@ -78,19 +80,19 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 			break;
 		}
 
-		double hanningFilter = sin( pi*double(nturn+1)/double(ntrack) );
+		double hanningFilter = sin(pi * double(nturn + 1) / double(ntrack));
 		hanningFilter *= hanningFilter;
 
-		if(nturn==ntrack)
+		if(nturn == ntrack)
 		{
 			xData = &xData2;
 			yData = &yData2;
 		}
 
-		xData->push_back( p1.x()  * hanningFilter );
-		xData->push_back( p1.xp() * hanningFilter );
-		yData->push_back( p1.y()  * hanningFilter );
-		yData->push_back( p1.yp() * hanningFilter );
+		xData->push_back(p1.x() * hanningFilter);
+		xData->push_back(p1.xp() * hanningFilter);
+		yData->push_back(p1.y() * hanningFilter);
+		yData->push_back(p1.yp() * hanningFilter);
 	}
 
 	Qx = stable ? FindTune(xData1) : 0;
@@ -110,7 +112,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 double BetatronTunes::FindTune(vector<double>& data)
 {
 	vector<double> spectrum;
-	int nvals = data.size()/2;
+	int nvals = data.size() / 2;
 	spectrum.reserve(nvals);
 
 	FFT(data);
@@ -118,40 +120,38 @@ double BetatronTunes::FindTune(vector<double>& data)
 	int peak_position = 0;
 
 	// skip artifacts in first 2 bins
-	for(int i=2; i<2*nvals; i+=2)
+	for(int i = 2; i < 2 * nvals; i += 2)
 	{
-		double vamp = sqrt(data[i]*data[i] + data[i+1]*data[i+1]);
+		double vamp = sqrt(data[i] * data[i] + data[i + 1] * data[i + 1]);
 		spectrum.push_back(vamp);
 		if(vamp > peak_height)
 		{
 			peak_height = vamp;
-			peak_position = i/2;
+			peak_position = i / 2;
 		}
 	}
 
 	double norm = sqrt(double(nvals));
-	double centr_peak = spectrum[peak_position]/norm;
-	double right_peak = spectrum[peak_position+1]/norm;
+	double centr_peak = spectrum[peak_position] / norm;
+	double right_peak = spectrum[peak_position + 1] / norm;
 
-	double peak_correction =
-	    nvals
-	    * asin( amp( centr_peak, right_peak, cos(twoPi/nvals) ) * sin(twoPi/double(nvals)) )
-	    / twoPi;
+	double peak_correction = nvals * asin(amp(centr_peak, right_peak, cos(twoPi / nvals))
+		* sin(twoPi / double(nvals))) / twoPi;
 
-	return (peak_position + peak_correction)/nvals;
+	return (peak_position + peak_correction) / nvals;
 }
 
 void BetatronTunes::FFT(vector<double>& data)
 {
-	int nn=data.size()/2;
+	int nn = data.size() / 2;
 	int n = nn << 1;
 	int j = 1;
-	for(int i=1; i<n; i+=2)
+	for(int i = 1; i < n; i += 2)
 	{
-		if(j>i)
+		if(j > i)
 		{
-			swap(data[j-1],data[i-1]);
-			swap(data[j],data[i]);
+			swap(data[j - 1], data[i - 1]);
+			swap(data[j], data[i]);
 		}
 
 		int m = nn;
@@ -168,25 +168,25 @@ void BetatronTunes::FFT(vector<double>& data)
 	{
 		int istep = mmax << 1;
 		double theta = twoPi / mmax;
-		double wtemp = sin(theta/2.);
+		double wtemp = sin(theta / 2.);
 		double wpr = -2.0 * wtemp * wtemp;
 		double wpi = sin(theta);
 		double wr = 1.;
 		double wi = 0.;
-		for(int m=1; m<mmax; m+=2)
+		for(int m = 1; m < mmax; m += 2)
 		{
-			for(int i=m; i<=n; i+=istep)
+			for(int i = m; i <= n; i += istep)
 			{
 				j = i + mmax;
-				double tempr = wr * data[j-1] - wi * data[j];
-				double tempi = wr * data[j] + wi * data[j-1];
-				data[j-1] = data[i-1] - tempr;
+				double tempr = wr * data[j - 1] - wi * data[j];
+				double tempi = wr * data[j] + wi * data[j - 1];
+				data[j - 1] = data[i - 1] - tempr;
 				data[j] = data[i] - tempi;
-				data[i-1] += tempr;
+				data[i - 1] += tempr;
 				data[i] += tempi;
 			}
-			wr = (wtemp=wr)*wpr - wi*wpi + wr;
-			wi = wi*wpr + wtemp*wpi + wi;
+			wr = (wtemp = wr) * wpr - wi * wpi + wr;
+			wi = wi * wpr + wtemp * wpi + wi;
 		}
 		mmax = istep;
 	}
@@ -195,8 +195,8 @@ void BetatronTunes::FFT(vector<double>& data)
 
 double BetatronTunes::amp(double a, double b, double c)
 {
-	double a1 = -(a+b*c)*(a-b);
-	double b1 = b * sqrt( c*c*(a+b)*(a+b) - 2.*a*b*(2*c*c-c-1.) );
-	double c1 = a*a + b*b + 2.*a*b*c;
-	return (a1+b1)/c1;
+	double a1 = -(a + b * c) * (a - b);
+	double b1 = b * sqrt(c * c * (a + b) * (a + b) - 2. * a * b * (2 * c * c - c - 1.));
+	double c1 = a * a + b * b + 2. * a * b * c;
+	return (a1 + b1) / c1;
 }

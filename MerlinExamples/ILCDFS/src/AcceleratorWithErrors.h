@@ -13,7 +13,7 @@
 
 class AlignmentError;
 
-class AcceleratorWithErrors : public Accelerator
+class AcceleratorWithErrors: public Accelerator
 {
 public:
 

@@ -13,8 +13,6 @@
 #include "LinearAlgebra.h"
 #include "OPFormat.h"
 
-
-void MatrixForm(const RealMatrix&, std::ostream&, const OPFormat& =OPFormat());
-
+void MatrixForm(const RealMatrix&, std::ostream&, const OPFormat& = OPFormat());
 
 #endif

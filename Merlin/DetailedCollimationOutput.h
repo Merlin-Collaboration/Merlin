@@ -27,7 +27,7 @@ namespace ParticleTracking
  * location, so it is useful to diagnose the cause of any given loss.
  *
  */
-class DetailedCollimationOutput : public CollimationOutput
+class DetailedCollimationOutput: public CollimationOutput
 {
 public:
 
@@ -37,7 +37,9 @@ public:
 	/**
 	 * Not needed for DetailedCollimationOutput, as no binning occurs.
 	 */
-	virtual void Finalise() {}
+	virtual void Finalise()
+	{
+	}
 	virtual void Output(std::ostream* os);
 	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
 
@@ -61,4 +63,3 @@ private:
 }
 
 #endif
-

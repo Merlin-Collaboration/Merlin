@@ -7,23 +7,25 @@
 
 #include "ComponentFrame.h"
 
-ComponentFrame::~ComponentFrame ()
-{}
+ComponentFrame::~ComponentFrame()
+{
+}
 
-void ComponentFrame::Invalidate () const
-{}
+void ComponentFrame::Invalidate() const
+{
+}
 
-const string& ComponentFrame::GetType () const
+const string& ComponentFrame::GetType() const
 {
 	_TYPESTR(ComponentFrame);
 }
 
-ModelElement* ComponentFrame::Copy () const
+ModelElement* ComponentFrame::Copy() const
 {
 	return new ComponentFrame(*this);
 }
 
-bool ComponentFrame::IsBoundaryPlane (BoundaryPlane p, const LatticeFrame* aSubFrame) const
+bool ComponentFrame::IsBoundaryPlane(BoundaryPlane p, const LatticeFrame* aSubFrame) const
 {
 	// Should never be called!
 	assert(false);

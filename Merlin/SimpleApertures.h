@@ -21,36 +21,36 @@
 #endif
 
 /**
-* Represents an aperture with a rectangular cross-section.
-* The aperture is assumed symmetric about the axis, and
-* extruded along its geometry.
-*/
-class RectangularAperture : public Aperture
+ * Represents an aperture with a rectangular cross-section.
+ * The aperture is assumed symmetric about the axis, and
+ * extruded along its geometry.
+ */
+class RectangularAperture: public Aperture
 {
 public:
-	RectangularAperture (double width, double height);
+	RectangularAperture(double width, double height);
 
-	double GetFullWidth () const;
-	double GetFullHeight () const;
-	void SetFullWidth (double w);
-	void SetFullHeight (double h);
-
-	/**
-	* Returns true if the point (x,y,z) is within the
-	* aperture. The z coordinate is ignored.
-	*
-	* @retval true If point is within aperture
-	* @retval false
-	*/
-	virtual bool PointInside (double x, double y, double z) const;
+	double GetFullWidth() const;
+	double GetFullHeight() const;
+	void SetFullWidth(double w);
+	void SetFullHeight(double h);
 
 	/**
-	* Returns the radius to the aperture at the angle phi. The
-	* z coordinate is ignored.
-	*
-	* @return Radius to the aperture (at angle phi)
-	*/
-	virtual double GetRadiusAt (double phi, double z) const;
+	 * Returns true if the point (x,y,z) is within the
+	 * aperture. The z coordinate is ignored.
+	 *
+	 * @retval true If point is within aperture
+	 * @retval false
+	 */
+	virtual bool PointInside(double x, double y, double z) const;
+
+	/**
+	 * Returns the radius to the aperture at the angle phi. The
+	 * z coordinate is ignored.
+	 *
+	 * @return Radius to the aperture (at angle phi)
+	 */
+	virtual double GetRadiusAt(double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
 	virtual void printout(std::ostream& out) const;
@@ -67,34 +67,34 @@ inline std::string RectangularAperture::GetApertureType() const
 }
 
 /**
-* Represents an aperture with a circular cross-section.
-* The aperture is assumed to be extruded along its
-* geometry.
-*/
-class CircularAperture : public Aperture
+ * Represents an aperture with a circular cross-section.
+ * The aperture is assumed to be extruded along its
+ * geometry.
+ */
+class CircularAperture: public Aperture
 {
 public:
-	explicit CircularAperture (double r);
+	explicit CircularAperture(double r);
 
-	double GetRadius () const;
-	double GetDiameter () const;
-	void SetRadius (double r);
-	void SetDiameter (double d);
-
-	/**
-	* Returns true if the point (x,y,z) is within the
-	* aperture. The z coordinate is ignored.
-	*
-	* @retval true If point is within aperture
-	* @retval false
-	*/
-	virtual bool PointInside (double x, double y, double z) const;
+	double GetRadius() const;
+	double GetDiameter() const;
+	void SetRadius(double r);
+	void SetDiameter(double d);
 
 	/**
-	* Returns the radius.
-	* @return The radius
-	*/
-	virtual double GetRadiusAt (double phi, double z) const;
+	 * Returns true if the point (x,y,z) is within the
+	 * aperture. The z coordinate is ignored.
+	 *
+	 * @retval true If point is within aperture
+	 * @retval false
+	 */
+	virtual bool PointInside(double x, double y, double z) const;
+
+	/**
+	 * Returns the radius.
+	 * @return The radius
+	 */
+	virtual double GetRadiusAt(double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
 	virtual void printout(std::ostream& out) const;
@@ -103,62 +103,64 @@ private:
 	double r2;
 };
 
-inline RectangularAperture::RectangularAperture (double width, double height)
-	:hw(fabs(width)/2),hh(fabs(height)/2)
-{}
-
-inline double RectangularAperture::GetFullWidth () const
+inline RectangularAperture::RectangularAperture(double width, double height) :
+	hw(fabs(width) / 2), hh(fabs(height) / 2)
 {
-	return 2*hw;
 }
 
-inline double RectangularAperture::GetFullHeight () const
+inline double RectangularAperture::GetFullWidth() const
 {
-	return 2*hh;
+	return 2 * hw;
 }
 
-inline void RectangularAperture::SetFullWidth (double w)
+inline double RectangularAperture::GetFullHeight() const
 {
-	hw=fabs(w)/2;
+	return 2 * hh;
 }
 
-inline void RectangularAperture::SetFullHeight (double h)
+inline void RectangularAperture::SetFullWidth(double w)
 {
-	hh=fabs(h)/2;
+	hw = fabs(w) / 2;
 }
 
-inline bool RectangularAperture::PointInside (double x, double y, double z=0.0) const
+inline void RectangularAperture::SetFullHeight(double h)
 {
-	return fabs(x)<hw && fabs(y)<hh;
+	hh = fabs(h) / 2;
 }
 
-inline CircularAperture::CircularAperture (double r)
-	: r2(r*r)
-{}
+inline bool RectangularAperture::PointInside(double x, double y, double z = 0.0) const
+{
+	return fabs(x) < hw && fabs(y) < hh;
+}
 
-inline double CircularAperture::GetRadius () const
+inline CircularAperture::CircularAperture(double r) :
+	r2(r * r)
+{
+}
+
+inline double CircularAperture::GetRadius() const
 {
 	return sqrt(r2);
 }
 
-inline double CircularAperture::GetDiameter () const
+inline double CircularAperture::GetDiameter() const
 {
-	return 2*GetRadius();
+	return 2 * GetRadius();
 }
 
-inline void CircularAperture::SetRadius (double r)
+inline void CircularAperture::SetRadius(double r)
 {
-	r2=r*r;
+	r2 = r * r;
 }
 
-inline void CircularAperture::SetDiameter (double d)
+inline void CircularAperture::SetDiameter(double d)
 {
-	r2=d*d/4.0;
+	r2 = d * d / 4.0;
 }
 
-inline bool CircularAperture::PointInside (double x, double y, double z) const
+inline bool CircularAperture::PointInside(double x, double y, double z) const
 {
-	return x*x+y*y<r2;
+	return x * x + y * y < r2;
 }
 
 inline std::string CircularAperture::GetApertureType() const
@@ -167,33 +169,33 @@ inline std::string CircularAperture::GetApertureType() const
 }
 
 /**
-* Represents an aperture with an elliptical cross-section.
-* The aperture is assumed extruded along its geometry.
-*/
-class EllipticalAperture : public Aperture
+ * Represents an aperture with an elliptical cross-section.
+ * The aperture is assumed extruded along its geometry.
+ */
+class EllipticalAperture: public Aperture
 {
 public:
-	EllipticalAperture (double width, double height);
+	EllipticalAperture(double width, double height);
 
-	double GetHalfWidth () const;
-	double GetHalfHeight () const;
-
-	/**
-	* Returns true if the point (x,y,z) is within the
-	* aperture. The z coordinate is ignored.
-	*
-	* @retval true If point is within aperture
-	* @retval false
-	*/
-	virtual bool PointInside (double x, double y, double z) const;
+	double GetHalfWidth() const;
+	double GetHalfHeight() const;
 
 	/**
-	* Returns the radius to the aperture at the angle phi. The
-	* z coordinate is ignored.
-	*
-	* @return Radius to the aperture (at angle phi)
-	*/
-	virtual double GetRadiusAt (double phi, double z) const;
+	 * Returns true if the point (x,y,z) is within the
+	 * aperture. The z coordinate is ignored.
+	 *
+	 * @retval true If point is within aperture
+	 * @retval false
+	 */
+	virtual bool PointInside(double x, double y, double z) const;
+
+	/**
+	 * Returns the radius to the aperture at the angle phi. The
+	 * z coordinate is ignored.
+	 *
+	 * @return Radius to the aperture (at angle phi)
+	 */
+	virtual double GetRadiusAt(double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
 	virtual void printout(std::ostream& out) const;
@@ -206,23 +208,24 @@ private:
 	double HV;
 };
 
-inline EllipticalAperture::EllipticalAperture (double ehh, double ehv)
-	: hw(ehh), hh(ehv), EHH2(ehh*ehh), HV((ehh*ehh)/(ehv*ehv))
-{}
+inline EllipticalAperture::EllipticalAperture(double ehh, double ehv) :
+	hw(ehh), hh(ehv), EHH2(ehh * ehh), HV((ehh * ehh) / (ehv * ehv))
+{
+}
 
-inline double EllipticalAperture::GetHalfWidth () const
+inline double EllipticalAperture::GetHalfWidth() const
 {
 	return hw;
 }
 
-inline double EllipticalAperture::GetHalfHeight () const
+inline double EllipticalAperture::GetHalfHeight() const
 {
 	return hh;
 }
 
-inline bool EllipticalAperture::PointInside (double x, double y, double z) const
+inline bool EllipticalAperture::PointInside(double x, double y, double z) const
 {
-	return (x*x + y*y*HV) < EHH2;
+	return (x * x + y * y * HV) < EHH2;
 }
 
 inline std::string EllipticalAperture::GetApertureType() const
@@ -231,13 +234,13 @@ inline std::string EllipticalAperture::GetApertureType() const
 }
 
 /**
-* Represents an aperture with an octagon cross-section.
-* The aperture is assumed extruded along its geometry.
-*/
-class OctagonalAperture : public Aperture
+ * Represents an aperture with an octagon cross-section.
+ * The aperture is assumed extruded along its geometry.
+ */
+class OctagonalAperture: public Aperture
 {
 public:
-	OctagonalAperture (double width, double height, double ang1, double ang2);
+	OctagonalAperture(double width, double height, double ang1, double ang2);
 
 	//Functions to extract the aperture parameters
 	double GetHalfWidth() const;
@@ -246,21 +249,21 @@ public:
 	double GetAngle2() const;
 
 	/**
-	* Returns true if the point (x,y,z) is within the
-	* aperture. The z coordinate is ignored.
-	*
-	* @retval true If point is within aperture
-	* @retval false
-	*/
-	virtual bool PointInside (double x, double y, double z) const;
+	 * Returns true if the point (x,y,z) is within the
+	 * aperture. The z coordinate is ignored.
+	 *
+	 * @retval true If point is within aperture
+	 * @retval false
+	 */
+	virtual bool PointInside(double x, double y, double z) const;
 
 	/**
-	* Returns the radius to the aperture at the angle phi. The
-	* z coordinate is ignored.
-	*
-	* @return Radius to the aperture (at angle phi)
-	*/
-	virtual double GetRadiusAt (double phi, double z) const;
+	 * Returns the radius to the aperture at the angle phi. The
+	 * z coordinate is ignored.
+	 *
+	 * @return Radius to the aperture (at angle phi)
+	 */
+	virtual double GetRadiusAt(double phi, double z) const;
 
 	virtual std::string GetApertureType() const;
 	virtual void printout(std::ostream& out) const;
@@ -282,46 +285,46 @@ private:
 	double c3;
 };
 
-inline OctagonalAperture::OctagonalAperture (double h, double v, double a1, double a2)
-	: hw(h), hh(v), angle1(a1), angle2(a2)
+inline OctagonalAperture::OctagonalAperture(double h, double v, double a1, double a2) :
+	hw(h), hh(v), angle1(a1), angle2(a2)
 {
 	//Compute the tangents.
 	tana1 = tan(angle1);
-	tana2 = tan(pi/2 - angle2);
+	tana2 = tan(pi / 2 - angle2);
 
 	//Make some constants.
 	//(hh*tana2 - hw)
-	c1 = (hh*tana2 - hw);
+	c1 = (hh * tana2 - hw);
 
 	//hw*tana1
-	c2 = hw*tana1;
+	c2 = hw * tana1;
 
 	//hh - hw*tana1
 	c3 = hh - c2;
 }
 
-inline bool OctagonalAperture::PointInside (double x, double y, double z) const
+inline bool OctagonalAperture::PointInside(double x, double y, double z) const
 {
 	//This is just taken from trrun.f90 in MAD-X. - credit to: 2015-Feb-20  18:42:26  ghislain: added octagon shape
 
 	/*
-	!*** case of octagon: test outer rectangle (ap1,ap2) then test cut corner.
-	lost =  x .gt. ap1 .or. y .gt. ap2 .or. &
+	   !*** case of octagon: test outer rectangle (ap1,ap2) then test cut corner.
+	   lost =  x .gt. ap1 .or. y .gt. ap2 .or. &
 	     (ap2*tan(pi/2 - ap4) - ap1)*(y - ap1*tan(ap3)) - (ap2 - ap1*tan(ap3))*(x - ap1) .lt. zero
-	*/
+	 */
 
 	double fabsx = fabs(x);
 	double fabsy = fabs(y);
 
-	x=fabsx;
-	y=fabsy;
+	x = fabsx;
+	y = fabsy;
 	//First check the rectangle
 	if(x >= hw || y >= hh)
 	{
 		return false;
 	}
 
-	if(c1*(y - c2) - c3*(x - hw) <= 0 )
+	if(c1 * (y - c2) - c3 * (x - hw) <= 0)
 	{
 		return false;
 	}
@@ -356,4 +359,3 @@ inline std::string OctagonalAperture::GetApertureType() const
 }
 
 #endif
-

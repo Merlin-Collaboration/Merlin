@@ -27,7 +27,6 @@ public:
 	const RealMatrix& GetMatrix() const;
 	const RealVector& GetReference() const;
 
-
 private:
 
 	Accelerator* acc;

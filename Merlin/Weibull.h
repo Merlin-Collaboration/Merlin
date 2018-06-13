@@ -31,13 +31,13 @@ public:
 	virtual double operator()();
 };
 
-
 inline void Weibull::setState()
 {
 	pInvAlpha = 1.0 / pAlpha;
 }
 
-inline Weibull::Weibull(double alpha, double beta,  RNG *gen) : Random(gen)
+inline Weibull::Weibull(double alpha, double beta, RNG *gen) :
+	Random(gen)
 {
 	pAlpha = alpha;
 	pBeta = beta;

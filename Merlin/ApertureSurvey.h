@@ -37,9 +37,12 @@ namespace ApertureSurvey
 //! Mode for survey. Changes how step is interpreted.
 enum SurveyType
 {
-	points_per_element, /**< Record \a step times per element, e.g. 1: just at start, 2: start and end, 3: start, end and middle. */
-	distance, /**< Record every \a step distance, within each element. Include start and end of each element. */
+	points_per_element,
+	/**< Record \a step times per element, e.g. 1: just at start, 2: start and end, 3: start, end and middle. */
+	distance,
+	/**< Record every \a step distance, within each element. Include start and end of each element. */
 	abs_distance /**< Record every \a step distance, along \a model. */
+
 };
 
 /**

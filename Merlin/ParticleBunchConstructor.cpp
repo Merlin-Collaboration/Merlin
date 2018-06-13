@@ -17,14 +17,15 @@ namespace ParticleTracking
 
 inline double RandomGauss(double variance, double cutoff)
 {
-	return cutoff==0 ? RandomNG::normal(0,variance) :  RandomNG::normal(0,variance,cutoff);
+	return cutoff == 0 ? RandomNG::normal(0, variance) :  RandomNG::normal(0, variance, cutoff);
 }
 
-ParticleBunchConstructor::ParticleBunchConstructor (const BeamData& beam, size_t npart, DistributionType dist)
-	: np(npart),dtype(dist),cutoffs(0),beamdat(beam),itsFilter(nullptr),M(NormalTransform(beam)),force_c(false)
-{}
+ParticleBunchConstructor::ParticleBunchConstructor(const BeamData& beam, size_t npart, DistributionType dist) :
+	np(npart), dtype(dist), cutoffs(0), beamdat(beam), itsFilter(nullptr), M(NormalTransform(beam)), force_c(false)
+{
+}
 
-ParticleBunchConstructor::~ParticleBunchConstructor ()
+ParticleBunchConstructor::~ParticleBunchConstructor()
 {
 	if(itsFilter)
 	{
@@ -32,38 +33,38 @@ ParticleBunchConstructor::~ParticleBunchConstructor ()
 	}
 }
 
-void ParticleBunchConstructor::SetBunchData (const BeamData& beam)
+void ParticleBunchConstructor::SetBunchData(const BeamData& beam)
 {
 	beamdat = beam;
 	M.R = NormalTransform(beam);
 }
 
-void ParticleBunchConstructor::SetNumParticles (size_t npart)
+void ParticleBunchConstructor::SetNumParticles(size_t npart)
 {
-	assert(npart>0);
-	np=npart;
+	assert(npart > 0);
+	np = npart;
 }
 
-void ParticleBunchConstructor::SetDistributionCutoff (double cut)
+void ParticleBunchConstructor::SetDistributionCutoff(double cut)
 {
 	cutoffs = PSvector(fabs(cut));
 }
 
-void ParticleBunchConstructor::SetDistributionCutoff (const PSvector& cut)
+void ParticleBunchConstructor::SetDistributionCutoff(const PSvector& cut)
 {
-	cutoffs=cut;
+	cutoffs = cut;
 }
 
-void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
+void ParticleBunchConstructor::ConstructBunchDistribution(int bunchIndex) const
 {
 	// The first particle is *always* the centroid particle
 	PSvector p;
-	p.x()=beamdat.x0;
-	p.xp()=beamdat.xp0;
-	p.y()=beamdat.y0;
-	p.yp()=beamdat.yp0;
-	p.dp()=0;
-	p.ct()=beamdat.ct0;
+	p.x() = beamdat.x0;
+	p.xp() = beamdat.xp0;
+	p.y() = beamdat.y0;
+	p.yp() = beamdat.yp0;
+	p.dp() = 0;
+	p.ct() = beamdat.ct0;
 	p.type() = -1.0;
 	p.location() = -1.0;
 	p.id() = 0;
@@ -71,7 +72,7 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 	pbunch.push_back(p);
 
 	size_t i = 1;
-	while(i<np)
+	while(i < np)
 	{
 		p = GenerateFromDistribution();
 
@@ -86,14 +87,14 @@ void ParticleBunchConstructor::ConstructBunchDistribution (int bunchIndex) const
 		// Apply Courant-Snyder
 		M.Apply(p);
 
-		p+=pbunch.front(); // add centroid
+		p += pbunch.front(); // add centroid
 
 		p.type() = -1.0;
 		p.location() = -1.0;
 		p.id() = i;
 		p.sd() = 0.0;
 
-		if(itsFilter==nullptr || itsFilter->Apply(p))
+		if(itsFilter == nullptr || itsFilter->Apply(p))
 		{
 			pbunch.push_back(p);
 			i++;
@@ -113,91 +114,91 @@ PSvector ParticleBunchConstructor::GenerateFromDistribution() const
 	switch(dtype)
 	{
 	case normalDistribution:
-		p.x()	= RandomGauss(1,cutoffs.x());
-		p.xp()	= RandomGauss(1,cutoffs.xp());
-		p.y()	= RandomGauss(1,cutoffs.y());
-		p.yp()	= RandomGauss(1,cutoffs.yp());
-		p.dp()	= RandomGauss(1,cutoffs.dp());
-		p.ct()	= RandomGauss(1,cutoffs.ct());
+		p.x()   = RandomGauss(1, cutoffs.x());
+		p.xp()  = RandomGauss(1, cutoffs.xp());
+		p.y()   = RandomGauss(1, cutoffs.y());
+		p.yp()  = RandomGauss(1, cutoffs.yp());
+		p.dp()  = RandomGauss(1, cutoffs.dp());
+		p.ct()  = RandomGauss(1, cutoffs.ct());
 		break;
 	case flatDistribution:
-		p.x()	= RandomNG::uniform(-1,1);
-		p.xp()	= RandomNG::uniform(-1,1);
-		p.y()	= RandomNG::uniform(-1,1);
-		p.yp()	= RandomNG::uniform(-1,1);
-		p.dp()	= RandomNG::uniform(-1,1);
-		p.ct()	= RandomNG::uniform(-1,1);
+		p.x()   = RandomNG::uniform(-1, 1);
+		p.xp()  = RandomNG::uniform(-1, 1);
+		p.y()   = RandomNG::uniform(-1, 1);
+		p.yp()  = RandomNG::uniform(-1, 1);
+		p.dp()  = RandomNG::uniform(-1, 1);
+		p.ct()  = RandomNG::uniform(-1, 1);
 		break;
 	case skewHaloDistribution:
 	case ringDistribution:
-		u = RandomNG::uniform(-pi,pi);
-		p.x()	= cos(u);
-		p.xp()	= sin(u);
-		u = RandomNG::uniform(-pi,pi);
-		p.y()	= cos(u);
-		p.yp()	= sin(u);
-		p.dp()	= RandomNG::uniform(-1,1);
-		p.ct()	= RandomNG::uniform(-1,1);
+		u = RandomNG::uniform(-pi, pi);
+		p.x()   = cos(u);
+		p.xp()  = sin(u);
+		u = RandomNG::uniform(-pi, pi);
+		p.y()   = cos(u);
+		p.yp()  = sin(u);
+		p.dp()  = RandomNG::uniform(-1, 1);
+		p.ct()  = RandomNG::uniform(-1, 1);
 		break;
 	case horizontalHaloDistribution1:
-		u = RandomNG::uniform(-pi,pi);
-		p.x()	= cos(u);
-		p.xp()	= sin(u);
-		u = RandomNG::uniform(-pi,pi);
-		p.y()	= 0.0;
-		p.yp()	= 0.0;
-		p.dp()	= RandomNG::uniform(-1,1);
-		p.ct()	= RandomNG::uniform(-1,1);
+		u = RandomNG::uniform(-pi, pi);
+		p.x()   = cos(u);
+		p.xp()  = sin(u);
+		u = RandomNG::uniform(-pi, pi);
+		p.y()   = 0.0;
+		p.yp()  = 0.0;
+		p.dp()  = RandomNG::uniform(-1, 1);
+		p.ct()  = RandomNG::uniform(-1, 1);
 		break;
 	case verticalHaloDistribution1:
-		u = RandomNG::uniform(-pi,pi);
-		p.x()	= 0.0;
-		p.xp()	= 0.0;
-		u = RandomNG::uniform(-pi,pi);
-		p.y()	= cos(u);
-		p.yp()	= sin(u);
-		p.dp()	= RandomNG::uniform(-1,1);
-		p.ct()	= RandomNG::uniform(-1,1);
+		u = RandomNG::uniform(-pi, pi);
+		p.x()   = 0.0;
+		p.xp()  = 0.0;
+		u = RandomNG::uniform(-pi, pi);
+		p.y()   = cos(u);
+		p.yp()  = sin(u);
+		p.dp()  = RandomNG::uniform(-1, 1);
+		p.ct()  = RandomNG::uniform(-1, 1);
 		break;
 	case horizontalHaloDistribution2:
-		u = RandomNG::uniform(-pi,pi);
-		p.x()	= cos(u);
-		p.xp()	= sin(u);
-		u = RandomNG::uniform(-pi,pi);
-		p.y()	= RandomGauss(1,cutoffs.y());
-		p.yp()	= RandomGauss(1,cutoffs.yp());
-		p.dp()	= RandomNG::uniform(-1,1);
-		p.ct()	= RandomNG::uniform(-1,1);
+		u = RandomNG::uniform(-pi, pi);
+		p.x()   = cos(u);
+		p.xp()  = sin(u);
+		u = RandomNG::uniform(-pi, pi);
+		p.y()   = RandomGauss(1, cutoffs.y());
+		p.yp()  = RandomGauss(1, cutoffs.yp());
+		p.dp()  = RandomNG::uniform(-1, 1);
+		p.ct()  = RandomNG::uniform(-1, 1);
 		break;
 	case verticalHaloDistribution2:
-		u = RandomNG::uniform(-pi,pi);
-		p.x()	= RandomGauss(1,cutoffs.x());
-		p.xp()	= RandomGauss(1,cutoffs.xp());
-		u = RandomNG::uniform(-pi,pi);
-		p.y()	= cos(u);
-		p.yp()	= sin(u);
-		p.dp()	= RandomNG::uniform(-1,1);
-		p.ct()	= RandomNG::uniform(-1,1);
+		u = RandomNG::uniform(-pi, pi);
+		p.x()   = RandomGauss(1, cutoffs.x());
+		p.xp()  = RandomGauss(1, cutoffs.xp());
+		u = RandomNG::uniform(-pi, pi);
+		p.y()   = cos(u);
+		p.yp()  = sin(u);
+		p.dp()  = RandomNG::uniform(-1, 1);
+		p.ct()  = RandomNG::uniform(-1, 1);
 		break;
 	}
 	return p;
 }
 
-Bunch* ParticleBunchConstructor::ConstructBunch (int bunchIndex) const
+Bunch* ParticleBunchConstructor::ConstructBunch(int bunchIndex) const
 {
 	ParticleBunchConstructor::ConstructBunchDistribution();
-	return new ParticleBunch(beamdat.p0,beamdat.charge,pbunch);
+	return new ParticleBunch(beamdat.p0, beamdat.charge, pbunch);
 }
 
-void ParticleBunchConstructor::ForceCentroid (bool fc)
+void ParticleBunchConstructor::ForceCentroid(bool fc)
 {
 	force_c = fc;
 }
 
-void ParticleBunchConstructor::DoForceCentroid () const
+void ParticleBunchConstructor::DoForceCentroid() const
 {
 	PSvector xm = pbunch.front();
-	for (auto p = pbunch.begin()+1; p != pbunch.end(); ++p)
+	for(auto p = pbunch.begin() + 1; p != pbunch.end(); ++p)
 	{
 		xm += *p;
 	}
@@ -205,7 +206,7 @@ void ParticleBunchConstructor::DoForceCentroid () const
 	xm /= np;
 	xm -= pbunch.front();
 
-	for (auto p = pbunch.begin()+1; p != pbunch.end(); ++p)
+	for(auto p = pbunch.begin() + 1; p != pbunch.end(); ++p)
 	{
 		p->x() -= xm.x();
 		p->xp() -= xm.xp();
@@ -215,6 +216,5 @@ void ParticleBunchConstructor::DoForceCentroid () const
 		p->ct() -= xm.ct();
 	}
 }
-
 
 } //end namespace ParticleTracking

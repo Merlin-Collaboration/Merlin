@@ -14,7 +14,7 @@ namespace
 inline double Wavelength(double f)
 {
 	using PhysicalConstants::SpeedOfLight;
-	return SpeedOfLight/f;
+	return SpeedOfLight / f;
 }
 }
 
@@ -22,37 +22,38 @@ inline double Wavelength(double f)
 
 const int SWRFStructure::ID = UniqueIndex();
 
-SWRFStructure::SWRFStructure (const string& id, int ncells, double f, double E0, double phi)
-	: RFStructure(id,Wavelength(f)*ncells/2,new SWRFfield(f,E0,phi))
-{}
+SWRFStructure::SWRFStructure(const string& id, int ncells, double f, double E0, double phi) :
+	RFStructure(id, Wavelength(f) * ncells / 2, new SWRFfield(f, E0, phi))
+{
+}
 
-SWRFStructure::SWRFStructure (const SWRFStructure& rhs)
-	: RFStructure(rhs.GetName(),rhs.GetLength(),new SWRFfield(static_cast<const SWRFfield&>(rhs.GetField())))
-{}
+SWRFStructure::SWRFStructure(const SWRFStructure& rhs) :
+	RFStructure(rhs.GetName(), rhs.GetLength(), new SWRFfield(static_cast<const SWRFfield&>(rhs.GetField())))
+{
+}
 
-const string& SWRFStructure::GetType () const
+const string& SWRFStructure::GetType() const
 {
 	_TYPESTR(SWRFStructure)
 }
 
-int SWRFStructure::GetIndex () const
+int SWRFStructure::GetIndex() const
 {
 	return ID;
 }
 
-void SWRFStructure::PrepareTracker (ComponentTracker& aTracker)
+void SWRFStructure::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,AcceleratorComponent)
+	_PREPTRACK(aTracker, AcceleratorComponent)
 }
 
-void SWRFStructure::RotateY180 ()
+void SWRFStructure::RotateY180()
 {
 	double E = GetField().GetAmplitude();
 	GetField().SetAmplitude(-E);
 }
 
-ModelElement* SWRFStructure::Copy () const
+ModelElement* SWRFStructure::Copy() const
 {
 	return new SWRFStructure(*this);
 }
-

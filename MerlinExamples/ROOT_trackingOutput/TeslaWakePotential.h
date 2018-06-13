@@ -12,7 +12,7 @@
 
 // A form of WakeFieldProcess::WakePotential that uses linear interpolation
 // from a tabulated wakefield file.
-class TeslaWakePotentials : public WakePotentials
+class TeslaWakePotentials: public WakePotentials
 {
 public:
 	double Wlong(double z) const;
@@ -20,4 +20,3 @@ public:
 };
 
 #endif
-

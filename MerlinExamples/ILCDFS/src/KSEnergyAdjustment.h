@@ -19,7 +19,7 @@
 // energy difference is made up by adjusting the initial beam energy.
 //
 // Note that this method does not support incremental tracking.
-class KSEnergyAdjustment :public EnergyAdjustmentPolicy
+class KSEnergyAdjustment: public EnergyAdjustmentPolicy
 {
 
 public:
@@ -54,9 +54,8 @@ private:
 
 	double energy0;
 	double delta;
-	std::pair<size_t,size_t> cKlysRange;
+	std::pair<size_t, size_t> cKlysRange;
 	double dEbeam;
 };
 
 #endif
-

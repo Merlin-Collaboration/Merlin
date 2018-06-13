@@ -20,29 +20,34 @@ class BeamDynamicsModel
 {
 public:
 
-	BeamDynamicsModel(const std::string& aName) : output(nullptr),itsName(aName) {}
+	BeamDynamicsModel(const std::string& aName) :
+		output(nullptr), itsName(aName)
+	{
+	}
 
-	virtual ~BeamDynamicsModel() {}
+	virtual ~BeamDynamicsModel()
+	{
+	}
 
 	// Sets the beamline to be tracked by all subsequent
 	// TrackBunch() operations.
-	virtual void SetBeamline(const AcceleratorModel::Beamline& bl) =0;
+	virtual void SetBeamline(const AcceleratorModel::Beamline& bl) = 0;
 
 	// Sets the initial bunch to be tracked by all subsequent
 	// TrackBunch() operations.
-	virtual void SetInitialBunch(const Bunch* bunch0) =0;
+	virtual void SetInitialBunch(const Bunch* bunch0) = 0;
 
 	// Tracks a copy of the current initial bunch through
 	// the current beamline. Returns the resulting tracked
 	// bunch;
-	virtual Bunch* TrackBunch() =0;
+	virtual Bunch* TrackBunch() = 0;
 
 	// Tracks and updates the specified bunch. This method
 	// does not affect the current initial bunch set by SetInitialBunch().
-	virtual void TrackThisBunch(Bunch* b) =0;
+	virtual void TrackThisBunch(Bunch* b) = 0;
 
 	// Creates a bunch with the given initial beam specification.
-	virtual Bunch* CreateBunch(const BeamData& beam0) =0;
+	virtual Bunch* CreateBunch(const BeamData& beam0) = 0;
 
 	// Return the name of this model
 	const std::string& GetName() const
@@ -65,8 +70,7 @@ private:
 
 inline void BeamDynamicsModel::SetOutput(SimulationOutput* so)
 {
-	output=so;
+	output = so;
 }
 
 #endif
-

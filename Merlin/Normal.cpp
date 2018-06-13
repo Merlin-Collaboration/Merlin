@@ -17,7 +17,7 @@
 double Normal::operator()()
 {
 
-	if (haveCachedNormal == 1)
+	if(haveCachedNormal == 1)
 	{
 		haveCachedNormal = 0;
 		return cachedNormal * pStdDev + pMean;
@@ -25,10 +25,10 @@ double Normal::operator()()
 	else
 	{
 
-		for(;;)
+		for(;; )
 		{
-			double u1 = pGenerator -> asDouble();
-			double u2 = pGenerator -> asDouble();
+			double u1 = pGenerator->asDouble();
+			double u2 = pGenerator->asDouble();
 			double v1 = 2 * u1 - 1;
 			double v2 = 2 * u2 - 1;
 			double w = (v1 * v1) + (v2 * v2);
@@ -37,9 +37,9 @@ double Normal::operator()()
 			//	We actually generate two IID normal distribution variables.
 			//	We cache the one & return the other.
 			//
-			if (w <= 1)
+			if(w <= 1)
 			{
-				double y = sqrt( (-2 * log(w)) / w);
+				double y = sqrt((-2 * log(w)) / w);
 				double x1 = v1 * y;
 				double x2 = v2 * y;
 
@@ -50,4 +50,3 @@ double Normal::operator()()
 		}
 	}
 }
-

@@ -30,28 +30,38 @@ namespace
 struct MatchName
 {
 	StringPattern pattern;
-	MatchName(const string& pat) : pattern(pat) {}
+	MatchName(const string& pat) :
+		pattern(pat)
+	{
+	}
 	bool operator()(const ComponentFrame* frm)
 	{
 		return pattern((*frm).GetComponent().GetQualifiedName());
 	}
+
 };
 
 struct ModelStats
 {
-	map<string,int>& s;
-	ModelStats(map<string,int>& stats) :s(stats) {}
+	map<string, int>& s;
+	ModelStats(map<string, int>& stats) :
+		s(stats)
+	{
+	}
 	void operator()(const ModelElement* element)
 	{
 		s[element->GetType()]++;
 	}
+
 };
 
-class ExtractAcceleratorSupports : public FrameTraverser
+class ExtractAcceleratorSupports: public FrameTraverser
 {
 public:
-	explicit ExtractAcceleratorSupports(AcceleratorSupportList& asList)
-		: asl(asList), nFound(0) {}
+	explicit ExtractAcceleratorSupports(AcceleratorSupportList& asList) :
+		asl(asList), nFound(0)
+	{
+	}
 	void ActOn(LatticeFrame* frame);
 private:
 	AcceleratorSupportList& asl;
@@ -68,18 +78,19 @@ void ExtractAcceleratorSupports::ActOn(LatticeFrame* aFrame)
 	}
 }
 
-}//end anonymous namespace
+} //end anonymous namespace
 
 extern ChannelServer* ConstructChannelServer();
 
-AcceleratorModel::AcceleratorModel() : globalFrame(nullptr)
+AcceleratorModel::AcceleratorModel() :
+	globalFrame(nullptr)
 {
 	theElements = new ElementRepository();
 	chServer = ConstructChannelServer();
 	chServer->SetRepository(theElements);
 }
 
-AcceleratorModel::~AcceleratorModel ()
+AcceleratorModel::~AcceleratorModel()
 {
 	if(chServer)
 	{
@@ -95,85 +106,85 @@ AcceleratorModel::~AcceleratorModel ()
 	}
 }
 
-AcceleratorModel::Beamline AcceleratorModel::GetBeamline ()
+AcceleratorModel::Beamline AcceleratorModel::GetBeamline()
 {
 	BeamlineIterator i = lattice.end();
-	advance(i,-1);
-	return Beamline(lattice.begin(),i,0,lattice.size()-1);
+	advance(i, -1);
+	return Beamline(lattice.begin(), i, 0, lattice.size() - 1);
 }
 
-AcceleratorModel::Beamline AcceleratorModel::GetBeamline (AcceleratorModel::Index n1, AcceleratorModel::Index n2)
+AcceleratorModel::Beamline AcceleratorModel::GetBeamline(AcceleratorModel::Index n1, AcceleratorModel::Index n2)
 {
-	if(n2>=lattice.size())
+	if(n2 >= lattice.size())
 	{
 		throw BadRange();
 	}
 
 	BeamlineIterator i1 = lattice.begin();
 	BeamlineIterator i2 = lattice.begin();
-	advance(i1,n1);
-	advance(i2,n2);
-	return Beamline(i1,i2,n1,n2);
+	advance(i1, n1);
+	advance(i2, n2);
+	return Beamline(i1, i2, n1, n2);
 }
 
-AcceleratorModel::Beamline AcceleratorModel::GetBeamline (const string& pat1, const string& pat2, int n1, int n2)
+AcceleratorModel::Beamline AcceleratorModel::GetBeamline(const string& pat1, const string& pat2, int n1, int n2)
 {
-	assert(n1>=1 && n2>=1);
+	assert(n1 >= 1 && n2 >= 1);
 
-	StringPattern p1(pat1),p2(pat2);
-	BeamlineIterator i1=lattice.end();
-	BeamlineIterator i2=lattice.end();
-	int nn1(0),nn2(0);
-	int ni=0, ni1=0, ni2=0; // initialise to please gcc. Paths where they don't get set result in throw.
+	StringPattern p1(pat1), p2(pat2);
+	BeamlineIterator i1 = lattice.end();
+	BeamlineIterator i2 = lattice.end();
+	int nn1(0), nn2(0);
+	int ni = 0, ni1 = 0, ni2 = 0; // initialise to please gcc. Paths where they don't get set result in throw.
 
-	for(BeamlineIterator i = lattice.begin(); i!=lattice.end() && (nn1!=n1 || nn2!=n2); i++,ni++)
+	for(BeamlineIterator i = lattice.begin(); i != lattice.end() && (nn1 != n1 || nn2 != n2); i++, ni++)
 	{
 		string id = (*i)->IsComponent() ? ((*i)->GetComponent()).GetQualifiedName() : (*i)->GetQualifiedName();
-		if(nn1<n1 && p1(id) && ++nn1 == n1)
+		if(nn1 < n1 && p1(id) && ++nn1 == n1)
 		{
-			i1=i;
-			ni1=ni;
+			i1 = i;
+			ni1 = ni;
 		}
-		else if(nn2<n2 && p2(id) && ++nn2 == n2)
+		else if(nn2 < n2 && p2(id) && ++nn2 == n2)
 		{
-			i2=i;
-			ni2=ni;
+			i2 = i;
+			ni2 = ni;
 		}
 	}
 
-	if(i1==lattice.end() || i2==lattice.end())
+	if(i1 == lattice.end() || i2 == lattice.end())
 	{
 		throw BadRange();
 	}
 
-	return Beamline(i1,i2,ni1,ni2);
+	return Beamline(i1, i2, ni1, ni2);
 }
 
-AcceleratorModel::RingIterator AcceleratorModel::GetRing (int n)
+AcceleratorModel::RingIterator AcceleratorModel::GetRing(int n)
 {
 	BeamlineIterator i = lattice.begin();
-	advance(i,n);
-	return RingIterator(lattice,i);
+	advance(i, n);
+	return RingIterator(lattice, i);
 }
 
-AcceleratorModel::Beamline AcceleratorModel::GetReversedBeamline ()
+AcceleratorModel::Beamline AcceleratorModel::GetReversedBeamline()
 {
 	BeamlineIterator i = lattice.end();
-	advance(i,-1);
-	return Beamline(i,lattice.begin(),lattice.size()-1,0);
+	advance(i, -1);
+	return Beamline(i, lattice.begin(), lattice.size() - 1, 0);
 }
 
-int AcceleratorModel::ExtractComponents (const string& pat, vector<ComponentFrame*>& frames)
+int AcceleratorModel::ExtractComponents(const string& pat, vector<ComponentFrame*>& frames)
 {
 	vector<ComponentFrame*> results;
-	if(pat=="*") // copy everything!
+	if(pat == "*") // copy everything!
 	{
-		copy(lattice.begin(),lattice.end(),back_inserter(results));
+		copy(lattice.begin(), lattice.end(), back_inserter(results));
 	}
 	else
 	{
 		MatchName mname(pat);
-		for(BeamlineIterator bi=lattice.begin(); bi!=lattice.end(); bi++)
+		for(BeamlineIterator bi = lattice.begin(); bi != lattice.end(); bi++)
 		{
 			if(mname(*bi))
 			{
@@ -185,34 +196,36 @@ int AcceleratorModel::ExtractComponents (const string& pat, vector<ComponentFram
 	return frames.size();
 }
 
-int AcceleratorModel::ExtractModelElements (const string& pat, vector<ModelElement*>& results)
+int AcceleratorModel::ExtractModelElements(const string& pat, vector<ModelElement*>& results)
 {
-	return theElements->Find(pat,results);
+	return theElements->Find(pat, results);
 }
 
-size_t AcceleratorModel::GetROChannels (const string& chID, std::vector<ROChannel*>& channels)
+size_t AcceleratorModel::GetROChannels(const string& chID, std::vector<ROChannel*>& channels)
 {
-	return chServer->GetROChannels(chID,channels);
+	return chServer->GetROChannels(chID, channels);
 }
 
-size_t AcceleratorModel::GetRWChannels (const string& chID, std::vector<RWChannel*>& channels)
+size_t AcceleratorModel::GetRWChannels(const string& chID, std::vector<RWChannel*>& channels)
 {
-	return chServer->GetRWChannels(chID,channels);
+	return chServer->GetRWChannels(chID, channels);
 }
 
-size_t AcceleratorModel::GetROChannels (AcceleratorModel::Beamline& aBeamline, const std::string& chid, std::vector<ROChannel*>& channels)
+size_t AcceleratorModel::GetROChannels(AcceleratorModel::Beamline& aBeamline, const std::string& chid,
+	std::vector<ROChannel*>& channels)
 {
-	return chServer->GetROChannels(aBeamline,chid,channels);
+	return chServer->GetROChannels(aBeamline, chid, channels);
 }
 
-size_t AcceleratorModel::GetRWChannels (AcceleratorModel::Beamline& aBeamline, const std::string& chid, std::vector<RWChannel*>& channels)
+size_t AcceleratorModel::GetRWChannels(AcceleratorModel::Beamline& aBeamline, const std::string& chid,
+	std::vector<RWChannel*>& channels)
 {
-	return chServer->GetRWChannels(aBeamline,chid,channels);
+	return chServer->GetRWChannels(aBeamline, chid, channels);
 }
 
-void AcceleratorModel::AddModelElement (ModelElement* element)
+void AcceleratorModel::AddModelElement(ModelElement* element)
 {
-	if(element!=nullptr)
+	if(element != nullptr)
 	{
 		theElements->Add(element);
 	}
@@ -223,7 +236,7 @@ void AcceleratorModel::InstallModelElement(AcceleratorComponent* element, double
 	// FIXME: implement element having a length
 	if(element->GetLength() != 0)
 	{
-		std::cout<< "Currently only zero length elements can be added" <<std::endl;
+		std::cout << "Currently only zero length elements can be added" << std::endl;
 		exit(1);
 	}
 
@@ -238,11 +251,11 @@ void AcceleratorModel::InstallModelElement(AcceleratorComponent* element, double
 	{
 		AcceleratorComponent* ac = &((*current_cf)->GetComponent());
 		s += ac->GetLength();
-		if(s>at)
+		if(s > at)
 		{
 			std::cout << "Found position in:" << ac->GetQualifiedName()
-			          << " (from:" << s-ac->GetLength() << " to:" << s
-			          << ")" << std::endl;
+					  << " (from:" << s - ac->GetLength() << " to:" << s
+					  << ")" << std::endl;
 			current_ac = ac;
 			current_name = ac->GetName();
 			cut_len1 = at - s + ac->GetLength();
@@ -266,17 +279,17 @@ void AcceleratorModel::InstallModelElement(AcceleratorComponent* element, double
 	}
 
 	// Create new drift sections, and frames to hold them
-	Drift* drift1 = new Drift(current_name+"_part1", cut_len1);
-	Drift* drift2 = new Drift(current_name+"_part2", cut_len2);
+	Drift* drift1 = new Drift(current_name + "_part1", cut_len1);
+	Drift* drift2 = new Drift(current_name + "_part2", cut_len2);
 	auto c_drift1 = new TComponentFrame<Drift>(*drift1);
 	auto c_drift2 = new TComponentFrame<Drift>(*drift2);
 	auto c_element = new TComponentFrame<AcceleratorComponent>(*element);
 
 	// set lattice positions
-	drift1->SetComponentLatticePosition(at-cut_len1);
+	drift1->SetComponentLatticePosition(at - cut_len1);
 	drift2->SetComponentLatticePosition(at);
 	element->SetComponentLatticePosition(at);
-	c_drift1->SetLocalPosition(at-cut_len1);
+	c_drift1->SetLocalPosition(at - cut_len1);
 	c_drift2->SetLocalPosition(at);
 	c_element->SetLocalPosition(at);
 
@@ -291,48 +304,49 @@ void AcceleratorModel::InstallModelElement(AcceleratorComponent* element, double
 	theElements->Add(c_element);
 }
 
-void AcceleratorModel::ReportModelStatistics (std::ostream& os) const
+void AcceleratorModel::ReportModelStatistics(std::ostream& os) const
 {
 	using std::map;
 
-	os<<"Arc length of beamline:     "<<globalFrame->GetGeometryLength()<<" meter"<<endl;
-	os<<"Total number of components: "<<lattice.size()<<endl;
-	os<<"Total number of elements:   "<<theElements->Size()<<endl;
-	os<<endl;
-	os<<"Model Element statistics\n";
-	os<<"------------------------\n\n";
+	os << "Arc length of beamline:     " << globalFrame->GetGeometryLength() << " meter" << endl;
+	os << "Total number of components: " << lattice.size() << endl;
+	os << "Total number of elements:   " << theElements->Size() << endl;
+	os << endl;
+	os << "Model Element statistics\n";
+	os << "------------------------\n\n";
 
-	map<string,int> stats;
-	for_each(theElements->begin(),theElements->end(),ModelStats(stats));
-	for(map<string,int>::iterator si=stats.begin(); si!=stats.end(); si++)
+	map<string, int> stats;
+	for_each(theElements->begin(), theElements->end(), ModelStats(stats));
+	for(map<string, int>::iterator si = stats.begin(); si != stats.end(); si++)
 	{
 		string atype = (*si).first;
 		int count = (*si).second;
-		os<<std::setw(20)<<left<<atype.c_str();
-		os<<std::setw(4)<<count<<endl;
+		os << std::setw(20) << left << atype.c_str();
+		os << std::setw(4) << count << endl;
 	}
-	os<<endl;
+	os << endl;
 }
 
-size_t AcceleratorModel::GetIndexes(const std::string& pat,std::vector<AcceleratorModel::Index>& iarray) const
+size_t AcceleratorModel::GetIndexes(const std::string& pat, std::vector<AcceleratorModel::Index>& iarray) const
 {
-	return GetIndexes(const_cast<AcceleratorModel*>(this)->GetBeamline(),pat,iarray);
+	return GetIndexes(const_cast<AcceleratorModel*>(this)->GetBeamline(), pat, iarray);
 }
 
 std::vector<AcceleratorModel::Index> AcceleratorModel::GetIndexes(const std::string& pat) const
 {
 	std::vector<AcceleratorModel::Index> iarray;
-	GetIndexes(pat,iarray);
+	GetIndexes(pat, iarray);
 	return iarray;
 }
 
-size_t AcceleratorModel::GetIndexes(const AcceleratorModel::Beamline& bline,const std::string& pat,std::vector<AcceleratorModel::Index>& iarray) const
+size_t AcceleratorModel::GetIndexes(const AcceleratorModel::Beamline& bline, const std::string& pat,
+	std::vector<AcceleratorModel::Index>& iarray) const
 {
 	vector<Index> iarray1;
 	StringPattern pattern(pat);
 
-	Index n0 = distance(lattice.begin(),bline.begin());
-	for(ConstBeamlineIterator fi = bline.begin(); fi!=bline.end(); fi++,n0++)
+	Index n0 = distance(lattice.begin(), bline.begin());
+	for(ConstBeamlineIterator fi = bline.begin(); fi != bline.end(); fi++, n0++)
 	{
 		if((*fi)->IsComponent())
 		{
@@ -363,7 +377,7 @@ static vector<AcceleratorComponent*> SortAcceleratorModel(AcceleratorModel* mode
 {
 	vector<AcceleratorComponent*> elements;
 
-	model->ExtractTypedElements(elements,"*");
+	model->ExtractTypedElements(elements, "*");
 
 	sort(elements.begin(), elements.end(), SortComponent);
 	return elements;
@@ -373,7 +387,7 @@ int AcceleratorModel::FindElementLatticePosition(string RequestedElement)
 {
 	vector<AcceleratorComponent*> elements = SortAcceleratorModel(this);
 	size_t nelm = elements.size();
-	for(size_t n=0; n<nelm; n++)
+	for(size_t n = 0; n < nelm; n++)
 	{
 		if(elements[n]->GetName() == RequestedElement)
 		{
@@ -382,4 +396,3 @@ int AcceleratorModel::FindElementLatticePosition(string RequestedElement)
 	}
 	return 0;
 }
-

@@ -28,9 +28,8 @@ public:
 
 };
 
-
-inline Binomial::Binomial(int n, double u, RNG *gen)
-	: Random(gen)
+inline Binomial::Binomial(int n, double u, RNG *gen) :
+	Random(gen)
 {
 	pN = n;
 	pU = u;

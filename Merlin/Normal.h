@@ -11,12 +11,12 @@
 #include "Random.h"
 
 /**
-*
-*  See Simulation, Modelling & Analysis by Law & Kelton, pp259
-*
-*  This is the ``polar'' method.
-*
-*/
+ *
+ *  See Simulation, Modelling & Analysis by Law & Kelton, pp259
+ *
+ *  This is the ``polar'' method.
+ *
+ */
 
 class Normal: public Random
 {
@@ -37,9 +37,8 @@ public:
 	virtual double operator()();
 };
 
-
-inline Normal::Normal(double xmean, double xvariance, RNG *gen)
-	: Random(gen)
+inline Normal::Normal(double xmean, double xvariance, RNG *gen) :
+	Random(gen)
 {
 	pMean = xmean;
 	pVariance = xvariance;
@@ -53,7 +52,7 @@ inline double Normal::mean()
 }
 inline double Normal::mean(double x)
 {
-	double t=pMean;
+	double t = pMean;
 	pMean = x;
 	return t;
 }
@@ -64,7 +63,7 @@ inline double Normal::variance()
 }
 inline double Normal::variance(double x)
 {
-	double t=pVariance;
+	double t = pVariance;
 	pVariance = x;
 	pStdDev = sqrt(pVariance);
 	return t;

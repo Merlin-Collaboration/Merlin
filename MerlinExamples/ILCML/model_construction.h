@@ -14,9 +14,6 @@
 #include "BeamData.h"
 #include <utility>
 
-std::pair<AcceleratorModel*,BeamData*> ConstructModel(const string& fname);
+std::pair<AcceleratorModel*, BeamData*> ConstructModel(const string& fname);
 
 #endif
-
-
-

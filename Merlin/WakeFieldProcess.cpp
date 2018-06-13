@@ -36,7 +36,7 @@
 namespace
 {
 
-#define COUT(x) cout<<std::setw(12)<<scientific<<std::setprecision(4)<<(x);
+#define COUT(x) cout << std::setw(12) << scientific << std::setprecision(4) << (x);
 
 using namespace std;
 using namespace PhysicalConstants;
@@ -46,35 +46,33 @@ using namespace ParticleTracking;
 // needed to resolve gcc 3.2 ambiguity problem
 //inline double pow(int x, int y) { return pow(double(x),double(y)); }
 
-Point2D GetSliceCentroid(ParticleBunch::const_iterator first,
-                         ParticleBunch::const_iterator last)
+Point2D GetSliceCentroid(ParticleBunch::const_iterator first, ParticleBunch::const_iterator last)
 {
-	Point2D c(0,0);
-	double n=0;
-	while(first!=last)
+	Point2D c(0, 0);
+	double n = 0;
+	while(first != last)
 	{
 		c.x += first->x();
 		c.y += first->y();
 		first++;
 		n++;
 	}
-	return n>1 ? c/n : c;
+	return n > 1 ? c / n : c;
 }
 
-PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first,
-                            ParticleBunch::const_iterator last)
+PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first, ParticleBunch::const_iterator last)
 {
 	PSvector c(0);
-	double n=0;
-	while(first!=last)
+	double n = 0;
+	while(first != last)
 	{
 		c += *first;
 		first++;
 		n++;
 	}
-	if(n>1)
+	if(n > 1)
 	{
-		c/=n;
+		c /= n;
 	}
 
 	return c;
@@ -82,16 +80,14 @@ PSvector GetSliceCentroid6D(ParticleBunch::const_iterator first,
 
 } //end namespace
 
-
-
 namespace ParticleTracking
 {
 
-WakeFieldProcess::WakeFieldProcess (int prio, size_t nb, double ns, string aID)
-	: ParticleBunchProcess(aID,prio),imploc(atExit),nbins(nb),nsig(ns),currentWake(nullptr),Qd(),Qdp(),filter(nullptr),
-	  wake_x(0),wake_y(0),wake_z(0),recalc(true),inc_tw(true),oldBunchLen(0)
+WakeFieldProcess::WakeFieldProcess(int prio, size_t nb, double ns, string aID) :
+	ParticleBunchProcess(aID, prio), imploc(atExit), nbins(nb), nsig(ns), currentWake(nullptr), Qd(), Qdp(), filter(
+		nullptr), wake_x(0), wake_y(0), wake_z(0), recalc(true), inc_tw(true), oldBunchLen(0)
 {
-	SetFilter(14,2,1);
+	SetFilter(14, 2, 1);
 
 #ifdef ENABLE_MPI
 	//Start the load leveling clock
@@ -113,43 +109,39 @@ WakeFieldProcess::~WakeFieldProcess()
 size_t WakeFieldProcess::CalculateQdist()
 {
 
-	pair<double,double> v = currentBunch->GetMoments(ps_CT);
+	pair<double, double> v = currentBunch->GetMoments(ps_CT);
 	double z0 = v.first;
 	double sigz = v.second;
 
 	// calculate binning ranges
-//    cout << nsig << "\t" << sigz << "\t" << z0 << endl;
-	zmin = -nsig*sigz+z0;
-	zmax =  nsig*sigz+z0;
-	dz = (zmax-zmin)/nbins;
+	zmin = -nsig * sigz + z0;
+	zmax = nsig * sigz + z0;
+	dz = (zmax - zmin) / nbins;
 
 	bunchSlices.clear();
 	Qd.clear();
 	Qdp.clear();
 
 	// Qdp contains the slope of the charge distribution, smoothed using a filter
-//    cout << "size 1: " << currentBunch->size() << endl;
-	size_t lost = ParticleBinList(*currentBunch,zmin,zmax,nbins,bunchSlices,Qd,Qdp,filter);
-//    cout << "size 2: " << currentBunch->size() << endl;
+	size_t lost = ParticleBinList(*currentBunch, zmin, zmax, nbins, bunchSlices, Qd, Qdp, filter);
 #ifndef NDEBUG
 	ofstream os("qdist.dat");
-	os<<zmin<<' '<<zmax<<' '<<dz<<endl;
-	copy(Qd.begin(),Qd.end(),ostream_iterator<double>(os,"\n"));
+	os << zmin << ' ' << zmax << ' ' << dz << endl;
+	copy(Qd.begin(), Qd.end(), ostream_iterator<double>(os, "\n"));
 #endif
-//cout << "Rank: " << MPI::COMM_WORLD.Get_rank() << "\tQDIST: " << lost << endl;
 	return lost;
 }
 
 /**
-* Smoothing filter takes the form of a set of coefficients
-* calculated using the Savitzky-Golay technique
-*
-* @param[in] n Width of the window on either side of the reference point
-* @param[in] m Order of the polynomial fitted to the points within the window
-* @param[in] d Order of the derivative required
-*
-* For CSR wake we need the first derivative
-*/
+ * Smoothing filter takes the form of a set of coefficients
+ * calculated using the Savitzky-Golay technique
+ *
+ * @param[in] n Width of the window on either side of the reference point
+ * @param[in] m Order of the polynomial fitted to the points within the window
+ * @param[in] d Order of the derivative required
+ *
+ * For CSR wake we need the first derivative
+ */
 void WakeFieldProcess::SetFilter(int n, int m, int d)
 {
 	if(filter)
@@ -161,33 +153,28 @@ void WakeFieldProcess::SetFilter(int n, int m, int d)
 
 #ifndef NDEBUG
 	ofstream os("filter.dat");
-	copy(filter->begin(),filter->end(),ostream_iterator<double>(os,"\n"));
+	copy(filter->begin(), filter->end(), ostream_iterator<double>(os, "\n"));
 #endif
 }
 
-void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
+void WakeFieldProcess::SetCurrentComponent(AcceleratorComponent& component)
 {
-	//	TWRFStructure* cavity = dynamic_cast<TWRFStructure*>(&component);
-	//	WakePotentials* wake = cavity!=0 ? cavity->GetWakePotentials() : 0;
-
 	WakePotentials* wake = component.GetWakePotentials();
 
 	// if not initialize(=0) we assume that WakeFieldProcess is responsible - for backward compatibility
 	// in general expected process must be equal to this process
-	if( wake && wake->GetExpectedProcess()!=nullptr && typeid(*(wake->GetExpectedProcess()))!=typeid(*this))
+	if(wake && wake->GetExpectedProcess() != nullptr && typeid(*(wake->GetExpectedProcess())) != typeid(*this))
 	{
-		wake=nullptr;
+		wake = nullptr;
 	}
 
-	//if(wake!=0) cout<<GetID()<<endl;
-
-	if(currentBunch!=nullptr && wake!=nullptr)
+	if(currentBunch != nullptr && wake != nullptr)
 	{
 		clen = component.GetLength();
 		switch(imploc)
 		{
 		case atCentre:
-			impulse_s = clen/2.0;
+			impulse_s = clen / 2.0;
 			break;
 
 		case atExit:
@@ -198,7 +185,7 @@ void WakeFieldProcess::SetCurrentComponent (AcceleratorComponent& component)
 		current_s = 0;
 		active = true;
 
-		if(recalc || wake!=currentWake)
+		if(recalc || wake != currentWake)
 		{
 			currentWake = wake;
 		}
@@ -221,8 +208,8 @@ void WakeFieldProcess::DoProcess(double ds)
 {
 	//Normal Code
 #ifndef ENABLE_MPI
-	current_s+=ds;
-	if(fequal(current_s,impulse_s))
+	current_s += ds;
+	if(fequal(current_s, impulse_s))
 	{
 		currentBunch->SortByCT();
 		Init();
@@ -232,8 +219,8 @@ void WakeFieldProcess::DoProcess(double ds)
 #endif
 
 #ifdef ENABLE_MPI
-	current_s+=ds;
-	if(fequal(current_s,impulse_s))
+	current_s += ds;
+	if(fequal(current_s, impulse_s))
 	{
 		currentBunch->gather();
 		if(currentBunch->MPI_rank == 0)
@@ -253,20 +240,20 @@ void WakeFieldProcess::ApplyWakefield(double ds)
 	// check if we are responsible for the current wakefield
 	// a class derived from this class must
 	// include the appropriate check for its own wake potential type!
-	if(typeid(WakePotentials*)!=typeid(currentWake))
+	if(typeid(WakePotentials*) != typeid(currentWake))
 	{
 		return;
 	}
 
 	// here we apply the wake field for
 	// the step ds
-	size_t n=0;
+	size_t n = 0;
 	double p0 = currentBunch->GetReferenceMomentum();
 
 	// If the bunch length or binning has been changed,
 	// we must recalculate the wakes
 	// dk explicit check on bunch length
-	if(recalc||oldBunchLen!=currentBunch->size())
+	if(recalc || oldBunchLen != currentBunch->size())
 	{
 		Init();
 	}
@@ -282,77 +269,71 @@ void WakeFieldProcess::ApplyWakefield(double ds)
 	// linear interpolation between the values
 	// at the slice boundaries
 
-	double bload=0;
+	double bload = 0;
 
-#define WAKE_GRADIENT(wake) (wake).empty() ? 0 : ((wake[nslice+1]-wake[nslice])/dz)
+#define WAKE_GRADIENT(wake) (wake).empty() ? 0 : ((wake[nslice + 1] - wake[nslice]) / dz)
 
-	double z=zmin;
+	double z = zmin;
 
-	for(size_t nslice = 0; nslice<nbins; nslice++)
+	for(size_t nslice = 0; nslice < nbins; nslice++)
 	{
 
 		double gz = WAKE_GRADIENT(wake_z);
 		double gx = WAKE_GRADIENT(wake_x);
 		double gy = WAKE_GRADIENT(wake_y);
 
-
-
-
-		for(ParticleBunch::iterator p=bunchSlices[nslice]; p!=bunchSlices[nslice+1]; p++)
+		for(ParticleBunch::iterator p = bunchSlices[nslice]; p != bunchSlices[nslice + 1]; p++)
 		{
-			double zz = p->ct()-z;
-			double ddp = -ds*(wake_z[nslice]+gz*zz)/p0;
+			double zz = p->ct() - z;
+			double ddp = -ds * (wake_z[nslice] + gz * zz) / p0;
 			p->dp() += ddp;
 			bload += ddp;
 
-			double dxp =  inc_tw? ds*(wake_x[nslice]+gx*zz)/p0 : 0;
-			double dyp =  inc_tw? ds*(wake_y[nslice]+gy*zz)/p0 : 0;
+			double dxp = inc_tw ? ds * (wake_x[nslice] + gx * zz) / p0 : 0;
+			double dyp = inc_tw ? ds * (wake_y[nslice] + gy * zz) / p0 : 0;
 
-
-			p->xp() = (p->xp()+dxp)/(1+ddp);
-			p->yp() = (p->yp()+dyp)/(1+ddp);
+			p->xp() = (p->xp() + dxp) / (1 + ddp);
+			p->yp() = (p->yp() + dyp) / (1 + ddp);
 		}
-		z+=dz;
+		z += dz;
 	}
 	if(!currentWake->Is_CSR())
 	{
-		currentBunch->AdjustRefMomentum(bload/currentBunch->size());
+		currentBunch->AdjustRefMomentum(bload / currentBunch->size());
 	}
 }
 
-double WakeFieldProcess::GetMaxAllowedStepSize () const
+double WakeFieldProcess::GetMaxAllowedStepSize() const
 {
-	return impulse_s-current_s;
+	return impulse_s - current_s;
 }
 
 void WakeFieldProcess::Init()
 {
-	double Qt  = currentBunch->GetTotalCharge();
+	double Qt = currentBunch->GetTotalCharge();
 
 	//keep track of bunch length to be aware of modifications
-	oldBunchLen=currentBunch->size();
+	oldBunchLen = currentBunch->size();
 
 	size_t nloss = CalculateQdist();
-	if(nloss!=0)
+	if(nloss != 0)
 	{
 		// Even though we have truncated particles, we still keep the
 		// the bunch charge constant
-		currentBunch->SetMacroParticleCharge(Qt/(currentBunch->size()));
-		MerlinIO::warning()<<GetID()<<" (WakefieldProcess): "<<nloss<<" particles truncated"<<endl;
+		currentBunch->SetMacroParticleCharge(Qt / (currentBunch->size()));
+		MerlinIO::warning() << GetID() << " (WakefieldProcess): " << nloss << " particles truncated" << endl;
 	}
 
 	// Calculate the long. bunch wake.
 	CalculateWakeL();
-	recalc=false;
+	recalc = false;
 
 }
 
-
-
 void WakeFieldProcess::CalculateWakeL()
 {
-	wake_z = vector<double>(bunchSlices.size(),0.0);
-	double a0 = dz*fabs(currentBunch->GetTotalCharge())*ElectronCharge*Volt;
+	wake_z = vector<double>(bunchSlices.size(), 0.0);
+	double a0 = dz * fabs(currentBunch->GetTotalCharge()) * ElectronCharge * Volt;
 
 	// Estimate the bunch wake at the slice boundaries by
 	// convolving the point-like wake over the current bunch
@@ -369,31 +350,31 @@ void WakeFieldProcess::CalculateWakeL()
 
 	if(currentWake->Is_CSR())
 	{
-		for(size_t i=0; i<bunchSlices.size(); i++)
+		for(size_t i = 0; i < bunchSlices.size(); i++)
 		{
-			for(size_t j=1; j<i; j++)
+			for(size_t j = 1; j < i; j++)
 			{
-				wake_z[i] += Qdp[j]*(currentWake->Wlong((j-i+0.5)*dz))/dz;
+				wake_z[i] += Qdp[j] * (currentWake->Wlong((j - i + 0.5) * dz)) / dz;
 			}
-			wake_z[i]*=a0;
+			wake_z[i] *= a0;
 		}
 	}
 	else
 	{
-		for(size_t i=0; i<bunchSlices.size(); i++)
+		for(size_t i = 0; i < bunchSlices.size(); i++)
 		{
-			for(size_t j=i; j<bunchSlices.size()-1; j++)
+			for(size_t j = i; j < bunchSlices.size() - 1; j++)
 			{
-				wake_z[i] += Qd[j]*(currentWake->Wlong((j-i+0.5)*dz));
+				wake_z[i] += Qd[j] * (currentWake->Wlong((j - i + 0.5) * dz));
 			}
-			wake_z[i]*=a0;
+			wake_z[i] *= a0;
 		}
 	}
 
 #ifndef NDEBUG
 	ofstream os("bunchWake.dat");
-	os<<zmin<<'\t'<<zmax<<'\t'<<dz<<endl;
-	copy(wake_z.begin(),wake_z.end(),ostream_iterator<double>(os,"\n"));
+	os << zmin << '\t' << zmax << '\t' << dz << endl;
+	copy(wake_z.begin(), wake_z.end(), ostream_iterator<double>(os, "\n"));
 #endif
 
 }
@@ -408,40 +389,40 @@ void WakeFieldProcess::CalculateWakeT()
 	vector<Point2D> xyc;
 	xyc.reserve(nbins);
 	size_t i;
-	for(i=0; i<nbins; i++)
+	for(i = 0; i < nbins; i++)
 	{
-		xyc.push_back(GetSliceCentroid(bunchSlices[i],bunchSlices[i+1]));
+		xyc.push_back(GetSliceCentroid(bunchSlices[i], bunchSlices[i + 1]));
 	}
 
 	// Now estimate the transverse bunch wake at the slice
 	// boundaries in the same way we did for the longitudinal wake.
 
-	double a0 = dz*(fabs(currentBunch->GetTotalCharge()))*ElectronCharge*Volt;
-	wake_x = vector<double>(bunchSlices.size(),0.0);
-	wake_y = vector<double>(bunchSlices.size(),0.0);
-	for(i=0; i<bunchSlices.size(); i++)
+	double a0 = dz * (fabs(currentBunch->GetTotalCharge())) * ElectronCharge * Volt;
+	wake_x = vector<double>(bunchSlices.size(), 0.0);
+	wake_y = vector<double>(bunchSlices.size(), 0.0);
+	for(i = 0; i < bunchSlices.size(); i++)
 	{
-		for(size_t j=i; j<bunchSlices.size()-1; j++)
+		for(size_t j = i; j < bunchSlices.size() - 1; j++)
 		{
-			double wxy = Qd[j]*(currentWake->Wtrans((j-i+0.5)*dz));
-			wake_x[i] += wxy*xyc[j].x;
-			wake_y[i] += wxy*xyc[j].y;
+			double wxy = Qd[j] * (currentWake->Wtrans((j - i + 0.5) * dz));
+			wake_x[i] += wxy * xyc[j].x;
+			wake_y[i] += wxy * xyc[j].y;
 		}
-		wake_x[i]*=a0;
-		wake_y[i]*=a0;
+		wake_x[i] *= a0;
+		wake_y[i] *= a0;
 	}
 }
 
 void WakeFieldProcess::DumpSliceCentroids(ostream& os) const
 {
-	for(size_t i=0; i<nbins; i++)
+	for(size_t i = 0; i < nbins; i++)
 	{
-		os<<std::setw(4)<<i;
-		os<<GetSliceCentroid6D(bunchSlices[i],bunchSlices[i+1]);
+		os << std::setw(4) << i;
+		os << GetSliceCentroid6D(bunchSlices[i], bunchSlices[i + 1]);
 	}
 }
 
-void WakeFieldProcess::InitialiseProcess (Bunch& bunch)
+void WakeFieldProcess::InitialiseProcess(Bunch& bunch)
 {
 	ParticleBunchProcess::InitialiseProcess(bunch);
 	currentWake = nullptr;
@@ -455,7 +436,7 @@ void WakeFieldProcess::InitialiseProcess (Bunch& bunch)
 int powi(int i, int j)
 {
 	int p = 1;
-	for(int m=0; m<j; m++)
+	for(int m = 0; m < j; m++)
 	{
 		p *= i;
 	}
@@ -464,43 +445,43 @@ int powi(int i, int j)
 
 void savgol(vector<double>& c, int nl, int nr, int ld, int m)
 {
-	Matrix<double> a(m+1,m+1);
+	Matrix<double> a(m + 1, m + 1);
 
-	for(int i=0; i<=m; i++)
-		for(int j=0; j<=i; j++)
+	for(int i = 0; i <= m; i++)
+		for(int j = 0; j <= i; j++)
 		{
 			double sum = 0.0;
 
-			for(int k=-nl; k<=nr; k++)
+			for(int k = -nl; k <= nr; k++)
 			{
 				sum += powi(k, i) * powi(k, j);
 			}
 
-			a(i,j) = sum;
-			a(j,i) = sum;
+			a(i, j) = sum;
+			a(j, i) = sum;
 		}
 
 	vector<int> indx;
 	double d;
-	ludcmp(a,indx,d);
+	ludcmp(a, indx, d);
 
-	Vector<double> b(m+1);
-	for(int j=0; j<=m; j++)
+	Vector<double> b(m + 1);
+	for(int j = 0; j <= m; j++)
 	{
 		b(j) = 0.0;
 	}
 	b(ld) = 1.0;
 
-	lubksb(a,indx,b);
+	lubksb(a, indx, b);
 
 	c.clear();
 
-	for(int k=-nl; k<=nr; k++)
+	for(int k = -nl; k <= nr; k++)
 	{
 		double sum = b(0);
 		double fac = 1.0;
 
-		for(int mm=1; mm<=m; mm++)
+		for(int mm = 1; mm <= m; mm++)
 		{
 			sum += b(mm) * (fac *= k);
 		}

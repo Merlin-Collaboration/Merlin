@@ -17,24 +17,24 @@ class ParticleBunchFilter
 {
 public:
 
-	virtual ~ParticleBunchFilter ();
+	virtual ~ParticleBunchFilter();
 
 	/**
-	*	Used by the ParticleBunch constructor object to select
-	*	vectors for inclusion in a ParticleBunch.
-	*/
-	virtual bool Apply (const PSvector& v) const = 0;
+	 *	Used by the ParticleBunch constructor object to select
+	 *	vectors for inclusion in a ParticleBunch.
+	 */
+	virtual bool Apply(const PSvector& v) const = 0;
 };
 
-class HorizontalHaloParticleBunchFilter : public ParticleBunchFilter
+class HorizontalHaloParticleBunchFilter: public ParticleBunchFilter
 {
 public:
 
 	/**
-	*	Used by the ParticleBunch constructor object to select
-	*	vectors for inclusion in a ParticleBunch.
-	*/
-	bool Apply (const PSvector& v) const;
+	 *	Used by the ParticleBunch constructor object to select
+	 *	vectors for inclusion in a ParticleBunch.
+	 */
+	bool Apply(const PSvector& v) const;
 
 	void SetHorizontalLimit(double);
 	void SetHorizontalOrbit(double);
@@ -44,16 +44,15 @@ private:
 	double orbit;
 };
 
-
-class VerticalHaloParticleBunchFilter : public ParticleBunchFilter
+class VerticalHaloParticleBunchFilter: public ParticleBunchFilter
 {
 public:
 
 	/**
-	*	Used by the ParticleBunch constructor object to select
-	*	vectors for inclusion in a ParticleBunch.
-	*/
-	bool Apply (const PSvector& v) const;
+	 *	Used by the ParticleBunch constructor object to select
+	 *	vectors for inclusion in a ParticleBunch.
+	 */
+	bool Apply(const PSvector& v) const;
 
 	void SetVerticalLimit(double);
 
@@ -61,7 +60,6 @@ private:
 	double limit;
 };
 
-
-}	//End particle tracking namespace
+}   //End particle tracking namespace
 
 #endif

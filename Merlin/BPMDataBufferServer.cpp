@@ -7,18 +7,18 @@
 
 #include "BPMDataBufferServer.h"
 
-BPMDataBuffer* BPMDataBufferServer::GetDataBuffer (BPM* bpm, bool create)
+BPMDataBuffer* BPMDataBufferServer::GetDataBuffer(BPM* bpm, bool create)
 {
-	map<BPM*,BPMDataBuffer>::iterator b = dataBuffers.find(bpm);
+	map<BPM*, BPMDataBuffer>::iterator b = dataBuffers.find(bpm);
 
-	if(b!=dataBuffers.end())
+	if(b != dataBuffers.end())
 	{
 		return &(b->second);
 	}
 
 	if(!create)
 	{
-		return (BPMDataBuffer*)nullptr;
+		return (BPMDataBuffer *) nullptr;
 	}
 
 	// make new buffer
@@ -27,4 +27,3 @@ BPMDataBuffer* BPMDataBufferServer::GetDataBuffer (BPM* bpm, bool create)
 	bpm->AddBuffer(newbuf);
 	return newbuf;
 }
-

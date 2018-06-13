@@ -19,7 +19,9 @@ public:
 	virtual double operator()();
 };
 
-
-inline Landau::Landau(RNG *gen) : Random(gen) {}
+inline Landau::Landau(RNG *gen) :
+	Random(gen)
+{
+}
 
 #endif

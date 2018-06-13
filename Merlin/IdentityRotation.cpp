@@ -9,73 +9,72 @@
 #include "GeneralRotation.h"
 #include "AxisRotations.h"
 
-Rot3Drep* IdentityRotation::inv () const
+Rot3Drep* IdentityRotation::inv() const
 {
 	return const_cast<IdentityRotation*>(this);
 }
 
-Point3D IdentityRotation::rotate (const Point3D& p) const
+Point3D IdentityRotation::rotate(const Point3D& p) const
 {
 	return p;
 }
 
-Vector3D IdentityRotation::rotate (const Vector3D& v) const
+Vector3D IdentityRotation::rotate(const Vector3D& v) const
 {
 	return v;
 }
 
-bool IdentityRotation::isIdentity () const
+bool IdentityRotation::isIdentity() const
 {
 	return true;
 }
 
-Rot3Drep* IdentityRotation::dot (const Rot3Drep& r) const
+Rot3Drep* IdentityRotation::dot(const Rot3Drep& r) const
 {
 	return const_cast<Rot3Drep*>(&r);
 }
 
-Rot3Drep* IdentityRotation::dotBy (const RotationX& rx) const
+Rot3Drep* IdentityRotation::dotBy(const RotationX& rx) const
 {
 	return const_cast<RotationX*>(&rx);
 }
 
-Rot3Drep* IdentityRotation::dotBy (const RotationY& ry) const
+Rot3Drep* IdentityRotation::dotBy(const RotationY& ry) const
 {
 	return const_cast<RotationY*>(&ry);
 }
 
-Rot3Drep* IdentityRotation::dotBy (const RotationZ& rz) const
+Rot3Drep* IdentityRotation::dotBy(const RotationZ& rz) const
 {
 	return const_cast<RotationZ*>(&rz);
 }
 
-Rot3Drep* IdentityRotation::dotBy (const GeneralRotation& r) const
+Rot3Drep* IdentityRotation::dotBy(const GeneralRotation& r) const
 {
 	return const_cast<GeneralRotation*>(&r);
 }
 
-RotationType IdentityRotation::type () const
+RotationType IdentityRotation::type() const
 {
 	return ident;
 }
 
-Rot3Drep* IdentityRotation::rotXbyPI () const
+Rot3Drep* IdentityRotation::rotXbyPI() const
 {
 	return const_cast<IdentityRotation*>(this);
 }
 
-Rot3Drep* IdentityRotation::rotYbyPI () const
+Rot3Drep* IdentityRotation::rotYbyPI() const
 {
 	return const_cast<IdentityRotation*>(this);
 }
 
-Rot3Drep* IdentityRotation::rotZbyPI () const
+Rot3Drep* IdentityRotation::rotZbyPI() const
 {
 	return const_cast<IdentityRotation*>(this);
 }
 
-RealMatrix& IdentityRotation::getMatrix (RealMatrix& m) const
+RealMatrix& IdentityRotation::getMatrix(RealMatrix& m) const
 {
 	return m.copy(IdentityMatrix(3));
 }
-

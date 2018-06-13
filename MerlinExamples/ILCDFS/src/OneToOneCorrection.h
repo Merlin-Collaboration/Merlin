@@ -19,7 +19,6 @@
 // the calcualtion of the response matrices and the estimate of the correction.
 //
 // The routine will attempt to use incremental tracking if possible.
-void OneToOneCorrection(Accelerator* acc, Accelerator::Plane pxy, size_t nseg=20);
+void OneToOneCorrection(Accelerator* acc, Accelerator::Plane pxy, size_t nseg = 20);
 
 #endif
-

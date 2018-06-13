@@ -23,7 +23,10 @@ class DataTableReaderTFS: public DataTableReader
 {
 public:
 	/// Read from an istream, e.g. an already opened file
-	DataTableReaderTFS(std::istream *in): in(in) {}
+	DataTableReaderTFS(std::istream *in) :
+		in(in)
+	{
+	}
 	/// Open a file to read
 	DataTableReaderTFS(std::string filename);
 
@@ -41,7 +44,8 @@ class DataTableWriterTFS: public DataTableWriter
 {
 public:
 	/// Write to an ostream, e.g. an already opened file
-	DataTableWriterTFS(std::ostream *_out):DataTableWriterTFS()
+	DataTableWriterTFS(std::ostream *_out) :
+		DataTableWriterTFS()
 	{
 		out = _out;
 	}
@@ -51,7 +55,10 @@ public:
 	/// Write the DataTable to the file or stream
 	void Write(DataTable& dt);
 private:
-	DataTableWriterTFS(): width_int(8), width_float(18), prec_float(10) {}
+	DataTableWriterTFS() :
+		width_int(8), width_float(18), prec_float(10)
+	{
+	}
 	int width_int;
 	int width_float;
 	int prec_float;

@@ -24,16 +24,16 @@ public:
 	void FindClosedOrbit(PSvector& particle, int ncpt = 0);
 	void FindRMSOrbit(PSvector& particle);
 
-	void TransverseOnly(bool flag);				// default: false
-	void Radiation(bool flag);					// default: false
+	void TransverseOnly(bool flag);             // default: false
+	void Radiation(bool flag);                  // default: false
 	void SetRadStepSize(double rad_stepsize);
 	void SetRadNumSteps(int rad_numsteps);
-	void FullAcceleration(bool flag);			// default: false
+	void FullAcceleration(bool flag);           // default: false
 	void ScaleBendPathLength(double scale);
 
-	void SetDelta(double new_delta);			// default: 1.0e-9
-	void SetTolerance(double tolerance);		// default: 1.0e-26
-	void SetMaxIterations(int max_iterations);	// default: 20
+	void SetDelta(double new_delta);            // default: 1.0e-9
+	void SetTolerance(double tolerance);        // default: 1.0e-26
+	void SetMaxIterations(int max_iterations);  // default: 20
 
 	void AddProcess(ParticleBunchProcess* aProcess);
 
@@ -62,4 +62,3 @@ private:
 };
 
 #endif
-

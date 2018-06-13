@@ -24,10 +24,10 @@ static char initialized = 0;
 
 RNG::RNG()
 {
-	if (!initialized)
+	if(!initialized)
 	{
 
-		assert (sizeof(double) == 2 * sizeof(_G_uint32_t));
+		assert(sizeof(double) == 2 * sizeof(_G_uint32_t));
 
 		//
 		//	The following is a hack that I attribute to
@@ -52,14 +52,14 @@ RNG::RNG()
 #if _IEEE == 1
 
 		t.d = 1.5;
-		if ( t.u[1] == 0 )  		// sun word order?
+		if(t.u[1] == 0)          // sun word order?
 		{
 			t.u[0] = 0x3fffffff;
 			t.u[1] = 0xffffffff;
 		}
 		else
 		{
-			t.u[0] = 0xffffffff;	// encore word order?
+			t.u[0] = 0xffffffff;    // encore word order?
 			t.u[1] = 0x3fffffff;
 		}
 
@@ -68,24 +68,22 @@ RNG::RNG()
 		volatile double x = 1.0; // volatile needed when fp hardware used,
 		// and has greater precision than memory doubles
 		double y = 0.5;
-		do  			    // find largest fp-number < 2.0
+		do                  // find largest fp-number < 2.0
 		{
 			t.d = x;
 			x += y;
 			y *= 0.5;
-		}
-		while (x != t.d && x < 2.0);
+		} while(x != t.d && x < 2.0);
 
 		volatile float xx = 1.0; // volatile needed when fp hardware used,
 		// and has greater precision than memory floats
 		float yy = 0.5;
-		do  			    // find largest fp-number < 2.0
+		do                  // find largest fp-number < 2.0
 		{
 			s.s = xx;
 			xx += yy;
 			yy *= 0.5;
-		}
-		while (xx != s.s && xx < 2.0);
+		} while(xx != s.s && xx < 2.0);
 #endif
 		// set doubleMantissa to 1 for each doubleMantissa bit
 		doubleMantissa.d = 1.0;
@@ -106,7 +104,7 @@ float RNG::asFloat()
 	result.s = 1.0;
 	result.u |= (asLong() & singleMantissa.u);
 	result.s -= 1.0;
-	assert( result.s < 1.0 && result.s >= 0);
+	assert(result.s < 1.0 && result.s >= 0);
 	return result.s;
 }
 
@@ -117,7 +115,6 @@ double RNG::asDouble()
 	result.u[0] |= (asLong() & doubleMantissa.u[0]);
 	result.u[1] |= (asLong() & doubleMantissa.u[1]);
 	result.d -= 1.0;
-	assert( result.d < 1.0 && result.d >= 0);
+	assert(result.d < 1.0 && result.d >= 0);
 	return result.d;
 }
-

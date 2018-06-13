@@ -22,4 +22,3 @@ CollimationOutput::CollimationOutput(OutputType ot)
 }
 
 } // End namespace ParticleTracking
-

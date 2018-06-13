@@ -12,25 +12,33 @@
 #include "BunchProcess.h"
 
 /**
-* Abstract class for calculating the longitudinal and
-* transverse single-bunch wakefield potentials (Greens
-* functions).
-*/
+ * Abstract class for calculating the longitudinal and
+ * transverse single-bunch wakefield potentials (Greens
+ * functions).
+ */
 class WakePotentials
 {
 
 public:
 
-	WakePotentials(double r, double s) : csr(false), expectedProcess(nullptr), radius(r), conductivity(s) {}
-	WakePotentials() : csr(false), expectedProcess(nullptr) {}   // back to the original constructor
+	WakePotentials(double r, double s) :
+		csr(false), expectedProcess(nullptr), radius(r), conductivity(s)
+	{
+	}
+	WakePotentials() :
+		csr(false), expectedProcess(nullptr)
+	{
+	}                                                            // back to the original constructor
 	//WakePotentials() : csr(false) {}   // back to the original constructor
 
-	virtual ~WakePotentials() {}
+	virtual ~WakePotentials()
+	{
+	}
 
 	virtual double Wlong(double z) const = 0;
 	virtual double Wtrans(double z) const = 0;
 
-	bool Is_CSR () const
+	bool Is_CSR() const
 	{
 		return csr;
 	}
@@ -42,7 +50,7 @@ public:
 
 	void SetExpectedProcess(BunchProcess* p)
 	{
-		expectedProcess=p;
+		expectedProcess = p;
 	}
 
 protected:
@@ -57,4 +65,3 @@ private:
 };
 
 #endif
-

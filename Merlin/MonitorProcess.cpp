@@ -12,7 +12,8 @@
 
 using namespace ParticleTracking;
 
-MonitorProcess::MonitorProcess(const string& aID ,int prio, const string& prefix ): ParticleBunchProcess(aID,prio)
+MonitorProcess::MonitorProcess(const string& aID, int prio, const string& prefix) :
+	ParticleBunchProcess(aID, prio)
 {
 	active = true;
 	file_prefix = prefix;
@@ -29,8 +30,7 @@ void MonitorProcess::AddElement(const string e)
 	dump_at_elements.push_back(e);
 }
 
-
-void MonitorProcess::InitialiseProcess (Bunch& bunch)
+void MonitorProcess::InitialiseProcess(Bunch& bunch)
 {
 	ParticleBunchProcess::InitialiseProcess(bunch);
 	if(!currentBunch)
@@ -38,7 +38,7 @@ void MonitorProcess::InitialiseProcess (Bunch& bunch)
 		active = false;
 	}
 }
-void MonitorProcess::DoProcess (const double ds)
+void MonitorProcess::DoProcess(const double ds)
 {
 	string filename;
 	filename = file_prefix + currentComponent->GetName() + "_" + to_string(count);
@@ -69,11 +69,12 @@ double MonitorProcess::GetMaxAllowedStepSize() const
 	return 1000;
 }
 
-void MonitorProcess::SetCurrentComponent (AcceleratorComponent& component)
+void MonitorProcess::SetCurrentComponent(AcceleratorComponent& component)
 {
 	currentComponent = &component;
 	string name = currentComponent->GetName();
 	// active if current component name in dump_at_elements
-	active = any_of(dump_at_elements.begin(), dump_at_elements.end(),
-	                [&name](string &s){return s == name;});
+	active = any_of(dump_at_elements.begin(), dump_at_elements.end(), [&name](string &s){
+		return s == name;
+	});
 }

@@ -8,6 +8,6 @@
 #include "NumericalConstants.h"
 #include <cmath>
 
-const double pi = 4.0*atan(1.0);
-const double twoPi = 8.0*atan(1.0);
+const double pi = 4.0 * atan(1.0);
+const double twoPi = 8.0 * atan(1.0);
 const double euler = 0.57721566490153286;

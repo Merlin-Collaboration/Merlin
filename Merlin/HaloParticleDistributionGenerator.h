@@ -15,7 +15,10 @@ class Halo1ParticleDistributionGenerator: public ParticleDistributionGenerator
 {
 public:
 	/// @parameter halo_size_ Size of halo in units of sigma
-	Halo1ParticleDistributionGenerator(double halo_size_ = 1.0):halo_size(halo_size_) {}
+	Halo1ParticleDistributionGenerator(double halo_size_ = 1.0) :
+		halo_size(halo_size_)
+	{
+	}
 protected:
 	double halo_size;
 };
@@ -47,8 +50,14 @@ public:
 class Halo2ParticleDistributionGenerator: public ParticleDistributionGenerator
 {
 public:
-	Halo2ParticleDistributionGenerator(double halo_size_ = 1.0, PSvector cutoffs_ = PSvector(0)):halo_size(halo_size_), cutoffs(cutoffs_) {}
-	Halo2ParticleDistributionGenerator(PSvector cutoffs_):halo_size(1.0), cutoffs(cutoffs_) {}
+	Halo2ParticleDistributionGenerator(double halo_size_ = 1.0, PSvector cutoffs_ = PSvector(0)) :
+		halo_size(halo_size_), cutoffs(cutoffs_)
+	{
+	}
+	Halo2ParticleDistributionGenerator(PSvector cutoffs_) :
+		halo_size(1.0), cutoffs(cutoffs_)
+	{
+	}
 protected:
 	double halo_size;
 	PSvector cutoffs;

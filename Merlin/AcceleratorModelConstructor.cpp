@@ -22,9 +22,12 @@ namespace
 struct ModelStats
 {
 
-	map<string,int>& s;
+	map<string, int>& s;
 
-	ModelStats(map<string,int>& stats) :s(stats) {}
+	ModelStats(map<string, int>& stats) :
+		s(stats)
+	{
+	}
 
 	void operator()(const ModelElement* element)
 	{
@@ -34,18 +37,19 @@ struct ModelStats
 };
 
 /**
-* class MEExtractor
-* FrameTraverser implementation used by AppendFrame(SequenceFrame*)
-* to add the specified frame to the accelerator model.
-*/
+ * class MEExtractor
+ * FrameTraverser implementation used by AppendFrame(SequenceFrame*)
+ * to add the specified frame to the accelerator model.
+ */
 
-class MEExtractor : public FrameTraverser
+class MEExtractor: public FrameTraverser
 {
 public:
 
-	MEExtractor(ElementRepository* erp, AcceleratorModel::FlatLattice* lp)
-		: erepo(erp),lattice(lp)
-	{}
+	MEExtractor(ElementRepository* erp, AcceleratorModel::FlatLattice* lp) :
+		erepo(erp), lattice(lp)
+	{
+	}
 
 	virtual void ActOn(LatticeFrame* frame)
 	{
@@ -61,11 +65,11 @@ public:
 		}
 		catch(bad_cast& b)
 		{
-			cerr<<"bad cast caught here!"<<endl;
+			cerr << "bad cast caught here!" << endl;
 		}
 		catch(...)
 		{
-			cerr<<"something weird here"<<endl;
+			cerr << "something weird here" << endl;
 		}
 	}
 
@@ -74,15 +78,14 @@ private:
 	AcceleratorModel::FlatLattice* lattice;
 };
 
-
 } // end anonymous namespace
 
+AcceleratorModelConstructor::AcceleratorModelConstructor() :
+	currentModel(nullptr)
+{
+}
 
-AcceleratorModelConstructor::AcceleratorModelConstructor ()
-	: currentModel(nullptr)
-{}
-
-AcceleratorModelConstructor::~AcceleratorModelConstructor ()
+AcceleratorModelConstructor::~AcceleratorModelConstructor()
 {
 	if(currentModel)
 	{
@@ -90,7 +93,7 @@ AcceleratorModelConstructor::~AcceleratorModelConstructor ()
 	}
 }
 
-void AcceleratorModelConstructor::NewModel ()
+void AcceleratorModelConstructor::NewModel()
 {
 	if(currentModel)
 	{
@@ -102,69 +105,69 @@ void AcceleratorModelConstructor::NewModel ()
 	}
 
 	currentModel = new AcceleratorModel();
-	SequenceFrame *globalFrame = new SequenceFrame("GLOBAL",SequenceFrame::originAtEntrance);
+	SequenceFrame *globalFrame = new SequenceFrame("GLOBAL", SequenceFrame::originAtEntrance);
 	currentModel->globalFrame = globalFrame;
 	frameStack.push(globalFrame);
 }
 
-AcceleratorModel* AcceleratorModelConstructor::GetModel ()
+AcceleratorModel* AcceleratorModelConstructor::GetModel()
 {
 	frameStack.pop();
 	assert(currentModel && frameStack.empty());
 
 	currentModel->globalFrame->ConsolidateConstruction();
 
-	AcceleratorModel* t=currentModel;
-	currentModel=nullptr;
+	AcceleratorModel* t = currentModel;
+	currentModel = nullptr;
 	return t;
 }
 
-void AcceleratorModelConstructor::NewFrame (SequenceFrame* aFrame)
+void AcceleratorModelConstructor::NewFrame(SequenceFrame* aFrame)
 {
 	assert(currentModel && aFrame);
 	currentModel->theElements->Add(aFrame);
 	frameStack.push(aFrame);
 }
 
-void AcceleratorModelConstructor::EndFrame ()
+void AcceleratorModelConstructor::EndFrame()
 {
 	SequenceFrame* cf = frameStack.top();
 	frameStack.pop();
 	(frameStack.top())->AppendFrame(*cf);
 }
 
-void AcceleratorModelConstructor::AppendDrift (double d)
+void AcceleratorModelConstructor::AppendDrift(double d)
 {
-	Drift* newd = new Drift("UNNAMED",d);
+	Drift* newd = new Drift("UNNAMED", d);
 	AppendComponentFrame(new TComponentFrame<Drift>(*newd));
 }
 
-void AcceleratorModelConstructor::AddModelElement (ModelElement* element)
+void AcceleratorModelConstructor::AddModelElement(ModelElement* element)
 {
 	currentModel->theElements->Add(element);
 }
 
-void AcceleratorModelConstructor::ReportStatistics (std::ostream& os) const
+void AcceleratorModelConstructor::ReportStatistics(std::ostream& os) const
 {
 	using std::map;
 
-	os<<"Arc length of beamline:     "<<currentModel->globalFrame->GetGeometryLength()<<" meter"<<endl;
-	os<<"Total number of components: "<<(*currentModel).lattice.size()<<endl;
-	os<<"Total number of elements:   "<<currentModel->theElements->Size()<<endl;
-	os<<endl;
-	os<<"Model Element statistics\n";
-	os<<"------------------------\n\n";
+	os << "Arc length of beamline:     " << currentModel->globalFrame->GetGeometryLength() << " meter" << endl;
+	os << "Total number of components: " << (*currentModel).lattice.size() << endl;
+	os << "Total number of elements:   " << currentModel->theElements->Size() << endl;
+	os << endl;
+	os << "Model Element statistics\n";
+	os << "------------------------\n\n";
 
-	map<string,int> stats;
-	for_each(currentModel->theElements->begin(),currentModel->theElements->end(),ModelStats(stats));
-	for(map<string,int>::iterator si=stats.begin(); si!=stats.end(); si++)
+	map<string, int> stats;
+	for_each(currentModel->theElements->begin(), currentModel->theElements->end(), ModelStats(stats));
+	for(map<string, int>::iterator si = stats.begin(); si != stats.end(); si++)
 	{
 		string atype = (*si).first;
 		int count = (*si).second;
-		os<<setw(20)<<left<<atype.c_str();
-		os<<setw(4)<<count<<endl;
+		os << setw(20) << left << atype.c_str();
+		os << setw(4) << count << endl;
 	}
-	os<<endl;
+	os << endl;
 }
 
 void AcceleratorModelConstructor::AppendFrame(SequenceFrame* aFrame)
@@ -176,13 +179,13 @@ void AcceleratorModelConstructor::AppendFrame(SequenceFrame* aFrame)
 	// extract (in order) all the ComponentFrame objects
 	// and append them to the lattice.
 
-	MEExtractor mextr(currentModel->theElements,&(currentModel->lattice));
+	MEExtractor mextr(currentModel->theElements, &(currentModel->lattice));
 	aFrame->Traverse(mextr);
 
 	(frameStack.top())->AppendFrame(*aFrame);
 }
 
-void AcceleratorModelConstructor::AppendComponentFrame (ComponentFrame* cf)
+void AcceleratorModelConstructor::AppendComponentFrame(ComponentFrame* cf)
 {
 	assert(currentModel);
 	currentModel->theElements->Add(cf);
@@ -192,6 +195,5 @@ void AcceleratorModelConstructor::AppendComponentFrame (ComponentFrame* cf)
 	}
 	(*currentModel).lattice.push_back(cf);
 	(frameStack.top())->AppendFrame(*cf);
-	cf->SetBeamlineIndex((*currentModel).lattice.size()-1);
+	cf->SetBeamlineIndex((*currentModel).lattice.size() - 1);
 }
-

@@ -11,7 +11,6 @@
 #include <string>
 #include <iomanip>
 
-
 #include "MADInterface.h"
 #include "LatticeFunctions.h"
 #include "AcceleratorModel.h"
@@ -21,14 +20,11 @@
 #include "TransferMatrix.h"
 #include "ClosedOrbit.h"
 
-
-
 /* Read a TFS lattice with the MAD interface.
  *
  * Compare the tune found by the TransferMatrix and by FFT using BetatronTunes.
  *
  */
-
 
 int main(int argc, char* argv[])
 {
@@ -40,11 +36,11 @@ int main(int argc, char* argv[])
 	string paths[] = {"../data/twiss.7.0tev.b1_new.tfs", "data/twiss.7.0tev.b1_new.tfs", "MerlinTests/data/twiss.7.0tev.b1_new.tfs"};
 
 	string lattice_path;
-	for (size_t i=0; i<3; i++)
+	for(size_t i = 0; i < 3; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
-		if (test_file)
+		if(test_file)
 		{
 			lattice_path = paths[i];
 			break;
@@ -72,14 +68,14 @@ int main(int argc, char* argv[])
 	TransferMatrix tm(model, beam_energy);
 	tm.SetDelta(delta);
 	tm.ScaleBendPathLength(cscale);
-	tm.FindTM(M,p2);
+	tm.FindTM(M, p2);
 
 	// calculate tune
-	const double tm_qx = acos( (M(0,0)+M(1,1))/2 )/2/M_PI;
-	const double tm_qy = acos( (M(2,2)+M(3,3))/2 )/2/M_PI;
+	const double tm_qx = acos((M(0, 0) + M(1, 1)) / 2) / 2 / M_PI;
+	const double tm_qy = acos((M(2, 2) + M(3, 3)) / 2) / 2 / M_PI;
 
 	// measure tunes by fft
-	BetatronTunes* tune =  new BetatronTunes (model, beam_energy);
+	BetatronTunes* tune =  new BetatronTunes(model, beam_energy);
 	Particle p(0);
 	p.x() = 1e-10;
 	p.y() = 1e-10;
@@ -93,7 +89,7 @@ int main(int argc, char* argv[])
 	cout << "From FFT" << endl;
 	cout << fft_qx << " " << fft_qy << endl;
 
-	double err_x = fabs(tm_qx-fft_qx), err_y = fabs(tm_qy-fft_qy);
+	double err_x = fabs(tm_qx - fft_qx), err_y = fabs(tm_qy - fft_qy);
 	cout << "diffs " << err_x << " " << err_y << endl;
 
 	assert(err_x < 1e-3);
@@ -104,5 +100,3 @@ int main(int argc, char* argv[])
 	delete tune;
 
 }
-
-

@@ -24,7 +24,9 @@ class EnergyAdjustmentPolicy
 
 public:
 
-	virtual ~EnergyAdjustmentPolicy() {}
+	virtual ~EnergyAdjustmentPolicy()
+	{
+	}
 
 	// Return the total number of energy states supported.
 	virtual size_t GetNumEnergyStates() = 0;
@@ -41,7 +43,7 @@ public:
 	// Initialise the policy. This function is called
 	// before implementation of DFS to allow any implementation
 	// dependent initialisation to be performed.
-	virtual void Initialise() =0;
+	virtual void Initialise() = 0;
 
 	// Informs this policy of the beamline segment being tuned.
 	virtual void SetActiveBeamlineSegment(DFS_Segment &seg) = 0;
@@ -69,10 +71,9 @@ protected:
 	void RestoreKlystrons();
 };
 
-inline 	void EnergyAdjustmentPolicy::SetReferenceParticles(const ReferenceParticleArray& refplist)
+inline void EnergyAdjustmentPolicy::SetReferenceParticles(const ReferenceParticleArray& refplist)
 {
 	beamrefs = refplist;
 }
 
 #endif
-

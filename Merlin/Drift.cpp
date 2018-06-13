@@ -10,32 +10,32 @@
 
 const int Drift::ID = UniqueIndex();
 
-Drift::Drift (const string& id, double len)
-	: TAccCompG<RectangularGeometry>(id,new RectangularGeometry(len))
-{}
+Drift::Drift(const string& id, double len) :
+	TAccCompG<RectangularGeometry>(id, new RectangularGeometry(len))
+{
+}
 
-const string& Drift::GetType () const
+const string& Drift::GetType() const
 {
 	_TYPESTR(Drift);
 }
 
-int Drift::GetIndex () const
+int Drift::GetIndex() const
 {
-	return  ID;
+	return ID;
 }
 
-void Drift::PrepareTracker (ComponentTracker& aTracker)
+void Drift::PrepareTracker(ComponentTracker& aTracker)
 {
-	_PREPTRACK(aTracker,AcceleratorComponent);
+	_PREPTRACK(aTracker, AcceleratorComponent);
 }
 
-void Drift::RotateY180 ()
+void Drift::RotateY180()
 {
 	// nothing to do
 }
 
-ModelElement* Drift::Copy () const
+ModelElement* Drift::Copy() const
 {
 	return new Drift(*this);
 }
-

@@ -15,9 +15,9 @@ namespace
 
 template<class II>
 void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX, bool injOnAxis,
-                     SimulationOutput* simop, II first, II last)
+	SimulationOutput* simop, II first, II last)
 {
-	bool fb=true;
+	bool fb = true;
 	do
 	{
 		ComponentFrame* frame = *first;
@@ -27,12 +27,12 @@ void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX,
 			std::cout << "ignoring first frame transformation" << std::endl;
 		}
 
-		if(includeX && !(fb&&injOnAxis))
+		if(includeX && !(fb && injOnAxis))
 		{
 			aBunch.ApplyTransformation(frame->GetEntrancePlaneTransform());
 		}
 
-		if(const Transform3D* t=frame->GetEntranceGeometryPatch())
+		if(const Transform3D* t = frame->GetEntranceGeometryPatch())
 		{
 			aBunch.ApplyTransformation(*t);
 		}
@@ -41,7 +41,7 @@ void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX,
 		{
 			aStepper.Track(frame->GetComponent());
 		}
-		if(const Transform3D* t=frame->GetExitGeometryPatch())
+		if(const Transform3D* t = frame->GetExitGeometryPatch())
 		{
 			aBunch.ApplyTransformation(*t);
 		}
@@ -52,55 +52,60 @@ void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX,
 		}
 		if(simop)
 		{
-			simop->DoRecord(frame,&aBunch);
+			simop->DoRecord(frame, &aBunch);
 		}
 
-		fb=false;
-	}
-	while(++first != last);
+		fb = false;
+	} while(++first != last);
 }
 
 } // end of anonymous namespace
 
-template <class I>
-TrackingSimulation::TStepper<I>::TStepper (I f, I l)
-	: first(f),last(l),curr(f)
+template<class I>
+TrackingSimulation::TStepper<I>::TStepper(I f, I l) :
+	first(f), last(l), curr(f)
 {
 	cFrame = *curr;
 }
 
-template <class I>
-ComponentFrame* TrackingSimulation::TStepper<I>::NextFrame ()
+template<class I>
+ComponentFrame* TrackingSimulation::TStepper<I>::NextFrame()
 {
 	curr++;
-	return cFrame = curr==last ? nullptr : *curr;
+	return cFrame = curr == last ? nullptr : *curr;
 }
 
-TrackingSimulation::TrackingSimulation (const AcceleratorModel::Beamline& bline)
-	: bunch(nullptr),incX(true),injOnAxis(false),log(nullptr),handle_me(false),type(beamline),ibunchCtor(nullptr),stepper(),theRing(),theBeamline(bline),cstepper(nullptr),simOp(nullptr)
-{}
+TrackingSimulation::TrackingSimulation(const AcceleratorModel::Beamline& bline) :
+	bunch(nullptr), incX(true), injOnAxis(false), log(nullptr), handle_me(false), type(beamline), ibunchCtor(nullptr),
+	stepper(), theRing(), theBeamline(bline), cstepper(nullptr), simOp(nullptr)
+{
+}
 
-TrackingSimulation::TrackingSimulation (const AcceleratorModel::RingIterator& aRing)
-	: bunch(nullptr),incX(true),injOnAxis(false),log(nullptr),handle_me(false),type(ring),ibunchCtor(nullptr),stepper(),theRing(aRing),theBeamline(),cstepper(nullptr),simOp(nullptr)
-{}
+TrackingSimulation::TrackingSimulation(const AcceleratorModel::RingIterator& aRing) :
+	bunch(nullptr), incX(true), injOnAxis(false), log(nullptr), handle_me(false), type(ring), ibunchCtor(nullptr),
+	stepper(), theRing(aRing), theBeamline(), cstepper(nullptr), simOp(nullptr)
+{
+}
 
-TrackingSimulation::TrackingSimulation ()
-	: bunch(nullptr),incX(true),injOnAxis(false),log(nullptr),handle_me(false),type(undefined),ibunchCtor(nullptr),stepper(),theRing(),theBeamline(),cstepper(nullptr),simOp(nullptr)
-{}
+TrackingSimulation::TrackingSimulation() :
+	bunch(nullptr), incX(true), injOnAxis(false), log(nullptr), handle_me(false), type(undefined), ibunchCtor(nullptr),
+	stepper(), theRing(), theBeamline(), cstepper(nullptr), simOp(nullptr)
+{
+}
 
-void TrackingSimulation::SetBeamline (const AcceleratorModel::Beamline& bline)
+void TrackingSimulation::SetBeamline(const AcceleratorModel::Beamline& bline)
 {
 	theBeamline = bline;
 	type = beamline;
 }
 
-void TrackingSimulation::SetRing (const AcceleratorModel::RingIterator& aRing)
+void TrackingSimulation::SetRing(const AcceleratorModel::RingIterator& aRing)
 {
 	theRing = aRing;
 	type = ring;
 }
 
-TrackingSimulation::~TrackingSimulation ()
+TrackingSimulation::~TrackingSimulation()
 {
 	if(bunch)
 	{
@@ -112,15 +117,15 @@ TrackingSimulation::~TrackingSimulation ()
 	}
 }
 
-Bunch& TrackingSimulation::DoRun (bool new_bunch, bool do_init)
+Bunch& TrackingSimulation::DoRun(bool new_bunch, bool do_init)
 {
 	// force initialisation if there is no bunch
-	do_init = new_bunch || do_init || (bunch==nullptr);
+	do_init = new_bunch || do_init || (bunch == nullptr);
 
 	if(new_bunch)
 	{
-		assert(ibunchCtor!=nullptr);
-		if(bunch!=nullptr)
+		assert(ibunchCtor != nullptr);
+		if(bunch != nullptr)
 		{
 			delete bunch;
 		}
@@ -148,13 +153,13 @@ Bunch& TrackingSimulation::DoRun (bool new_bunch, bool do_init)
 			stepper.Initialise(*bunch);
 		}
 
-		if(type==beamline)
+		if(type == beamline)
 		{
-			PerformTracking(stepper,*bunch,incX,injOnAxis,simOp,theBeamline.begin(),theBeamline.end());
+			PerformTracking(stepper, *bunch, incX, injOnAxis, simOp, theBeamline.begin(), theBeamline.end());
 		}
 		else
 		{
-			PerformTracking(stepper,*bunch,incX,injOnAxis,simOp,theRing,theRing);
+			PerformTracking(stepper, *bunch, incX, injOnAxis, simOp, theRing, theRing);
 		}
 	}
 	catch(MerlinException& me)
@@ -179,47 +184,46 @@ Bunch& TrackingSimulation::DoRun (bool new_bunch, bool do_init)
 
 Bunch& TrackingSimulation::Run()
 {
-	return DoRun(true,true);
+	return DoRun(true, true);
 }
 
 Bunch& TrackingSimulation::Continue()
 {
-	return DoRun(false,false);
+	return DoRun(false, false);
 }
 
-
-void TrackingSimulation::AddProcess (BunchProcess* proc)
+void TrackingSimulation::AddProcess(BunchProcess* proc)
 {
 	stepper.AddProcess(proc);
 }
 
-bool TrackingSimulation::RemoveProcess (BunchProcess* proc)
+bool TrackingSimulation::RemoveProcess(BunchProcess* proc)
 {
 	return stepper.RemoveProcess(proc);
 }
 
-void TrackingSimulation::AssumeFlatLattice (bool flat)
+void TrackingSimulation::AssumeFlatLattice(bool flat)
 {
 	incX = !flat;
 }
 
-void TrackingSimulation::SetInitialBunchCtor (BunchConstructor* bctor)
+void TrackingSimulation::SetInitialBunchCtor(BunchConstructor* bctor)
 {
 	//	assert(bctor!=0);
-	if(ibunchCtor!=nullptr)
+	if(ibunchCtor != nullptr)
 	{
 		delete ibunchCtor;
 	}
 	ibunchCtor = bctor;
 }
 
-void TrackingSimulation::InitStepper (bool genNewBunch)
+void TrackingSimulation::InitStepper(bool genNewBunch)
 {
-	assert(ibunchCtor!=nullptr);
+	assert(ibunchCtor != nullptr);
 
-	if(genNewBunch || bunch==nullptr)
+	if(genNewBunch || bunch == nullptr)
 	{
-		if(bunch!=nullptr)
+		if(bunch != nullptr)
 		{
 			delete bunch;
 		}
@@ -228,25 +232,25 @@ void TrackingSimulation::InitStepper (bool genNewBunch)
 
 	stepper.Initialise(*bunch);
 
-	if(cstepper!=nullptr)
+	if(cstepper != nullptr)
 	{
 		delete cstepper;
 	}
 
-	if(type==beamline)
+	if(type == beamline)
 	{
-		cstepper = new BeamlineStepper(theBeamline.begin(),theBeamline.end());
+		cstepper = new BeamlineStepper(theBeamline.begin(), theBeamline.end());
 	}
 	else
-		//		cstepper = new RingStepper(theRing,theRing);
+	//		cstepper = new RingStepper(theRing,theRing);
 	{
 		cstepper = nullptr;
 	}
 }
 
-void TrackingSimulation::InitStepper (Bunch* aBunch)
+void TrackingSimulation::InitStepper(Bunch* aBunch)
 {
-	if(bunch!=nullptr)
+	if(bunch != nullptr)
 	{
 		delete bunch;
 	}
@@ -254,14 +258,14 @@ void TrackingSimulation::InitStepper (Bunch* aBunch)
 	bunch = aBunch;
 	stepper.Initialise(*bunch);
 
-	if(cstepper!=nullptr)
+	if(cstepper != nullptr)
 	{
 		delete cstepper;
 	}
 
-	if(type==beamline)
+	if(type == beamline)
 	{
-		cstepper = new BeamlineStepper(theBeamline.begin(),theBeamline.end());
+		cstepper = new BeamlineStepper(theBeamline.begin(), theBeamline.end());
 	}
 	else
 	{
@@ -269,7 +273,7 @@ void TrackingSimulation::InitStepper (Bunch* aBunch)
 	}
 }
 
-bool TrackingSimulation::StepComponent ()
+bool TrackingSimulation::StepComponent()
 {
 	assert(cstepper && cstepper->cFrame);
 	ComponentFrame* frame = cstepper->cFrame;
@@ -285,12 +289,11 @@ bool TrackingSimulation::StepComponent ()
 
 	if(simOp)
 	{
-		simOp->DoRecord(frame,bunch);
+		simOp->DoRecord(frame, bunch);
 	}
 
 	return cstepper->NextFrame() != nullptr;
 }
-
 
 void TrackingSimulation::SetOutput(SimulationOutput *simout)
 {
@@ -301,7 +304,7 @@ void TrackingSimulation::SetOutput(SimulationOutput *simout)
 
 bool SimulationOutput::IsMember(const string& key)
 {
-	for(std::vector<StringPattern>::const_iterator p=ids.begin(); p!=ids.end(); p++)
+	for(std::vector<StringPattern>::const_iterator p = ids.begin(); p != ids.end(); p++)
 	{
 		if(p->Match(key))
 		{
@@ -324,7 +327,7 @@ void SimulationOutput::DoRecord(const ComponentFrame* frame, const Bunch* bunch)
 
 		if(output_all || IsMember(id))
 		{
-			Record(frame,bunch);
+			Record(frame, bunch);
 		}
 	}
 }
@@ -346,5 +349,3 @@ void SimulationOutput::DoRecordFinalBunch(const Bunch* bunch)
 }
 
 void DoRecordFinalBunch(const Bunch* bunch);
-
-

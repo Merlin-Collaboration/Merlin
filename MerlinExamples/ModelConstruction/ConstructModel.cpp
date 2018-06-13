@@ -14,7 +14,6 @@
 // v1.0 Nick Walker 21.10.2004
 //-------------------------------------------------------------------------
 
-
 // An example of constructing a Merlin model using the MADInterface class.
 //-------------------------------------------------------------------------
 
@@ -35,7 +34,7 @@
 AcceleratorModel* ConstructModel(const string& fname, double energyInGeV, const string& logFile)
 {
 	// Construct the parser
-	MADInterface madi(fname,energyInGeV);
+	MADInterface madi(fname, energyInGeV);
 
 	// Open a file stream for the log file
 	// (useful for debugging)
@@ -56,7 +55,7 @@ AcceleratorModel* ConstructModel(const string& fname, double energyInGeV, const 
 	//    G     GirderMount
 	// Note the X_ prefix is stripped from the label.
 
-	madi.IgnoreZeroLengthType ("MARKER");
+	madi.IgnoreZeroLengthType("MARKER");
 	// In this example we will ignore zero-length MARKER elements
 
 	// madi.TreatTypeAsDrift("RFCAVITY");
@@ -64,6 +63,3 @@ AcceleratorModel* ConstructModel(const string& fname, double energyInGeV, const 
 
 	return madi.ConstructModel();
 }
-
-
-
