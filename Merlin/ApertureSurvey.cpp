@@ -28,7 +28,7 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, string file_name, S
 {
 	// Simple wrapper around overloaded function that expects a ostream
 	ofstream* output_file = open_file(file_name);
-	ApertureSurvey(model, output_file, mode, step);
+	ApertureSurvey(model,output_file, mode, step);
 	delete output_file;
 }
 
@@ -42,36 +42,36 @@ static void CheckAperture(Aperture* ap, double s, double *aps)
 	const double min = 0.0;
 
 	// iterate through directions
-	for(int dir = 0; dir < 4; dir++)
+	for (int dir=0; dir<4; dir++)
 	{
-		double xdir = 0, ydir = 0;
-		if(dir == 0)
+		double xdir=0, ydir=0;
+		if (dir==0)
 		{
-			xdir = +1;
+			xdir=+1;
 		}
-		else if(dir == 1)
+		else if (dir==1)
 		{
-			xdir = -1;
+			xdir=-1;
 		}
-		else if(dir == 2)
+		else if (dir==2)
 		{
-			ydir = +1;
+			ydir=+1;
 		}
-		else if(dir == 3)
+		else if (dir==3)
 		{
-			ydir = -1;
+			ydir=-1;
 		}
 
 		aps[dir] = 0;
 
 		// scan for limit
-		double below = min, above = max;
+		double below=min, above=max;
 
-		while(above - below > delta)
+		while(above-below > delta)
 		{
-			double guess = (above + below) / 2;
+			double guess = (above+below)/2;
 
-			if(ap->PointInside(xdir * guess, ydir * guess, s))
+			if (ap->CheckWithinApertureBoundaries(xdir*guess, ydir*guess, s))
 			{
 				below = guess;
 			}
@@ -80,9 +80,10 @@ static void CheckAperture(Aperture* ap, double s, double *aps)
 				above = guess;
 			}
 		}
-		aps[dir] = (above + below) / 2;
+		aps[dir] = (above+below)/2;
 	}
 }
+
 
 void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, SurveyType mode, double step)
 {
@@ -91,11 +92,11 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, S
 	// Some checks on the parameters
 	size_t points = 0;
 	double step_size = step;
-	switch(mode)
+	switch (mode)
 	{
 	case points_per_element:
 		points = size_t(step);
-		if(points < 1)
+		if (points < 1)
 		{
 			std::cerr << "ERROR: With mode=points_per_element, step must be at least 1" << std::endl;
 			exit(EXIT_FAILURE);
@@ -103,7 +104,7 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, S
 		break;
 	case distance:
 	case abs_distance:
-		if(step_size <= 0)
+		if (step_size <= 0)
 		{
 			std::cerr << "ERROR: step must be positive" << std::endl;
 			exit(EXIT_FAILURE);
@@ -112,75 +113,76 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, S
 	}
 
 	double s = 0; // current element start
-	double last_sample = 0 - step_size;
+	double last_sample = 0-step_size;
 	double lims[4];
 
 	// iterate though model
-	for(AcceleratorModel::BeamlineIterator bi = model->GetBeamline().begin(); bi != model->GetBeamline().end(); bi++)
+	for (AcceleratorModel::BeamlineIterator bi = model->GetBeamline().begin(); bi != model->GetBeamline().end(); bi++)
 	{
 
 		AcceleratorComponent *ac = &(*bi)->GetComponent();
-		if(ac->GetLength() == 0)
+		if (ac->GetLength() == 0)
 		{
 			continue;    // skip zero length elements
 		}
 
-		if(fabs(s - ac->GetComponentLatticePosition()) > 1e-6)
+		if (fabs(s - ac->GetComponentLatticePosition())> 1e-6)
 		{
 			std::cerr << "ERROR: discrepancy between GetComponentLatticePosition() and sum of lengths" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 
 		// get aperture
-		Aperture* ap =  ac->GetAperture();
+		Aperture* ap =	ac->GetAperture();
 
 		// find points within element to check, based on mode
 		vector<double> zs;
-		switch(mode)
+		switch (mode)
 		{
 		case points_per_element:
 			zs.push_back(0); // avoid divide by zero in loop if points=1
-			for(size_t i = 1; i < points; i++)
+			for (size_t i=1; i<points; i++)
 			{
-				zs.push_back(i * ac->GetLength() * (1.0 / (points - 1)));
+				zs.push_back(i*ac->GetLength()*(1.0/(points-1)));
 			}
 
 			break;
 		case distance:
-			for(double sample = 0; sample <= ac->GetLength(); sample += step_size)
+			for (double sample=0; sample <= ac->GetLength(); sample += step_size)
 			{
 				zs.push_back(sample);
 			}
 			zs.push_back(ac->GetLength());
 			break;
 		case abs_distance:
-			while(last_sample + step_size < s + ac->GetLength())
+			while (last_sample+step_size < s + ac->GetLength())
 			{
 				last_sample += step_size;
-				zs.push_back(last_sample - s);
+				zs.push_back(last_sample-s);
 			}
 			break;
 
 		}
 
 		// check aperture at each point in the element and output
-		for(size_t zi = 0; zi < zs.size(); zi++)
+		for (size_t zi = 0; zi < zs.size(); zi++)
 		{
 			double z = zs[zi];
-			if(ap != NULL)
+			//cout << "call check_aperture(" << z << ")" << endl;
+			if (ap != NULL)
 			{
 				CheckAperture(ap, z, lims);
 			}
 			else
 			{
-				lims[0] = lims[1] = lims[2] = lims[3] = 1;
+				lims[0] = lims[1] = lims[2]= lims[3] = 1;
 			}
 
 			(*os) << ac->GetName() << "\t";
 			(*os) << ac->GetType() << "\t";
-			(*os) << ac->GetComponentLatticePosition() + ac->GetLength() << "\t";
+			(*os) << ac->GetComponentLatticePosition()+ac->GetLength() << "\t";
 			(*os) << ac->GetLength() << "\t";
-			(*os) << s + z << "\t";
+			(*os) << s+z << "\t";
 			(*os) << lims[0] << "\t";
 			(*os) << lims[1] << "\t";
 			(*os) << lims[2] << "\t";
@@ -189,3 +191,4 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, S
 		s += ac->GetLength();
 	}
 }
+

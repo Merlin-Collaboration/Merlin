@@ -19,7 +19,7 @@ FlukaCollimationOutput::FlukaCollimationOutput(OutputType ot)
 	otype = ot;
 }
 
-void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
+void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, PSvector& particle, int turn)
 {
 	// If current component is a collimator we store the loss, otherwise we do not
 	if(currentComponent != &currcomponent)

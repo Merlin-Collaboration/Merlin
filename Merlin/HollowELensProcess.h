@@ -56,7 +56,7 @@ public:
 	/**
 	 * Use simple profile to calculate kick
 	 */
-	virtual double CalcKickSimple(Particle &p);
+	virtual double CalcKickSimple(PSvector &p);
 	/**
 	 * Need this to output profiles
 	 */
@@ -65,7 +65,7 @@ public:
 	/**
 	 * Use radial (measured) profile to calculate kick
 	 */
-	virtual double CalcKickRadial(Particle &p);
+	virtual double CalcKickRadial(PSvector &p);
 	/**
 	 * Need this to output profiles
 	 */

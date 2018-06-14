@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	const int npart = 100;
 	for(int i = 0; i < npart; i++)
 	{
-		Particle p(0);
+		PSvector p(0);
 		p.x() = i * 0.1;
 		p.xp() = i * 0.1 + 0.01;
 		p.y() = i * 0.2;
@@ -47,8 +47,8 @@ int main(int argc, char* argv[])
 
 	for(int i = 0; i < npart; i++)
 	{
-		Particle &p1 = b1->GetParticles()[i];
-		Particle &p2 = b2->GetParticles()[i];
+		PSvector &p1 = b1->GetParticles()[i];
+		PSvector &p2 = b2->GetParticles()[i];
 		assert_close(p1.x(), p2.x(), 1e-20);
 		assert_close(p1.xp(), p2.xp(), 1e-20);
 		assert_close(p1.y(), p2.y(), 1e-20);

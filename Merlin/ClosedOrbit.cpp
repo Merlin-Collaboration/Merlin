@@ -167,7 +167,7 @@ void ClosedOrbit::FindClosedOrbit(PSvector& particle, int ncpt)
 		theTracker->Run();
 
 		ip = theTracker->GetTrackedBunch().begin();
-		const Particle& p_ref = *ip++; // reference particle
+		const PSvector& p_ref = *ip++; // reference particle
 
 #ifdef DEBUG_CLOSED_ORBIT
 		cout << "After tracking:" << endl;

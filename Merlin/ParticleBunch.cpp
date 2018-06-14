@@ -402,7 +402,7 @@ void ParticleBunch::SetCentroid()
 	}
 }
 
-void ParticleBunch::SetCentroid(const Particle& x0)
+void ParticleBunch::SetCentroid(const PSvector& x0)
 {
 	FirstParticle() = x0;
 	SetCentroid();

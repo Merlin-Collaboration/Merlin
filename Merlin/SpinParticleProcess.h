@@ -37,9 +37,9 @@ class SpinParticleBunch: public ParticleBunch
 public:
 	SpinParticleBunch(double P0, double Qm = 1);
 	virtual ParticleBunch::iterator erase(ParticleBunch::iterator p);
-	virtual size_t AddParticle(const Particle& p);
-	size_t AddParticle(const Particle& p, const SpinVector& spin);
-	virtual void push_back(const Particle& p);
+	virtual size_t AddParticle(const PSvector& p);
+	size_t AddParticle(const PSvector& p, const SpinVector& spin);
+	virtual void push_back(const PSvector& p);
 	virtual void SortByCT();
 	SpinVectorArray::iterator beginSpinArray();
 	SpinVectorArray::iterator endSpinArray();

@@ -109,7 +109,7 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit)
 	int k = 0;
 	for(k = 0; k < 7; k++)
 	{
-		Particle p = orbit;
+		PSvector p = orbit;
 		if(k > 0)
 		{
 			p[k - 1] += delta;
@@ -148,7 +148,7 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit)
 	tracker.Run();
 
 	ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
-	const Particle& pref = *ip++;
+	const PSvector& pref = *ip++;
 
 	for(k = 0; k < 6; k++, ip++)
 		for(int m = 0; m < 6; m++)
@@ -169,7 +169,7 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit, int n1, int n2)
 	int k = 0;
 	for(k = 0; k < 7; k++)
 	{
-		Particle p = orbit;
+		PSvector p = orbit;
 		if(k > 0)
 		{
 			p[k - 1] += delta;
@@ -206,7 +206,7 @@ void TransferMatrix::FindTM(RealMatrix& M, PSvector& orbit, int n1, int n2)
 	tracker.Run();
 
 	ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
-	const Particle& pref = *ip++;
+	const PSvector& pref = *ip++;
 
 	for(k = 0; k < 6; k++, ip++)
 		for(int m = 0; m < 6; m++)
