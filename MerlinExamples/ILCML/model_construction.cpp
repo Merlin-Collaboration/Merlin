@@ -11,7 +11,6 @@
 #include "BeamData.h"
 #include "PhysicalConstants.h"
 #include "TWRFStructure.h"
-#include "SimpleApertures.h"
 #include "TeslaWakePotential.h"
 #include "PatchFrame.h"
 #include <vector>

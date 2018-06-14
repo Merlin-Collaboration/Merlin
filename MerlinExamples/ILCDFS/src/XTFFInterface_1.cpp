@@ -17,7 +17,6 @@
 
 #include "Components.h"
 #include "AcceleratorModelConstructor.h"
-#include "SimpleApertures.h"
 #include "SupportStructure.h"
 #include "PhysicalConstants.h"
 #include "ConstructSrot.h"

@@ -8,7 +8,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "SimpleApertures.h"
 #include "AcceleratorModelConstructor.h"
 #include "Collimator.h"
 
