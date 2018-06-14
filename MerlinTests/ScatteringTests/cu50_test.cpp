@@ -45,48 +45,50 @@ using namespace ParticleTracking;
  * passed as the first argument.
  *
  *
- */
+*/
+
 
 int main(int argc, char* argv[])
 {
 	int seed = 0;
-	if(argc >= 2)
+	if (argc >=2)
 	{
 		seed = atoi(argv[1]);
 	}
 
-	if(seed == 0)
+	if (seed == 0)
 	{
-		seed = (int) time(nullptr);
+		seed = (int)time(nullptr);
 	}
 
 	//Number of particles
 	//const int npart = 1e9;
 	uint64_t npart = 1e6;
-	if(argc >= 3)
+	if (argc >=3)
 	{
 		npart = std::stoull(argv[2]);
 	}
 
 	bool scatter_mode_sixtrack = 0;
 
-	if(argc >= 4)
+	if (argc >=4)
 	{
-		for(int i = 3; i < argc; i++)
+		for(int i=3; i < argc; i++)
 		{
 			cout << "opt " << argv[i] << endl;
-			if(strcmp(argv[i], "sixtrack") == 0)
+			if (strcmp(argv[i], "sixtrack")==0)
 			{
 				scatter_mode_sixtrack = 1;
 			}
 		}
 	}
 
+
 	cout << "Seed: " << seed << endl;
 	RandomNG::init(seed);
 	/*********************************************************************
-	 *	GENERAL SETTINGS
-	 *********************************************************************/
+	**	GENERAL SETTINGS
+	*********************************************************************/
 	//Loss_Map or Merged Collimation
 	bool Loss_Map = 0;
 	if(Loss_Map)
@@ -97,11 +99,12 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "New Collimation (CollimateProtonProcess)" << std::endl;
 	}
-	bool output_final_bunch     = 0;
+	bool output_final_bunch 	= 0;
 
 	//Beam energy (GeV) 7000,3500,450 etc
 	//double beam_energy = 7000.0;
 	const double beam_energy = 7000.0;
+
 
 	uint64_t particles_left = npart;
 	const uint64_t max_particles_per_bunch = 1e6; // batch, to avoid high mem usage
@@ -120,11 +123,12 @@ int main(int argc, char* argv[])
 	bin_mins[4] = 1e-6;
 	bin_maxs[4] = 1e-1;      //dp
 
-	uint64_t hists[5][nbins + 2] = {{0}};
+
+	uint64_t hists[5][nbins+2] = {{0}};
 
 	/*********************************************************************
-	 *	ACCELERATOR MODEL LOADING
-	 *********************************************************************/
+	**	ACCELERATOR MODEL LOADING
+	*********************************************************************/
 
 	MaterialDatabase* mat = new MaterialDatabase();
 	Material* CollimatorMaterial = mat->FindMaterial("Cu");
@@ -132,10 +136,10 @@ int main(int argc, char* argv[])
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
 	construct->NewModel();
 	double length = 0.5;
-	Collimator* TestCol = new Collimator("TestCollimator", length);
+	Collimator* TestCol = new Collimator("TestCollimator",length);
 	TestCol->SetMaterial(CollimatorMaterial);
 
-	CollimatorAperture* app = new CollimatorAperture(2, 2, 0, CollimatorMaterial, length, 0, 0);
+	CollimatorAperture* app=new CollimatorAperture(2,2,0,length, 0,0);
 	app->SetExitWidth(app->GetFullEntranceWidth());      //Horizontal
 	app->SetExitHeight(app->GetFullEntranceHeight());    //Vertical
 
@@ -155,11 +159,11 @@ int main(int argc, char* argv[])
 	}
 
 	/*********************************************************************
-	 *	PARTICLE TRACKER
-	 *********************************************************************/
-	ProtonBunch* myBunch = new ProtonBunch(beam_energy, 1);
+	**	PARTICLE TRACKER
+	*********************************************************************/
+	ProtonBunch* myBunch = new ProtonBunch(beam_energy,1);
 	AcceleratorModel::RingIterator bline = model->GetRing();
-	ParticleTracker* tracker = new ParticleTracker(bline, myBunch);
+	ParticleTracker* tracker = new ParticleTracker(bline,myBunch);
 
 	auto nancheck = new NANCheckProcess;
 	nancheck->SetDetailed(0);
@@ -167,14 +171,14 @@ int main(int argc, char* argv[])
 	tracker->AddProcess(nancheck);
 
 	/*********************************************************************
-	 *	COLLIMATION SETTINGS
-	 *********************************************************************/
+	**	COLLIMATION SETTINGS
+	*********************************************************************/
 	ScatteringModel* myScatter;
 	if(Loss_Map)
 	{
-		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2, 4);
+		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2,4);
 		myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
-		if(scatter_mode_sixtrack)
+		if (scatter_mode_sixtrack)
 		{
 			myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
 		}
@@ -194,8 +198,8 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
-		if(scatter_mode_sixtrack)
+		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2,4);
+		if (scatter_mode_sixtrack)
 		{
 			myScatter = new ScatteringModelSixTrack;
 		}
@@ -220,14 +224,14 @@ int main(int argc, char* argv[])
 	}
 
 	double y_offset = 1.0 + 1e-6;
-	while(particles_left > 0)
+	while (particles_left > 0)
 	{
-		cout << "Particles_left " << particles_left << " of " << npart << endl;
+		cout << "Particles_left " << particles_left << " of "<< npart << endl;
 		/*********************************************************************
-		 *      BEAM SETTINGS
-		 *********************************************************************/
+		**      BEAM SETTINGS
+		*********************************************************************/
 		size_t this_npart = particles_left;
-		if(this_npart > max_particles_per_bunch)
+		if (this_npart > max_particles_per_bunch)
 		{
 			//cout << "Run subset of " << max_particles_per_bunch << endl;
 			this_npart = max_particles_per_bunch;
@@ -236,17 +240,17 @@ int main(int argc, char* argv[])
 		particles_left -= this_npart;
 		//cout << "this_npart " << this_npart << " new particles_left " << particles_left << endl;
 		myBunch->clear();
-		Particle p(0);
+		PSvector p(0);
 
 		p.y() = y_offset;
-		for(size_t i = 0; i < this_npart; i++)
+		for(size_t i=0; i<this_npart; i++)
 		{
 			myBunch->AddParticle(p);
 		}
 
 		/*********************************************************************
-		 *	Tracking
-		 *********************************************************************/
+		**	Tracking
+		*********************************************************************/
 
 		cout << "Tracking" << endl;
 		tracker->Track(myBunch);
@@ -256,29 +260,30 @@ int main(int argc, char* argv[])
 		cout << "absorbed: " << this_npart - myBunch->size() << endl;
 
 		/*********************************************************************
-		 *	Output Final Bunch
-		 *********************************************************************/
+		**	Output Final Bunch
+		*********************************************************************/
+
 
 		if(output_final_bunch)
 		{
 			myBunch->Output(bunch_output2);
 		}
 		// Histogramming
-		for(PSvectorArray::iterator ip = myBunch->begin(); ip != myBunch->end(); ip++)
+		for (PSvectorArray::iterator ip=myBunch->begin(); ip!=myBunch->end(); ip++)
 		{
-			double coords[] = {ip->x(), ip->xp(), ip->y() - y_offset, ip->yp(), -ip->dp()};
-			for(int i = 0; i < 5; i++)
+			double coords[] = {ip->x(), ip->xp(), ip->y()-y_offset, ip->yp(), -ip->dp()};
+			for(int i=0; i<5; i++)
 			{
 				// beware, this can rollover when x is big
-				int bin_x = ((coords[i] - bin_mins[i]) / (bin_maxs[i] - bin_mins[i]) * (nbins)) + 1; // +1 because bin zero for outliers
+				int bin_x = ((coords[i] - bin_mins[i]) / (bin_maxs[i]-bin_mins[i]) * (nbins)) +1; // +1 because bin zero for outliers
 				// so handle end bins, by check against x, not bin
-				if(coords[i] < bin_mins[i])
+				if (coords[i] < bin_mins[i])
 				{
 					bin_x = 0;
 				}
-				if(coords[i] > bin_maxs[i])
+				if (coords[i] > bin_maxs[i])
 				{
-					bin_x = nbins + 1;
+					bin_x = nbins+1;
 				}
 				hists[i][bin_x] += 1;
 			}
@@ -295,25 +300,25 @@ int main(int argc, char* argv[])
 	delete mat;
 	delete TestCol;
 	/*********************************************************************
-	 *	Output Final Hist
-	 *********************************************************************/
+	**	Output Final Hist
+	*********************************************************************/
 	std::ostringstream filename;
-	filename << "cu50_test_hist_" << (scatter_mode_sixtrack ? "st" : "m") << "_" << npart << ".dat";
+	filename << "cu50_test_hist_" << (scatter_mode_sixtrack ? "st":"m") << "_" << npart << ".dat";
 
 	std::ofstream out2;
 	out2.open(filename.str());
-	out2 << "# From merlin npart=" << npart << endl;
-	out2 << "# bin x xp y yp dp" << endl;
-	for(size_t i = 0; i < nbins + 2; i++)
+	out2 << "# From merlin npart="<<npart<<endl;
+	out2 << "# bin x xp y yp dp"<<endl;
+	for (size_t i=0; i<nbins+2; i++)
 	{
 		out2 << i << " ";
-		for(int j = 0; j < 5; j++)
+		for(int j=0; j<5; j++)
 		{
 			out2 << hists[j][i] << " ";
 		}
 		out2 << endl;
 	}
-	cout << "Wrote " << filename.str() << endl;
+	cout << "Wrote "<< filename.str() << endl;
 
 	return 0;
 }

@@ -47,24 +47,24 @@ int main()
 	RandomNG::init(seed);
 
 	// Test bunch with particles along x, y and diagonals
-	vector<Particle> pcoords;
+	vector<PSvector> pcoords;
 	for(size_t i = 0; i < npart; i++)
 	{
 		double pos = (double(i) - (npart / 2)) * 0.1 * millimeter;
-		Particle p1(0);
+		PSvector p1(0);
 		p1.x() = pos;
 		pcoords.push_back(p1);
 
-		Particle p2(0);
+		PSvector p2(0);
 		p2.y() = pos;
 		pcoords.push_back(p2);
 
-		Particle p3(0);
+		PSvector p3(0);
 		p3.x() = pos;
 		p3.y() = pos;
 		pcoords.push_back(p3);
 
-		Particle p4(0);
+		PSvector p4(0);
 		p4.x() = pos;
 		p4.y() = -pos;
 		pcoords.push_back(p4);
@@ -72,7 +72,7 @@ int main()
 
 	// first track diff_turns turns though the diffusive mode
 
-	vector<Particle> diff_coords {pcoords};
+	vector<PSvector> diff_coords {pcoords};
 	ProtonBunch* diff_bunch = new ProtonBunch(beam_energy, 1, diff_coords);
 
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
@@ -101,7 +101,7 @@ int main()
 	delete diff_tracker;
 
 	// then track though the DC mode, until the bunch matches the diffusive
-	vector<Particle> ac_coords {pcoords};
+	vector<PSvector> ac_coords {pcoords};
 	ProtonBunch* ac_bunch = new ProtonBunch(beam_energy, 1, ac_coords);
 
 	ctor = new AcceleratorModelConstructor();

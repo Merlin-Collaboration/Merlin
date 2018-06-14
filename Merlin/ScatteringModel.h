@@ -158,7 +158,7 @@ public:
 	}
 
 	// Scatter plot
-	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, std::string name);
+	void ScatterPlot(ParticleTracking::PSvector& p, double z, int turn, std::string name);
 	void SetScatterPlot(std::string name, int single_turn = 0);
 	void OutputScatterPlot(std::string directory, int seed = 0);
 	std::vector<std::string> ScatterPlotNames;
@@ -166,7 +166,7 @@ public:
 	std::vector<ScatterPlotData*> StoredScatterPlotData;
 
 	// Jaw impact
-	void JawImpact(ParticleTracking::Particle& p, int turn, std::string name);
+	void JawImpact(ParticleTracking::PSvector& p, int turn, std::string name);
 	void SetJawImpact(std::string name, int single_turn = 0);
 	void OutputJawImpact(std::string directory, int seed = 0);
 	std::vector<std::string> JawImpactNames;

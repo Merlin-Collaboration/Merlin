@@ -266,7 +266,7 @@ double HollowELensProcess::CalcThetaMax(double r)
 	return ThetaMax;
 }
 
-double HollowELensProcess::CalcKickSimple(Particle &p)
+double HollowELensProcess::CalcKickSimple(PSvector &p)
 {
 	// Start of HEL
 	double x = p.x();
@@ -302,7 +302,7 @@ double HollowELensProcess::CalcKickSimple(double R)
 	}
 }
 
-double HollowELensProcess::CalcKickRadial(Particle &p)
+double HollowELensProcess::CalcKickRadial(PSvector &p)
 {
 	// Start of HEL
 	double x = p.x();

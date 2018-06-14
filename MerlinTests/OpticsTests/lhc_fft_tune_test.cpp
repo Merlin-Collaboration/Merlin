@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 	// find closed orbit
 	double cscale = 1e-16;
 	double delta = 1.0e-8;
-	Particle p2(0);
+	PSvector p2(0);
 	ClosedOrbit co(model, beam_energy);
 	co.SetDelta(delta);
 	co.ScaleBendPathLength(cscale);
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 
 	// measure tunes by fft
 	BetatronTunes* tune =  new BetatronTunes(model, beam_energy);
-	Particle p(0);
+	PSvector p(0);
 	p.x() = 1e-10;
 	p.y() = 1e-10;
 

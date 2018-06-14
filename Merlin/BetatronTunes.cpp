@@ -67,7 +67,7 @@ void BetatronTunes::FindTunes(PSvector& particle, int ntrack, bool diffusion)
 		}
 
 		ParticleBunch::iterator pp = bunch->begin();
-		Particle& p1 = *pp;
+		PSvector& p1 = *pp;
 
 #ifdef _MSV_VER
 		if(_isnan(p1.x()) || _isnan(p1.y()))

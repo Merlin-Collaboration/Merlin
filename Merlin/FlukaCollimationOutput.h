@@ -29,7 +29,7 @@ public:
 
 	virtual void Finalise();
 	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, PSvector& particle, int turn = 0);
 
 protected:
 

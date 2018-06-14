@@ -31,7 +31,7 @@ class ParticleBunchFilter; //#include "BunchFilter.h"
 /**
  *	Representation of a particle.
  */
-typedef PSvector Particle;
+typedef PSvector PSvector;
 
 /**
  *	A Bunch which is represented by an ensemble of
@@ -43,7 +43,7 @@ class ParticleBunch: public Bunch
 {
 public:
 
-	typedef Particle particle_type;
+	typedef PSvector particle_type;
 	typedef PSvectorArray::iterator iterator;
 	typedef PSvectorArray::const_iterator const_iterator;
 
@@ -144,7 +144,7 @@ public:
 	/**
 	 *	Add a (macro-)particle to the bunch.
 	 */
-	virtual size_t AddParticle(const Particle& p);
+	virtual size_t AddParticle(const PSvector& p);
 
 	/**
 	 *	Sets the particle charge per macro-particle.
@@ -156,7 +156,7 @@ public:
 	ParticleBunch::const_iterator begin() const;
 	ParticleBunch::const_iterator end() const;
 	size_t size() const;
-	virtual void push_back(const Particle& p);
+	virtual void push_back(const PSvector& p);
 	virtual ParticleBunch::iterator erase(ParticleBunch::iterator p);
 	void reserve(const size_t n);
 
@@ -167,8 +167,8 @@ public:
 	 *	Returns the first particle in the bunch.
 	 *	@return First particle in the bunch
 	 */
-	const Particle& FirstParticle() const;
-	Particle& FirstParticle();
+	const PSvector& FirstParticle() const;
+	PSvector& FirstParticle();
 
 	/**
 	 * Sets the centroid of the particle bunch to be equal to the zeroth
@@ -180,7 +180,7 @@ public:
 	 * Sets the centroid of the particle bunch to be exactly x0 and updates
 	 * the zeroth particle to x0.
 	 */
-	void SetCentroid(const Particle& x0);
+	void SetCentroid(const PSvector& x0);
 
 	/**
 	 * Removes all particles from the bunch
@@ -208,7 +208,7 @@ public:
 	 * to enable the relevant physics for each particle type (protons, electrons,
 	 * etc).
 	 */
-	virtual int Scatter(Particle&, double length, const Aperture*)
+	virtual int Scatter(PSvector&, double length, const Aperture*)
 	{
 		return 0;
 	}
@@ -352,7 +352,7 @@ inline void ParticleBunch::swap(ParticleBunch newbunch)
 	//cout << "After " << size() << "\t" << newbunch.size() << endl;
 }
 
-inline size_t ParticleBunch::AddParticle(const Particle& p)
+inline size_t ParticleBunch::AddParticle(const PSvector& p)
 {
 	pArray.push_back(p);
 	return size();
@@ -374,7 +374,7 @@ inline ParticleBunch::iterator ParticleBunch::end()
 	return pArray.end();
 }
 
-inline void ParticleBunch::push_back(const Particle& p)
+inline void ParticleBunch::push_back(const PSvector& p)
 {
 	AddParticle(p);
 }
@@ -414,12 +414,12 @@ inline const PSvectorArray& ParticleBunch::GetParticles() const
 	return pArray;
 }
 
-inline const Particle& ParticleBunch::FirstParticle() const
+inline const PSvector& ParticleBunch::FirstParticle() const
 {
 	return pArray.front();
 }
 
-inline Particle& ParticleBunch::FirstParticle()
+inline PSvector& ParticleBunch::FirstParticle()
 {
 	return pArray.front();
 }

@@ -26,119 +26,119 @@
 namespace ParticleTracking
 {
 
-class ExcessiveParticleLoss: public MerlinException
+class ExcessiveParticleLoss : public MerlinException
 {
 public:
-	ExcessiveParticleLoss(const string& c_id, double threshold, size_t nlost, size_t nstart);
+	ExcessiveParticleLoss (const string& c_id, double threshold, size_t nlost, size_t nstart);
 };
 
 /**
- * A process which effectively collimates the particle
- * beam, given the aperture of the current  component.
- * Collimation within a component can occur at one or more
- * positions:
+* A process which effectively collimates the particle
+* beam, given the aperture of the current  component.
+* Collimation within a component can occur at one or more
+* positions:
 
- * COLL_AT_ENTRANCE,
- * COLL_AT_CENTER,
- * COLL_AT_EXIT
- */
-class CollimateParticleProcess: public ParticleBunchProcess
+* COLL_AT_ENTRANCE,
+* COLL_AT_CENTER,
+* COLL_AT_EXIT
+*/
+class CollimateParticleProcess : public ParticleBunchProcess
 {
 public:
 
 	/**
-	 * Used to generate unique filenames for particle loss data files.
-	 */
-	typedef map<string, int> IDTBL;
+	* Used to generate unique filenames for particle loss data files.
+	*/
+	typedef map<string,int> IDTBL;
 
 	/**
-	 * Constructor taking the collimation mode, and the output
-	 * stream pointer to which to print the results. mode can
-	 * be a logical OR combination of the collimation modes. A
-	 * nullptr for osp (default) suppresses output.
-	 */
-	CollimateParticleProcess(int priority, int mode, std::ostream* osp = nullptr);
+	* Constructor taking the collimation mode, and the output
+	* stream pointer to which to print the results. mode can
+	* be a logical OR combination of the collimation modes. A
+	* nullptr for osp (default) suppresses output.
+	*/
+	CollimateParticleProcess (int priority, int mode, std::ostream* osp = nullptr);
 
-	~CollimateParticleProcess();
-
-	/**
-	 * Initialise this process with the specified Bunch. If
-	 * bunch is not a ParticleBunch object, the process becomes
-	 * inactive.
-	 */
-	virtual void InitialiseProcess(Bunch& bunch);
+	~CollimateParticleProcess ();
 
 	/**
-	 * Sets the current accelerator component.
-	 */
-	virtual void SetCurrentComponent(AcceleratorComponent& component);
+	* Initialise this process with the specified Bunch. If
+	* bunch is not a ParticleBunch object, the process becomes
+	* inactive.
+	*/
+	virtual void InitialiseProcess (Bunch& bunch);
 
 	/**
-	 * Preform the process for the specified step ds.
-	 */
-	virtual void DoProcess(double ds);
+	* Sets the current accelerator component.
+	*/
+	virtual void SetCurrentComponent (AcceleratorComponent& component);
 
 	/**
-	 * Returns the current maximum step length for this process.
-	 * @return Current maximum step length
-	 */
-	virtual double GetMaxAllowedStepSize() const;
+	* Preform the process for the specified step ds.
+	*/
+	virtual void DoProcess (double ds);
 
 	/**
-	 * If set to true, the process scatters the particles in
-	 * energy and angle at a Collimator element, if the particle is
-	 * outside the aperture.
-	 */
+	* Returns the current maximum step length for this process.
+	* @return Current maximum step length
+	*/
+	virtual double GetMaxAllowedStepSize () const;
+
+	/**
+	* If set to true, the process scatters the particles in
+	* energy and angle at a Collimator element, if the particle is
+	* outside the aperture.
+	*/
 	void ScatterAtCollimator(bool tf);
 
 	/**
-	 * If flg is true, then files are generated containing the
-	 * lost (collimated) particles. The file names have the
-	 * form {fprefix.}type.id.n.loss, where the string fprefix
-	 * is optional, type.id is the qualified name of the
-	 * element where the particle loss occurs, and n is an
-	 * occurrence count for like-named elements (starting with
-	 * n=1).
-	 */
-	void CreateParticleLossFiles(bool flg, string fprefix = "");
+	* If flg is true, then files are generated containing the
+	* lost (collimated) particles. The file names have the
+	* form {fprefix.}type.id.n.loss, where the string fprefix
+	* is optional, type.id is the qualified name of the
+	* element where the particle loss occurs, and n is an
+	* occurrence count for like-named elements (starting with
+	* n=1).
+	*/
+	void CreateParticleLossFiles (bool flg, string fprefix = "");
 
 	/**
-	 * If index is true, then the initial  particles are
-	 * sequential indexed (1..n). These index values for each
-	 * particle are then maintained, and output during any
-	 * particle output operation (as the first column). The
-	 * indexing allows particles to be traced back to the
-	 * original coordinates.
-	 */
-	void IndexParticles(bool index);
-	void IndexParticles(std::list<size_t>& anIndex);
+	* If index is true, then the initial  particles are
+	* sequential indexed (1..n). These index values for each
+	* particle are then maintained, and output during any
+	* particle output operation (as the first column). The
+	* indexing allows particles to be traced back to the
+	* original coordinates.
+	*/
+	void IndexParticles (bool index);
+	void IndexParticles (std::list<size_t>& anIndex);
 	const std::list<size_t>& GetIndexes() const;
 
 	/**
-	 * Sets the threshold for particle loss before the process
-	 * throws ParticleLossThreshold exception. The value is in
-	 * % of the initial particle number (default = 100%).
-	 */
-	void SetLossThreshold(double losspc);
+	* Sets the threshold for particle loss before the process
+	* throws ParticleLossThreshold exception. The value is in
+	* % of the initial particle number (default = 100%).
+	*/
+	void SetLossThreshold (double losspc);
 
 	/**
-	 * Set the log stream for the process. A nullptr
-	 * turns logging off.
-	 */
+	* Set the log stream for the process. A nullptr
+	* turns logging off.
+	*/
 	void SetLogStream(std::ostream* anOs);
 
 	/**
-	 * Enable collimator jaw imperfections
-	 */
+	* Enable collimator jaw imperfections
+	*/
 	void EnableImperfections(bool);
 
 	virtual double GetOutputBinSize() const;
 	virtual void SetOutputBinSize(double);
 
-	virtual void SetCollimationOutput(CollimationOutput* odb)
+	virtual void SetCollimationOutput (CollimationOutput* odb)
 	{
 		CollimationOutputVector.push_back(odb);
-		CollimationOutputSet = true;
+		CollimationOutputSet=true;
 	}
 
 	std::vector<CollimationOutput*> CollimationOutputVector;
@@ -152,13 +152,13 @@ protected:
 	string file_prefix;
 	double lossThreshold;
 	size_t nstart;
-	std::list<size_t>* pindex;
+	std::list< size_t >* pindex;
 
 	IDTBL idtbl;
 
 	/**
-	 * The input array
-	 */
+	* The input array
+	*/
 	PSvectorArray InputArray;
 
 	double s_total;
@@ -166,8 +166,8 @@ protected:
 	double next_s;
 
 	/**
-	 * physical length
-	 */
+	* physical length
+	*/
 	double len;
 
 	bool is_collimator;
@@ -178,9 +178,9 @@ protected:
 	size_t nlost;
 
 	/**
-	 * 0 when no CollimationOutput is set
-	 * @retval 0 No CollimationOutput set
-	 */
+	* 0 when no CollimationOutput is set
+	* @retval 0 No CollimationOutput set
+	*/
 	bool CollimationOutputSet;
 
 	double GetBinSize() const
@@ -195,26 +195,26 @@ protected:
 
 private:
 
-	virtual void DoCollimation();
-	void SetNextS();
-	virtual void DoOutput(const PSvectorArray& lostb, const std::list<size_t>& lost_i);
+	virtual void DoCollimation ();
+	void SetNextS ();
+	virtual void DoOutput (const PSvectorArray& lostb, const std::list<size_t>& lost_i);
 	void bin_lost_output(const PSvectorArray& lostb);
 
 	bool scatter;
-	double bin_size;        /// size of bins
-	double step_size;       /// step size to handle when the collimator cannot be split equally into bins
+	double bin_size;		/// size of bins
+	double step_size;		/// step size to handle when the collimator cannot be split equally into bins
 	bool Imperfections;
 
 	double Xr; /// radiation length
-	virtual bool DoScatter(Particle&);
+	virtual bool DoScatter(PSvector&);
 
 	/**
-	 * A list of particles we want to use in the input array
-	 */
+	* A list of particles we want to use in the input array
+	*/
 	std::vector<unsigned int> LostParticlePositions;
 };
 
-inline void CollimateParticleProcess::CreateParticleLossFiles(bool flg, string fprefix)
+inline void CollimateParticleProcess::CreateParticleLossFiles (bool flg, string fprefix)
 {
 	createLossFiles = flg;
 	file_prefix = fprefix;
@@ -222,7 +222,7 @@ inline void CollimateParticleProcess::CreateParticleLossFiles(bool flg, string f
 
 inline void CollimateParticleProcess::SetLogStream(std::ostream* anOs)
 {
-	os = anOs;
+	os=anOs;
 }
 
 inline const std::list<size_t>& CollimateParticleProcess::GetIndexes() const
@@ -232,7 +232,7 @@ inline const std::list<size_t>& CollimateParticleProcess::GetIndexes() const
 
 inline void CollimateParticleProcess::ScatterAtCollimator(bool tf)
 {
-	scatter = tf;
+	scatter=tf;
 }
 
 } // end namespace ParticleTracking

@@ -89,8 +89,8 @@ void Dispersion::FindRMSDispersion(ofstream* file)
 		// This is a little clumsy, but is a direct result of not
 		// having random access for std::list!
 		ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
-		const Particle& p0 = *ip++;
-		const Particle& p1 = *ip;
+		const PSvector& p0 = *ip++;
+		const PSvector& p1 = *ip;
 
 		for(int m = 0; m < 2; m++)
 		{

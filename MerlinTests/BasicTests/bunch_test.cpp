@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 	assert_close(myBunch_e->GetParticleMass(), 9.10938215e-31, 1e-38);
 
 	assert(myBunch_p->size() == 0);
-	Particle p(0);
+	PSvector p(0);
 	p.x() = 1;
 	myBunch_p->AddParticle(p);
 	assert(myBunch_p->size() == 1);

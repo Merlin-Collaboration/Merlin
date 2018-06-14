@@ -12,30 +12,31 @@
 
 #include "CollimateParticleProcess.h"
 #include "ScatteringModel.h"
+//#include "ScatteredParticle.h"
 
 using namespace Collimation;
 
 namespace ParticleTracking
 {
 
-class CollimateProtonProcess: public CollimateParticleProcess
+class CollimateProtonProcess : public CollimateParticleProcess
 {
 public:
 
 	/**
-	 * Constructor taking the collimation mode, and the output
-	 * stream pointer to which to print the results. mode can
-	 * be a logical OR combination of the collimation modes. A
-	 * null pointer for osp (default) suppresses output.
-	 */
-	CollimateProtonProcess(int priority, int mode, std::ostream* osp = nullptr);
+	* Constructor taking the collimation mode, and the output
+	* stream pointer to which to print the results. mode can
+	* be a logical OR combination of the collimation modes. A
+	* null pointer for osp (default) suppresses output.
+	*/
+	CollimateProtonProcess (int priority, int mode, std::ostream* osp = nullptr);
 
 	void SetScatteringModel(Collimation::ScatteringModel* s);
 
 private:
 	Collimation::ScatteringModel* scattermodel;
 
-	bool DoScatter(Particle&);
+	bool DoScatter(PSvector&);
 
 };
 

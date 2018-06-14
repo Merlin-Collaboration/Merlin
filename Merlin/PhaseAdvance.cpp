@@ -98,7 +98,7 @@ double PhaseAdvance::PhaseAdvanceBetween(string name, bool horizontal)
 
 RealMatrix PhaseAdvance::TransferMapBetween(int n1, int n2)
 {
-	Particle p2(0.);
+	PSvector p2(0.);
 
 	if(n1 > n2)
 	{

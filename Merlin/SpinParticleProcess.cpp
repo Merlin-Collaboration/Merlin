@@ -64,20 +64,20 @@ SpinParticleBunch::SpinParticleBunch(double P0, double Qm) :
 {
 }
 
-size_t SpinParticleBunch::AddParticle(const Particle& p)
+size_t SpinParticleBunch::AddParticle(const PSvector& p)
 {
 	SpinVector* spin = new SpinVector(0, 0, 1);
 	spinArray.push_back(*spin);
 	return ParticleBunch::AddParticle(p);
 }
 
-size_t SpinParticleBunch::AddParticle(const Particle& p, const SpinVector& spin)
+size_t SpinParticleBunch::AddParticle(const PSvector& p, const SpinVector& spin)
 {
 	spinArray.push_back(spin);
 	return ParticleBunch::AddParticle(p);
 }
 
-void SpinParticleBunch::push_back(const Particle& p)
+void SpinParticleBunch::push_back(const PSvector& p)
 {
 	AddParticle(p);
 }

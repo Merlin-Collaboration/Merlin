@@ -10,7 +10,7 @@
 namespace ParticleTracking
 {
 
-void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
+void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, PSvector& particle, int turn)
 {
 	if(currentComponent != &currcomponent)
 	{

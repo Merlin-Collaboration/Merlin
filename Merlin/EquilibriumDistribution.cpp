@@ -273,7 +273,7 @@ void EquilibriumDistribution::CalculateEmittance()
 	ParticleBunch particle(p0, 1.0);
 	for(int n = 0; n < 7; n++)
 	{
-		Particle p = orbit;
+		PSvector p = orbit;
 		if(n > 0)
 		{
 			p[n - 1] += dscale;
@@ -294,7 +294,7 @@ void EquilibriumDistribution::CalculateEmittance()
 		{
 
 			ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
-			const Particle& p_ref = *ip++;
+			const PSvector& p_ref = *ip++;
 
 			for(k = 0; k < 3; k++)
 			{

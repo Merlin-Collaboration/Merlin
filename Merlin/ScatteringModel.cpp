@@ -275,7 +275,7 @@ void ScatteringModel::SetScatterType(int st)
 	ScatteringPhysicsModel = st;
 }
 
-void ScatteringModel::ScatterPlot(Particle& p, double z, int turn, string name)
+void ScatteringModel::ScatterPlot(PSvector& p, double z, int turn, string name)
 {
 	ScatterPlotData* temp = new ScatterPlotData;
 	(*temp).ID = p.id();
@@ -290,7 +290,7 @@ void ScatteringModel::ScatterPlot(Particle& p, double z, int turn, string name)
 	StoredScatterPlotData.push_back(temp);
 }
 
-void ScatteringModel::JawImpact(Particle& p, int turn, string name)
+void ScatteringModel::JawImpact(PSvector& p, int turn, string name)
 {
 	JawImpactData* temp = new JawImpactData;
 	(*temp).ID = p.id();

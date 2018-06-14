@@ -200,11 +200,11 @@ struct CalculateLatticeFunction
 {
 private:
 	double s;
-	const Particle* p;
+	const PSvector* p;
 	RealMatrix* N;
 
 public:
-	CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N) :
+	CalculateLatticeFunction(double _s, const PSvector& _p, RealMatrix& _N) :
 		s(_s), p(&_p), N(&_N)
 	{
 	}
@@ -377,7 +377,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 
 	for(row = 0; row < 6; row++)
 	{
-		Particle q = p;
+		PSvector q = p;
 		q[row] += delta;
 		particle->push_back(q);
 	}
@@ -407,8 +407,8 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	{
 
 		ParticleBunch::iterator ip = tracker.GetTrackedBunch().begin();
-		Particle pref1 = *ip++;
-		Particle pref2 = *ip++;
+		PSvector pref1 = *ip++;
+		PSvector pref2 = *ip++;
 
 		e1 = tracker.GetTrackedBunch().GetReferenceMomentum();
 
@@ -505,7 +505,7 @@ double LatticeFunctionTable::DoCalculateOrbitOnly(double cscale, PSvector* pInit
 	{
 
 		ParticleBunch::const_iterator ip = tracker.GetTrackedBunch().begin();
-		const Particle& pref = *ip++;
+		const PSvector& pref = *ip++;
 
 		for_each(lfnlist.begin(), lfnlist.end(), CalculateLatticeFunction(s, pref, N1));
 		s += tracker.GetCurrentComponent().GetLength();
