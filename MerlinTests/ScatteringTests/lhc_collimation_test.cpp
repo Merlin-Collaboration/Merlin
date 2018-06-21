@@ -185,7 +185,6 @@ int main(int argc, char* argv[])
 	MADInterface* myMADinterface;
 	myMADinterface = new MADInterface(input_data_dir + "twiss.7.0tev.b1_new.tfs", beam_energy);
 	myMADinterface->TreatTypeAsDrift("RFCAVITY");
-	myMADinterface->ConstructApertures(false);
 
 	//Build accelerator model
 	AcceleratorModel* model = myMADinterface->ConstructModel();

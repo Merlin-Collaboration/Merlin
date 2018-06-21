@@ -11,12 +11,14 @@
 #include "merlin_config.h"
 #include <fstream>
 #include <string>
+#include <map>
 #include <set>
 
 #include "AcceleratorModel.h"
+#include "DataTable.h"
+#include "DataTableTFS.h"
 
 class AcceleratorModelConstructor;
-class MADKeyMap;
 
 using std::ifstream;
 using std::ostream;
@@ -34,13 +36,19 @@ using std::ostream;
 class MADInterface
 {
 public:
-
 	/**
 	 *  Constructor taking the name of the MAD optics file, and
 	 *  the momentum in GeV/c.
 	 */
 	MADInterface(const std::string& madFileName = "", double P0 = 0);
+
+	/**
+	 *  Destructor
+	 */
 	~MADInterface();
+
+	AcceleratorComponent* ComponentTypeMap(string& type);
+
 	/**
 	 *   Causes the construction of an AcceleratorModel object
 	 *   based on the MAD optics file.
@@ -63,9 +71,19 @@ public:
 	void SetLoggingOff();
 
 	/**
+	 * Function to return corresponding multipole string *
+	 */
+	string GetMutipoleType(unique_ptr<DataTable>& MADinput, size_t id);
+
+	/**
+	 * Function to define all type overrides
+	 */
+	void TypeOverrides(unique_ptr<DataTable>& MADinput, size_t index);
+
+	/**
 	 *   If true, all RFCavities will be forced to a length of
-	 *   wavelength/2 + a Drift of remaining length (LHC MAD tfs table
-	 *	 bugfix).
+	 *   wavelength/2 + a Drift of remaining length (
+	 *   //LHC MAD tfs table bugfix!!!
 	 */
 	void SetSingleCellRF(bool scrf)
 	{
@@ -106,41 +124,49 @@ public:
 	 */
 	void TreatTypeAsDrift(const std::string& typestr);
 
-	/**
-	 * Functions for constructing a model from several files.
-	 * Repeated calls to AppendModel(fname,p) constructs a single
-	 * model (beamline) from the respective files. The final
-	 * model is returned using GetModel().
-	 */
 	void AppendModel(const std::string& fname, double pref);
 	AcceleratorModel* GetModel();
+	AcceleratorModelConstructor* GetModelConstructor();
 
 	void ConstructNewFrame(const string& name);
 	void EndFrame(const string& name);
 
-protected:
+	double GetEnergy()
+	{
+		return energy;
+	}
+
+	void SetEnergy(double newenergy)
+	{
+		energy = newenergy;
+	}
+
+	bool GetSynchRadFlag()
+	{
+		return inc_sr;
+	}
+
 	double energy;
+	bool inc_sr;
+	bool flatLattice;
+	double z;	///Distance along the lattice
+	bool single_cell_rf;
+
+protected:
+
 	std::string filename;
 	ifstream *ifs;
 	ostream* log;
 
 	bool logFlag;
-	bool flatLattice;
 	bool honMadStructs;
-	bool incApertures;
-	bool inc_sr;
+	bool appendFlag;
 
 	std::set<std::string> zeroLengths;
 	std::set<std::string> driftTypes;
 
-	AcceleratorModelConstructor* ctor;
-	MADKeyMap* prmMap;
-
-	double ReadComponent();
-	void Initialise();
-	double z;   ///Distance along the lattice
-
-	bool single_cell_rf;
+	AcceleratorModelConstructor* modelconstr;
+	AcceleratorComponent* currentcomponent;
 };
 
 inline void MADInterface::SetLogFile(ostream& os)
@@ -168,13 +194,158 @@ inline void MADInterface::ConstructFlatLattice(bool flg)
 	flatLattice = flg;
 }
 
-inline void MADInterface::ConstructApertures(bool flg)
-{
-	incApertures = flg;
-}
-
 inline void MADInterface::ScaleForSynchRad(bool scaleSR)
 {
 	inc_sr = scaleSR;
 }
+
+typedef AcceleratorComponent* (*getTypeFunc)(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+
+class TypeFactory
+{
+public:
+	static map<string, getTypeFunc> componentTypes;
+	AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+
+};
+
+class TypeFactoryInit
+{
+	static TypeFactoryInit init;
+public:
+	TypeFactoryInit();
+};
+
+class DriftComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class RBendComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class SBendComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class QuadrupoleComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class SkewQuadrupoleComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class SextupoleComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class SkewSextupoleComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class OctupoleComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class YCorComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class XCorComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class VKickerComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class HKickerComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class SolenoidComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class RFCavityComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class CollimatorComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class CrabMarkerComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class CrabRFComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class HELComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class MonitorComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class MarkerComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class LineComponent: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
+class SROTComponenet: public AcceleratorComponent
+{
+public:
+	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+};
+
 #endif
