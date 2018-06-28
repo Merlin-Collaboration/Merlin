@@ -48,16 +48,16 @@ void Log(const string& tag, int depth, ostream& os)
 
 // Class MADInterface
 MADInterface::MADInterface(const string& madFileName, double P0) :
-	energy(P0), filename(madFileName), ifs(madFileName.empty() ? nullptr : new ifstream(madFileName.c_str())),
-	log(MerlinIO::std_out), logFlag(false), flatLattice(false), honMadStructs(false), appendFlag(false),
-	modelconstr(nullptr), z(0), single_cell_rf(false)
+	energy(P0), filename(madFileName), ifs(madFileName.empty() ? nullptr : new ifstream(madFileName.c_str())), log(
+		MerlinIO::std_out), logFlag(false), flatLattice(false), honMadStructs(false), appendFlag(false), modelconstr(
+		nullptr), z(0), single_cell_rf(false)
 {
 	if(ifs)
 	{
 		if(!(*ifs))
 		{
-			MERLIN_ERR<< "ERROR opening file " << madFileName << std::endl;
-			throw MerlinException(string("ERROR opening file ")+string(madFileName));
+			MERLIN_ERR << "ERROR opening file " << madFileName << std::endl;
+			throw MerlinException(string("ERROR opening file ") + string(madFileName));
 		}
 	}
 	//By default, we currently treat the following MAD types as drifts
@@ -66,7 +66,7 @@ MADInterface::MADInterface(const string& madFileName, double P0) :
 	TreatTypeAsDrift("VMONITOR");
 	TreatTypeAsDrift("HMONITOR");
 	TreatTypeAsDrift("KICKER");
-	TreatTypeAsDrift("TKICKER");// merlin bug! - transverse dampers, injection + extraction kickers + friends.
+	TreatTypeAsDrift("TKICKER"); // merlin bug! - transverse dampers, injection + extraction kickers + friends.
 	TreatTypeAsDrift("MATRIX");
 
 	IgnoreZeroLengthType("RCOLLIMATOR");
@@ -220,7 +220,7 @@ void MADInterface::ConstructNewFrame(const string& name)
 			break;
 
 		default:
-			MERLIN_ERR<< "Unknown frame character: " << name << endl;
+			MERLIN_ERR << "Unknown frame character: " << name << endl;
 			abort();
 			break;
 		}
@@ -262,7 +262,7 @@ void MADInterface::AppendModel(const string& fname, double Pref)
 
 	if(!(*ifs))
 	{
-		MERLIN_ERR<< "ERROR opening file " << fname << endl;
+		MERLIN_ERR << "ERROR opening file " << fname << endl;
 		delete ifs;
 		abort();
 	}
@@ -316,8 +316,8 @@ void MADInterface::TreatTypeAsDrift(const std::string& typestr)
 	driftTypes.insert(typestr);
 }
 
-AcceleratorComponent* DriftComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* DriftComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -328,8 +328,8 @@ AcceleratorComponent* DriftComponent::GetInstance(unique_ptr<DataTable>& MADinpu
 		return nullptr;
 }
 
-AcceleratorComponent* RBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* RBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -366,8 +366,8 @@ AcceleratorComponent* RBendComponent::GetInstance(unique_ptr<DataTable>& MADinpu
 	return bend;
 }
 
-AcceleratorComponent* SBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* SBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -444,8 +444,8 @@ AcceleratorComponent* SkewSextupoleComponent::GetInstance(unique_ptr<DataTable>&
 	return new SkewSextupole(name, length, brho * k2l / length);
 }
 
-AcceleratorComponent* OctupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* OctupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -470,8 +470,8 @@ AcceleratorComponent* XCorComponent::GetInstance(unique_ptr<DataTable>& MADinput
 	return new XCor(name, length);
 }
 
-AcceleratorComponent* VKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* VKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -485,8 +485,8 @@ AcceleratorComponent* VKickerComponent::GetInstance(unique_ptr<DataTable>& MADin
 	return new YCor(name, length, scale * kick);
 }
 
-AcceleratorComponent* HKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* HKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -500,8 +500,8 @@ AcceleratorComponent* HKickerComponent::GetInstance(unique_ptr<DataTable>& MADin
 	return new XCor(name, length, -scale * kick);
 }
 
-AcceleratorComponent* SolenoidComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* SolenoidComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -510,8 +510,8 @@ AcceleratorComponent* SolenoidComponent::GetInstance(unique_ptr<DataTable>& MADi
 	return new Solenoid(name, length, brho * ks / length);
 }
 
-AcceleratorComponent* RFCavityComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* RFCavityComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -588,8 +588,8 @@ AcceleratorComponent* CrabMarkerComponent::GetInstance(unique_ptr<DataTable>& MA
 	return new CrabMarker(name, length, mux, muy);
 }
 
-AcceleratorComponent* CrabRFComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* CrabRFComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -614,8 +614,8 @@ AcceleratorComponent* HELComponent::GetInstance(unique_ptr<DataTable>& MADinput,
 	return new HollowElectronLens(name, length, 0, 0, 0, 0, 0);
 }
 
-AcceleratorComponent* MonitorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* MonitorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -626,8 +626,8 @@ AcceleratorComponent* MonitorComponent::GetInstance(unique_ptr<DataTable>& MADin
 		return new BPM(name, length);
 }
 
-AcceleratorComponent* MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 
@@ -659,8 +659,8 @@ AcceleratorComponent* LineComponent::GetInstance(unique_ptr<DataTable>& MADinput
 	return nullptr;
 }
 
-AcceleratorComponent* SROTComponenet::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+AcceleratorComponent* SROTComponenet::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id)
 {
 	MADInterface* mad;
 	AcceleratorModelConstructor* constr = mad->GetModelConstructor();
@@ -711,4 +711,3 @@ TypeFactoryInit::TypeFactoryInit()
 
 map<string, getTypeFunc> TypeFactory::componentTypes;
 TypeFactoryInit TypeFactoryInit::init;
-

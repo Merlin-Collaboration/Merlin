@@ -149,7 +149,7 @@ public:
 	double energy;
 	bool inc_sr;
 	bool flatLattice;
-	double z;	///Distance along the lattice
+	double z;   ///Distance along the lattice
 	bool single_cell_rf;
 
 protected:
