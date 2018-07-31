@@ -6,22 +6,16 @@
  */
 
 #include <cstdlib>
-
 #include "Components.h"
-
 #include "MerlinIO.h"
 #include "utils.h"
-
-#include "CollimatorAperture.h"
 #include "AcceleratorModelConstructor.h"
 #include "SequenceFrame.h"
 #include "SupportStructure.h"
 #include "MagnetMover.h"
-
 #include "ResistiveWakePotentials.h"
-
 #include "PhysicalConstants.h"
-
+#include "DataTableTFS.h"
 #include "ConstructSrot.h"
 #include "MADInterface.h"
 
@@ -48,9 +42,10 @@ void Log(const string& tag, int depth, ostream& os)
 
 // Class MADInterface
 MADInterface::MADInterface(const string& madFileName, double P0) :
-	energy(P0), filename(madFileName), ifs(madFileName.empty() ? nullptr : new ifstream(madFileName.c_str())), log(
-		MerlinIO::std_out), logFlag(false), flatLattice(false), honMadStructs(false), appendFlag(false), modelconstr(
-		nullptr), z(0), single_cell_rf(false)
+	energy(P0), flatLattice(false),  z(0), single_cell_rf(false), filename(madFileName), ifs(madFileName.empty() ?
+		nullptr : new ifstream(madFileName.c_str())), log(
+		MerlinIO::std_out), logFlag(false), honMadStructs(false), appendFlag(false), modelconstr(
+		nullptr)
 {
 	if(ifs)
 	{
@@ -94,8 +89,7 @@ inline double SRdE(double h, double len, double E)
 
 AcceleratorModel* MADInterface::ConstructModel()
 {
-	unique_ptr<DataTable> dt(DataTableReaderTFS(filename).Read());
-	unique_ptr<DataTable>& MADinput = dt;
+	unique_ptr<DataTable> MADinput(DataTableReaderTFS(filename).Read());
 
 	if(modelconstr != nullptr && appendFlag == false)
 	{
@@ -107,7 +101,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 		modelconstr->NewModel();
 	}
 
-	TypeFactory* factory;
+	TypeFactory* factory = new TypeFactory();
 	double brho = energy / eV / SpeedOfLight;
 
 	//Loop over all components
@@ -122,9 +116,6 @@ AcceleratorModel* MADInterface::ConstructModel()
 			continue;
 		}
 		TypeOverrides(MADinput, i);
-
-		if(type == "MULTIPOLE")
-			type = GetMutipoleType(MADinput, i);
 
 		//Determine multipole type by parameters
 		AcceleratorComponent* component = factory->GetInstance(MADinput, energy, brho, i);
@@ -151,6 +142,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 
 	AcceleratorModel* theModel = modelconstr->GetModel();
 	delete modelconstr;
+	delete factory;
 	modelconstr = nullptr;
 	return theModel;
 }
@@ -662,13 +654,14 @@ AcceleratorComponent* LineComponent::GetInstance(unique_ptr<DataTable>& MADinput
 AcceleratorComponent* SROTComponenet::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
 	id)
 {
-	MADInterface* mad;
+	MADInterface* mad = new MADInterface();
 	AcceleratorModelConstructor* constr = mad->GetModelConstructor();
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
 
 	constr->AppendComponentFrame(ConstructSrot(length, name));
 
+	delete mad;
 	return nullptr;
 }
 

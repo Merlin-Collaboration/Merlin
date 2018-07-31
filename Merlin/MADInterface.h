@@ -13,10 +13,9 @@
 #include <string>
 #include <map>
 #include <set>
-
+#include <memory>
 #include "AcceleratorModel.h"
 #include "DataTable.h"
-#include "DataTableTFS.h"
 
 class AcceleratorModelConstructor;
 
@@ -102,8 +101,6 @@ public:
 	 *   nested frames.
 	 */
 	void ConstructFlatLattice(bool flg);
-
-	void ConstructApertures(bool flg);
 
 	/**
 	 *   Components of type madType are ignored during
