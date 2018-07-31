@@ -10,21 +10,21 @@ BAD_FILES=""
 
 for FILE in $FILES;
 do
-	if ! $STYLE_SCRIPT check $FILE
+	if ! git show :$FILE | $STYLE_SCRIPT check -
 	then 
-		echo $FILE "failed style check"
+		echo "Staged version of" $FILE "failed style check"
 		BAD_FILES="$BAD_FILES $FILE"
 	fi
 done
 
 if [ -n "$BAD_FILES" ]
 then
-	echo "To see require changes run:"
+	echo -e "\nTo see require changes run:"
 	echo $STYLE_SCRIPT diff $BAD_FILES
-	echo "To fix:"
+	echo -e "\nTo fix:"
 	echo $STYLE_SCRIPT fix $BAD_FILES
 	echo git add $BAD_FILES
-	echo "Or bypass check with 'git commit --no-verify'"
+	echo -e "\nOr bypass check with 'git commit --no-verify'"
 	exit 1
 fi
 

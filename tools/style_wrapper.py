@@ -83,8 +83,21 @@ def indent_comment_like_eclipse(in_text):
 if __name__ == "__main__":
 	all_good = True
 	mode = sys.argv[1]
-	for fname in sys.argv[2:]:
-		in_text = open(fname, **enc_arg).read()
+	fnames = sys.argv[2:]
+
+	if "-" in fnames:
+		if mode == "fix":
+			print("Cannot use fix mode with input on stdin")
+			exit(2)
+		if len(fnames) > 1:
+			print("Can only accept a single file on stdin")
+			exit(2)
+
+	for fname in fnames:
+		if fname == "-":
+			in_text = sys.stdin.read()
+		else:
+			in_text = open(fname, **enc_arg).read()
 		out_text = in_text
 		#print(fname)
 		for func in format_functions:
@@ -93,7 +106,10 @@ if __name__ == "__main__":
 
 		if mode == "check":
 			if in_text != out_text:
-				print(fname, "needs reformatting")
+				if fname == "-":
+					print("stdin needs reformatting")
+				else:
+					print(fname, "needs reformatting")
 				all_good = False
 		elif mode == "diff":
 			if in_text != out_text:
