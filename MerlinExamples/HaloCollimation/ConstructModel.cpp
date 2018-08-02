@@ -45,7 +45,6 @@ pair<AcceleratorModel*, BeamData*> ConstructModel(const string& fname)
 	mad.SetLogFile(madlog);
 	mad.SetLoggingOn();
 
-	mad.ConstructApertures(true);
 	mad.ConstructFlatLattice(true);
 
 	// MADInterface knows nothing about the following types,

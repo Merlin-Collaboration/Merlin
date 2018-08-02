@@ -83,7 +83,6 @@ int main(int argc, char* argv[])
 	// read lattice using MAD interface
 	myMADinterface = new MADInterface(lattice_path, beam_energy);
 	myMADinterface->TreatTypeAsDrift("RFCAVITY");
-	myMADinterface->ConstructApertures(false);
 	AcceleratorModel* model = myMADinterface->ConstructModel();
 
 	model->ReportModelStatistics(cout);
