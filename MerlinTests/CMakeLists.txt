@@ -62,6 +62,10 @@ add_test_t(collimate_particle_process_test BasicTests/collimate_particle_process
 merlin_test(BasicTests particle_bunch_constructor_test particle_bunch_constructor_test.cpp)
 add_test_t(particle_bunch_constructor_test BasicTests/particle_bunch_constructor_test)
 
+merlin_test(BasicTests random_test random_test.cpp)
+merlin_test_py(BasicTests random_test.py)
+add_test_t(random_test.py BasicTests/random_test.py)
+
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
 add_test_t(lhc_optics_test OpticsTests/lhc_optics_test)
 
