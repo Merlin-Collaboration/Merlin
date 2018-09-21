@@ -72,6 +72,9 @@ add_test_t(lhc_optics_test OpticsTests/lhc_optics_test)
 merlin_test(OpticsTests lhc_fft_tune_test lhc_fft_tune_test.cpp)
 add_test_t(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
 
+merlin_test(OpticsTests ground_movement ground_movement.cpp)
+add_test_t(ground_movement OpticsTests/ground_movement)
+
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 merlin_test_py(ScatteringTests cu50_test.py)
 add_test_t(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
