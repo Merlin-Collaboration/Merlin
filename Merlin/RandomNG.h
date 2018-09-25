@@ -14,6 +14,7 @@
 #include <memory>
 #include <cstdint>
 #include <iostream>
+#include <unordered_map>
 
 class ACG;
 class Normal;
@@ -179,9 +180,31 @@ public:
 	 */
 	static double landau();
 
+	/// Gives a reference to the actual generator
+	static std::mt19937_64& getGenerator();
+
+	/**
+	 * Get a new generator to be used within a physics process class
+	 *
+	 * This can improve reproducibility, as each local generator is independent.
+	 * name_hash is added to the list of seeds, and should be set using
+	 * the name of the calling class, e.g.
+	 *
+	 *     auto gen = RandomNG::getLocalGenerator(hash_string("MyPhysicsProcess"));
+	 *
+	 * The generator is held within RandomNG::generator_store, so the same
+	 * generator will be returned if called with the same name_hash
+	 */
+	static std::mt19937_64& getLocalGenerator(size_t name_hash);
+
+	/// Reset a given local generator
+	static void resetLocalGenerator(size_t name_hash);
+
 private:
 	static std::vector<std::uint32_t> master_seed;
 	static std::unique_ptr<std::mt19937_64> generator;
+
+	static std::unordered_map<size_t, std::mt19937_64> generator_store;
 
 	static void not_seeded()
 	{
@@ -191,4 +214,5 @@ private:
 	}
 };
 
+std::uint32_t hash_string(std::string s);
 #endif

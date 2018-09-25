@@ -152,6 +152,8 @@ void RandGenerator::ResetGenerators()
 std::vector<std::uint32_t> RandomNG::master_seed;
 std::unique_ptr<std::mt19937_64> RandomNG::generator;
 
+std::unordered_map<size_t, std::mt19937_64> RandomNG::generator_store;
+
 void RandomNG::init()
 {
 	const int nseeds = 8;
@@ -254,4 +256,44 @@ double RandomNG::landau()
 	}
 	landau_distribution<double> dist{};
 	return dist(*generator);
+}
+
+std::mt19937_64& RandomNG::getGenerator()
+{
+	return *generator;
+}
+
+std::mt19937_64& RandomNG::getLocalGenerator(size_t name_hash)
+{
+	auto search = generator_store.find(name_hash);
+	if(search != generator_store.end())
+	{
+		return search->second;
+	}
+	else
+	{
+		// extend master seed
+		std::vector<std::uint32_t> new_seed{master_seed};
+		new_seed.push_back(name_hash);
+		std::seed_seq ss(new_seed.begin(), new_seed.end());
+		// create and store new generator
+		auto new_gen = std::mt19937_64{ss};
+		generator_store[name_hash] = new_gen;
+		return generator_store[name_hash];
+	}
+}
+
+void RandomNG::resetLocalGenerator(size_t name_hash)
+{
+	std::vector<std::uint32_t> new_seed{master_seed};
+	new_seed.push_back(name_hash);
+	std::seed_seq ss(new_seed.begin(), new_seed.end());
+	// create and store new generator
+	auto new_gen = std::mt19937_64{ss};
+	generator_store[name_hash] = new_gen;
+}
+
+std::uint32_t hash_string(std::string s)
+{
+	return std::hash<std::string>{} (s);
 }
