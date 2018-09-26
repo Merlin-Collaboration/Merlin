@@ -10,10 +10,7 @@
 
 #include "merlin_config.h"
 #include <iostream>
-#include <vector>
 #include "AcceleratorSupport.h"
-
-class RandGenerator;
 
 /**
  *	Represents a simple ATL model of ground motion. On each
@@ -104,7 +101,7 @@ private:
 
 	AcceleratorSupportList theSupports;
 
-	RandGenerator* rg;
+	std::mt19937_64* rg;
 
 	//Copy protection
 	SimpleATL(const SimpleATL& rhs);
