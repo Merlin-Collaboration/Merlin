@@ -87,8 +87,6 @@ merlin_test_py(ScatteringTests lhc_collimation_test.py)
 add_test_t(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
 #add_test_t(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
 
-merlin_test(ScatteringTests rand_test rand_test.cpp)
-
 merlin_test(HollowElectronLens basic_hollow_electron_lens_test basic_hollow_electron_lens_test.cpp)
 merlin_test_py(HollowElectronLens basic_hollow_electron_lens_test.py)
 add_test_t(basic_hollow_electron_lens_test.py HollowElectronLens/basic_hollow_electron_lens_test.py)
