@@ -49,10 +49,6 @@ add_test_t(bunch_test BasicTests/bunch_test)
 merlin_test(BasicTests bunch_io_test bunch_io_test.cpp)
 add_test_t(bunch_io_test BasicTests/bunch_io_test)
 
-merlin_test(BasicTests landau_test landau_test.cpp)
-merlin_test_py(BasicTests landau_test.py)
-add_test_t(landau_test.py BasicTests/landau_test.py)
-
 merlin_test(BasicTests aperture_test aperture_test.cpp)
 add_test_t(aperture_test BasicTests/aperture_test)
 
