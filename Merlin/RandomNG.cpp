@@ -123,6 +123,10 @@ std::mt19937_64& RandomNG::getGenerator()
 
 std::mt19937_64& RandomNG::getLocalGenerator(size_t name_hash)
 {
+	if(!generator)
+	{
+		not_seeded();
+	}
 	auto search = generator_store.find(name_hash);
 	if(search != generator_store.end())
 	{
@@ -143,6 +147,10 @@ std::mt19937_64& RandomNG::getLocalGenerator(size_t name_hash)
 
 void RandomNG::resetLocalGenerator(size_t name_hash)
 {
+	if(!generator)
+	{
+		not_seeded();
+	}
 	std::vector<std::uint32_t> new_seed{master_seed};
 	new_seed.push_back(name_hash);
 	std::seed_seq ss(new_seed.begin(), new_seed.end());
