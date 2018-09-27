@@ -55,10 +55,9 @@ void RandomNG::reset(const std::vector<std::uint32_t>& iseed)
 	reset();
 }
 
-//std::vector<std::uint32_t> RandomNG::getSeed()
-std::uint32_t RandomNG::getSeed()
+const std::vector<std::uint32_t>& RandomNG::getSeed()
 {
-	return master_seed[0];
+	return master_seed;
 }
 
 double RandomNG::normal(double mean, double variance)

@@ -58,8 +58,7 @@ public:
 	/**
 	 * Get the seed for the generator.
 	 */
-	//static std::vector<std::uint32_t> getSeed();
-	static std::uint32_t getSeed();
+	static const std::vector<std::uint32_t>& getSeed();
 
 	/**
 	 * Generates a random number from a normal (Gaussian)

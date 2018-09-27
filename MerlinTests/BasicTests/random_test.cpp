@@ -57,7 +57,12 @@ int main(int argc, char* argv[])
 
 	const int nthrows =  1e6;
 
-	cout << "Seed: " << RandomNG::getSeed() << endl;
+	cout << "Seed: ";
+	for(auto s : RandomNG::getSeed())
+	{
+		cout << s << " ";
+	}
+	cout << endl;
 
 	std::unique_ptr<DataTable> random_setup(DataTableReaderTFS(find_data_file("random_test_setup.tfs")).Read());
 
