@@ -39,7 +39,7 @@ def find_data_file(fname):
 	print("Could not find data file '%s'. Try running from cmake build directory, or the executable directory"% fname)
 	sys.exit(1)
 
-#tol = 0 # changed based on distribution
+tol = 0
 pval = 1e-3
 
 
@@ -112,12 +112,6 @@ for mn, mode in enumerate(random_setup):
 		print("Columns in", results_file, "do not match", random_setup_fname)
 		print("You may need to rerun random_test_gendata.py")
 		exit(1)
-
-	tol = 0
-	if mode["dist"] == "poisson" and mode["var1"] >= 10:
-		# Method in Poisson.h has poor accuracy for large lambdas, noticeable with nthrows > 1e7
-		tol = 1e-2
-		print("For", mode["dist"], " var1=", mode["var1"], " increasing tol to", tol)
 
 	bs = numpy.arange(int(metadata["bins"])+2)
 	ys_m = results_data[:, mn]
