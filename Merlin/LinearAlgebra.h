@@ -46,7 +46,7 @@ double Invert(RealMatrix& t);
 /**
  * Eigensystem
  */
-void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigenvectors);
+bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigenvectors);
 
 /**
  * Matrix symplectification
