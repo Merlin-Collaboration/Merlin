@@ -136,8 +136,9 @@ double Invert(RealMatrix& t)
 	return Inverse(t);
 }
 
-void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigenvectors)
+bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigenvectors)
 {
+     bool allOK=true; 
 	ComplexMatrix m(t);
 	Matrix<int> s(6, 6, 0);
 
@@ -201,6 +202,7 @@ void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 			iter++;
 		}
 
+                assert(iter<100); // just in case  RJB
 		//Now normalise to Transpose[Conjugate[b]].s.b = I
 		Complex bnorm = 0.;
 
@@ -227,8 +229,12 @@ void EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 		}
 		eigenvalues(pln) = lambda;
 		eigenvectors.row(pln) = b;
+                if((imag(lambda)==0) && pln==2) {
+                        cout<<" Unstable in 3rd dimension\n";
+                        allOK=false;
+                        }
 	}
-
+        return allOK;
 }
 
 void Symplectify(RealMatrix& a)

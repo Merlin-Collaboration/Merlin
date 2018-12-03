@@ -300,6 +300,7 @@ void LatticeFunctionTable::CalculateEnergyDerivative()
 
 double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMatrix* MInit)
 {
+        int Ndim,Nsize;
 	for_each(lfnlist.begin(), lfnlist.end(), ClearLatticeFunction());
 
 	PSvector p(0);
@@ -335,15 +336,17 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	{
 		Symplectify(M);
 	}
-	EigenSystem(M, eigenvalues, eigenvectors);
+	bool eigenOK=EigenSystem(M, eigenvalues, eigenvectors);
+        Ndim = eigenOK ? 3 : 2 ; // drop longitudinal dimension if not convergent
+        Nsize=2*Ndim ; 
 
 	int row, col;
 
-	RealMatrix N(6);
-	RealMatrix R(6);
-	for(row = 0; row < 6; row++)
+	RealMatrix N(Nsize);
+	RealMatrix R(Nsize);
+	for(row = 0; row < Nsize; row++)
 	{
-		for(col = 0; col < 3; col++)
+		for(col = 0; col < Ndim; col++)
 		{
 			N(row, 2 * col)   = sqrt(2.) * eigenvectors(col, row).real();
 			N(row, 2 * col + 1) = sqrt(2.) * eigenvectors(col, row).imag();
@@ -354,7 +357,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	ofstream nfile("DataFiles/NormMatrix.dat");
 	MatrixForm(N, nfile, OPFormat().precision(6).fixed());
 
-	for(row = 0; row < 3; row++)
+	for(row = 0; row < Ndim; row++)
 	{
 		int i = 2 * row;
 		int j = 2 * row + 1;
@@ -375,7 +378,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	particle->push_back(p);
 	particle->push_back(p);
 
-	for(row = 0; row < 6; row++)
+	for(row = 0; row < Nsize; row++)
 	{
 		Particle q = p;
 		q[row] += delta;
@@ -395,9 +398,9 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	bool isMore = true;
 	tracker.InitStepper();
 
-	RealMatrix M1 = IdentityMatrix(6);
-	RealMatrix M2(6);
-	RealMatrix M21(6);
+	RealMatrix M1 = IdentityMatrix(Nsize);
+	RealMatrix M2(Nsize);
+	RealMatrix M21(Nsize);
 
 	double e0 = particle->GetReferenceMomentum();
 	double e1 = e0;
@@ -413,21 +416,21 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		e1 = tracker.GetTrackedBunch().GetReferenceMomentum();
 
 		if(e1 != e0)
-			for(int row = 0; row < 6; row++)
+			for(int row = 0; row < Nsize; row++)
 			{
 				pref2[row] *= sqrt(e1 / e0);
 			}
 
-		for(int col = 0; col < 6; col++, ip++)
+		for(int col = 0; col < Nsize; col++, ip++)
 		{
 
 			if(e1 != e0)
-				for(int row = 0; row < 6; row++)
+				for(int row = 0; row < Nsize; row++)
 				{
 					(*ip)[row] *= sqrt(e1 / e0);
 				}
 
-			for(int row = 0; row < 6; row++)
+			for(int row = 0; row < Nsize; row++)
 			{
 				M2(row, col) = ((*ip)[row] - pref2[row]) / delta;
 			}
