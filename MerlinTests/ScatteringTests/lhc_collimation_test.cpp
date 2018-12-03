@@ -268,9 +268,8 @@ int main(int argc, char* argv[])
 	mybeam.Dxp = disp->Dxp;
 	mybeam.Dyp = disp->Dyp;
 
-	mybeam.emit_x = impact * impact * emittance * meter;
-	impact = 1;
-	mybeam.emit_y = impact * impact * emittance * meter;
+	mybeam.emit_x = emittance * meter;
+	mybeam.emit_y = emittance * meter;
 	mybeam.sig_z = 0.0;
 
 	//Beam centroid
@@ -320,10 +319,10 @@ int main(int argc, char* argv[])
 	switch(loss_map_mode)
 	{
 	case HORIZONTAL_LOSS:
-		myBunch = new ProtonBunch(node_particles, HorizonalHalo2ParticleDistributionGenerator(), mybeam, hFilter);
+		myBunch = new ProtonBunch(node_particles, HorizonalHalo2ParticleDistributionGenerator(impact), mybeam, hFilter);
 		break;
 	case VERTICAL_LOSS:
-		myBunch = new ProtonBunch(node_particles, VerticalHalo2ParticleDistributionGenerator(), mybeam, hFilter);
+		myBunch = new ProtonBunch(node_particles, VerticalHalo2ParticleDistributionGenerator(impact), mybeam, hFilter);
 		break;
 	}
 
