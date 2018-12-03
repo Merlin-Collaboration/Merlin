@@ -6,8 +6,9 @@
  */
 
 #include <cmath>
+#include <random>
 #include "NumericalConstants.h"
-#include "ACG.h"
+#include "RandomNG.h"
 
 namespace
 {
@@ -36,8 +37,9 @@ namespace
 
 double Ran1()
 {
-	static ACG pgen(12345);
-	return pgen.asDouble();
+	static auto gen = RandomNG::getLocalGenerator(hash_string("PhotonSpectrumGen"));
+	static auto dist = std::uniform_real_distribution<>{0.0, 1.0};
+	return dist(gen);
 }
 
 /**

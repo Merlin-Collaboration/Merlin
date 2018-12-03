@@ -1,0 +1,16 @@
+* name dist var1 var2 var3 range_min range_max
+$ %s %s %le %le %le %le %le
+ uniform_0_1 uniform 0 1 0 -1 2
+ uniform_-1_2 uniform -1 2 0 -2 3
+ uniform_1_3.5 uniform 1 3 0 0 4
+ normal_0_1 normal 0 1 0 -5 5
+ normal_1_0.2 normal 1 0.2 0 -5 5
+ normalc_0_1_2 normalc 0 1 2 -5 5
+ poisson_0.5 poisson 0.5 0 0 -1 10
+ poisson_2 poisson 2 0 0 -1 10
+ poisson_10 poisson 10 0 0 -1 40
+ poisson_20 poisson 20 0 0 -1 50
+ poisson_30 poisson 30 0 0 -1 60
+ poisson_40 poisson 40 0 0 -1 70
+ poisson_50 poisson 50 0 0 -1 80
+ landau landau 0 0 0 -10 40

@@ -9,6 +9,29 @@ user programs.
 
 ## Version 5.02 {#APIChanges502}
 
+### RandomNG changes
+
+RandomNG has switched from using the internal ACG random number generator to the Mersenne Twister algorithm found in the C++11 standard library. There are only minor changes to the RandomNG api.
+
+Mersenne Twister can take a vector of unsigned ints as the seed. This allows more flexible uses of seeds without risk of collision. For example study involving multiple parameter sets and multiple cluster jobs might use a seed for each. The multiple seeds can be set for example like:
+
+    RandomNG::init();
+    RandomNG::init(seed);// where seed is a std::uint32_t
+    RandomNG::init(seeds); // where seeds is a std::vector<std::uint32_t>
+    RandomNG::init({seed1, seed2});
+
+The generator will also be self seeded (using the random values from the operating system), if RandomNG::init() is not called or called with no arguments.
+
+Likewise RandomNG::getSeed() will now return a vector:
+
+    static std::vector<std::uint32_t> getSeed();
+
+RandGenerator is also removed, code using it to get access to its own generator should instead use RandomNG::getLocalGenerator().
+
+Remove all classes related to old random number generators: ACG, Binomial, DiscUnif, Erlang, Geom, HypGeom, Landau, LogNorm, MLCG, NegExp, Normal, Poisson, RNG, Random, RndInt, Uniform, Weibull.
+
+Some additional functions have been added, see documentation for RandomNG.
+
 ### Removal of ParticleBunchConstructor
 
 The ParticleBunchConstructor has been removed and its functionality moved into the constructor of the ParticleBunch class. This simplifies creating bunches and makes it easy to add new distribution types.
