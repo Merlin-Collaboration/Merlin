@@ -31,7 +31,7 @@ inline bool AsZ(const AcceleratorSupport* s1, const AcceleratorSupport* s2)
 struct ApplyATL
 {
 
-	ApplyATL(double A, double dt, vector<double>& gmy, double vibv, RandGenerator* rg) :
+	ApplyATL(double A, double dt, vector<double>& gmy, double vibv, std::mt19937_64* rg) :
 		AT(A * dt), y(0), z(0), yy(gmy.begin()), vv(vibv), rng(rg)
 	{
 	}
@@ -40,12 +40,11 @@ struct ApplyATL
 	{
 		// Perform the random walk
 		double v = AT * (s->GetArcPosition() - z);
-		y += rng->normal(0, v);
+		y += normal_distribution<>{0, sqrt(v)} (*rng);
 		*yy += y;
 
 		// add random 'noise'
-		double yv = vv != 0 ? rng->normal(0, vv) : 0.0;
-
+		double yv = vv != 0 ? normal_distribution<>{0, sqrt(vv)} (*rng) : 0.0;
 		s->SetOffset(0, *yy + yv, 0);
 		z = s->GetArcPosition();
 
@@ -58,7 +57,7 @@ struct ApplyATL
 	double z;
 	vector<double>::iterator yy;
 	double vv;
-	RandGenerator* rng;
+	std::mt19937_64* rng;
 
 };
 
@@ -87,14 +86,14 @@ struct DumpOffset
 } // end of annonymous namespace
 
 SimpleATL::SimpleATL(double anA, const AcceleratorSupportList& supports, double vrms) :
-	t(0), A(anA), seed(0), vv(vrms * vrms), atlgm(supports.size(), 0.0), theSupports(supports), rg(new RandGenerator())
+	t(0), A(anA), seed(0), vv(vrms * vrms), atlgm(supports.size(), 0.0), theSupports(supports)
 {
 	sort(theSupports.begin(), theSupports.end(), AsZ);
+	rg = &RandomNG::getLocalGenerator(hash_string("ATL2D") + seed);
 }
 
 SimpleATL::~SimpleATL()
 {
-	delete rg;
 }
 
 void SimpleATL::Reset()
@@ -131,15 +130,18 @@ double SimpleATL::GetTime() const
 
 void SimpleATL::SetRandomSeed(unsigned int nseed)
 {
-	rg->reset(nseed);
+	seed = nseed;
+	RandomNG::resetLocalGenerator(hash_string("ATL2D") + seed);
+	rg = &RandomNG::getLocalGenerator(hash_string("ATL2D") + seed);
 }
 
 unsigned int SimpleATL::GetRandomSeed() const
 {
-	return rg->getSeed();
+	return seed;
 }
 
 void SimpleATL::ResetRandomSeed()
 {
-	rg->reset();
+	RandomNG::resetLocalGenerator(hash_string("ATL2D") + seed);
+	rg = &RandomNG::getLocalGenerator(hash_string("ATL2D") + seed);
 }

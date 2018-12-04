@@ -10,11 +10,8 @@
 
 #include "merlin_config.h"
 #include <iostream>
-#include <vector>
 #include "AcceleratorSupport.h"
 #include "LinearAlgebra.h"
-
-class RandGenerator;
 
 /**
  *
@@ -112,7 +109,7 @@ private:
 	double vv;
 
 	AcceleratorSupportList theSupports;
-	RandGenerator* rg;
+	std::mt19937_64* rg;
 
 	RealMatrix evecsT;
 	RealVector evals;

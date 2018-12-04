@@ -8,6 +8,7 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#include <random>
 
 #include "RandomNG.h"
 #include "ATL2D.h"
@@ -27,7 +28,7 @@ inline void ResetSupport(AcceleratorSupport* s)
 struct ApplyATL
 {
 
-	ApplyATL(RealVector& gmy, double vibv, RandGenerator* rg, ATL2D::ATLMode theMode) :
+	ApplyATL(RealVector& gmy, double vibv, std::mt19937_64* rg, ATL2D::ATLMode theMode) :
 		n(0), yy(gmy), vv(vibv), rng(rg), atlMode(theMode)
 	{
 	}
@@ -41,7 +42,7 @@ struct ApplyATL
 		else
 		{
 			// add random 'noise'
-			double yv = vv != 0 ? rng->normal(0, vv) : 0.0;
+			double yv = vv != 0 ? normal_distribution<>{0, sqrt(vv)} (*rng) : 0.0;
 			s->SetOffset(0, yy(n) + yv, 0);
 		}
 
@@ -52,7 +53,7 @@ struct ApplyATL
 	int n;
 	RealVector yy;
 	double vv;
-	RandGenerator* rng;
+	std::mt19937_64* rng;
 	ATL2D::ATLMode atlMode;
 
 };
@@ -90,7 +91,7 @@ struct DumpOffset
 
 ATL2D::ATL2D(double anA, const AcceleratorSupportList& supports, const Point2D refPoint, ifstream* evecTFile,
 	ifstream* evalFile) :
-	t(0), A(anA), seed(0), vv(0), theSupports(supports), rg(new RandGenerator()), atlMode(absolute)
+	t(0), A(anA), seed(0), vv(0), theSupports(supports), atlMode(absolute)
 {
 	const int n = theSupports.size();
 
@@ -125,12 +126,11 @@ ATL2D::ATL2D(double anA, const AcceleratorSupportList& supports, const Point2D r
 		EigenSystemSymmetricMatrix(evecsT, evals);
 	}
 
-	rg->init(seed);
+	rg = &RandomNG::getLocalGenerator(hash_string("ATL2D") + seed);
 }
 
 ATL2D::~ATL2D()
 {
-	delete rg;
 }
 
 void ATL2D::Reset()
@@ -147,7 +147,7 @@ double ATL2D::DoStep(double dt)
 
 	for(size_t n = 0; n < theSupports.size(); n++)
 	{
-		yy(n) = rg->normal(0, at * evals[n]);
+		yy(n) = normal_distribution<>{0, sqrt(at * evals[n])} (*rg);
 	}
 
 	RealVector dy = evecsT * yy;
@@ -178,17 +178,20 @@ double ATL2D::GetTime() const
 
 void ATL2D::SetRandomSeed(unsigned int nseed)
 {
-	rg->reset(nseed);
+	seed = nseed;
+	RandomNG::resetLocalGenerator(hash_string("ATL2D") + seed);
+	rg = &RandomNG::getLocalGenerator(hash_string("ATL2D") + seed);
 }
 
 unsigned int ATL2D::GetRandomSeed() const
 {
-	return rg->getSeed();
+	return seed;
 }
 
 void ATL2D::ResetRandomSeed()
 {
-	rg->reset();
+	RandomNG::resetLocalGenerator(hash_string("ATL2D") + seed);
+	rg = &RandomNG::getLocalGenerator(hash_string("ATL2D") + seed);
 }
 
 bool ATL2D::SetATLMode(const ATLMode mode)

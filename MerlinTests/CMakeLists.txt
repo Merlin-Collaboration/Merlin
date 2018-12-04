@@ -49,10 +49,6 @@ add_test_t(bunch_test BasicTests/bunch_test)
 merlin_test(BasicTests bunch_io_test bunch_io_test.cpp)
 add_test_t(bunch_io_test BasicTests/bunch_io_test)
 
-merlin_test(BasicTests landau_test landau_test.cpp)
-merlin_test_py(BasicTests landau_test.py)
-add_test_t(landau_test.py BasicTests/landau_test.py)
-
 merlin_test(BasicTests aperture_test aperture_test.cpp)
 add_test_t(aperture_test BasicTests/aperture_test)
 
@@ -62,11 +58,18 @@ add_test_t(collimate_particle_process_test BasicTests/collimate_particle_process
 merlin_test(BasicTests particle_bunch_constructor_test particle_bunch_constructor_test.cpp)
 add_test_t(particle_bunch_constructor_test BasicTests/particle_bunch_constructor_test)
 
+merlin_test(BasicTests random_test random_test.cpp)
+merlin_test_py(BasicTests random_test.py)
+add_test_t(random_test.py BasicTests/random_test.py)
+
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
 add_test_t(lhc_optics_test OpticsTests/lhc_optics_test)
 
 merlin_test(OpticsTests lhc_fft_tune_test lhc_fft_tune_test.cpp)
 add_test_t(lhc_fft_tune_test OpticsTests/lhc_fft_tune_test)
+
+merlin_test(OpticsTests ground_movement ground_movement.cpp)
+add_test_t(ground_movement OpticsTests/ground_movement)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 merlin_test_py(ScatteringTests cu50_test.py)
@@ -79,8 +82,6 @@ merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
 merlin_test_py(ScatteringTests lhc_collimation_test.py)
 add_test_t(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
 #add_test_t(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
-
-merlin_test(ScatteringTests rand_test rand_test.cpp)
 
 merlin_test(HollowElectronLens basic_hollow_electron_lens_test basic_hollow_electron_lens_test.cpp)
 merlin_test_py(HollowElectronLens basic_hollow_electron_lens_test.py)

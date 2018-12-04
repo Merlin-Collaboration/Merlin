@@ -191,6 +191,7 @@ ParticleBunch::ParticleBunch(size_t np, const ParticleDistributionGenerator& gen
 	pArray.push_back(p);
 
 	size_t i = 1;
+	size_t filtered = 0;
 	while(i < np)
 	{
 		p = generator.GenerateFromDistribution();
@@ -217,6 +218,16 @@ ParticleBunch::ParticleBunch(size_t np, const ParticleDistributionGenerator& gen
 		{
 			pArray.push_back(p);
 			i++;
+		}
+		else
+		{
+			filtered += 1;
+		}
+
+		if(filtered == 10000 && i == 1)
+		{
+			cout << "WARNING: In ParticleBunch::ParticleBunch() ParticleBunchFilter has skipped over " << filtered
+				 << " particles without allowing any." << endl;
 		}
 	}
 	qPerMP = beam.charge / size();

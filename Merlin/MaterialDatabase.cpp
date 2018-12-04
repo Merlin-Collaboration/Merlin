@@ -303,7 +303,7 @@ Material* MaterialDatabase::FindMaterial(std::string symbol)
 	//did not find the material, this is bad.
 	if(position == db.end())
 	{
-		std::cerr << "Requested aperture material not found. Exiting." << std::endl;
+		std::cerr << "Requested aperture material '" << symbol << "' not found. Exiting." << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
