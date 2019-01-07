@@ -6,7 +6,7 @@
  */
 
 #include "ConstructModel.h"
-#include "MADInterface/MADInterface.h"
+#include "MADInterface.h"
 #include <iostream>
 //#include <fstream>
 

@@ -5,22 +5,22 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#include "BeamModel/BeamData.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "Collimators/CollimatorWakeProcess.h"
-#include "MADInterface/MADInterface.h"
+#include "BeamData.h"
+#include "ParticleBunchConstructor.h"
+#include "ParticleTracker.h"
+#include "CollimatorWakeProcess.h"
+#include "MADInterface.h"
 
-#include "Random/RandomNG.h"
+#include "RandomNG.h"
 
-#include "NumericalUtils/PhysicalUnits.h"
-#include "NumericalUtils/PhysicalConstants.h"
+#include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 
-#include "BeamDynamics/ParticleTracking/SynchRadParticleProcess.h"
-#include "Collimators/CollimateParticleProcess.h"
+#include "SynchRadParticleProcess.h"
+#include "CollimateParticleProcess.h"
 
-#include "Collimators/Collimator_Database.hpp"
-#include "Collimators/Material_Database.hpp"
+#include "CollimatorDatabase.h"
+#include "MaterialDatabase.h"
 
 #include <iostream>
 #include <fstream>
@@ -34,9 +34,9 @@ using namespace ParticleTracking;
 int main(int argc, char* argv[])
 {
 
-	Material_Database* mat = new Material_Database();
+	MaterialDatabase* mat = new MaterialDatabase();
 
-	Collimator_Database* collimator_db = new Collimator_Database("collimator.db", mat);
+	CollimatorDatabase* collimator_db = new CollimatorDatabase("collimator.db", mat, 0);
 
 	int seed = 0;
 	if(argc >= 2)
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
 	 *********************************************************************/
 
 	//Load accelerator optics file.
-	MADInterface* myMADinterface = new MADInterface("Input/lhc.tfs", 7000.0 * GeV);
+	MADInterface* myMADinterface = new MADInterface("MerlinExamples/LHC/Input/lhc.tfs", 7000.0 * GeV);
 	//MADInterface* myMADinterface = new MADInterface("Input/LHCB19.tfs",7000.0*GeV);
 	cout << "Got MADInterface" << endl;
 
@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
 	myMADinterface->SetLoggingOn();
 
 	//Set the Collimator db
-	myMADinterface->Set_Collimator_Database(collimator_db);
+	//myMADinterface->Set_Collimator_Database(collimator_db);
 
 	//Build accelerator model
 	AcceleratorModel* model = myMADinterface->ConstructModel();
@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
 	// Do the loop for nlaps times
 	for(int iii = 1; iii <= nlaps; iii++)
 	{
-		PSvectorArray testarray = myBunch->GetParticles();
+		ParticleArray testarray = myBunch->GetParticles();
 		cout << "Lap " << iii << "\tParticle number: " << testarray.size() << endl;
 		ostringstream lapprefix;
 		lapprefix << "Output/loss_lap_" << setw(4) << setfill('0') << iii << "_";

@@ -1,18 +1,18 @@
-* NAME             KEYWORD          S              L              KS             K0L            E1             E2             K1L            KS1L           K2L            K3L            TILT           TYPE            
-$ %16s             %16s             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %16s            
-@ GAMTR            %e    176.470    
-@ ALFA             %e   0.321112E-04
-@ XIY              %e   -12.7445    
-@ XIX              %e   -13.8711    
-@ QY               %e    3.26571    
-@ QX               %e    4.77992    
+@ GAMTR            %le    176.470    
+@ ALFA             %le   0.321112E-04
+@ XIY              %le   -12.7445    
+@ XIX              %le   -13.8711    
+@ QY               %le    3.26571    
+@ QX               %le    4.77992    
 @ CIRCUM           %le     93.2200000000    
-@ DELTA            %e    0.00000    
+@ DELTA            %le    0.00000    
 @ TYPE             %08s "OPTICS"
 @ COMMENT          %04s " "
 @ ORIGIN           %28s "MAD 8.23dl  Windows NT 4.0"
 @ DATE             %08s "27/09/05"
 @ TIME             %08s "12.04.14"
+* NAME             KEYWORD          S              L              KS             ANGLE            E1             E2             K1L            KS1L           K2L            K3L            TILT           TYPE            
+$ %16s             %16s             %le             %le             %le             %le             %le             %le             %le             %le             %le             %le             %le             %16s            
   "SPINROT"        "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "ARCAU1"         "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "ARCAU11"        "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             

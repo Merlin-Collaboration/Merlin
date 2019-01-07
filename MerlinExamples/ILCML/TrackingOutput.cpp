@@ -56,7 +56,7 @@ void TrackingOutput::Record(const string& id, const Bunch* bunch)
 	double gamma = p0 / MeV / ElectronMassMeV;
 	double gex = gamma * ProjectedEmittance(S, ps_X, ps_XP);
 	double gey = gamma * ProjectedEmittance(S, ps_Y, ps_YP);
-	double geyc = S.var(ps_DP) != 0 ? gamma * DispersionCorrectedEmittance(S) : gey;
+	double geyc = S.var(ps_DP) != 0 ? gamma*DispersionCorrectedEmittance(S) : gey;
 	double z = bunch->GetReferenceTime();
 
 	double eta_y = S(ps_Y, ps_DP) / S.var(ps_DP);

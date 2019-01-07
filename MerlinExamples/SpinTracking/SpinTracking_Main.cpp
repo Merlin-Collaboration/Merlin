@@ -88,7 +88,23 @@ int main()
 	{
 		// Construct the AcceleratorModel
 		// from a lattice file produced by MAD
-		MADInterface madi("../lattices/SpinRotator.lattice.txt", BEAMENERGY);
+		string paths[] = {"../lattices/SpinRotator.lattice.txt", "lattices/SpinRotator.lattice.txt",
+						  "MerlinExamples/lattices/SpinRotator.lattice.txt"};
+
+		string lattice_path;
+		for(size_t i = 0; i < 3; i++)
+		{
+			ifstream test_file;
+			test_file.open(paths[i].c_str());
+			if(test_file)
+			{
+				lattice_path = paths[i];
+				break;
+			}
+		}
+		cout << "Lattice " << lattice_path << endl;
+
+		MADInterface madi(lattice_path, BEAMENERGY);
 
 		ofstream madlog("mad.log");
 		madi.SetLogFile(madlog);
@@ -209,7 +225,7 @@ SpinParticleBunch* ConstructSpinParticleBunch(const BeamData& beam, const SpinVe
 
 	for(PSvectorArray::iterator it = aBunch->begin(); it != aBunch->end(); it++)
 	{
-		PSvector p = *it;
+		Particle p = *it;
 		spinBunch->AddParticle(p, spin);
 	}
 

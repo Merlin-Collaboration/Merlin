@@ -11,7 +11,7 @@
 #include "BeamData.h"
 #include "PhysicalConstants.h"
 #include "TWRFStructure.h"
-#include "SimpleApertures.h"
+#include "Aperture.h"
 #include "TeslaWakePotential.h"
 #include "PatchFrame.h"
 #include <vector>
@@ -50,7 +50,7 @@ pair<AcceleratorModel*, BeamData*> ConstructModel(const string& fname)
 	model->ExtractTypedElements(cavities, "CAV*"); // linac cavities only
 	TeslaWakePotentials* wake = new TeslaWakePotentials;
 
-	CircularAperture* iris = new CircularAperture(0.035); // TESLA iris aperture
+	Aperture* iris = new CircularAperture(0.035); // TESLA iris aperture
 
 	for(vector<TWRFStructure*>::iterator c = cavities.begin(); c != cavities.end(); c++)
 	{

@@ -13,6 +13,9 @@
 #include <fstream>
 
 #include "AcceleratorModel.h"
+#include "DataTable.h"
+
+using namespace std;
 
 class ApertureConfiguration
 {
@@ -33,7 +36,7 @@ public:
 	 * Load the Aperture settings from an input file.
 	 * @param[in] InputFileName The name of the aperture file to load
 	 */
-	void LoadApertureConfiguration(std::string InputFileName);
+	void AssignAperturesToList(unique_ptr<DataTable>&);
 
 	/**
 	 * Dumps the input file back out
@@ -93,49 +96,15 @@ public:
 	typedef size_t ApertureClass_t;
 
 	/**
-	 * See the MAD users guide for how these apertures are defined.
-	 * (current as of V5.02.07)
-	 * http://madx.web.cern.ch/madx/releases/last-dev/madxuguide.pdf
-	 * "Physical Aperture: Aperture definition"
-	 *
-	 * Interpolated in this case is where one type joins another - internal usage, not a MAD-X type.
-	 */
-	/*
-	    typedef enum
-	    {
-	        NONE,
-	        UNKNOWN,
-	        CIRCLE,			//Supported
-	        RECTANGLE,		//Supported
-	        ELLIPSE,		//Supported
-	        RECTCIRCLE,
-	        LHCSCREEN,		//Supported as RECTELLIPSE
-	        RECTELLIPSE,	//Supported
-	        RACETRACK,
-	        OCTAGON,
-	        INTERPOLATED
-	    } ApertureClass;
-	 */
-	struct ap
-	{
-		double s;
-		double ap1;
-		double ap2;
-		double ap3;
-		double ap4;
-		ApertureClass_t ApType;
-
-	};
-
-	/**
 	 * One aperture entry
 	 */
-	ap ApertureEntry;
-
+	Aperture* ApertureEntry;
+	//ap ApertureEntry;
 	/**
 	 * The global list of Aperture entries
 	 */
-	std::vector<ap> ApertureList;
+	vector<Aperture*> ApertureList;
+	//std::vector<ap> ApertureList;
 
 	/**
 	 * A pointer to a default aperture entry

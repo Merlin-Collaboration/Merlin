@@ -45,7 +45,22 @@ int main()
 	RandomNG::init();
 
 	// Construct model
-	pair<AcceleratorModel*, BeamData*> mb = ConstructModel("../lattices/ilc_linac_15_250.xtff");
+	string paths[] = {"../lattices/ilc_linac_15_250.xtff", "lattices/ilc_linac_15_250.xtff",
+					  "MerlinExamples/lattices/ilc_linac_15_250.xtff"};
+
+	string lattice_path;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path = paths[i];
+			break;
+		}
+	}
+	cout << "Lattice " << lattice_path << endl;
+	pair<AcceleratorModel*, BeamData*> mb = ConstructModel(lattice_path);
 
 	AcceleratorModel*          model = mb.first;
 	BeamData*                  beam  = mb.second;

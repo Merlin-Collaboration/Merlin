@@ -46,7 +46,22 @@ int main()
 	// --------------------------------------------------------------------
 	// Construct the simulation and reference
 	// accelerator models.
-	const string modelFile = "../lattices/ilc_linac_15_250.xtff";
+	string paths[] = {"../lattices/ilc_linac_15_250.xtff", "lattices/ilc_linac_15_250.xtff",
+					  "MerlinExamples/lattices/ilc_linac_15_250.xtff"};
+
+	string lattice_path;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path = paths[i];
+			break;
+		}
+	}
+	cout << "Lattice " << lattice_path << endl;
+	const string modelFile = lattice_path;
 	const bool constructCurvedLinac = true;
 
 	pair<AcceleratorModel*, BeamData*> mb;

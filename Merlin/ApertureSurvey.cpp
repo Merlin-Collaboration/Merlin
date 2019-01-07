@@ -71,7 +71,7 @@ static void CheckAperture(Aperture* ap, double s, double *aps)
 		{
 			double guess = (above + below) / 2;
 
-			if(ap->PointInside(xdir * guess, ydir * guess, s))
+			if(ap->CheckWithinApertureBoundaries(xdir * guess, ydir * guess, s))
 			{
 				below = guess;
 			}
@@ -167,6 +167,7 @@ void ApertureSurvey::ApertureSurvey(AcceleratorModel* model, std::ostream* os, S
 		for(size_t zi = 0; zi < zs.size(); zi++)
 		{
 			double z = zs[zi];
+			//cout << "call check_aperture(" << z << ")" << endl;
 			if(ap != NULL)
 			{
 				CheckAperture(ap, z, lims);

@@ -122,8 +122,8 @@ void TrackingOutputROOT::Record(const string& id, const Bunch* bunch)
 	double gamma = E / MeV / ElectronMassMeV;
 	double gex   = gamma * ProjectedEmittance(S, ps_X, ps_XP);
 	double gey   = gamma * ProjectedEmittance(S, ps_Y, ps_YP);
-	double gexc  = S.var(ps_DP) != 0 ? gamma * DispersionCorrectedEmittance(S, ps_X, ps_XP) : gex;
-	double geyc  = S.var(ps_DP) != 0 ? gamma * DispersionCorrectedEmittance(S, ps_Y, ps_YP) : gey;
+	double gexc  = S.var(ps_DP) != 0 ? gamma*DispersionCorrectedEmittance(S, ps_X, ps_XP) : gex;
+	double geyc  = S.var(ps_DP) != 0 ? gamma*DispersionCorrectedEmittance(S, ps_Y, ps_YP) : gey;
 
 	size_t n = id.find('.');
 	strncpy(data.type, id.substr(0, n).c_str(), 15);
@@ -201,15 +201,15 @@ bool TrackingOutputROOT::NewTree(const std::string& tname)
 		// block base
 		if(Output.base)
 		{
-			tree->Branch("z", &data.z, "z/D", Bufsize);
-			tree->Branch("p0", &data.p0, "p0/D", Bufsize);
-			tree->Branch("n", &data.n, "n/I", Bufsize);
+			tree->Branch("z",    &data.z,    "z/D", Bufsize);
+			tree->Branch("p0",   &data.p0,   "p0/D", Bufsize);
+			tree->Branch("n",    &data.n,    "n/I", Bufsize);
 		}
 		// block bunchFirst
 		if(Output.bunchFirst)
 		{
-			tree->Branch("m_x", &data.m_x, "m_x/D", Bufsize);
-			tree->Branch("m_y", &data.m_y, "m_y/D", Bufsize);
+			tree->Branch("m_x",  &data.m_x,  "m_x/D", Bufsize);
+			tree->Branch("m_y",  &data.m_y,  "m_y/D", Bufsize);
 			tree->Branch("m_xp", &data.m_xp, "m_xp/D", Bufsize);
 			tree->Branch("m_yp", &data.m_yp, "m_yp/D", Bufsize);
 			tree->Branch("m_dp", &data.m_dp, "m_dp/D", Bufsize);
@@ -218,21 +218,21 @@ bool TrackingOutputROOT::NewTree(const std::string& tname)
 		// block emittance
 		if(Output.emittance)
 		{
-			tree->Branch("gex", &data.gex, "gex/D", Bufsize);
-			tree->Branch("gey", &data.gey, "gey/D", Bufsize);
+			tree->Branch("gex",  &data.gex,  "gex/D", Bufsize);
+			tree->Branch("gey",  &data.gey,  "gey/D", Bufsize);
 			tree->Branch("geyc", &data.geyc, "geyc/D", Bufsize);
 		}
 		// block Twiss
 		if(Output.Twiss)
 		{
-			tree->Branch("ax", &data.ax, "ax/D", Bufsize);
-			tree->Branch("bx", &data.bx, "bx/D", Bufsize);
-			tree->Branch("ay", &data.ay, "ay/D", Bufsize);
-			tree->Branch("by", &data.by, "by/D", Bufsize);
-			tree->Branch("Dx", &data.Dx, "Dx/D", Bufsize);
-			tree->Branch("Dy", &data.Dy, "Dy/D", Bufsize);
-			tree->Branch("Dxp", &data.Dxp, "Dxp/D", Bufsize);
-			tree->Branch("Dyp", &data.Dyp, "Dyp/D", Bufsize);
+			tree->Branch("ax",   &data.ax,   "ax/D", Bufsize);
+			tree->Branch("bx",   &data.bx,   "bx/D", Bufsize);
+			tree->Branch("ay",   &data.ay,   "ay/D", Bufsize);
+			tree->Branch("by",   &data.by,   "by/D", Bufsize);
+			tree->Branch("Dx",   &data.Dx,   "Dx/D", Bufsize);
+			tree->Branch("Dy",   &data.Dy,   "Dy/D", Bufsize);
+			tree->Branch("Dxp",   &data.Dxp,   "Dxp/D", Bufsize);
+			tree->Branch("Dyp",   &data.Dyp,   "Dyp/D", Bufsize);
 		}
 		// block bunchSecond
 		if(Output.bunchSecond)
