@@ -1,0 +1,53 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* KEYWORD            NAME               PARENT                         S             L        APER_1        APER_2        APER_3        APER_4 		APERTYPE
+$ %s                 %s                 %s                           %le           %le           %le           %le           %le           %le 		%s
+
+
+ MARKER LHCB1$START MARKER 0 0 0 0 0 0 "CIRCLE"
+ DRIFT D1 DRIFT 0 1 0.9 0.8 0 0 "RECTANGLE"
+ DRIFT D2 DRIFT 1 1 0.75 0 0 0 "CIRCLE"
+ DRIFT D3 DRIFT 2 1 0.7 0.6 0 0 "ELLIPSE"
+ DRIFT D4 DRIFT 3 1 0.4 0.4 0.4 0.5 "RECTELLIPSE"
+ DRIFT D5 DRIFT 4 1 0.3 0.3 0.392699081698724 1.17809724509617 "OCTAGON"
+ DRIFT D6 DRIFT 5 1 0.15 0.2 0.7853981633974483 1.17809724509617 "OCTAGON"
