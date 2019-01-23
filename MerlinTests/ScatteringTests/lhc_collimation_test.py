@@ -114,7 +114,6 @@ for run_n in range(1):
 
 	print("running:", [exe_name]+args)
 	ret = subprocess.call([exe_name]+args)
-	ret=0
 
 	if ret != 0:
 		print("Failed to run executable %s, error %s"%(exe_name, ret))

@@ -59,21 +59,10 @@ void write_read(DataTable dt)
 void read_big()
 {
 	cout << "read_big()" << endl;
-	string paths[] = {"../data/twiss.7.0tev.b1_new.tfs", "data/twiss.7.0tev.b1_new.tfs", "MerlinTests/data/twiss.7.0tev.b1_new.tfs"};
 
-	string lattice_path;
-	for(size_t i = 0; i < 3; i++)
-	{
-		ifstream test_file;
-		test_file.open(paths[i].c_str());
-		if(test_file)
-		{
-			lattice_path = paths[i];
-			break;
-		}
-	}
+	string lattice_path = find_data_file("twiss.7.0tev.b1_new.tfs");
+
 	cout << "Reading: " << lattice_path << endl;
-
 	unique_ptr<DataTable> dt(DataTableReaderTFS(lattice_path).Read());
 
 	assert(dt->Length() == 13211);
