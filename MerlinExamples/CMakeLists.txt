@@ -11,12 +11,18 @@ macro (merlin_example dir exe_name)
 	target_link_libraries(${exe_name} merlin)
 endmacro (merlin_example)
 
+# macro to install a test python script (need add_test() to call it)
+macro (merlin_example_py dir script_name)
+	add_custom_target(${script_name} ALL)
+	add_custom_command(TARGET ${script_name}
+	                   DEPENDS ${dir}/${script_name}
+	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
+endmacro (merlin_example_py)
 
 add_custom_target(ExampleDataFiles ALL)
 add_custom_command(TARGET ExampleDataFiles
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_CURRENT_SOURCE_DIR}/lattices ${CMAKE_CURRENT_BINARY_DIR}/lattices)
-
 
 merlin_example(AcceleratorErrors AccErr main.cpp)
 merlin_example(ClosedOrbit ClosedOrbit ClosedOrbit_Main.cpp)
@@ -30,7 +36,9 @@ merlin_example(LatticeFunctions LatticeFunctions LatticeFunctions_Main.cpp)
 merlin_example(SpinTracking SpinTracking SpinTracking_Main.cpp)
 merlin_example(StrayFieldClosedOrbit StrayFieldClosedOrbit StrayFieldClosedOrbit_Main.cpp ConstantStrayFieldProcess.cpp)
 merlin_example(Tracking Tracking Tracking_Main.cpp)
+#merlin_example_py(Tracking Tracking_Main.py)
 merlin_example(Trajectory Trajectory Trajectory_Main.cpp)
+#merlin_example_py(Trajectory Trajectory_Main.py)
 merlin_example(Wakefields wakefile_ex1 ex1.cpp TeslaWakePotential.cpp)
 merlin_example(Wakefields wakefile_ex2 ex2.cpp TeslaWakePotential.cpp)
 merlin_example(Wakefields wakefile_ex3 ex3.cpp TeslaWakePotential.cpp)

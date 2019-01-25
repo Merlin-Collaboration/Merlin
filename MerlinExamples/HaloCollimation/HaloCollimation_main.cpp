@@ -28,6 +28,9 @@
 // For this example, we incapsulate the halo construction
 // and tracking in a utility class HaloTracker.
 #include "HaloTracker.h"
+#include <iostream>
+
+#include "XTFFInterface.h"
 
 using namespace std;
 
@@ -47,7 +50,21 @@ int main()
 	RandomNG::init();
 
 	// Construct the BDS beamline model
-	pair<AcceleratorModel*, BeamData*> mb = ConstructModel("../lattices/tesla_bds_v8.05.optics");
+	string paths[] = {"../lattices/tesla_bds_v8.05.optics", "lattices/tesla_bds_v8.05.optics",
+					  "MerlinExamples/lattices/tesla_bds_v8.05.optics"};
+
+	string lattice_path;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path = paths[i];
+			break;
+		}
+	}
+	pair<AcceleratorModel*, BeamData*> mb = ConstructModel(lattice_path);
 
 	AcceleratorModel* model = mb.first;
 	BeamData* beam = mb.second;

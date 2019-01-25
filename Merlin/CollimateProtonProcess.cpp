@@ -100,7 +100,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		double E1 = E0 * (1 + p.dp());
 		//Note that pathlength should be calculated with E0
 
-		double xlen = scattermodel->PathLength(C->p, E0);
+		double xlen = scattermodel->PathLength(C->material, E0);
 
 		double E2 = 0;
 
@@ -125,7 +125,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		}
 
 		//Energy Loss
-		scattermodel->EnergyLoss(p, step_size, C->p, E0);
+		scattermodel->EnergyLoss(p, step_size, C->material, E0);
 
 		E2 = E0 * (1 + p.dp());
 
@@ -145,7 +145,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		}
 
 		//MCS
-		scattermodel->Straggle(p, step_size, C->p, E1, E2);
+		scattermodel->Straggle(p, step_size, C->material, E1, E2);
 
 		if((E2 < (E0 / 100.0)))
 		{
@@ -159,7 +159,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 			scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
 		}
 
-		if((colap->PointInside((p.x()), (p.y()), z)))
+		if((colap->CheckWithinApertureBoundaries((p.x()), (p.y()), z)))
 		{
 			//escaped jaw, so propagate to end of element
 			p.x() += p.xp() * lengthtogo;
@@ -175,7 +175,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		//Scattering - use E2
 		if(interacted)
 		{
-			if(!scattermodel->ParticleScatter(p, C->p, E2))
+			if(!scattermodel->ParticleScatter(p, C->material, E2))
 			{
 				p.ct() = z;
 

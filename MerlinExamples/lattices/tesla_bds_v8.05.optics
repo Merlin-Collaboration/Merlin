@@ -1,16 +1,16 @@
-* NAME             KEYWORD          S              L              K0L            K1L            K2L            K3L            TILT           TYPE            
-$ %16s             %16s             %e             %e             %e             %e             %e             %e             %e             %16s            
-@ XIY              %e   -32.7535    
-@ XIX              %e   -50.0317    
-@ QY               %e    7.04524    
-@ QX               %e    11.9257    
+@ XIY              %le   -32.7535    
+@ XIX              %le   -50.0317    
+@ QY               %le    7.04524    
+@ QX               %le    11.9257    
 @ CIRCUM           %le     1759.26700000    
-@ DELTA            %e    0.00000    
+@ DELTA            %le    0.00000    
 @ TYPE             %08s "OPTICS"
 @ COMMENT          %56s "TESLA BEAM DELIVERY SYSTEM, VERSION 8.02, June 26, 2000"
 @ ORIGIN           %28s "MAD 8.23/accWindows NT 4.0"
 @ DATE             %08s "26/07/00"
 @ TIME             %08s "16.21.55"
+* NAME             KEYWORD          S              L              ANGLE            K1L            K2L            K3L            TILT           TYPE            
+$ %16s             %16s             %le             %le             %le             %le             %le             %le             %le             %16s            
   "EBDS"           "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "LI2CDSE"        "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "BEGL"           "MARKER"            0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             

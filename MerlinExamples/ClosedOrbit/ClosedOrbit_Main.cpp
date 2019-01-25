@@ -25,7 +25,23 @@ int main()
 {
 	// Construct the AcceleratorModel
 	// from a lattice file produced by MAD
-	MADInterface madi("../lattices/MERLINFodo.lattice.txt", BEAMENERGY);
+	string paths[] = {"../lattices/MERLINFodo.lattice.txt", "lattices/MERLINFodo.lattice.txt",
+					  "MerlinExamples/lattices/MERLINFodo.lattice.txt"};
+
+	string lattice_path;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path = paths[i];
+			break;
+		}
+	}
+	cout << "Lattice " << lattice_path << endl;
+
+	MADInterface madi(lattice_path, BEAMENERGY);
 
 	ofstream madlog("mad.log");
 	madi.SetLogFile(madlog);
@@ -41,7 +57,7 @@ int main()
 
 	// Find the closed orbit in the ring.
 	ClosedOrbit theClosedOrbit(theModel, BEAMENERGY);
-	PSvector co(0);
+	Particle co(0);
 	theClosedOrbit.FindClosedOrbit(co);
 
 	// Construct a bunch of particles

@@ -45,9 +45,9 @@ void HaloTracker::Run(size_t npart)
 		while(npart--)
 		{
 			Particle p(0);
-			p.x() = RandomNG::uniform(-x, x) + bdat.x0;
+			p.x()  = RandomNG::uniform(-x, x) + bdat.x0;
 			p.xp() = RandomNG::uniform(-xp, xp) + bdat.xp0;
-			p.y() = RandomNG::uniform(-y, y) + bdat.y0;
+			p.y()  = RandomNG::uniform(-y, y) + bdat.y0;
 			p.yp() = RandomNG::uniform(-yp, yp) + bdat.yp0;
 			p.dp() = RandomNG::uniform(-dp, dp);
 			p.ct() = 0;

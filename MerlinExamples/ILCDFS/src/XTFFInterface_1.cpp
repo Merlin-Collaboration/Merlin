@@ -17,7 +17,7 @@
 
 #include "Components.h"
 #include "AcceleratorModelConstructor.h"
-#include "SimpleApertures.h"
+#include "Aperture.h"
 #include "SupportStructure.h"
 #include "PhysicalConstants.h"
 #include "ConstructSrot.h"
@@ -491,7 +491,8 @@ void XTFFInterface_1::ConstructComponent(XTFF_Data& dat)
 		c = mc->AppendComponent(ConstructDrift(dat));
 		if(incApertures)
 		{
-			c->SetAperture(new RectangularAperture(2 * dat[XGAP], 2 * dat[YGAP]));
+			Aperture* ap = new RectangularAperture(2 * dat[XGAP], 2 * dat[YGAP]);
+			c->SetAperture(ap);
 		}
 	}
 	else if(dat.keywrd == "SROT")
@@ -507,7 +508,8 @@ void XTFFInterface_1::ConstructComponent(XTFF_Data& dat)
 
 	if(c && incApertures && dat[APER] != 0)
 	{
-		c->SetAperture(new CircularAperture(dat[APER]));
+		Aperture* ap = new CircularAperture(dat[APER]);
+		c->SetAperture(ap);
 	}
 
 	if(c)

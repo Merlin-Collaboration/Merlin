@@ -84,7 +84,22 @@ int main()
 	RandomNG::init(1234);
 
 	// Construct model
-	pair<AcceleratorModel*, BeamData*> mb = ConstructModel("lattice/tesla_linac.xtff");
+	string paths[] = {"../ILCML/lattice/tesla_linac.xtff", "ILCML/lattice/tesla_linac.xtff",
+					  "MerlinExamples/ILCML/lattice/tesla_linac.xtff"};
+
+	string lattice_path;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path = paths[i];
+			break;
+		}
+	}
+	cout << "Lattice " << lattice_path << endl;
+	pair<AcceleratorModel*, BeamData*> mb = ConstructModel(lattice_path);
 	AcceleratorModel* model = mb.first;
 	BeamData* beam0 = mb.second;
 
@@ -177,8 +192,22 @@ void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac, SMP
 
 void AdjustLattice(AcceleratorModel& linacModel)
 {
+	string paths[] = {"../ILCML/lattice/nick23p4_misxy_1.txt", "ILCML/lattice/nick23p4_misxy_1.txt",
+					  "MerlinExamples/ILCML/lattice/nick23p4_misxy_1.txt"};
+
+	string lattice_path;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path = paths[i];
+			break;
+		}
+	}
 	// Read in misalignment file
-	ifstream ifs("lattice/nick23p4_misxy_1.txt");
+	ifstream ifs(lattice_path);
 	if(!ifs)
 	{
 		cerr << "problems openning file lattice/nick23p4_misxy_1.txt" << endl;
@@ -222,7 +251,21 @@ void AdjustLattice(AcceleratorModel& linacModel)
 	}
 
 	// YCOR settings (assumed units are tesla.meter)
-	ifstream ifs1("lattice/nick23p4_misxy_ycor_1.txt");
+	string path2[] = {"../ILCML/lattice/nick23p4_misxy_ycor_1.txt", "ILCML/lattice/nick23p4_misxy_ycor_1.txt",
+					  "MerlinExamples/ILCML/lattice/nick23p4_misxy_ycor_1.txt"};
+
+	string lattice_path2;
+	for(size_t i = 0; i < 3; i++)
+	{
+		ifstream test_file;
+		test_file.open(paths[i].c_str());
+		if(test_file)
+		{
+			lattice_path2 = paths[i];
+			break;
+		}
+	}
+	ifstream ifs1(lattice_path2);
 	if(!ifs1)
 	{
 		cerr << "problems openning file lattice/nick23p4_misxy_ycor_1.txt" << endl;
@@ -237,7 +280,7 @@ void AdjustLattice(AcceleratorModel& linacModel)
 	{
 		double yc, z;
 		ifs1 >> z >> yc;
-		if(!ifs1)
+		if(ifs1)
 		{
 			cerr << "error reading file lattice/nick23p4_misxy_ycor_1.txt" << endl;
 			abort();

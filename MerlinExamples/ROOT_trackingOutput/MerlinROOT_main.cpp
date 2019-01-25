@@ -6,19 +6,19 @@
  */
 
 #include "merlin_config.h"
-#include "Random/RandomNG.h"
-#include "MADInterface/XTFFInterface.h"
-#include "AcceleratorModel/AcceleratorModel.h"
-#include "BeamModel/BeamData.h"
-#include "BeamDynamics/ParticleTracking/ParticleTracker.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/ParticleTracking/ParticleBunchConstructor.h"
-#include "BeamDynamics/ParticleTracking/WakeFieldProcess.h"
-#include "AcceleratorModel/StdComponent/TWRFStructure.h"
+#include "RandomNG.h"
+#include "XTFFInterface.h"
+#include "AcceleratorModel.h"
+#include "BeamData.h"
+#include "ParticleTracker.h"
+#include "ParticleBunch.h"
+#include "ParticleBunchConstructor.h"
+#include "WakeFieldProcess.h"
+#include "TWRFStructure.h"
 
-#include "NumericalUtils/NumericalConstants.h"
-#include "NumericalUtils/PhysicalConstants.h"
-#include "NumericalUtils/PhysicalUnits.h"
+#include "NumericalConstants.h"
+#include "PhysicalConstants.h"
+#include "PhysicalUnits.h"
 
 #include <iostream>
 

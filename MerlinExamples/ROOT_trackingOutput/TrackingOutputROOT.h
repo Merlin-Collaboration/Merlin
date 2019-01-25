@@ -8,12 +8,12 @@
 #ifndef _h_TrackingOutputROOT
 #define _h_TrackingOutputROOT
 
-#include "BeamDynamics/TrackingSimulation.h"
-#include "utility/StringPattern.h"
-#include "BeamModel/BeamData.h"
+#include "TrackingSimulation.h"
+#include "StringPattern.h"
+#include "BeamData.h"
 
-#include "BeamDynamics/ParticleTracking/ParticleBunch.h"
-#include "BeamDynamics/SMPTracking/SMPBunch.h"
+#include "ParticleBunch.h"
+#include "SMPBunch.h"
 
 #include <map>
 #include <string>

@@ -10,7 +10,7 @@
 
 #include "ParticleBunch.h"
 #include <iostream>
-#include "Aperture.h"
+#include "Collimator.h"
 #include "PhysicalConstants.h"
 #include <vector>
 #include "ElasticScatter.h"
@@ -77,9 +77,9 @@ public:
 	virtual double GetParticleMassMeV() const;
 	virtual double GetParticleLifetime() const;
 
-	int Scatter(Particle& pi, double x, const Aperture* ap);
+	int Scatter(Particle& pi, double x, const Collimator* col);
 
-	int (*ScatterFunctionPointer)(Particle& p, double x, const Aperture* ap);
+	int (*ScatterFunctionPointer)(Particle& p, double x, const Collimator* col);
 
 	void set()
 	{
@@ -141,18 +141,18 @@ public:
 	void EnableScatteringPhysics(scatMode);
 	//void EnableSixtrackPhysics(bool);
 
-	int ScatterSixtrack(PSvector& pi, double x, const Aperture* ap);
-	int ScatterSixtrackAdvancedIonization(PSvector& pi, double x, const Aperture* ap);
-	int ScatterSixtrackAdvancedElastic(PSvector& pi, double x, const Aperture* ap);
-	int ScatterSixtrackAdvancedSingleDiffraction(PSvector& pi, double x, const Aperture* ap);
-	int ScatterMerlin(PSvector& pi, double x, const Aperture* ap);
+	int ScatterSixtrack(PSvector& pi, double x, const Collimator* col);
+	int ScatterSixtrackAdvancedIonization(PSvector& pi, double x, const Collimator* col);
+	int ScatterSixtrackAdvancedElastic(PSvector& pi, double x, const Collimator* col);
+	int ScatterSixtrackAdvancedSingleDiffraction(PSvector& pi, double x, const Collimator* col);
+	int ScatterMerlin(PSvector& pi, double x, const Collimator* col);
 
-	void ConfigureScatter(const Aperture* ap);
-	void ConfigureScatterMerlin(const Aperture* ap);
-	void ConfigureScatterSixtrack(const Aperture* ap);
-	void ConfigureScatterSixtrackAdvancedIonization(const Aperture* ap);
-	void ConfigureScatterSixtrackAdvancedElastic(const Aperture* ap);
-	void ConfigureScatterSixtrackAdvancedSingleDiffraction(const Aperture* ap);
+	void ConfigureScatter(const Collimator* col);
+	void ConfigureScatterMerlin(const Collimator* col);
+	void ConfigureScatterSixtrack(const Collimator* col);
+	void ConfigureScatterSixtrackAdvancedIonization(const Collimator* col);
+	void ConfigureScatterSixtrackAdvancedElastic(const Collimator* col);
+	void ConfigureScatterSixtrackAdvancedSingleDiffraction(const Collimator* col);
 
 	//The pp elastic scattering class
 	bool GotElastic;

@@ -26,15 +26,12 @@ class Collimator: public Drift
 {
 public:
 
-	// Overloaded constructor
 	Collimator(const string& id, double len);
 	Collimator(const string& id, double len, double radLength);
 	Collimator(const string& id, double len, Material* pp, double P0);
-	//~ Collimator (const string& id, double len, Material* pp, Collimation::ScatteringModel* s, double P0);
 
 	/**
-	 * Returns the length of the collimator in units of its
-	 * radiation length
+	 * Returns the length of the collimator in units of its radiation length
 	 * @return Collimator length
 	 */
 	double GetNumRadLengths() const
@@ -58,8 +55,7 @@ public:
 	virtual const string& GetType() const;
 
 	/**
-	 *	Returns the unique index for this class of accelerator
-	 *	components.
+	 *	Returns the unique index for this class of accelerator components.
 	 *	@return Unique index for the class of accelerator components
 	 */
 	virtual int GetIndex() const;
@@ -102,23 +98,24 @@ public:
 		return Coll_ID;
 	}
 
-	bool scatter_at_this_collimator;
-
 	/**
 	 * Collimator material
 	 */
-	Material* p;
-	virtual void SetMaterial(Material* pp)
+	Material* material;
+
+	virtual void SetMaterial(Material* mat)
 	{
-		p = pp;
+		material = mat;
 	}
 
-	// ScatteringModel contains the relevent ScatteringProcess to use when performing scattering
-	//~ Collimation::ScatteringModel* scatter;
-	//~ virtual void SetScatteringModel(Collimation::ScatteringModel* s);
+	Material* GetMaterial() const
+	{
+		return material;
+	}
 
 private:
 	double Xr;
+	bool scatter_at_this_collimator;
 };
 
 #endif

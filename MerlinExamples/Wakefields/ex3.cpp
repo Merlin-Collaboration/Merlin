@@ -153,15 +153,15 @@ AcceleratorModel* ConstructLinac(WakePotentials* wake, BeamData& beam)
 	double driftLen = 0.3346 * meter;
 
 	// cavity parameters
-	double cavLen =  1.0362 * meter;
-	double volt   = 32.6 * MV;
-	double phase  = -0.0925025;
-	double freq   =  1.3e+09;
-	double eloss  =  0.0458 * Volt;
+	double cavLen =   1.0362 * meter;
+	double volt   =  32.6 * MV;
+	double phase  =  -0.0925025;
+	double freq   =   1.3e+09;
+	double eloss  =   0.0458 * Volt;
 
 	// quadrupole parameters
-	double quadLen = 0.666 * meter;
-	double f_k1    = 0.0524;
+	double quadLen =  0.666 * meter;
+	double f_k1    =  0.0524;
 	double d_k1    = -0.0471;
 	double E       = beam.p0;
 
@@ -200,9 +200,9 @@ AcceleratorModel* ConstructLinac(WakePotentials* wake, BeamData& beam)
 
 	// set twiss parameters for this lattice
 	beam.beta_x  = 106.37 * meter;
-	beam.beta_y  = 37.27 * meter;
+	beam.beta_y  =  37.27 * meter;
 	beam.alpha_x = -1.857;
-	beam.alpha_y = 0.6584;
+	beam.alpha_y =  0.6584;
 
 	return accel_modConst->GetModel();
 

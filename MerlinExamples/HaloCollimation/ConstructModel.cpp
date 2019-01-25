@@ -31,7 +31,7 @@ pair<AcceleratorModel*, BeamData*> ConstructModel(const string& fname)
 
 	BeamData *beam = new BeamData;
 	beam->beta_x = 172.070;
-	beam->sig_z = 0.0003;
+	beam->sig_z  = 0.0003;
 	beam->beta_y = 57.48;
 	beam->sig_dp = 1.5e-03;
 	beam->emit_x = 10.0e-06 / gamma;

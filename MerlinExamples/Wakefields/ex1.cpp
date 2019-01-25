@@ -8,7 +8,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "SimpleApertures.h"
+#include "Aperture.h"
 #include "AcceleratorModelConstructor.h"
 #include "Collimator.h"
 
@@ -107,7 +107,7 @@ int main()
 	Collimator* collimator      = new Collimator("aCollimator", collimatorlength, collimatorthick);
 	double aperturewidth  = 1.9 * millimeter;
 	double apertureheight = 1.9 * millimeter;
-	RectangularAperture* aperture = new RectangularAperture(aperturewidth, apertureheight);
+	Aperture* aperture = new RectangularAperture(aperturewidth, apertureheight);
 	collimator->SetAperture(aperture);
 
 	double driftlength2 = 1.0 * meter;
@@ -132,7 +132,7 @@ int main()
 
 // apply the geometric wakefields
 	TaperedCollimatorPotentials* collWake
-		= new TaperedCollimatorPotentials(modes, aperturewidth / 2, apertureheight / 2);
+		=  new TaperedCollimatorPotentials(modes, aperturewidth / 2, apertureheight / 2);
 	collimator->SetWakePotentials(collWake);
 
 // //another example: a resistive wakefield
@@ -141,7 +141,7 @@ int main()
 // double conductivity = 3.08e7;         //berrilium
 // double conductivity = 6.e4;           //carbon
 // double conductivity = 4.5e6;          //for TiN
-// ResistiveWakePotentials* resWake = new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, collimatorlength);
+// ResistiveWakePotentials* resWake =  new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, collimatorlength);
 // collimator->SetWakePotentials(resWake);
 
 //-----------------------------------------------------

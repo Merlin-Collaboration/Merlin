@@ -8,9 +8,6 @@
 #ifndef _H_TeslaCoupler
 #define _H_TeslaCoupler
 
-#include <complex>
-typedef std::complex<double> Complex;
-
 #include "CombinedWakeRF.h"
 #include "Transform2D.h"
 #include "PhysicalConstants.h"
@@ -59,7 +56,7 @@ public:
 
 	// cavity wake fields - tesla wake fields
 	//
-	double Wlong(double z) const
+	double Wlong(double z)  const
 	{
 		return 38.1e+12 * (1.165 * exp(-sqrt(z / 3.65e-3)) - 0.165);
 	}
@@ -106,7 +103,7 @@ public:
 	// a phi > means later than t0 - opposite sign to Merlin TWRFStructure::GetPhase()!
 	//
 	// old design
-	Vector2D oldCouplerRFKickDown(double x, double y, double phi) const
+	Vector2D oldCouplerRFKickDown(double x, double y, double phi)  const
 	{
 		Complex a = polar(1., phi);
 
@@ -119,14 +116,14 @@ public:
 		// komplex arithmetic is a bit slow
 
 	}
-	Vector2D oldCouplerRFKickUp(double x, double y, double phi) const
+	Vector2D oldCouplerRFKickUp(double x, double y, double phi)  const
 	{
 		Complex a = polar(1., phi);
 
 		// kap = Vt/Vz for upstream coupler
 		Complex kap_x = Complex(-0.000057 + x * 0.0011 + y * 0.0034, 0.000007 - x * 0.0007 + y * 0.00015);
 		// typo in paper: 0.41+0.03i instead of the correct -0.41-0.03i
-		Complex kap_y = Complex(-0.000041 + x * 0.0034 - y * 0.001, -0.000003 + x * 0.0002 + y * 0.0006);
+		Complex kap_y = Complex(-0.000041 + x * 0.0034 - y * 0.001,  -0.000003 + x * 0.0002 + y * 0.0006);
 
 		return Vector2D(real(kap_x * a), real(kap_y * a));
 		// komplex arithmetic is a bit slow
@@ -143,14 +140,14 @@ public:
 		Complex a = polar(1., phi);
 
 		// kap = Vt/Vz for downstream coupler
-		Complex kap_x(-0.000025 - x * .004  + y * .0029, 0.000052 - x * 0.002 + y * 0.00037);
+		Complex kap_x(-0.000025 - x * .004  + y * .0029,  0.000052 - x * 0.002 + y * 0.00037);
 		// mirror i.e. - sign in y
 		Complex kap_y(-0.000032 - x * .0029 - y * .0038, -0.000005 - x * .0005 - y * 0.0018);
 
 		return Vector2D(real(kap_x * a), real(kap_y * a));
 	}
 
-	Vector2D oldCouplerRFKick(double x, double y, double phi) const
+	Vector2D oldCouplerRFKick(double x, double y, double phi)  const
 	{
 		Complex a = polar(1., phi);
 		// up+down old
@@ -159,17 +156,17 @@ public:
 		return Vector2D(real(kap_x * a), real(kap_y * a));
 		// komplex arithmetic is a bit slow
 	}
-	Vector2D newCouplerRFKick(double x, double y, double phi) const
+	Vector2D newCouplerRFKick(double x, double y, double phi)  const
 	{
 		Complex a = polar(1., phi);
 		// up+down new
-		Complex kap_x(-0.000082  - x * 0.0029  + y * 0.0063, 0.000058  - x * 0.0027  + y * 0.00051);
+		Complex kap_x(-0.000082  - x * 0.0029  + y * 0.0063,  0.000058  - x * 0.0027  + y * 0.00051);
 		Complex kap_y(-0.000074  + x * 0.00049 - y * 0.0048, -0.0000087 - x * 0.00029 - y * 0.0012);
 		return Vector2D(real(kap_x * a), real(kap_y * a));
 		// komplex arithmetic is a bit slow
 	}
 
-	Vector2D dummyCouplerRFKick(double x, double y, double phi) const
+	Vector2D dummyCouplerRFKick(double x, double y, double phi)  const
 	{
 		return Vector2D(0, 0);
 	}
