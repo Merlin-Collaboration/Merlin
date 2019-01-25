@@ -165,11 +165,6 @@ public:
 	CollimationOutput(OutputType otype = nearestelement);
 
 	/**
-	 * Destructor
-	 */
-	~CollimationOutput();
-
-	/**
 	 * Finalise will call any sorting algorithms and perform formatting for final output
 	 */
 	virtual void Finalise()

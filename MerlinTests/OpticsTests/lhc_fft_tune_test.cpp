@@ -33,19 +33,7 @@ int main(int argc, char* argv[])
 
 	// Find lattice file
 	MADInterface* myMADinterface;
-	string paths[] = {"../data/twiss.7.0tev.b1_new.tfs", "data/twiss.7.0tev.b1_new.tfs", "MerlinTests/data/twiss.7.0tev.b1_new.tfs"};
-
-	string lattice_path;
-	for(size_t i = 0; i < 3; i++)
-	{
-		ifstream test_file;
-		test_file.open(paths[i].c_str());
-		if(test_file)
-		{
-			lattice_path = paths[i];
-			break;
-		}
-	}
+	string lattice_path = find_data_file("twiss.7.0tev.b1_new.tfs");
 	cout << "Lattice " << lattice_path << endl;
 
 	// read lattice using MAD interface

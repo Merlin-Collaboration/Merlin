@@ -5,6 +5,7 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
+#include "../tests.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -128,32 +129,6 @@ int main(int argc, char* argv[])
 	cout << "Random Seed: " << seed << endl;
 	RandomNG::init(seed);
 
-	// find directories
-	string log_dir = "";
-	string input_data_dir = "";
-	string result_dir = "";
-
-	string paths[] = {"../", "", "MerlinTests/"};
-	for(size_t i = 0; i < 3; i++)
-	{
-		ifstream test_file;
-		test_file.open((paths[i] + "data/collimator.7.0.sigma").c_str());
-		if(test_file)
-		{
-			test_file.close();
-			input_data_dir = paths[i] + "data/";
-			log_dir = paths[i] + "outputs/";
-			result_dir = paths[i] + "outputs/";
-			break;
-		}
-	}
-	if(log_dir == "")
-	{
-		cout << "Could not find data directory. Try running from cmake build directory, or the executable directory"
-			 << endl;
-		exit(1);
-	}
-
 	double beam_energy = 7000.0;
 
 	cout << "npart=" << npart << " nturns=" << nturns << endl;
@@ -179,11 +154,11 @@ int main(int argc, char* argv[])
 	double emittance = normalized_emittance / (gamma * beta);
 
 	MaterialDatabase* mat = new MaterialDatabase();
-	CollimatorDatabase* collimator_db = new CollimatorDatabase(input_data_dir + "collimator.7.0.sigma", mat, true);
+	CollimatorDatabase* collimator_db = new CollimatorDatabase(find_data_file("collimator.7.0.sigma"), mat, true);
 
 	//	ACCELERATOR MODEL LOADING
 	MADInterface* myMADinterface;
-	myMADinterface = new MADInterface(input_data_dir + "twiss.7.0tev.b1_new.tfs", beam_energy);
+	myMADinterface = new MADInterface(find_data_file("twiss.7.0tev.b1_new.tfs"), beam_energy);
 	myMADinterface->TreatTypeAsDrift("RFCAVITY");
 
 	//Build accelerator model
@@ -237,7 +212,7 @@ int main(int argc, char* argv[])
 	cout << "Impact factor number of sigmas: " << impact << endl;
 	delete collimator_db;
 
-	ApertureConfiguration* apc = new ApertureConfiguration(input_data_dir + "LHCB1Aperture.tfs");
+	ApertureConfiguration* apc = new ApertureConfiguration(find_data_file("LHCB1Aperture.tfs"));
 
 	apc->ConfigureElementApertures(model);
 	cout << "aperture load finished" << endl << "start twiss" << endl;

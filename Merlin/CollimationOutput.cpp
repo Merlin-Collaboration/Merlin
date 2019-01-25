@@ -16,9 +16,9 @@
 namespace ParticleTracking
 {
 
-CollimationOutput::CollimationOutput(OutputType ot)
+CollimationOutput::CollimationOutput(OutputType ot) :
+	otype(ot), currentComponent(nullptr)
 {
-	otype = ot;
 }
 
 } // End namespace ParticleTracking

@@ -226,7 +226,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 							}
 							else if(itr->ApType == RECTANGLE)
 							{
-								aper = new RectangularAperture(itr->ap1, itr->ap2);
+								aper = new RectangularAperture(itr->ap1 * 2, itr->ap2 * 2);
 							}
 							else if(itr->ApType == OCTAGON)
 							{

@@ -32,7 +32,6 @@ class DetailedCollimationOutput: public CollimationOutput
 public:
 
 	DetailedCollimationOutput();
-	~DetailedCollimationOutput();
 
 	/**
 	 * Not needed for DetailedCollimationOutput, as no binning occurs.
