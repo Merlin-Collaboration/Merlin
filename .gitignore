@@ -1,0 +1,8 @@
+Makefile
+depend
+!merlin-unix/Makefile
+merlin-unix/obj/
+*.o
+*~
+CMakeCache.txt
+build

@@ -1,0 +1,276 @@
+! TESLA linac
+! ---------------------------------------------------------
+! 02.12.06 - N. Walker
+! Turned all the units back to standard MAD so I can track
+! this lattice with MERLIN
+! ---------------------------------------------------------
+! 06.06.05 - J. Smith
+!  Modified e_loss to more accurately reflect wakes
+! ---------------------------------------------------------
+! 03.29.05 - changes by J. Smith
+! ---------------------------------------------------------
+! 05.10.04 - Modified by J.Urban
+! ---------------------------------------------------------
+! 1. I switched the sign of PHI0 for CAV & CAVAP, as per
+!    Nick's warning on the cavity phase sign defintions
+!    I also cleaned up the comments in this file so it's all consistent.
+! 2. I set E_LOSS for CAV & CAVAP equal to 1.40E13 V/C/m
+!    This number comes from an average 479 MeV energy loss
+!    from the wakefields over 10.667 km of accelerating cavities.
+! 3. I added a line to define ring%param%charge which is used 
+!    with E_LOSS to define the reference energy of the lattice.
+!    ==> removed by JCS 19.10.04 (replaced by n_part)
+! ---------------------------------------------------------
+! TESLA linac
+! ---------------------------------------------------------
+! 14.11.01 - Constructed by N.Walker
+! ---------------------------------------------------------
+! The lattice described here has been constructed based on
+! information from cthe TESLA TDR, together with additional
+! information from S. Wolff.
+!
+! The lattice reflects the TDR Base Line Design
+! (i.e. single 9 cell cavities, 12 per cryomodule)
+!
+! The cavity gradients and phases now include autophasing
+! as defined by V.M.Tsakanov (TESLA-2001-XX) as follows:
+! First 12 FODO cells: phi = +27 deg
+! Remainder of linac : phi = -5 deg
+
+! Initial matched beam at entrance of first (QF) cryomodule
+!
+! E0 = 5.0 GeV
+! gEX = 8.0e-06 m
+! gEY = 2.0e-08 m
+! dp/p = 0.027844 [uncorrelated from b.c.]
+! sig_z = 3.0e-04 m
+
+LINAC_IN : BETA0, BETX=89.309, BETY=50.681, ALFX=-1.451, ALFY=0.873
+
+! units
+
+G = 23.4 ! MV/m
+
+Lc = 1.036
+Fc = 1.3021875e+03 ! MHz
+!Fc = 1.3021875e+09 + 0.6526e+7 ! Hz
+
+! MADacc tracking
+ 
+CAV   : LCAV, L=Lc, FREQ=Fc, DELTAE=G*Lc, PHI0=-5/360.0,  ELOSS=1.40E13
+CAVAP : LCAV, L=Lc, FREQ=Fc, DELTAE=G*Lc, PHI0=+27/360.0, ELOSS=1.40E13
+
+
+! BMAD tracking
+  ! standard cavity, phase = 5 deg ahead of crest (z(=-ct)>0)
+  !CAV : LCAV, L=Lc, rf_frequency=Fc, gradient=G , PHI0=-5/360.0, E_LOSS=1.40E13, &
+!  CAV : LCAV, L=Lc, rf_frequency=Fc, gradient=G , PHI0=-5/360.0, E_LOSS=2.895E13, &
+!  sr_wake_file = "ILCV_LAT:sr_wake.tesla", lr_wake_file = "ILCV_LAT:lr_wake.tesla"
+  
+  ! autophased cavity, phase = 27 deg behind crest (z<0)
+  !CAVAP : LCAV, L=Lc, RF_FREQUENCY=Fc, gradient=G, PHI0=+27/360.0, E_LOSS=1.40E13, &
+!  CAVAP : LCAV, L=Lc, RF_FREQUENCY=Fc, gradient=G, PHI0=+27/360.0, E_LOSS=2.895E13, &
+!  sr_wake_file = "ILCV_LAT:sr_wake.tesla", lr_wake_file = "ILCV_LAT:lr_wake.tesla"
+
+! Boris tracking
+! ! standard cavity, phase = 5 deg ahead of crest (z(=-ct)>0)
+! CAV : LCAV, L=Lc, rf_frequency=Fc, gradient=G , PHI0=-5/360.0, E_LOSS=2.895E13, &
+! sr_wake_file = "ILCV_LAT:sr_wake.tesla", lr_wake_file = "ILCV_LAT:lr_wake.tesla", &
+! tracking_method = boris, ds_step = 1e-3
+!  
+! ! autophased cavity, phase = 27 deg behind crest (z<0)
+! CAVAP : LCAV, L=Lc, RF_FREQUENCY=Fc, gradient=G, PHI0=+27/360.0, E_LOSS=2.895E13, &
+! sr_wake_file = "ILCV_LAT:sr_wake.tesla", lr_wake_file = "ILCV_LAT:lr_wake.tesla", & 
+! tracking_method = boris, ds_step = 1e-3
+
+! Adaptive Boris tracking
+! ! standard cavity, phase = 5 deg ahead of crest (z(=-ct)>0)
+! CAV : LCAV, L=Lc, rf_frequency=Fc, gradient=G , PHI0=-5/360.0, E_LOSS=2.895E13, &
+! sr_wake_file = "ILCV_LAT:sr_wake.tesla", lr_wake_file = "ILCV_LAT:lr_wake.tesla", &
+! tracking_method = adaptive_boris, rel_tol = 1e-6, abs_tol = 1e-8
+!  
+! ! autophased cavity, phase = 27 deg behind crest (z<0)
+! CAVAP : LCAV, L=Lc, RF_FREQUENCY=Fc, gradient=G, PHI0=+27/360.0, E_LOSS=2.895E13, &
+! sr_wake_file = "ILCV_LAT:sr_wake.tesla", lr_wake_file = "ILCV_LAT:lr_wake.tesla", & 
+! tracking_method = adaptive_boris, rel_tol = 1e-6, abs_tol = 1e-8
+
+! CRYOMODULE definitions
+! ----------------------
+DCME : DRIFT, L=0.191 ! entrance/exit CM drifts
+DICS : DRIFT, L=0.283 ! inter-cav spacing
+DUQP : DRIFT, L=0.247 ! upstream drift for quad pkg
+DDQP : DRIFT, L=0.171 ! downstream "    "    "   "
+DIMS : DRIFT, L=0.382 ! inter-module spacing
+
+! standard (no quad) CM (12 cavities), length = 15.927 m
+CM(cav):LINE=(DCME,11*(cav,DICS),cav,DCME)
+
+! CM with quad pkg., length = 16.728 m
+CMQ(cav,qpkg):LINE=(DCME,5*(cav,DICS),cav,DUQP,qpkg,DDQP, &
+                   5*(cav,DICS),cav,DCME)
+
+! bpm, corrector defs (zero length elements)
+BPM : MONITOR
+XCOR: HKICK, 
+YCOR: VKICK,
+
+! quad. pkg definitions
+! Note: 
+! The correctors are modelled here as thin kicks
+! placed after the quad. In reality they are
+! additional dipole windings placed on the quads.
+! A better model would be to split the quad, and
+! place the kick at the centre.
+QFPKG(Q):LINE=(BPM,Q,XCOR,YCOR)
+QDPKG(Q):LINE=(BPM,Q,YCOR)
+
+! LOW energy FODO cell definition (5 - ~125 GeV)
+! ----------------------------------------------
+! four CM per cell
+! bmax = 115.574366 m
+! phase advance per cell = 60 deg
+
+LQ  = 0.666    ! length of s.c. quadrupole         
+KLE = 0.045231 ! strength of low energy cell quads
+
+QFLE:QUAD,L=LQ,K1= KLE
+QDLE:QUAD,L=LQ,K1=-KLE
+
+! Packages
+PQFLE:LINE=(QFPKG(QFLE))
+PQDLE:LINE=(QDPKG(QDLE))
+
+! low energy cell template
+LEC(cav) : LINE=( &
+        CMQ(cav,PQFLE), &
+        DIMS,                 &
+        CM(cav),              &
+        DIMS,                 &
+        CMQ(cav,PQDLE), &
+        DIMS,                 &
+        CM(cav),              &
+        DIMS)
+
+! low energy linac definition (including autophasing)
+! total of 101 cells
+! energy gain = 115.6 GeV
+! (cells #1-#101)
+
+LELINAC:LINE=(12*LEC(CAVAP),89*LEC(CAV))
+
+! HIGH energy FODO cell definition (~125 - ~250 GeV)
+! ----------------------------------------------
+! six CM per cell
+! bmax = 172.07 m
+! phase advance per cell = 60 deg
+
+KHE = 0.03033! strength of high energy cell quads
+
+QFHE:QUAD,L=LQ,K1= KHE
+QDHE:QUAD,L=LQ,K1=-KHE
+
+! packages
+PQFHE:LINE=(QFPKG(QFHE))
+PQDHE:LINE=(QDPKG(QDHE))
+
+! high energy cell
+HEC : LINE=(                  &
+        CMQ(CAV,PQFHE), &
+        DIMS,                 &
+        CM(CAV),              &
+        DIMS,                 &
+        CM(CAV),              &
+        DIMS,                 &
+        CMQ(CAV,PQDHE), &
+        DIMS,                 &
+        CM(CAV),              &
+        DIMS,                 &
+        CM(CAV),              &
+        DIMS)
+
+! high energy linac definition
+! total of 73 cells + one CMQ
+! energy gain = 127.2 GeV
+! (cells = #105-#177)
+
+HELINAC:LINE=(73*HEC,CMQ(CAV,PQFHE))
+
+! beta xchg section
+! -----------------
+! The beta xchg between low energy (4 CM per cell)
+! and high energy (6 CM per cell) is performed over 
+! 5 quadrupoles
+! (cells #102-#104)
+
+QDM1:QUAD,L=LQ, K1 = -3.749300e-02
+QFM2:QUAD,L=LQ, K1 =  4.123559e-02
+QDM3:QUAD,L=LQ, K1 = -4.562015e-02
+QFM4:QUAD,L=LQ, K1 =  3.612909e-02
+QDM5:QUAD,L=LQ, K1 = -4.063047e-02
+
+! packages
+PQDM1:LINE=(QDPKG(QDM1))
+PQFM2:LINE=(QFPKG(QFM2))
+PQDM3:LINE=(QDPKG(QDM3))
+PQFM4:LINE=(QFPKG(QFM4))
+PQDM5:LINE=(QDPKG(QDM5))
+
+BXCHG:LINE=( &
+      CMQ(CAV,PQFLE),        &  ! start LE cell #102
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CMQ(CAV,PQDM1),        &  ! start transition
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CMQ(CAV,PQFM2),        &  ! start cell #103
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CMQ(CAV,PQDM3),        &  ! transition to 6xCM/cell
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CMQ(CAV,PQFM4),        &  ! start cell #104
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CMQ(CAV,PQDM5),        & 
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS,                  &
+      CM(CAV),               &
+      DIMS)
+
+! Definition of complete linac
+! -----------------------------
+! total length = 14277.095 m
+! exit energy  = 252.18 GeV
+
+BPM_END:MONI,
+
+LINAC:LINE=(YCOR,LELINAC,BXCHG,HELINAC,BPM_END)
+
+! exit beam
+!LINAC_OUT : BETA0, BETX=145.279, BETY=68.594, ALFX=1.546, ALFY=-0.774             
+
+
+! output to XTFF file
+!--------------------------------------
+
+USE,LINAC
+
+beam,particle=electron,energy=5.0,exn=8.0e-06,eyn=2.0e-08, &
+     npart=2e+10,sigt=0.0003,sige=0.028
+
+SELECT,TWISS,FULL
+TWISS,BETA0=LINAC_IN ,SAVE, TAPE="tesla_linac.xtff"
+
+
+
+
