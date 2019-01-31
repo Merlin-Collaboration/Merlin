@@ -42,7 +42,7 @@ public:
 	virtual double CalculateSixtrackTotalNucleusCrossSection();
 	virtual double CalculateSixtrackInelasticNucleusCrossSection();
 	virtual double CalculateSixtrackRutherfordCrossSection();
-	virtual double CalculateSixtrackdEdx(double E = 7E12);
+	virtual double CalculateSixtrackdEdx();
 
 	virtual void SetAtomicNumber(double);
 	virtual void SetName(std::string);
