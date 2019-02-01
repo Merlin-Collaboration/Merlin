@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <complex>
+#include <memory>
 #include "Interpolation.h"
 
 namespace ParticleTracking
@@ -33,7 +34,6 @@ public:
 	{
 	}
 
-	~ppElasticScatter();
 	/**
 	 * Generates the required differential cross sections and integrates for the specified energy
 	 */
@@ -108,8 +108,7 @@ private:
 	/**
 	 * Interpolation classes for the cross section data
 	 */
-	Interpolation *LinearInterpolation;
-	Interpolation *InversionInterpolation;
+	std::unique_ptr<Interpolation> LinearInterpolation;
 
 	/**
 	 * bool to check if the cross sections have been generated
@@ -135,7 +134,6 @@ private:
 	std::vector<double> *DSig;
 
 	std::vector<double> *DSigN;
-//std::vector<double> IntSigN;
 
 	/*
 	 * The Integrated elastic cross section
@@ -143,17 +141,10 @@ private:
 	double SigElastic;
 	double SigElasticN;
 
-	/*
-	 * b slope
-	 */
-//double b;
-
 	/**
 	 * Enable Scattering/MC debugging
 	 */
 	bool Debug;
-
-//double MinSigValue;
 
 	/**
 	 *
