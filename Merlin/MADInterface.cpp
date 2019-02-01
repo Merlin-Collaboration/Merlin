@@ -26,7 +26,7 @@ using namespace PhysicalUnits;
 namespace
 {
 
-stack<string> frameStack;
+//stack<string> frameStack;
 
 void Log(const string& tag, int depth, ostream& os)
 {
@@ -117,6 +117,26 @@ AcceleratorModel* MADInterface::ConstructModel()
 			continue;
 		}
 		TypeOverrides(MADinput, i);
+
+		if(type == "LINE")
+		{
+			if(!flatLattice)
+			{
+				const string& name = MADinput->Get_s("NAME", i);
+				if(!frameStack.empty() && name == frameStack.top())
+				{
+					frameStack.pop();
+					EndFrame(name);
+				}
+
+				else
+				{
+					frameStack.push(name);
+					ConstructNewFrame(name);
+				}
+			}
+			continue;
+		}
 
 		//Determine multipole type by parameters
 		AcceleratorComponent* component = factory->GetInstance(MADinput, energy, brho, i);
@@ -616,31 +636,6 @@ AcceleratorComponent* MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinp
 	return new Marker(name);
 }
 
-AcceleratorComponent* LineComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id)
-{
-	bool MADInterface::* fl = &MADInterface::flatLattice;
-
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-
-	if(!fl)
-	{
-		MADInterface* mad;
-		if(!frameStack.empty() && name == frameStack.top())
-		{
-			frameStack.pop();
-			mad->EndFrame(name);
-		}
-
-		else
-		{
-			frameStack.push(name);
-			mad->ConstructNewFrame(name);
-		}
-	}
-	return nullptr;
-}
-
 AcceleratorComponent* SROTComponenet::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
 	id)
 {
@@ -688,7 +683,6 @@ TypeFactoryInit::TypeFactoryInit()
 	TypeFactory::componentTypes["HEL"] = &HELComponent::GetInstance;
 	TypeFactory::componentTypes["MONITOR"] = &MonitorComponent::GetInstance;
 	TypeFactory::componentTypes["MARKER"] = &MarkerComponent::GetInstance;
-	TypeFactory::componentTypes["LINE"] = &LineComponent::GetInstance;
 	TypeFactory::componentTypes["SROT"] = &SROTComponenet::GetInstance;
 }
 

@@ -14,6 +14,7 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <stack>
 #include "AcceleratorModel.h"
 #include "DataTable.h"
 
@@ -164,6 +165,7 @@ protected:
 
 	AcceleratorModelConstructor* modelconstr;
 	AcceleratorComponent* currentcomponent;
+	stack<string> frameStack;
 };
 
 inline void MADInterface::SetLogFile(ostream& os)
@@ -328,12 +330,6 @@ public:
 };
 
 class MarkerComponent: public AcceleratorComponent
-{
-public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
-};
-
-class LineComponent: public AcceleratorComponent
 {
 public:
 	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
