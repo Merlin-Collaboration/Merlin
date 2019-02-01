@@ -42,7 +42,8 @@ void Log(const string& tag, int depth, ostream& os)
 
 // Class MADInterface
 MADInterface::MADInterface(const string& madFileName, double P0) :
-	energy(P0), flatLattice(false),  z(0), single_cell_rf(false), filename(madFileName), ifs(madFileName.empty() ?
+	energy(P0), inc_sr(false), flatLattice(false),  z(0), single_cell_rf(false), filename(madFileName), ifs(
+		madFileName.empty() ?
 		nullptr : new ifstream(madFileName.c_str())), log(
 		MerlinIO::std_out), logFlag(false), honMadStructs(false), appendFlag(false), modelconstr(
 		nullptr)
@@ -119,6 +120,12 @@ AcceleratorModel* MADInterface::ConstructModel()
 
 		//Determine multipole type by parameters
 		AcceleratorComponent* component = factory->GetInstance(MADinput, energy, brho, i);
+
+		if(inc_sr && (type == "SBEND" || type == "RBEND"))
+		{
+			energy -= SRdE(MADinput->Get_d("ANGLE", i) / length, length, energy);
+			brho = energy / eV / SpeedOfLight;
+		}
 
 		if(component != nullptr)
 		{
@@ -346,15 +353,6 @@ AcceleratorComponent* RBendComponent::GetInstance(unique_ptr<DataTable>& MADinpu
 	}
 	bend->GetGeometry().SetTilt(tilt);
 
-	MADInterface mad;
-	bool sr = mad.inc_sr;
-	if(sr)
-	{
-		MADInterface mad;
-		double dE = SRdE(h, length, energy);
-		mad.SetEnergy(energy - dE);
-	}
-
 	return bend;
 }
 
@@ -384,14 +382,6 @@ AcceleratorComponent* SBendComponent::GetInstance(unique_ptr<DataTable>& MADinpu
 	}
 	if(tilt)
 		bend->GetGeometry().SetTilt(tilt);
-
-	MADInterface mad;
-	bool sr = mad.inc_sr;
-	if(sr)
-	{
-		double dE = SRdE(h, length, energy);
-		mad.SetEnergy(energy - dE);
-	}
 
 	return bend;
 }
