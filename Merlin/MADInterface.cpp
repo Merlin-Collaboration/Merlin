@@ -137,6 +137,11 @@ AcceleratorModel* MADInterface::ConstructModel()
 			}
 			continue;
 		}
+		else if(type == "SROT")
+		{
+			modelconstr->AppendComponentFrame(ConstructSrot(length, MADinput->Get_s("NAME", i)));
+			continue;
+		}
 
 		//Determine multipole type by parameters
 		AcceleratorComponent* component = factory->GetInstance(MADinput, energy, brho, i);
@@ -636,20 +641,6 @@ AcceleratorComponent* MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinp
 	return new Marker(name);
 }
 
-AcceleratorComponent* SROTComponenet::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
-	id)
-{
-	MADInterface* mad = new MADInterface();
-	AcceleratorModelConstructor* constr = mad->GetModelConstructor();
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-
-	constr->AppendComponentFrame(ConstructSrot(length, name));
-
-	delete mad;
-	return nullptr;
-}
-
 AcceleratorComponent* TypeFactory::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id)
 {
 	string type = MADinput->Get_s("KEYWORD", id);
@@ -683,7 +674,6 @@ TypeFactoryInit::TypeFactoryInit()
 	TypeFactory::componentTypes["HEL"] = &HELComponent::GetInstance;
 	TypeFactory::componentTypes["MONITOR"] = &MonitorComponent::GetInstance;
 	TypeFactory::componentTypes["MARKER"] = &MarkerComponent::GetInstance;
-	TypeFactory::componentTypes["SROT"] = &SROTComponenet::GetInstance;
 }
 
 map<string, getTypeFunc> TypeFactory::componentTypes;

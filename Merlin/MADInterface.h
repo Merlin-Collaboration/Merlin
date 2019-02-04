@@ -335,10 +335,4 @@ public:
 	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
 };
 
-class SROTComponenet: public AcceleratorComponent
-{
-public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
-};
-
 #endif
