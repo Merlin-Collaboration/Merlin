@@ -348,6 +348,8 @@ double HollowELensProcess::CalcKickRadial(double R)
 		r2 = 315;       // rise - straight section		(x1.248)
 		r3 = 435;       // straight - left of peak		(x1.193)
 		r4 = 505;       // left - right of peak			(x1.184)
+
+		r0 = 222.5; // FIXME: Need to check
 	}
 
 	double elense_r_min = Rmin; //Need to calculate 4 sigma at this point
