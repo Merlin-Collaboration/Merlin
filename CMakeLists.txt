@@ -42,6 +42,11 @@ else()
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 endif()
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	# Hide an unnecessary clang warning
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template")
+endif()
+
 #Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
 	SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
