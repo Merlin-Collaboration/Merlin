@@ -14,6 +14,7 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <stack>
 #include "AcceleratorModel.h"
 #include "DataTable.h"
 
@@ -164,6 +165,7 @@ protected:
 
 	AcceleratorModelConstructor* modelconstr;
 	AcceleratorComponent* currentcomponent;
+	stack<string> frameStack;
 };
 
 inline void MADInterface::SetLogFile(ostream& os)
@@ -196,13 +198,14 @@ inline void MADInterface::ScaleForSynchRad(bool scaleSR)
 	inc_sr = scaleSR;
 }
 
-typedef AcceleratorComponent* (*getTypeFunc)(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+typedef vector<AcceleratorComponent*> (*getTypeFunc)(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+	id);
 
 class TypeFactory
 {
 public:
 	static map<string, getTypeFunc> componentTypes;
-	AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
 
 };
 
@@ -216,133 +219,148 @@ public:
 class DriftComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class RBendComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class SBendComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class QuadrupoleComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class SkewQuadrupoleComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class SextupoleComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class SkewSextupoleComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class OctupoleComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class YCorComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class XCorComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class VKickerComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class HKickerComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class SolenoidComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class RFCavityComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
+};
+
+class RFCavityComponentSingleCell: public AcceleratorComponent
+{
+public:
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class CollimatorComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class CrabMarkerComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class CrabRFComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class HELComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class MonitorComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 class MarkerComponent: public AcceleratorComponent
 {
 public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
-};
-
-class LineComponent: public AcceleratorComponent
-{
-public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
-};
-
-class SROTComponenet: public AcceleratorComponent
-{
-public:
-	static AcceleratorComponent* GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t id);
+	static vector<AcceleratorComponent*> GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho, size_t
+		id);
 };
 
 #endif

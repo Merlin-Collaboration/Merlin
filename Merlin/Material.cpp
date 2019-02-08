@@ -115,7 +115,7 @@ double Material::CalculateSixtrackRutherfordCrossSection()
 	return 0;
 }
 
-double Material::CalculateSixtrackdEdx(double E)
+double Material::CalculateSixtrackdEdx()
 {
 	//Since the numbers in sixtrack make no sense, what can be done here?
 	return 1;
