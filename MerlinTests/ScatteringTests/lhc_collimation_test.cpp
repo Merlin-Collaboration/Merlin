@@ -175,13 +175,25 @@ int main(int argc, char* argv[])
 	double bscale1 = 1e-22;
 	while(true)
 	{
+		cout << "Trying bend scale: " << bscale1 << endl;
 		twiss->ScaleBendPathLength(bscale1);
-		twiss->Calculate();
-		if(!std::isnan(twiss->Value(1, 1, 1, 0)))
+		try
 		{
+			twiss->Calculate();
+			cout << "Success!" << endl;
 			break;
 		}
-		bscale1 *= 2;
+		catch(MerlinException &e)
+		{
+			cout << "Adjusting bend scale" << endl;
+			bscale1 *= 2;
+		}
+
+		if(bscale1 > 1e-18)
+		{
+			cout << "Giving up" << endl;
+			exit(1);
+		}
 	}
 
 	// FLAG to set an automatically matching between beam envelope and collimator taper
