@@ -127,14 +127,6 @@ void ppElasticScatter::GenerateTDistribution(double energy)
 	}
 }
 
-ppElasticScatter::~ppElasticScatter()
-{
-	if(LinearInterpolation)
-	{
-		delete LinearInterpolation;
-	}
-}
-
 /**
  * Generates the elastic differential cross section
  * Places the results into the vectors t and DSig
@@ -187,14 +179,13 @@ void ppElasticScatter::GenerateDsigDt(double energy)
 	}
 	else
 	{
-		std::ofstream *dSigDebug = new std::ofstream("DSigDebugLog");
+		std::ofstream dSigDebug("DSigDebugLog");
 		for(unsigned int n = 0; n <= nSteps; n++)
 		{
 			Uniformt->push_back((static_cast<double>(n) * step) + t_min);
 			DSig->push_back(PomeronScatter((*Uniformt)[n], sqrts, true));
 			DSigN->push_back(PomeronScatter((*Uniformt)[n], sqrts, false));
-			(*dSigDebug) << (*Uniformt)[n] << "\t" << (*DSig)[n] << std::endl;
-
+			dSigDebug << (*Uniformt)[n] << "\t" << (*DSig)[n] << std::endl;
 		}
 	}
 }
@@ -236,12 +227,12 @@ void ppElasticScatter::IntegrateDsigDt()
 	std::cout << "Elastic Cross section (without peak): " << SigElasticN * 1000 << " mb" << std::endl;
 	std::cout << "Sixtrack Elastic Cross section: " << 7 * pow((7000 / 450), 0.04792) << " mb" << std::endl;
 
-	std::ofstream* ofile;
-	std::ofstream* SigmaDistributionFile;
+	std::unique_ptr<std::ofstream> ofile;
+	std::unique_ptr<std::ofstream> SigmaDistributionFile;
 	itr = IntSig.begin() + 1;
 	if(Debug)
 	{
-		ofile = new std::ofstream("IntegratedSigNormalized");
+		ofile.reset(new std::ofstream("IntegratedSigNormalized"));
 		ofile->precision(16);
 		(*ofile) << (*Uniformt)[0] << "\t" << IntSig[0] << std::endl;
 
@@ -262,11 +253,11 @@ void ppElasticScatter::IntegrateDsigDt()
 		}
 	}
 
-	InversionInterpolation = new Interpolation(IntSig, *Uniformt);
+	Interpolation InversionInterpolation(IntSig, *Uniformt);
 
 	if(Debug)
 	{
-		SigmaDistributionFile = new std::ofstream("SigmaTDistribution");
+		SigmaDistributionFile.reset(new std::ofstream("SigmaTDistribution"));
 		SigmaDistributionFile->precision(16);
 	}
 
@@ -289,7 +280,7 @@ void ppElasticScatter::IntegrateDsigDt()
 		double target = (static_cast<double>(n) / nSteps);
 		try
 		{
-			sig_gen = (*InversionInterpolation)(target);
+			sig_gen = InversionInterpolation(target);
 		}
 		catch(Interpolation::BadRange& error)
 		{
@@ -319,20 +310,7 @@ void ppElasticScatter::IntegrateDsigDt()
 		(*SigmaDistributionFile) << 1.0 << "\t" << t_max << std::endl;
 	}
 
-	LinearInterpolation = new Interpolation(Sig, 0, (1.0 / nSteps));    // Interpolation of equally spaced data points
-
-	if(Debug)
-	{
-		SigmaDistributionFile->close();
-		ofile->close();
-
-		//Free up memory
-		delete SigmaDistributionFile;
-		delete ofile;
-	}
-
-	delete InversionInterpolation;
-	//delete LinearInterpolation;
+	LinearInterpolation.reset(new Interpolation(Sig, 0, (1.0 / nSteps)));    // Interpolation of equally spaced data points
 }
 
 /**

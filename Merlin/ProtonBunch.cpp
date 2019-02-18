@@ -895,8 +895,6 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 			{
 				tally[1]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -909,8 +907,6 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 			{
 				tally[2]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_pp;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -940,8 +936,6 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 				}
 				t = -log(RandomNG::uniform(0, 1)) / b;
 				dp = xm2 * E1 / center_of_mass_squared;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 2;
 				p.sd() = 1;
 			}
@@ -1353,8 +1347,6 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 			{
 				tally[1]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1367,8 +1359,6 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 			{
 				tally[2]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_pp;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1398,8 +1388,6 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 				}
 				t = -log(RandomNG::uniform(0, 1)) / b;
 				dp = xm2 * E1 / center_of_mass_squared;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 
 				p.type() = 2;
 				p.sd() = 1;
@@ -1733,8 +1721,6 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
 				double TargetMass = A * AtomicMassUnit; // Nucleus mass
 				dp = t / (2 * TargetMass);
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1748,8 +1734,6 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 				tally[2]++;
 				t = ElasticScatter->SelectT();
 				dp = t / (2 * AtomicMassUnit);
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1779,8 +1763,6 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 				}
 				t = -log(RandomNG::uniform(0, 1)) / b;
 				dp = xm2 * E1 / center_of_mass_squared;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 2;
 				p.sd() = 1;
 			}
@@ -2113,8 +2095,6 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 			{
 				tally[1]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -2127,8 +2107,6 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 			{
 				tally[2]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_pp;
-				double P0 = GetReferenceMomentum();
-				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 

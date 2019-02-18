@@ -108,10 +108,6 @@ double Material::CalculateSixtrackInelasticNucleusCrossSection()
 
 double Material::CalculateSixtrackRutherfordCrossSection()
 {
-	double R = 1.2e-15 * pow(AtomicMass, 1.0 / 3.0);
-	double expC = -0.856e-3 * pow(R, 2);
-	const double C = pow(PlanckConstantBar * SpeedOfLight / (ElectronCharge * 1e9 * 0.001 * 1e-28), 2);
-	const double PiAlpha = 4 * pi * pow(FineStructureConstant, 2);
 	return 0;
 }
 

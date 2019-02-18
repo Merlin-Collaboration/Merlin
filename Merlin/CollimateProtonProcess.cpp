@@ -37,7 +37,6 @@ namespace ParticleTracking
 CollimateProtonProcess::CollimateProtonProcess(int priority, int mode, std::ostream* osp) :
 	CollimateParticleProcess(priority, mode, osp), scattermodel(nullptr)
 {
-
 }
 
 /**
@@ -50,9 +49,6 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 	bool scatter_plot = 0;
 	bool jaw_impact = 0;
-
-	// Length of the collimator
-	double coll_length = currentComponent->GetLength();
 
 	double z = currentBunch->int_s;
 	double lengthtogo = s - z;
