@@ -22,6 +22,8 @@ void PerformTracking(ProcessStepManager& aStepper, Bunch& aBunch, bool includeX,
 	{
 		ComponentFrame* frame = *first;
 
+		//std::cout << frame->GetComponent().GetType() << std::endl;
+
 		if(fb && injOnAxis)
 		{
 			std::cout << "ignoring first frame transformation" << std::endl;

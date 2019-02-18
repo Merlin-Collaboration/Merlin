@@ -212,22 +212,23 @@ int main(int argc, char* argv[])
 
 	double bscale1 = 1e-22;
 
+	//loop
 	while(true)
 	{
-		cout << "Trying bend scale: " << bscale1 << endl;
+		cout << "Trying bscale: " << bscale1 << "\t";
+		cout.flush();
 		twiss_table->ScaleBendPathLength(bscale1);
-		try
+		cout << "Calculating" << endl;
+		twiss_table->Calculate();
+		cout << "Done calculating" << endl;
+		if(!std::isnan(twiss_table->Value(1, 1, 1, 0)))
 		{
-			twiss_table->Calculate();
 			cout << "Success!" << endl;
 			break;
 		}
-		catch(MerlinException &e)
-		{
-			cout << "Adjusting bend scale" << endl;
-			bscale1 *= 2;
-		}
 
+		bscale1 *= 2;
+		cout << "Fail :(" << endl;
 		if(bscale1 > 1e-18)
 		{
 			cout << "Giving up" << endl;

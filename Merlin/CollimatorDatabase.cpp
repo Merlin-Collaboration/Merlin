@@ -126,7 +126,7 @@ void CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model)
 			Material* collimator_material = CollData[n].JawMaterial;
 			//Create an aperture for the collimator jaws
 			CollimatorAperture* app = new CollimatorAperture(CollData[n].x_gap, CollData[n].y_gap, CollData[n].tilt,
-				collimator_material, (CMapit->second)->GetLength(), 0, 0);
+				(CMapit->second)->GetLength(), 0, 0);
 
 			{
 				app->SetExitWidth(CollData[n].x_gap);      //Horizontal
@@ -273,7 +273,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 
 							CollimatorAperture* app = new CollimatorAperture(collimator_aperture_width_entrance,
 								collimator_aperture_height_entrance, \
-								collimator_aperture_tilt, collimator_material, length, x_orbit, y_orbit);
+								collimator_aperture_tilt, length, x_orbit, y_orbit);
 
 							app->SetExitWidth(collimator_aperture_width_exit);  //Horizontal
 							app->SetExitHeight(collimator_aperture_height_exit);    //Vertical
@@ -336,7 +336,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 							{
 								OneSidedUnalignedCollimatorAperture* app = new OneSidedUnalignedCollimatorAperture(
 									x_size, y_size, \
-									collimator_aperture_tilt, collimator_material, length, x_pos, y_pos);
+									collimator_aperture_tilt, length, x_pos, y_pos);
 
 								//Set the aperture for collimation
 								(CMapit->second)->SetAperture(app);
@@ -346,7 +346,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 							{
 								OneSidedUnalignedCollimatorAperture* app = new OneSidedUnalignedCollimatorAperture(
 									x_size, y_size, \
-									collimator_aperture_tilt, collimator_material, length, x_pos, y_pos);
+									collimator_aperture_tilt, length, x_pos, y_pos);
 
 								//Set the aperture for collimation
 								(CMapit->second)->SetAperture(app);
@@ -356,7 +356,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 							{
 								OneSidedUnalignedCollimatorAperture* app = new OneSidedUnalignedCollimatorAperture(
 									x_size, y_size, \
-									collimator_aperture_tilt, collimator_material, length, x_pos, y_pos);
+									collimator_aperture_tilt, length, x_pos, y_pos);
 
 								//Set the aperture for collimation
 								(CMapit->second)->SetAperture(app);
@@ -365,7 +365,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 							else
 							{
 								UnalignedCollimatorAperture* app = new UnalignedCollimatorAperture(x_size, y_size, \
-									collimator_aperture_tilt, collimator_material, length, x_pos, y_pos);
+									collimator_aperture_tilt, length, x_pos, y_pos);
 
 								//Set the aperture for collimation
 								(CMapit->second)->SetAperture(app);
@@ -541,7 +541,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 										  << std::setw(15) << yAngleError2 / microradian << endl;
 
 							CollimatorAperture* app = new CollimatorAperture(x_size_entrance, y_size_entrance, \
-								collimator_aperture_tilt, collimator_material, length, x_pos_entrance, y_pos_entrance);
+								collimator_aperture_tilt, length, x_pos_entrance, y_pos_entrance);
 
 							app->SetExitXOffset(x_pos_exit);    //Horizontal
 							app->SetExitYOffset(y_pos_exit);    //Vertical

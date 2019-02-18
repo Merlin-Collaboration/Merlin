@@ -23,15 +23,11 @@ Collimator::Collimator(const string& id, double len, double radLength) :
 	scatter_at_this_collimator = true;
 }
 
-Collimator::Collimator(const string& id, double len, Material* pp, double P0) :
-	Drift(id, len), p(pp)
+Collimator::Collimator(const string& id, double len, Material* mat, double P0) :
+	Drift(id, len)
 {
 	scatter_at_this_collimator = true;
 }
-
-//~ Collimator::Collimator (const string& id, double len, Material* pp, Collimation::ScatteringModel* s, double P0)
-//~ : Drift(id, len), p(pp), scatter(s)
-//~ {scatter_at_this_collimator = true;}
 
 const string& Collimator::GetType() const
 {

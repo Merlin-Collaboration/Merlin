@@ -5,224 +5,238 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#ifndef _InterpolatedApertures_h_
-#define _InterpolatedApertures_h_ 1
+#ifndef INTERPOLATEDAPERTURE_H_
+#define INTERPOLATEDAPERTURE_H_
 
-#include "SimpleApertures.h"
-#include <vector>
-#include <string>
+#include "Aperture.h"
+#include "DataTable.h"
 
-class InterpolatedAperture
+using namespace std;
+
+
+
+/**
+ * Interpolated apertures utilize all four parameters and are inherently of rectellipse geometry
+ */
+
+class InterpolatedAperture: public Aperture
 {
 public:
 
 	/**
-	 * Typedef for access to the enum
+	 *  InterpolatedAperture default constructor
+	 *  @param[in] apVec vector of relevant aperture pointers to be interpolated
 	 */
-	typedef size_t ApertureClass_t;
+	InterpolatedAperture(DataTable ApertureDataTable);
 
-	struct ap
+	/**
+	 *  Virtual destructor
+	 */
+	virtual ~InterpolatedAperture();
+
+	/**
+	 *  function to get aperture typename string
+	 *  @return aperture typename string
+	 */
+	string GetType();
+
+	/**
+	 *  InterpolatedAperture override of Aperture member function CheckWithinApertureBoundaries()
+	 *  @param[in] x x-coord of particle
+	 *  @param[in] y y-coord of particle
+	 *  @param[in] z z-coord of particle
+	 *  @return true/false flag
+	 */
+	bool CheckWithinApertureBoundaries(double x, double y, double z) const;
+
+	/**
+	 *  get new InterpolatedAperture instance - only called by ApertureFactory::getInstance class
+	 *  @param[in] vector of Aperture
+	 *  @return constructed Aperture pointer of assigned type RectangularAperture
+	 */
+	static Aperture* GetInstance(DataTable);
+
+	DataTable AperturesToInterpolate;
+
+	struct apStruct
 	{
+		string ApType;
 		double s;
 		double ap1;
 		double ap2;
 		double ap3;
 		double ap4;
-		ApertureClass_t ApType;
-
 	};
 
-	InterpolatedAperture()
-	{
-	}
-	InterpolatedAperture(std::vector<ap> ApertureListInput) :
-		ApertureList(ApertureListInput)
-	{
-	}
+	apStruct ApEntry;
 
-	std::vector<ap> GetApertureList() const
-	{
-		return ApertureList;
-	}
-	void AddS(double s)
-	{
-		ApertureEntry.s = s;
-	}
-	void AddAp1(double ap1)
-	{
-		ApertureEntry.ap1 = ap1;
-	}
-	void AddAp2(double ap2)
-	{
-		ApertureEntry.ap2 = ap2;
-	}
-	void AddAp3(double ap3)
-	{
-		ApertureEntry.ap3 = ap3;
-	}
-	void AddAp4(double ap4)
-	{
-		ApertureEntry.ap4 = ap4;
-	}
-	void AddEntry()
-	{
-		ApertureList.push_back(ApertureEntry);
-	}
-//protected:
+	vector<apStruct> ApList;
 
-	ap ApertureEntry;
-	std::vector<ap> ApertureList;
+	void ConvertToStruct(DataTable);
 };
 
-/**
- * RectEllipse Aperture
- */
-class InterpolatedRectEllipseAperture: public InterpolatedAperture, public Aperture
+class InterpolatedRectEllipseAperture: public InterpolatedAperture
 {
 public:
 	/**
-	 * Constructor
+	 *  InterpolatedRectEllipseAperture default constructor
+	 *  @param[in] apVec vector of relevant aperture pointers to be interpolated
 	 */
-	InterpolatedRectEllipseAperture(std::vector<InterpolatedAperture::ap> ElementApertureList) :
-		InterpolatedAperture(ElementApertureList)
-	{
-		//MerlinProfile::AddProcess("APERTURE");
-		Print = false;
-		ApertureMaterial = nullptr;
-	}
+	InterpolatedRectEllipseAperture(DataTable ApertureDataTable);
 
 	/**
-	 * Returns true if the point (x,y,z) is within the aperture.
-	 * @retval true If (x,y,z) is within the aperture
+	 *  Virtual destructor
 	 */
-	virtual bool PointInside(double x, double y, double z) const;
-
-	//TODO
-	//Returns true if the point p is within the aperture.
-	//bool PointInside (const Point3D& p) const;
+	virtual ~InterpolatedRectEllipseAperture();
 
 	/**
-	 * Returns the radius to the aperture at location z and angle phi.
-	 * @return Radius to the aperture
+	 *  function to get aperture typename string
+	 *  @return aperture typename string
 	 */
-	virtual double GetRadiusAt(double phi, double z) const;
+	string GetType();
 
-	virtual std::string GetApertureType() const;
+	/**
+	 *  InterpolatedRectEllipseAperture override of Aperture member function CheckWithinApertureBoundaries()
+	 *  @param[in] x x-coord of particle
+	 *  @param[in] y y-coord of particle
+	 *  @param[in] z z-coord of particle
+	 *  @return true/false flag
+	 */
+	bool CheckWithinApertureBoundaries(double x, double y, double z) const;
 
-	void EnablePrint();
-	bool Print;
-	virtual void printout(std::ostream& out) const;
+	/**
+	 *  get new InterpolatedRectEllipseAperture instance - only called by ApertureFactory::getInstance class
+	 *  @param[in] vector of Aperture
+	 *  @return constructed Aperture pointer of assigned type RectangularAperture
+	 */
+	static Aperture* GetInstance(DataTable);
 };
 
-inline std::string InterpolatedRectEllipseAperture::GetApertureType() const
-{
-	return "INTERPOLATEDRECTELLIPSE";
-}
-
-class InterpolatedCircularAperture: public InterpolatedAperture, public Aperture
-{
-public:
-	InterpolatedCircularAperture(std::vector<ap> ElementApertureList) :
-		InterpolatedAperture(ElementApertureList)
-	{
-	}
-
-	double GetRadius() const;
-	double GetDiameter() const;
-	void SetRadius(double r);
-	void SetDiameter(double d);
-
-	/**
-	 * Returns true if the point (x,y,z) is within the aperture.
-	 * @retval true If (x,y,z) is within the aperture
-	 */
-	virtual bool PointInside(double x, double y, double z) const;
-
-	/**
-	 * Returns the radius.
-	 * @return Radius
-	 */
-	virtual double GetRadiusAt(double phi, double z) const;
-
-	virtual std::string GetApertureType() const;
-	virtual void printout(std::ostream& out) const;
-private:
-	double r2;
-};
-
-inline std::string InterpolatedCircularAperture::GetApertureType() const
-{
-	return "INTERPOLATEDCIRCULAR";
-}
-
-class InterpolatedEllipticalAperture: public InterpolatedAperture, public Aperture
-{
-public:
-	InterpolatedEllipticalAperture(std::vector<ap> ElementApertureList) :
-		InterpolatedAperture(ElementApertureList)
-	{
-	}
-
-	/**
-	 * Returns true if the point (x,y,z) is within the aperture.
-	 */
-	virtual bool PointInside(double x, double y, double z) const;
-
-	/**
-	 * Returns the radius.
-	 */
-	virtual double GetRadiusAt(double phi, double z) const;
-
-	virtual std::string GetApertureType() const;
-	virtual void printout(std::ostream& out) const;
-};
-
-inline std::string InterpolatedEllipticalAperture::GetApertureType() const
-{
-	return "INTERPOLATEDELLIPTICAL";
-}
-
-/**
- * RectEllipse Aperture
- */
-class InterpolatedOctagonalAperture: public InterpolatedAperture, public Aperture
+class InterpolatedCircularAperture: public InterpolatedAperture
 {
 public:
 	/**
-	 * Constructor
+	 *  InterpolatedCircularAperture default constructor
+	 *  @param[in] apVec vector of relevant aperture pointers to be interpolated
 	 */
-	InterpolatedOctagonalAperture(std::vector<InterpolatedAperture::ap> ElementApertureList) :
-		InterpolatedAperture(ElementApertureList)
-	{
-		Print = false;
-		ApertureMaterial = nullptr;
-	}
+	InterpolatedCircularAperture(DataTable ApertureDataTable);
 
 	/**
-	 * Returns true if the point (x,y,z) is within the aperture.
-	 * @retval true If (x,y,z) is within the aperture
+	 *  Virtual destructor
 	 */
-	virtual bool PointInside(double x, double y, double z) const;
-
-	//TODO
-	//Returns true if the point p is within the aperture.
-	//bool PointInside (const Point3D& p) const;
+	virtual ~InterpolatedCircularAperture();
 
 	/**
-	 * Returns the radius to the aperture at location z and angle phi.
-	 * @return Radius to the aperture
+	 *  function to get aperture typename string
+	 *  @return aperture typename string
 	 */
-	virtual double GetRadiusAt(double phi, double z) const;
+	string GetType();
 
-	virtual std::string GetApertureType() const;
+	/**
+	 *  InterpolatedCircularAperture override of Aperture member function CheckWithinApertureBoundaries()
+	 *  @param[in] x x-coord of particle
+	 *  @param[in] y y-coord of particle
+	 *  @param[in] z z-coord of particle
+	 *  @return true/false flag
+	 */
+	bool CheckWithinApertureBoundaries(double x, double y, double z) const;
 
-	void EnablePrint();
-	bool Print;
-	virtual void printout(std::ostream& out) const;
+	/**
+	 *  get new InterpolatedCircularAperture instance - only called by ApertureFactory::getInstance class
+	 *  @param[in] vector of Aperture
+	 *  @return constructed Aperture pointer of assigned type RectangularAperture
+	 */
+	static Aperture* GetInstance(DataTable);
 };
 
-inline std::string InterpolatedOctagonalAperture::GetApertureType() const
+class InterpolatedEllipticalAperture: public InterpolatedAperture
 {
-	return "INTERPOLATEDOCTAGONAL";
-}
-#endif
+public:
+	/**
+	 *  InterpolatedEllipticalAperture default constructor
+	 *  @param[in] apVec vector of relevant aperture pointers to be interpolated
+	 */
+	InterpolatedEllipticalAperture(DataTable ApertureDataTable);
+
+	/**
+	 *  Virtual destructor
+	 */
+	virtual ~InterpolatedEllipticalAperture();
+
+	/**
+	 *  function to get aperture typename string
+	 *  @return aperture typename string
+	 */
+	string GetType();
+
+	/**
+	 *  InterpolatedEllipticalAperture override of Aperture member function CheckWithinApertureBoundaries()
+	 *  @param[in] x x-coord of particle
+	 *  @param[in] y y-coord of particle
+	 *  @param[in] z z-coord of particle
+	 *  @return true/false flag
+	 */
+	bool CheckWithinApertureBoundaries(double x, double y, double z) const;
+
+	/**
+	 *  get new InterpolatedEllipticalAperture instance - only called by ApertureFactory::getInstance class
+	 *  @param[in] vector of Aperture
+	 *  @return constructed Aperture pointer of assigned type RectangularAperture
+	 */
+	static Aperture* GetInstance(DataTable);
+};
+
+class InterpolatedOctagonalAperture: public InterpolatedAperture
+{
+public:
+	/**
+	 *  InterpolatedOctagonalAperture default constructor
+	 *  @param[in] apVec vector of relevant aperture pointers to be interpolated
+	 */
+	InterpolatedOctagonalAperture(DataTable ApertureDataTable);
+
+	/**
+	 *  Virtual destructor
+	 */
+	virtual ~InterpolatedOctagonalAperture();
+
+	/**
+	 *  function to get aperture typename string
+	 *  @return aperture typename string
+	 */
+	string GetType();
+
+	/**
+	 *  InterpolatedOctagonalAperture override of Aperture member function CheckWithinApertureBoundaries()
+	 *  @param[in] x x-coord of particle
+	 *  @param[in] y y-coord of particle
+	 *  @param[in] z z-coord of particle
+	 *  @return true/false flag
+	 */
+	bool CheckWithinApertureBoundaries(double x, double y, double z) const;
+
+	/**
+	 *  get new InterpolatedOctagonalAperture instance - only called by ApertureFactory::getInstance class
+	 *  @param[in] vector of Aperture
+	 *  @return constructed Aperture pointer of assigned type RectangularAperture
+	 */
+	static Aperture* GetInstance(DataTable);
+};
+
+typedef Aperture* (*getInterpolator)(DataTable);
+
+class InterpolatorFactory
+{
+public:
+	static map<string, getInterpolator> interpolatorTypes;
+	Aperture* GetInstance(DataTable);
+};
+
+class InterpolatorFactoryInitializer
+{
+	static InterpolatorFactoryInitializer init;
+public:
+	InterpolatorFactoryInitializer();
+};
+
+#endif /* INTERPOLATEDAPERTURE_H_ */

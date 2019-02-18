@@ -213,7 +213,7 @@ void CollimateParticleProcess::DoCollimation()
 	{
 		for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 		{
-			if(!ap->PointInside((*p).x() - bin_size * (*p).xp(), (*p).y() - bin_size * (*p).yp(), s))
+			if(!ap->CheckWithinApertureBoundaries((*p).x() - bin_size * (*p).xp(), (*p).y() - bin_size * (*p).yp(), s))
 			{
 				any_loss = true;
 				first_loss = p - currentBunch->begin();
@@ -225,7 +225,7 @@ void CollimateParticleProcess::DoCollimation()
 	{
 		for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 		{
-			if(!ap->PointInside((*p).x(), (*p).y(), s))
+			if(!ap->CheckWithinApertureBoundaries((*p).x(), (*p).y(), s))
 			{
 				any_loss = true;
 				first_loss = p - currentBunch->begin();
@@ -276,7 +276,7 @@ void CollimateParticleProcess::DoCollimation()
 //			(*p).x() -= bin_size * (*p).xp();
 //			(*p).y() -= bin_size * (*p).yp();
 //		}
-		if(particle_number >= first_loss && !ap->PointInside((*p).x(), (*p).y(), s))
+		if(particle_number >= first_loss && !ap->CheckWithinApertureBoundaries((*p).x(), (*p).y(), s))
 		{
 			// If the 'aperture' is a collimator, then the particle is lost
 			// if the DoScatter(*p) returns true (energy cut)
@@ -388,7 +388,7 @@ void CollimateParticleProcess::DoCollimation()
 					//LostParticleTracker->GetIntegratedLength() will give the position integrated past this point
 					//(*p).ct() will give the offset for this specific particle
 
-					if(!ap->PointInside((*p).x(), (*p).y(), IntegratedLength))
+					if(!ap->CheckWithinApertureBoundaries((*p).x(), (*p).y(), IntegratedLength))
 					{
 						//if not, delete the particle, and add the coordinates to the lost bunch list (PSvectorArray lost)
 

@@ -71,7 +71,7 @@ static void CheckAperture(Aperture* ap, double s, double *aps)
 		{
 			double guess = (above + below) / 2;
 
-			if(ap->PointInside(xdir * guess, ydir * guess, s))
+			if(ap->CheckWithinApertureBoundaries(xdir * guess, ydir * guess, s))
 			{
 				below = guess;
 			}

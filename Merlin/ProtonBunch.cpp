@@ -13,7 +13,7 @@
 #include "PhysicalConstants.h"
 #include "MerlinException.h"
 #include "Aperture.h"
-#include "CollimatorAperture.h"
+#include "Collimator.h"
 
 using namespace std;
 using namespace ParticleTracking;
@@ -64,28 +64,28 @@ void ProtonBunch::EnableScatteringPhysics(scatMode chooseScat)
 	}
 }
 
-int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
+int ProtonBunch::Scatter(Particle& p, double x, const Collimator* col)
 {
 	int returnvalue;
 	if(ScatteringPhysicsModel == 0)
 	{
-		returnvalue = ScatterSixtrack(p, x, ap);
+		returnvalue = ScatterSixtrack(p, x, col);
 	}
 	else if(ScatteringPhysicsModel == 1)
 	{
-		returnvalue = ScatterSixtrackAdvancedIonization(p, x, ap);
+		returnvalue = ScatterSixtrackAdvancedIonization(p, x, col);
 	}
 	else if(ScatteringPhysicsModel == 2)
 	{
-		returnvalue = ScatterSixtrackAdvancedElastic(p, x, ap);
+		returnvalue = ScatterSixtrackAdvancedElastic(p, x, col);
 	}
 	else if(ScatteringPhysicsModel == 3)
 	{
-		returnvalue = ScatterSixtrackAdvancedSingleDiffraction(p, x, ap);
+		returnvalue = ScatterSixtrackAdvancedSingleDiffraction(p, x, col);
 	}
 	else if(ScatteringPhysicsModel == 4)
 	{
-		returnvalue = ScatterMerlin(p, x, ap);
+		returnvalue = ScatterMerlin(p, x, col);
 		MERLIN_PROFILE_END_TIMER("ProtonBunch::ScatterMerlin");
 	}
 	else
@@ -104,42 +104,42 @@ int ProtonBunch::Scatter(Particle& p, double x, const Aperture* ap)
 }
 //End of ScatterProton
 
-void ProtonBunch::ConfigureScatter(const Aperture* ap)
+void ProtonBunch::ConfigureScatter(const Collimator* col)
 {
 	if(ScatteringPhysicsModel == 0)
 	{
-		ConfigureScatterSixtrack(ap);
+		ConfigureScatterSixtrack(col);
 	}
 	else if(ScatteringPhysicsModel == 1)
 	{
-		ConfigureScatterSixtrackAdvancedIonization(ap);
+		ConfigureScatterSixtrackAdvancedIonization(col);
 	}
 	else if(ScatteringPhysicsModel == 2)
 	{
-		ConfigureScatterSixtrackAdvancedElastic(ap);
+		ConfigureScatterSixtrackAdvancedElastic(col);
 	}
 	else if(ScatteringPhysicsModel == 3)
 	{
-		ConfigureScatterSixtrackAdvancedSingleDiffraction(ap);
+		ConfigureScatterSixtrackAdvancedSingleDiffraction(col);
 	}
 	else if(ScatteringPhysicsModel == 4)
 	{
 		MERLIN_PROFILE_START_TIMER("ProtonBunch::ConfigureScatterMerlin");
-		ConfigureScatterMerlin(ap);
+		ConfigureScatterMerlin(col);
 		MERLIN_PROFILE_END_TIMER("ProtonBunch::ConfigureScatterMerlin");
 	}
 }
 
-void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
+void ProtonBunch::ConfigureScatterMerlin(const Collimator* col)
 {
 
-	//Do a cast to check if we have a "CollimatorAperture"
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
-	if(!tap)
-	{
-		std::cout << "ProtonBunch::ConfigureScatterMerlin() ap is not CollimatorAperture" << std::endl;
-		throw MerlinException("ScatterProton : No Collimator Aperture");
-	}
+	//Do a cast to check if we have a "Collimator"
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
+//	if(!col)
+//	{
+//		std::cout << "ProtonBunch::ConfigureScatterMerlin() ap is not Collimator" << std::endl;
+//		throw MerlinException("ScatterProton : No Collimator Aperture");
+//	}
 
 	/**
 	 * The proton momentum
@@ -200,20 +200,20 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 		GotDiffractive = true;
 	}
 
-	const double sigma_pN_total_reference = tap->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
-	const double sigma_pN_inelastic_reference = tap->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
-	const double sigma_Rutherford_reference = tap->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
+	const double sigma_pN_total_reference = col->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
+	const double sigma_pN_inelastic_reference = col->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
+	const double sigma_Rutherford_reference = col->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
 
-	rho = tap->GetMaterial()->GetDensity() / 1000.0;                  //density (g /cm^3)
-	A = tap->GetMaterial()->GetAtomicMass();                //Atomic mass
-	Z = tap->GetMaterial()->GetAtomicNumber();              //Atomic number
+	rho = col->GetMaterial()->GetDensity() / 1000.0;                  //density (g /cm^3)
+	A = col->GetMaterial()->GetAtomicMass();                //Atomic mass
+	Z = col->GetMaterial()->GetAtomicNumber();              //Atomic number
 
-	name = tap->GetMaterial()->GetName();
-	X0 = tap->GetMaterial()->GetRadiationLengthInM();
-	I = tap->GetMaterial()->GetMeanExcitationEnergy() / eV;
-	const double ElectronDensity = tap->GetMaterial()->GetElectronDensity();        //N_e / m^3
-	const double PlasmaEnergy = tap->GetMaterial()->GetPlasmaEnergy() / eV;
-	const double b_N_ref = tap->GetMaterial()->GetSixtrackNuclearSlope();
+	name = col->GetMaterial()->GetName();
+	X0 = col->GetMaterial()->GetRadiationLengthInM();
+	I = col->GetMaterial()->GetMeanExcitationEnergy() / eV;
+	const double ElectronDensity = col->GetMaterial()->GetElectronDensity();        //N_e / m^3
+	const double PlasmaEnergy = col->GetMaterial()->GetPlasmaEnergy() / eV;
+	const double b_N_ref = col->GetMaterial()->GetSixtrackNuclearSlope();
 
 	/**
 	 * We have now read the material properties, now to scale these if required to the current energy scale etc
@@ -376,7 +376,7 @@ void ProtonBunch::ConfigureScatterMerlin(const Aperture* ap)
 	}
 }
 
-int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
+int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Collimator* col)
 {
 	// p is the scattering Proton - a single particle.
 	// x is the length of the collimator
@@ -397,10 +397,10 @@ int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 
 	if(!ScatterConfigured)
 	{
-		ConfigureScatter(ap);
+		ConfigureScatter(col);
 	}
 	MERLIN_PROFILE_START_TIMER("ProtonBunch::ScatterMerlin");
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
 
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
 	double z = 0;   // distance travelled along the collimator. Units (m)
@@ -522,7 +522,7 @@ int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 		 * Check we are still inside the collimator
 		 * If not, the particle leaves
 		 */
-		if(tap->PointInside(p.x(), p.y(), z += zstep))
+		if(col->GetAperture()->CheckWithinApertureBoundaries(p.x(), p.y(), z += zstep))
 		{
 			tally[0]++;
 			p.x() += p.xp() * x;
@@ -535,9 +535,9 @@ int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
 		 */
 		if(interacted)
 		{
-			if(tap->GetMaterial()->IsMixture())
+			if(col->GetMaterial()->IsMixture())
 			{
-				tap->GetMaterial()->SelectRandomMaterial();
+				col->GetMaterial()->SelectRandomMaterial();
 			}
 			E1 = E0 * (1 + p.dp());
 			double r = RandomNG::uniform(0, 1) * (sigma_pN_total + sigma_Rutherford);
@@ -645,27 +645,27 @@ int ProtonBunch::ScatterMerlin(PSvector& p, double x, const Aperture* ap)
  *
  ****************************************************************/
 
-void ProtonBunch::ConfigureScatterSixtrack(const Aperture* ap)
+void ProtonBunch::ConfigureScatterSixtrack(const Collimator* col)
 {
-	//Do a cast to check if we have a "CollimatorAperture"
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
-	if(!tap)
-	{
-		throw MerlinException("ScatterProton : No Collimator Aperture");
-	}
+//	//Do a cast to check if we have a "Collimator"
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
+//	if(!col)
+//	{
+//		throw MerlinException("ScatterProton : No Collimator Aperture");
+//	}
 
 	double P0 = GetReferenceMomentum();
 	E0 = sqrt(P0 * P0 + pow(ProtonMassMeV * MeV, 2));
 
-	const double sigma_pN_total_reference = tap->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
-	const double sigma_pN_inelastic_reference = tap->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
-	const double sigma_Rutherford_reference = tap->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
-	dEdx = tap->GetMaterial()->GetSixtrackdEdx();                   //dE/dx - (GeV m^-1)
-	rho = tap->GetMaterial()->GetDensity() / 1000.0;
-	A = tap->GetMaterial()->GetAtomicMass();                        //Atomic mass
-	Z = tap->GetMaterial()->GetAtomicNumber();              //Atomic number
-	X0 = tap->GetMaterial()->GetRadiationLengthInM();
-	const double b_N_ref = tap->GetMaterial()->GetSixtrackNuclearSlope();
+	const double sigma_pN_total_reference = col->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
+	const double sigma_pN_inelastic_reference = col->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
+	const double sigma_Rutherford_reference = col->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
+	dEdx = col->GetMaterial()->GetSixtrackdEdx();                   //dE/dx - (GeV m^-1)
+	rho = col->GetMaterial()->GetDensity() / 1000.0;
+	A = col->GetMaterial()->GetAtomicMass();                        //Atomic mass
+	Z = col->GetMaterial()->GetAtomicNumber();              //Atomic number
+	X0 = col->GetMaterial()->GetRadiationLengthInM();
+	const double b_N_ref = col->GetMaterial()->GetSixtrackNuclearSlope();
 
 	//We have now read the material properties, now to scale these if required to the current energy scale etc
 	center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;  //ecmsq in SixTrack
@@ -783,7 +783,7 @@ void ProtonBunch::ConfigureScatterSixtrack(const Aperture* ap)
 
 }
 
-int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
+int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Collimator* col)
 {
 	// p is the scattering Proton - a single particle.
 	// x is the length of the collimator
@@ -804,9 +804,9 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 
 	if(!ScatterConfigured)
 	{
-		ConfigureScatter(ap);
+		ConfigureScatter(col);
 	}
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
 
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
 	double z = 0;   // distance travelled along the collimator. Units (m)
@@ -868,7 +868,7 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 		//Check we are still inside the collimator
 		//If not, the particle leaves
 		z += zstep;
-		if(tap->PointInside(p.x(), p.y(), int_s + z))
+		if(col->GetAperture()->CheckWithinApertureBoundaries(p.x(), p.y(), int_s + z))
 		{
 			tally[0]++;
 			p.x() += p.xp() * x;
@@ -895,6 +895,8 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 			{
 				tally[1]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -907,6 +909,8 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 			{
 				tally[2]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_pp;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -936,6 +940,8 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
 				}
 				t = -log(RandomNG::uniform(0, 1)) / b;
 				dp = xm2 * E1 / center_of_mass_squared;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 2;
 				p.sd() = 1;
 			}
@@ -1005,14 +1011,14 @@ int ProtonBunch::ScatterSixtrack(PSvector& p, double x, const Aperture* ap)
  *
  ****************************************************************/
 
-void ProtonBunch::ConfigureScatterSixtrackAdvancedIonization(const Aperture* ap)
+void ProtonBunch::ConfigureScatterSixtrackAdvancedIonization(const Collimator* col)
 {
-	//Do a cast to check if we have a "CollimatorAperture"
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
-	if(!tap)
-	{
-		throw MerlinException("ScatterProton : No Collimator Aperture");
-	}
+//	//Do a cast to check if we have a "Collimator"
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
+//	if(!col)
+//	{
+//		throw MerlinException("ScatterProton : No Collimator Aperture");
+//	}
 
 	double P0 = GetReferenceMomentum();
 	E0 = sqrt(P0 * P0 + pow(ProtonMassMeV * MeV, 2));
@@ -1027,17 +1033,17 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedIonization(const Aperture* ap)
 	 */
 	double beta = sqrt(1 - (1 / (gamma * gamma)));
 
-	const double sigma_pN_total_reference = tap->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
-	const double sigma_pN_inelastic_reference = tap->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
-	const double sigma_Rutherford_reference = tap->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
-	rho = tap->GetMaterial()->GetDensity() / 1000.0;
-	A = tap->GetMaterial()->GetAtomicMass();                        //Atomic mass
-	Z = tap->GetMaterial()->GetAtomicNumber();              //Atomic number
-	X0 = tap->GetMaterial()->GetRadiationLengthInM();
-	I = tap->GetMaterial()->GetMeanExcitationEnergy() / eV;
-	const double ElectronDensity = tap->GetMaterial()->GetElectronDensity();        //N_e / m^3
-	const double PlasmaEnergy = tap->GetMaterial()->GetPlasmaEnergy() / eV;
-	const double b_N_ref = tap->GetMaterial()->GetSixtrackNuclearSlope();
+	const double sigma_pN_total_reference = col->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
+	const double sigma_pN_inelastic_reference = col->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
+	const double sigma_Rutherford_reference = col->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
+	rho = col->GetMaterial()->GetDensity() / 1000.0;
+	A = col->GetMaterial()->GetAtomicMass();                        //Atomic mass
+	Z = col->GetMaterial()->GetAtomicNumber();              //Atomic number
+	X0 = col->GetMaterial()->GetRadiationLengthInM();
+	I = col->GetMaterial()->GetMeanExcitationEnergy() / eV;
+	const double ElectronDensity = col->GetMaterial()->GetElectronDensity();        //N_e / m^3
+	const double PlasmaEnergy = col->GetMaterial()->GetPlasmaEnergy() / eV;
+	const double b_N_ref = col->GetMaterial()->GetSixtrackNuclearSlope();
 	//We have now read the material properties, now to scale these if required to the current energy scale etc
 	center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;  //ecmsq in SixTrack
 	//pp cross-sections and parameters for energy dependence scaling
@@ -1186,7 +1192,7 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedIonization(const Aperture* ap)
 
 }
 
-int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const Aperture* ap)
+int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const Collimator* col)
 {
 	// p is the scattering Proton - a single particle.
 	// x is the length of the collimator
@@ -1207,9 +1213,9 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 
 	if(!ScatterConfigured)
 	{
-		ConfigureScatter(ap);
+		ConfigureScatter(col);
 	}
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
 
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
 	double z = 0;   // distance travelled along the collimator. Units (m)
@@ -1320,7 +1326,7 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 		//Check we are still inside the collimator
 		//If not, the particle leaves
 		z += zstep;
-		if(tap->PointInside(p.x(), p.y(), int_s + z))
+		if(col->GetAperture()->CheckWithinApertureBoundaries(p.x(), p.y(), int_s + z))
 		{
 			tally[0]++;
 			p.x() += p.xp() * x;
@@ -1347,6 +1353,8 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 			{
 				tally[1]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1359,6 +1367,8 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 			{
 				tally[2]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_pp;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1388,6 +1398,8 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
 				}
 				t = -log(RandomNG::uniform(0, 1)) / b;
 				dp = xm2 * E1 / center_of_mass_squared;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 
 				p.type() = 2;
 				p.sd() = 1;
@@ -1458,14 +1470,14 @@ int ProtonBunch::ScatterSixtrackAdvancedIonization(PSvector& p, double x, const 
  *
  ****************************************************************/
 
-void ProtonBunch::ConfigureScatterSixtrackAdvancedElastic(const Aperture* ap)
+void ProtonBunch::ConfigureScatterSixtrackAdvancedElastic(const Collimator* col)
 {
-	//Do a cast to check if we have a "CollimatorAperture"
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
-	if(!tap)
-	{
-		throw MerlinException("ScatterProton : No Collimator Aperture");
-	}
+//	//Do a cast to check if we have a "Collimator"
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
+//	if(!col)
+//	{
+//		throw MerlinException("ScatterProton : No Collimator Aperture");
+//	}
 
 	double P0 = GetReferenceMomentum();
 	E0 = sqrt(P0 * P0 + pow(ProtonMassMeV * MeV, 2));
@@ -1483,16 +1495,16 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedElastic(const Aperture* ap)
 		GotElastic = true;
 	}
 
-	const double sigma_pN_total_reference = tap->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
-	const double sigma_pN_inelastic_reference = tap->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
-	const double sigma_Rutherford_reference = tap->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
-	dEdx = tap->GetMaterial()->GetSixtrackdEdx();                   //dE/dx - (GeV m^-1)
-	rho = tap->GetMaterial()->GetDensity() / 1000.0;
-	A = tap->GetMaterial()->GetAtomicMass();                        //Atomic mass
-	Z = tap->GetMaterial()->GetAtomicNumber();              //Atomic number
-	X0 = tap->GetMaterial()->GetRadiationLengthInM();
+	const double sigma_pN_total_reference = col->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
+	const double sigma_pN_inelastic_reference = col->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
+	const double sigma_Rutherford_reference = col->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
+	dEdx = col->GetMaterial()->GetSixtrackdEdx();                   //dE/dx - (GeV m^-1)
+	rho = col->GetMaterial()->GetDensity() / 1000.0;
+	A = col->GetMaterial()->GetAtomicMass();                        //Atomic mass
+	Z = col->GetMaterial()->GetAtomicNumber();              //Atomic number
+	X0 = col->GetMaterial()->GetRadiationLengthInM();
 
-	const double b_N_ref = tap->GetMaterial()->GetSixtrackNuclearSlope();
+	const double b_N_ref = col->GetMaterial()->GetSixtrackNuclearSlope();
 
 	//We have now read the material properties, now to scale these if required to the current energy scale etc
 	center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;  //ecmsq in SixTrack
@@ -1607,7 +1619,7 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedElastic(const Aperture* ap)
 
 }
 
-int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Aperture* ap)
+int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Collimator* col)
 {
 	// p is the scattering Proton - a single particle.
 	// x is the length of the collimator
@@ -1628,9 +1640,9 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 
 	if(!ScatterConfigured)
 	{
-		ConfigureScatter(ap);
+		ConfigureScatter(col);
 	}
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
 
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
 	double z = 0;   // distance travelled along the collimator. Units (m)
@@ -1692,7 +1704,7 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 		//Check we are still inside the collimator
 		//If not, the particle leaves
 		z += zstep;
-		if(tap->PointInside(p.x(), p.y(), int_s + z))
+		if(col->GetAperture()->CheckWithinApertureBoundaries(p.x(), p.y(), int_s + z))
 		{
 			tally[0]++;
 			p.x() += p.xp() * x;
@@ -1721,6 +1733,8 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
 				double TargetMass = A * AtomicMassUnit; // Nucleus mass
 				dp = t / (2 * TargetMass);
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1734,6 +1748,8 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 				tally[2]++;
 				t = ElasticScatter->SelectT();
 				dp = t / (2 * AtomicMassUnit);
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -1763,6 +1779,8 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
 				}
 				t = -log(RandomNG::uniform(0, 1)) / b;
 				dp = xm2 * E1 / center_of_mass_squared;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 2;
 				p.sd() = 1;
 			}
@@ -1832,11 +1850,11 @@ int ProtonBunch::ScatterSixtrackAdvancedElastic(PSvector& p, double x, const Ape
  *
  ****************************************************************/
 
-void ProtonBunch::ConfigureScatterSixtrackAdvancedSingleDiffraction(const Aperture* ap)
+void ProtonBunch::ConfigureScatterSixtrackAdvancedSingleDiffraction(const Collimator* col)
 {
-	//Do a cast to check if we have a "CollimatorAperture"
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
-	if(!tap)
+	//Do a cast to check if we have a "Collimator"
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
+	if(!col)
 	{
 		throw MerlinException("ScatterProton : No Collimator Aperture");
 	}
@@ -1867,15 +1885,15 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedSingleDiffraction(const Apertu
 		GotDiffractive = true;
 	}
 
-	const double sigma_pN_total_reference = tap->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
-	const double sigma_pN_inelastic_reference = tap->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
-	const double sigma_Rutherford_reference = tap->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
-	dEdx = tap->GetMaterial()->GetSixtrackdEdx();                   //dE/dx - (GeV m^-1)
-	rho = tap->GetMaterial()->GetDensity() / 1000.0;
-	A = tap->GetMaterial()->GetAtomicMass();                        //Atomic mass
-	Z = tap->GetMaterial()->GetAtomicNumber();              //Atomic number
-	X0 = tap->GetMaterial()->GetRadiationLengthInM();
-	const double b_N_ref = tap->GetMaterial()->GetSixtrackNuclearSlope();
+	const double sigma_pN_total_reference = col->GetMaterial()->GetSixtrackTotalNucleusCrossSection();      //Material reference proton-Nucleus total scattering cross section
+	const double sigma_pN_inelastic_reference = col->GetMaterial()->GetSixtrackInelasticNucleusCrossSection();  //Material reference proton-Nucleus inelastic scattering cross section
+	const double sigma_Rutherford_reference = col->GetMaterial()->GetSixtrackRutherfordCrossSection();      //Material reference Rutherford scattering cross section
+	dEdx = col->GetMaterial()->GetSixtrackdEdx();                   //dE/dx - (GeV m^-1)
+	rho = col->GetMaterial()->GetDensity() / 1000.0;
+	A = col->GetMaterial()->GetAtomicMass();                        //Atomic mass
+	Z = col->GetMaterial()->GetAtomicNumber();              //Atomic number
+	X0 = col->GetMaterial()->GetRadiationLengthInM();
+	const double b_N_ref = col->GetMaterial()->GetSixtrackNuclearSlope();
 
 	//We have now read the material properties, now to scale these if required to the current energy scale etc
 	center_of_mass_squared = 2 * ProtonMassMeV * MeV * E0;  //ecmsq in SixTrack
@@ -1983,7 +2001,7 @@ void ProtonBunch::ConfigureScatterSixtrackAdvancedSingleDiffraction(const Apertu
 	}
 }
 
-int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x, const Aperture* ap)
+int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x, const Collimator* col)
 {
 	// p is the scattering Proton - a single particle.
 	// x is the length of the collimator
@@ -2004,9 +2022,9 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 
 	if(!ScatterConfigured)
 	{
-		ConfigureScatter(ap);
+		ConfigureScatter(col);
 	}
-	const CollimatorAperture* tap = dynamic_cast<const CollimatorAperture*> (ap);
+//	const Collimator* col = dynamic_cast<const Collimator*> (col);
 
 	//Keep track of distance along the collimator for aperture checking (aperture could vary with z)
 	double z = 0;   // distance travelled along the collimator. Units (m)
@@ -2068,7 +2086,7 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 		//Check we are still inside the collimator
 		//If not, the particle leaves
 		z += zstep;
-		if(tap->PointInside(p.x(), p.y(), int_s + z))
+		if(col->GetAperture()->CheckWithinApertureBoundaries(p.x(), p.y(), int_s + z))
 		{
 			tally[0]++;
 			p.x() += p.xp() * x;
@@ -2095,6 +2113,8 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 			{
 				tally[1]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_N;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 
@@ -2107,6 +2127,8 @@ int ProtonBunch::ScatterSixtrackAdvancedSingleDiffraction(PSvector& p, double x,
 			{
 				tally[2]++;
 				t = -log(RandomNG::uniform(0, 1)) / b_pp;
+				double P0 = GetReferenceMomentum();
+				double theta = sqrt(t) / P0;
 				p.type() = 1;
 			}
 

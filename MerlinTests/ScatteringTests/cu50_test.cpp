@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 	Collimator* TestCol = new Collimator("TestCollimator", length);
 	TestCol->SetMaterial(CollimatorMaterial);
 
-	CollimatorAperture* app = new CollimatorAperture(2, 2, 0, CollimatorMaterial, length, 0, 0);
+	CollimatorAperture* app = new CollimatorAperture(2, 2, 0, length, 0, 0);
 	app->SetExitWidth(app->GetFullEntranceWidth());      //Horizontal
 	app->SetExitHeight(app->GetFullEntranceHeight());    //Vertical
 

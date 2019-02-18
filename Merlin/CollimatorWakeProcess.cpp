@@ -194,6 +194,7 @@ void CollimatorWakeProcess::ApplyWakefield(double ds) //  int nmodes)
 		CalculateWakeT(dz, currmode);
 		CalculateWakeL(dz, currmode);
 		double z = zmin;
+		int iparticle = 0;
 
 		for(size_t nslice = 0; nslice < nbins; nslice++)
 		{
@@ -202,9 +203,10 @@ void CollimatorWakeProcess::ApplyWakefield(double ds) //  int nmodes)
 			double g_cl = WAKE_GRADIENT(wake_cl);
 			double g_sl = WAKE_GRADIENT(wake_sl);
 			g_ct = g_st = g_cl = g_sl = 0;
-
+			int number_particles = 0;
 			for(ParticleBunch::iterator p = bunchSlices[nslice]; p != bunchSlices[nslice + 1]; p++)
 			{
+				number_particles++;
 				double r = sqrt(powd(p->x(), 2) + powd(p->y(), 2));
 				double theta = atan2(p->y(), p->x());
 				double zz = p->ct() - z;

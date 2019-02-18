@@ -14,6 +14,7 @@
 #include "EMField.h"
 #include "AcceleratorGeometry.h"
 #include "Aperture.h"
+#include "Material.h"
 #include "ModelElement.h"
 #include "WakePotentials.h"
 
@@ -159,6 +160,16 @@ public:
 		return Coll_ID;
 	}
 
+	virtual void SetMaterial(Material* mat)
+	{
+		material = mat;
+	}
+
+	Material* GetMaterial() const
+	{
+		return material;
+	}
+
 protected:
 
 	/**
@@ -198,6 +209,12 @@ protected:
 	 * A pointer to the Aperture for this component
 	 */
 	Aperture* itsAperture;
+
+	/**
+	 * A pointer to the Material for this component
+	 */
+	Material* material;
+
 
 	/**
 	 * A pointer to the Wake potentials for this component

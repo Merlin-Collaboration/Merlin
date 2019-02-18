@@ -322,7 +322,7 @@ void CCFailureProcess::DoProcess(double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuX(0.), DeltaMuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			double DeltaMuX(0.), DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 			int n1(0.), n2(0.);
 
 			++testn;
@@ -502,7 +502,7 @@ void CCFailureProcess::DoProcess(double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			double DeltaMuY(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 			int n1(0.), n2(0.);
 
 			++testn;
@@ -625,7 +625,7 @@ void CCFailureProcess::DoProcess(double ds)
 				Beta_p = LorentzBeta(Gamma_p);
 			}
 
-			double DeltaMuX(0.), M12(0.), M22(0.), V1(0.), V2(0.);
+			double DeltaMuX(0.), MuX(0.), MuY(0.), M12(0.), M22(0.), V1(0.), V2(0.);
 
 			int n1(0.), n2(0.);
 
@@ -855,6 +855,8 @@ double CCFailureProcess::CalcV2(double V1, double M22)
 void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool horizontal)
 {
 	double omega_ov_c = omega / SpeedOfLight;
+	double tantheta = tan(theta);
+	int n = 4;  //No of CCs
 
 	//Working
 	double kick = (V * sin(phi_s + (p.ct() * omega_ov_c))) / (EnergyCC);
@@ -872,6 +874,8 @@ void CCFailureProcess::ApplyPreCCKick(PSvector &p, double V, double M12, bool ho
 void CCFailureProcess::ApplyPostCCKick(PSvector &p, double V, double M12, bool horizontal)
 {
 	double omega_ov_c = omega / SpeedOfLight;
+	double tantheta = tan(theta);
+	int n = 4;  //No of CCs
 
 	//Working
 	double kick = (V * sin(phi_s + (p.ct() * omega_ov_c))) / (EnergyCC);
