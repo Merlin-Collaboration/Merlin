@@ -13,6 +13,9 @@
 #include <fstream>
 
 #include "AcceleratorModel.h"
+#include "DataTable.h"
+
+using namespace std;
 
 class ApertureConfiguration
 {
@@ -30,16 +33,10 @@ public:
 	ApertureConfiguration(std::string InputFileName);
 
 	/**
-	 * Load the Aperture settings from an input file.
-	 * @param[in] InputFileName The name of the aperture file to load
-	 */
-	void LoadApertureConfiguration(std::string InputFileName);
-
-	/**
-	 * Dumps the input file back out
+	 * Prints the configured apertures from AcceleratorModel
 	 * @param[in] os The name of the stream to output to
 	 */
-	void OutputApertureList(std::ostream& os);
+	void OutputConfiguredAperture(AcceleratorModel* model, ostream& os);
 
 	/**
 	 * Configures the beam pipe for a given accelerator model
@@ -66,18 +63,6 @@ public:
 	void EnableLogging(bool flag);
 
 	/**
-	 * Set a default class of aperture to use in ambiguous cases
-	 * @param [in] flag The requested logging state
-	 */
-	void SetDefaultAperture(Aperture* ap);
-
-	/**
-	 * Enable/disable use of the default aperture where it is not possible to clearly select an aperture type (e.g. OCTAGON -> RECTELLIPSE joins)
-	 * @param [in] flag A bool to enable or disable the usage of the default aperture
-	 */
-	void EnableDefaultAperture(bool flag);
-
-	/**
 	 * The output log file
 	 */
 	std::ostream* log;
@@ -88,60 +73,10 @@ public:
 	bool logFlag;
 
 	/**
-	 * Typedef for access to the enum
-	 */
-	typedef size_t ApertureClass_t;
-
-	/**
-	 * See the MAD users guide for how these apertures are defined.
-	 * (current as of V5.02.07)
-	 * http://madx.web.cern.ch/madx/releases/last-dev/madxuguide.pdf
-	 * "Physical Aperture: Aperture definition"
-	 *
-	 * Interpolated in this case is where one type joins another - internal usage, not a MAD-X type.
-	 */
-	/*
-	    typedef enum
-	    {
-	        NONE,
-	        UNKNOWN,
-	        CIRCLE,			//Supported
-	        RECTANGLE,		//Supported
-	        ELLIPSE,		//Supported
-	        RECTCIRCLE,
-	        LHCSCREEN,		//Supported as RECTELLIPSE
-	        RECTELLIPSE,	//Supported
-	        RACETRACK,
-	        OCTAGON,
-	        INTERPOLATED
-	    } ApertureClass;
-	 */
-	struct ap
-	{
-		double s;
-		double ap1;
-		double ap2;
-		double ap3;
-		double ap4;
-		ApertureClass_t ApType;
-
-	};
-
-	/**
-	 * One aperture entry
-	 */
-	ap ApertureEntry;
-
-	/**
 	 * The global list of Aperture entries
 	 */
-	std::vector<ap> ApertureList;
+	DataTable ApertureDataTable;
 
-	/**
-	 * A pointer to a default aperture entry
-	 */
-	Aperture* DefaultAperture;
-	bool DefaultApertureFlag;
 };
 
 #endif

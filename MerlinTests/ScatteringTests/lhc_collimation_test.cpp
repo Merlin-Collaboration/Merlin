@@ -102,6 +102,7 @@ int FindElementLatticePosition(string RequestedElement, AcceleratorModel* model)
 
 int main(int argc, char* argv[])
 {
+
 	int seed = 0;
 	int npart = 10000;
 	//~ int npart = 100000;
@@ -281,7 +282,7 @@ int main(int argc, char* argv[])
 
 	vector<Collimator*> TCP;
 	int siz = model->ExtractTypedElements(TCP, start_element);
-	Aperture *ap = (TCP[0])->GetAperture();
+	Aperture* ap = (TCP[0])->GetAperture();
 	if(!ap)
 	{
 		cout << "Could not get tcp ap" << endl;
@@ -295,7 +296,7 @@ int main(int argc, char* argv[])
 	}
 
 	double h_offset = twiss->Value(1, 0, 0, start_element_number);
-	double JawPosition = CollimatorJaw->GetFullWidth() / 2.0;
+	double JawPosition = CollimatorJaw->GetFullEntranceWidth() / 2.0;
 	HorizontalHaloParticleBunchFilter *hFilter = new HorizontalHaloParticleBunchFilter();
 	hFilter->SetHorizontalLimit(JawPosition);
 	hFilter->SetHorizontalOrbit(h_offset);
@@ -379,7 +380,7 @@ int main(int argc, char* argv[])
 	//	TRACKING RUN
 	for(int turn = 1; turn <= nturns; turn++)
 	{
-		cout << "Turn " << turn << "\tParticle number: " << myBunch->size() << endl;
+   		cout << "Turn " << turn << "\tParticle number: " << myBunch->size() << endl;
 		tracker->Track(myBunch);
 		if(myBunch->size() <= 1)
 		{

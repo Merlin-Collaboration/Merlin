@@ -63,6 +63,22 @@ size_t DataTable::AddRow()
 	return length - 1;
 }
 
+void DataTable::AddRowFromRow(DataTableRow dt)
+{
+	//TODO
+}
+
+void DataTable::ApertureFromRow(DataTableRow dtrow,size_t row)
+{
+	this->AddRow();
+	this->Set("APERTYPE",row,dtrow.Get_s("APERTYPE"));
+	this->Set_d("S",row,dtrow.Get_d("S"));
+	this->Set_d("APER_1",row,dtrow.Get_d("APER_1"));
+	this->Set_d("APER_2",row,dtrow.Get_d("APER_2"));
+	this->Set_d("APER_3",row,dtrow.Get_d("APER_3"));
+	this->Set_d("APER_4",row,dtrow.Get_d("APER_4"));
+}
+
 double DataTable::Get_d(const std::string col_name, size_t i) const
 {
 	location l = lookup.at(col_name);

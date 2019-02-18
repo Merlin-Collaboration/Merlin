@@ -13,7 +13,7 @@
 #include "PhysicalUnits.h"
 #include "ParticleBunchTypes.h"
 #include "ParticleTracker.h"
-#include "SimpleApertures.h"
+#include "Aperture.h"
 #include "CollimateParticleProcess.h"
 
 /* Create a bunch of particle, and check that the correct number survive various sized apertures
@@ -25,13 +25,22 @@ using namespace PhysicalUnits;
 
 int main(int argc, char* argv[])
 {
-
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
 	ctor->NewModel();
 
 	AcceleratorComponent *drift = new Drift("d1", 1 * meter);
 
-	RectangularAperture *rect_app = new RectangularAperture(21 * millimeter, 100 * millimeter);
+	ApertureFactory factory;
+	DataTable dt;
+	dt.AddColumn("S", 'd');
+	dt.AddColumn("APER_1", 'd');
+	dt.AddColumn("APER_2", 'd');
+	dt.AddColumn("APER_3", 'd');
+	dt.AddColumn("APER_4", 'd');
+	dt.AddColumn("APERTYPE",'s');
+	dt.AddRow(0.0, 21 * millimeter, 100 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	DataTableRowIterator itr = dt.begin();
+	Aperture* rect_app = factory.GetInstance(*itr);
 	ctor->AppendComponent(*drift);
 
 	AcceleratorModel* theModel = ctor->GetModel();
@@ -84,8 +93,10 @@ int main(int argc, char* argv[])
 	//
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	rect_app->SetFullWidth(70 * millimeter);
-	rect_app->SetFullHeight(70 * millimeter);
+	dt.AddRow(0.0, 35 * millimeter, 35 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	itr++;
+	Aperture* rect_app1 = factory.GetInstance(*itr);
+	drift->SetAperture(rect_app1);
 	tracker->Track(test_bunch);
 	cout << "Particle number: " << test_bunch->size() << endl;
 	assert(test_bunch->size() == 8);
@@ -93,8 +104,10 @@ int main(int argc, char* argv[])
 
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	rect_app->SetFullWidth(70 * millimeter);
-	rect_app->SetFullHeight(50 * millimeter);
+	dt.AddRow(0.0, 35 * millimeter, 25 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	itr++;
+	Aperture* rect_app2 = factory.GetInstance(*itr);
+	drift->SetAperture(rect_app2);
 	tracker->Track(test_bunch);
 	cout << "Particle number: " << test_bunch->size() << endl;
 	assert(test_bunch->size() == 7);
@@ -102,8 +115,10 @@ int main(int argc, char* argv[])
 
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	rect_app->SetFullWidth(50 * millimeter);
-	rect_app->SetFullHeight(70 * millimeter);
+	dt.AddRow(0.0, 25 * millimeter, 35 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	itr++;
+	Aperture* rect_app3 = factory.GetInstance(*itr);
+	drift->SetAperture(rect_app3);
 	tracker->Track(test_bunch);
 	cout << "Particle number: " << test_bunch->size() << endl;
 	assert(test_bunch->size() == 8);
@@ -111,17 +126,24 @@ int main(int argc, char* argv[])
 
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	rect_app->SetFullWidth(30 * millimeter);
-	rect_app->SetFullHeight(30 * millimeter);
+	dt.AddRow(0.0, 15 * millimeter, 15 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	itr++;
+	Aperture* rect_app4 = factory.GetInstance(*itr);
+	drift->SetAperture(rect_app4);
 	tracker->Track(test_bunch);
 	cout << "Particle number: " << test_bunch->size() << endl;
 	assert(test_bunch->size() == 4);
 	delete test_bunch;
 
 	delete rect_app;
+	delete rect_app2;
+	delete rect_app3;
+	delete rect_app4;
 
 	delete myBunch;
 	delete tracker;
 	delete theModel;
+
+	cout << "test successful" << endl;
 
 }

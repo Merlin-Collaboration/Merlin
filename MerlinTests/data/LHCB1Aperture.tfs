@@ -1,3 +1,50 @@
+@ NAME             %05s "TWISS"
+@ TYPE             %05s "TWISS"
+@ SEQUENCE         %05s "LHCB1"
+@ PARTICLE         %06s "PROTON"
+@ MASS             %le       0.938272
+@ CHARGE           %le       1.000000
+@ ENERGY           %le    7000.000063
+@ PC               %le    7000.000000
+@ GAMMA            %le    7460.523257
+@ KBUNCH           %le       1.000000
+@ BCURRENT         %le       0.000000
+@ SIGE             %le       0.000000
+@ SIGT             %le       0.000000
+@ NPART            %le       0.000000
+@ EX               %le       1.000000
+@ EY               %le       1.000000
+@ ET               %le       1.000000
+@ LENGTH           %le   26658.883200
+@ ALFA             %le       0.000321
+@ ORBIT5           %le      -0.000000
+@ GAMMATR          %le      55.772571
+@ Q1               %le      64.310000
+@ Q2               %le      59.320000
+@ DQ1              %le       0.999989
+@ DQ2              %le       0.999845
+@ DXMAX            %le       2.860323
+@ DYMAX            %le       0.000000
+@ XCOMAX           %le       0.000000
+@ YCOMAX           %le       0.000000
+@ BETXMAX          %le    4877.328045
+@ BETYMAX          %le    4877.328027
+@ XCORMS           %le       0.000000
+@ YCORMS           %le       0.000000
+@ DXRMS            %le       1.338336
+@ DYRMS            %le       0.000000
+@ DELTAP           %le       0.000000
+@ SYNCH_1          %le       0.000000
+@ SYNCH_2          %le       0.000000
+@ SYNCH_3          %le       0.000000
+@ SYNCH_4          %le       0.000000
+@ SYNCH_5          %le       0.000000
+@ TITLE            %08s "LHC V6.5"
+@ ORIGIN           %19s "MAD-X 3.03    Linux"
+@ DATE             %08s "05/05/06"
+@ TIME             %08s "17.29.36"
+* KEYWORD            NAME               PARENT                         S             L        APER_1        APER_2        APER_3        APER_4 		APERTYPE
+$ %s                 %s                 %s                           %le           %le           %le           %le           %le           %le 		%s
  "MARKER"            "LHCB1$START"       "MARKER"                             0                  0                  0                  0                  0                  0 "CIRCLE"           
  "MARKER"            "ATLASPIPE1.R1"     "MARKER"                             0                  0              0.029                  0                  0                  0 "CIRCLE"           
  "MARKER"            "IP1"               "OMK"                                0                  0              0.029                  0                  0                  0 "CIRCLE"           

@@ -15,6 +15,7 @@
 
 class DataTableRowIterator;
 class DataTableHeader;
+class DataTableRow;
 
 class BadFormatException: public std::runtime_error
 {
@@ -90,6 +91,11 @@ public:
 	void AddColumn(std::string col_name, char type);
 	/// New empty row.
 	size_t AddRow();
+
+	void AddRowFromRow(DataTableRow dt);
+
+	//configure aperture info from DataTableRow
+	void ApertureFromRow(DataTableRow dtrow, size_t row);
 
 	// get type in name
 	///Get double value by name and row.
@@ -249,6 +255,8 @@ void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args ... arg)
 	AddRowN(col_n + 1, row_n, arg ...);
 }
 
+
+
 /** @brief Access individual rows of a DataTable.
  *
  * Type returned when using DataTableRowIterator. Does not actually hold
@@ -281,6 +289,7 @@ public:
 	{
 		return dt->GetAsStr(col_name, pos);
 	}
+
 
 private:
 	const DataTable * dt;
@@ -330,6 +339,11 @@ public:
 	DataTableRowIterator operator--(int);
 	bool operator==(const DataTableRowIterator &other) const;
 	bool operator!=(const DataTableRowIterator &other) const;
+
+	size_t _pos() const
+	{
+		return pos;
+	}
 
 private:
 	const DataTable * dt;
