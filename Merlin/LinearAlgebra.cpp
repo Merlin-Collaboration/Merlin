@@ -138,7 +138,7 @@ double Invert(RealMatrix& t)
 
 bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigenvectors)
 {
-     bool allOK=true; 
+	bool allOK = true;
 	ComplexMatrix m(t);
 	Matrix<int> s(6, 6, 0);
 
@@ -160,49 +160,61 @@ bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 		b(2 * pln) = Complex(1 / sqrt(2.0));
 		b(2 * pln + 1) = b(2 * pln);
 
-		//Iterate!
-		ComplexMatrix mp(m);
-
-		double prox = 1.0;
-		int iter = 0;
+		// Did you accidentally guess right? - added RJB
+		ComplexVector Check(0., 6);
+		for(int i = 0; i < 6; i++)
+			for(int j = 0; j < 6; j++)
+				Check(i) += m(i, j) * b(j);
+		double test = 0;
+		for(int i = 0; i < 6; i++)
+			test += pow(ABS(Check(i) - b(i)), 2);
 		Subscript n = 0;
 		Subscript row = 0;
+		if(test > 1.0E-15)           // if the guess is spot on, iteration fails!
 
-		while(prox > 1.0e-16 && iter < 100)
-		{
-			for(n = 0; n < 6; n++)
+		{ //Iterate!
+			ComplexMatrix mp(m);
+
+			double prox = 1.0;
+			int iter = 0;
+
+			while(prox > 1.0e-16 && iter < 100)
 			{
-				mp(n, n) = m(n, n) - lambda;
-			}
-
-			ComplexMatrix minv(mp);
-			prox = Inverse(minv);
-
-			ComplexVector y(6);
-			for(row = 0; row < 6; row++)
-			{
-				Complex sum = 0.0;
-				for(Subscript col = 0; col < 6; col++)
+				for(n = 0; n < 6; n++)
 				{
-					sum += minv(row, col) * b(col);
+					mp(n, n) = m(n, n) - lambda;
 				}
-				y(row) = sum;
+
+				ComplexMatrix minv(mp);
+				prox = Inverse(minv);
+
+				ComplexVector y(6);
+				for(row = 0; row < 6; row++)
+				{
+					Complex sum = 0.0;
+					for(Subscript col = 0; col < 6; col++)
+					{
+						sum += minv(row, col) * b(col);
+					}
+					y(row) = sum;
+				}
+
+				Complex ynorm = 0.0;
+				Complex ydotb = 0.0;
+				for(n = 0; n < 6; n++)
+				{
+					ynorm += y(n) * y(n);
+					ydotb += y(n) * b(n);
+				}
+
+				b = y / sqrt(ynorm);
+				lambda += 1.0 / ydotb;
+				iter++;
 			}
 
-			Complex ynorm = 0.0;
-			Complex ydotb = 0.0;
-			for(n = 0; n < 6; n++)
-			{
-				ynorm += y(n) * y(n);
-				ydotb += y(n) * b(n);
-			}
+			assert(iter < 100);   // just in case  RJB
+		}          // end of test check
 
-			b = y / sqrt(ynorm);
-			lambda += 1.0 / ydotb;
-			iter++;
-		}
-
-                assert(iter<100); // just in case  RJB
 		//Now normalise to Transpose[Conjugate[b]].s.b = I
 		Complex bnorm = 0.;
 
@@ -229,12 +241,13 @@ bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 		}
 		eigenvalues(pln) = lambda;
 		eigenvectors.row(pln) = b;
-                if((imag(lambda)==0) && pln==2) {
-                        cout<<" Unstable in 3rd dimension\n";
-                        allOK=false;
-                        }
+		if((imag(lambda) == 0) && pln == 2)
+		{
+			cout << " Unstable in 3rd dimension\n";
+			allOK = false;
+		}
 	}
-        return allOK;
+	return allOK;
 }
 
 void Symplectify(RealMatrix& a)
