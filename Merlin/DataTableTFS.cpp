@@ -89,11 +89,13 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	std::vector<char> col_types;
 	std::string line;
 	std::vector<std::string> words;
+	size_t line_number = 0;
 
 	// Read header
 	// Lines start with "@". Ends when line starts with "*"
 	while(getline(*in, line))
 	{
+		line_number++;
 		words = split_line(line);
 		if(words.size() == 0)
 		{
@@ -105,7 +107,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 		}
 		if(words.size() != 4)
 		{
-			throw BadFormatException("Expected '@ name %type value'");
+			throw BadFormatException("Expected '@ name %type value' at line " + std::to_string(line_number));
 		}
 
 		dt->HeaderAddColumn(words[1], type_conv(words[2]));
@@ -115,7 +117,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	//Read column names
 	if(words[0] != "*")
 	{
-		throw BadFormatException("Expected line starting with '*' or '@'");
+		throw BadFormatException("Expected line starting with '*' or '@' at line " + std::to_string(line_number));
 	}
 	for(auto w = words.begin() + 1; w < words.end(); w++)
 	{
@@ -124,10 +126,11 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 
 	//Read column types
 	getline(*in, line);
+	line_number++;
 	words = split_line(line);
 	if(words[0] != "$")
 	{
-		throw BadFormatException("Expected line starting with '$'");
+		throw BadFormatException("Expected line starting with '$' at line " + std::to_string(line_number));
 	}
 	for(auto w = words.begin() + 1; w != words.end(); w++)
 	{
@@ -136,7 +139,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 
 	if(col_names.size() != col_types.size())
 	{
-		throw BadFormatException("Mismatched length of column names and types");
+		throw BadFormatException("Mismatched length of column names and types at line " + std::to_string(line_number));
 	}
 
 	{
@@ -153,15 +156,17 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 	// Read body
 	while(getline(*in, line))
 	{
+		line_number++;
 		words = split_line(line);
 		if(words.size() == 0)
 		{
 			continue;
 		}
 
-		if(col_names.size() != col_types.size())
+		if(words.size() != col_types.size())
 		{
-			throw BadFormatException("Row does not contain correct number of values");
+			throw BadFormatException("Row does not contain correct number of values at line "
+					  + std::to_string(line_number));
 		}
 		size_t rown = dt->AddRow();
 		{
