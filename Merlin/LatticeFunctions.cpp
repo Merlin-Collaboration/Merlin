@@ -96,7 +96,7 @@ void LatticeFunction::Derivative(LatticeFunction* lfnM, LatticeFunction* lfnP, d
 }
 
 LatticeFunctionTable::LatticeFunctionTable(AcceleratorModel* aModel, double refMomentum) :
-	theModel(aModel), p0(refMomentum), delta(1.0e-8), bendscale(1.0e-16), symplectify(false), orbitonly(true)
+	theModel(aModel), p0(refMomentum), delta(1.0e-8), bendscale(0), symplectify(false), orbitonly(true)
 {
 	UseDefaultFunctions();
 }
@@ -133,6 +133,11 @@ void LatticeFunctionTable::ScaleBendPathLength(double scale)
 void LatticeFunctionTable::MakeTMSymplectic(bool flag)
 {
 	symplectify = flag;
+}
+
+void LatticeFunctionTable::SetForceLongitudinalStability(bool enable)
+{
+	forcelongstab = enable;
 }
 
 void LatticeFunctionTable::AddFunction(int i, int j, int k)
@@ -216,10 +221,13 @@ public:
 		double v = 0;
 
 		lfn->GetIndices(i, j, k);
-                if((k==3) & !OKflag) {
-                    cout<<" Illegal attempt to calculate longitudinal lattice parameter with unstable motion"<<endl; 
-                    throw MerlinException();   
-                    }
+		if((k == 3) & !OKflag)
+		{
+			cout << " Illegal attempt to calculate longitudinal lattice parameter with unstable motion" << endl;
+			cout << " If your lattice has no RF cavities then consider using" << endl;
+			cout << " LatticeFunctionTable::SetForceLongitudinalStability(true)" << endl;
+			throw MerlinException();
+		}
 
 		if(i == 0 && j == 0 && k > 0)
 		{
@@ -333,6 +341,21 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		tm.SetDelta(delta);
 		tm.ScaleBendPathLength(cscale);
 		tm.FindTM(M, p);
+	}
+
+	if(forcelongstab)
+	{
+		cout << "SetForceLongitudinalStability enabled" << endl;
+		if(fabs(M(4, 4) - 1) > 1e-8)
+		{
+			cout << "R_55 not close to 1. Do you have RF enabled? Aborting" << endl;
+			exit(1);
+		}
+
+		cout << "Setting R_55 to 1 - 1e-12" << endl;
+		M(4, 4) = 1 - 1e-12;
+		MatrixForm(M, cout, OPFormat().precision(12).fixed());
+		cout << endl;
 	}
 
 	ComplexVector eigenvalues(3);
