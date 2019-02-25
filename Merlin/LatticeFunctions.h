@@ -50,6 +50,7 @@ public:
 	void SetDelta(double new_delta);
 	void MakeTMSymplectic(bool flag);
 	int NumberOfRows();
+	[[deprecated("Use the SetForceLongitudinalStability() option.")]]
 	void ScaleBendPathLength(double scale);
 
 	/** \brief Force longitudinal stability

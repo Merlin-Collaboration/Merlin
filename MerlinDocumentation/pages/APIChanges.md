@@ -9,6 +9,16 @@ user programs.
 
 ## Version 5.02 {#APIChanges502}
 
+### Deprecation of ScaleBendPathLength and RingDeltaTProcess
+
+For lattices with no RF the longitudinal part of the transfer matrix will be unstable, which prevents LatticeFunctionTable calculations from working. Previously by setting a bend scale, RingDeltaTProcess was used to adjust the ct particle coordinate make the dynamics stable. This however required finding a value of the bend scale that would work for a given lattice.
+
+This has now been replaced by a simpler option.
+
+LatticeFunctionTable::SetForceLongitudinalStability();
+
+This achieves the same by directly changing the R_55 transfer matrix element.
+
 ### RandomNG changes
 
 RandomNG has switched from using the internal ACG random number generator to the Mersenne Twister algorithm found in the C++11 standard library. There are only minor changes to the RandomNG api.
