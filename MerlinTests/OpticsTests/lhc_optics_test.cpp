@@ -76,30 +76,8 @@ int main(int argc, char* argv[])
 
 	unique_ptr<DataTable> mad_optics(DataTableReaderTFS(lattice_path).Read());
 
-	double bscale1 = 1e-22;
-
-	while(true)
-	{
-		cout << "Trying bend scale: " << bscale1 << endl;
-		twiss_table->ScaleBendPathLength(bscale1);
-		try
-		{
-			twiss_table->Calculate();
-			cout << "Success!" << endl;
-			break;
-		}
-		catch(MerlinException &e)
-		{
-			cout << "Adjusting bend scale" << endl;
-			bscale1 *= 2;
-		}
-
-		if(bscale1 > 1e-18)
-		{
-			cout << "Giving up" << endl;
-			exit(1);
-		}
-	}
+	twiss_table->SetForceLongitudinalStability(true);
+	twiss_table->Calculate();
 
 	cout << setprecision(9);
 
