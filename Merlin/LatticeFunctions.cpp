@@ -206,7 +206,7 @@ private:
 
 public:
 	CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N, bool eigenOK = true) :
-		s(_s), p(&_p), N(&_N), OKflag(eigenOK)
+		OKflag(eigenOK), s(_s), p(&_p), N(&_N)
 	{
 	}
 
