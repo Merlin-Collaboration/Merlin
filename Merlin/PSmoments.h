@@ -27,7 +27,7 @@ typedef TCovMtrx<double, 2> SigmaMatrix2D;
  */
 
 template<int N>
-class TPSMoments: public PSvector, public TCovMtrx<double, 2*N>
+class TPSMoments: public PSvector, public TCovMtrx<double, 2 * N>
 {
 public:
 

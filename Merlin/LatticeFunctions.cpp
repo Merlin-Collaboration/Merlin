@@ -199,13 +199,13 @@ public:
 struct CalculateLatticeFunction
 {
 private:
-        bool OKflag;
+	bool OKflag;
 	double s;
 	const Particle* p;
 	RealMatrix* N;
 
 public:
-	CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N,bool eigenOK=true) :
+	CalculateLatticeFunction(double _s, const Particle& _p, RealMatrix& _N, bool eigenOK = true) :
 		s(_s), p(&_p), N(&_N), OKflag(eigenOK)
 	{
 	}
@@ -216,10 +216,11 @@ public:
 		double v = 0;
 
 		lfn->GetIndices(i, j, k);
-                if((k==3) & !OKflag) {
-                    cout<<" Illegal attempt to calculate longitudinal lattice parameter with unstable motion"<<endl; 
-                    throw MerlinException();   
-                    }
+		if((k == 3) & !OKflag)
+		{
+			cout << " Illegal attempt to calculate longitudinal lattice parameter with unstable motion" << endl;
+			throw MerlinException();
+		}
 
 		if(i == 0 && j == 0 && k > 0)
 		{
@@ -305,7 +306,7 @@ void LatticeFunctionTable::CalculateEnergyDerivative()
 
 double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMatrix* MInit)
 {
-        int Ndim,Nsize;
+	int Ndim, Nsize;
 	for_each(lfnlist.begin(), lfnlist.end(), ClearLatticeFunction());
 
 	PSvector p(0);
@@ -341,9 +342,9 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 	{
 		Symplectify(M);
 	}
-	bool eigenOK=EigenSystem(M, eigenvalues, eigenvectors);
-        Ndim = eigenOK ? 3 : 2 ; // drop longitudinal dimension if not convergent
-        Nsize=2*Ndim ; 
+	bool eigenOK = EigenSystem(M, eigenvalues, eigenvectors);
+	Ndim = eigenOK ? 3 : 2;      // drop longitudinal dimension if not convergent
+	Nsize = 2 * Ndim;
 
 	int row, col;
 
@@ -359,7 +360,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 			R(row, 2 * col + 1) = 0.0;
 		}
 	}
-        
+
 	ofstream nfile("DataFiles/NormMatrix.dat");
 	MatrixForm(N, nfile, OPFormat().precision(6).fixed());
 
@@ -374,13 +375,11 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 		R(j, i) = -sin(theta);
 	}
 
-       
 	N = N * R;
 	nfile << endl;
 	MatrixForm(R, nfile, OPFormat().precision(6).fixed());
 	nfile << endl;
 	MatrixForm(N, nfile, OPFormat().precision(6).fixed());
-      
 
 	ParticleBunch* particle = new ParticleBunch(p0, 1.0);
 	particle->push_back(p);
@@ -457,7 +456,7 @@ double LatticeFunctionTable::DoCalculate(double cscale, PSvector* pInit, RealMat
 
 		N  = M21 * N;
 
-		for_each(lfnlist.begin(), lfnlist.end(), CalculateLatticeFunction(s, pref1, N,eigenOK));
+		for_each(lfnlist.begin(), lfnlist.end(), CalculateLatticeFunction(s, pref1, N, eigenOK));
 		if(isMore)
 		{
 			s += tracker.GetCurrentComponent().GetLength();

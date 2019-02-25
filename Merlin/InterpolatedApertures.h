@@ -13,8 +13,6 @@
 
 using namespace std;
 
-
-
 /**
  * Interpolated apertures utilize all four parameters and are inherently of rectellipse geometry
  */
@@ -66,6 +64,7 @@ public:
 		double ap2;
 		double ap3;
 		double ap4;
+
 	};
 
 	apStruct ApEntry;

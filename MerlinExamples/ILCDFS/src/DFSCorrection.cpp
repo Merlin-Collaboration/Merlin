@@ -54,7 +54,7 @@ DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
 
 	RealMatrix M0(nbpms, ncors, 0.0);
 	RealMatrix Mi(nbpms, ncors, 0.0);
-	RealMatrix M(nstates*nbpms, ncors, 0.0);
+	RealMatrix M(nstates * nbpms, ncors, 0.0);
 	refdata.reserve(nstates);
 
 	dfs_trace(dfs_trace::level_1) << "Constructing DFS model matrix" << endl;
@@ -86,7 +86,7 @@ DFSCorrection::DFSCorrection(const DFS_Segment &aSegment, Accelerator::Plane xy)
 	theEnergyAdjustmentPolicy->Restore();
 
 	// Set up weight vector for SVD
-	RealVector w(nstates*nbpms);
+	RealVector w(nstates * nbpms);
 	w[Range(0, nbpms - 1)] = w_abs;
 	w[Range(nbpms, nstates * nbpms - 1)] = w_diff;
 

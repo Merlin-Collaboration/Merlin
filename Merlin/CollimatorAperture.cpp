@@ -10,12 +10,13 @@
 #include "RandomNG.h"
 
 CollimatorAperture::CollimatorAperture(double w, double h, double t, double length, double x_off, double y_off) :
-	RectEllipseAperture(), alpha(t), CollimatorLength(length), x_offset_entry(x_off), y_offset_entry(y_off), x_offset_exit(0), y_offset_exit(
+	RectEllipseAperture(), alpha(t), CollimatorLength(length), x_offset_entry(x_off), y_offset_entry(y_off),
+	x_offset_exit(0), y_offset_exit(
 		0), w_entrance(w), h_entrance(h), w_exit(0), h_exit(0), cosalpha(cos(-t)), sinalpha(sin(-t))
 {
 	rectHalfX = w / 2;
 	rectHalfY = h / 2;
-	minDim = fmin(rectHalfX,rectHalfY);
+	minDim = fmin(rectHalfX, rectHalfY);
 	SetType("COLLIMATOR");
 }
 
@@ -131,7 +132,7 @@ UnalignedCollimatorAperture::UnalignedCollimatorAperture(double w, double h, dou
 {
 	rectHalfX = w / 2;
 	rectHalfY = h / 2;
-	minDim = fmin(rectHalfX,rectHalfY);
+	minDim = fmin(rectHalfX, rectHalfY);
 	SetType("UNALIGNED COLLIMATOR");
 }
 
@@ -166,7 +167,7 @@ OneSidedUnalignedCollimatorAperture::OneSidedUnalignedCollimatorAperture(double 
 {
 	rectHalfX = w / 2;
 	rectHalfY = h / 2;
-	minDim = fmin(rectHalfX,rectHalfY);
+	minDim = fmin(rectHalfX, rectHalfY);
 	SetType("ONE-SIDED COLLIMATOR");
 }
 

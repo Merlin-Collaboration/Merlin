@@ -300,7 +300,8 @@ public:
 	/**
 	 *  RectEllipseAperture override default constructor
 	 */
-	RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double ellipHalfY);
+	RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double
+		ellipHalfY);
 
 	/**
 	 *  RectEllipseAperture override of Aperture member function getType()
@@ -366,6 +367,7 @@ public:
 		double ap2;
 		double ap3;
 		double ap4;
+
 	};
 
 	ap ApertureEntry;

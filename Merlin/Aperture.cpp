@@ -31,33 +31,33 @@ Aperture::~Aperture()
 }
 
 Aperture::Aperture(string type, double s, double aper1) :
-		apType(type), latticelocation(s)
+	apType(type), latticelocation(s)
 {
 
 }
 
 Aperture::Aperture(string type, double s, double aper1, double aper2) :
-		apType(type), latticelocation(s)
+	apType(type), latticelocation(s)
 {
 
 }
 
 Aperture::Aperture(string type, double s, double aper1, double aper2, double aper3, double aper4) :
-		apType(type), latticelocation(s)
+	apType(type), latticelocation(s)
 {
 
 }
 
 CircularAperture::CircularAperture(double radius) :
-		radius(radius)
+	radius(radius)
 {
-	radius_sq = radius*radius;
+	radius_sq = radius * radius;
 }
 
 CircularAperture::CircularAperture(string type, double s, double radius) :
-		Aperture(type,s,radius), radius(radius)
+	Aperture(type, s, radius), radius(radius)
 {
-	radius_sq = radius*radius;
+	radius_sq = radius * radius;
 }
 
 string CircularAperture::GetType()
@@ -70,7 +70,7 @@ Aperture* CircularAperture::GetInstance(DataTableRow dt)
 {
 	//THIS SHOULD BE APER_3 ACCORDING TO MADX USER GUIDE, BUT
 	//CIRCLE APERTURE TWISS OUTPUT SEEMS TO PUT IT IN APER_1
-	if(dt.Get_d("APER_3")==0)
+	if(dt.Get_d("APER_3") == 0)
 		return new CircularAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_1"));
 	return new CircularAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_3"));
 }
@@ -88,17 +88,17 @@ inline bool CircularAperture::CheckWithinApertureBoundaries(double x, double y, 
 }
 
 RectangularAperture::RectangularAperture(double rectHalfX, double rectHalfY) :
-		rectHalfX(rectHalfX), rectHalfY(rectHalfY)
+	rectHalfX(rectHalfX), rectHalfY(rectHalfY)
 {
-	minDim = fmin(rectHalfX,rectHalfY);
-	maxDim = fmax(rectHalfX,rectHalfY);
+	minDim = fmin(rectHalfX, rectHalfY);
+	maxDim = fmax(rectHalfX, rectHalfY);
 }
 
 RectangularAperture::RectangularAperture(string type, double s, double rectHalfX, double rectHalfY) :
-		Aperture(type,s,rectHalfX,rectHalfY), rectHalfX(rectHalfX), rectHalfY(rectHalfY)
+	Aperture(type, s, rectHalfX, rectHalfY), rectHalfX(rectHalfX), rectHalfY(rectHalfY)
 {
-	minDim = fmin(rectHalfX,rectHalfY);
-	maxDim = fmax(rectHalfX,rectHalfY);
+	minDim = fmin(rectHalfX, rectHalfY);
+	maxDim = fmax(rectHalfX, rectHalfY);
 }
 
 string RectangularAperture::GetType()
@@ -127,11 +127,11 @@ inline bool RectangularAperture::CheckWithinApertureBoundaries(double x, double 
 EllipticalAperture::EllipticalAperture(string type, double s, double ellipHalfX, double ellipHalfY) :
 	Aperture(type, s, ellipHalfX, ellipHalfY), ellipHalfX(ellipHalfX), ellipHalfY(ellipHalfY)
 {
-	minDim = fmin(ellipHalfX,ellipHalfY);
-	maxDim = fmax(ellipHalfX,ellipHalfY);
-	ellipHalfX_sq = ellipHalfX*ellipHalfX;
-	ellipHalfY_sq = ellipHalfY*ellipHalfY;
-	ellipHalfX_sq_div_ellipHalfY_sq = ellipHalfX_sq/ellipHalfY_sq;
+	minDim = fmin(ellipHalfX, ellipHalfY);
+	maxDim = fmax(ellipHalfX, ellipHalfY);
+	ellipHalfX_sq = ellipHalfX * ellipHalfX;
+	ellipHalfY_sq = ellipHalfY * ellipHalfY;
+	ellipHalfX_sq_div_ellipHalfY_sq = ellipHalfX_sq / ellipHalfY_sq;
 }
 
 string EllipticalAperture::GetType()
@@ -143,7 +143,7 @@ string EllipticalAperture::GetType()
 Aperture* EllipticalAperture::GetInstance(DataTableRow dt)
 {
 	//SAME MAD-X TWISS OUT CONFUSION
-	if(dt.Get_d("APER_3")==0 && dt.Get_d("APER_4")==0)
+	if(dt.Get_d("APER_3") == 0 && dt.Get_d("APER_4") == 0)
 		return new EllipticalAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_1"), dt.Get_d("APER_2"));
 	return new EllipticalAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_3"), dt.Get_d("APER_4"));
 }
@@ -165,20 +165,21 @@ RectEllipseAperture::RectEllipseAperture()
 	//for collimator inheritence
 }
 
-RectEllipseAperture::RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double
-		ellipHalfY) :
+RectEllipseAperture::RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX,
+	double
+	ellipHalfY) :
 	Aperture(type, s, rectHalfX, rectHalfY, ellipHalfX, ellipHalfY), rectHalfX(rectHalfX), rectHalfY(rectHalfY),
 	ellipHalfX(ellipHalfX), ellipHalfY(ellipHalfY)
 {
 	minDim = min({rectHalfX, rectHalfY, ellipHalfX, ellipHalfY});
 	maxDim = max({rectHalfX, rectHalfY, ellipHalfX, ellipHalfY});
-	minRectDim = fmin(rectHalfX,rectHalfY);
-	maxRectDim = fmax(rectHalfX,rectHalfY);
-	minEllipDim = fmin(ellipHalfX,ellipHalfY);
-	maxEllipDim = fmax(ellipHalfX,ellipHalfY);
-	ellipHalfX_sq = ellipHalfX*ellipHalfX;
-	ellipHalfY_sq = ellipHalfY*ellipHalfY;
-	ellipHalfX_sq_div_ellipHalfY_sq = ellipHalfX_sq/ellipHalfY_sq;
+	minRectDim = fmin(rectHalfX, rectHalfY);
+	maxRectDim = fmax(rectHalfX, rectHalfY);
+	minEllipDim = fmin(ellipHalfX, ellipHalfY);
+	maxEllipDim = fmax(ellipHalfX, ellipHalfY);
+	ellipHalfX_sq = ellipHalfX * ellipHalfX;
+	ellipHalfY_sq = ellipHalfY * ellipHalfY;
+	ellipHalfX_sq_div_ellipHalfY_sq = ellipHalfX_sq / ellipHalfY_sq;
 }
 
 string RectEllipseAperture::GetType()
@@ -189,7 +190,8 @@ string RectEllipseAperture::GetType()
 
 Aperture* RectEllipseAperture::GetInstance(DataTableRow dt)
 {
-	return new RectEllipseAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_1"), dt.Get_d("APER_2"), dt.Get_d("APER_3"), dt.Get_d("APER_4"));
+	return new RectEllipseAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_1"), dt.Get_d("APER_2"),
+			   dt.Get_d("APER_3"), dt.Get_d("APER_4"));
 
 }
 
@@ -207,15 +209,16 @@ inline bool RectEllipseAperture::CheckWithinApertureBoundaries(double x, double 
 		return true;
 }
 
-OctagonalAperture::OctagonalAperture(string type, double s, double rectHalfX, double rectHalfY, double angle1, double angle2) :
+OctagonalAperture::OctagonalAperture(string type, double s, double rectHalfX, double rectHalfY, double angle1, double
+	angle2) :
 	Aperture(type, s, rectHalfX, rectHalfY, angle1, angle2), rectHalfX(rectHalfX), rectHalfY(rectHalfY), angle1(angle1),
 	angle2(angle2)
 {
-	minDim = fmin(rectHalfX,rectHalfY);
-	maxDim = fmax(rectHalfX,rectHalfY);
-	const1 = (rectHalfY*tan((pi/2)-angle2)-rectHalfX);
-	const2 = rectHalfX*tan(angle1);
-	const3 = rectHalfY-const2;
+	minDim = fmin(rectHalfX, rectHalfY);
+	maxDim = fmax(rectHalfX, rectHalfY);
+	const1 = (rectHalfY * tan((pi / 2) - angle2) - rectHalfX);
+	const2 = rectHalfX * tan(angle1);
+	const3 = rectHalfY - const2;
 }
 
 string OctagonalAperture::GetType()
@@ -226,7 +229,8 @@ string OctagonalAperture::GetType()
 
 Aperture* OctagonalAperture::GetInstance(DataTableRow dt)
 {
-	return new OctagonalAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_1"), dt.Get_d("APER_2"), dt.Get_d("APER_3"), dt.Get_d("APER_4"));
+	return new OctagonalAperture(dt.Get_s("APERTYPE"), dt.Get_d("S"), dt.Get_d("APER_1"), dt.Get_d("APER_2"), dt.Get_d(
+				   "APER_3"), dt.Get_d("APER_4"));
 
 }
 

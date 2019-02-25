@@ -380,7 +380,7 @@ int main(int argc, char* argv[])
 	//	TRACKING RUN
 	for(int turn = 1; turn <= nturns; turn++)
 	{
-   		cout << "Turn " << turn << "\tParticle number: " << myBunch->size() << endl;
+		cout << "Turn " << turn << "\tParticle number: " << myBunch->size() << endl;
 		tracker->Track(myBunch);
 		if(myBunch->size() <= 1)
 		{
