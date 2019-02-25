@@ -228,7 +228,7 @@ class InterpolatorFactory
 {
 public:
 	static map<string, getInterpolator> interpolatorTypes;
-	Aperture* GetInstance(DataTable);
+	static Aperture* GetInstance(DataTable);
 };
 
 class InterpolatorFactoryInitializer

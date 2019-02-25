@@ -495,7 +495,7 @@ public:
 	 * gets instance of input typename-specific Aperture, checks type against ApertureFactoryInitializer list
 	 * @return constructed Aperture pointer of assigned type
 	 */
-	Aperture* GetInstance(DataTableRow);
+	static Aperture* GetInstance(DataTableRow);
 };
 
 class ApertureFactoryInitializer

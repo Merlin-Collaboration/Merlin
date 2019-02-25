@@ -62,8 +62,6 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 	size_t noConfiguredApertures = 0;
 
 	Aperture* aperture;
-	ApertureFactory* factory;
-	InterpolatorFactory* interpfactory;
 
 	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp != Elements.end(); ++comp)
 	{
@@ -79,7 +77,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 			{
 				if((*dt).Get_d("S") >= Position)
 				{
-					aperture = factory->GetInstance(*dt);
+					aperture = ApertureFactory::GetInstance(*dt);
 					(*comp)->SetAperture(aperture);
 					++noConfiguredApertures;
 					break;
@@ -131,14 +129,14 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 					if(dt == ApertureDataTable.end())
 					{
 						++row;
-						dt == ApertureDataTable.begin();
+						dt = ApertureDataTable.begin();
 						ThisElementAperture.ApertureFromRow(*dt, row);
 					}
 					else
 					{
 						++row;
 						ThisElementAperture.ApertureFromRow(*dt, row);
-						dt == ApertureDataTable.end();
+						dt = ApertureDataTable.end();
 					}
 
 					//First do a little bit of cleaning
@@ -210,7 +208,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 						}
 						if(typeChange == false)
 						{
-							aperture = interpfactory->GetInstance(CleanElementAperture);
+							aperture = InterpolatorFactory::GetInstance(CleanElementAperture);
 							(*comp)->SetAperture(aperture);
 							++noConfiguredApertures;
 							break;
@@ -270,7 +268,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 									<< endl;
 								exit(EXIT_FAILURE);
 							}
-							aperture = interpfactory->GetInstance(CleanElementAperture);
+							aperture = InterpolatorFactory::GetInstance(CleanElementAperture);
 							(*comp)->SetAperture(aperture);
 							++noConfiguredApertures;
 							break;
@@ -279,7 +277,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 					else
 					{
 						DataTableRowIterator itr = CleanElementAperture.begin();
-						aperture = factory->GetInstance(*itr);
+						aperture = ApertureFactory::GetInstance(*itr);
 						(*comp)->SetAperture(aperture);
 						++noConfiguredApertures;
 						break;
