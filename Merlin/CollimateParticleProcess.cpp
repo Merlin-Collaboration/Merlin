@@ -645,10 +645,9 @@ void CollimateParticleProcess::DoOutput(const PSvectorArray& lostb, const list<s
 
 bool CollimateParticleProcess::DoScatter(Particle& p)
 {
-	const CollimatorAperture *tap = (CollimatorAperture *) currentComponent->GetAperture();
+	const Collimator* col = static_cast<Collimator*>(currentComponent);
 
-	//int scatter_type = currentBunch->Scatter(p,len,tap);
-	int scatter_type = currentBunch->Scatter(p, bin_size, tap);
+	int scatter_type = currentBunch->Scatter(p, bin_size, col);
 
 	if(scatter_type == 1)
 	{

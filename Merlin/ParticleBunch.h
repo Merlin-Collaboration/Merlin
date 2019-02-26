@@ -23,6 +23,7 @@ class BeamData; //#include "BeamData.h"
 #endif
 
 class Transform3D;
+class Collimator;
 using namespace PhysicalConstants;
 
 namespace ParticleTracking
@@ -208,7 +209,7 @@ public:
 	 * to enable the relevant physics for each particle type (protons, electrons,
 	 * etc).
 	 */
-	virtual int Scatter(Particle&, double length, const Aperture*)
+	virtual int Scatter(Particle&, double length, const Collimator*)
 	{
 		return 0;
 	}
