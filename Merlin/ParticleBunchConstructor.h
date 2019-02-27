@@ -58,8 +58,8 @@ public:
 	 * Constructor taking the beam data and the number of
 	 * particles to generate.
 	 */
-	[[deprecated("Use the ParticleBunch constructor directly.")]] ParticleBunchConstructor(const BeamData& beam, size_t
-		npart, DistributionType dist = normalDistribution);
+	[[gnu::deprecated("Use the ParticleBunch constructor directly.")]] ParticleBunchConstructor(const BeamData& beam,
+		size_t npart, DistributionType dist = normalDistribution);
 
 	~ParticleBunchConstructor();
 
