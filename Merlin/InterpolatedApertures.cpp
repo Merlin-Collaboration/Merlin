@@ -145,6 +145,23 @@ bool InterpolatedRectEllipseAperture::CheckWithinApertureBoundaries(double x, do
 	}
 }
 
+void InterpolatedRectEllipseAperture::printout(std::ostream& out) const
+{
+	out << "INTERPOLATEDRECTELLIPSE" << "(";
+	for(size_t n = 0; n < ApList.size(); n++)
+	{
+		out << ApList[n].s << " [";
+		out << ApList[n].ap1 << ", " << ApList[n].ap2 << ", " << ApList[n].ap3 << ", "
+			<< ApList[n].ap4;
+		out << "]";
+		if(n < ApList.size() - 1)
+		{
+			out << ", ";
+		}
+	}
+	out << ")";
+}
+
 InterpolatedCircularAperture::InterpolatedCircularAperture(DataTable dt) :
 	InterpolatedAperture(dt)
 {

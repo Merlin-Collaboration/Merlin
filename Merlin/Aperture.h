@@ -89,10 +89,7 @@ public:
 	 *  function to allow printing of all read apertures
 	 *  @param[in] out The stream to print
 	 */
-	void printout(std::ostream& out) const
-	{
-		out << apType;
-	}
+	virtual void printout(std::ostream& out) const;
 
 protected:
 
@@ -146,6 +143,7 @@ public:
 	//static Aperture* GetInstance(string type, double s, double aper1, double aper2, double aper3, double aper4);
 	static Aperture* GetInstance(DataTableRow);
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -192,14 +190,7 @@ public:
 		return rectHalfY;
 	}
 
-	/**
-	 *  function to allow printing of all read apertures
-	 *  @param[in] out The stream to print
-	 */
-	void printout(std::ostream& out) const
-	{
-		out << apType;
-	}
+	virtual void printout(std::ostream& out) const;
 
 	/**
 	 *  RectangularAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -274,6 +265,7 @@ public:
 	 */
 	static Aperture* GetInstance(DataTableRow);
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -374,6 +366,7 @@ public:
 
 	vector<ap> ApertureList;
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -462,6 +455,7 @@ public:
 	 */
 	static Aperture* GetInstance(DataTableRow);
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**

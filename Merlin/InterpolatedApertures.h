@@ -109,6 +109,8 @@ public:
 	 *  @return constructed Aperture pointer of assigned type RectangularAperture
 	 */
 	static Aperture* GetInstance(DataTable);
+
+	virtual void printout(std::ostream& out) const;
 };
 
 class InterpolatedCircularAperture: public InterpolatedAperture

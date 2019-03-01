@@ -48,6 +48,11 @@ Aperture::Aperture(string type, double s, double aper1, double aper2, double ape
 
 }
 
+void Aperture::printout(std::ostream& out) const
+{
+	out << apType;
+}
+
 CircularAperture::CircularAperture(double radius) :
 	radius(radius)
 {
@@ -87,6 +92,11 @@ inline bool CircularAperture::CheckWithinApertureBoundaries(double x, double y, 
 		return true;
 }
 
+void CircularAperture::printout(std::ostream& out) const
+{
+	out << apType << "(" << radius << ")";
+}
+
 RectangularAperture::RectangularAperture(double rectHalfX, double rectHalfY) :
 	rectHalfX(rectHalfX), rectHalfY(rectHalfY)
 {
@@ -124,6 +134,11 @@ inline bool RectangularAperture::CheckWithinApertureBoundaries(double x, double 
 		return true;
 }
 
+void RectangularAperture::printout(std::ostream& out) const
+{
+	out << apType << "(" << rectHalfX << ", " << rectHalfY << ")";
+}
+
 EllipticalAperture::EllipticalAperture(string type, double s, double ellipHalfX, double ellipHalfY) :
 	Aperture(type, s, ellipHalfX, ellipHalfY), ellipHalfX(ellipHalfX), ellipHalfY(ellipHalfY)
 {
@@ -158,6 +173,11 @@ inline bool EllipticalAperture::CheckWithinApertureBoundaries(double x, double y
 		return false;
 	else
 		return true;
+}
+
+void EllipticalAperture::printout(std::ostream& out) const
+{
+	out << apType << "(" << ellipHalfX << ", " << ellipHalfY << ")";
 }
 
 RectEllipseAperture::RectEllipseAperture()
@@ -209,6 +229,11 @@ inline bool RectEllipseAperture::CheckWithinApertureBoundaries(double x, double 
 		return true;
 }
 
+void RectEllipseAperture::printout(std::ostream& out) const
+{
+	out << apType << "(" << rectHalfX << ", " << rectHalfY << ", " << ellipHalfX << ", " << ellipHalfY << ")";
+}
+
 OctagonalAperture::OctagonalAperture(string type, double s, double rectHalfX, double rectHalfY, double angle1, double
 	angle2) :
 	Aperture(type, s, rectHalfX, rectHalfY, angle1, angle2), rectHalfX(rectHalfX), rectHalfY(rectHalfY), angle1(angle1),
@@ -246,6 +271,11 @@ inline bool OctagonalAperture::CheckWithinApertureBoundaries(double x, double y,
 	if(const1 * (ay - const2) - const3 * (ax - rectHalfX) <= 0)
 		return false;
 	return true;
+}
+
+void OctagonalAperture::printout(std::ostream& out) const
+{
+	out << apType << "(" << rectHalfX << ", " << rectHalfY << ", " << angle1 << ", " << angle2 << ")";
 }
 
 Aperture* ApertureFactory::GetInstance(DataTableRow dt)
