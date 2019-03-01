@@ -9,6 +9,11 @@ user programs.
 
 ## Version 5.02 {#APIChanges502}
 
+### Behaviour change in LatticeFunctionTable
+
+Behaviour of calling LatticeFunctionTable::Calculate() has changed in the case where the longitudinal motion is unstable (for example lattices without RF). Previously it would return a table, but some of the values would be invalid (NaN). Now it will throw a MerlinException if you try to calculate a function using non transverse terms. If you were previously checking the content of the table for NaNs, you should now use a try/catch block to catch the error. Also see LatticeFunctionTable::SetForceLongitudinalStability() which can simplify the process of dealing with lattices without RF.
+
+
 ### Deprecation of ScaleBendPathLength and RingDeltaTProcess
 
 For lattices with no RF the longitudinal part of the transfer matrix will be unstable, which prevents LatticeFunctionTable calculations from working. Previously by setting a bend scale, RingDeltaTProcess was used to adjust the ct particle coordinate make the dynamics stable. This however required finding a value of the bend scale that would work for a given lattice.
