@@ -16,7 +16,7 @@ cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 PROJECT(MERLIN)
 
 OPTION(ENABLE_EXAMPLES "Build the example programs. Default ON" ON)
-OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" OFF)
+OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" ON)
 OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(ENABLE_MPI "Use MPI where possible. Default OFF" OFF)
