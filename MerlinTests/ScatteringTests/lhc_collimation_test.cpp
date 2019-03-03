@@ -173,29 +173,8 @@ int main(int argc, char* argv[])
 	twiss->AddFunction(6, 6, 3);
 
 	// find twiss
-	double bscale1 = 1e-22;
-	while(true)
-	{
-		cout << "Trying bend scale: " << bscale1 << endl;
-		twiss->ScaleBendPathLength(bscale1);
-		try
-		{
-			twiss->Calculate();
-			cout << "Success!" << endl;
-			break;
-		}
-		catch(MerlinException &e)
-		{
-			cout << "Adjusting bend scale" << endl;
-			bscale1 *= 2;
-		}
-
-		if(bscale1 > 1e-18)
-		{
-			cout << "Giving up" << endl;
-			exit(1);
-		}
-	}
+	twiss->SetForceLongitudinalStability(true);
+	twiss->Calculate();
 
 	// FLAG to set an automatically matching between beam envelope and collimator taper
 	collimator_db->MatchBeamEnvelope(false);
@@ -377,10 +356,10 @@ int main(int argc, char* argv[])
 		tracker->AddProcess(myCollimateProcess);
 	}
 
-	//	TRACKING RUN
+	// TRACKING RUN
 	for(int turn = 1; turn <= nturns; turn++)
 	{
-   		cout << "Turn " << turn << "\tParticle number: " << myBunch->size() << endl;
+		cout << "Turn " << turn << "\tParticle number: " << myBunch->size() << endl;
 		tracker->Track(myBunch);
 		if(myBunch->size() <= 1)
 		{

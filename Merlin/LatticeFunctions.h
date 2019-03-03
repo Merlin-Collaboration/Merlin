@@ -50,7 +50,18 @@ public:
 	void SetDelta(double new_delta);
 	void MakeTMSymplectic(bool flag);
 	int NumberOfRows();
+	[[gnu::deprecated("Use the SetForceLongitudinalStability() option.")]]
 	void ScaleBendPathLength(double scale);
+
+	/** \brief Force longitudinal stability
+	 *
+	 * For lattices with no RF this can be used to force the longitudinal
+	 * block of the transfer matrix to be stable by setting R_55 to just
+	 * below 1.
+	 *
+	 * This only effects LatticeFunction calculations, not any other tracking.
+	 */
+	void SetForceLongitudinalStability(bool enable = true);
 	double Mean(int i, int j, int k, int n1 = 0, int n2 = -1);
 	double RMS(int i, int j, int k, int n1 = 0, int n2 = -1);
 
@@ -61,6 +72,7 @@ private:
 	double bendscale;
 	bool symplectify;
 	bool orbitonly;
+	bool forcelongstab = false;
 
 	vectorlfn lfnlist;
 

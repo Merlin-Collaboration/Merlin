@@ -16,6 +16,12 @@
 namespace ParticleTracking
 {
 
+/** \brief Should not be used in new code
+ *
+ * Old method for forcing longitudinal stability in order to calculate
+ * lattice functions. LatticeFunctionTable now offers a SetForceLongitudinalStability()
+ * option that should be used instead. This class will be deprecated in the future.
+ */
 class RingDeltaTProcess: public ParticleBunchProcess
 {
 public:

@@ -79,9 +79,33 @@ void DataTable::ApertureFromRow(DataTableRow dtrow,size_t row)
 	this->Set_d("APER_4",row,dtrow.Get_d("APER_4"));
 }
 
+DataTable::location DataTable::get_location(const std::string &col_name) const
+{
+	try
+	{
+		return lookup.at(col_name);
+	}
+	catch(std::out_of_range &e)
+	{
+		throw std::out_of_range("DataTable: Could not find column: " + col_name);
+	}
+}
+
+DataTable::location DataTable::get_hlocation(const std::string &hcol_name) const
+{
+	try
+	{
+		return hlookup.at(hcol_name);
+	}
+	catch(std::out_of_range &e)
+	{
+		throw std::out_of_range("DataTable: Could not find header column: " + hcol_name);
+	}
+}
+
 double DataTable::Get_d(const std::string col_name, size_t i) const
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	if(l.type != 'd')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a double");
@@ -91,7 +115,7 @@ double DataTable::Get_d(const std::string col_name, size_t i) const
 
 int DataTable::Get_i(const std::string col_name, size_t i) const
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	if(l.type != 'i')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a int");
@@ -101,7 +125,7 @@ int DataTable::Get_i(const std::string col_name, size_t i) const
 
 std::string DataTable::Get_s(const std::string col_name, size_t i) const
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	if(l.type != 's')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a string");
@@ -111,7 +135,7 @@ std::string DataTable::Get_s(const std::string col_name, size_t i) const
 
 void DataTable::Set(const std::string col_name, size_t i, double x)
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	if(l.type != 'd')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a double");
@@ -121,7 +145,7 @@ void DataTable::Set(const std::string col_name, size_t i, double x)
 
 void DataTable::Set(const std::string col_name, size_t i, int x)
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	if(l.type != 'i')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a int");
@@ -131,7 +155,7 @@ void DataTable::Set(const std::string col_name, size_t i, int x)
 
 void DataTable::Set(const std::string col_name, size_t i, std::string x)
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	if(l.type != 's')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a string");
@@ -141,7 +165,7 @@ void DataTable::Set(const std::string col_name, size_t i, std::string x)
 
 void DataTable::SetWithStr(const std::string col_name, size_t i, std::string x)
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	switch(l.type)
 	{
 	case 'd':
@@ -160,7 +184,7 @@ void DataTable::SetWithStr(const std::string col_name, size_t i, std::string x)
 
 std::string DataTable::GetAsStr(const std::string col_name, size_t i) const
 {
-	location l = lookup.at(col_name);
+	location l = get_location(col_name);
 	switch(l.type)
 	{
 	case 'd':
@@ -213,7 +237,7 @@ void DataTable::HeaderAddColumn(std::string col_name, char type)
 
 double DataTable::HeaderGet_d(const std::string col_name) const
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	if(l.type != 'd')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a double");
@@ -223,7 +247,7 @@ double DataTable::HeaderGet_d(const std::string col_name) const
 
 int DataTable::HeaderGet_i(const std::string col_name) const
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	if(l.type != 'i')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a int");
@@ -233,7 +257,7 @@ int DataTable::HeaderGet_i(const std::string col_name) const
 
 std::string DataTable::HeaderGet_s(const std::string col_name) const
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	if(l.type != 's')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a string");
@@ -243,7 +267,7 @@ std::string DataTable::HeaderGet_s(const std::string col_name) const
 
 void DataTable::HeaderSet(const std::string col_name, double x)
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	if(l.type != 'd')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a double");
@@ -253,7 +277,7 @@ void DataTable::HeaderSet(const std::string col_name, double x)
 
 void DataTable::HeaderSet(const std::string col_name, int x)
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	if(l.type != 'i')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a int");
@@ -263,7 +287,7 @@ void DataTable::HeaderSet(const std::string col_name, int x)
 
 void DataTable::HeaderSet(const std::string col_name, std::string x)
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	if(l.type != 's')
 	{
 		throw WrongTypeException("Column '" + col_name + "' is not a string");
@@ -273,7 +297,7 @@ void DataTable::HeaderSet(const std::string col_name, std::string x)
 
 void DataTable::HeaderSetWithStr(const std::string col_name, std::string x)
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	switch(l.type)
 	{
 	case 'd':
@@ -292,7 +316,7 @@ void DataTable::HeaderSetWithStr(const std::string col_name, std::string x)
 
 std::string DataTable::HeaderGetAsStr(const std::string col_name) const
 {
-	location l = hlookup.at(col_name);
+	location l = get_hlocation(col_name);
 	switch(l.type)
 	{
 	case 'd':
