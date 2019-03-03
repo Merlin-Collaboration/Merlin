@@ -72,12 +72,16 @@ protected:
 	std::unordered_map<std::string, location> lookup;
 	size_t length;
 
+	location get_location(const std::string &col_name) const;
+
 	// Header values
 	std::vector<double> hdata_d;
 	std::vector<int> hdata_i;
 	std::vector<std::string> hdata_s;
 	std::vector<std::string> hcol_names;
 	std::unordered_map<std::string, location> hlookup;
+
+	location get_hlocation(const std::string &col_name) const;
 
 public:
 	/// Construct an empty DataTable.
