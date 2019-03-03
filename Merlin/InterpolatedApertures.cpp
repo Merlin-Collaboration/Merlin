@@ -76,7 +76,7 @@ Aperture* InterpolatedRectEllipseAperture::GetInstance(DataTable dt)
 
 string InterpolatedRectEllipseAperture::GetType()
 {
-	return "ELLIPSE-interpolated";
+	return "RECTELLIPSE-interpolated";
 }
 
 bool InterpolatedRectEllipseAperture::CheckWithinApertureBoundaries(double x, double y, double z) const
@@ -291,7 +291,7 @@ Aperture* InterpolatedEllipticalAperture::GetInstance(DataTable dt)
 
 string InterpolatedEllipticalAperture::GetType()
 {
-	return "CIRCLE-interpolated";
+	return "ELLIPSE-interpolated";
 }
 
 bool InterpolatedEllipticalAperture::CheckWithinApertureBoundaries(double x, double y, double z) const

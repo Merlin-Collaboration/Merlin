@@ -82,6 +82,7 @@ void testInterpolatedApertureFactory()
 {
 	InterpolatorFactory intfactory;
 	DataTable dt;
+	DataTable dt2;
 
 	dt.AddColumn("APERTYPE", 's');
 	dt.AddColumn("S", 'd');
@@ -92,6 +93,16 @@ void testInterpolatedApertureFactory()
 	dt.AddColumn("APER_4", 'd');
 	dt.AddRow();
 	dt.AddRow();
+
+	dt2.AddColumn("APERTYPE", 's');
+	dt2.AddColumn("S", 'd');
+	dt2.AddColumn("L", 'd');
+	dt2.AddColumn("APER_1", 'd');
+	dt2.AddColumn("APER_2", 'd');
+	dt2.AddColumn("APER_3", 'd');
+	dt2.AddColumn("APER_4", 'd');
+	dt2.AddRow();
+	dt2.AddRow();
 
 	dt.Set("APERTYPE", 0, "RECTELLIPSE");
 	dt.Set_d("S", 0, 1);
@@ -108,15 +119,26 @@ void testInterpolatedApertureFactory()
 	dt.Set_d("APER_3", 1, 2);
 	dt.Set_d("APER_4", 1, 2);
 
-	Aperture* apInt = intfactory.GetInstance(dt);
+	dt2.Set("APERTYPE", 0, "CIRCLE");
+	dt2.Set_d("S", 0, 1);
+	dt2.Set_d("L", 0, 1);
+	dt2.Set_d("APER_1", 0, 1);
+	dt2.Set("APERTYPE", 1, "CIRCLE");
+	dt2.Set_d("S", 1, 2);
+	dt2.Set_d("L", 1, 2);
+	dt2.Set_d("APER_1", 1, 2);
 
-	assert(apInt->GetType() == "RECTELLIPSEinterpolated");
+	Aperture* apInt = intfactory.GetInstance(dt);
+	Aperture* apInt2 = intfactory.GetInstance(dt2);
+
+	assert(apInt->GetType() == "RECTELLIPSE-interpolated");
+	assert(apInt2->GetType() == "CIRCLE-interpolated");
 }
 
 int main(int argc, char* argv[])
 {
 	testApertureFactory();
-	//testInterpolatedApertureFactory();
+	testInterpolatedApertureFactory();
 	testCollimatorAperture();
 	cout << "all aperture tests successful" << endl;
 }
