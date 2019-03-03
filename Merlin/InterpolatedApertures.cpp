@@ -49,17 +49,17 @@ void InterpolatedAperture::ConvertToStruct(DataTable dt)
 {
 	for(size_t row = 0; row < dt.Length(); ++row)
 	{
-		ApEntry.s = dt.Get_d("S",row);
-		ApEntry.ap1 = dt.Get_d("APER_1",row);
-		ApEntry.ap2 = dt.Get_d("APER_2",row);
-		ApEntry.ap3 = dt.Get_d("APER_3",row);
-		ApEntry.ap4 = dt.Get_d("APER_4",row);
+		ApEntry.s = dt.Get_d("S", row);
+		ApEntry.ap1 = dt.Get_d("APER_1", row);
+		ApEntry.ap2 = dt.Get_d("APER_2", row);
+		ApEntry.ap3 = dt.Get_d("APER_3", row);
+		ApEntry.ap4 = dt.Get_d("APER_4", row);
 		ApList.push_back(ApEntry);
 	}
 }
 
-InterpolatedRectEllipseAperture::InterpolatedRectEllipseAperture(DataTable dt):
-				InterpolatedAperture(dt)
+InterpolatedRectEllipseAperture::InterpolatedRectEllipseAperture(DataTable dt) :
+	InterpolatedAperture(dt)
 {
 
 }
@@ -86,7 +86,6 @@ bool InterpolatedRectEllipseAperture::CheckWithinApertureBoundaries(double x, do
 	double ax = fabs(x);
 	double ay = fabs(y);
 
-
 	if(z < 0)
 	{
 		z = 0;
@@ -102,7 +101,8 @@ bool InterpolatedRectEllipseAperture::CheckWithinApertureBoundaries(double x, do
 		}
 	}
 
-	double minDim = min({apFront.ap1, apFront.ap2, apFront.ap3, apFront.ap4, apFront.ap1, apBack.ap2, apBack.ap3, apBack.ap4});
+	double minDim = min({apFront.ap1, apFront.ap2, apFront.ap3, apFront.ap4, apFront.ap1, apBack.ap2, apBack.ap3,
+						 apBack.ap4});
 	if(ax + ay < minDim)
 	{
 		return true;
@@ -131,7 +131,7 @@ bool InterpolatedRectEllipseAperture::CheckWithinApertureBoundaries(double x, do
 	double ellipse_half_vertical = (g4 * z) + c4;
 
 	if(((x * x) / (ellipse_half_horizontal * ellipse_half_horizontal)) + ((y * y) / (ellipse_half_vertical
-			* ellipse_half_vertical)) > 1)
+		* ellipse_half_vertical)) > 1)
 	{
 		return 0;
 	}
@@ -145,8 +145,25 @@ bool InterpolatedRectEllipseAperture::CheckWithinApertureBoundaries(double x, do
 	}
 }
 
-InterpolatedCircularAperture::InterpolatedCircularAperture(DataTable dt):
-				InterpolatedAperture(dt)
+void InterpolatedRectEllipseAperture::printout(std::ostream& out) const
+{
+	out << "INTERPOLATEDRECTELLIPSE" << "(";
+	for(size_t n = 0; n < ApList.size(); n++)
+	{
+		out << ApList[n].s << " [";
+		out << ApList[n].ap1 << ", " << ApList[n].ap2 << ", " << ApList[n].ap3 << ", "
+			<< ApList[n].ap4;
+		out << "]";
+		if(n < ApList.size() - 1)
+		{
+			out << ", ";
+		}
+	}
+	out << ")";
+}
+
+InterpolatedCircularAperture::InterpolatedCircularAperture(DataTable dt) :
+	InterpolatedAperture(dt)
 {
 
 }
@@ -201,7 +218,6 @@ bool InterpolatedCircularAperture::CheckWithinApertureBoundaries(double x, doubl
 			apFront.s = ApList[n].s;
 			apFront.ap1 = ApList[n].ap1;
 
-
 			double minDim = min({apFront.ap1, apBack.ap1});
 			if(ax + ay < minDim)
 			{
@@ -229,12 +245,11 @@ bool InterpolatedCircularAperture::CheckWithinApertureBoundaries(double x, doubl
 			for(size_t m = 0; m < ApList.size(); m++)
 			{
 				cout << "Entry " << m << " - z = " << ApList[m].s << "\t" << ApList[m].ap1
-						<< endl;
+					 << endl;
 			}
 			abort();
 		}
 	}
-
 
 	//We now have the aperture before and after the particle.
 	//It must now be calculated at the point where the particle is currently.
@@ -258,8 +273,8 @@ bool InterpolatedCircularAperture::CheckWithinApertureBoundaries(double x, doubl
 	return x * x + y * y < r2;
 }
 
-InterpolatedEllipticalAperture::InterpolatedEllipticalAperture(DataTable dt):
-				InterpolatedAperture(dt)
+InterpolatedEllipticalAperture::InterpolatedEllipticalAperture(DataTable dt) :
+	InterpolatedAperture(dt)
 {
 
 }
@@ -341,7 +356,7 @@ bool InterpolatedEllipticalAperture::CheckWithinApertureBoundaries(double x, dou
 			for(size_t m = 0; m < ApList.size(); m++)
 			{
 				cout << "Entry " << m << " - z = " << ApList[m].s << "\t" << ApList[m].ap1
-						<< endl;
+					 << endl;
 			}
 			abort();
 		}
@@ -364,7 +379,7 @@ bool InterpolatedEllipticalAperture::CheckWithinApertureBoundaries(double x, dou
 	double ellipse_half_vertical = (g2 * z) + c2;
 
 	if(((x * x) / (ellipse_half_horizontal * ellipse_half_horizontal)) + ((y * y) / (ellipse_half_vertical
-			* ellipse_half_vertical)) > 1)
+		* ellipse_half_vertical)) > 1)
 	{
 		return 0;
 	}
@@ -374,8 +389,8 @@ bool InterpolatedEllipticalAperture::CheckWithinApertureBoundaries(double x, dou
 	}
 }
 
-InterpolatedOctagonalAperture::InterpolatedOctagonalAperture(DataTable dt):
-				InterpolatedAperture(dt)
+InterpolatedOctagonalAperture::InterpolatedOctagonalAperture(DataTable dt) :
+	InterpolatedAperture(dt)
 {
 
 }
@@ -458,9 +473,9 @@ bool InterpolatedOctagonalAperture::CheckWithinApertureBoundaries(double x, doub
 	//This is just taken from trrun.f90 in MAD-X. - credit to: 2015-Feb-20  18:42:26  ghislain: added octagon shape
 
 	/*
-		   !*** case of octagon: test outer rectangle (ap1,ap2) then test cut corner.
-		   lost =  x .gt. ap1 .or. y .gt. ap2 .or. &
-		     (ap2*tan(pi/2 - ap4) - ap1)*(y - ap1*tan(ap3)) - (ap2 - ap1*tan(ap3))*(x - ap1) .lt. zero
+	       !*** case of octagon: test outer rectangle (ap1,ap2) then test cut corner.
+	       lost =  x .gt. ap1 .or. y .gt. ap2 .or. &
+	         (ap2*tan(pi/2 - ap4) - ap1)*(y - ap1*tan(ap3)) - (ap2 - ap1*tan(ap3))*(x - ap1) .lt. zero
 	 */
 	double fabsx = fabs(x);
 	double fabsy = fabs(y);
@@ -481,7 +496,7 @@ bool InterpolatedOctagonalAperture::CheckWithinApertureBoundaries(double x, doub
 
 Aperture* InterpolatorFactory::GetInstance(DataTable dt)
 {
-	map<string, getInterpolator>::iterator itr = interpolatorTypes.find(dt.Get_s("APERTYPE",0));
+	map<string, getInterpolator>::iterator itr = interpolatorTypes.find(dt.Get_s("APERTYPE", 0));
 	if(itr != interpolatorTypes.end())
 	{
 		return (*itr->second)(dt);

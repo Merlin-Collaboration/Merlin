@@ -13,8 +13,6 @@
 
 using namespace std;
 
-
-
 /**
  * Interpolated apertures utilize all four parameters and are inherently of rectellipse geometry
  */
@@ -66,6 +64,7 @@ public:
 		double ap2;
 		double ap3;
 		double ap4;
+
 	};
 
 	apStruct ApEntry;
@@ -110,6 +109,8 @@ public:
 	 *  @return constructed Aperture pointer of assigned type RectangularAperture
 	 */
 	static Aperture* GetInstance(DataTable);
+
+	virtual void printout(std::ostream& out) const;
 };
 
 class InterpolatedCircularAperture: public InterpolatedAperture
@@ -229,7 +230,7 @@ class InterpolatorFactory
 {
 public:
 	static map<string, getInterpolator> interpolatorTypes;
-	Aperture* GetInstance(DataTable);
+	static Aperture* GetInstance(DataTable);
 };
 
 class InterpolatorFactoryInitializer

@@ -258,7 +258,7 @@ void CollimateParticleProcess::DoCollimation()
 
 	if(is_collimator)
 	{
-		for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); )
+		for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end();)
 		{
 			(*p).x() -= bin_size * (*p).xp();
 			(*p).y() -= bin_size * (*p).yp();
@@ -266,7 +266,7 @@ void CollimateParticleProcess::DoCollimation()
 		}
 	}
 
-	for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); )
+	for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end();)
 	{
 		// If we are collimating at the end of the element, track back a drift
 		// Do not do this at the start of the element.
@@ -381,7 +381,7 @@ void CollimateParticleProcess::DoCollimation()
 
 				double IntegratedLength = LostParticleTracker->GetIntegratedLength();
 				//Now loop over each particle in turn
-				for(PSvectorArray::iterator p = LostBunch->begin(); p != LostBunch->end(); )
+				for(PSvectorArray::iterator p = LostBunch->begin(); p != LostBunch->end();)
 				{
 					//Check if the particle is outside the aperture
 					//s, is where the integrator will start
@@ -645,10 +645,9 @@ void CollimateParticleProcess::DoOutput(const PSvectorArray& lostb, const list<s
 
 bool CollimateParticleProcess::DoScatter(Particle& p)
 {
-	const CollimatorAperture *tap = (CollimatorAperture *) currentComponent->GetAperture();
+	const Collimator* col = static_cast<Collimator*>(currentComponent);
 
-	//int scatter_type = currentBunch->Scatter(p,len,tap);
-	int scatter_type = currentBunch->Scatter(p, bin_size, tap);
+	int scatter_type = currentBunch->Scatter(p, bin_size, col);
 
 	if(scatter_type == 1)
 	{

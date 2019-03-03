@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
 	dt.AddColumn("APER_2", 'd');
 	dt.AddColumn("APER_3", 'd');
 	dt.AddColumn("APER_4", 'd');
-	dt.AddColumn("APERTYPE",'s');
-	dt.AddRow(0.0, 21 * millimeter, 100 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	dt.AddColumn("APERTYPE", 's');
+	dt.AddRow(0.0, 21 * millimeter, 100 * millimeter, 0.0, 0.0, "RECTELLIPSE");
 	DataTableRowIterator itr = dt.begin();
 	Aperture* rect_app = factory.GetInstance(*itr);
 	ctor->AppendComponent(*drift);
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 	//
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	dt.AddRow(0.0, 35 * millimeter, 35 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	dt.AddRow(0.0, 35 * millimeter, 35 * millimeter, 0.0, 0.0, "RECTELLIPSE");
 	itr++;
 	Aperture* rect_app1 = factory.GetInstance(*itr);
 	drift->SetAperture(rect_app1);
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	dt.AddRow(0.0, 35 * millimeter, 25 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	dt.AddRow(0.0, 35 * millimeter, 25 * millimeter, 0.0, 0.0, "RECTELLIPSE");
 	itr++;
 	Aperture* rect_app2 = factory.GetInstance(*itr);
 	drift->SetAperture(rect_app2);
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
 
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	dt.AddRow(0.0, 25 * millimeter, 35 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	dt.AddRow(0.0, 25 * millimeter, 35 * millimeter, 0.0, 0.0, "RECTELLIPSE");
 	itr++;
 	Aperture* rect_app3 = factory.GetInstance(*itr);
 	drift->SetAperture(rect_app3);
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 
 	pcoords2 = pcoords;
 	test_bunch = new ProtonBunch(beam_energy, 1, pcoords2);
-	dt.AddRow(0.0, 15 * millimeter, 15 * millimeter, 0.0, 0.0,"RECTELLIPSE");
+	dt.AddRow(0.0, 15 * millimeter, 15 * millimeter, 0.0, 0.0, "RECTELLIPSE");
 	itr++;
 	Aperture* rect_app4 = factory.GetInstance(*itr);
 	drift->SetAperture(rect_app4);

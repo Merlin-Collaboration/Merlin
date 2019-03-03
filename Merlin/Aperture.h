@@ -89,10 +89,7 @@ public:
 	 *  function to allow printing of all read apertures
 	 *  @param[in] out The stream to print
 	 */
-	void printout(std::ostream& out) const
-	{
-		out << apType;
-	}
+	virtual void printout(std::ostream& out) const;
 
 protected:
 
@@ -146,6 +143,7 @@ public:
 	//static Aperture* GetInstance(string type, double s, double aper1, double aper2, double aper3, double aper4);
 	static Aperture* GetInstance(DataTableRow);
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -192,14 +190,7 @@ public:
 		return rectHalfY;
 	}
 
-	/**
-	 *  function to allow printing of all read apertures
-	 *  @param[in] out The stream to print
-	 */
-	void printout(std::ostream& out) const
-	{
-		out << apType;
-	}
+	virtual void printout(std::ostream& out) const;
 
 	/**
 	 *  RectangularAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -274,6 +265,7 @@ public:
 	 */
 	static Aperture* GetInstance(DataTableRow);
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -300,7 +292,8 @@ public:
 	/**
 	 *  RectEllipseAperture override default constructor
 	 */
-	RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double ellipHalfY);
+	RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double
+		ellipHalfY);
 
 	/**
 	 *  RectEllipseAperture override of Aperture member function getType()
@@ -366,12 +359,14 @@ public:
 		double ap2;
 		double ap3;
 		double ap4;
+
 	};
 
 	ap ApertureEntry;
 
 	vector<ap> ApertureList;
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -460,6 +455,7 @@ public:
 	 */
 	static Aperture* GetInstance(DataTableRow);
 
+	virtual void printout(std::ostream& out) const;
 protected:
 
 	/**
@@ -493,7 +489,7 @@ public:
 	 * gets instance of input typename-specific Aperture, checks type against ApertureFactoryInitializer list
 	 * @return constructed Aperture pointer of assigned type
 	 */
-	Aperture* GetInstance(DataTableRow);
+	static Aperture* GetInstance(DataTableRow);
 };
 
 class ApertureFactoryInitializer

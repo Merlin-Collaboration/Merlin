@@ -14,7 +14,6 @@
 #include "MADInterface.h"
 #include "ApertureConfiguration.h"
 
-
 void testCollimatorAperture()
 {
 	double x_size_entrance = 0.1;
@@ -55,7 +54,7 @@ void testApertureFactory()
 {
 	ApertureFactory factory;
 	DataTable dt;
-	dt.AddColumn("APERTYPE",'s');
+	dt.AddColumn("APERTYPE", 's');
 	dt.AddColumn("S", 'd');
 	dt.AddColumn("L", 'd');
 	dt.AddColumn("APER_1", 'd');
@@ -65,12 +64,12 @@ void testApertureFactory()
 	dt.AddRow();
 
 	dt.Set("APERTYPE", 0, "RECTELLIPSE");
-	dt.Set_d("S",0,1);
-	dt.Set_d("L",0,1);
-	dt.Set_d("APER_1",0,1);
-	dt.Set_d("APER_2",0,1);
-	dt.Set_d("APER_3",0,1);
-	dt.Set_d("APER_4",0,1);
+	dt.Set_d("S", 0, 1);
+	dt.Set_d("L", 0, 1);
+	dt.Set_d("APER_1", 0, 1);
+	dt.Set_d("APER_2", 0, 1);
+	dt.Set_d("APER_3", 0, 1);
+	dt.Set_d("APER_4", 0, 1);
 
 	DataTableRowIterator itr = dt.begin();
 	Aperture* ap = factory.GetInstance(*itr);
@@ -84,7 +83,7 @@ void testInterpolatedApertureFactory()
 	InterpolatorFactory intfactory;
 	DataTable dt;
 
-	dt.AddColumn("APERTYPE",'s');
+	dt.AddColumn("APERTYPE", 's');
 	dt.AddColumn("S", 'd');
 	dt.AddColumn("L", 'd');
 	dt.AddColumn("APER_1", 'd');
@@ -95,19 +94,19 @@ void testInterpolatedApertureFactory()
 	dt.AddRow();
 
 	dt.Set("APERTYPE", 0, "RECTELLIPSE");
-	dt.Set_d("S",0,1);
-	dt.Set_d("L",0,1);
-	dt.Set_d("APER_1",0,1);
-	dt.Set_d("APER_2",0,1);
-	dt.Set_d("APER_3",0,1);
-	dt.Set_d("APER_4",0,1);
+	dt.Set_d("S", 0, 1);
+	dt.Set_d("L", 0, 1);
+	dt.Set_d("APER_1", 0, 1);
+	dt.Set_d("APER_2", 0, 1);
+	dt.Set_d("APER_3", 0, 1);
+	dt.Set_d("APER_4", 0, 1);
 	dt.Set("APERTYPE", 1, "RECTELLIPSE");
-	dt.Set_d("S",1,2);
-	dt.Set_d("L",1,2);
-	dt.Set_d("APER_1",1,2);
-	dt.Set_d("APER_2",1,2);
-	dt.Set_d("APER_3",1,2);
-	dt.Set_d("APER_4",1,2);
+	dt.Set_d("S", 1, 2);
+	dt.Set_d("L", 1, 2);
+	dt.Set_d("APER_1", 1, 2);
+	dt.Set_d("APER_2", 1, 2);
+	dt.Set_d("APER_3", 1, 2);
+	dt.Set_d("APER_4", 1, 2);
 
 	Aperture* apInt = intfactory.GetInstance(dt);
 
@@ -115,7 +114,7 @@ void testInterpolatedApertureFactory()
 }
 
 int main(int argc, char* argv[])
- {
+{
 	testApertureFactory();
 	//testInterpolatedApertureFactory();
 	testCollimatorAperture();

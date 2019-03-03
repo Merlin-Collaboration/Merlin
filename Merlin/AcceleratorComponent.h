@@ -215,7 +215,6 @@ protected:
 	 */
 	Material* material;
 
-
 	/**
 	 * A pointer to the Wake potentials for this component
 	 */

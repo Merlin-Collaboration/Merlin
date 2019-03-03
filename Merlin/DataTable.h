@@ -259,8 +259,6 @@ void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args ... arg)
 	AddRowN(col_n + 1, row_n, arg ...);
 }
 
-
-
 /** @brief Access individual rows of a DataTable.
  *
  * Type returned when using DataTableRowIterator. Does not actually hold
@@ -294,7 +292,6 @@ public:
 		return dt->GetAsStr(col_name, pos);
 	}
 
-
 private:
 	const DataTable * dt;
 	size_t pos;
@@ -325,10 +322,10 @@ private:
 
 /// @brief Row iterator for DataTable.
 class DataTableRowIterator: public std::iterator<std::bidirectional_iterator_tag,
-	DataTableRow,
-	std::ptrdiff_t,
-	DataTableRow*,
-	DataTableRow&>
+		DataTableRow,
+		std::ptrdiff_t,
+		DataTableRow*,
+		DataTableRow&>
 {
 public:
 	DataTableRowIterator(const DataTable *_dt, size_t _pos) :
