@@ -1,6 +1,7 @@
 # Merlin++ 5.02
 
 Welcome to Merlin++!! We hope you enjoy your stay. The current version of Merlin++ is 5.02.
+
 The follow provides a very quick build guide. For a full in-depth installation guide please
 refer to the provided QuickStartGuide.pdf in the `Documentation` directory.
 
