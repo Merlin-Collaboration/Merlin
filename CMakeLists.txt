@@ -83,10 +83,10 @@ set(${PROJECT_NAME}_VERSION_MAJOR "5")
 set(${PROJECT_NAME}_VERSION_MINOR "02")
 set(${PROJECT_NAME}_VERSION_PATCH "0")
 
-configure_file(Merlin/MerlinVersion.cpp.in ${CMAKE_BINARY_DIR}/Merlin/MerlinVersion.cpp)
-AUX_SOURCE_DIRECTORY(${CMAKE_BINARY_DIR}/Merlin sources)
+configure_file(Merlin++/MerlinVersion.cpp.in ${CMAKE_BINARY_DIR}/Merlin++/MerlinVersion.cpp)
+AUX_SOURCE_DIRECTORY(${CMAKE_BINARY_DIR}/Merlin++ sources)
 
-set(GITREV_FILE ${CMAKE_BINARY_DIR}/Merlin/git_rev.h)
+set(GITREV_FILE ${CMAKE_BINARY_DIR}/Merlin++/git_rev.h)
 add_custom_command(
 	OUTPUT gitrev_file
 	COMMAND ${CMAKE_COMMAND} -E echo_append "const std::string GIT_REV=\"" > ${GITREV_FILE}.tmp
@@ -103,8 +103,8 @@ add_custom_target(gitrev ALL DEPENDS gitrev_file)
 
 
 # Add the source and includes
-include_directories(${MERLIN_SOURCE_DIR}/Merlin/)
-AUX_SOURCE_DIRECTORY(Merlin sources)
+include_directories(${MERLIN_SOURCE_DIR}/Merlin++/)
+AUX_SOURCE_DIRECTORY(Merlin++ sources)
 
 #Closed orbit debugging
 if(ORBIT_DEBUG)
@@ -128,10 +128,10 @@ if(ENABLE_OPENMP)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif(ENABLE_OPENMP)
 
-#Enable to build the MerlinExamples folder
+#Enable to build the ExamplesTutorials folder
 if(ENABLE_EXAMPLES)
 	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
-	add_subdirectory(MerlinExamples)
+	add_subdirectory(ExamplesTutorials)
 endif()
 
 #Enable building of user created code in UserSim folder
@@ -140,43 +140,43 @@ if(ENABLE_USER_RUNS)
 	add_subdirectory(UserSim)
 endif()
 
-#Enable to build the MerlinTests folder
+#Enable to build the DeveloperTools/CodeTesting folder
 if(BUILD_TESTING)
 	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
 	enable_testing()
-	add_subdirectory(MerlinTests)
+	add_subdirectory(DeveloperTools/CodeTesting)
 endif()
 
 #make the libmerlin.so shared library from the sources
 if(BUILD_DYNAMIC)
-	add_library(merlin SHARED ${sources})
+	add_library(merlin++ SHARED ${sources})
 endif()
 
 #make libmerlin.a
 if(BUILD_STATIC)
-	add_library(merlin STATIC ${sources})
+	add_library(merlin++ STATIC ${sources})
 endif()
 
-add_dependencies(merlin gitrev)
+add_dependencies(merlin++ gitrev)
 
 if(ENABLE_MPI)
-	target_link_libraries(merlin ${MPI_CXX_LIBRARIES})
+	target_link_libraries(merlin++ ${MPI_CXX_LIBRARIES})
 endif()
 
 
 IF(COVERAGE)
 	set(COVERAGE_FLAGS "-fprofile-arcs")
-	target_compile_options(merlin PRIVATE -fprofile-arcs -ftest-coverage)
-	SET_TARGET_PROPERTIES(merlin PROPERTIES LINK_FLAGS " ${COVERAGE_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
+	target_compile_options(merlin++ PRIVATE -fprofile-arcs -ftest-coverage)
+	SET_TARGET_PROPERTIES(merlin++ PROPERTIES LINK_FLAGS " ${COVERAGE_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
 ENDIF(COVERAGE)
 
 if(LIBNUMA)
-	SET_TARGET_PROPERTIES(merlin PROPERTIES COMPILE_FLAGS "-DLIBNUMA")
-	target_link_libraries(merlin numa)
+	SET_TARGET_PROPERTIES(merlin++ PROPERTIES COMPILE_FLAGS "-DLIBNUMA")
+	target_link_libraries(merlin++ numa)
 endif(LIBNUMA)
 
-install(TARGETS merlin LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib )
-install(DIRECTORY Merlin/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATCHING PATTERN "*.h")
+install(TARGETS merlin++ LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib )
+install(DIRECTORY Merlin++/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include FILES_MATCHING PATTERN "*.h")
 
 # Build doxygen documentation
 # make doxygen
@@ -191,7 +191,7 @@ endif()
 
 if(BUILD_DOCUMENTATION)
 	find_file(DOXYFILE_IN "Merlin.Doxyfile.in"
-			PATHS "${MERLIN_SOURCE_DIR}/MerlinDocumentation"
+			PATHS "${MERLIN_SOURCE_DIR}/Documentation"
 			NO_DEFAULT_PATH
 			DOC "Path to the doxygen configuration template file")
 	set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")

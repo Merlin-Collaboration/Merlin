@@ -1,0 +1,85 @@
+! MERLIN Example FODO Damping Ring Lattice
+! Version 1.0: A. Wolski (LBNL) Oct 21, 2004
+
+!------------------------------------------------------------
+! Principal Parameters
+!------------------------------------------------------------
+
+E0     := 5.0            ! Beam energy      [GeV]
+BRHO   := E0/0.299792    ! Beam rigidity    [Tm]
+
+NCELL  := 112            ! Number of FODO cells per arc
+
+RFVOLT := 10.00          ! Total RF voltage [MV]
+
+Q30L   :=  0.30          ! Quadrupole length
+S20L   :=  0.20          ! Sextupole length
+
+SXT_ON := 1
+RF_ON  := 1
+
+!------------------------------------------------------------
+! RF Cavities
+!------------------------------------------------------------
+
+RFCL   := 0.6e-6
+ 
+RFC    : RFCAVITY, L=S20L, VOLT=RFVOLT*RF_ON/NCELL, &
+                   LAG=0.5, HARMON=36
+
+!------------------------------------------------------------
+! ARC Cell
+!------------------------------------------------------------
+
+BTHETA := PI/NCELL      ! Dipole bend angle = pi/number of cells
+BDIP   := 0.07          ! Dipole field
+
+BRAD   := BRHO/BDIP     ! Dipole radius of curvature
+BLEN   := BRAD*BTHETA   ! Diple length
+
+! ARC Drifts ------------------------------------------------
+
+ARCDFT1L:=  0.2
+ARCDFT2L:=  S20L
+
+ARCDFT1 : DRIFT, L=ARCDFT1L
+ARCDFT2 : DRIFT, L=ARCDFT2L
+
+! ARC Dipoles -----------------------------------------------
+
+ARCDIP  : SBEND, L=BLEN, ANGLE=BTHETA, E1=BTHETA/2, E2=BTHETA/2
+
+! ARC Quadrupoles -------------------------------------------
+
+ARCQ1K1 :=  0.605314411184
+ARCQ2K1 := -0.579172042724
+
+Q30H    : QUAD, L=Q30L
+ARCQ1   : Q30H, K1=ARCQ1K1
+ARCQ2   : Q30H, K1=ARCQ2K1
+
+! ARC BPMs --------------------------------------------------
+
+ARCBPM  : MONITOR
+
+! ARC Sextupoles --------------------------------------------
+
+ARCS1K2 :=  1.81390241709
+ARCS2K2 := -3.453721140299
+
+S20H    : SEXT, L=S20L
+ARCS1   : S20H, K2=ARCS1K2
+ARCS2   : S20H, K2=ARCS2K2
+
+! ARC Beamlines ---------------------------------------------
+
+M_BPMQUAD1 : LINE=(ARCBPM, ARCQ1)
+M_BPMQUAD2 : LINE=(ARCBPM, ARCQ2)
+
+ARCCELL : &
+  LINE=(M_BPMQUAD1,  ARCDFT1, ARCS1,   ARCDFT1, &
+        ARCDIP,      ARCDFT1, ARCDFT2, ARCDFT1, &
+        M_BPMQUAD2,  ARCDFT1, ARCS2,   ARCDFT1, &
+        ARCDIP,      ARCDFT1, RFC,     ARCDFT1)
+
+

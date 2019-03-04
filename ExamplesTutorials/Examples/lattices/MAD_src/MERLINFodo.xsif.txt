@@ -1,0 +1,96 @@
+! MERLIN Example FODO Damping Ring Lattice
+! Version 1.0: A. Wolski (LBNL) Oct 21, 2004
+
+!------------------------------------------------------------
+! Principal Parameters
+!------------------------------------------------------------
+
+E0     := 5.0            ! Beam energy      [GeV]
+BRHO   := E0/0.299792    ! Beam rigidity    [Tm]
+
+NCELL  :=  28            ! Number of FODO cells in ring
+NRFC   :=   4            ! Number of RF cavities in ring
+HNUM   := NCELL*36       ! Harmonic number
+
+RFVOLT := 10.00          ! Total RF voltage [MV]
+
+Q30L   :=  0.30          ! Quadrupole length
+S20L   :=  0.20          ! Sextupole length
+
+SXT_ON := 1
+RF_ON  := 1
+
+!------------------------------------------------------------
+! RF Cavities
+!------------------------------------------------------------
+
+LRFC   := 0.2273118
+RFC    :  RFCAVITY, L=LRFC, VOLT=RFVOLT*RF_ON/NRFC, &
+                    LAG=0.5, HARMON=1008
+
+!------------------------------------------------------------
+! ARC Cell
+!------------------------------------------------------------
+
+BTHETA := PI/NCELL      ! Dipole bend angle = pi/number of cells
+BDIP   := 0.28          ! Dipole field
+
+BRAD   := BRHO/BDIP     ! Dipole radius of curvature
+BLEN   := BRAD*BTHETA   ! Diple length
+
+! ARC Drifts ------------------------------------------------
+
+ARCDFT1L:=  0.2
+ARCDFT2L:=  S20L
+ARCDFT3L:=  (2*ARCDFT1L + ARCDFT2L - LRFC)/2
+
+ARCDFT1 : DRIFT, L=ARCDFT1L
+ARCDFT2 : DRIFT, L=ARCDFT2L
+ARCDFT3 : DRIFT, L=ARCDFT3L
+
+! ARC Dipoles -----------------------------------------------
+
+ARCDIP  : SBEND, L=BLEN, ANGLE=BTHETA, E1=BTHETA/2, E2=BTHETA/2
+
+! ARC Quadrupoles -------------------------------------------
+
+ARCQ1K1 :=  0.598837873172
+ARCQ2K1 := -0.571585290274
+
+Q30H    : QUAD, L=Q30L
+ARCQ1   : Q30H, K1=ARCQ1K1
+ARCQ2   : Q30H, K1=ARCQ2K1
+
+! ARC BPMs --------------------------------------------------
+
+BPM_ARCBPM : MONITOR
+
+! ARC Sextupoles --------------------------------------------
+
+ARCS1K2 :=  0.424318856789
+ARCS2K2 := -0.80399356616
+
+S20H    : SEXT, L=S20L
+ARCS1   : S20H, K2=ARCS1K2
+ARCS2   : S20H, K2=ARCS2K2
+
+! ARC Beamlines ---------------------------------------------
+
+M_BPMQUAD1 : LINE=(BPM_ARCBPM, ARCQ1)
+M_BPMQUAD2 : LINE=(BPM_ARCBPM, ARCQ2)
+
+ARCCELL : &
+  LINE=(M_BPMQUAD1,  ARCDFT1, ARCS1,   ARCDFT1, &
+        ARCDIP,      ARCDFT1, ARCDFT2, ARCDFT1, &
+        M_BPMQUAD2,  ARCDFT1, ARCS2,   ARCDFT1, &
+        ARCDIP,      ARCDFT1, ARCDFT2, ARCDFT1)
+
+ARCCELLRF : &
+  LINE=(M_BPMQUAD1,  ARCDFT1, ARCS1,   ARCDFT1, &
+        ARCDIP,      ARCDFT1, ARCDFT2, ARCDFT1, &
+        M_BPMQUAD2,  ARCDFT1, ARCS2,   ARCDFT1, &
+        ARCDIP,      ARCDFT3, RFC,     ARCDFT3)
+
+ARCSECT   : LINE=(6*ARCCELL, ARCCELLRF)
+
+RING      : LINE=(4*ARCSECT)

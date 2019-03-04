@@ -1,0 +1,42 @@
+#include <string>
+#include <cstdlib>
+
+#include "git_rev.h"
+
+std::string merlin_version()
+{
+	return "@MERLIN_VERSION@";
+}
+
+int merlin_version_major()
+{
+	// defend against leading zeros being interpreted as octal
+	return strtol("@MERLIN_VERSION_MAJOR@", NULL, 10);
+}
+
+int merlin_version_minor()
+{
+	return strtol("@MERLIN_VERSION_MINOR@", NULL, 10);
+}
+
+int merlin_version_patch()
+{
+	return strtol("@MERLIN_VERSION_PATCH@", NULL, 10);
+}
+
+std::string merlin_version_git()
+{
+	return GIT_REV;
+}
+
+std::string merlin_version_info()
+{
+	std::string info;
+	info += "MERLIN++ version: @MERLIN_VERSION@\n";
+
+	std::string git_tag = merlin_version_git();
+	if(git_tag.size()){
+		info += "MERLIN GIT tag: "+git_tag+"\n";
+	}
+	return info;
+}
