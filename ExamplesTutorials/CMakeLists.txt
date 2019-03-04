@@ -21,7 +21,7 @@ macro (merlin_tutorial dir exe_name)
 	# To keep the directory structure, we must set the output_name, add a rule to make the directory
 	set_target_properties( ${exe_name} PROPERTIES OUTPUT_NAME ${dir}/${exe_name} )
 	add_custom_command(TARGET ${exe_name} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${dir})
-	target_link_libraries(${exe_name} ../merlin)
+	target_link_libraries(${exe_name} merlin++)
 endmacro (merlin_tutorial)
 
 
