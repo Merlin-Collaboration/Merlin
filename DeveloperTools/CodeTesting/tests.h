@@ -23,7 +23,7 @@
 
 std::string find_data_file(std::string fname)
 {
-	std::vector<std::string> paths = {"MerlinTests/data/", "data/", "../data/"};
+	std::vector<std::string> paths = {"DeveloperTools/CodeTesting/data/","CodeTesting/data/", "data/", "../data/"};
 	std::string file_path = "";
 
 	for(auto &p : paths)
