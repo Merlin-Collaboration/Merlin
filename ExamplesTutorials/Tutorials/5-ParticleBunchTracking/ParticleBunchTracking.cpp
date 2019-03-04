@@ -16,7 +16,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Include units
-#include "../../../ExamplesTutorials/Examples/Trajectory/BPMVectorBuffer.h"
+#include "../ExamplesTutorials/Examples/Trajectory/BPMVectorBuffer.h"
 #include "PhysicalUnits.h"
 
 // Include MAD interface classes
@@ -44,9 +44,9 @@ int main()
 
 	cout << "Locating MAD lattice information..." << endl;
 	// Loop over possible build directories to locate MAD .tfs files
-	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs"};
+	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs", "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
 	string lattice_path;
-	for (size_t i=0; i<3; i++)
+	for (size_t i=0; i<4; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());

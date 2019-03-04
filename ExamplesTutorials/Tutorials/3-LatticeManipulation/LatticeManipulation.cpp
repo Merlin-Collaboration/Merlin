@@ -39,9 +39,9 @@ int main()
 {
 	cout << "Locating MAD lattice information..." << endl;
 	// Loop over possible build directories to locate MAD .tfs files
-	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs"};
+	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs", "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
 	string lattice_path;
-	for (size_t i=0; i<3; i++)
+	for (size_t i=0; i<4; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
@@ -61,20 +61,25 @@ int main()
 	// Construct Model
 	AcceleratorModel* theModel = MADinput.ConstructModel();
 
+	// Find the closed orbit in the ring
+	ClosedOrbit theClosedOrbit(theModel,beamenergy);
+	Particle particle(0);
+	theClosedOrbit.FindClosedOrbit(particle);
+
 	// Calculate beta and dispersion functions
-	LatticeFunctionTable latticeFunctions(theModel,beamenergy);
-	latticeFunctions.Calculate();
+	LatticeFunctionTable* latticeFunctions = new LatticeFunctionTable(theModel,beamenergy);
+	latticeFunctions->Calculate();
 
 	// Write lattice functions to output file
 	ofstream latticeFunctionLog("build/tutorial3a.out");
-	latticeFunctions.PrintTable(latticeFunctionLog);
+	latticeFunctions->PrintTable(latticeFunctionLog);
 
 	// Manipulate lattice to simulation alignment errors etc
 	vector<MagnetMover*> magnetMovers;
 	theModel->ExtractTypedElements(magnetMovers);
 
-	// Offset 20th magnet vertically by 100um
-	magnetMovers[20]->SetY(100.0e-6);
+	// Offset 20th magnet vertically by 10mm
+	magnetMovers[20]->SetY(10e-3);
 
 	// Offset 40th magnet horizontally by 50um
 	magnetMovers[40]->SetX(50.0e-6);
@@ -83,22 +88,22 @@ int main()
 	vector<Quadrupole*> quadVec;
 	theModel->ExtractTypedElements(quadVec);
 
-	// Put a 20% gradient error on the 5th and 20th quadrupoles
+	// Put a 5% gradient error on the 5th and 20th quadrupoles
 	MultipoleField& field = quadVec[5]->GetField();
 	Complex b1a = field.GetComponent(1);
-	field.SetComponent(1, b1a.real() * 1.20, b1a.imag() * 1.20);
+	field.SetComponent(1, b1a.real() * 1.17, b1a.imag() * 1.17);
 
-	MultipoleField& field2 = quadVec[20]->GetField();
+	MultipoleField& field2 = quadVec[21]->GetField();
 	Complex b1b = field2.GetComponent(1);
-	field2.SetComponent(1, b1b.real() * 1.10, b1b.imag() * 1.10);
+	field2.SetComponent(1, b1b.real() * 1.12, b1b.imag() * 1.12);
 
 	// Calculate beta and dispersion functions
-	LatticeFunctionTable newLatticeFunctions(theModel,beamenergy);
-	newLatticeFunctions.Calculate();
+	LatticeFunctionTable* newLatticeFunctions = new LatticeFunctionTable(theModel,beamenergy);
+	newLatticeFunctions->Calculate();
 
 	// Write lattice functions to output file
 	ofstream newLatticeFunctionLog("build/tutorial3b.out");
-	newLatticeFunctions.PrintTable(newLatticeFunctionLog);
+	newLatticeFunctions->PrintTable(newLatticeFunctionLog);
 
 	delete theModel;
 

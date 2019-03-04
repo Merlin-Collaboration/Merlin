@@ -13,6 +13,8 @@
 //																										//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Include i/o file stream
+#include <fstream>
 
 // Include units and constants
 #include "PhysicalUnits.h"
@@ -24,8 +26,9 @@
 #include "StandardMultipoles.h"
 #include "SectorBend.h"
 
-// Include closed orbit calculator
+// Include closed orbit and lattice function calculators
 #include "ClosedOrbit.h"
+#include "LatticeFunctions.h"
 
 // Namespaces for convenience
 using namespace std;
@@ -53,7 +56,8 @@ int main() {
 
 	// Period FODO lattice storage ring - loops over lattice cell ncell times
 	//
-	// WARNING: This is a basic and unstable FODO lattice without an RF component. Lattice functions (Tutorial 2) will fail if used as a result.
+	// WARNING: This is a basic and unstable FODO lattice without an RF component.
+	// To resolve this issue for simple lattice analysis, we force longitudinal stability
 	//
 	for (int n=1;n<(ncell+1);++n) {
 		latticeConstructor.AppendComponent(new Quadrupole("QF",lquad,0.0098*rigid), n==1 ? 0 : 0.15*lcell-ldipole);
@@ -72,6 +76,15 @@ int main() {
 	ClosedOrbit theClosedOrbit(lattice,beamenergy);
 	Particle particle(0);
 	theClosedOrbit.FindClosedOrbit(particle);
+
+	// Calculate beta and dispersion functions
+	LatticeFunctionTable* latticeFunctions = new LatticeFunctionTable(lattice,beamenergy);
+	latticeFunctions->SetForceLongitudinalStability(true);
+	latticeFunctions->Calculate();
+
+	// Write lattice functions to output file
+	ofstream latticeFunctionLog("build/tutorial1.out");
+	latticeFunctions->PrintTable(latticeFunctionLog);
 
 	delete lattice;
 

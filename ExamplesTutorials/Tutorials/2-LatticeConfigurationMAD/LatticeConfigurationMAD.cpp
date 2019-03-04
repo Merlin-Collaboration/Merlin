@@ -38,9 +38,9 @@ int main()
 {
 	cout << "Locating MAD lattice information..." << endl;
 	// Loop over possible build directories to locate MAD .tfs files
-	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs"};
+	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs", "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
 	string lattice_path;
-	for (size_t i=0; i<3; i++)
+	for (size_t i=0; i<4; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
@@ -68,12 +68,13 @@ int main()
 	theClosedOrbit.FindClosedOrbit(particle);
 
 	// Calculate beta and dispersion functions
-	LatticeFunctionTable latticeFunctions(theModel,beamenergy);
-	latticeFunctions.Calculate();
+	LatticeFunctionTable* latticeFunctions = new LatticeFunctionTable(theModel,beamenergy);
+	//latticeFunctions->SetForceLongitudinalStability(true);
+	latticeFunctions->Calculate();
 
 	// Write lattice functions to output file
 	ofstream latticeFunctionLog("build/tutorial2.out");
-	latticeFunctions.PrintTable(latticeFunctionLog);
+	latticeFunctions->PrintTable(latticeFunctionLog);
 
 
 	delete theModel;

@@ -43,13 +43,13 @@ int main()
 
 	// Import and construct LHC lattice
 	cout << "Loading MAD lattice file..." << endl;
-	MADInterface* MADinput = new MADInterface("Tutorials/input/LHC.tfs", beamenergy);
+	MADInterface* MADinput = new MADInterface("ExamplesTutorials/Tutorials/input/LHC.tfs", beamenergy);
 	MADinput->TreatTypeAsDrift("RFCAVITY");
 	AcceleratorModel* theModel = MADinput->ConstructModel();
 
 	// Import and define component aperture information
 	cout << "Loading aperture information..." << endl;
-	ApertureConfiguration* apertures = new ApertureConfiguration("Tutorials/input/LHCbeam1apertureinfo.tfs");
+	ApertureConfiguration* apertures = new ApertureConfiguration("ExamplesTutorials/Tutorials/input/LHCbeam1apertureinfo.tfs");
 	apertures->ConfigureElementApertures(theModel);
 
 	// Calculate closed orbit
@@ -80,7 +80,7 @@ int main()
 
 	// Import and define collimator information
 	cout << "Loading collimators database..." << endl;
-	CollimatorDatabase* collimator_db = new CollimatorDatabase("Tutorials/input/LHCcollimatorinfo.dat", material_db, true);
+	CollimatorDatabase* collimator_db = new CollimatorDatabase("ExamplesTutorials/Tutorials/input/LHCcollimatorinfo.dat", material_db, true);
 
 	// Write lattice functions to output file
 	cout << "Writing lattice functions..." << endl;
