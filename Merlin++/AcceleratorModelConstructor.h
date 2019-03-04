@@ -36,8 +36,7 @@ public:
 	~AcceleratorModelConstructor();
 
 	/**
-	 *	Initialises a new AcceleratorModel. Must be called
-	 *	before any subsequent constructor calls.
+	 *	Initialises a new AcceleratorModel.
 	 */
 	void NewModel();
 

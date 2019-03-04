@@ -83,6 +83,7 @@ private:
 AcceleratorModelConstructor::AcceleratorModelConstructor() :
 	currentModel(nullptr)
 {
+	NewModel();
 }
 
 AcceleratorModelConstructor::~AcceleratorModelConstructor()
