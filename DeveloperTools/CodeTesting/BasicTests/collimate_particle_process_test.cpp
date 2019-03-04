@@ -26,7 +26,6 @@ using namespace PhysicalUnits;
 int main(int argc, char* argv[])
 {
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
-	ctor->NewModel();
 
 	AcceleratorComponent *drift = new Drift("d1", 1 * meter);
 

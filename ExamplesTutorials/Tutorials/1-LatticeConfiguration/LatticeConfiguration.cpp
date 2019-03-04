@@ -50,7 +50,6 @@ int main() {
 
 	// Instantiate AcceleratorModelConstructor
 	AcceleratorModelConstructor latticeConstructor;
-	latticeConstructor.NewModel();
 
 	cout << "Constructing Lattice..." << endl;
 

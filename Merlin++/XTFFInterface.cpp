@@ -660,7 +660,6 @@ void XTFFInterface::Parse1(int nelm, bool isNewModel)
 			delete mc;
 		}
 		mc = new AcceleratorModelConstructor();
-		mc->NewModel();
 		z_total = 0;
 		beamload = 0;
 		energy = beam0->p0;

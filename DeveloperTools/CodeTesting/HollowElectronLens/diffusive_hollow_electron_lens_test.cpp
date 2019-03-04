@@ -76,7 +76,6 @@ int main()
 	ProtonBunch* diff_bunch = new ProtonBunch(beam_energy, 1, diff_coords);
 
 	AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
-	ctor->NewModel();
 	ctor->AppendComponent(*diff_hel);
 	AcceleratorModel* theModel = ctor->GetModel();
 	delete ctor;
@@ -105,7 +104,6 @@ int main()
 	ProtonBunch* ac_bunch = new ProtonBunch(beam_energy, 1, ac_coords);
 
 	ctor = new AcceleratorModelConstructor();
-	ctor->NewModel();
 	ctor->AppendComponent(*ac_hel);
 	theModel = ctor->GetModel();
 	delete ctor;

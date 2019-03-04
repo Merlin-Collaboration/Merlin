@@ -100,7 +100,6 @@ int main()
 //-----------------------------------------------------
 
 	AcceleratorModelConstructor* accelerator_model = new AcceleratorModelConstructor();
-	accelerator_model->NewModel();
 
 	double driftlength1 = 1.0 * meter;
 	Drift* drift1       = new Drift("aDrift1", driftlength1);

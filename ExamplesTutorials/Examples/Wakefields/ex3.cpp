@@ -147,7 +147,6 @@ AcceleratorModel* ConstructLinac(WakePotentials* wake, BeamData& beam)
 {
 
 	AcceleratorModelConstructor* accel_modConst = new AcceleratorModelConstructor();
-	accel_modConst->NewModel();
 
 	// drift between cavities
 	double driftLen = 0.3346 * meter;

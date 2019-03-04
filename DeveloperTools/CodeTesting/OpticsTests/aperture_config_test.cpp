@@ -24,7 +24,6 @@ using namespace std;
 int main()
 {
 	AcceleratorModelConstructor ctor;
-	ctor.NewModel();
 
 	AcceleratorComponent *drift;
 
