@@ -10,7 +10,7 @@ macro (merlin_test dir exe_name)
 	set_target_properties( ${exe_name} PROPERTIES OUTPUT_NAME ${dir}/${exe_name} )
 	set_target_properties( ${exe_name} PROPERTIES COMPILE_FLAGS -g )
 	add_custom_command(TARGET ${exe_name} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${dir})
-	target_link_libraries(${exe_name} merlin)
+	target_link_libraries(${exe_name} merlin++)
 
 	IF(COVERAGE)
 		target_compile_options(${exe_name} PRIVATE -fprofile-arcs -ftest-coverage)
