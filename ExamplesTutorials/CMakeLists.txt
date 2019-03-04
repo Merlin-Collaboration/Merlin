@@ -24,12 +24,32 @@ macro (merlin_tutorial dir exe_name)
 	target_link_libraries(${exe_name} merlin++)
 endmacro (merlin_tutorial)
 
+# macro to install a test python script (need add_test() to call it)
+macro (merlin_examples_py dir script_name)
+	add_custom_target(${script_name} ALL)
+	add_custom_command(TARGET ${script_name}
+	                   DEPENDS ${dir}/Examples/${script_name}
+	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
+endmacro (merlin_examples_py)
+
+# macro to install a test python script (need add_test() to call it)
+macro (merlin_tutorial_py dir script_name)
+	add_custom_target(${script_name} ALL)
+	add_custom_command(TARGET ${script_name}
+	                   DEPENDS ${dir}/Tutorials/${script_name}
+	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
+endmacro (merlin_tutorial_py)
+
 
 add_custom_target(ExampleDataFiles ALL)
 add_custom_command(TARGET ExampleDataFiles
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-                   ${CMAKE_CURRENT_SOURCE_DIR}/lattices ${CMAKE_CURRENT_BINARY_DIR}/lattices)
+                   ${CMAKE_CURRENT_SOURCE_DIR}/Examples/lattices ${CMAKE_CURRENT_BINARY_DIR}/Examples/lattices)
 
+add_custom_target(TutorialDataFiles ALL)
+add_custom_command(TARGET TutorialDataFiles
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_CURRENT_SOURCE_DIR}/Tutorials/input ${CMAKE_CURRENT_BINARY_DIR}/Tutorials/input)
 
 merlin_example(Examples/AcceleratorErrors AcceleratorErrors main.cpp)
 merlin_example(Examples/ClosedOrbit ClosedOrbit ClosedOrbit_Main.cpp)
@@ -49,9 +69,22 @@ merlin_example(Examples/Wakefields wakefile_ex2 ex2.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex3 ex3.cpp TeslaWakePotential.cpp)
 
 merlin_tutorial(Tutorials/1-LatticeConfiguration LatticeConfiguration LatticeConfiguration.cpp)
+merlin_tutorial_py(Tutorials/1-LatticeConfiguration LatticeConfiguration.py)
+
 merlin_tutorial(Tutorials/2-LatticeConfigurationMAD LatticeConfigurationMAD LatticeConfigurationMAD.cpp)
+merlin_tutorial_py(Tutorials/2-LatticeConfigurationMAD LatticeConfigurationMAD.py)
+
 merlin_tutorial(Tutorials/3-LatticeManipulation LatticeManipulation LatticeManipulation.cpp)
+merlin_tutorial_py(Tutorials/3-LatticeManipulation LatticeManipulation.py)
+
 merlin_tutorial(Tutorials/4-ParticleTracking ParticleTracking ParticleTracking.cpp)
+merlin_tutorial_py(Tutorials/4-ParticleTracking ParticleTracking.py)
+
 merlin_tutorial(Tutorials/5-ParticleBunchTracking ParticleBunchTracking ParticleBunchTracking.cpp)
+merlin_tutorial_py(Tutorials/5-ParticleBunchTracking ParticleBunchTracking.py)
+
 merlin_tutorial(Tutorials/6-LHCLattice LHCLattice LHCLattice.cpp)
+merlin_tutorial_py(Tutorials/6-LHCLattice LHCLattice.py)
+
 merlin_tutorial(Tutorials/7-CollimationAndScattering CollimationAndScattering CollimationAndScattering.cpp)
+merlin_tutorial_py(Tutorials/7-CollimationAndScattering CollimationAndScattering.py)

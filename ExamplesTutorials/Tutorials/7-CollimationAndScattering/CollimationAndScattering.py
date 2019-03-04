@@ -7,11 +7,11 @@
 
 from __future__ import division, print_function
 import numpy
-from matplotlib import pyplot, gridspec
+from matplotlib import pyplot
 import os
 import sys
 
-data_filename = "tutorial2.out"
+data_filename = "tutorial7.out"
 dir_path = os.path.dirname(os.path.realpath(__file__))
 print(dir_path)
 
@@ -20,28 +20,21 @@ all_good = False;
 for data_path in data_paths:
 	try:
 		fname = os.path.join(data_path, data_filename)
-		latticefunctions = numpy.loadtxt(fname)
+		data = numpy.loadtxt(fname,skiprows=1,usecols=(1,2,3))
 		print("Read test data:", fname)
 	except IOError:
-			continue#
+		continue#
 
 	all_good = True;
+
+	pyplot.xlabel("Location [m]")
+	pyplot.ylabel("Loss Count")
+	pyplot.yscale('log')
 	
-	grid = gridspec.GridSpec(2,1,height_ratios=[3,1])
-	plt1 = pyplot.subplot(grid[0])
-	plt1.set_ylabel("Beta [m]")
+	pyplot.hist(data[:,0], weights=data[:,2], bins = 120)
+	pyplot.legend(['Lost Particles'],loc=1)
+	pyplot.tight_layout()
 
-	beta_x, = plt1.plot(latticefunctions[:,0],latticefunctions[:,7], color='b', label='Beta x')
-	beta_y, = plt1.plot(latticefunctions[:,0],latticefunctions[:,9], color='r', label='Beta y')
-	plt1.legend(handles=[beta_x, beta_y],loc=1)
-
-	plt2 = pyplot.subplot(grid[1])
-	plt2.set_ylim([0,3.5])
-	plt2.set_ylabel("Disp x [m]")	
-	plt2.set_xlabel("Location [m]")
-	disp_x, = plt2.plot(latticefunctions[:,0],(latticefunctions[:,11]/latticefunctions[:,15]), color='g', label='Disp x')
-	plt2.legend(handles=[disp_x],loc=1)
-		
 	pyplot.show()
 	
 if all_good:

@@ -163,6 +163,11 @@ void LatticeFunctionTable::UseDefaultFunctions()
 	AddFunction(1, 2, 1); // -alfa_x
 	AddFunction(3, 3, 2); // beta_y
 	AddFunction(3, 4, 2); // -alfa_y
+    AddFunction(1, 6, 3); // Dx  = (1,6,3)/(6,6,3)
+    AddFunction(2, 6, 3); // Dpx = (2,6,3)/(6,6,3)
+    AddFunction(3, 6, 3);
+    AddFunction(4, 6, 3);
+    AddFunction(6, 6, 3);
 }
 
 void LatticeFunctionTable::UseOrbitFunctions()

@@ -12,8 +12,10 @@ import os
 import sys
 
 data_filenames = ["tutorial3a.out","tutorial3b.out"]
+dir_path = os.path.dirname(os.path.realpath(__file__))
+print(dir_path)
 
-data_paths = ["./build/","../build/", "../../build/","./build/output/","../build/output/","../../build/output/"]
+data_paths = ["../../","../../../","../../../../","../../../../../"]
 all_good = False;
 for data_path in data_paths:
 	try:

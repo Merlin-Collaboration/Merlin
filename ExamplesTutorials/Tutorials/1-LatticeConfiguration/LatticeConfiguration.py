@@ -11,7 +11,7 @@ from matplotlib import pyplot, gridspec
 import os
 import sys
 
-data_filename = "tutorial2.out"
+data_filename = "tutorial1.out"
 dir_path = os.path.dirname(os.path.realpath(__file__))
 print(dir_path)
 
@@ -27,20 +27,11 @@ for data_path in data_paths:
 
 	all_good = True;
 	
-	grid = gridspec.GridSpec(2,1,height_ratios=[3,1])
-	plt1 = pyplot.subplot(grid[0])
-	plt1.set_ylabel("Beta [m]")
+	pyplot.ylabel("Beta [m]")
+	pyplot.xlabel("Location [m]")
 
-	beta_x, = plt1.plot(latticefunctions[:,0],latticefunctions[:,7], color='b', label='Beta x')
-	beta_y, = plt1.plot(latticefunctions[:,0],latticefunctions[:,9], color='r', label='Beta y')
-	plt1.legend(handles=[beta_x, beta_y],loc=1)
-
-	plt2 = pyplot.subplot(grid[1])
-	plt2.set_ylim([0,3.5])
-	plt2.set_ylabel("Disp x [m]")	
-	plt2.set_xlabel("Location [m]")
-	disp_x, = plt2.plot(latticefunctions[:,0],(latticefunctions[:,11]/latticefunctions[:,15]), color='g', label='Disp x')
-	plt2.legend(handles=[disp_x],loc=1)
+	beta_x, = pyplot.plot(latticefunctions[:,0],latticefunctions[:,7], color='b', label='Beta x')
+	pyplot.legend(handles=[beta_x],loc=1)
 		
 	pyplot.show()
 	

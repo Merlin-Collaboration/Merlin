@@ -16,25 +16,22 @@ Particle1 = []
 Particle2 = []
 count = 1
 
-data_paths = ["./build/","../build/", "../../build/","./build/output/","../build/output/","../../build/output/"]
+dir_path = os.path.dirname(os.path.realpath(__file__))
+print(dir_path)
+
+data_paths = ["../../","../../../","../../../../","../../../../../"]
 all_good = False;
 for data_path in data_paths:
 	try:
 		fname = os.path.join(data_path, data_filename)
-		with open(fname, 'r') as file:
-			for line in file :
-				if count % 2 != 0 :
-					Particle1.append(line.split())
-				else :
-					Particle2.append(line.split())
-				count+=1
+		data = numpy.loadtxt(fname)
 		print("Read test data:", fname)
 	except IOError:
 		continue#
 
-	Particle1array = numpy.asarray(Particle1)
-	Particle2array = numpy.asarray(Particle2)
-
+	Particle1array = data[0::2]
+	Particle2array = data[1::2]
+	
 	all_good = True;
 
 	pyplot.xlabel("x [m]")
@@ -47,6 +44,7 @@ for data_path in data_paths:
 	pyplot.tight_layout()
 
 	pyplot.show()
+	
 	
 if all_good:
 	print("Plotted lattice functions")
