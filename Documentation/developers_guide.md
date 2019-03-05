@@ -44,9 +44,9 @@ Merlin++ has a large existing codebase, so not all code meets the current guidel
 
 * Good formatting is enforced with a git hook that uses the script [uncrustify](http://uncrustify.sourceforge.net/). If you don't have it already, you can install uncrustify from its [website](http://uncrustify.sourceforge.net/) or through your linux package manager. The hook must be manually installed by copying or linking it from the `tools` to the `.git/hooks` directory:
 
-`cp tools/pre-commit .git/`
+`cp DeveloperTools/Tools/pre-commit .git/hooks`
 or
-`ln -s tools/pre-commit .git/`
+`ln -sr DeveloperTools/Tools/pre-commit .git/hooks`
 
 * Style can be checked, displayed or fixed with the the `style_wrapper.py` script:
 `tools/style_wrapper.py check Merlin/AcceleratorComponent.cpp`
