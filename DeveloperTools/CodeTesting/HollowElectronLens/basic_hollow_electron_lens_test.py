@@ -50,7 +50,7 @@ print("Read simulated data")
 
 if not ref_run:
 	# Find test data
-	data_paths = ["../data", "data", "MerlinTests/data"]
+	data_paths = ["../data", "data", "DeveloperTools/CodeTesting/data"]
 
 	probs_raw = None
 	for data_path in data_paths:
