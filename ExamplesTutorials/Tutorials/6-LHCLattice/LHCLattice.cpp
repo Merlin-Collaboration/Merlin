@@ -62,6 +62,7 @@ int main()
 	LatticeFunctionTable* latticefunctions = new LatticeFunctionTable(theModel, beamenergy);
 
 	// Calculate lattice functions
+	latticefunctions->SetForceLongitudinalStability(true);
 	latticefunctions->Calculate();
 
 	// Define material database
