@@ -97,18 +97,9 @@ int main()
 	cout << "Calculating lattice functions..." << endl;
 	LatticeFunctionTable* latticefunctions = new LatticeFunctionTable(theModel, beamenergy);
 
-	// Dynamic lattice function convergence loop
-	double bscale1 = 1e-22;
-	while(true)
-	{
-		latticefunctions->ScaleBendPathLength(bscale1);
-		latticefunctions->Calculate();
-		if(!std::isnan(latticefunctions->Value(1, 1, 1, 0)))
-		{
-			break;
-		}
-		bscale1 *= 2;
-	}
+	// Force longitudinal lattice stability
+	latticefunctions->SetForceLongitudinalStability(true);
+	latticefunctions->Calculate();
 
 	// Calculate Dispersion
 	string start_element = "TCP.C6L7.B1";

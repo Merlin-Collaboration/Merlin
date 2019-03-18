@@ -61,18 +61,8 @@ int main()
 	cout << "Calculating lattice functions..." << endl;
 	LatticeFunctionTable* latticefunctions = new LatticeFunctionTable(theModel, beamenergy);
 
-	// Dynamic lattice function convergence loop
-	double bscale1 = 1e-22;
-	while(true)
-	{
-		latticefunctions->ScaleBendPathLength(bscale1);
-		latticefunctions->Calculate();
-		if(!std::isnan(latticefunctions->Value(1, 1, 1, 0)))
-		{
-			break;
-		}
-		bscale1 *= 2;
-	}
+	// Calculate lattice functions
+	latticefunctions->Calculate();
 
 	// Define material database
 	cout << "Loading materials database..." << endl;

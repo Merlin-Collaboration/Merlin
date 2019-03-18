@@ -13,7 +13,6 @@ user programs.
 
 Behaviour of calling LatticeFunctionTable::Calculate() has changed in the case where the longitudinal motion is unstable (for example lattices without RF). Previously it would return a table, but some of the values would be invalid (NaN). Now it will throw a MerlinException if you try to calculate a function using non transverse terms. If you were previously checking the content of the table for NaNs, you should now use a try/catch block to catch the error. Also see LatticeFunctionTable::SetForceLongitudinalStability() which can simplify the process of dealing with lattices without RF.
 
-
 ### Deprecation of ScaleBendPathLength and RingDeltaTProcess
 
 For lattices with no RF the longitudinal part of the transfer matrix will be unstable, which prevents LatticeFunctionTable calculations from working. Previously by setting a bend scale, RingDeltaTProcess was used to adjust the ct particle coordinate make the dynamics stable. This however required finding a value of the bend scale that would work for a given lattice.
@@ -23,6 +22,14 @@ This has now been replaced by a simpler option.
 LatticeFunctionTable::SetForceLongitudinalStability();
 
 This achieves the same by directly changing the R_55 transfer matrix element.
+
+### MADInterface changes
+
+The MADInterface class has been refactored to utilize the newly developed and versitile DataTable container class. Moreover, the ConstructApertures function has been removed as it was a redundant function designed for direct aperture construction from a MAD input file. The function was also notably incomplete and buggy. All intended functionality is still provided via the ApertureConfiguration class, which has been also been redesigned for simplicity and modularity.
+
+### ApertureConfiguration changes
+
+The ConfigureElementApertures function has been streamlined to utilise the new Aperture function's improved factory pattern design. As a result, any non-viable aperture input will return an error and the default aperture is automatically a RECTELLIPSE of dimensions {1,1,1,1}. This has made the SetDefaultAperture and EnableDefaultAperture member function obsolete and they have been removed, accordingly.
 
 ### RandomNG changes
 
