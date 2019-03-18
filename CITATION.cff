@@ -1,0 +1,47 @@
+cff-version: 1.0.3 # https://citation-file-format.github.io/
+
+message: If you use this software, please cite it as below.
+
+title: Merlin++
+version: '5.02'
+date-released: 2019-03-xx
+doi: xxx
+
+authors:
+  - family-names: Appleby
+    given-names: Robert
+  - family-names: Barlow
+    given-names: Roger
+    orcid: https://orcid.org/0000-0002-8295-8612
+  - family-names: Bungau
+    given-names: Adriana
+  - family-names: Fallon
+    given-names: James
+    orcid: https://orcid.org/0000-0003-0306-6403
+  - family-names: Kruecker
+    given-names: Dirk
+  - family-names: Molson
+    given-names: James
+  - family-names: Rafique
+    given-names: Haroon
+    orcid: https://orcid.org/0000-0002-0140-4037
+  - family-names: Rowan
+    given-names: Scott
+    orcid: https://orcid.org/0000-0003-4199-1499
+  - family-names: Serluca
+    given-names: Maurizio
+  - family-names: Toader
+    given-names: Adina
+  - family-names: Tygier
+    given-names: Sam
+    email: sam.tygier@manchester.ac.uk
+    orcid: https://orcid.org/0000-0002-7495-8655
+  - family-names: Walker
+    given-names: Nick
+  - family-names: Wolski
+    given-names: Andy
+    orcid: https://orcid.org/0000-0002-5057-5588
+
+license: GPL-2.0-or-later
+repository-code: https://github.com/Merlin-Collaboration/Merlin
+
