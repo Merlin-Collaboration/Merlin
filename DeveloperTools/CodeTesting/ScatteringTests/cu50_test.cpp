@@ -130,7 +130,6 @@ int main(int argc, char* argv[])
 	Material* CollimatorMaterial = mat->FindMaterial("Cu");
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
-	construct->NewModel();
 	double length = 0.5;
 	Collimator* TestCol = new Collimator("TestCollimator", length);
 	TestCol->SetMaterial(CollimatorMaterial);

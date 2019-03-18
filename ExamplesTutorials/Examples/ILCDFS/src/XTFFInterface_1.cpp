@@ -585,7 +585,6 @@ pair<AcceleratorModel*, BeamData*> XTFFInterface_1::Parse1(int nelm)
 	}
 	mc = new AcceleratorModelConstructor();
 
-	mc->NewModel();
 	z_total = 0;
 	beamload = 0;
 

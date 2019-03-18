@@ -15,7 +15,7 @@ import numpy
 import itertools
 
 def find_data_file(fname):
-	paths = ["MerlinTests/data/", "data/", "../data/"]
+	paths = ["DeveloperTools/CodeTesting/data/", "data/", "../data/"]
 
 	for path in paths:
 		if os.path.exists(os.path.join(path, fname)):

@@ -41,7 +41,7 @@ ref_run = "ref_run" in sys.argv[3:]
 
 if not ref_run:
 	# Find test data
-	data_paths = ["../data", "data", "MerlinTests/data"]
+	data_paths = ["../data", "data", "DeveloperTools/CodeTesting/data"]
 	dt = numpy.dtype({"names":["name","s","bin_start","loss","temp","len"], "formats":["a64","f8","f8","f8","f8","f8"]})
 	probs_raw = None
 	for data_path in data_paths:

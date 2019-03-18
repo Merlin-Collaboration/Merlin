@@ -24,7 +24,6 @@ int main()
 	RandomNG::init();
 
 	AcceleratorModelConstructor am_ctor;
-	am_ctor.NewModel();
 
 	GirderMount* g1 = new GirderMount("g1");
 	GirderMount* g2 = new GirderMount("g2");

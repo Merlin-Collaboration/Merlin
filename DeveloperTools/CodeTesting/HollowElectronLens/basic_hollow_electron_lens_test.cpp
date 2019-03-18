@@ -142,7 +142,6 @@ int main()
 		}
 
 		AcceleratorModelConstructor* ctor = new AcceleratorModelConstructor();
-		ctor->NewModel();
 		ctor->AppendComponent(*hel);
 		AcceleratorModel* theModel = ctor->GetModel();
 		delete ctor;

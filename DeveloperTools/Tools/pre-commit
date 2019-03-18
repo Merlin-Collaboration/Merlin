@@ -3,7 +3,7 @@
 # Place in .git/hooks
 
 
-STYLE_SCRIPT="tools/style_wrapper.py"
+STYLE_SCRIPT="DeveloperTools/Tools/style_wrapper.py"
 
 FILES=`git diff --cached --name-only --diff-filter=ACMR | grep -E "\.(cpp|h)$"`
 BAD_FILES=""

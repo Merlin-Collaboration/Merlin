@@ -99,7 +99,6 @@ AcceleratorModel* MADInterface::ConstructModel()
 	if(modelconstr == nullptr && appendFlag == false)
 	{
 		modelconstr = new AcceleratorModelConstructor();
-		modelconstr->NewModel();
 	}
 
 	TypeFactory* factory = new TypeFactory();
@@ -297,7 +296,6 @@ void MADInterface::AppendModel(const string& fname, double Pref)
 	{
 		// first file
 		modelconstr = new AcceleratorModelConstructor();
-		modelconstr->NewModel();
 	}
 
 	energy = Pref;
