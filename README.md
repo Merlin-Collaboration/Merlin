@@ -1,5 +1,7 @@
 # Merlin++ 5.02
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2598428.svg)](https://doi.org/10.5281/zenodo.2598428)
+
 Welcome to Merlin++!! We hope you enjoy your stay. The current version of Merlin++ is 5.02.
 
 The follow provides a very quick build guide. For a full in-depth installation guide please
