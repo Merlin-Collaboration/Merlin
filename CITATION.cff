@@ -4,8 +4,8 @@ message: If you use this software, please cite it as below.
 
 title: Merlin++
 version: '5.02'
-date-released: 2019-03-xx
-doi: xxx
+date-released: 2019-03-19
+doi: 10.5281/zenodo.2598398
 
 authors:
   - family-names: Appleby

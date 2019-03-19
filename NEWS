@@ -1,0 +1,35 @@
+* Changes in release 5.02 (2019-03-19)
+
+  Hollow Electron Lens: updates and refactoring.
+  Removed some unneeded modes. Move parameters from process to elements. Add tests.
+
+  DataTable: Introduction of new data structure and IO for TFS files.
+  A flexible structure for columned data. Can be used to simplify many classes.
+
+  ParticleBunch: New Constructor, to replace ParticleBunchConstructor class.
+  Creation of common bunch types is now in the ParticleBunch class. Distribution types are factored out into ParticleDistributionGenerator.
+
+  Aperture: Refactoring, use of DataTable.
+  Aperture hierarchy is simplified. New ApertureConfiguration class using factory pattern and DataTable.
+
+  MADInterface: Refactoring, use of DataTable.
+  New MADInterface class using factory pattern and DataTable.
+
+  Random Numbers: Switch to C++11 standard library RNG.
+  Removed old RNG.
+
+  LatticeFunctions and LinearAlgebra: Better handling of longitudinally unstable lattices.
+  LatticeFunctions can fall back to 4-dims when full 6-dim is unstable. SetForceLongitudinalStability option to replace ScaleBendPathLength.
+
+  Documentation: Large increase in coverage of doxygen docs.
+
+  Tutorials: Add tutorials.
+
+  Code formatting updates.
+  Now using uncustify for formatting, eclipse_formatting_style.xml for Eclipse.
+
+  Clean-ups, bug fixes, warning fixes, memory leak fixes.
+
+  See APIChanges.md or the APIChanges page in the documentation for changes that you may need to make to any existing Merlin scripts.
+
+  Full list of changes can be found using git: git log v5.01..v5.02
