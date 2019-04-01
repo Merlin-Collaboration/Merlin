@@ -1,22 +1,12 @@
-# Developers guide
+# Developers guide {#dev_guide}
 
-## Contents
+[TOC]
 
-* [Code Style](#Code-Style)
-	* [General](#General)
-	* [Memory](#Memory)
-	* [Formatting](#Formatting)
-* [Reversions control](#Reversions-control)
-* [Testing](#Testing)
-* [Documentation](#Documentation)
-
-
-
-## Code Style
+# Code Style {#code_style}
 
 Merlin++ has a large existing codebase, so not all code meets the current guidelines. New code should and old code should gradually be improved.
 
-### General
+## General {#general}
 
 * Class names should be fully descriptive. e.g.  SlicedMacroParticleTracker not SMPTracker.
 
@@ -30,7 +20,7 @@ Merlin++ has a large existing codebase, so not all code meets the current guidel
 
 * Do not add hard requirements beyond a modern C++ compiler and [CMake](https://cmake.org/) build system. [ROOT](https://root.cern.ch/), [Python](https://www.python.org/), etc must be optional for users.
 
-### Memory
+## Memory {#memory}
 
 * Use C++ smart pointers where possible. See [unique_ptr](http://en.cppreference.com/w/cpp/memory/unique_ptr), [shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) and [weak_ptr](http://en.cppreference.com/w/cpp/memory/weak_ptr).
 
@@ -38,7 +28,7 @@ Merlin++ has a large existing codebase, so not all code meets the current guidel
 
 * When using `new` consider if it could be avoided, for example by using a regular stack value or using a c++ container class instead of bare arrays.
 
-### Formatting
+## Formatting {#formatting}
 
 * Merlin++ uses the Allman/BSD brace style (braces on separate lines) and tabs for indentation.
 
@@ -55,7 +45,7 @@ or
 
 * If you are using the Eclipse IDE you can install the formatting style from `tools/eclipse_formatting_style.xml`. Note that Eclipse does not format identically to uncrustify, so do not run the auto formatter on existing code. Expect the commit hook to occasionally request changes.
 
-## Version control
+# Version control {#version_control}
 
 * Merlin++ source code is managed with [GIT](https://git-scm.com/) or [GitHub](https://github.com/MERLIN-Collaboration/merlin-cmake).
 
@@ -67,7 +57,7 @@ There is a large amount of documentation at the [Git website](https://www.git-sc
 
 * Pull requests should be reviewed by another developer.
 
-### Historic Versions
+## Historic Versions {#historic}
 
 * The main Merlin++ repository starts in 2009. To see older commits you can graft in the older history. From in side your Merlin++ git directory run:
 
@@ -75,7 +65,7 @@ There is a large amount of documentation at the [Git website](https://www.git-sc
 `git fetch Merlin-DESY`
 `echo "ba5f0d0a5eec186a2475c11c11833ea2241d8595 a80fe00a7205b87972f34771f3782fbe31d6d94a" >> .git/info/grafts`
 
-### Making Changes
+## Making Changes {#changes}
 
 If you want to make put some changes you have made to your Merlin++ program into the repository so that other users can benefit from your additions of bug fixes, the procedure is as follows
 
@@ -90,7 +80,7 @@ If you want to make put some changes you have made to your Merlin++ program into
 9. Then `git push origin master` will make the changes in your github repository
 10. Go to the github website, log in, go to the Merlin repository, click on `pull requests` and then `new pull request`. This will start the process of moving the changes in your fork into the mainstream. This requires approval by at least one other developer, who will now be alerted by emails. So it will not be instant. 
 
-## Testing
+# Testing {#testing}
 
 * Merlin++ use the ctest framework provided by cmake.
 
@@ -101,7 +91,7 @@ If you want to make put some changes you have made to your Merlin++ program into
 
 * New code should have tests.
 
-## Documentation
+# Documentation {#doc}
 
 * Merlin++ uses [Doxygen](http://doxygen.nl/) for documentation. See the [Doxygen docs](http://www.doxygen.nl/manual/index.html) for examples of how to write them. 
 

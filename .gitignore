@@ -9,14 +9,7 @@ CMakeCache.txt
 build/
 
 # exclude
-Documentation/*
-
-# exception to the rule
-!Documentation/pages/*
-!Documentation/QuickStartGuide.pdf
-!Documentation/Merlin.Doxyfile.in
-!Documentation/developers_guide.md
-!Documentation/README.md
-!Documentation/MerlinImage.jpg
-!Documentation/extraStyle.css
+Documentation/html
+Documentation/latex
+Documentation/man
 
