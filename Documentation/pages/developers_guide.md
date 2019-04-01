@@ -12,7 +12,7 @@ Merlin++ has a large existing codebase, so not all code meets the current guidel
 
 * Comments should not get in the way of understanding the code - which should be mostly self-explanatory, given.
 
-* Use standard C++11, newer features should be avoided as Scientific Linux with GCC 4.8 is still widely used.
+* Use standard C++14
 
 * Prefer modern language features where appropriate, e.g. vectors over C style arrays.
 

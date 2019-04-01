@@ -30,7 +30,7 @@ OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
 SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++14 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic")
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
