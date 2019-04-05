@@ -43,6 +43,12 @@ public:
 	MADInterface(const std::string& madFileName = "", double P0 = 0);
 
 	/**
+	 *  Constructor taking an input stream of a MAD optics file, and
+	 *  the momentum in GeV/c.
+	 */
+	MADInterface(std::istream *in, double P0 = 0);
+
+	/**
 	 *  Destructor
 	 */
 	~MADInterface();
@@ -145,25 +151,26 @@ public:
 	}
 
 	double energy;
-	bool inc_sr;
-	bool flatLattice;
-	double z;   ///Distance along the lattice
-	bool single_cell_rf;
+	bool inc_sr = false;
+	bool flatLattice = false;
+	double z = 0;   ///Distance along the lattice
+	bool single_cell_rf = false;
 
 protected:
-
+	void init();
 	std::string filename;
-	ifstream *ifs;
+	istream* ifs; // madx input stream (may point to infile or be passsed in)
+	std::unique_ptr<ifstream> infile; // madx input if reading from file
 	ostream* log;
 
-	bool logFlag;
-	bool honMadStructs;
-	bool appendFlag;
+	bool logFlag = false;
+	bool honMadStructs = false;
+	bool appendFlag = false;
 
 	std::set<std::string> zeroLengths;
 	std::set<std::string> driftTypes;
 
-	AcceleratorModelConstructor* modelconstr;
+	AcceleratorModelConstructor* modelconstr = nullptr;
 	AcceleratorComponent* currentcomponent;
 	stack<string> frameStack;
 };

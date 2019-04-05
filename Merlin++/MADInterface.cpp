@@ -42,20 +42,29 @@ void Log(const string& tag, int depth, ostream& os)
 
 // Class MADInterface
 MADInterface::MADInterface(const string& madFileName, double P0) :
-	energy(P0), inc_sr(false), flatLattice(false),  z(0), single_cell_rf(false), filename(madFileName), ifs(
-		madFileName.empty() ?
-		nullptr : new ifstream(madFileName.c_str())), log(
-		MerlinIO::std_out), logFlag(false), honMadStructs(false), appendFlag(false), modelconstr(
-		nullptr)
+	energy(P0), filename(madFileName)
 {
-	if(ifs)
+	infile = make_unique<ifstream>(madFileName);
+	ifs = infile.get();
+	init();
+}
+
+MADInterface::MADInterface(std::istream *in, double P0) :
+	energy(P0), filename("std::istream"), ifs(in)
+{
+	init();
+}
+
+void MADInterface::init()
+{
+	if(!ifs || !ifs->good())
 	{
-		if(!(*ifs))
-		{
-			MERLIN_ERR << "ERROR opening file " << madFileName << std::endl;
-			throw MerlinException(string("ERROR opening file ") + string(madFileName));
-		}
+		MERLIN_ERR << "MADInterface: ERROR opening or reading file " << filename << std::endl;
+		throw MerlinException(string("ERROR opening file ") + string(filename));
 	}
+
+	log = MerlinIO::std_out;
+
 	//By default, we currently treat the following MAD types as drifts
 	TreatTypeAsDrift("INSTRUMENT");
 	TreatTypeAsDrift("PLACEHOLDER");
@@ -75,11 +84,6 @@ MADInterface::~MADInterface()
 	{
 		delete modelconstr;
 	}
-	if(ifs)
-	{
-		ifs->close();
-		delete ifs;
-	}
 }
 
 inline double SRdE(double h, double len, double E)
@@ -90,7 +94,16 @@ inline double SRdE(double h, double len, double E)
 
 AcceleratorModel* MADInterface::ConstructModel()
 {
-	unique_ptr<DataTable> MADinput(DataTableReaderTFS(filename).Read());
+	unique_ptr<DataTable> MADinput;
+	try
+	{
+		MADinput = DataTableReaderTFS(ifs).Read();
+	}
+	catch(const BadFormatException &e)
+	{
+		MERLIN_ERR << "MADInterface: Error reading " << filename << endl;
+		throw e;
+	}
 
 	if(modelconstr != nullptr && appendFlag == false)
 	{
@@ -278,17 +291,13 @@ void MADInterface::EndFrame(const string& name)
 void MADInterface::AppendModel(const string& fname, double Pref)
 {
 	filename = fname;
-	if(ifs)
-	{
-		delete ifs;
-	}
 
-	ifs = new ifstream(fname.c_str());
+	infile = make_unique<ifstream>(fname);
+	ifs = infile.get();
 
 	if(!(*ifs))
 	{
 		MERLIN_ERR << "ERROR opening file " << fname << endl;
-		delete ifs;
 		abort();
 	}
 
