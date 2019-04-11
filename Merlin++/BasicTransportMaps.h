@@ -19,7 +19,7 @@
  */
 
 RTMap* DriftTM(double s);
-RTMap* SectorBendTM(double s, double h);
+RTMap* SectorBendTM(double s, double h, double gamma);
 RTMap* SextupoleTM(double s, double K2);
 RTMap* QuadrupoleTM(double s, double K1);
 RTMap* GenSectorBendTM(double s, double h, double K1, double K2);
