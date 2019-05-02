@@ -50,7 +50,7 @@ namespace
 {
 
 // tolerance for bend scaling
-#define REL_ENGY_TOL 1.0 - 06
+#define REL_ENGY_TOL 1.0e-6
 
 struct MultipoleKick
 {
