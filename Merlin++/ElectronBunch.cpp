@@ -5,17 +5,11 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#include <cmath>
 #include "ElectronBunch.h"
-#include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
-#include "MerlinException.h"
-#include "Aperture.h"
 
-using namespace std;
 using namespace ParticleTracking;
 using namespace PhysicalConstants;
-using namespace PhysicalUnits;
 
 double ElectronBunch::GetParticleMass() const
 {
@@ -36,9 +30,3 @@ bool ElectronBunch::IsStable() const
 {
 	return true;
 }
-/*
-   int ElectronBunch::Scatter(PSvector& p,double x,double E0,const Aperture* ap)
-   {
-    return 0;
-   } //End of ScatterElectron
- */

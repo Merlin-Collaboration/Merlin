@@ -54,7 +54,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 	// Length of the collimator
 	double coll_length = currentComponent->GetLength();
 
-	double z = currentBunch->int_s;
+	double z = int_s;
 	double lengthtogo = s - z;
 
 	Collimator* C = static_cast<Collimator*>(currentComponent);

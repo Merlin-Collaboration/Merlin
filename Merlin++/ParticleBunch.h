@@ -11,9 +11,7 @@
 #include "merlin_config.h"
 #include "PSTypes.h"
 #include "Bunch.h"
-#include "PhysicalConstants.h"
 
-class Aperture; //#include "Aperture.h"
 class ParticleDistributionGenerator; //#include "ParticleDistributionGenerator.h"
 class BeamData; //#include "BeamData.h"
 
@@ -24,7 +22,6 @@ class BeamData; //#include "BeamData.h"
 
 class Transform3D;
 class Collimator;
-using namespace PhysicalConstants;
 
 namespace ParticleTracking
 {
@@ -202,29 +199,6 @@ public:
 	 * Number of coordinates involved in our Particle type
 	 */
 	int coords;
-
-	/**
-	 * Per-particle type scattering.
-	 * This virtual function will be replaced in specific particle bunch classes
-	 * to enable the relevant physics for each particle type (protons, electrons,
-	 * etc).
-	 */
-	virtual int Scatter(Particle&, double length, const Collimator*)
-	{
-		return 0;
-	}
-
-	void SetScatterConfigured(bool);
-	bool ScatterConfigured;
-	size_t ScatteringPhysicsModel;
-	double int_s;
-
-	void SetIntS(double);
-
-	double GetIntS()
-	{
-		return int_s;
-	}
 
 	/**
 	 * Checks if the particle type is stable or not, returns true if the particle is considered stable.
@@ -428,16 +402,6 @@ inline Particle& ParticleBunch::FirstParticle()
 inline void ParticleBunch::clear()
 {
 	pArray.clear();
-}
-
-inline void ParticleBunch::SetScatterConfigured(bool state)
-{
-	ScatterConfigured = state;
-}
-
-inline void ParticleBunch::SetIntS(double step)
-{
-	int_s = step;
 }
 
 } // end namespace ParticleTracking

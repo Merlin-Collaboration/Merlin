@@ -87,16 +87,6 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	 *	GENERAL SETTINGS
 	 *********************************************************************/
-	//Loss_Map or Merged Collimation
-	bool Loss_Map = 0;
-	if(Loss_Map)
-	{
-		std::cout << "Old Collimation (CollimateParticleProcess)" << std::endl;
-	}
-	else
-	{
-		std::cout << "New Collimation (CollimateProtonProcess)" << std::endl;
-	}
 	bool output_final_bunch     = 0;
 
 	//Beam energy (GeV) 7000,3500,450 etc
@@ -169,54 +159,30 @@ int main(int argc, char* argv[])
 	 *	COLLIMATION SETTINGS
 	 *********************************************************************/
 	ScatteringModel* myScatter;
-	if(Loss_Map)
+
+	CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
+	if(scatter_mode_sixtrack)
 	{
-		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(2, 4);
-		myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
-		if(scatter_mode_sixtrack)
-		{
-			myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
-		}
-		stringstream loststr;
-
-		myCollimateProcess->ScatterAtCollimator(true);
-
-		// Sets maximum allowed loss percentage at a single collimator.
-		myCollimateProcess->SetLossThreshold(101.0);
-
-		//sets process log stream, nullptr to disable. aka, what col_output is above
-		myCollimateProcess->SetLogStream(nullptr);
-
-		//Add Collimation process to the tracker.
-		myCollimateProcess->SetOutputBinSize(length);
-		tracker->AddProcess(myCollimateProcess);
+		myScatter = new ScatteringModelSixTrack;
 	}
 	else
 	{
-		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
-		if(scatter_mode_sixtrack)
-		{
-			myScatter = new ScatteringModelSixTrack;
-		}
-		else
-		{
-			myScatter = new ScatteringModelMerlin;
-		}
-		myCollimateProcess->SetScatteringModel(myScatter);
-		stringstream loststr;
-
-		myCollimateProcess->ScatterAtCollimator(true);
-
-		// Sets maximum allowed loss percentage at a single collimator.
-		myCollimateProcess->SetLossThreshold(101.0);
-
-		//sets process log stream, nullptr to disable. aka, what col_output is above
-		myCollimateProcess->SetLogStream(nullptr);
-
-		//Add Collimation process to the tracker.
-		myCollimateProcess->SetOutputBinSize(length);
-		tracker->AddProcess(myCollimateProcess);
+		myScatter = new ScatteringModelMerlin;
 	}
+	myCollimateProcess->SetScatteringModel(myScatter);
+	stringstream loststr;
+
+	myCollimateProcess->ScatterAtCollimator(true);
+
+	// Sets maximum allowed loss percentage at a single collimator.
+	myCollimateProcess->SetLossThreshold(101.0);
+
+	//sets process log stream, nullptr to disable. aka, what col_output is above
+	myCollimateProcess->SetLogStream(nullptr);
+
+	//Add Collimation process to the tracker.
+	myCollimateProcess->SetOutputBinSize(length);
+	tracker->AddProcess(myCollimateProcess);
 
 	double y_offset = 1.0 + 1e-6;
 	while(particles_left > 0)
@@ -284,10 +250,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if(!Loss_Map)
-	{
-		delete myScatter;
-	}
+	delete myScatter;
 	delete myBunch;
 	delete tracker;
 	delete construct;

@@ -8,7 +8,7 @@
 #ifndef CollimateProtonProcess_h
 #define CollimateProtonProcess_h 1
 
-#include <fstream>
+#include <iostream>
 
 #include "CollimateParticleProcess.h"
 #include "ScatteringModel.h"
@@ -17,6 +17,11 @@ using namespace Collimation;
 
 namespace ParticleTracking
 {
+
+/**
+ * Collimation physics process that includes scattering within the jaw
+ * of the collimator elements.
+ */
 
 class CollimateProtonProcess: public CollimateParticleProcess
 {
@@ -35,7 +40,7 @@ public:
 private:
 	Collimation::ScatteringModel* scattermodel;
 
-	bool DoScatter(Particle&);
+	bool DoScatter(Particle&) override;
 
 };
 

@@ -10,12 +10,9 @@
 
 #include "ParticleBunch.h"
 #include <iostream>
-#include "Aperture.h"
-#include "PhysicalConstants.h"
 
 using namespace std;
 using namespace ParticleTracking;
-using namespace PhysicalConstants;
 
 namespace ParticleTracking
 {
@@ -61,9 +58,6 @@ public:
 	virtual double GetParticleMass() const;
 	virtual double GetParticleMassMeV() const;
 	virtual double GetParticleLifetime() const;
-
-	//int Scatter(PSvector& pi, double x, double E0, const Aperture* ap);
-	//int Scatter(PSvector&, double, double, const Aperture*);
 
 	void set()
 	{
