@@ -41,6 +41,10 @@ public:
  * COLL_AT_ENTRANCE,
  * COLL_AT_CENTER,
  * COLL_AT_EXIT
+ *
+ * CollimateParticleProcess does not model scattering, so particles are
+ * lost when they reach the aperture. CollimateProtonProcess implements
+ * scattering of protons within in the collimator material.
  */
 class CollimateParticleProcess: public ParticleBunchProcess
 {
@@ -164,6 +168,7 @@ protected:
 	double s_total;
 	double s;
 	double next_s;
+	double int_s;
 
 	/**
 	 * physical length
@@ -206,7 +211,10 @@ private:
 	bool Imperfections;
 
 	double Xr; /// radiation length
-	virtual bool DoScatter(Particle&);
+	virtual bool DoScatter(Particle&)
+	{
+		return 0;
+	}
 
 	/**
 	 * A list of particles we want to use in the input array

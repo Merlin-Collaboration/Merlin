@@ -42,20 +42,29 @@ void Log(const string& tag, int depth, ostream& os)
 
 // Class MADInterface
 MADInterface::MADInterface(const string& madFileName, double P0) :
-	energy(P0), inc_sr(false), flatLattice(false),  z(0), single_cell_rf(false), filename(madFileName), ifs(
-		madFileName.empty() ?
-		nullptr : new ifstream(madFileName.c_str())), log(
-		MerlinIO::std_out), logFlag(false), honMadStructs(false), appendFlag(false), modelconstr(
-		nullptr)
+	momentum(P0), filename(madFileName)
 {
-	if(ifs)
+	infile = make_unique<ifstream>(madFileName);
+	ifs = infile.get();
+	init();
+}
+
+MADInterface::MADInterface(std::istream *in, double P0) :
+	momentum(P0), filename("std::istream"), ifs(in)
+{
+	init();
+}
+
+void MADInterface::init()
+{
+	if(!ifs || !ifs->good())
 	{
-		if(!(*ifs))
-		{
-			MERLIN_ERR << "ERROR opening file " << madFileName << std::endl;
-			throw MerlinException(string("ERROR opening file ") + string(madFileName));
-		}
+		MERLIN_ERR << "MADInterface: ERROR opening or reading file " << filename << std::endl;
+		throw MerlinException(string("ERROR opening file ") + string(filename));
 	}
+
+	log = MerlinIO::std_out;
+
 	//By default, we currently treat the following MAD types as drifts
 	TreatTypeAsDrift("INSTRUMENT");
 	TreatTypeAsDrift("PLACEHOLDER");
@@ -75,22 +84,27 @@ MADInterface::~MADInterface()
 	{
 		delete modelconstr;
 	}
-	if(ifs)
-	{
-		ifs->close();
-		delete ifs;
-	}
 }
 
 inline double SRdE(double h, double len, double E)
 {
+	// Calculation assumes electron, and uses energy rather than momentum
 	static const double Cg = 8.85e-05 / twoPi;
 	return Cg * pow(E, 4) * h * h * len;
 }
 
 AcceleratorModel* MADInterface::ConstructModel()
 {
-	unique_ptr<DataTable> MADinput(DataTableReaderTFS(filename).Read());
+	unique_ptr<DataTable> MADinput;
+	try
+	{
+		MADinput = DataTableReaderTFS(ifs).Read();
+	}
+	catch(const BadFormatException &e)
+	{
+		MERLIN_ERR << "MADInterface: Error reading " << filename << endl;
+		throw e;
+	}
 
 	if(modelconstr != nullptr && appendFlag == false)
 	{
@@ -102,7 +116,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 	}
 
 	TypeFactory* factory = new TypeFactory();
-	double brho = energy / eV / SpeedOfLight;
+	double brho = momentum / eV / SpeedOfLight;
 
 	//Loop over all components
 	for(size_t i = 0; i < MADinput->Length(); ++i)
@@ -143,12 +157,12 @@ AcceleratorModel* MADInterface::ConstructModel()
 		}
 
 		//Determine multipole type by parameters
-		vector<AcceleratorComponent*> components = factory->GetInstance(MADinput, energy, brho, i);
+		vector<AcceleratorComponent*> components = factory->GetInstance(MADinput, brho, i);
 
 		if(inc_sr && (type == "SBEND" || type == "RBEND"))
 		{
-			energy -= SRdE(MADinput->Get_d("ANGLE", i) / length, length, energy);
-			brho = energy / eV / SpeedOfLight;
+			momentum -= SRdE(MADinput->Get_d("ANGLE", i) / length, length, momentum);
+			brho = momentum / eV / SpeedOfLight;
 		}
 
 		for(auto component : components)
@@ -167,7 +181,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 
 		if(inc_sr)
 		{
-			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
+			*log << endl << endl << "final momentum = " << momentum << " GeV" << endl;
 		}
 	}
 
@@ -278,17 +292,13 @@ void MADInterface::EndFrame(const string& name)
 void MADInterface::AppendModel(const string& fname, double Pref)
 {
 	filename = fname;
-	if(ifs)
-	{
-		delete ifs;
-	}
 
-	ifs = new ifstream(fname.c_str());
+	infile = make_unique<ifstream>(fname);
+	ifs = infile.get();
 
 	if(!(*ifs))
 	{
 		MERLIN_ERR << "ERROR opening file " << fname << endl;
-		delete ifs;
 		abort();
 	}
 
@@ -298,7 +308,7 @@ void MADInterface::AppendModel(const string& fname, double Pref)
 		modelconstr = new AcceleratorModelConstructor();
 	}
 
-	energy = Pref;
+	momentum = Pref;
 
 	appendFlag = 1;
 	ConstructModel();
@@ -314,7 +324,7 @@ AcceleratorModel* MADInterface::GetModel()
 		modelconstr->ReportStatistics(*log);
 		if(inc_sr)
 		{
-			*log << endl << endl << "final energy = " << energy << " GeV" << endl;
+			*log << endl << endl << "final momentum = " << momentum << " GeV" << endl;
 		}
 	}
 
@@ -340,8 +350,7 @@ void MADInterface::TreatTypeAsDrift(const std::string& typestr)
 	driftTypes.insert(typestr);
 }
 
-vector<AcceleratorComponent*> DriftComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> DriftComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -353,8 +362,7 @@ vector<AcceleratorComponent*> DriftComponent::GetInstance(unique_ptr<DataTable>&
 		return {};
 }
 
-vector<AcceleratorComponent*> RBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> RBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -383,8 +391,7 @@ vector<AcceleratorComponent*> RBendComponent::GetInstance(unique_ptr<DataTable>&
 	return {bend};
 }
 
-vector<AcceleratorComponent*> SBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> SBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -414,7 +421,7 @@ vector<AcceleratorComponent*> SBendComponent::GetInstance(unique_ptr<DataTable>&
 	return {bend};
 }
 
-vector<AcceleratorComponent*> QuadrupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> QuadrupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -424,8 +431,8 @@ vector<AcceleratorComponent*> QuadrupoleComponent::GetInstance(unique_ptr<DataTa
 	return {new Quadrupole(name, length, brho * k1l / length)};
 }
 
-vector<AcceleratorComponent*> SkewQuadrupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy,
-	double brho, size_t id)
+vector<AcceleratorComponent*> SkewQuadrupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
+	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -434,7 +441,7 @@ vector<AcceleratorComponent*> SkewQuadrupoleComponent::GetInstance(unique_ptr<Da
 	return {new SkewQuadrupole(name, length, brho * k1l / length)};
 }
 
-vector<AcceleratorComponent*> SextupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> SextupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -444,7 +451,7 @@ vector<AcceleratorComponent*> SextupoleComponent::GetInstance(unique_ptr<DataTab
 	return {new Sextupole(name, length, brho * k2l / length)};
 }
 
-vector<AcceleratorComponent*> SkewSextupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> SkewSextupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -454,7 +461,7 @@ vector<AcceleratorComponent*> SkewSextupoleComponent::GetInstance(unique_ptr<Dat
 	return {new SkewSextupole(name, length, brho * k2l / length)};
 }
 
-vector<AcceleratorComponent*> OctupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> OctupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t
 	id)
 {
@@ -465,8 +472,7 @@ vector<AcceleratorComponent*> OctupoleComponent::GetInstance(unique_ptr<DataTabl
 	return {new Octupole(name, length, brho * k3l / length)};
 }
 
-vector<AcceleratorComponent*> YCorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+vector<AcceleratorComponent*> YCorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -474,8 +480,7 @@ vector<AcceleratorComponent*> YCorComponent::GetInstance(unique_ptr<DataTable>& 
 	return {new YCor(name, length)};
 }
 
-vector<AcceleratorComponent*> XCorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+vector<AcceleratorComponent*> XCorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -483,8 +488,7 @@ vector<AcceleratorComponent*> XCorComponent::GetInstance(unique_ptr<DataTable>& 
 	return {new XCor(name, length)};
 }
 
-vector<AcceleratorComponent*> VKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> VKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -499,8 +503,7 @@ vector<AcceleratorComponent*> VKickerComponent::GetInstance(unique_ptr<DataTable
 	return {new YCor(name, length, scale * kick)};
 }
 
-vector<AcceleratorComponent*> HKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> HKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -515,7 +518,7 @@ vector<AcceleratorComponent*> HKickerComponent::GetInstance(unique_ptr<DataTable
 	return {new XCor(name, length, -scale * kick)};
 }
 
-vector<AcceleratorComponent*> SolenoidComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> SolenoidComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t
 	id)
 {
@@ -526,8 +529,8 @@ vector<AcceleratorComponent*> SolenoidComponent::GetInstance(unique_ptr<DataTabl
 	return {new Solenoid(name, length, brho * ks / length)};
 }
 
-vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(unique_ptr<DataTable>& MADinput, double energy,
-	double brho, size_t
+vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(unique_ptr<DataTable>& MADinput, double brho,
+	size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -564,7 +567,7 @@ vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(unique_pt
 
 }
 
-vector<AcceleratorComponent*> RFCavityComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> RFCavityComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t
 	id)
 {
@@ -593,7 +596,7 @@ vector<AcceleratorComponent*> RFCavityComponent::GetInstance(unique_ptr<DataTabl
 
 }
 
-vector<AcceleratorComponent*> CrabMarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> CrabMarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t id)
 {
 	double mux = MADinput->Get_d("MUX", id);
@@ -604,8 +607,7 @@ vector<AcceleratorComponent*> CrabMarkerComponent::GetInstance(unique_ptr<DataTa
 	return {new CrabMarker(name, length, mux, muy)};
 }
 
-vector<AcceleratorComponent*> CrabRFComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> CrabRFComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -614,7 +616,7 @@ vector<AcceleratorComponent*> CrabRFComponent::GetInstance(unique_ptr<DataTable>
 	return {new TransverseRFStructure(name, length, 0, 0)};
 }
 
-vector<AcceleratorComponent*> CollimatorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double
+vector<AcceleratorComponent*> CollimatorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
 	brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -623,8 +625,7 @@ vector<AcceleratorComponent*> CollimatorComponent::GetInstance(unique_ptr<DataTa
 	return {new Collimator(name, length)};
 }
 
-vector<AcceleratorComponent*> HELComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+vector<AcceleratorComponent*> HELComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
 	double length = MADinput->Get_d("L", id);
@@ -632,8 +633,7 @@ vector<AcceleratorComponent*> HELComponent::GetInstance(unique_ptr<DataTable>& M
 	return {new HollowElectronLens(name, length, 0, 0, 0, 0, 0)};
 }
 
-vector<AcceleratorComponent*> MonitorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> MonitorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -645,8 +645,7 @@ vector<AcceleratorComponent*> MonitorComponent::GetInstance(unique_ptr<DataTable
 		return {new BPM(name, length)};
 }
 
-vector<AcceleratorComponent*> MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t
+vector<AcceleratorComponent*> MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
 	id)
 {
 	const string& name = MADinput->Get_s("NAME", id);
@@ -654,14 +653,13 @@ vector<AcceleratorComponent*> MarkerComponent::GetInstance(unique_ptr<DataTable>
 	return {new Marker(name)};
 }
 
-vector<AcceleratorComponent*> TypeFactory::GetInstance(unique_ptr<DataTable>& MADinput, double energy, double brho,
-	size_t id)
+vector<AcceleratorComponent*> TypeFactory::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
 {
 	string type = MADinput->Get_s("KEYWORD", id);
 	map<string, getTypeFunc>::iterator itr = componentTypes.find(type);
 	if(itr != componentTypes.end())
 	{
-		return (*itr->second)(MADinput, energy, brho, id);
+		return (*itr->second)(MADinput, brho, id);
 	}
 	return {};
 }

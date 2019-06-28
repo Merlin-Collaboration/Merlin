@@ -5,17 +5,11 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#include <cmath>
 #include "MuonBunch.h"
-#include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
-#include "MerlinException.h"
-#include "Aperture.h"
 
-using namespace std;
 using namespace ParticleTracking;
 using namespace PhysicalConstants;
-using namespace PhysicalUnits;
 
 double MuonBunch::GetParticleMass() const
 {

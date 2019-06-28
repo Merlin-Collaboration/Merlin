@@ -13,6 +13,8 @@ user programs.
 
 Behaviour of calling LatticeFunctionTable::Calculate() has changed in the case where the longitudinal motion is unstable (for example lattices without RF). Previously it would return a table, but some of the values would be invalid (NaN). Now it will throw a MerlinException if you try to calculate a function using non transverse terms. If you were previously checking the content of the table for NaNs, you should now use a try/catch block to catch the error. Also see LatticeFunctionTable::SetForceLongitudinalStability() which can simplify the process of dealing with lattices without RF.
 
+LatticeFunctionTable::UseDefaultFunctions() now includes dispersion functions.
+
 ### Deprecation of ScaleBendPathLength and RingDeltaTProcess
 
 For lattices with no RF the longitudinal part of the transfer matrix will be unstable, which prevents LatticeFunctionTable calculations from working. Previously by setting a bend scale, RingDeltaTProcess was used to adjust the ct particle coordinate make the dynamics stable. This however required finding a value of the bend scale that would work for a given lattice.
@@ -30,6 +32,23 @@ The MADInterface class has been refactored to utilize the newly developed and ve
 ### ApertureConfiguration changes
 
 The ConfigureElementApertures function has been streamlined to utilise the new Aperture function's improved factory pattern design. As a result, any non-viable aperture input will return an error and the default aperture is automatically a RECTELLIPSE of dimensions {1,1,1,1}. This has made the SetDefaultAperture and EnableDefaultAperture member function obsolete and they have been removed, accordingly.
+
+### Aperture changes
+
+Some functions for getting and setting aperture sizes have changed or been removed. When switching to replacements note 'full' vs 'half' and 'diameter' vs 'radius'.
+
+    RectangularAperture::GetFullHeight()     ->     RectangularAperture::GetRectHalfY()
+    RectangularAperture::GetFullWidth()      ->     RectangularAperture::GetRectHalfX()
+
+    CircularAperture::GetDiameter()          ->     CircularAperture::GetRadius()
+
+    EllipticalAperture::GetHalfHeight()      ->     EllipticalAperture::GetEllipHalfY()
+    EllipticalAperture::GetHalfWidth()       ->     EllipticalAperture::GetEllipHalfX()
+
+    OctagonalAperture::GetHalfHeight()       ->     OctagonalAperture::GetRectHalfY()
+    OctagonalAperture::GetHalfWidth()        ->     OctagonalAperture::GetRectHalfX()
+
+RectEllipseAperture gains GetRectHalfX(), GetRectHalfY(), GetEllipHalfX(), GetEllipHalfY()
 
 ### RandomNG changes
 

@@ -50,7 +50,7 @@ namespace
 {
 
 // tolerance for bend scaling
-#define REL_ENGY_TOL 1.0 - 06
+#define REL_ENGY_TOL 1.0e-6
 
 struct MultipoleKick
 {
@@ -228,6 +228,9 @@ void SectorBendCI::TrackStep(double ds)
 	const double brho = P0 / eV / SpeedOfLight;
 	int np = field.HighestMultipole();
 
+	double mass = currentBunch->GetParticleMassMeV() * MeV;
+	double gamma = sqrt(1 + pow(P0 / mass, 2));
+
 	assert(Pref > 0);
 
 	const Complex b0 = field.GetCoefficient(0);
@@ -239,7 +242,7 @@ void SectorBendCI::TrackStep(double ds)
 	double len = splitMagnet ? ds / 2.0 : ds;
 
 	// Construct the second-order map
-	RTMap* M = (abs(K1) == 0) ? SectorBendTM(len, h) : GenSectorBendTM(len, h, K1.real(), 0);
+	RTMap* M = (abs(K1) == 0) ? SectorBendTM(len, h, gamma) : GenSectorBendTM(len, h, K1.real(), 0);
 
 	if(fequal(P0, Pref, REL_ENGY_TOL))
 	{

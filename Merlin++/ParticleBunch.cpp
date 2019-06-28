@@ -6,8 +6,7 @@
  */
 
 #include <algorithm>
-#include <fstream>
-#include <list>
+#include <iostream>
 #include <iterator>
 #include "Transform3D.h"
 #include "PSvectorTransform3D.h"
@@ -134,26 +133,20 @@ inline void SortArray(std::vector<T>& array)
 	sort(array.begin(), array.end());
 }
 
-template<class T>
-inline void SortArray(std::list<T>& array)
-{
-	array.sort();
-}
-
 } //end namespace
 
 namespace ParticleTracking
 {
 
 ParticleBunch::ParticleBunch(double P0, double Q, PSvectorArray& particles) :
-	Bunch(P0, Q), init(false), coords((int) sizeof(PSvector) / sizeof(double)), ScatteringPhysicsModel(0), qPerMP(Q
+	Bunch(P0, Q), init(false), coords((int) sizeof(PSvector) / sizeof(double)), qPerMP(Q
 		/ particles.size()), pArray()
 {
 	pArray.swap(particles);
 }
 
 ParticleBunch::ParticleBunch(double P0, double Q, std::istream& is) :
-	Bunch(P0, Q), init(false), coords((int) sizeof(PSvector) / sizeof(double)), ScatteringPhysicsModel(0)
+	Bunch(P0, Q), init(false), coords((int) sizeof(PSvector) / sizeof(double))
 {
 	PSvector p;
 	while(is >> p)
@@ -165,7 +158,7 @@ ParticleBunch::ParticleBunch(double P0, double Q, std::istream& is) :
 }
 
 ParticleBunch::ParticleBunch(double P0, double Qm) :
-	Bunch(P0, Qm), init(false), coords((int) sizeof(PSvector) / sizeof(double)), ScatteringPhysicsModel(0), qPerMP(Qm)
+	Bunch(P0, Qm), init(false), coords((int) sizeof(PSvector) / sizeof(double)), qPerMP(Qm)
 {
 }
 

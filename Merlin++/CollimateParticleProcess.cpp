@@ -120,7 +120,6 @@ void CollimateParticleProcess::SetCurrentComponent(AcceleratorComponent& compone
 			at_cent = at_entr = false; // currently scatter only at exit
 			at_exit = true;
 			SetNextS();
-			currentBunch->SetScatterConfigured(false);
 			len = aCollimator->GetLength();
 			//	CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(aCollimator->GetAperture());
 		}
@@ -147,7 +146,7 @@ void CollimateParticleProcess::DoProcess(double ds)
 	if(fequal(s, next_s))
 	{
 		//This lets the scattering routine know how far down the collimator we are for aperture checking inside the scattering step.
-		currentBunch->SetIntS(s - ds);
+		int_s = s - ds;
 		DoCollimation();
 		SetNextS();
 	}
@@ -640,22 +639,6 @@ void CollimateParticleProcess::DoOutput(const PSvectorArray& lostb, const list<s
 				OutputIndexParticles(lostb, lost_i, file);
 			}
 		}
-	}
-}
-
-bool CollimateParticleProcess::DoScatter(Particle& p)
-{
-	const Collimator* col = static_cast<Collimator*>(currentComponent);
-
-	int scatter_type = currentBunch->Scatter(p, bin_size, col);
-
-	if(scatter_type == 1)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
 	}
 }
 

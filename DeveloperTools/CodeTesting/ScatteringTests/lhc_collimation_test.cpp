@@ -108,8 +108,7 @@ int main(int argc, char* argv[])
 	//~ int npart = 100000;
 	int nturns = 20;
 
-	//Loss_Map or Merged Collimation
-	bool Loss_Map               = 0;
+	// SixTrack scattering
 	bool st_scatter             = 0;
 
 	if(argc >= 2)
@@ -295,15 +294,6 @@ int main(int argc, char* argv[])
 
 	myBunch->SetMacroParticleCharge(mybeam.charge);
 
-	if(Loss_Map && st_scatter)
-	{
-		myBunch->EnableScatteringPhysics(ProtonBunch::SixTrack);
-	}
-	else if(Loss_Map && !st_scatter)
-	{
-		myBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
-	}
-
 	//	PARTICLE TRACKER
 	AcceleratorModel::RingIterator bline = model->GetRing(start_element_number);
 	ParticleTracker* tracker = new ParticleTracker(bline, myBunch);
@@ -320,41 +310,27 @@ int main(int argc, char* argv[])
 
 	LossMapCollimationOutput* myLossOutput = new LossMapCollimationOutput(tencm);
 	ScatteringModel* myScatter;
-	if(Loss_Map)
+
+	CollimateProtonProcess* myCollimateProcess;
+
+	myCollimateProcess = new CollimateProtonProcess(2, 4);
+	myCollimateProcess->ScatterAtCollimator(true);
+
+	if(st_scatter)
 	{
-		CollimateParticleProcess* myCollimateProcess;
-
-		myCollimateProcess = new CollimateParticleProcess(2, 4);
-		myCollimateProcess->ScatterAtCollimator(true);
-
-		myCollimateProcess->SetLossThreshold(200.0);
-		myCollimateProcess->SetOutputBinSize(0.1);
-		myCollimateProcess->SetCollimationOutput(myLossOutput);
-		tracker->AddProcess(myCollimateProcess);
+		myScatter = new ScatteringModelSixTrack;
 	}
 	else
 	{
-		CollimateProtonProcess* myCollimateProcess;
-
-		myCollimateProcess = new CollimateProtonProcess(2, 4);
-		myCollimateProcess->ScatterAtCollimator(true);
-
-		if(st_scatter)
-		{
-			myScatter = new ScatteringModelSixTrack;
-		}
-		else
-		{
-			myScatter = new ScatteringModelMerlin;
-		}
-
-		myCollimateProcess->SetScatteringModel(myScatter);
-
-		myCollimateProcess->SetLossThreshold(200.0);
-		myCollimateProcess->SetOutputBinSize(0.1);
-		myCollimateProcess->SetCollimationOutput(myLossOutput);
-		tracker->AddProcess(myCollimateProcess);
+		myScatter = new ScatteringModelMerlin;
 	}
+
+	myCollimateProcess->SetScatteringModel(myScatter);
+
+	myCollimateProcess->SetLossThreshold(200.0);
+	myCollimateProcess->SetOutputBinSize(0.1);
+	myCollimateProcess->SetCollimationOutput(myLossOutput);
+	tracker->AddProcess(myCollimateProcess);
 
 	// TRACKING RUN
 	for(int turn = 1; turn <= nturns; turn++)

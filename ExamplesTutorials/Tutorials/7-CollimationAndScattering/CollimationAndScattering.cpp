@@ -67,7 +67,7 @@ int main()
 	RandomNG::init(seed);
 
 	// Define main beam params
-	double beamenergy = 7000*GeV;
+	double beamenergy = 7000 * GeV;
 	double beamcharge = 1.1e11;
 	double normalized_emittance = 3.5e-6;
 	double gamma = beamenergy / ProtonMassMeV / MeV;
@@ -82,7 +82,8 @@ int main()
 
 	// Import and define component aperture information
 	cout << "Loading aperture information..." << endl;
-	ApertureConfiguration* apertures = new ApertureConfiguration("ExamplesTutorials/Tutorials/input/LHCbeam1apertureinfo.tfs");
+	ApertureConfiguration* apertures = new ApertureConfiguration(
+		"ExamplesTutorials/Tutorials/input/LHCbeam1apertureinfo.tfs");
 	apertures->ConfigureElementApertures(theModel);
 
 	// Define material database
@@ -91,7 +92,8 @@ int main()
 
 	// Import and define collimator information
 	cout << "Loading collimators database..." << endl;
-	CollimatorDatabase* collimator_db = new CollimatorDatabase("ExamplesTutorials/Tutorials/input/LHCcollimatorinfo.dat", material_db, true);
+	CollimatorDatabase* collimator_db = new CollimatorDatabase(
+		"ExamplesTutorials/Tutorials/input/LHCcollimatorinfo.dat", material_db, true);
 
 	// Instantiate and calculate lattice functions
 	cout << "Calculating lattice functions..." << endl;
@@ -166,11 +168,9 @@ int main()
 	hFilter->SetHorizontalOrbit(h_offset);
 
 	// Construct corresponding bunch
-	ProtonBunch* particleBunch = new ProtonBunch(npart, HorizonalHalo2ParticleDistributionGenerator(), beamData, hFilter);
+	ProtonBunch* particleBunch = new ProtonBunch(npart, HorizonalHalo2ParticleDistributionGenerator(), beamData,
+		hFilter);
 	particleBunch->SetMacroParticleCharge(beamData.charge);
-
-	// Enable scattering physics
-	particleBunch->EnableScatteringPhysics(ProtonBunch::Merlin);
 
 	// Construct a ParticleTracker to perform tracking
 	AcceleratorModel::RingIterator ring = theModel->GetRing(start_element_number);
