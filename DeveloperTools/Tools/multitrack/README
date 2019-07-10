@@ -1,0 +1,3 @@
+These scripts allow comparing individual elements between multiple tracking codes. Currently wrappers for Merlin++ and MADX are included.
+
+To use make a `run.py` file (you can use the run.py.example as an example). Make sure ENABLE_DEVTOOLS is enabled in the cmake settings.

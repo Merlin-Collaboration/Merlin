@@ -16,6 +16,7 @@ cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 PROJECT(MERLIN)
 
 OPTION(ENABLE_EXAMPLES "Build the example programs. Default ON" ON)
+OPTION(ENABLE_DEVTOOLS "Build the developer tools. Default OFF" OFF)
 OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" ON)
 OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
@@ -132,6 +133,12 @@ endif(ENABLE_OPENMP)
 if(ENABLE_EXAMPLES)
 	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
 	add_subdirectory(ExamplesTutorials)
+endif()
+
+#Enable to build the DeveloperTools/Tools folder
+if(ENABLE_DEVTOOLS)
+	set(MERLIN_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Current build directory")
+	add_subdirectory(DeveloperTools/Tools/multitrack)
 endif()
 
 #Enable building of user created code in UserSim folder
