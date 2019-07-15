@@ -180,7 +180,6 @@ public:
 
 	void operator()(PSvector& v) const
 	{
-
 		double& x0 = v.x();
 		double& px0 = v.xp();
 		double& y0 = v.y();
@@ -666,6 +665,21 @@ inline void ApplySectorBendMap(ParticleBunch* bunch, double h, double ds)
 	}
 }
 
+inline void ApplySectorBendMapEF(ParticleBunch* bunch, double h, double ds)
+{
+	if(ds != 0)
+	{
+		if(h == 0)
+		{
+			for_each(bunch->begin(), bunch->end(), DriftMap(ds));
+		}
+		else
+		{
+			for_each(bunch->begin(), bunch->end(), SectorBendMapEF(h, ds));
+		}
+	}
+}
+
 inline void ApplyCombinedFunctionSectorBendMap(ParticleBunch* bunch, double h, double k1, double ds)
 {
 	if(ds != 0)
@@ -804,6 +818,122 @@ void SectorBendCI::TrackStep(double ds)
 		if(h != 0 && K1.real() == 0)
 		{
 			ApplySectorBendMap(currentBunch, h, len);
+		}
+
+		if(h != 0 && K1.real() != 0)
+		{
+			ApplyCombinedFunctionSectorBendMap(currentBunch, h, K1.real(), len);
+		}
+
+		// Remember to set the components back
+		field.SetCoefficient(0, b0);
+		field.SetCoefficient(1, b1);
+	}
+
+	if(tilt != 0)
+	{
+		RMtrx Rr;
+		TransportMatrix::Srot(-tilt, Rr.R);
+		Rr.Apply(currentBunch->GetParticles());
+	}
+}
+
+void SectorBendCI_ef::TrackEntrance()
+{
+	double h = (*currentComponent).GetGeometry().GetCurvature();
+	const SectorBend::PoleFaceInfo& pfi = currentComponent->GetPoleFaceInfo();
+	if(pfi.entrance != nullptr)
+	{
+		ApplyPoleFaceRotation(currentBunch, h, *pfi.entrance);
+	}
+}
+
+void SectorBendCI_ef::TrackExit()
+{
+	double h = (*currentComponent).GetGeometry().GetCurvature();
+	const SectorBend::PoleFaceInfo& pfi = currentComponent->GetPoleFaceInfo();
+	if(pfi.exit != nullptr)
+	{
+		ApplyPoleFaceRotation(currentBunch, h, *pfi.exit);
+	}
+}
+
+void SectorBendCI_ef::TrackStep(double ds)
+{
+	double h = currentComponent->GetGeometry().GetCurvature();
+
+	double tilt = currentComponent->GetGeometry().GetTilt();
+
+	if(tilt != 0)
+	{
+		RMtrx Rr;
+		TransportMatrix::Srot(tilt, Rr.R);
+		Rr.Apply(currentBunch->GetParticles());
+	}
+
+	MultipoleField& field = currentComponent->GetField();
+	const double P0 = currentBunch->GetReferenceMomentum();
+	const double q = currentBunch->GetChargeSign();
+	const double Pref = currentComponent->GetMatchedMomentum(q);
+	const double brho = P0 / eV / SpeedOfLight;
+	int np = field.HighestMultipole();
+
+	assert(Pref > 0);
+
+	const Complex b0 = field.GetCoefficient(0);
+	const Complex K1 = (np > 0) ? q * field.GetKn(1, brho) : Complex(0);
+
+	// We need to split the magnet for a kick if the following is true
+	bool splitMagnet = b0.imag() != 0 || K1.imag() != 0 || np > 1;
+	double len = splitMagnet ? ds / 2.0 : ds;
+
+	if(h == 0 && K1.real() == 0)
+	{
+		ApplyDriftMap(currentBunch, len);
+	}
+
+	if(h == 0 && K1.real() != 0)
+	{
+		ApplyQuadrupoleMap(currentBunch, K1.real(), len);
+	}
+
+	if(h != 0 && K1.real() == 0)
+	{
+		ApplySectorBendMapEF(currentBunch, h, len);
+	}
+
+	if(h != 0 && K1.real() != 0)
+	{
+		ApplyCombinedFunctionSectorBendMap(currentBunch, h, K1.real(), len);
+	}
+
+	// If we have split the magnet, we need to apply the kick approximation,
+	// and then re-apply the map M
+	if(splitMagnet)
+	{
+
+		// First we set the real parts of the dipole and quad fields to zero,
+		// since these components have been modeled in the matrix
+		Complex b1 = field.GetCoefficient(1);
+		field.SetCoefficient(0, Complex(0, b0.imag()));
+		field.SetCoefficient(1, Complex(0, b1.imag()));
+
+		// Apply the integrated kick, and then track through the linear second half
+		ApplyMultipoleKick(currentBunch, field, ds, P0, q);
+
+		if(h == 0 && K1.real() == 0)
+		{
+			ApplyDriftMap(currentBunch, len);
+		}
+
+		if(h == 0 && K1.real() != 0)
+		{
+			ApplyQuadrupoleMap(currentBunch, K1.real(), len);
+		}
+
+		if(h != 0 && K1.real() == 0)
+		{
+			ApplySectorBendMapEF(currentBunch, h, len);
 		}
 
 		if(h != 0 && K1.real() != 0)

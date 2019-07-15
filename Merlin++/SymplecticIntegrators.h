@@ -36,6 +36,14 @@ public:
 	void TrackExit();
 };
 
+class SectorBendCI_ef: public ParticleComponentTracker::Integrator<SectorBend>
+{
+public:
+	void TrackStep(double);
+	void TrackEntrance();
+	void TrackExit();
+};
+
 DECL_INTG_SET(ParticleComponentTracker, StdISet)
 
 }  // end namespace SYMPLECTIC
