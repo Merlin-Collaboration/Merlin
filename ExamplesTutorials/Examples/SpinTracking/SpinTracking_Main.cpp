@@ -194,7 +194,7 @@ int main()
 	}
 	catch(MerlinException& error)
 	{
-		cerr << error.Msg() << endl;
+		cerr << error.what() << endl;
 		return -99;
 	}
 	return 0;
