@@ -13,25 +13,27 @@
 #include <string>
 #include <iostream>
 
+#include "MerlinException.h"
+
 class DataTableRowIterator;
 class ConstDataTableRowIterator;
 class DataTableHeader;
 class DataTableRow;
 
-class BadFormatException: public std::runtime_error
+class BadFormatException: public MerlinException
 {
 public:
 	BadFormatException(const std::string& what_arg) :
-		runtime_error(what_arg)
+		MerlinException(what_arg)
 	{
 	}
 };
 
-class WrongTypeException: public std::runtime_error
+class WrongTypeException: public MerlinException
 {
 public:
 	WrongTypeException(const std::string& what_arg) :
-		runtime_error(what_arg)
+		MerlinException(what_arg)
 	{
 	}
 };

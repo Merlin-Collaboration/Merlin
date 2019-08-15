@@ -138,11 +138,11 @@ double EqualSpacedData::ValueAt(double x) const
 
 // exception
 Interpolation::BadRange::BadRange(double x, const FloatRange& r) :
-	MerlinException(""), value(x), valid_range(r)
+	MerlinException("BadRange")
 {
 	ostringstream buf;
-	buf << value << " not in interpolation range (" << r.lower << "," << r.upper << ')';
-	SetMsg(buf.str());
+	buf << x << " not in interpolation range (" << r.lower << "," << r.upper << ')';
+	msg = buf.str();
 }
 
 Interpolation::Interpolation(const vector<double>& yvals, double xmin, double dx) :

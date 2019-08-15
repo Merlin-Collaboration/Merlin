@@ -284,8 +284,7 @@ void ppElasticScatter::IntegrateDsigDt()
 		}
 		catch(Interpolation::BadRange& error)
 		{
-			std::cerr << "Bad Range in interpolation - requested: " << error.value << " but valid range is from "
-					  << error.valid_range.lower << " to "  << error.valid_range.upper << std::endl;
+			std::cerr << "Bad Range in interpolation - requested: " << error.what() << std::endl;
 			std::cerr << "error in entry: " << n << " with total " << nSteps << std::endl;
 			throw;
 		}

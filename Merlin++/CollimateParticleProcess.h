@@ -30,6 +30,12 @@ class ExcessiveParticleLoss: public MerlinException
 {
 public:
 	ExcessiveParticleLoss(const string& c_id, double threshold, size_t nlost, size_t nstart);
+	const char* what() const noexcept
+	{
+		return msg.c_str();
+	}
+private:
+	std::string msg;
 };
 
 /**
