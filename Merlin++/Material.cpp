@@ -36,6 +36,8 @@ Material::Material(std::string name0, std::string sym0, double A0, int AtomicNum
 	Conductivity = Conductivity0;
 }
 
+// test
+
 double Material::CalculateElectronDensity()
 {
 	return AtomicNumber * Avogadro * Density * 0.001 / (AtomicMass * pow(centimeter, 3)); // n_e m^-3 (1e6 conversion from cm^3)
