@@ -7,6 +7,7 @@ user programs.
 
 [TOC]
 
+
 ## Version 5.03 {#APIChanges503}
 
 Merlin++ 5.03 switches to the C++14 standard.
@@ -25,7 +26,13 @@ or if a pointer is not needed, just use the object
 
     auto dt = DataTableReaderTFS(InputFileName).Read();
 
+### Exceptions
+
+MerlinException is now derived from std::runtime_error, and follows the design of exceptions in the C++ standard library. New exception types in Merlin should derive from MerlinException and set an appropriate message either by passing a string to the MerlinException constructor or by overriding the what() method. The MerlinException.what() method should be used in place of the deprecated MerlinException.Msg()
+
 ## Version 5.02 {#APIChanges502}
+
+Merlin++ moves to the C++11 standard.
 
 ### Behaviour change in LatticeFunctionTable
 

@@ -26,11 +26,19 @@ public:
 	{
 	}
 
+	/// Deprecated use MerlinException::what()
 	[[deprecated("Use what()")]]
 	const char* Msg() const noexcept
 	{
 		return what();
 	}
+
+	/**
+	 * \fn virtual const char* MerlinException::what() const noexcept;
+	 * \memberof MerlinException
+	 *
+	 * Returns the explanatory string. Inheritied from std::runtime_error
+	 */
 };
 
 #endif
