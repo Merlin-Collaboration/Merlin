@@ -5,236 +5,215 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//																										//
-//	Tutorial 7 - The LHC																				//
-//																										//
-//	- Construct the entire LHC lattice, including aperture and collimator info in Merlin++				//
-//	- Define beam																						//
-//	- Initialize collimation and scattering																//
-//	- Record losses and plot loss map																	//
-//																										//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include <iostream>
+using namespace std;
 
-// Include units and constants etc
+/*
+    Tests materials class
+
+      and also use of the CERN ROOT histogram package
+
+      In order to do this, you need to set the environment variable
+      ROOTSYS to the directory where root has been installed
+      e.g.  /home/software/root
+
+      This can be cleanly done by sourcing the file bin/thisroot.sh or .csh
+      in that directory
+ */
+
+#include "MaterialProperties.h"
+#include "MaterialData.h"
+
+#include "TH1.h"
+#include "TH2.h"
+#include "TH3.h"
+#include "TFile.h"
+
+//
+#include "BeamData.h"
+#include "PSmoments.h"
+#include "ParticleBunch.h"
+#include "ParticleDistributionGenerator.h"
+#include "ParticleTracker.h"
+#include "RandomNG.h"
+#include "AcceleratorModel.h"
+// #include "SimpleApertures.h"
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
-#include "RandomNG.h"
-#include "NANCheckProcess.h"
+#include "AcceleratorModelConstructor.h"
+#include "Drift.h"
+#include "CollimateParticleProcess.h"
 
-// Include MAD interface classes
-#include "MADInterface.h"
-
-// Include lattice function calculator
-#include "LatticeFunctions.h"
-#include "Dispersion.h"
-
-// Include particle bunch classes
-#include "BeamData.h"
-#include "ParticleBunch.h"
-#include "ParticleBunchTypes.h"
-#include "ParticleDistributionGenerator.h"
-#include "HaloParticleDistributionGenerator.h"
-#include "ParticleTracker.h"
-#include "BunchFilter.h"
-
-// Include collimator classes
-#include "MaterialDatabase.h"
-#include "CollimatorDatabase.h"
-#include "CollimateProtonProcess.h"
-#include "LossMapCollimationOutput.h"
-
-// Include aperture classes
-#include "ApertureConfiguration.h"
-#include "CollimatorAperture.h"
-
-// Include scattering classes
-#include "ScatteringProcess.h"
-#include "ScatteringModelsMerlin.h"
-
-// Namespaces for convenience
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
+#include <typeinfo>
+#include <string>
+#include <map>
 using namespace std;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
 
-int main()
+TH1D *histt1;
+TH1D *histt2;
+TH1D *histt3;
+TH1D *histt4;
+TH1D *histt5;
+
+int main(int argc, char* argv[])
 {
-	// Define number of particles and turns
-	size_t npart = (size_t) 1e4;
-	size_t nturns = (size_t) 20;
-	int seed = 111;
-	RandomNG::init(seed);
+	cout << "Here we go ! \n";
+	int seed = 0;
+	try{
+		if(argc >= 2)
+			seed = atoi(argv[1]);
+		cout << " seed set to " << seed << endl;
+		RandomNG::init(seed);         // initialise Random number generator
+		TFile hfile("job1.root", "RECREATE", "merlin output");
+		int npart = 100000;
+		if(argc >= 3)
+			npart = atoi(argv[2]);
+		cout << npart << " particles \n";
 
-	// Define main beam params
-	double beamenergy = 7000 * GeV;
-	double beamcharge = 1.1e11;
-	double normalized_emittance = 3.5e-6;
-	double gamma = beamenergy / ProtonMassMeV / MeV;
-	double beta = sqrt(1.0 - (1.0 / pow(gamma, 2)));
-	double emittance = normalized_emittance / (gamma * beta);
+		BeamData mybeam;
+		mybeam.charge = 1.31e11;
+		mybeam.beta_x = 0.5495121695 * meter;
+		mybeam.beta_y = 0.5498820579 * meter;
 
-	// Import and construct LHC lattice
-	cout << "Loading MAD lattice file..." << endl;
-	MADInterface* MADinput = new MADInterface("ExamplesTutorials/Tutorials/input/LHC.tfs", beamenergy);
-	MADinput->TreatTypeAsDrift("RFCAVITY");
-	AcceleratorModel* theModel = MADinput->ConstructModel();
+		mybeam.emit_x = 33.640 * 5.026457122e-10 * meter;
+		mybeam.emit_y = 33.64 * 5.026457122e-10 * meter;
+		mybeam.emit_x = 0 * meter;
+		mybeam.emit_y = 0 * meter;
+		mybeam.sig_z = 75.5 * millimeter;
+		// mybeam.sig_dp = 0.000113 ;
+		mybeam.sig_dp = 0.0;
+		mybeam.p0 = 7000 * GeV;
+		//mybeam.alpha_x = -0.001*meter;
+		//mybeam.alpha_y = -0.001*meter;
 
-	// Import and define component aperture information
-	cout << "Loading aperture information..." << endl;
-	ApertureConfiguration* apertures = new ApertureConfiguration(
-		"ExamplesTutorials/Tutorials/input/LHCbeam1apertureinfo.tfs");
-	apertures->ConfigureElementApertures(theModel);
+		mybeam.alpha_x = -0.0001721885021 * meter;
+		mybeam.alpha_y = -0.0004654580947 * meter;
+		// mybeam.y0 = offset;
 
-	// Define material database
-	cout << "Loading materials database..." << endl;
-	MaterialDatabase* material_db = new MaterialDatabase();
+		int i;
+		float offset = (2.10 + 1.E-6) * meter;
+		mybeam.yp0 = 0;
+		mybeam.xp0 = 0;
+		mybeam.x0 = 0;
+		mybeam.y0 = offset;
+		MaterialProperties xx(1., 2., 3., 4., 5., 6., 7., 8.);
+		MaterialProperties* yy =
+			new  MaterialProperties(1, 2, 3, 4, 5, 6, 7, 8);
+		cout << " Simple Material properties " << (*yy) << endl;
+		(*yy->extra)["stuff"] = 99;
+		(*yy->extra)["more"] = 98;
+		yy->SetExtra("new cheese sandwich", double(88.0), double(99), 55.6);
+		cout << "with extras " << (*yy) << endl;
+		cout << " test GetExtra and get " << yy->GetExtra("more") << endl;
+		StandardMaterialData*  matter = new StandardMaterialData;
 
-	// Import and define collimator information
-	cout << "Loading collimators database..." << endl;
-	CollimatorDatabase* collimator_db = new CollimatorDatabase(
-		"ExamplesTutorials/Tutorials/input/LHCcollimatorinfo.dat", material_db, true);
+		cout << "Standard  materialdata" << endl;
+		matter->PrintTable();
+		matter->UseSixTrackValues();
+		cout << "SixTrack Modified  materialdata" << endl;
+		matter->PrintTable();
+		MaterialProperties test1 = *(matter->property[string("Cu")]);
+		cout << " for example copper is " << test1 << endl;
+		MaterialProperties test2(*(matter->property["Al"]));
+		cout << " and aluminium is " << test2 << endl;
+		MaterialProperties test3;
+		test3 = test2;
+		cout << "test  copy of copper and get  " << test3 << endl;
+		(*(matter->property["Cu"])->extra)["slope"] = 4.;
+		cout << " now add property to copper\n  ";
+		matter->PrintTable();
+		matter->MakeMixture("SiC", "Si C", 1, 1, 3.2, 4.3);
+		cout << " done 1" << endl;
+		matter->MakeMixture("test", "Al Be Cu W", 1, 2, 3, 4, 99., 88.);
+		matter->MakeMixtureByWeight("test2", "Al Be Cu W", 1, 2, 3, 4, 99., 88.);
+		matter->PrintTable();
+		Aperture* ap = new CircularAperture(.2);
+		ParticleDistributionGenerator* pg = new NormalParticleDistributionGenerator();
 
-	// Instantiate and calculate lattice functions
-	cout << "Calculating lattice functions..." << endl;
-	LatticeFunctionTable* latticefunctions = new LatticeFunctionTable(theModel, beamenergy);
+		ParticleBunch* myBunch = new ParticleBunch(npart, NormalParticleDistributionGenerator(), mybeam);
 
-	// Force longitudinal lattice stability
-	latticefunctions->SetForceLongitudinalStability(true);
-	latticefunctions->Calculate();
+		double xlim, ylim, xplim, yplim, zlim;
+		xlim  = 0.0001;
+		xplim = 0.0001;
+		ylim  = sqrt(mybeam.emit_y * mybeam.beta_y) * 4.0;
+		yplim = sqrt(mybeam.emit_y / mybeam.beta_y) * 4.0;
+		ylim = 0.00001;
+		yplim = 0.00003;
+		zlim = mybeam.sig_z * 4.0;
 
-	// Calculate Dispersion
-	string start_element = "TCP.C6L7.B1";
-	int start_element_number = 8764;
-	Dispersion* dispersion = new Dispersion(theModel, beamenergy);
-	dispersion->FindDispersion(start_element_number);
+		histt1 = new TH1D("t1", "Nuclear elastic t", 100, 0, 0.2);
+		histt2 = new TH1D("t2", "Nucleon elastic t", 100, 0, 0.2);
+		histt3 = new TH1D("t3", "SD Mass squared", 100, 0, 100.0);
+		histt4 = new TH1D("t4", "Diffractive  t", 100, 0, 0.2);
+		histt5 = new TH1D("m1", "Diffractive Mass squared", 100, 0, 50);
+		TH1D *PShist1 = new TH1D("xbefore", "x before", 100, -xlim, xlim);
+		TH1D *PShist2 = new TH1D("xafter", "x after", 100, -xlim, xlim);
+		TH1D *PShist3 = new TH1D("xpbefore", "x prime before", 100, -xplim, xplim);
+		TH1D *PShist4 = new TH1D("xpafter", "x prime after", 100, -xplim, xplim);
+		TH1D *PShist5 = new TH1D("dpafter", "delta p after", 100, 0, 0.001);
+		TH1D *PShist6 = new TH1D("yafter", "y after", 100, -xlim, xlim);
+		TH1D *PShist7 = new TH1D("ypafter", "y prime after", 100, -xplim, xplim);
+		//   TH2D *yPShist3 = new TH2D("test1","test2", 100, -zlim,zlim , 100, -yplim, yplim);
 
-	// Initialize collimator database
-	collimator_db->MatchBeamEnvelope(false);
-	collimator_db->EnableJawAlignmentErrors(false);
-	collimator_db->SetJawPositionError(0.0 * nanometer);
-	collimator_db->SetJawAngleError(0.0 * microradian);
-	collimator_db->SelectImpactFactor(start_element, 1.0e-6);
-	double impact = collimator_db->ConfigureCollimators(theModel, emittance, emittance, latticefunctions);
+		PSvectorArray particlearray1 = myBunch->GetParticles();
 
-	// Fully initialize beam data using the above
-	BeamData beamData;
+		npart = particlearray1.size();
 
-	beamData.charge = beamcharge / npart;
-	beamData.p0 = beamenergy;
-	beamData.beta_x = latticefunctions->Value(1, 1, 1, start_element_number) * meter;
-	beamData.beta_y = latticefunctions->Value(3, 3, 2, start_element_number) * meter;
-	beamData.alpha_x = -latticefunctions->Value(1, 2, 1, start_element_number);
-	beamData.alpha_y = -latticefunctions->Value(3, 4, 2, start_element_number);
-
-	//Dispersion
-	beamData.Dx = dispersion->Dx;
-	beamData.Dy = dispersion->Dy;
-	//mybeam.Dy=0;
-	beamData.Dxp = dispersion->Dxp;
-	beamData.Dyp = dispersion->Dyp;
-
-	beamData.emit_x = impact * impact * emittance * meter;
-	impact = 1;
-	beamData.emit_y = impact * impact * emittance * meter;
-	beamData.sig_z = 0.0;
-
-	//Beam centroid
-	beamData.x0 = latticefunctions->Value(1, 0, 0, start_element_number);
-	beamData.xp0 = latticefunctions->Value(2, 0, 0, start_element_number);
-	beamData.y0 = latticefunctions->Value(3, 0, 0, start_element_number);
-	beamData.yp0 = latticefunctions->Value(4, 0, 0, start_element_number);
-	beamData.ct0 = latticefunctions->Value(5, 0, 0, start_element_number);
-
-	beamData.sig_dp = 0.0;
-
-	//X-Y coupling
-	beamData.c_xy = 0.0;
-	beamData.c_xyp = 0.0;
-	beamData.c_xpy = 0.0;
-	beamData.c_xpyp = 0.0;
-
-	// Initialize collimator aperture info
-	vector<Collimator*> TCP;
-	int siz = theModel->ExtractTypedElements(TCP, start_element);
-	Aperture *ap = (TCP[0])->GetAperture();
-	CollimatorAperture* CollimatorJaw = dynamic_cast<CollimatorAperture*>(ap);
-	double h_offset = latticefunctions->Value(1, 0, 0, start_element_number);
-	double JawPosition = CollimatorJaw->GetFullEntranceWidth() / 2.0;
-
-	// Define horizontal bunch filter
-	HorizontalHaloParticleBunchFilter* hFilter = new HorizontalHaloParticleBunchFilter();
-	hFilter->SetHorizontalLimit(JawPosition);
-	hFilter->SetHorizontalOrbit(h_offset);
-
-	// Construct corresponding bunch
-	ProtonBunch* particleBunch = new ProtonBunch(npart, HorizonalHalo2ParticleDistributionGenerator(), beamData,
-		hFilter);
-	particleBunch->SetMacroParticleCharge(beamData.charge);
-
-	// Construct a ParticleTracker to perform tracking
-	AcceleratorModel::RingIterator ring = theModel->GetRing(start_element_number);
-	ParticleTracker* tracker = new ParticleTracker(ring, particleBunch);
-	tracker->SetLogStream(cout);
-
-	auto nancheck = new NANCheckProcess;
-	nancheck->SetDetailed(0);
-	nancheck->SetHaltNAN(1);
-	tracker->AddProcess(nancheck);
-
-	// Define collimation and scattering settings
-	string filename = "build/tutorial7.out";
-
-	LossMapCollimationOutput* lossOutput = new LossMapCollimationOutput(tencm);
-	ScatteringModel* scatterModel = new ScatteringModelMerlin;
-
-	CollimateProtonProcess* collimateProcess = new CollimateProtonProcess(2, 4);
-	collimateProcess->SetScatteringModel(scatterModel);
-
-	collimateProcess->ScatterAtCollimator(true);
-	collimateProcess->SetLossThreshold(200.0);
-	collimateProcess->SetOutputBinSize(0.1);
-	collimateProcess->SetCollimationOutput(lossOutput);
-	tracker->AddProcess(collimateProcess);
-
-	// Run tracker
-	for(size_t turn = 1; turn <= nturns; ++turn)
-	{
-		cout << "Turn " << turn << "\tParticle number: " << particleBunch->size() << endl;
-		tracker->Track(particleBunch);
-		if(particleBunch->size() <= 1)
+		for(int i = 0; i <= npart; i++)
 		{
-			break;
+			PShist3->Fill(particlearray1[i].xp());
+			PShist1->Fill(particlearray1[i].x());
 		}
+
+		AcceleratorModelConstructor* myaccmodelctor = new AcceleratorModelConstructor()
+		;
+		myaccmodelctor->NewModel();
+		myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
+		AcceleratorModel* mymodel = myaccmodelctor->GetModel();
+		ParticleTracker mytracker(mymodel->GetBeamline(), myBunch);
+		ParticleTracker* tracker = new ParticleTracker(mymodel->GetBeamline(), myBunch
+			);
+
+		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(0, 7);
+		myCollimateProcess->ScatterAtCollimator(true);          // Needs resurrection
+		tracker->AddProcess(myCollimateProcess);
+		ParticleBunch* bunch2;
+		cout << " start tracking" << endl;
+		bunch2 = tracker->Track(myBunch);
+		cout << " done tracking" << endl;
+		cout << " get particles \n";
+		PSvectorArray myparticles2 = bunch2->GetParticles();
+		npart = myparticles2.size();
+		cout << " size " << npart << endl;
+		for(i = 0; i <= npart; i++)
+		{
+			PShist2->Fill(myparticles2[i].x());
+			PShist4->Fill(myparticles2[i].xp());
+			PShist5->Fill(-myparticles2[i].dp());
+			PShist6->Fill(myparticles2[i].y() - offset);
+			PShist7->Fill(myparticles2[i].yp());
+////                        PShist3->Fill((myparticles2[i]).ct(),myparticles2[i].yp());
+
+		}
+		PShist2->Draw();
+		cout << "writing\n";
+		hfile.Write();
+		cout << "written\n";
+		delete matter;
+		cout << "deleted\n";
+	}     // end of try
+	catch(MerlinException&  s)
+	{
+		cout << " Merlin Exception: " << s.Msg() << endl;
 	}
 
-	lossOutput->Finalise();
-	ofstream* col_output = new ofstream(filename);
-	lossOutput->Output(col_output);
-	col_output->flush();
-	col_output->close();
-	cout << "Output: " << filename << endl;
-
-	cout << "npart: " << npart << endl;
-	cout << "left: " << particleBunch->size() << endl;
-	cout << "absorbed: " << npart - particleBunch->size() << endl;
-
-	delete MADinput;
-	delete theModel;
-	delete apertures;
-	delete material_db;
-	delete collimator_db;
-	delete latticefunctions;
-	delete hFilter;
-	delete dispersion;
-	delete particleBunch;
-	delete tracker;
-	delete scatterModel;
-	delete collimateProcess;
-	delete col_output;
-
-	cout << "Successful! Tutorial 7 Complete." << endl;
-	cout << "Please run the corresponding python script to see tracked particle info and scattering loss maps." << endl;
-
 	return 0;
+
 }
