@@ -17,6 +17,7 @@
 
 #include "Components.h"
 #include "AcceleratorModelConstructor.h"
+#include "Aperture.h"
 #include "SupportStructure.h"
 #include "MagnetMover.h"
 #include "PhysicalConstants.h"

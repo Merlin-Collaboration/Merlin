@@ -19,6 +19,7 @@
 #include "Klystron.h"
 #include "TComponentFrame.h"
 #include "ILCDFS_IO.h"
+#include "Aperture.h"
 
 using namespace std;
 using namespace PhysicalConstants;

@@ -21,6 +21,7 @@
 #include "PhysicalConstants.h"
 #include "ConstructSrot.h"
 #include "MerlinException.h"
+#include "Aperture.h"
 
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;

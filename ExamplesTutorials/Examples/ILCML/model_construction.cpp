@@ -13,6 +13,7 @@
 #include "TWRFStructure.h"
 #include "TeslaWakePotential.h"
 #include "PatchFrame.h"
+#include "Aperture.h"
 #include <vector>
 
 using namespace std;
