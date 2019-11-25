@@ -300,13 +300,15 @@ private:
 };
 
 /// @brief Row iterator for DataTable.
-class DataTableRowIterator: public std::iterator<std::bidirectional_iterator_tag,
-		DataTableRow,
-		std::ptrdiff_t,
-		DataTableRow*,
-		DataTableRow&>
+class DataTableRowIterator
 {
 public:
+	using iterator_category = std::bidirectional_iterator_tag;
+	using value_type = DataTableRow;
+	using difference_type = std::ptrdiff_t;
+	using pointer = DataTableRow *;
+	using reference = DataTableRow&;
+
 	DataTableRowIterator(const DataTable *_dt, size_t _pos) :
 		dtr(_dt, _pos)
 	{
