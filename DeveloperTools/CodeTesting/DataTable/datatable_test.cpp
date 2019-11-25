@@ -145,6 +145,26 @@ void test_const(const DataTable dt)
 	assert(dt.HeaderGet_s("z") == "test");
 }
 
+void test_const_iter(const DataTable dt)
+{
+	cout << "test_const_iter()" << endl;
+	for(const auto &row : dt)
+	{
+		cout << "dt: " << row.GetAsStr("a") << endl;
+	}
+}
+
+void test_nonconst_iter(DataTable dt)
+{
+	cout << "test_nonconst_iter()" << endl;
+	for(auto &row : dt)
+	{
+		cout << "dt: before=" << row.GetAsStr("b");
+		row.Set_d("b", row.Get_d("b") * 2.0);
+		cout << " after=" << row.GetAsStr("b") << endl;
+	}
+}
+
 void test_has_key()
 {
 	cout << "test_has_key()" << endl;
@@ -176,6 +196,10 @@ int main()
 
 	const auto dt2 = make_example_dt2();
 	test_const(dt2);
+	test_const_iter(dt2);
+
+	auto dt2nc = make_example_dt2();
+	test_nonconst_iter(dt2nc);
 
 	test_has_key();
 
