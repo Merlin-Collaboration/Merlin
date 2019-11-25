@@ -384,43 +384,43 @@ DataTableRowIterator DataTable::end() const
 
 DataTableRow DataTableRowIterator::operator *()
 {
-	return DataTableRow(dt, pos);
+	return dtr;
 }
 
-DataTableRowPtr DataTableRowIterator::operator ->()
+DataTableRow* DataTableRowIterator::operator ->()
 {
-	return DataTableRowPtr(dt, pos);
+	return &dtr;
 }
 
 DataTableRowIterator& DataTableRowIterator::operator++()
 {
-	++pos;
+	++dtr.pos;
 	return *this;
 }
 
 DataTableRowIterator DataTableRowIterator::operator++(int)
 {
 	auto ret = *this;
-	++pos;
+	++dtr.pos;
 	return ret;
 }
 
 DataTableRowIterator& DataTableRowIterator::operator--()
 {
-	--pos;
+	--dtr.pos;
 	return *this;
 }
 
 DataTableRowIterator DataTableRowIterator::operator--(int)
 {
 	auto ret = *this;
-	--pos;
+	--dtr.pos;
 	return ret;
 }
 
 bool DataTableRowIterator::operator==(const DataTableRowIterator &other) const
 {
-	return (dt == other.dt) && (pos == other.pos);
+	return (dtr.dt == other.dtr.dt) && (_pos() == other._pos());
 }
 
 bool DataTableRowIterator::operator!=(const DataTableRowIterator &other) const

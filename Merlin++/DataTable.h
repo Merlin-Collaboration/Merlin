@@ -270,6 +270,8 @@ void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args ... arg)
 class DataTableRow
 {
 public:
+	friend DataTableRowIterator;
+
 	DataTableRow(const DataTable *_dt, size_t _pos) :
 		dt(_dt), pos(_pos)
 	{
@@ -297,29 +299,6 @@ private:
 	size_t pos;
 };
 
-/** @brief Emulate pointer access to individual rows of a DataTable
- *
- * See DataTableRow
- */
-class DataTableRowPtr
-{
-public:
-	DataTableRowPtr(const DataTable *_dt, size_t _pos) :
-		dtr(_dt, _pos)
-	{
-	}
-	DataTableRow &operator*()
-	{
-		return dtr;
-	}
-	DataTableRow *operator->()
-	{
-		return &dtr;
-	}
-private:
-	DataTableRow dtr;
-};
-
 /// @brief Row iterator for DataTable.
 class DataTableRowIterator: public std::iterator<std::bidirectional_iterator_tag,
 		DataTableRow,
@@ -329,11 +308,11 @@ class DataTableRowIterator: public std::iterator<std::bidirectional_iterator_tag
 {
 public:
 	DataTableRowIterator(const DataTable *_dt, size_t _pos) :
-		dt(_dt), pos(_pos)
+		dtr(_dt, _pos)
 	{
 	}
 	DataTableRow operator *();
-	DataTableRowPtr operator ->();
+	DataTableRow* operator ->();
 	DataTableRowIterator& operator++();
 	DataTableRowIterator operator++(int);
 	DataTableRowIterator& operator--();
@@ -343,12 +322,11 @@ public:
 
 	size_t _pos() const
 	{
-		return pos;
+		return dtr.pos;
 	}
 
 private:
-	const DataTable * dt;
-	size_t pos;
+	DataTableRow dtr;
 };
 
 #endif
