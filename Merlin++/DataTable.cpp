@@ -352,21 +352,21 @@ bool DataTable::HeaderHasKey(std::string col_name, char type) const
 
 void DataTable::OutputAscii(std::ostream &os) const
 {
-	for(auto &col_name : hcol_names)
+	for(const auto &col_name : hcol_names)
 	{
 		os << col_name << "\t" << HeaderGetAsStr(col_name) << std::endl;
 	}
 
-	for(auto &col_name : col_names)
+	for(const auto &col_name : col_names)
 	{
 		os << col_name << "\t";
 	}
 	os << std::endl;
-	for(size_t i = 0; i < length; i++)
+	for(const auto &row : *this)
 	{
-		for(auto &col_name : col_names)
+		for(const auto &col_name : col_names)
 		{
-			os << GetAsStr(col_name, i) << "\t";
+			os << row.GetAsStr(col_name) << "\t";
 		}
 		os << std::endl;
 	}
