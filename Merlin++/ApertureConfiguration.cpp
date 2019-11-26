@@ -30,7 +30,7 @@ ApertureConfiguration::ApertureConfiguration(string InputFileName) :
 	log(nullptr), logFlag(false)
 {
 	unique_ptr<DataTable> dt(DataTableReaderTFS(InputFileName).Read());
-	auto temp = *dt;
+
 	ApertureDataTable.AddColumn("S", 'd');
 	ApertureDataTable.AddColumn("APER_1", 'd');
 	ApertureDataTable.AddColumn("APER_2", 'd');
@@ -39,15 +39,15 @@ ApertureConfiguration::ApertureConfiguration(string InputFileName) :
 	ApertureDataTable.AddColumn("APERTYPE", 's');
 	//filter non-aperture entries
 	size_t row = 0;
-	for(DataTableRowIterator itr = temp.begin(); itr != temp.end(); ++itr)
+	for(auto &itr : *dt)
 	{
-		if((*itr).Get_d("APER_1") != 0 || (*itr).Get_d("APER_2") != 0 || (*itr).Get_d("APER_3") != 0 || (*itr).Get_d(
+		if(itr.Get_d("APER_1") != 0 || itr.Get_d("APER_2") != 0 || itr.Get_d("APER_3") != 0 || itr.Get_d(
 				"APER_4") != 0)
 		{
-			ApertureDataTable.ApertureFromRow(*itr, row);
-			ApertureDataTable.Set("S", row, ((*itr).Get_d("S") - (*itr).Get_d("L")));
+			ApertureDataTable.ApertureFromRow(itr, row);
+			ApertureDataTable.Set("S", row, (itr.Get_d("S") - itr.Get_d("L")));
 			++row;
-			ApertureDataTable.ApertureFromRow(*itr, row);
+			ApertureDataTable.ApertureFromRow(itr, row);
 			++row;
 		}
 	}
@@ -75,7 +75,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 		{
 			for(DataTableRowIterator dt = ApertureDataTable.begin(); dt != ApertureDataTable.end(); ++dt)
 			{
-				if((*dt).Get_d("S") >= Position)
+				if(dt->Get_d("S") >= Position)
 				{
 					aperture = ApertureFactory::GetInstance(*dt);
 					(*comp)->SetAperture(aperture);
@@ -90,7 +90,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 			{
 				auto temp = ApertureDataTable.end();
 				--temp;
-				if((*dt).Get_d("S") >= Position || dt == temp)
+				if(dt->Get_d("S") >= Position || dt == temp)
 				{
 					size_t row = 0;
 					DataTable ThisElementAperture;
@@ -184,17 +184,16 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 					//Determine need to interpolate
 					bool interpolate = false;
 					bool typeChange = false;
-					for(DataTableRowIterator itr = CleanElementAperture.begin(); itr != CleanElementAperture.end();
-						++itr)
+					for(auto &itr :CleanElementAperture)
 					{
-						if(CleanElementAperture.begin()->Get_d("APER_1") != itr->Get_d("APER_1")
-							|| CleanElementAperture.begin()->Get_d("APER_2") != itr->Get_d("APER_2")
-							|| CleanElementAperture.begin()->Get_d("APER_3") != itr->Get_d("APER_3")
-							|| CleanElementAperture.begin()->Get_d("APER_4") != itr->Get_d("APER_4"))
+						if(CleanElementAperture.begin()->Get_d("APER_1") != itr.Get_d("APER_1")
+							|| CleanElementAperture.begin()->Get_d("APER_2") != itr.Get_d("APER_2")
+							|| CleanElementAperture.begin()->Get_d("APER_3") != itr.Get_d("APER_3")
+							|| CleanElementAperture.begin()->Get_d("APER_4") != itr.Get_d("APER_4"))
 						{
 							interpolate = true;
 						}
-						if(typeChange == false && CleanElementAperture.begin()->Get_s("APERTYPE") != itr->Get_s(
+						if(typeChange == false && CleanElementAperture.begin()->Get_s("APERTYPE") != itr.Get_s(
 								"APERTYPE"))
 						{
 							typeChange = true;
@@ -307,21 +306,21 @@ void ApertureConfiguration::OutputConfiguredAperture(AcceleratorModel* Model, os
 	int nElements = Model->ExtractTypedElements(Elements, "*");
 	size_t number = 1;
 
-	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp != Elements.end(); comp++)
+	for(const auto &comp : Elements)
 	{
-		if((*comp)->GetAperture() != nullptr)
+		if(comp->GetAperture() != nullptr)
 		{
 			cout << number << "\t"
-				 << (*comp)->GetIndex() << "\t"
-				 << (*comp)->GetName() << "\t"
-				 << (*comp)->GetQualifiedName() << "\t"
-				 << (*comp)->GetCollID() << "\t"
-				 << (*comp)->GetEMField() << "\t"
-				 << (*comp)->GetType() << "\t"
-				 << (*comp)->GetComponentLatticePosition() << "\t"
-				 << (*comp)->GetGeometry()->GetGeometryLength() << "\t"
-				 << (*comp)->GetIndex() << "\t"
-				 << (*comp)->GetMaterial() << "\t"
+				 << comp->GetIndex() << "\t"
+				 << comp->GetName() << "\t"
+				 << comp->GetQualifiedName() << "\t"
+				 << comp->GetCollID() << "\t"
+				 << comp->GetEMField() << "\t"
+				 << comp->GetType() << "\t"
+				 << comp->GetComponentLatticePosition() << "\t"
+				 << comp->GetGeometry()->GetGeometryLength() << "\t"
+				 << comp->GetIndex() << "\t"
+				 << comp->GetMaterial() << "\t"
 				 << endl;
 			++number;
 		}
@@ -343,12 +342,12 @@ void ApertureConfiguration::DeleteAllApertures(AcceleratorModel* Model)
 	std::vector<AcceleratorComponent*> Elements;
 	int nElements = Model->ExtractTypedElements(Elements, "*");
 
-	for(std::vector<AcceleratorComponent*>::iterator comp = Elements.begin(); comp != Elements.end(); comp++)
+	for(const auto &comp : Elements)
 	{
-		if((*comp)->GetAperture() != nullptr)
+		if(comp->GetAperture() != nullptr)
 		{
-			delete (*comp)->GetAperture();
-			(*comp)->SetAperture(nullptr);
+			delete comp->GetAperture();
+			comp->SetAperture(nullptr);
 		}
 	}
 }
