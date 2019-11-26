@@ -29,7 +29,8 @@ ApertureConfiguration::ApertureConfiguration() :
 ApertureConfiguration::ApertureConfiguration(string InputFileName) :
 	log(nullptr), logFlag(false)
 {
-	unique_ptr<DataTable> dt(DataTableReaderTFS(InputFileName).Read());
+	//unique_ptr<DataTable> dt(DataTableReaderTFS(InputFileName).Read());
+	auto dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
 
 	ApertureDataTable.AddColumn("S", 'd');
 	ApertureDataTable.AddColumn("APER_1", 'd');

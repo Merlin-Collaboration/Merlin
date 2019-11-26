@@ -41,18 +41,18 @@ void write_read(DataTable dt)
 	stringstream ss;
 
 	DataTableWriterTFS(&ss).Write(dt);
-	unique_ptr<DataTable> dt2(DataTableReaderTFS(&ss).Read());
+	auto dt2 = DataTableReaderTFS(&ss).Read();
 
-	assert(dt.HeaderGet_d("x") == dt2->HeaderGet_d("x"));
-	assert(dt.HeaderGet_i("y") == dt2->HeaderGet_i("y"));
-	assert(dt.HeaderGet_s("z") == dt2->HeaderGet_s("z"));
+	assert(dt.HeaderGet_d("x") == dt2.HeaderGet_d("x"));
+	assert(dt.HeaderGet_i("y") == dt2.HeaderGet_i("y"));
+	assert(dt.HeaderGet_s("z") == dt2.HeaderGet_s("z"));
 
-	assert(dt.Length() == dt2->Length());
+	assert(dt.Length() == dt2.Length());
 	for(size_t i = 0; i < dt.Length(); i++)
 	{
-		assert(dt.Get_s("a", i) == dt2->Get_s("a", i));
-		assert(dt.Get_d("b", i) == dt2->Get_d("b", i));
-		assert(dt.Get_i("c", i) == dt2->Get_i("c", i));
+		assert(dt.Get_s("a", i) == dt2.Get_s("a", i));
+		assert(dt.Get_d("b", i) == dt2.Get_d("b", i));
+		assert(dt.Get_i("c", i) == dt2.Get_i("c", i));
 	}
 }
 
@@ -63,15 +63,15 @@ void read_big()
 	string lattice_path = find_data_file("twiss.7.0tev.b1_new.tfs");
 
 	cout << "Reading: " << lattice_path << endl;
-	unique_ptr<DataTable> dt(DataTableReaderTFS(lattice_path).Read());
+	auto dt = DataTableReaderTFS(lattice_path).Read();
 
-	assert(dt->Length() == 13211);
+	assert(dt.Length() == 13211);
 
-	assert(dt->HeaderGet_s("NAME") == "TWISS");
-	assert_close(dt->HeaderGet_d("MASS"), 9.3827201299999996E-01, 1e-8);
-	assert(dt->Get_s("NAME", 0) == "LHCB1$START");
-	assert(dt->Get_s("NAME", 2) == "MBAS2.1R1");
-	assert_close(dt->Get_d("S", 4), 2.0915000000000003E+01, 1e-8);
+	assert(dt.HeaderGet_s("NAME") == "TWISS");
+	assert_close(dt.HeaderGet_d("MASS"), 9.3827201299999996E-01, 1e-8);
+	assert(dt.Get_s("NAME", 0) == "LHCB1$START");
+	assert(dt.Get_s("NAME", 2) == "MBAS2.1R1");
+	assert_close(dt.Get_d("S", 4), 2.0915000000000003E+01, 1e-8);
 }
 
 int main()

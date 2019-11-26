@@ -98,7 +98,7 @@ AcceleratorModel* MADInterface::ConstructModel()
 	unique_ptr<DataTable> MADinput;
 	try
 	{
-		MADinput = DataTableReaderTFS(ifs).Read();
+		MADinput = make_unique<DataTable>(DataTableReaderTFS(ifs).Read());
 	}
 	catch(const BadFormatException &e)
 	{
