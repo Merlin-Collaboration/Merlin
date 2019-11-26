@@ -47,13 +47,13 @@ bool InterpolatedAperture::CheckWithinApertureBoundaries(double x, double y, dou
 
 void InterpolatedAperture::ConvertToStruct(DataTable dt)
 {
-	for(size_t row = 0; row < dt.Length(); ++row)
+	for(auto &row : dt)
 	{
-		ApEntry.s = dt.Get_d("S", row);
-		ApEntry.ap1 = dt.Get_d("APER_1", row);
-		ApEntry.ap2 = dt.Get_d("APER_2", row);
-		ApEntry.ap3 = dt.Get_d("APER_3", row);
-		ApEntry.ap4 = dt.Get_d("APER_4", row);
+		ApEntry.s = row.Get_d("S");
+		ApEntry.ap1 = row.Get_d("APER_1");
+		ApEntry.ap2 = row.Get_d("APER_2");
+		ApEntry.ap3 = row.Get_d("APER_3");
+		ApEntry.ap4 = row.Get_d("APER_4");
 		ApList.push_back(ApEntry);
 	}
 }
