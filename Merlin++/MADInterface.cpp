@@ -119,23 +119,23 @@ AcceleratorModel* MADInterface::ConstructModel()
 	double brho = momentum / eV / SpeedOfLight;
 
 	//Loop over all components
-	for(size_t i = 0; i < MADinput->Length(); ++i)
+	for(auto &MADinputrow : *MADinput)
 	{
-		string type = MADinput->Get_s("KEYWORD", i);
-		double length = MADinput->Get_d("L", i);
+		string type = MADinputrow.Get_s("KEYWORD");
+		double length = MADinputrow.Get_d("L");
 
 		if(length == 0 && zeroLengths.find(type) != zeroLengths.end())
 		{
-			MerlinIO::warning() << "Ignoring zero length " << type << ": " << MADinput->Get_s("NAME", i) << endl;
+			MerlinIO::warning() << "Ignoring zero length " << type << ": " << MADinputrow.Get_s("NAME") << endl;
 			continue;
 		}
-		TypeOverrides(MADinput, i);
+		TypeOverrides(MADinputrow);
 
 		if(type == "LINE")
 		{
 			if(!flatLattice)
 			{
-				const string& name = MADinput->Get_s("NAME", i);
+				const string& name = MADinputrow.Get_s("NAME");
 				if(!frameStack.empty() && name == frameStack.top())
 				{
 					frameStack.pop();
@@ -152,16 +152,16 @@ AcceleratorModel* MADInterface::ConstructModel()
 		}
 		else if(type == "SROT")
 		{
-			modelconstr->AppendComponentFrame(ConstructSrot(length, MADinput->Get_s("NAME", i)));
+			modelconstr->AppendComponentFrame(ConstructSrot(length, MADinputrow.Get_s("NAME")));
 			continue;
 		}
 
 		//Determine multipole type by parameters
-		vector<AcceleratorComponent*> components = factory->GetInstance(MADinput, brho, i);
+		vector<AcceleratorComponent*> components = factory->GetInstance(MADinputrow, brho);
 
 		if(inc_sr && (type == "SBEND" || type == "RBEND"))
 		{
-			momentum -= SRdE(MADinput->Get_d("ANGLE", i) / length, length, momentum);
+			momentum -= SRdE(MADinputrow.Get_d("ANGLE") / length, length, momentum);
 			brho = momentum / eV / SpeedOfLight;
 		}
 
@@ -192,32 +192,32 @@ AcceleratorModel* MADInterface::ConstructModel()
 	return theModel;
 }
 
-void MADInterface::TypeOverrides(unique_ptr<DataTable>& MADinput, size_t index)
+void MADInterface::TypeOverrides(DataTableRow& MADinputrow)
 {
-	string keyword = MADinput->Get_s("KEYWORD", index);
+	string keyword = MADinputrow.Get_s("KEYWORD");
 	if(driftTypes.find(keyword) != driftTypes.end())
-		MADinput->Set_s("KEYWORD", index, "DRIFT");
+		MADinputrow.Set_s("KEYWORD", "DRIFT");
 	if(keyword == "LCAV")
-		MADinput->Set_s("KEYWORD", index, "RFCAVITY");
+		MADinputrow.Set_s("KEYWORD", "RFCAVITY");
 	if(keyword == "RCOLLIMATOR" || keyword == "ECOLLIMATOR")
-		MADinput->Set_s("KEYWORD", index, "COLLIMATOR");
-	if(keyword == "RBEND" && MADinput->Get_d("K0L", index))
-		MADinput->Set_s("KEYWORD", index, "SBEND");
-	if(single_cell_rf && MADinput->Get_s("KEYWORD", index) == "RFCAVITY")
-		MADinput->Set_s("KEYWORD", index, "RFCAVITY_SingleCell");
+		MADinputrow.Set_s("KEYWORD", "COLLIMATOR");
+	if(keyword == "RBEND" && MADinputrow.Get_d("K0L"))
+		MADinputrow.Set_s("KEYWORD", "SBEND");
+	if(single_cell_rf && MADinputrow.Get_s("KEYWORD") == "RFCAVITY")
+		MADinputrow.Set_s("KEYWORD", "RFCAVITY_SingleCell");
 }
 
-string MADInterface::GetMutipoleType(unique_ptr<DataTable>& MADinput, size_t index)
+string MADInterface::GetMutipoleType(DataTableRow& MADinputrow)
 {
-	if(!MADinput->Get_d("K0L", index))
+	if(!MADinputrow.Get_d("K0L"))
 		return "SBEND";
-	if(!MADinput->Get_d("K1L", index))
+	if(!MADinputrow.Get_d("K1L"))
 		return "QUADRUPOLE";
-	if(!MADinput->Get_d("K2L", index))
+	if(!MADinputrow.Get_d("K2L"))
 		return "SEXTUPOLE";
-	if(!MADinput->Get_d("K3L", index))
+	if(!MADinputrow.Get_d("K3L"))
 		return "OCTUPOLE";
-	if(!MADinput->Get_d("K4L", index))
+	if(!MADinputrow.Get_d("K4L"))
 		return "DECAPOLE";
 	return "DRIFT";
 }
@@ -350,11 +350,10 @@ void MADInterface::TreatTypeAsDrift(const std::string& typestr)
 	driftTypes.insert(typestr);
 }
 
-vector<AcceleratorComponent*> DriftComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> DriftComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	if(length != 0)
 		return {new Drift(name, length)};
@@ -362,14 +361,13 @@ vector<AcceleratorComponent*> DriftComponent::GetInstance(unique_ptr<DataTable>&
 		return {};
 }
 
-vector<AcceleratorComponent*> RBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> RBendComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double angle = MADinput->Get_d("ANGLE", id);
-	double k1l = MADinput->Get_d("K1L", id);
-	double tilt = MADinput->Get_d("TILT", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double angle = MADinputrow.Get_d("ANGLE");
+	double k1l = MADinputrow.Get_d("K1L");
+	double tilt = MADinputrow.Get_d("TILT");
 	double h = angle / length;
 
 	SectorBend* bend = new SectorBend(name, length, h, brho * h);
@@ -377,8 +375,8 @@ vector<AcceleratorComponent*> RBendComponent::GetInstance(unique_ptr<DataTable>&
 	if(k1l)
 		bend->SetB1(brho * k1l / length);
 
-	double e1 = MADinput->Get_d("E1", id);
-	double e2 = MADinput->Get_d("E2", id);
+	double e1 = MADinputrow.Get_d("E1");
+	double e2 = MADinputrow.Get_d("E2");
 
 	if(e1 != 0 || e2 != 0)
 	{
@@ -391,14 +389,13 @@ vector<AcceleratorComponent*> RBendComponent::GetInstance(unique_ptr<DataTable>&
 	return {bend};
 }
 
-vector<AcceleratorComponent*> SBendComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> SBendComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double angle = MADinput->Get_d("ANGLE", id);
-	double k1l = MADinput->Get_d("K1L", id);
-	double tilt = MADinput->Get_d("TILT", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double angle = MADinputrow.Get_d("ANGLE");
+	double k1l = MADinputrow.Get_d("K1L");
+	double tilt = MADinputrow.Get_d("TILT");
 	double h = angle / length;
 
 	SectorBend* bend = new SectorBend(name, length, h, brho * h);
@@ -406,8 +403,8 @@ vector<AcceleratorComponent*> SBendComponent::GetInstance(unique_ptr<DataTable>&
 	if(k1l)
 		bend->SetB1(brho * k1l / length);
 
-	double e1 = MADinput->Get_d("E1", id);
-	double e2 = MADinput->Get_d("E2", id);
+	double e1 = MADinputrow.Get_d("E1");
+	double e2 = MADinputrow.Get_d("E2");
 
 	if(e1 || e2)
 	{
@@ -421,79 +418,72 @@ vector<AcceleratorComponent*> SBendComponent::GetInstance(unique_ptr<DataTable>&
 	return {bend};
 }
 
-vector<AcceleratorComponent*> QuadrupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t id)
+vector<AcceleratorComponent*> QuadrupoleComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double k1l = MADinput->Get_d("K1L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double k1l = MADinputrow.Get_d("K1L");
 
 	return {new Quadrupole(name, length, brho * k1l / length)};
 }
 
-vector<AcceleratorComponent*> SkewQuadrupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> SkewQuadrupoleComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double k1l = MADinput->Get_d("K1L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double k1l = MADinputrow.Get_d("K1L");
 
 	return {new SkewQuadrupole(name, length, brho * k1l / length)};
 }
 
-vector<AcceleratorComponent*> SextupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t id)
+vector<AcceleratorComponent*> SextupoleComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double k2l = MADinput->Get_d("K2L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double k2l = MADinputrow.Get_d("K2L");
 
 	return {new Sextupole(name, length, brho * k2l / length)};
 }
 
-vector<AcceleratorComponent*> SkewSextupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t id)
+vector<AcceleratorComponent*> SkewSextupoleComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double k2l = MADinput->Get_d("K2L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double k2l = MADinputrow.Get_d("K2L");
 
 	return {new SkewSextupole(name, length, brho * k2l / length)};
 }
 
-vector<AcceleratorComponent*> OctupoleComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t
-	id)
+vector<AcceleratorComponent*> OctupoleComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double k3l = MADinput->Get_d("K3L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double k3l = MADinputrow.Get_d("K3L");
 
 	return {new Octupole(name, length, brho * k3l / length)};
 }
 
-vector<AcceleratorComponent*> YCorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
+vector<AcceleratorComponent*> YCorComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	return {new YCor(name, length)};
 }
 
-vector<AcceleratorComponent*> XCorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
+vector<AcceleratorComponent*> XCorComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	return {new XCor(name, length)};
 }
 
-vector<AcceleratorComponent*> VKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> VKickerComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double kick = MADinput->Get_d("VKICK", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double kick = MADinputrow.Get_d("VKICK");
 	double scale;
 	if(length > 0)
 		scale = brho / length;
@@ -503,12 +493,11 @@ vector<AcceleratorComponent*> VKickerComponent::GetInstance(unique_ptr<DataTable
 	return {new YCor(name, length, scale * kick)};
 }
 
-vector<AcceleratorComponent*> HKickerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> HKickerComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double kick = MADinput->Get_d("HKICK", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double kick = MADinputrow.Get_d("HKICK");
 	double scale;
 	if(length > 0)
 		scale = brho / length;
@@ -518,27 +507,23 @@ vector<AcceleratorComponent*> HKickerComponent::GetInstance(unique_ptr<DataTable
 	return {new XCor(name, length, -scale * kick)};
 }
 
-vector<AcceleratorComponent*> SolenoidComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t
-	id)
+vector<AcceleratorComponent*> SolenoidComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
-	double ks = MADinput->Get_d("KS", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
+	double ks = MADinputrow.Get_d("KS");
 
 	return {new Solenoid(name, length, brho * ks / length)};
 }
 
-vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(unique_ptr<DataTable>& MADinput, double brho,
-	size_t
-	id)
+vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 	// Here we assume an SW cavity
-	double freq = MADinput->Get_d("FREQ", id);
-	double phase = MADinput->Get_d("LAG", id);
-	double volts = MADinput->Get_d("VOLT", id);
+	double freq = MADinputrow.Get_d("FREQ");
+	double phase = MADinputrow.Get_d("LAG");
+	double volts = MADinputrow.Get_d("VOLT");
 	// standing wave cavities need an exact integer of half-wavelengths
 	freq *= MHz;
 	double lambdaOver2 = SpeedOfLight / freq / 2;
@@ -567,16 +552,14 @@ vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(unique_pt
 
 }
 
-vector<AcceleratorComponent*> RFCavityComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t
-	id)
+vector<AcceleratorComponent*> RFCavityComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 	// Here we assume an SW cavity
-	double freq = MADinput->Get_d("FREQ", id);
-	double phase = MADinput->Get_d("LAG", id);
-	double volts = MADinput->Get_d("VOLT", id);
+	double freq = MADinputrow.Get_d("FREQ");
+	double phase = MADinputrow.Get_d("LAG");
+	double volts = MADinputrow.Get_d("VOLT");
 	// standing wave cavities need an exact integer of half-wavelengths
 	freq *= MHz;
 	double lambdaOver2 = SpeedOfLight / freq / 2;
@@ -596,48 +579,44 @@ vector<AcceleratorComponent*> RFCavityComponent::GetInstance(unique_ptr<DataTabl
 
 }
 
-vector<AcceleratorComponent*> CrabMarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t id)
+vector<AcceleratorComponent*> CrabMarkerComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	double mux = MADinput->Get_d("MUX", id);
-	double muy = MADinput->Get_d("MUY", id);
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	double mux = MADinputrow.Get_d("MUX");
+	double muy = MADinputrow.Get_d("MUY");
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	return {new CrabMarker(name, length, mux, muy)};
 }
 
-vector<AcceleratorComponent*> CrabRFComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> CrabRFComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	return {new TransverseRFStructure(name, length, 0, 0)};
 }
 
-vector<AcceleratorComponent*> CollimatorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double
-	brho, size_t id)
+vector<AcceleratorComponent*> CollimatorComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	return {new Collimator(name, length)};
 }
 
-vector<AcceleratorComponent*> HELComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
+vector<AcceleratorComponent*> HELComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	return {new HollowElectronLens(name, length, 0, 0, 0, 0, 0)};
 }
 
-vector<AcceleratorComponent*> MonitorComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> MonitorComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
-	double length = MADinput->Get_d("L", id);
+	const string& name = MADinputrow.Get_s("NAME");
+	double length = MADinputrow.Get_d("L");
 
 	if(name.substr(0, 2) == "WS")
 		return {new RMSProfileMonitor(name, length)};
@@ -645,21 +624,20 @@ vector<AcceleratorComponent*> MonitorComponent::GetInstance(unique_ptr<DataTable
 		return {new BPM(name, length)};
 }
 
-vector<AcceleratorComponent*> MarkerComponent::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t
-	id)
+vector<AcceleratorComponent*> MarkerComponent::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	const string& name = MADinput->Get_s("NAME", id);
+	const string& name = MADinputrow.Get_s("NAME");
 
 	return {new Marker(name)};
 }
 
-vector<AcceleratorComponent*> TypeFactory::GetInstance(unique_ptr<DataTable>& MADinput, double brho, size_t id)
+vector<AcceleratorComponent*> TypeFactory::GetInstance(DataTableRow& MADinputrow, double brho)
 {
-	string type = MADinput->Get_s("KEYWORD", id);
+	string type = MADinputrow.Get_s("KEYWORD");
 	map<string, getTypeFunc>::iterator itr = componentTypes.find(type);
 	if(itr != componentTypes.end())
 	{
-		return (*itr->second)(MADinput, brho, id);
+		return (*itr->second)(MADinputrow, brho);
 	}
 	return {};
 }
