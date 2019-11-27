@@ -1040,6 +1040,17 @@ public:
 		//std::copy(rhs.begin(),rhs.end(),begin());
 	}
 
+	// Need an explicit version that compiler can recognize as a copy constructor
+	Matrix(const Matrix<T>& rhs) :
+		nr(rhs.nrows()), nc(rhs.ncols()), array(rhs.nrows() * rhs.ncols())
+	{
+		iterator q = begin();
+		for(const_iterator rhsp = rhs.begin(); rhsp != rhs.end(); rhsp++, q++)
+		{
+			*q = T(*rhsp);
+		}
+	}
+
 	// destruction
 	~Matrix()
 	{
