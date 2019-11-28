@@ -241,4 +241,11 @@ private:
  */
 typedef std::vector<PSvector> PSvectorArray;
 
+/**
+ *	Representation of a particle.
+ */
+namespace ParticleTracking
+{
+typedef PSvector Particle;
+}
 #endif
