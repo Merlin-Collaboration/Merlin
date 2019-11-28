@@ -39,6 +39,7 @@
 #include "BunchFilter.h"
 
 // Include collimator classes
+#include "Collimator.h"
 #include "MaterialDatabase.h"
 #include "CollimatorDatabase.h"
 #include "CollimateProtonProcess.h"

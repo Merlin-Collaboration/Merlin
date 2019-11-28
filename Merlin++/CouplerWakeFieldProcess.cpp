@@ -17,10 +17,10 @@
 #include "utils.h"
 #include "MerlinIO.h"
 #include "TLASimp.h"
+#include "CombinedWakeRF.h"
 
 #include <stdexcept>
 #include <sstream>
-#include <iterator>
 #include <algorithm>
 #include <fstream>
 

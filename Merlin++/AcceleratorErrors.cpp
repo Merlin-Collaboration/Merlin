@@ -7,6 +7,9 @@
 
 #include "AcceleratorErrors.h"
 #include "utils.h"
+#include "RandomNG.h"
+
+#include "LatticeFrame.h"
 
 using namespace std;
 namespace

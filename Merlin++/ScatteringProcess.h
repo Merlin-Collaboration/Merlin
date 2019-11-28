@@ -9,21 +9,10 @@
 #define _h_ScatteringProcess 1
 
 #include <iostream>
-#include <cmath>
 
 #include "merlin_config.h"
 
 #include "PSvector.h"
-
-#include "Material.h"
-#include "DiffractiveScatter.h"
-#include "ElasticScatter.h"
-#include "CrossSections.h"
-
-#include "utils.h"
-#include "PhysicalUnits.h"
-#include "PhysicalConstants.h"
-#include "NumericalConstants.h"
 
 /*
 
@@ -35,8 +24,11 @@
 
  */
 
+class Material;
+
 namespace Collimation
 {
+class CrossSections;
 
 class ScatteringProcess
 {

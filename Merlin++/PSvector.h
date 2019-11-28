@@ -9,7 +9,7 @@
 #define PSvector_h 1
 
 #include "merlin_config.h"
-#include <algorithm>
+
 #include <iostream>
 #include <vector>
 #include "LinearAlgebra.h"

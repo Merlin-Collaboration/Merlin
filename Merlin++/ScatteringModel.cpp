@@ -11,10 +11,13 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <cmath>
 
 #include "ScatteringModel.h"
 #include "DiffractiveScatter.h"
 #include "ElasticScatter.h"
+#include "Material.h"
+#include "CrossSections.h"
 
 #include "utils.h"
 #include "PhysicalUnits.h"

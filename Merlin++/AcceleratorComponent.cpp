@@ -6,9 +6,6 @@
  */
 
 #include "ComponentTracker.h"
-#include "EMField.h"
-#include "AcceleratorGeometry.h"
-#include "Aperture.h"
 #include "AcceleratorComponent.h"
 
 const int AcceleratorComponent::ID = UniqueIndex();

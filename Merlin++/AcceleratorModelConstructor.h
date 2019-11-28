@@ -12,7 +12,6 @@
 #include <stack>
 #include "TComponentFrame.h"
 #include "AcceleratorModel.h"
-#include "utils.h"
 
 class SequenceFrame;
 

@@ -15,7 +15,6 @@
 #include "ElementRepository.h"
 
 class ModelElement;
-class StringPattern;
 class RWChannel;
 class ROChannel;
 

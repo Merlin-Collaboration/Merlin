@@ -15,6 +15,8 @@
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
 #include "NumericalConstants.h"
+#include "CrossSections.h"
+#include "Material.h"
 
 #include "RandomNG.h"
 

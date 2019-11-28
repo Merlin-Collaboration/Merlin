@@ -13,11 +13,10 @@
 #include <vector>
 
 #include "AcceleratorModel.h"
-#include "Collimator.h"
-#include "BeamData.h"
-#include "Material.h"
-#include "MaterialDatabase.h"
 #include "LatticeFunctions.h"
+
+class Material;
+class MaterialDatabase;
 
 using namespace std;
 /**

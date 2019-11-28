@@ -9,10 +9,8 @@
 #define _h_CouplerWakeFieldProcess
 
 #include "WakeFieldProcess.h"
-#include "StringPattern.h"
-#include <vector>
 
-#include "CombinedWakeRF.h"
+class CombinedWakeRF;
 
 namespace ParticleTracking
 {

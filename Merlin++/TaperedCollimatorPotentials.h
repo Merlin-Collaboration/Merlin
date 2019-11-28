@@ -5,29 +5,8 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#include <typeinfo>
-#include <iostream>
-
-#include "AcceleratorModel.h"
-#include "WakePotentials.h"
-#include "AcceleratorModelConstructor.h"
-#include "Drift.h"
-#include "Collimator.h"
-
-#include "BeamData.h"
-#include "ParticleTracker.h"
-
-#include "CollimatorWakeProcess.h"
 #include "CollimatorWakePotentials.h"
 
-#include "PhysicalUnits.h"
-#include "PhysicalConstants.h"
-
-#include "RandomNG.h"
-
-using namespace std;
-using namespace PhysicalUnits;
-using namespace PhysicalConstants;
 using namespace ParticleTracking;
 
 class TaperedCollimatorPotentials: public CollimatorWakePotentials

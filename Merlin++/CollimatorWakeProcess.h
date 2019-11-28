@@ -8,14 +8,11 @@
 #ifndef _h_CollimatorWakeProcess
 #define _h_CollimatorWakeProcess
 
-#include <vector>
-
 #include "merlin_config.h"
-#include "CollimatorWakePotentials.h"
-#include "ParticleBunch.h"
-#include "ParticleBunchProcess.h"
+
 #include "WakeFieldProcess.h"
-#include "StringPattern.h"
+
+class CollimatorWakePotentials;
 
 namespace ParticleTracking
 {

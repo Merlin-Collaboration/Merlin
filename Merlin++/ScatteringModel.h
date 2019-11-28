@@ -9,22 +9,17 @@
 #define ScatteringModel_h 1
 
 #include <iostream>
-#include <cmath>
+#include <string>
 #include <map>
 
 #include "merlin_config.h"
 
 #include "PSvector.h"
 
-#include "ParticleBunch.h"
-
 #include "Material.h"
 #include "ScatteringProcess.h"
 
 #include "utils.h"
-#include "PhysicalUnits.h"
-#include "PhysicalConstants.h"
-#include "NumericalConstants.h"
 
 namespace Collimation
 {

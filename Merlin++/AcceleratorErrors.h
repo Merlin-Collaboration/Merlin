@@ -9,16 +9,7 @@
 #define AcceleratorErrors_h 1
 
 #include "AcceleratorModel.h"
-#include "LatticeFrame.h"
-#include "ComponentFrame.h"
-#include "SequenceFrame.h"
-#include "SupportStructure.h"
 
-#include "StringPattern.h"
-#include "NumericalConstants.h"
-#include "RandomNG.h"
-
-#include <algorithm>
 #include <iostream>
 #include <string>
 

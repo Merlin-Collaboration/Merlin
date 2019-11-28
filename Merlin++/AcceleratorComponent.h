@@ -13,12 +13,12 @@
 
 #include "EMField.h"
 #include "AcceleratorGeometry.h"
-#include "Material.h"
 #include "ModelElement.h"
-#include "WakePotentials.h"
 
 class ComponentTracker;
 class Aperture;
+class WakePotentials;
+class Material;
 
 using std::string;
 

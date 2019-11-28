@@ -8,6 +8,7 @@
 #include <iostream>
 #include "ScatteringModelsMerlin.h"
 #include "ScatteringProcess.h"
+#include "CrossSections.h"
 
 namespace Collimation
 {

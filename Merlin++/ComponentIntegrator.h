@@ -12,7 +12,6 @@
 #include "utils.h"
 #include "Range.h"
 #include "AcceleratorComponent.h"
-#include "utils.h"
 
 /**
  *  Class ComponentIntegrator

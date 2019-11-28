@@ -18,6 +18,7 @@
 #include "SectorBend.h"
 
 #include "WakeFieldProcess.h"
+#include "WakePotentials.h"
 #include "ParticleBunch.h"
 #include "ParticleBunchUtilities.h"
 

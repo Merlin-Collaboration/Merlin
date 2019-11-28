@@ -19,15 +19,18 @@
 #include "InterpolatedApertures.h"
 #include "Collimator.h"
 
+#include "PSvector.h"
 #include "ParticleComponentTracker.h"
 #include "ParticleBunch.h"
 
 #include "CollimateProtonProcess.h"
 #include "ScatteringProcess.h"
 #include "ScatteringModel.h"
+#include "CrossSections.h"
 
 #include "utils.h"
 #include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 
 using namespace Collimation;
 
