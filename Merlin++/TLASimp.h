@@ -248,7 +248,7 @@ void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 		double big = 0.0;
 		for(j = 0; j < n; j++)
 		{
-			big = _MAX(fabs(a[i][j]), big);
+			big = std::max(fabs(a[i][j]), big);
 		}
 		if(big == 0.0)
 		{

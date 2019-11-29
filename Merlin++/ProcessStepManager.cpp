@@ -17,12 +17,6 @@
 
 namespace
 {
-
-#ifndef  _MSC_VER
-#define _MIN(a, b) std::min(a, b)
-#define _MAX(a, b) std::max(a, b)
-#endif
-
 using std::setw;
 
 typedef std::list<BunchProcess*>::iterator proc_itor;
@@ -71,7 +65,7 @@ struct CalcStepSize
 	{
 		if(proc->IsActive())
 		{
-			ds = _MIN(ds, proc->GetMaxAllowedStepSize());
+			ds = std::min(ds, proc->GetMaxAllowedStepSize());
 		}
 	}
 

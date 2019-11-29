@@ -19,19 +19,19 @@
  * Template argument T must be a valid concrete ComponentTracker class.
  */
 template<class T>
-class TTrnsProc: public TBunchProc<__TYPENAME__ T::bunch_type>
+class TTrnsProc: public TBunchProc<typename T::bunch_type>
 {
 public:
 
-	typedef __TYPENAME__ T::bunch_type bunch_type;
-	typedef __TYPENAME__ T::B_Integrator integrator_type;
-	typedef __TYPENAME__ T::ISetBase integrator_set_base;
+	typedef typename T::bunch_type bunch_type;
+	typedef typename T::B_Integrator integrator_type;
+	typedef typename T::ISetBase integrator_set_base;
 
 	/**
 	 * Construct process using the default integrator set
 	 */
 	TTrnsProc() :
-		TBunchProc<__TYPENAME__ T::bunch_type>("TRANSPORT", 0), ctracker()
+		TBunchProc<typename T::bunch_type>("TRANSPORT", 0), ctracker()
 	{
 	}
 
@@ -39,7 +39,7 @@ public:
 	 * Construct process using an explicit integrator set
 	 */
 	TTrnsProc(const integrator_set_base& iset) :
-		TBunchProc<__TYPENAME__ T::bunch_type>("TRANSPORT", 0), ctracker(iset)
+		TBunchProc<typename T::bunch_type>("TRANSPORT", 0), ctracker(iset)
 	{
 	}
 
@@ -110,11 +110,11 @@ class TTrackSim: public TrackingSimulation
 {
 public:
 
-	typedef __TYPENAME__ T::bunch_type bunch_type;
-	typedef __TYPENAME__ bunch_type::particle_type particle_type;
+	typedef typename T::bunch_type bunch_type;
+	typedef typename bunch_type::particle_type particle_type;
 	typedef TTrnsProc<T> transport_process;
-	typedef __TYPENAME__ transport_process::integrator_type integrator_type;
-	typedef __TYPENAME__ T::ISetBase integrator_set_base;
+	typedef typename transport_process::integrator_type integrator_type;
+	typedef typename T::ISetBase integrator_set_base;
 
 	/**
 	 * Constructor taking the beamline to be tracked and a
@@ -264,7 +264,7 @@ void TTrackSim<T>::SetInitialParticle(const particle_type& p, double Pref)
  * Standard Track "Tracker"
  */
 template<class T>
-__TYPENAME__ TTrackSim<T>::bunch_type * TTrackSim<T>::Track(bunch_type * aBunch)
+typename TTrackSim<T>::bunch_type * TTrackSim<T>::Track(bunch_type * aBunch)
 {
 	if(bunch != nullptr)
 	{

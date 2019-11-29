@@ -465,13 +465,13 @@ struct map_applicator_dp
 template<class C, class M>
 void ApplyMap(const M& m, C& cont)
 {
-	for_each(cont.begin(), cont.end(), map_applicator<M, __TYPENAME__ C::value_type>(m));
+	for_each(cont.begin(), cont.end(), map_applicator<M, typename C::value_type>(m));
 }
 
 template<class C, class M>
 void ApplyMap(const M& m, C& cont, double p0, double p1)
 {
-	for_each(cont.begin(), cont.end(), map_applicator_dp<M, __TYPENAME__ C::value_type>(m, p0 / p1));
+	for_each(cont.begin(), cont.end(), map_applicator_dp<M, typename C::value_type>(m, p0 / p1));
 }
 
 #endif

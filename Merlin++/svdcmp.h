@@ -8,10 +8,6 @@
 #ifndef svdcmp_h
 #define svdcmp_h 1
 
-//#ifndef _MSC_VER
-//#define _MAX(a,b) std::max((a),(b))
-//#endif
-
 #include "utils.h"
 
 template<class T, class V>
@@ -172,7 +168,7 @@ void svdcmp(Matrix<T>& a, Vector<T>& w, Matrix<T>& v)
 				}
 			}
 		}
-		anorm = _MAX(anorm, (fabs(w[i]) + fabs(rv1[i])));
+		anorm = std::max(anorm, (fabs(w[i]) + fabs(rv1[i])));
 	}
 	for(i = n - 1; i >= 0; i--)
 	{
