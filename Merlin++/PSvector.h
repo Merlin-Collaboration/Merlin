@@ -10,6 +10,7 @@
 
 #include "merlin_config.h"
 
+#include <cstring>
 #include <iostream>
 #include <vector>
 #include "LinearAlgebra.h"

@@ -7,8 +7,6 @@
 
 #ifndef _h_merlin_config
 #define _h_merlin_config
-#include <string>
-#include <cstring>
 
 //Include for x86 vector functions
 #ifdef __x86_64__
