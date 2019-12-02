@@ -8,11 +8,6 @@
 #ifndef _h_merlin_config
 #define _h_merlin_config
 
-//Include for x86 vector functions
-#ifdef __x86_64__
-#include <immintrin.h>
-#endif
-
 #ifdef _MSC_VER
 #pragma warning(disable: 4786)
 #pragma warning(disable: 4660)
