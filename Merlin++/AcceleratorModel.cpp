@@ -7,7 +7,6 @@
 
 #include <iomanip>
 #include <cassert>
-#include "algorithm.h"
 
 #include "ComponentFrame.h"
 #include "TComponentFrame.h"
