@@ -9,7 +9,6 @@
 #define CollimateParticleProcess_h 1
 
 #include <map>
-#include <set>
 #include <list>
 #include <vector>
 

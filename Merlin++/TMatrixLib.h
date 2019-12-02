@@ -12,10 +12,7 @@
 #include <cstdlib>
 #include <utility>
 #include <cassert>
-#include <algorithm>
-#include <vector>
 #include <cmath>
-#include <limits>
 #include <valarray>
 #include <iostream>
 

@@ -9,7 +9,6 @@
 #define _DiffractiveScatter_h_
 
 #include <vector>
-#include <complex>
 
 #include "Interpolation.h"
 

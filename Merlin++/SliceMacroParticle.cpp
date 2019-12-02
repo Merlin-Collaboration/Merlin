@@ -6,7 +6,6 @@
  */
 
 #include "SliceMacroParticle.h"
-#include <algorithm> // for std::fill
 #include <iostream>
 #include <iomanip>
 

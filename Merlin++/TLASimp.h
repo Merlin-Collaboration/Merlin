@@ -11,7 +11,6 @@
 // Templated functions and classes for performing linear algebra. The following
 // perform linear algebra functions based on TMAT::Matrix and TMAT::Vector classes.
 
-#include <vector>
 #include "TLAS.h"
 
 namespace TLAS

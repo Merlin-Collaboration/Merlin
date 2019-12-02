@@ -9,7 +9,6 @@
 #define BPM_h 1
 
 #include "merlin_config.h"
-#include <set>
 
 #include "Monitor.h"
 #include "AMBufferManager.h"

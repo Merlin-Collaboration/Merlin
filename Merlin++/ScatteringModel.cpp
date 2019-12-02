@@ -9,8 +9,6 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include <sstream>
-#include <cstring>
 #include <cmath>
 
 #include "ScatteringModel.h"

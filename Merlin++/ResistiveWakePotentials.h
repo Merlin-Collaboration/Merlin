@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <sstream>
 #include <cmath>
 
 #include "WakePotentials.h"

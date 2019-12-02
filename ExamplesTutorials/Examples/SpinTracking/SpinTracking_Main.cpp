@@ -5,6 +5,8 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
+#include <fstream>
+
 #include "merlin_config.h"
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"

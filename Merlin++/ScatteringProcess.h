@@ -8,10 +8,7 @@
 #ifndef _h_ScatteringProcess
 #define _h_ScatteringProcess 1
 
-#include <iostream>
-
 #include "merlin_config.h"
-
 #include "PSvector.h"
 
 /*

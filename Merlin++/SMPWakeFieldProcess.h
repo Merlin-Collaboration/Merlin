@@ -12,7 +12,6 @@
 #include "SMPBunchProcess.h"
 
 #include <vector>
-#include <typeinfo>
 
 class WakePotentials;
 

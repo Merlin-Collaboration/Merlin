@@ -6,7 +6,6 @@
  * This file is derived from software bearing the copyright notice: Copyright (c) 1999 by N.J.Walker.  ALL RIGHTS RESERVED.
  */
 
-#include <iterator>
 #include <algorithm>
 #include <list>
 

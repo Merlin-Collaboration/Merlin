@@ -15,7 +15,6 @@
 #include "ParticleBunch.h"
 #include "ParticleBunchTypes.h"
 #include "BunchFilter.h"
-#include <typeinfo>
 #include "PSvector.h"
 
 namespace ParticleTracking

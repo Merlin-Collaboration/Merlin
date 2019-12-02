@@ -9,7 +9,6 @@
 #define _h_WakeFieldProcess
 
 #include <vector>
-#include <typeinfo>
 
 #include "ParticleBunchProcess.h"
 

@@ -9,7 +9,6 @@
 #define TComponentFrame_h 1
 
 #include "merlin_config.h"
-#include <iostream>
 #include "ComponentFrame.h"
 
 /**

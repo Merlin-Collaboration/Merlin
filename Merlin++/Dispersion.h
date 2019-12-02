@@ -8,7 +8,6 @@
 #ifndef Dispersion_h
 #define Dispersion_h 1
 
-#include <fstream>
 #include <iostream>
 #include "AcceleratorModel.h"
 
@@ -17,7 +16,7 @@ class Dispersion
 public:
 	Dispersion(AcceleratorModel* aModel, double refMomentum);
 	void FindDispersion(int n = 0);
-	void FindRMSDispersion(ofstream* file = nullptr);
+	void FindRMSDispersion(ostream* file = nullptr);
 	double Dx, Dxp, Dy, Dyp;
 	double DxRMS, DyRMS;
 	double SetDelta(double new_delta);

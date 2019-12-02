@@ -6,7 +6,6 @@
  */
 
 #include <iomanip>
-#include <iterator>
 #include <cassert>
 #include "algorithm.h"
 

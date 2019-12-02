@@ -8,7 +8,7 @@
 #ifndef _COLLIMATOR_DATABASE_H_
 #define _COLLIMATOR_DATABASE_H_
 
-#include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 

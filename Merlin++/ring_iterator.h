@@ -8,8 +8,6 @@
 #ifndef ring_iterator_h
 #define ring_iterator_h 1
 
-#include <iterator>
-
 /**
  * template class ring_iterator
  * An iterator which cyclically iterates through a sequence (container).

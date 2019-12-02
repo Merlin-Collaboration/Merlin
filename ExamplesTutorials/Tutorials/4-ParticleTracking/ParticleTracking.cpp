@@ -14,6 +14,8 @@
 //																										//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <fstream>
+
 // Include units
 #include "PhysicalUnits.h"
 
@@ -31,19 +33,20 @@ using namespace PhysicalUnits;
 using namespace ParticleTracking;
 
 // Define accelerator parameters for convenience
-#define beamenergy 5.0*GeV
+#define beamenergy 5.0 * GeV
 
 int main()
 {
 	cout << "Locating MAD lattice information..." << endl;
 	// Loop over possible build directories to locate MAD .tfs files
-	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs", "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
+	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs",
+					  "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
 	string lattice_path;
-	for (size_t i=0; i<4; i++)
+	for(size_t i = 0; i < 4; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
-		if (test_file)
+		if(test_file)
 		{
 			lattice_path = paths[i];
 			break;
@@ -77,18 +80,18 @@ int main()
 	bool show_header = true;
 	for(int turn = 0; turn < 100; turn++)
 	{
-		cout << "Tracking... turn: " << turn+1 << endl;
+		cout << "Tracking... turn: " << turn + 1 << endl;
 		if(turn == 0)
 		{
 			tracker.Run();
 		}
 		else
 		{
-			show_header=false;
+			show_header = false;
 			tracker.Continue();
 		}
 		ParticleBunch& tracked = tracker.GetTrackedBunch();
-		tracked.Output(trackingLog,show_header);
+		tracked.Output(trackingLog, show_header);
 	}
 
 	delete theParticles;

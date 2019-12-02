@@ -17,8 +17,6 @@
 #define RMap_h 1
 
 #include "merlin_config.h"
-#include <cassert>
-#include <vector>
 #include "PSTypes.h"
 #include "LinearAlgebra.h"
 #include "utils.h"

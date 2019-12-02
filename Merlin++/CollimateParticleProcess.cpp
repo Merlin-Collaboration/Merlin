@@ -7,9 +7,7 @@
 
 #include <iterator>
 #include <iomanip>
-#include <typeinfo>
 #include <fstream>
-#include <sstream>
 
 #include "merlin_config.h"
 

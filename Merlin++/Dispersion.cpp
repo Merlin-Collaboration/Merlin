@@ -47,7 +47,7 @@ void Dispersion::FindDispersion(int n)
 	Dyp = (q.yp() - p.yp()) / 2 / delta;
 }
 
-void Dispersion::FindRMSDispersion(ofstream* file)
+void Dispersion::FindRMSDispersion(ostream* file)
 {
 	ClosedOrbit co(theModel, p0);
 	co.TransverseOnly(true);

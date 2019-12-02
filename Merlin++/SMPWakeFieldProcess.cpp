@@ -14,11 +14,7 @@
 #include "MerlinIO.h"
 #include "TLASimp.h"
 
-#include <stdexcept>
-#include <sstream>
-#include <iterator>
 #include <algorithm>
-#include <fstream>
 
 namespace
 {

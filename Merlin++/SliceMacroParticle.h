@@ -11,7 +11,6 @@
 #include "PSTypes.h"
 #include "Space2D.h"
 #include <iostream>
-#include <cmath>
 
 namespace SMPTracking
 {

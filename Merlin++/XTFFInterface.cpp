@@ -11,7 +11,6 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
-#include <iterator>
 #include <stdexcept>
 #include <cctype>
 

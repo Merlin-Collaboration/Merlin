@@ -14,6 +14,8 @@
 //																										//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <fstream>
+
 // Include units
 #include "PhysicalUnits.h"
 
@@ -33,19 +35,20 @@ using namespace PhysicalUnits;
 using namespace ParticleTracking;
 
 // Define accelerator parameters for convenience
-#define beamenergy 5.0*GeV
+#define beamenergy 5.0 * GeV
 
 int main()
 {
 	cout << "Locating MAD lattice information..." << endl;
 	// Loop over possible build directories to locate MAD .tfs files
-	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs", "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
+	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs",
+					  "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
 	string lattice_path;
-	for (size_t i=0; i<4; i++)
+	for(size_t i = 0; i < 4; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
-		if (test_file)
+		if(test_file)
 		{
 			lattice_path = paths[i];
 			break;
@@ -62,12 +65,12 @@ int main()
 	AcceleratorModel* theModel = MADinput.ConstructModel();
 
 	// Find the closed orbit in the ring
-	ClosedOrbit theClosedOrbit(theModel,beamenergy);
+	ClosedOrbit theClosedOrbit(theModel, beamenergy);
 	Particle particle(0);
 	theClosedOrbit.FindClosedOrbit(particle);
 
 	// Calculate beta and dispersion functions
-	LatticeFunctionTable* latticeFunctions = new LatticeFunctionTable(theModel,beamenergy);
+	LatticeFunctionTable* latticeFunctions = new LatticeFunctionTable(theModel, beamenergy);
 	latticeFunctions->Calculate();
 
 	// Write lattice functions to output file
@@ -98,7 +101,7 @@ int main()
 	field2.SetComponent(1, b1b.real() * 1.12, b1b.imag() * 1.12);
 
 	// Calculate beta and dispersion functions
-	LatticeFunctionTable* newLatticeFunctions = new LatticeFunctionTable(theModel,beamenergy);
+	LatticeFunctionTable* newLatticeFunctions = new LatticeFunctionTable(theModel, beamenergy);
 	newLatticeFunctions->Calculate();
 
 	// Write lattice functions to output file

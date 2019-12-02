@@ -7,8 +7,6 @@
 
 #include <time.h>
 
-#include <stdexcept>
-#include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <fstream>
