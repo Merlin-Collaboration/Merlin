@@ -32,11 +32,6 @@ inline bool fequal(double x, double y, double tol = std::numeric_limits<double>:
 
 double NormalBin(double x1, double x2);
 
-// Modified Bessel function
-double BesselI0(double x);
-double BesselI1(double x);
-double BesselIn(int n, double x);
-
 // Gamma function
 double LogGamma(double);
 inline double Gamma(double x)
