@@ -14,6 +14,16 @@
 #include "MatrixPrinter.h"
 #endif
 
+namespace TLAS
+{
+template class Vector<Complex>;
+template class Matrix<Complex>;
+template class SubVector<Complex>;
+template class SubMatrix<Complex>;
+template class ConstSubVector<Complex>;
+template class ConstSubMatrix<Complex>;
+}
+
 namespace
 {
 

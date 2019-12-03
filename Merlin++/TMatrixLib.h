@@ -1431,6 +1431,13 @@ ostream& operator<<(ostream& os, const Matrix<T>& M)
 	return os;
 }
 
+extern template class Vector<double>;
+extern template class Matrix<double>;
+extern template class SubVector<double>;
+extern template class SubMatrix<double>;
+extern template class ConstSubVector<double>;
+extern template class ConstSubMatrix<double>;
+
 } // end of namespace TLAS
 
 #endif  // _h_TMatrixLib
