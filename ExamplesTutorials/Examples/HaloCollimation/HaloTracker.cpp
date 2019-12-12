@@ -106,7 +106,7 @@ void HaloTracker::Run(size_t npart)
 	}
 	catch(MerlinException& err)
 	{
-		cout << err.Msg() << endl;
+		cout << err.what() << endl;
 	}
 }
 

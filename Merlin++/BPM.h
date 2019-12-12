@@ -31,8 +31,6 @@ class ComponentTracker;
 
 class BPM: public Monitor
 {
-private:
-	BPM& operator=(const BPM& rhs);
 public:
 
 	BPM() :

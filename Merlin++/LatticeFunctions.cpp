@@ -231,7 +231,7 @@ public:
 			cout << " Illegal attempt to calculate longitudinal lattice parameter with unstable motion" << endl;
 			cout << " If your lattice has no RF cavities then consider using" << endl;
 			cout << " LatticeFunctionTable::SetForceLongitudinalStability(true)" << endl;
-			throw MerlinException();
+			throw MerlinException("Illegal attempt to calculate longitudinal lattice parameter");
 		}
 
 		if(i == 0 && j == 0 && k > 0)

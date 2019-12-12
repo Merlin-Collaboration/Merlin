@@ -643,13 +643,13 @@ void CollimateParticleProcess::DoOutput(const PSvectorArray& lostb, const list<s
 }
 
 ExcessiveParticleLoss::ExcessiveParticleLoss(const string& c_id, double threshold, size_t nlost, size_t nstart) :
-	MerlinException()
+	MerlinException("ExcessiveParticleLoss")
 {
 	ostringstream buffer;
 	buffer << "CollimateParticleProcess Exception\n";
 	buffer << "particle loss threshold of " << 100 * threshold << "% exceeded ";
 	buffer << '(' << nlost << '/' << nstart << ") at " << c_id;
-	SetMsg(buffer.str());
+	msg = buffer.str();
 }
 
 void CollimateParticleProcess::SetOutputBinSize(double binsize)

@@ -166,7 +166,7 @@ Bunch& TrackingSimulation::DoRun(bool new_bunch, bool do_init)
 	{
 		if(handle_me)
 		{
-			MERLIN_ERR << std::endl << me.Msg() << std::endl;
+			MERLIN_ERR << std::endl << me.what() << std::endl;
 		}
 		else
 		{

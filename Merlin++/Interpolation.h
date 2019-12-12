@@ -30,8 +30,13 @@ public:
 	{
 	public:
 		BadRange(double x, const FloatRange& r);
-		double value;
-		FloatRange valid_range;
+
+		const char* what() const noexcept
+		{
+			return msg.c_str();
+		}
+	private:
+		std::string msg;
 	};
 
 	/**

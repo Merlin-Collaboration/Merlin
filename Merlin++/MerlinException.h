@@ -9,85 +9,36 @@
 #define MerlinException_h 1
 
 #include <string>
+#include <stdexcept>
 
 /**
  * Root class for all Merlin exceptions.
  */
-class MerlinException
+class MerlinException: public std::runtime_error
 {
 public:
-
 	/**
 	 * Constructor: Builds the MerlinException and sets the exception message.
-	 * @param[in] s The exception message.
+	 * @param[in] what_arg The exception message.
 	 */
-	explicit MerlinException(const std::string& s);
-
-	/**
-	 * Constructor: Builds the MerlinException.
-	 */
-	MerlinException();
-
-	/**
-	 * Virtual destructor.
-	 */
-	virtual ~MerlinException()
+	MerlinException(const std::string& what_arg) :
+		std::runtime_error(what_arg)
 	{
 	}
 
-	/**
-	 * Gets the exception message.
-	 * @return The current exception message.
-	 */
-	const char* Msg() const;
-
-protected:
-
-	/**
-	 * Sets the exception message.
-	 * @see AppendMsg
-	 * @param[in] s The exception message.
-	 */
-	void SetMsg(const std::string& s);
+	/// Deprecated use MerlinException::what()
+	[[deprecated("Use what()")]]
+	const char* Msg() const noexcept
+	{
+		return what();
+	}
 
 	/**
-	 * Appends a string to the exception message.
-	 * @see SetMsg
-	 * @param[in] s The string to append to the exception message.
+	 * \fn virtual const char* MerlinException::what() const noexcept;
+	 * \memberof MerlinException
+	 *
+	 * Returns the explanatory string. Inheritied from std::runtime_error
 	 */
-	void AppendMsg(const std::string& s);
-
-private:
-
-	/**
-	 * String storage containing the exception message.
-	 */
-	std::string msg;
 };
-
-inline MerlinException::MerlinException(const std::string& s) :
-	msg(s)
-{
-}
-
-inline MerlinException::MerlinException() :
-	msg()
-{
-}
-
-inline const char* MerlinException::Msg() const
-{
-	return msg.c_str();
-}
-
-inline void MerlinException::SetMsg(const std::string& s)
-{
-	msg = s;
-}
-
-inline void MerlinException::AppendMsg(const std::string& s)
-{
-	msg += s;
-}
 
 #endif
