@@ -7,6 +7,24 @@ user programs.
 
 [TOC]
 
+## Version 5.03 {#APIChanges503}
+
+Merlin++ 5.03 switches to the C++14 standard.
+
+## DataTable changes
+
+DataTableReader::Read() functions such as DataTableReaderTFS::Read() now return a DataTable rather than a unique_ptr<DataTable>. In C++14 it is trivial to convert objects into unique_ptr when needed using make_unique. For example instead of
+
+    unique_ptr<DataTable> dt(DataTableReaderTFS(InputFileName).Read());
+
+use
+
+    auto dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
+
+or if a pointer is not needed, just use the object
+
+    auto dt = DataTableReaderTFS(InputFileName).Read();
+
 ## Version 5.02 {#APIChanges502}
 
 ### Behaviour change in LatticeFunctionTable
@@ -27,7 +45,7 @@ This achieves the same by directly changing the R_55 transfer matrix element.
 
 ### MADInterface changes
 
-The MADInterface class has been refactored to utilize the newly developed and versitile DataTable container class. Moreover, the ConstructApertures function has been removed as it was a redundant function designed for direct aperture construction from a MAD input file. The function was also notably incomplete and buggy. All intended functionality is still provided via the ApertureConfiguration class, which has been also been redesigned for simplicity and modularity.
+The MADInterface class has been refactored to utilize the newly developed and versatile DataTable container class. Moreover, the ConstructApertures function has been removed as it was a redundant function designed for direct aperture construction from a MAD input file. The function was also notably incomplete and buggy. All intended functionality is still provided via the ApertureConfiguration class, which has been also been redesigned for simplicity and modularity.
 
 ### ApertureConfiguration changes
 

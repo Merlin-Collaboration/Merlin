@@ -31,7 +31,7 @@ public:
 	DataTableReaderTFS(std::string filename);
 
 	/// Read the file, returning a new DataTable
-	virtual std::unique_ptr<DataTable> Read() override;
+	virtual DataTable Read() override;
 
 private:
 	std::istream *in; // either a passed pointer, or pointer to the opened file

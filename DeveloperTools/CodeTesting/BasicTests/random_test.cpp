@@ -64,11 +64,11 @@ int main(int argc, char* argv[])
 	}
 	cout << endl;
 
-	std::unique_ptr<DataTable> random_setup(DataTableReaderTFS(find_data_file("random_test_setup.tfs")).Read());
+	auto random_setup = DataTableReaderTFS(find_data_file("random_test_setup.tfs")).Read();
 
 	DataTable results;
 
-	for(const auto row : *random_setup)
+	for(const auto row : random_setup)
 	{
 		results.AddColumn(row.Get_s("name"), 'i');
 	}
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 		results.AddRow();
 	}
 
-	for(const auto row : *random_setup)
+	for(const auto row : random_setup)
 	{
 		const string name = row.Get_s("name");
 		const string dist = row.Get_s("dist");

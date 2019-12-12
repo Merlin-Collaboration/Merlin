@@ -14,6 +14,7 @@
 #include <iostream>
 
 class DataTableRowIterator;
+class ConstDataTableRowIterator;
 class DataTableHeader;
 class DataTableRow;
 
@@ -147,8 +148,11 @@ public:
 	template<typename ... Args>
 	void AddRow(Args ... arg);
 
-	DataTableRowIterator begin() const;
-	DataTableRowIterator end() const;
+	DataTableRowIterator begin();
+	DataTableRowIterator end();
+
+	ConstDataTableRowIterator begin() const;
+	ConstDataTableRowIterator end() const;
 
 	/// Access column names.
 	const std::vector<std::string>& ColumnNames()
@@ -270,7 +274,80 @@ void DataTable::AddRowN(size_t col_n, size_t row_n, T x, Args ... arg)
 class DataTableRow
 {
 public:
-	DataTableRow(const DataTable *_dt, size_t _pos) :
+	friend DataTableRowIterator;
+	friend ConstDataTableRowIterator;
+
+	DataTableRow(DataTable *_dt, size_t _pos) :
+		dt(_dt), pos(_pos)
+	{
+	}
+
+	double Get_d(const std::string col_name) const
+	{
+		return dt->Get_d(col_name, pos);
+	}
+	int Get_i(const std::string col_name) const
+	{
+		return dt->Get_i(col_name, pos);
+	}
+	std::string Get_s(const std::string col_name) const
+	{
+		return dt->Get_s(col_name, pos);
+	}
+	std::string GetAsStr(const std::string col_name) const
+	{
+		return dt->GetAsStr(col_name, pos);
+	}
+
+	void Set(const std::string col_name, double x)
+	{
+		dt->Set(col_name, pos, x);
+	}
+	void Set(const std::string col_name, int x)
+	{
+		dt->Set(col_name, pos, x);
+	}
+	void Set(const std::string col_name, std::string x)
+	{
+		dt->Set(col_name, pos, x);
+	}
+	void Set_d(const std::string col_name, double x)
+	{
+		Set(col_name, x);
+	}
+	void Set_i(const std::string col_name, int x)
+	{
+		Set(col_name, x);
+	}
+	void Set_s(const std::string col_name, std::string x)
+	{
+		Set(col_name, x);
+	}
+	void SetWithStr(const std::string col_name, std::string x)
+	{
+		dt->SetWithStr(col_name, pos, x);
+	}
+
+private:
+	DataTable * dt;
+	size_t pos;
+};
+
+/** @brief Access individual rows of a DataTable.
+ *
+ * Type returned when using ConstDataTableRowIterator. Does not actually hold
+ * any data, just access values from the DataTable that is being iterated.
+ *
+ * Methods are wrappers around the accessors in DataTable, but without the
+ * row number argument.
+ */
+class ConstDataTableRow
+{
+public:
+	friend DataTableRowIterator;
+	friend ConstDataTableRowIterator;
+
+	ConstDataTableRow(const DataTable *_dt, size_t _pos) :
 		dt(_dt), pos(_pos)
 	{
 	}
@@ -297,43 +374,22 @@ private:
 	size_t pos;
 };
 
-/** @brief Emulate pointer access to individual rows of a DataTable
- *
- * See DataTableRow
- */
-class DataTableRowPtr
+/// @brief Row iterator for DataTable.
+class DataTableRowIterator
 {
 public:
-	DataTableRowPtr(const DataTable *_dt, size_t _pos) :
+	using iterator_category = std::bidirectional_iterator_tag;
+	using value_type = DataTableRow;
+	using difference_type = std::ptrdiff_t;
+	using pointer = DataTableRow *;
+	using reference = DataTableRow&;
+
+	DataTableRowIterator(DataTable *_dt, size_t _pos) :
 		dtr(_dt, _pos)
 	{
 	}
-	DataTableRow &operator*()
-	{
-		return dtr;
-	}
-	DataTableRow *operator->()
-	{
-		return &dtr;
-	}
-private:
-	DataTableRow dtr;
-};
-
-/// @brief Row iterator for DataTable.
-class DataTableRowIterator: public std::iterator<std::bidirectional_iterator_tag,
-		DataTableRow,
-		std::ptrdiff_t,
-		DataTableRow*,
-		DataTableRow&>
-{
-public:
-	DataTableRowIterator(const DataTable *_dt, size_t _pos) :
-		dt(_dt), pos(_pos)
-	{
-	}
-	DataTableRow operator *();
-	DataTableRowPtr operator ->();
+	DataTableRow& operator *();
+	DataTableRow* operator ->();
 	DataTableRowIterator& operator++();
 	DataTableRowIterator operator++(int);
 	DataTableRowIterator& operator--();
@@ -343,12 +399,43 @@ public:
 
 	size_t _pos() const
 	{
-		return pos;
+		return dtr.pos;
 	}
 
 private:
-	const DataTable * dt;
-	size_t pos;
+	DataTableRow dtr;
+};
+
+/// @brief Const row iterator for DataTable.
+class ConstDataTableRowIterator
+{
+public:
+	using iterator_category = std::bidirectional_iterator_tag;
+	using value_type = ConstDataTableRow;
+	using difference_type = std::ptrdiff_t;
+	using pointer = ConstDataTableRow *;
+	using reference = ConstDataTableRow&;
+
+	ConstDataTableRowIterator(const DataTable *_dt, size_t _pos) :
+		dtr(_dt, _pos)
+	{
+	}
+	const ConstDataTableRow& operator *();
+	const ConstDataTableRow* operator ->();
+	ConstDataTableRowIterator& operator++();
+	ConstDataTableRowIterator operator++(int);
+	ConstDataTableRowIterator& operator--();
+	ConstDataTableRowIterator operator--(int);
+	bool operator==(const ConstDataTableRowIterator &other) const;
+	bool operator!=(const ConstDataTableRowIterator &other) const;
+
+	size_t _pos() const
+	{
+		return dtr.pos;
+	}
+
+private:
+	ConstDataTableRow dtr;
 };
 
 #endif

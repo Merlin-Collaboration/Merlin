@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 	twiss_table->AddFunction(4, 6, 3);
 	twiss_table->AddFunction(6, 6, 3);
 
-	unique_ptr<DataTable> mad_optics(DataTableReaderTFS(lattice_path).Read());
+	auto mad_optics = make_unique<DataTable>(DataTableReaderTFS(lattice_path).Read());
 
 	twiss_table->SetForceLongitudinalStability(true);
 	twiss_table->Calculate();

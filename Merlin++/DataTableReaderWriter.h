@@ -26,7 +26,7 @@ class DataTableReader
 {
 public:
 	/// Read the source and return a DataTable
-	virtual std::unique_ptr<DataTable> Read() = 0;
+	virtual DataTable Read() = 0;
 private:
 };
 

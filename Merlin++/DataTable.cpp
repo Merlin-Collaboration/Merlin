@@ -352,78 +352,134 @@ bool DataTable::HeaderHasKey(std::string col_name, char type) const
 
 void DataTable::OutputAscii(std::ostream &os) const
 {
-	for(auto &col_name : hcol_names)
+	for(const auto &col_name : hcol_names)
 	{
 		os << col_name << "\t" << HeaderGetAsStr(col_name) << std::endl;
 	}
 
-	for(auto &col_name : col_names)
+	for(const auto &col_name : col_names)
 	{
 		os << col_name << "\t";
 	}
 	os << std::endl;
-	for(size_t i = 0; i < length; i++)
+	for(const auto &row : *this)
 	{
-		for(auto &col_name : col_names)
+		for(const auto &col_name : col_names)
 		{
-			os << GetAsStr(col_name, i) << "\t";
+			os << row.GetAsStr(col_name) << "\t";
 		}
 		os << std::endl;
 	}
 }
 
-DataTableRowIterator DataTable::begin() const
+DataTableRowIterator DataTable::begin()
 {
 	return DataTableRowIterator(this, 0);
 }
 
-DataTableRowIterator DataTable::end() const
+DataTableRowIterator DataTable::end()
 {
 	return DataTableRowIterator(this, length);
 }
 
-DataTableRow DataTableRowIterator::operator *()
+ConstDataTableRowIterator DataTable::begin() const
 {
-	return DataTableRow(dt, pos);
+	return ConstDataTableRowIterator(this, 0);
 }
 
-DataTableRowPtr DataTableRowIterator::operator ->()
+ConstDataTableRowIterator DataTable::end() const
 {
-	return DataTableRowPtr(dt, pos);
+	return ConstDataTableRowIterator(this, length);
+}
+
+DataTableRow& DataTableRowIterator::operator *()
+{
+	return dtr;
+}
+
+DataTableRow* DataTableRowIterator::operator ->()
+{
+	return &dtr;
 }
 
 DataTableRowIterator& DataTableRowIterator::operator++()
 {
-	++pos;
+	++dtr.pos;
 	return *this;
 }
 
 DataTableRowIterator DataTableRowIterator::operator++(int)
 {
 	auto ret = *this;
-	++pos;
+	++dtr.pos;
 	return ret;
 }
 
 DataTableRowIterator& DataTableRowIterator::operator--()
 {
-	--pos;
+	--dtr.pos;
 	return *this;
 }
 
 DataTableRowIterator DataTableRowIterator::operator--(int)
 {
 	auto ret = *this;
-	--pos;
+	--dtr.pos;
 	return ret;
 }
 
 bool DataTableRowIterator::operator==(const DataTableRowIterator &other) const
 {
-	return (dt == other.dt) && (pos == other.pos);
+	return (dtr.dt == other.dtr.dt) && (_pos() == other._pos());
 }
 
 bool DataTableRowIterator::operator!=(const DataTableRowIterator &other) const
+{
+	return !(*this == other);
+}
+
+const ConstDataTableRow& ConstDataTableRowIterator::operator *()
+{
+	return dtr;
+}
+
+const ConstDataTableRow* ConstDataTableRowIterator::operator ->()
+{
+	return &dtr;
+}
+
+ConstDataTableRowIterator& ConstDataTableRowIterator::operator++()
+{
+	++dtr.pos;
+	return *this;
+}
+
+ConstDataTableRowIterator ConstDataTableRowIterator::operator++(int)
+{
+	auto ret = *this;
+	++dtr.pos;
+	return ret;
+}
+
+ConstDataTableRowIterator& ConstDataTableRowIterator::operator--()
+{
+	--dtr.pos;
+	return *this;
+}
+
+ConstDataTableRowIterator ConstDataTableRowIterator::operator--(int)
+{
+	auto ret = *this;
+	--dtr.pos;
+	return ret;
+}
+
+bool ConstDataTableRowIterator::operator==(const ConstDataTableRowIterator &other) const
+{
+	return (dtr.dt == other.dtr.dt) && (_pos() == other._pos());
+}
+
+bool ConstDataTableRowIterator::operator!=(const ConstDataTableRowIterator &other) const
 {
 	return !(*this == other);
 }

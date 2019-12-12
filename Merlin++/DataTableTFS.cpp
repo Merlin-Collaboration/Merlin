@@ -82,9 +82,9 @@ static std::vector<std::string> split_line(std::string line)
 	return sl;
 }
 
-std::unique_ptr<DataTable> DataTableReaderTFS::Read()
+DataTable DataTableReaderTFS::Read()
 {
-	std::unique_ptr<DataTable> dt(new DataTable);
+	DataTable dt;
 	std::vector<std::string> col_names;
 	std::vector<char> col_types;
 	std::string line;
@@ -110,8 +110,8 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 			throw BadFormatException("Expected '@ name %type value' at line " + std::to_string(line_number));
 		}
 
-		dt->HeaderAddColumn(words[1], type_conv(words[2]));
-		dt->HeaderSetWithStr(words[1], words[3]);
+		dt.HeaderAddColumn(words[1], type_conv(words[2]));
+		dt.HeaderSetWithStr(words[1], words[3]);
 	}
 
 	//Read column names
@@ -147,7 +147,7 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 		auto type = col_types.begin();
 		while(name != col_names.end())
 		{
-			dt->AddColumn(*name, *type);
+			dt.AddColumn(*name, *type);
 			++name;
 			++type;
 		}
@@ -168,13 +168,13 @@ std::unique_ptr<DataTable> DataTableReaderTFS::Read()
 			throw BadFormatException("Row does not contain correct number of values at line "
 					  + std::to_string(line_number));
 		}
-		size_t rown = dt->AddRow();
+		size_t rown = dt.AddRow();
 		{
 			auto name = col_names.begin();
 			auto word = words.begin();
 			while(name != col_names.end())
 			{
-				dt->SetWithStr(*name, rown, *word);
+				dt.SetWithStr(*name, rown, *word);
 				++name;
 				++word;
 			}
