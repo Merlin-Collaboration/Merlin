@@ -10,7 +10,6 @@
 
 #include <map>
 #include <string>
-#include <vector>
 
 #include "Material.h"
 

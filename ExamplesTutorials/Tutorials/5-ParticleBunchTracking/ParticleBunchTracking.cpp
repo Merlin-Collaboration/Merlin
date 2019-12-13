@@ -5,7 +5,6 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //																										//
 //	Tutorial 5 - ParticleTracking																		//
@@ -14,6 +13,8 @@
 //	- Record and plot BPM real coord centroid readings for 2 turns													//
 //																										//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include <fstream>
 
 // Include units
 #include "../ExamplesTutorials/Examples/Trajectory/BPMVectorBuffer.h"
@@ -44,13 +45,14 @@ int main()
 
 	cout << "Locating MAD lattice information..." << endl;
 	// Loop over possible build directories to locate MAD .tfs files
-	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs", "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
+	string paths[] = {"../input/StorageRing.tfs", "input/StorageRing.tfs", "Tutorials/input/StorageRing.tfs",
+					  "ExamplesTutorials/Tutorials/input/StorageRing.tfs"};
 	string lattice_path;
-	for (size_t i=0; i<4; i++)
+	for(size_t i = 0; i < 4; i++)
 	{
 		ifstream test_file;
 		test_file.open(paths[i].c_str());
-		if (test_file)
+		if(test_file)
 		{
 			lattice_path = paths[i];
 			break;
@@ -82,7 +84,6 @@ int main()
 	//Relative energy spread of beam.
 	beam.sig_dp = 0.000113;
 
-
 	beam.p0 = beamenergy;
 
 	ParticleDistributionGenerator* bunchDist = new NormalParticleDistributionGenerator();
@@ -97,7 +98,7 @@ int main()
 
 	for(int turn = 0; turn < 2; turn++)
 	{
-		cout << "Tracking... turn: " << turn+1 << endl;
+		cout << "Tracking... turn: " << turn + 1 << endl;
 		if(turn == 0)
 		{
 			tracker.Run();

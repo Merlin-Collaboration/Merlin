@@ -5,12 +5,9 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#include <iterator>
 #include <iostream>
-#include <typeinfo>
 #include <unistd.h>
 #include <vector>
-#include <algorithm>
 
 #include "merlin_config.h"
 
@@ -19,15 +16,18 @@
 #include "InterpolatedApertures.h"
 #include "Collimator.h"
 
+#include "PSvector.h"
 #include "ParticleComponentTracker.h"
 #include "ParticleBunch.h"
 
 #include "CollimateProtonProcess.h"
 #include "ScatteringProcess.h"
 #include "ScatteringModel.h"
+#include "CrossSections.h"
 
 #include "utils.h"
 #include "PhysicalUnits.h"
+#include "PhysicalConstants.h"
 
 using namespace Collimation;
 

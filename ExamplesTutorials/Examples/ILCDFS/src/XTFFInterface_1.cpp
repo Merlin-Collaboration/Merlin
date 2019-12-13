@@ -11,7 +11,6 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
-#include <iterator>
 #include <stdexcept>
 #include <cctype>
 
@@ -21,6 +20,7 @@
 #include "PhysicalConstants.h"
 #include "ConstructSrot.h"
 #include "MerlinException.h"
+#include "Aperture.h"
 
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;

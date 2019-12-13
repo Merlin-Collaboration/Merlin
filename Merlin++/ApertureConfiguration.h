@@ -8,9 +8,8 @@
 #ifndef _APERTURECONFIGURATION_H_
 #define _APERTURECONFIGURATION_H_
 
-#include <vector>
 #include <string>
-#include <fstream>
+#include <iostream>
 
 #include "AcceleratorModel.h"
 #include "DataTable.h"

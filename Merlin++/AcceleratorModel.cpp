@@ -6,9 +6,7 @@
  */
 
 #include <iomanip>
-#include <iterator>
 #include <cassert>
-#include "algorithm.h"
 
 #include "ComponentFrame.h"
 #include "TComponentFrame.h"

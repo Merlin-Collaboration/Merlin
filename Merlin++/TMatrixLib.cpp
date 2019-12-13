@@ -5,20 +5,17 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#ifndef stdext_algorithm_h
-#define stdext_algorithm_h 1
+#include "TMatrixLib.h"
 
-#include "merlin_config.h"
+#include <complex>
+typedef std::complex<double> Complex;
 
-template<class InIt, class OutIt, class Pred>
-OutIt copy_if(InIt first, InIt last, OutIt x, Pred test)
+namespace TLAS
 {
-	while(first++ != last)
-		if(test(*first))
-		{
-			*x++ = *first;
-		}
-	return x;
+template class Vector<double>;
+template class Matrix<double>;
+template class SubVector<double>;
+template class SubMatrix<double>;
+template class ConstSubVector<double>;
+template class ConstSubMatrix<double>;
 }
-
-#endif

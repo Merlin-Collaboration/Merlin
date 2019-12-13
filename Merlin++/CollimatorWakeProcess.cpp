@@ -6,8 +6,6 @@
  */
 
 #include <cmath>
-#include <stdexcept>
-#include <sstream>
 #include <iterator>
 #include <algorithm>
 #include <fstream>

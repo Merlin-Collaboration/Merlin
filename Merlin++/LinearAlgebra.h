@@ -16,25 +16,15 @@ typedef std::complex<double> Complex;
 namespace TLAS
 {
 
-// explicit instantiation for doubles
-template class Vector<double>;
-template class Matrix<double>;
-template class SubVector<double>;
-template class SubMatrix<double>;
-template class ConstSubVector<double>;
-template class ConstSubMatrix<double>;
+extern template class Vector<Complex>;
+extern template class Matrix<Complex>;
+extern template class SubVector<Complex>;
+extern template class SubMatrix<Complex>;
+extern template class ConstSubVector<Complex>;
+extern template class ConstSubMatrix<Complex>;
 
 typedef Vector<double> RealVector;
 typedef Matrix<double> RealMatrix;
-
-// explicit instantiation for Complex
-template class Vector<Complex>;
-template class Matrix<Complex>;
-template class SubVector<Complex>;
-template class SubMatrix<Complex>;
-template class ConstSubVector<Complex>;
-template class ConstSubMatrix<Complex>;
-
 typedef Vector<Complex> ComplexVector;
 typedef Matrix<Complex> ComplexMatrix;
 

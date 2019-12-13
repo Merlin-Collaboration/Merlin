@@ -11,12 +11,12 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
-#include <iterator>
 #include <stdexcept>
 #include <cctype>
 
 #include "Components.h"
 #include "AcceleratorModelConstructor.h"
+#include "Aperture.h"
 #include "SupportStructure.h"
 #include "MagnetMover.h"
 #include "PhysicalConstants.h"

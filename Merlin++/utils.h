@@ -18,11 +18,6 @@ inline bool fequal(double x, double y, double tol = std::numeric_limits<double>:
 	return fabs(x - y) <= tol;
 }
 
-inline int Round(double x)
-{
-	return static_cast<int>(x + 0.5);
-}
-
 /**
  * TIMING macro. Used to output the real time used (in seconds)
  * by a function call. The result is output to OS, which must
@@ -36,11 +31,6 @@ inline int Round(double x)
 // ----------------------------
 
 double NormalBin(double x1, double x2);
-
-// Modified Bessel function
-double BesselI0(double x);
-double BesselI1(double x);
-double BesselIn(int n, double x);
 
 // Gamma function
 double LogGamma(double);

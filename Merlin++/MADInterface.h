@@ -9,7 +9,7 @@
 #define MADInterface_h 1
 
 #include "merlin_config.h"
-#include <fstream>
+#include <iostream>
 #include <string>
 #include <map>
 #include <set>

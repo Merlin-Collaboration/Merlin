@@ -11,7 +11,6 @@
 // Templated functions and classes for performing linear algebra. The following
 // perform linear algebra functions based on TMAT::Matrix and TMAT::Vector classes.
 
-#include <vector>
 #include "TLAS.h"
 
 namespace TLAS
@@ -248,7 +247,7 @@ void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 		double big = 0.0;
 		for(j = 0; j < n; j++)
 		{
-			big = _MAX(fabs(a[i][j]), big);
+			big = std::max(fabs(a[i][j]), big);
 		}
 		if(big == 0.0)
 		{

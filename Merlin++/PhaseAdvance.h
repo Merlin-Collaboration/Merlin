@@ -10,11 +10,7 @@
 
 #include <string>
 #include "AcceleratorModel.h"
-#include "PSTypes.h"
 #include "LatticeFunctions.h"
-#include "TLAS.h"
-
-using namespace TLAS;
 
 /**
  * Class to calculate the phase advance of a given element

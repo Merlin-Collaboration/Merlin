@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <sstream>
 #include <cmath>
 
 #include "WakePotentials.h"
@@ -15,11 +14,9 @@
 #include "CollimatorWakePotentials.h"
 #include "CollimatorTable.h"
 
-#include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
 
 using namespace std;
-using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
 

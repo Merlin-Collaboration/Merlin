@@ -34,7 +34,7 @@ void ConstantStrayFieldProcess::SetCurrentComponent(AcceleratorComponent& compon
 	ParticleBunchProcess::SetCurrentComponent(component);
 
 	cL = component.GetLength();
-	kick_ds = _MIN(maxStep, cL);
+	kick_ds = std::min(maxStep, cL);
 	s_int = 0;
 	active =  true; // this process is always active.
 }
@@ -47,7 +47,7 @@ void ConstantStrayFieldProcess::DoProcess(double ds)
 	{
 		ApplyKick();
 		// calculate next kick_ds
-		kick_ds = _MIN(maxStep, cL);
+		kick_ds = std::min(maxStep, cL);
 		s_int = 0;
 	}
 }

@@ -8,16 +8,9 @@
 #ifndef _h_WakeFieldProcess
 #define _h_WakeFieldProcess
 
-#ifdef ENABLE_MPI
-#include <time.h>
-#endif
-
 #include <vector>
-#include <typeinfo>
 
-#include "WakePotentials.h"
 #include "ParticleBunchProcess.h"
-#include "StringPattern.h"
 
 class WakePotentials;
 

@@ -7,7 +7,6 @@
 
 #include <algorithm>
 #include <iostream>
-#include <iterator>
 #include "Transform3D.h"
 #include "PSvectorTransform3D.h"
 #include "ParticleBunch.h"

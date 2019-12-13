@@ -8,9 +8,6 @@
 #ifndef FlukaCollimationOutput_h
 #define FlukaCollimationOutput_h 1
 
-#include <string>
-#include <vector>
-
 #include "CollimationOutput.h"
 #include "AcceleratorComponent.h"
 #include "ParticleBunch.h"

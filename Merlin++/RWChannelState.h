@@ -10,7 +10,6 @@
 
 #include "merlin_config.h"
 #include <vector>
-#include <iostream>
 #include "Channels.h"
 
 class RWChannelState

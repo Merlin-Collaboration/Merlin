@@ -8,7 +8,7 @@
 #include "BasicTransportMaps.h"
 #include "TransportMatrix.h"
 #include <cmath>
-#include <typeinfo>
+
 using namespace std;
 
 RTMap* SectorBendTM(double s, double h, double gamma)

@@ -7,7 +7,6 @@
 
 #include <iterator>
 #include <iomanip>
-#include <typeinfo>
 #include <fstream>
 #include <sstream>
 

@@ -8,7 +8,6 @@
 #include <cstdlib>
 #include "Components.h"
 #include "MerlinIO.h"
-#include "utils.h"
 #include "AcceleratorModelConstructor.h"
 #include "SequenceFrame.h"
 #include "SupportStructure.h"
@@ -527,7 +526,7 @@ vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(DataTable
 	// standing wave cavities need an exact integer of half-wavelengths
 	freq *= MHz;
 	double lambdaOver2 = SpeedOfLight / freq / 2;
-	int ncells = Round(length / lambdaOver2);
+	int ncells = round(length / lambdaOver2);
 	double len1 = ncells * lambdaOver2;
 
 	// adjust phase for cosine-like field
@@ -535,7 +534,7 @@ vector<AcceleratorComponent*> RFCavityComponentSingleCell::GetInstance(DataTable
 
 	double rfcav_len = lambdaOver2;
 	double drift_len = length - lambdaOver2;
-	ncells = Round(rfcav_len / lambdaOver2);
+	ncells = round(rfcav_len / lambdaOver2);
 
 	if((rfcav_len / length - 1) > 0.001)
 	{
@@ -563,7 +562,7 @@ vector<AcceleratorComponent*> RFCavityComponent::GetInstance(DataTableRow& MADin
 	// standing wave cavities need an exact integer of half-wavelengths
 	freq *= MHz;
 	double lambdaOver2 = SpeedOfLight / freq / 2;
-	int ncells = Round(length / lambdaOver2);
+	int ncells = round(length / lambdaOver2);
 	double len1 = ncells * lambdaOver2;
 
 	// adjust phase for cosine-like field

@@ -12,7 +12,6 @@
 
 #include "TLAS.h"
 #include <queue>
-#include <list>
 #include "Channels.h"
 #include "LinearAlgebra.h"
 

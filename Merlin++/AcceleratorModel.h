@@ -9,8 +9,6 @@
 #define AcceleratorModel_h 1
 
 #include "merlin_config.h"
-#include <algorithm>
-#include <set>
 #include <vector>
 #include <string>
 #include "ComponentFrame.h"
@@ -31,7 +29,6 @@ class RWChannel;
 class ROChannel;
 
 using std::string;
-using std::set;
 using std::vector;
 
 class AcceleratorModel

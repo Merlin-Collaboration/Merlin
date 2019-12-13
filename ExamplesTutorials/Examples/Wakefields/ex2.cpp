@@ -10,6 +10,7 @@
 
 #include "AcceleratorModelConstructor.h"
 #include "Collimator.h"
+#include "Aperture.h"
 #include "TWRFStructure.h"
 
 #include "BeamData.h"

@@ -26,10 +26,6 @@ class Collimator;
 namespace ParticleTracking
 {
 class ParticleBunchFilter; //#include "BunchFilter.h"
-/**
- *	Representation of a particle.
- */
-typedef PSvector Particle;
 
 /**
  *	A Bunch which is represented by an ensemble of

@@ -8,6 +8,8 @@
 // Implementation of global function to construct
 // an accelerator model from an OPTICS MAD output file.
 
+#include <fstream>
+
 #include "merlin_config.h"
 #include "AcceleratorModel.h"
 #include "MADInterface.h"

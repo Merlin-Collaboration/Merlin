@@ -135,8 +135,8 @@ size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nb
 	{
 		fbins[n] = hbins[n] * a;
 		if(c)
-			//for(m=_MAX(0,int(n)-w); m<=_MIN(nbins,int(n)+w); m++)// ERROR! m can be set to nbins -> out of range!
-			for(m = _MAX(0, int(n) - w); m < _MIN(nbins, size_t(n) + w); m++)   // This needs to be checked!
+			//for(m=std::max(0,int(n)-w); m<=std::max(nbins,int(n)+w); m++)// ERROR! m can be set to nbins -> out of range!
+			for(m = std::max(0, int(n) - w); m < std::max(nbins, size_t(n) + w); m++)   // This needs to be checked!
 			{
 				fpbins[n] += hbins[m] * (*c)[m - n + w] * a;
 			}

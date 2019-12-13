@@ -9,7 +9,8 @@
 #define PSvector_h 1
 
 #include "merlin_config.h"
-#include <algorithm>
+
+#include <cstring>
 #include <iostream>
 #include <vector>
 #include "LinearAlgebra.h"
@@ -241,4 +242,11 @@ private:
  */
 typedef std::vector<PSvector> PSvectorArray;
 
+/**
+ *	Representation of a particle.
+ */
+namespace ParticleTracking
+{
+typedef PSvector Particle;
+}
 #endif

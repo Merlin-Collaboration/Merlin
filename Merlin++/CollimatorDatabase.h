@@ -8,16 +8,15 @@
 #ifndef _COLLIMATOR_DATABASE_H_
 #define _COLLIMATOR_DATABASE_H_
 
-#include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 
 #include "AcceleratorModel.h"
-#include "Collimator.h"
-#include "BeamData.h"
-#include "Material.h"
-#include "MaterialDatabase.h"
 #include "LatticeFunctions.h"
+
+class Material;
+class MaterialDatabase;
 
 using namespace std;
 /**

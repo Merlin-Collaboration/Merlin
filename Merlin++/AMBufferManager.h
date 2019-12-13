@@ -10,7 +10,6 @@
 
 #include "merlin_config.h"
 #include <set>
-#include <algorithm>
 #include <cassert>
 
 /*

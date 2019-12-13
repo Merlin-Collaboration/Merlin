@@ -10,10 +10,9 @@
 
 #include "merlin_config.h"
 #include "Drift.h"
-#include "Material.h"
-#include "ScatteringModel.h"
 
 class ComponentTracker;
+class Material;
 
 /**
  * A collimator represents a scattering element in the beamline. Collimator objects

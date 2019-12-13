@@ -8,11 +8,13 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <map>
 #include <vector>
 
 #include "CollimatorAperture.h"
+#include "Collimator.h"
 
 #include "CollimatorDatabase.h"
 #include "ResistiveWakePotentials.h"
