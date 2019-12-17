@@ -6,6 +6,7 @@
  */
 
 #include <time.h>
+#include <typeinfo>
 
 #include <iterator>
 #include <algorithm>

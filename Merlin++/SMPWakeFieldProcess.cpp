@@ -15,6 +15,7 @@
 #include "TLASimp.h"
 
 #include <algorithm>
+#include <typeinfo>
 
 namespace
 {

@@ -9,6 +9,7 @@
 #include <cassert>
 #include <map>
 #include <iomanip>
+#include <typeinfo>
 
 #include "Drift.h"
 #include "SequenceFrame.h"
