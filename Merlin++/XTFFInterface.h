@@ -35,25 +35,25 @@ public:
 	 * for the cavities to calculate the reference (matched) energy for the
 	 * magnet strengths.
 	 */
-	XTFFInterface(const std::string& fname, double nb = 0, ostream* log = nullptr);
+	XTFFInterface(const std::string& fname, double nb = 0, std::ostream* log = nullptr);
 
 	/**
 	 * This version should be used when multiple files are to be parsed
 	 * using AppendModel().
 	 */
-	XTFFInterface(double nb = 0, ostream* log = nullptr);
+	XTFFInterface(double nb = 0, std::ostream* log = nullptr);
 
 	/**
 	 * Destructor
 	 */
 	~XTFFInterface();
 
-	pair<AcceleratorModel*, BeamData*> Parse();
-	pair<AcceleratorModel*, BeamData*> Parse(double P_ref);
+	std::pair<AcceleratorModel*, BeamData*> Parse();
+	std::pair<AcceleratorModel*, BeamData*> Parse(double P_ref);
 
 	// Methods for constructing a model from multiple files
 	void AppendModel(const std::string& fname);
-	pair<AcceleratorModel*, BeamData*> GetModel();
+	std::pair<AcceleratorModel*, BeamData*> GetModel();
 
 	/**
 	 * Construct apertures if flag is true (default)
@@ -66,7 +66,7 @@ public:
 	/**
 	 * Treat MAD type as DRIFT
 	 */
-	void TreatTypeAsDrift(const string&);
+	void TreatTypeAsDrift(const std::string&);
 
 	/**
 	 * Construct girders
@@ -87,13 +87,13 @@ private:
 	int ParseHeader(BeamData*);
 	void Parse1(int, bool);
 
-	std::set<string> driftTypes;
+	std::set<std::string> driftTypes;
 
 	std::ifstream* ifs;
 	AcceleratorModelConstructor* mc;
 	BeamData* beam0;
 	double nb;
-	ostream* logos;
+	std::ostream* logos;
 	bool incApertures;
 
 	/**

@@ -17,6 +17,8 @@
 #include <algorithm>
 #include <typeinfo>
 
+using namespace std;
+
 namespace
 {
 

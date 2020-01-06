@@ -344,10 +344,10 @@ RealMatrix& TransportMatrix::QuadrupoleT(double length, double Kx, RealMatrix& T
 
 	if(Kx < 0)   // defocusing
 	{
-		swap(T(0, 0), T(2, 2));
-		swap(T(0, 1), T(2, 3));
-		swap(T(1, 0), T(3, 2));
-		swap(T(1, 1), T(3, 3));
+		std::swap(T(0, 0), T(2, 2));
+		std::swap(T(0, 1), T(2, 3));
+		std::swap(T(1, 0), T(3, 2));
+		std::swap(T(1, 1), T(3, 3));
 	}
 
 	return T;

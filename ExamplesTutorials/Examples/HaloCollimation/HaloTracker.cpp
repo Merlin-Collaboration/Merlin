@@ -18,6 +18,7 @@
 #include "RandomNG.h"
 #include "QuadIntegrator.h"
 
+using namespace std;
 using namespace ParticleTracking;
 
 namespace

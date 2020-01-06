@@ -23,6 +23,7 @@
 
 #include "RandomNG.h"
 
+using namespace std;
 using namespace ParticleTracking;
 using namespace PhysicalUnits;
 using namespace PhysicalConstants;

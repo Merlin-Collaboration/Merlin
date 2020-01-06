@@ -18,7 +18,6 @@
 
 #include "PhysicalConstants.h"
 
-using namespace std;
 using namespace PhysicalConstants;
 using namespace ParticleTracking;
 
@@ -35,7 +34,7 @@ public:
 	collimatortable** Transverse;
 	collimatortable** Longitudinal;
 
-	ResistivePotential(int m, double ss, double bb, double l, string filename, double tau = 0) :
+	ResistivePotential(int m, double ss, double bb, double l, std::string filename, double tau = 0) :
 		CollimatorWakePotentials(m, 0., 0.), sigma(ss), b(bb), leng(l)
 	{
 		double Z0 = 377;
@@ -47,12 +46,12 @@ public:
 		Longitudinal = new collimatortable*[m + 1];
 		for(int mode = 0; mode <= m; mode++)
 		{
-			stringstream ss;
+			std::stringstream ss;
 			ss << filename << "L" << mode << ".txt";
 			Longitudinal[mode] = new collimatortable(ss.str().c_str(), Gamma, xi);
 			if(mode > 0)
 			{
-				stringstream ss;
+				std::stringstream ss;
 				ss << filename << "T2m" << mode << ".txt";
 				Transverse[mode] = new collimatortable(ss.str().c_str(), Gamma, xi);
 			}
@@ -99,7 +98,7 @@ public:
 	ResistiveWakePotentials(int m, double r, double s, double l) :
 		CollimatorWakePotentials(m, r, s), rad(r), sigma(s), length(l)
 	{
-		cout << "Making new ResistiveWakePotentials with length: " << length << endl;
+		std::cout << "Making new ResistiveWakePotentials with length: " << length << std::endl;
 		coeff = new double[m + 1];
 
 		int delta;
@@ -122,7 +121,7 @@ public:
 	virtual double Wlong(double z) const;
 	double Wtrans(double z, int m) const
 	{
-		cout << " call for " << m << endl;
+		std::cout << " call for " << m << std::endl;
 		return z > 0 ? coeff[m] * sqrt(376.74 / (pi * sigma)) * length / sqrt(z) : 0;
 	}
 	double Wlong(double z, int m) const

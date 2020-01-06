@@ -11,6 +11,8 @@
 #include "Channels.h"
 #include <algorithm>
 
+using namespace std;
+
 ROChannelArray::~ROChannelArray()
 {
 	DestroyChannels();

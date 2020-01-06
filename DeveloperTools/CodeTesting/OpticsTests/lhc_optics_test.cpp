@@ -16,6 +16,8 @@
 #include "DataTable.h"
 #include "DataTableTFS.h"
 
+using namespace std;
+
 /* Read a TFS lattice with the MAD interface, measure the twiss parameters with
  * LatticeFunctionTable. Also read the data from the TFS file
  *

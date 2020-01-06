@@ -141,7 +141,7 @@ void MultiNormal<N>::CholeskyDecomp()   // copied from John Ellithorpe based on 
 			{
 				if(sum <= 0.0)
 				{
-					cout << "MultiNormal::CholeskyDecomp Failed!" << endl;
+					std::cout << "MultiNormal::CholeskyDecomp Failed!" << std::endl;
 					// we set L=0 so that we just return the mean values
 					for(int i = 0; i < N; i++)
 						for(int j = 0; j < N; j++)

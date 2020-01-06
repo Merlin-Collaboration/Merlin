@@ -11,7 +11,6 @@
 #include "ParticleBunch.h"
 #include <iostream>
 
-using namespace std;
 namespace ParticleTracking
 {
 
@@ -70,11 +69,11 @@ public:
 
 	void report()
 	{
-		cout << "Electron Scatter tallies ";
-		for(int i = 0; i < ntally; cout << tally[i++] << " ")
+		std::cout << "Electron Scatter tallies ";
+		for(int i = 0; i < ntally; std::cout << tally[i++] << " ")
 		{
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
 }; // end ElectronBunch class
 } // end namespace ParticleTracking

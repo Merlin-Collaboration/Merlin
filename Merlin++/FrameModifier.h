@@ -39,7 +39,7 @@ public:
 	 *	Returns the type string of the sub-frame.
 	 *	@return String type of the sub-frame
 	 */
-	const string& GetType() const;
+	const std::string& GetType() const;
 
 	/**
 	 *	Causes any cached state to be invalidated. The cached

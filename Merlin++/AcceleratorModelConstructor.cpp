@@ -15,6 +15,8 @@
 #include "SequenceFrame.h"
 #include "AcceleratorModelConstructor.h"
 
+using namespace std;
+
 namespace
 {
 

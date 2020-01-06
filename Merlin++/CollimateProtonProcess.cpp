@@ -28,6 +28,7 @@
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
 
+using namespace std;
 using namespace Collimation;
 
 namespace ParticleTracking

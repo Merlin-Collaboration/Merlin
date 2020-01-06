@@ -20,6 +20,7 @@
 
 typedef vector<MagnetMover*> MagnetMoverList;
 
+using namespace std;
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
 

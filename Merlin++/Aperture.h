@@ -16,8 +16,6 @@
 #include <cmath>
 #include "DataTable.h"
 
-using namespace std;
-
 class Aperture
 {
 public:
@@ -32,9 +30,9 @@ public:
 	 *  @param[in] aper4 the vertical elliptical aperture parameter
 	 */
 	Aperture();
-	Aperture(string type, double s, double aper1);
-	Aperture(string type, double s, double aper1, double aper2);
-	Aperture(string type, double s, double aper1, double aper2, double aper3, double aper4);
+	Aperture(std::string type, double s, double aper1);
+	Aperture(std::string type, double s, double aper1, double aper2);
+	Aperture(std::string type, double s, double aper1, double aper2, double aper3, double aper4);
 
 	/**
 	 *  Virtual destructor
@@ -54,13 +52,13 @@ public:
 	 *	Pure virtual function/interface for getting aperture type
 	 *	@return string of aperture typename
 	 */
-	virtual string GetType() = 0;
+	virtual std::string GetType() = 0;
 
 	/**
 	 *	Function/interface for setting aperture type
 	 *	@return string of aperture typename
 	 */
-	void SetType(string type)
+	void SetType(std::string type)
 	{
 		apType = type;
 	}
@@ -94,7 +92,7 @@ protected:
 	/**
 	 *  protected aperture parameters accessible only via class get/set functions
 	 */
-	string apType;
+	std::string apType;
 	double latticelocation;
 };
 
@@ -109,12 +107,12 @@ public:
 	/**
 	 *  CircularAperture override base constructor
 	 */
-	CircularAperture(string type, double s, double radius);
+	CircularAperture(std::string type, double s, double radius);
 
 	/**
 	 *  CircularAperture override of Aperture member function getType()
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 * function to get the radius aperture parameter
@@ -163,12 +161,12 @@ public:
 	/**
 	 *  RectangularAperture override default constructor
 	 */
-	RectangularAperture(string type, double s, double rectHalfX, double rectHalfY);
+	RectangularAperture(std::string type, double s, double rectHalfX, double rectHalfY);
 
 	/**
 	 *  RectangularAperture override of Aperture member function getType()
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 * function to get the vertical rectangular aperture parameter
@@ -224,12 +222,12 @@ public:
 	/**
 	 *  EllipticalAperture override base constructor
 	 */
-	EllipticalAperture(string type, double s, double ellipHalfX, double ellipHalfY);
+	EllipticalAperture(std::string type, double s, double ellipHalfX, double ellipHalfY);
 
 	/**
 	 *  EllipticalAperture override of Aperture member function getType()
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  function to get the horizontal elliptical aperture parameter
@@ -290,13 +288,13 @@ public:
 	/**
 	 *  RectEllipseAperture override default constructor
 	 */
-	RectEllipseAperture(string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double
+	RectEllipseAperture(std::string type, double s, double rectHalfX, double rectHalfY, double ellipHalfX, double
 		ellipHalfY);
 
 	/**
 	 *  RectEllipseAperture override of Aperture member function getType()
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 * function to get the vertical rectangular aperture parameter
@@ -351,7 +349,7 @@ public:
 
 	struct ap
 	{
-		string ApType;
+		std::string ApType;
 		double s;
 		double ap1;
 		double ap2;
@@ -362,7 +360,7 @@ public:
 
 	ap ApertureEntry;
 
-	vector<ap> ApertureList;
+	std::vector<ap> ApertureList;
 
 	virtual void printout(std::ostream& out) const;
 protected:
@@ -395,12 +393,12 @@ public:
 	 *  see (slide 6): https://indico.cern.ch/event/379692/contributions/1804923/subcontributions/156446/attachments/757501/1039118/2105-03-18_HSS_meeting_rev.pdf
 	 *
 	 */
-	OctagonalAperture(string type, double s, double rectHalfX, double rectHalfY, double angle1, double angle2);
+	OctagonalAperture(std::string type, double s, double rectHalfX, double rectHalfY, double angle1, double angle2);
 
 	/**
 	 *  OctagonalAperture override of Aperture member function getType()
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 * function to get the vertical rectangular aperture parameter
@@ -481,7 +479,7 @@ public:
 	/**
 	 * define map of typename string to type-specific constructor member functions
 	 */
-	static map<string, getAperture> ApertureTypes;
+	static std::map<std::string, getAperture> ApertureTypes;
 
 	/**
 	 * gets instance of input typename-specific Aperture, checks type against ApertureFactoryInitializer list

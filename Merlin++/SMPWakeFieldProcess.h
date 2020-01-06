@@ -33,7 +33,7 @@ public:
 
 	};
 
-	WakeFieldProcess(int prio, double slice_width = 1.0e-6, string aID = "SMP WAKEFIELD");
+	WakeFieldProcess(int prio, double slice_width = 1.0e-6, std::string aID = "SMP WAKEFIELD");
 	~WakeFieldProcess();
 
 	virtual void InitialiseProcess(Bunch& bunch);

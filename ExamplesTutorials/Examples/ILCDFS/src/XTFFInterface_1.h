@@ -34,8 +34,8 @@ public:
 	XTFFInterface_1(const std::string& fname, double nb = 0, ostream* log = nullptr);
 	~XTFFInterface_1();
 
-	pair<AcceleratorModel*, BeamData*> Parse();
-	pair<AcceleratorModel*, BeamData*> Parse(double P_ref);
+	std::pair<AcceleratorModel*, BeamData*> Parse();
+	std::pair<AcceleratorModel*, BeamData*> Parse(double P_ref);
 
 	// Construct apertures if flag is true (default)
 	void IncludeApertures(bool flag)
@@ -59,7 +59,7 @@ private:
 
 	void ConstructComponent(XTFF_Data&);
 	int ParseHeader();
-	pair<AcceleratorModel*, BeamData*> Parse1(int);
+	std::pair<AcceleratorModel*, BeamData*> Parse1(int);
 
 	std::set<string> driftTypes;
 
@@ -67,7 +67,7 @@ private:
 	AcceleratorModelConstructor* mc;
 	BeamData* beam0;
 	double nb;
-	ostream* logos;
+	std::ostream* logos;
 	bool incApertures;
 
 	// used for girder construction

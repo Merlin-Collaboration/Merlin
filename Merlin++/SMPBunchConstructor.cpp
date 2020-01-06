@@ -9,6 +9,8 @@
 #include "NormalTransform.h"
 #include "utils.h"
 
+using namespace std;
+
 namespace
 {
 

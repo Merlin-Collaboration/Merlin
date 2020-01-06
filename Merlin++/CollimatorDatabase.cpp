@@ -23,6 +23,7 @@
 
 #include "RandomNG.h"
 
+using namespace std;
 using namespace PhysicalUnits;
 
 //Read in file into some sensible structure

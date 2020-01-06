@@ -233,9 +233,9 @@ BeamData& SigmaMatrixToBeamData(const PSmoments& S0, BeamData& t)
 	return t;
 }
 
-pair<double, double> NormalModeEmittance(const PSmoments& S)
+std::pair<double, double> NormalModeEmittance(const PSmoments& S)
 {
 	BeamData t;
 	SigmaMatrixToBeamData(S, t);
-	return pair<double, double>(t.emit_x, t.emit_y);
+	return std::pair<double, double>(t.emit_x, t.emit_y);
 }

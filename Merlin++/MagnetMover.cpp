@@ -7,7 +7,7 @@
 
 #include "MagnetMover.h"
 
-const string& MagnetMover::GetType() const
+const std::string& MagnetMover::GetType() const
 {
 	_TYPESTR(MagnetMover);
 }

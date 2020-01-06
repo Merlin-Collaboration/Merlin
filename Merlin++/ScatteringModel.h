@@ -30,7 +30,7 @@ struct JawImpactData
 	double yp;
 	double ct;
 	double dp;
-	string name;
+	std::string name;
 
 };
 
@@ -43,7 +43,7 @@ struct ScatterPlotData
 	double y;
 	double yp;
 	double z;
-	string name;
+	std::string name;
 
 	inline bool operator==(const ScatterPlotData& rhs)
 	{

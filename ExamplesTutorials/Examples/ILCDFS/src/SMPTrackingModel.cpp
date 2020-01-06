@@ -11,6 +11,7 @@
 #include "SMPWakeFieldProcess.h"
 #include "ILCDFS_IO.h"
 
+using namespace std;
 using namespace SMPTracking;
 
 SMPTrackingModel::SMPTrackingModel(size_t nslice, size_t mpps) :

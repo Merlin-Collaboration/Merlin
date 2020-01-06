@@ -5,6 +5,8 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
+using namespace std;
+
 #include "AcceleratorWithErrors.h"
 #include "StringPattern.h"
 #include "LatticeFrame.h"

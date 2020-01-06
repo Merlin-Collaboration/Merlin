@@ -16,7 +16,6 @@ typedef std::complex<double> Complex;
 #include "PhysicalConstants.h"
 
 using namespace PhysicalConstants;
-using namespace std;
 
 // Wxy            - Sum (up+downstream) of coupler wakefield
 // CouplerRFKick  - Sum        "        of coupler RF kicks

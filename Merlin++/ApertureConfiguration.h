@@ -14,8 +14,6 @@
 #include "AcceleratorModel.h"
 #include "DataTable.h"
 
-using namespace std;
-
 class ApertureConfiguration
 {
 public:
@@ -35,7 +33,7 @@ public:
 	 * Prints the configured apertures from AcceleratorModel
 	 * @param[in] os The name of the stream to output to
 	 */
-	void OutputConfiguredAperture(AcceleratorModel* model, ostream& os);
+	void OutputConfiguredAperture(AcceleratorModel* model, std::ostream& os);
 
 	/**
 	 * Configures the beam pipe for a given accelerator model
@@ -53,7 +51,7 @@ public:
 	 * Set the stream for the collimator settings log.
 	 * @param [in] os The stream to log the generated aperture to
 	 */
-	void SetLogFile(ostream& os);
+	void SetLogFile(std::ostream& os);
 
 	/**
 	 * Enable/disable logging

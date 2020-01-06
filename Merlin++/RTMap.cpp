@@ -12,7 +12,7 @@
 void RTMap::Print(std::ostream& os) const
 {
 	// Print linear matrix first
-	os << "R:" << endl;
+	os << "R:" << std::endl;
 	RMap::MatrixForm(os);
 
 	os << "\nT:\n";
@@ -34,7 +34,7 @@ void RTMap::Print(std::ostream& os) const
 			}
 		}
 		::MatrixForm(M, os);
-		os << endl;
+		os << std::endl;
 	}
 }
 

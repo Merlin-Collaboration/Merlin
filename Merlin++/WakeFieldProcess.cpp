@@ -33,6 +33,8 @@
 #include <mpi.h>
 #endif
 
+using namespace std;
+
 namespace
 {
 

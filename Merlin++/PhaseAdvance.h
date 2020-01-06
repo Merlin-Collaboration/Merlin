@@ -32,7 +32,7 @@ public:
 	 * or the names of the two elements
 	 */
 	double PhaseAdvanceBetween(int n1, int n2, bool horizontal);
-	double PhaseAdvanceBetween(string name1, string name2, bool horizontal);
+	double PhaseAdvanceBetween(std::string name1, std::string name2, bool horizontal);
 
 	/**
 	 * PA at a given element
@@ -40,7 +40,7 @@ public:
 	 * or the name of the element
 	 */
 	double PhaseAdvanceBetween(int n, bool horizontal);
-	double PhaseAdvanceBetween(string name, bool horizontal);
+	double PhaseAdvanceBetween(std::string name, bool horizontal);
 
 	/**
 	 * Calculates the transfer matrix between two lattice elements
@@ -51,7 +51,7 @@ public:
 	double GetPhaseAdvanceX(int n2, int n1 = 0);
 	double GetPhaseAdvanceY(int n2, int n1 = 0);
 
-	pair<double, double> CalcIntegerPart(int n);
+	std::pair<double, double> CalcIntegerPart(int n);
 
 private:
 	AcceleratorModel* theModel;

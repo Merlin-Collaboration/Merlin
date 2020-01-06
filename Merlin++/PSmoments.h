@@ -102,12 +102,12 @@ void TPSMoments<N>::printFormatted(std::ostream& os, bool normalised) const
 	using std::setw;
 
 	int oldp = os.precision(3);
-	ios_base::fmtflags oflg = os.setf(ios::scientific, ios::floatfield);
+	std::ios_base::fmtflags oflg = os.setf(std::ios::scientific, std::ios::floatfield);
 
 	for(int i = 0; i < 2 * N; i++)
 	{
-		os << setw(12) << right << scientific << this->mean(i);
-		os << setw(12) << right << scientific << this->std(i);
+		os << setw(12) << std::right << std::scientific << this->mean(i);
+		os << setw(12) << std::right << std::scientific << this->std(i);
 		for(int j = 1; j < 2 * N; j++)
 		{
 			if(j <= i)
@@ -123,18 +123,18 @@ void TPSMoments<N>::printFormatted(std::ostream& os, bool normalised) const
 			}
 			else
 			{
-				os << right;
+				os << std::right;
 				if(normalised)
 				{
-					os << setw(8) << fixed << this->r_ij(i, j);
+					os << setw(8) << std::fixed << this->r_ij(i, j);
 				}
 				else
 				{
-					os << setw(12) << scientific << this->sig(i, j);
+					os << setw(12) << std::scientific << this->sig(i, j);
 				}
 			}
 		}
-		os << endl;
+		os << std::endl;
 	}
 	os.precision(oldp);
 	os.flags(oflg);

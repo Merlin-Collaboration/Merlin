@@ -71,7 +71,7 @@ public:
 
 protected:
 
-	SupportStructure(const string& id, Type type);
+	SupportStructure(const std::string& id, Type type);
 
 private:
 
@@ -114,7 +114,7 @@ public:
 	 *	Returns "SupportStructure".
 	 *	@return SupportStructure
 	 */
-	virtual const string& GetType() const;
+	virtual const std::string& GetType() const;
 
 	/**
 	 *	Virtual constructor.
@@ -137,7 +137,7 @@ public:
 	 *	Returns "SupportStructure".
 	 *	@return SupportStructure
 	 */
-	virtual const string& GetType() const;
+	virtual const std::string& GetType() const;
 
 	/**
 	 *	Virtual constructor.

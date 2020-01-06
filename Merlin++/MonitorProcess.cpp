@@ -10,6 +10,7 @@
 #include <fstream>
 #include "ParticleBunchProcess.h"
 
+using namespace std;
 using namespace ParticleTracking;
 
 MonitorProcess::MonitorProcess(const string& aID, int prio, const string& prefix) :

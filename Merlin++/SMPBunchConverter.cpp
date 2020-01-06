@@ -14,6 +14,7 @@
 #include "MultiNormal.h"
 #include <set>
 
+using namespace std;
 using namespace ParticleTracking;
 using namespace SMPTracking;
 

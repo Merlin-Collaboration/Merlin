@@ -11,6 +11,7 @@
 #include "TLASimp.h"
 #include "ILCDFS_IO.h"
 
+using namespace std;
 using namespace TLAS;
 
 void OneToOneCorrection(Accelerator* acc, Accelerator::Plane pxy, size_t nseg)

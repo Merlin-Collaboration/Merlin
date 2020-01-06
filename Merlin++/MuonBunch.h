@@ -11,7 +11,6 @@
 #include "ParticleBunch.h"
 #include <iostream>
 
-using namespace std;
 using namespace ParticleTracking;
 
 namespace ParticleTracking
@@ -68,11 +67,11 @@ public:
 
 	void report()
 	{
-		cout << "Muon Scatter tallies ";
-		for(int i = 0; i < ntally; cout << tally[i++] << " ")
+		std::cout << "Muon Scatter tallies ";
+		for(int i = 0; i < ntally; std::cout << tally[i++] << " ")
 		{
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
 }; // end MuonBunch class
 

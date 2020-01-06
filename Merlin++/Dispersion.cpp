@@ -105,7 +105,7 @@ void Dispersion::FindRMSDispersion(ostream* file)
 
 		if(file)
 		{
-			*file << endl;
+			*file << std::endl;
 		}
 
 		len += dl;

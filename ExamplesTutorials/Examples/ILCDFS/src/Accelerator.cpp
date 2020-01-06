@@ -15,6 +15,8 @@
 #include "BeamDynamicsModel.h"
 #include "ILCDFS_IO.h"
 
+using namespace std;
+
 namespace
 {
 

@@ -29,13 +29,13 @@ bool HorizontalHaloParticleBunchFilter::Apply(const PSvector& v) const
 
 void HorizontalHaloParticleBunchFilter::SetHorizontalLimit(double lim)
 {
-	cout << "Setting Horizontal limit to: " << lim << endl;
+	std::cout << "Setting Horizontal limit to: " << lim << std::endl;
 	limit = lim;
 }
 
 void HorizontalHaloParticleBunchFilter::SetHorizontalOrbit(double lim)
 {
-	cout << "Setting Horizontal orbit to: " << lim << endl;
+	std::cout << "Setting Horizontal orbit to: " << lim << std::endl;
 	orbit = lim;
 }
 
@@ -50,7 +50,7 @@ bool VerticalHaloParticleBunchFilter::Apply(const PSvector& v) const
 
 void VerticalHaloParticleBunchFilter::SetVerticalLimit(double lim)
 {
-	cout << "Setting Vertical limit to: " << lim << endl;
+	std::cout << "Setting Vertical limit to: " << lim << std::endl;
 	limit = lim;
 }
 

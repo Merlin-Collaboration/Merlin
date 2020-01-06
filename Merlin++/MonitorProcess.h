@@ -24,8 +24,8 @@ namespace ParticleTracking
 class MonitorProcess: public ParticleBunchProcess
 {
 private:
-	vector<string> dump_at_elements;
-	string file_prefix;
+	std::vector<std::string> dump_at_elements;
+	std::string file_prefix;
 	unsigned int count;
 
 public:
@@ -37,13 +37,13 @@ public:
 	 * \param prefix Output file name prefix
 	 *
 	 */
-	MonitorProcess(const string& aID = "MONITOR", int prio = 0, const string& prefix = "");
+	MonitorProcess(const std::string& aID = "MONITOR", int prio = 0, const std::string& prefix = "");
 
 	/// Set the output file name prefix
-	void SetPrefix(const string& prefix);
+	void SetPrefix(const std::string& prefix);
 
 	/// Add element at which to record
-	void AddElement(const string e);
+	void AddElement(const std::string e);
 	void InitialiseProcess(Bunch&  bunch);
 	void DoProcess(const double ds);
 	double GetMaxAllowedStepSize() const;

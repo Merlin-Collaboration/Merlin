@@ -11,6 +11,8 @@
 #include "ResponseMatrixGenerator.h"
 #include "ILCDFS_IO.h"
 
+using namespace std;
+
 EnergyAdjustmentPolicy* DFSCorrection::theEnergyAdjustmentPolicy = nullptr;
 Accelerator* DFSCorrection::theReferenceModel = nullptr;
 Accelerator* DFSCorrection::theSimulationModel = nullptr;

@@ -30,7 +30,7 @@ private:
 	double spin[3];
 };
 
-typedef vector<SpinVector> SpinVectorArray;
+typedef std::vector<SpinVector> SpinVectorArray;
 
 class SpinParticleBunch: public ParticleBunch
 {

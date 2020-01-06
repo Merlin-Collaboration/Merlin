@@ -92,7 +92,7 @@ public:
 	/**
 	 *	Constructor
 	 */
-	explicit LatticeFrame(const string& id = "");
+	explicit LatticeFrame(const std::string& id = "");
 
 	/**
 	 *	Copy constructor.
@@ -353,7 +353,7 @@ private:
  * Class LatticeFrame
  */
 
-inline LatticeFrame::LatticeFrame(const string& id) :
+inline LatticeFrame::LatticeFrame(const std::string& id) :
 	ModelElement(id), Transformable(), s_0(0), superFrame(nullptr), itsGeometry(nullptr)
 {
 }

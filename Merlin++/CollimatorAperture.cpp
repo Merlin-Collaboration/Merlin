@@ -6,7 +6,6 @@
  */
 
 #include "CollimatorAperture.h"
-#include "MADInterface.h"
 #include "RandomNG.h"
 
 CollimatorAperture::CollimatorAperture(double w, double h, double t, double length, double x_off, double y_off) :
@@ -121,7 +120,7 @@ double CollimatorAperture::GetCollimatorLength() const
 	return CollimatorLength;
 }
 
-string CollimatorAperture::GetType()
+std::string CollimatorAperture::GetType()
 {
 	return apType;
 }

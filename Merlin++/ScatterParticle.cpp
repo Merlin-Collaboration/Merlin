@@ -22,7 +22,7 @@ namespace
  *
  * See particle data book, section 27.3
  */
-pair<double, double> CoulombScatter(double x, double theta0)
+std::pair<double, double> CoulombScatter(double x, double theta0)
 {
 	static const double root12 = sqrt(12.0);
 
@@ -32,7 +32,7 @@ pair<double, double> CoulombScatter(double x, double theta0)
 	double theta_plane = z2 * theta0;
 	double y_plane = z1 * x * theta0 / root12 + x * theta_plane / 2;
 
-	return make_pair(y_plane, theta_plane);
+	return std::make_pair(y_plane, theta_plane);
 }
 }
 
@@ -81,7 +81,7 @@ void ScatterParticle(PSvector& p, double X0, double x, double E0)
 	double Eav = (E1 + E2) / 2.0;
 	double theta0 = 0.0136 * sqrt(t) * (1.0 + 0.038 * log(t)) / Eav; /// small-angle Coulomb scattering
 
-	pair<double, double> s = CoulombScatter(x, theta0);
+	std::pair<double, double> s = CoulombScatter(x, theta0);
 	p.x() += s.first;
 	p.xp() += s.second;
 

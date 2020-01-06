@@ -11,6 +11,7 @@
 #include "ParticleBunch.h"
 #include "ParticleDistributionGenerator.h"
 
+using namespace std;
 using namespace ParticleTracking;
 
 ParticleTrackingModel::ParticleTrackingModel(size_t npart) :

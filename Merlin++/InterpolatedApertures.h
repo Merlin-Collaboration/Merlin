@@ -11,8 +11,6 @@
 #include "Aperture.h"
 #include "DataTable.h"
 
-using namespace std;
-
 /**
  * Interpolated apertures utilize all four parameters and are inherently of rectellipse geometry
  */
@@ -36,7 +34,7 @@ public:
 	 *  function to get aperture typename string
 	 *  @return aperture typename string
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  InterpolatedAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -58,7 +56,7 @@ public:
 
 	struct apStruct
 	{
-		string ApType;
+		std::string ApType;
 		double s;
 		double ap1;
 		double ap2;
@@ -69,7 +67,7 @@ public:
 
 	apStruct ApEntry;
 
-	vector<apStruct> ApList;
+	std::vector<apStruct> ApList;
 
 	void ConvertToStruct(DataTable);
 };
@@ -92,7 +90,7 @@ public:
 	 *  function to get aperture typename string
 	 *  @return aperture typename string
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  InterpolatedRectEllipseAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -131,7 +129,7 @@ public:
 	 *  function to get aperture typename string
 	 *  @return aperture typename string
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  InterpolatedCircularAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -168,7 +166,7 @@ public:
 	 *  function to get aperture typename string
 	 *  @return aperture typename string
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  InterpolatedEllipticalAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -205,7 +203,7 @@ public:
 	 *  function to get aperture typename string
 	 *  @return aperture typename string
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  InterpolatedOctagonalAperture override of Aperture member function CheckWithinApertureBoundaries()
@@ -229,7 +227,7 @@ typedef Aperture* (*getInterpolator)(DataTable);
 class InterpolatorFactory
 {
 public:
-	static map<string, getInterpolator> interpolatorTypes;
+	static std::map<std::string, getInterpolator> interpolatorTypes;
 	static Aperture* GetInstance(DataTable);
 };
 

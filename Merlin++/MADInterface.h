@@ -20,9 +20,6 @@
 
 class AcceleratorModelConstructor;
 
-using std::ifstream;
-using std::ostream;
-
 /**
  *      Class used to construct a MERLIN model from a MAD optics
  *      output listing. The class now automatically  identifies
@@ -53,7 +50,7 @@ public:
 	 */
 	~MADInterface();
 
-	AcceleratorComponent* ComponentTypeMap(string& type);
+	AcceleratorComponent* ComponentTypeMap(std::string& type);
 
 	/**
 	 *   Causes the construction of an AcceleratorModel object
@@ -64,7 +61,7 @@ public:
 	/**
 	 *   Sets the log file stream to os.
 	 */
-	void SetLogFile(ostream& os);
+	void SetLogFile(std::ostream& os);
 
 	/**
 	 *   Turns logging on.
@@ -79,7 +76,7 @@ public:
 	/**
 	 * Function to return corresponding multipole string *
 	 */
-	string GetMutipoleType(DataTableRow& MADinputrow);
+	std::string GetMutipoleType(DataTableRow& MADinputrow);
 
 	/**
 	 * Function to define all type overrides
@@ -134,8 +131,8 @@ public:
 	AcceleratorModel* GetModel();
 	AcceleratorModelConstructor* GetModelConstructor();
 
-	void ConstructNewFrame(const string& name);
-	void EndFrame(const string& name);
+	void ConstructNewFrame(const std::string& name);
+	void EndFrame(const std::string& name);
 
 	double GetMomentum()
 	{
@@ -171,9 +168,9 @@ public:
 protected:
 	void init();
 	std::string filename;
-	istream* ifs; // madx input stream (may point to infile or be passsed in)
-	std::unique_ptr<ifstream> infile; // madx input if reading from file
-	ostream* log;
+	std::istream* ifs; // madx input stream (may point to infile or be passsed in)
+	std::unique_ptr<std::ifstream> infile; // madx input if reading from file
+	std::ostream* log;
 
 	bool logFlag = false;
 	bool honMadStructs = false;
@@ -184,10 +181,10 @@ protected:
 
 	AcceleratorModelConstructor* modelconstr = nullptr;
 	AcceleratorComponent* currentcomponent;
-	stack<string> frameStack;
+	std::stack<std::string> frameStack;
 };
 
-inline void MADInterface::SetLogFile(ostream& os)
+inline void MADInterface::SetLogFile(std::ostream& os)
 {
 	log = &os;
 }
@@ -217,13 +214,13 @@ inline void MADInterface::ScaleForSynchRad(bool scaleSR)
 	inc_sr = scaleSR;
 }
 
-typedef vector<AcceleratorComponent*> (*getTypeFunc)(DataTableRow& MADinputrow, double brho);
+typedef std::vector<AcceleratorComponent*> (*getTypeFunc)(DataTableRow& MADinputrow, double brho);
 
 class TypeFactory
 {
 public:
-	static map<string, getTypeFunc> componentTypes;
-	vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::map<std::string, getTypeFunc> componentTypes;
+	std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 
 };
 
@@ -237,127 +234,127 @@ public:
 class DriftComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class RBendComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class SBendComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class QuadrupoleComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class SkewQuadrupoleComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class SextupoleComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class SkewSextupoleComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class OctupoleComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class YCorComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class XCorComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class VKickerComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class HKickerComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class SolenoidComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class RFCavityComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class RFCavityComponentSingleCell: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class CollimatorComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class CrabMarkerComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class CrabRFComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class HELComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class MonitorComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 class MarkerComponent: public AcceleratorComponent
 {
 public:
-	static vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
+	static std::vector<AcceleratorComponent*> GetInstance(DataTableRow& MADinputrow, double brho);
 };
 
 #endif

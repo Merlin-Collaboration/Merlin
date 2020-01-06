@@ -21,13 +21,12 @@
 
 #include <iostream>
 
+using namespace std;
+
 namespace
 {
 
 #define COUT(x) cout << std::setw(12) << scientific << std::setprecision(4) << (x);
-
-using namespace std;
-using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
 

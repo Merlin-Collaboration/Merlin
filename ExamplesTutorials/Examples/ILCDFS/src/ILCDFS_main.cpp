@@ -17,6 +17,7 @@
 #include "DFSOutput.h"
 #include "OneToOneCorrection.h"
 
+using namespace std;
 using namespace PhysicalUnits;
 
 // Main programme for ILC DFS simulation appliction

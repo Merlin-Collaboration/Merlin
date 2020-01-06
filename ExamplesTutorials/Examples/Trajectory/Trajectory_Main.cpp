@@ -17,6 +17,7 @@
 
 #define BEAMENERGY 5.0 * GeV
 
+using namespace std;
 typedef vector<MagnetMover*> MagnetMoverList;
 
 using namespace PhysicalUnits;

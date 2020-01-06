@@ -209,7 +209,7 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 	v.redim(u.ncols(), u.ncols());
 	svdcmp(u, w, v);
 
-	T wmin = threshold != T(0) ? threshold * (*max_element(w.begin(), w.end())) : threshold;
+	T wmin = threshold != T(0) ? threshold * (*std::max_element(w.begin(), w.end())) : threshold;
 	int zerocount = 0;
 	for(size_t i = 0; i < w.size(); i++)
 		if(w[i] <= wmin)
@@ -229,7 +229,7 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 template<class T>
 void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
 {
-	static const T tiny = numeric_limits<T>::epsilon();
+	static const T tiny = std::numeric_limits<T>::epsilon();
 	size_t imax, i, j, k;
 	const size_t n = a.ncols();
 
