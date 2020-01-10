@@ -28,9 +28,6 @@ template<class T> class TComponentFrame;
 class RWChannel;
 class ROChannel;
 
-using std::string;
-using std::vector;
-
 class AcceleratorModel
 {
 public:
@@ -264,7 +261,7 @@ public:
 	 * @exception Throws a BadRange exception if the requested range cannot be found.
 	 * @return The requested Beamline.
 	 */
-	Beamline GetBeamline(const string& pat1, const string& pat2, int n1 = 1, int n2 = 1);
+	Beamline GetBeamline(const std::string& pat1, const std::string& pat2, int n1 = 1, int n2 = 1);
 
 	/**
 	 * Assumes that the AcceleratorModel represents a ring
@@ -292,7 +289,7 @@ public:
 	 * @param[out] results The vector of ComponentFrame pointers that will contain the output results.
 	 * @return An integer containing the number of extracted components.
 	 */
-	int ExtractComponents(const string& pat, vector<ComponentFrame*>& results);
+	int ExtractComponents(const std::string& pat, std::vector<ComponentFrame*>& results);
 
 	/**
 	 * Returns in results all ModelElement objects whose name
@@ -303,7 +300,7 @@ public:
 	 * @param[out] results The vector of ModelElement pointers that will contain the output results.
 	 * @return An integer containing the number of extracted model elements.
 	 */
-	int ExtractModelElements(const string& pat, vector<ModelElement*>& results);
+	int ExtractModelElements(const std::string& pat, std::vector<ModelElement*>& results);
 
 	/**
 	 * template function returning TComponentFrame objects
@@ -316,7 +313,8 @@ public:
 	 * @param[in] pattern A string containing the pattern of unqualified element names to match. Default is to match all elements.
 	 * @return An integer containing the number of matched components
 	 */
-	template<class T> int ExtractTypedComponents(vector<TComponentFrame<T>*>& results, const string& pattern = "*")
+	template<class T> int ExtractTypedComponents(std::vector<TComponentFrame<T>*>& results, const std::string& pattern =
+		"*")
 	{
 		StringPattern p(pattern);
 		for(BeamlineIterator i = lattice.begin(); i != lattice.end(); i++)
@@ -339,7 +337,7 @@ public:
 	 * @param[in] pattern A string containing the pattern of unqualified element names to match. Default is to match all elements.
 	 * @return An integer containing the number of matched components
 	 */
-	template<class T> int ExtractTypedElements(T& results, const string& pattern = "*")
+	template<class T> int ExtractTypedElements(T& results, const std::string& pattern = "*")
 	{
 		typedef typename T::value_type value_type;
 		StringPattern p(pattern);
@@ -387,7 +385,7 @@ public:
 	 * @param[out] channels A vector array holding the ROChannels that matched the chID pattern.
 	 * @return A size_t containing the number of matched channels.
 	 */
-	size_t GetROChannels(const string& chID, std::vector<ROChannel*>& channels);
+	size_t GetROChannels(const std::string& chID, std::vector<ROChannel*>& channels);
 
 	/**
 	 * Returns in channels all RWChannels matching chID.
@@ -396,7 +394,7 @@ public:
 	 * @param[out] channels A vector array holding the RWChannels that matched the chID pattern.
 	 * @return A size_t containing the number of matched channels.
 	 */
-	size_t GetRWChannels(const string& chID, std::vector<RWChannel*>& channels);
+	size_t GetRWChannels(const std::string& chID, std::vector<RWChannel*>& channels);
 
 	/**
 	 * Returns read-only channels matching chid for all
@@ -480,7 +478,7 @@ public:
 	 * @param[in] RequestedElement The name of the requested element to find.
 	 * @return An integer containing the number of the element in the lattice.
 	 */
-	int FindElementLatticePosition(string RequestedElement);
+	int FindElementLatticePosition(std::string RequestedElement);
 
 private:
 

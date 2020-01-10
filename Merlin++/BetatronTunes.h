@@ -8,6 +8,8 @@
 #ifndef BetatronTunes_h
 #define BetatronTunes_h 1
 
+#include <vector>
+
 #include "AcceleratorModel.h"
 #include "HollowELensProcess.h"
 #include "PSTypes.h"
@@ -43,14 +45,14 @@ public:
 		myHELProcess = HELP;
 	}
 
-	double FindTune(vector<double>& data);
+	double FindTune(std::vector<double>& data);
 
 private:
 	AcceleratorModel* theModel;
 	double p0;
 	HollowELensProcess* myHELProcess;
 
-	void FFT(vector<double>& data);
+	void FFT(std::vector<double>& data);
 	double amp(double a, double b, double c);
 };
 

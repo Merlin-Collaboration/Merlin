@@ -6,6 +6,7 @@
  */
 
 #include <fstream>
+#include <vector>
 
 #include "PhysicalUnits.h"
 #include "MADInterface.h"
@@ -18,11 +19,11 @@
 
 #define BEAMENERGY 5.0 * GeV
 
-typedef vector<MagnetMover*> MagnetMoverList;
-
 using namespace std;
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
+
+typedef vector<MagnetMover*> MagnetMoverList;
 
 int main()
 {

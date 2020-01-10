@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	vector<BPM::Data> BPMReading;
+	std::vector<BPM::Data> BPMReading;
 
 	void Record(const BPM& aBPM, const BPM::Data& data)
 	{
