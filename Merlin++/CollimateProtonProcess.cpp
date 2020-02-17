@@ -23,7 +23,6 @@
 #include "CollimateProtonProcess.h"
 #include "ScatteringProcess.h"
 #include "ScatteringModel.h"
-#include "CrossSections.h"
 
 #include "utils.h"
 #include "PhysicalUnits.h"
@@ -37,7 +36,7 @@ namespace ParticleTracking
 CollimateProtonProcess::CollimateProtonProcess(int priority, int mode, std::ostream* osp) :
 	CollimateParticleProcess(priority, mode, osp), scattermodel(nullptr)
 {
-
+	scattermodel = new ScatteringModel();
 }
 
 /**
@@ -56,35 +55,34 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 	double z = int_s;
 	double lengthtogo = s - z;
-
 	Collimator* C = static_cast<Collimator*>(currentComponent);
 
 	string ColName = currentComponent->GetName();
+/*
+    if(scattermodel->ScatterPlot_on)
+    {
+        for(vector<string>::iterator its = scattermodel->ScatterPlotNames.begin(); its !=
+            scattermodel->ScatterPlotNames.end(); ++its)
+        {
+            if(ColName == *its)
+            {
+                scatter_plot = 1;
+            }
+        }
+    }
 
-	if(scattermodel->ScatterPlot_on)
-	{
-		for(vector<string>::iterator its = scattermodel->ScatterPlotNames.begin(); its !=
-			scattermodel->ScatterPlotNames.end(); ++its)
-		{
-			if(ColName == *its)
-			{
-				scatter_plot = 1;
-			}
-		}
-	}
-
-	if(scattermodel->JawImpact_on)
-	{
-		for(vector<string>::iterator its = scattermodel->JawImpactNames.begin(); its !=
-			scattermodel->JawImpactNames.end(); ++its)
-		{
-			if(ColName == *its)
-			{
-				jaw_impact = 1;
-			}
-		}
-	}
-
+    if(scattermodel->JawImpact_on)
+    {
+        for(vector<string>::iterator its = scattermodel->JawImpactNames.begin(); its !=
+            scattermodel->JawImpactNames.end(); ++its)
+        {
+            if(ColName == *its)
+            {
+                jaw_impact = 1;
+            }
+        }
+    }
+ */
 	const Aperture *colap = C->GetAperture();
 
 	//set scattering model
@@ -94,13 +92,12 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		std::cout << "Use 'myCollimateProcess->SetScatteringModel(myScatter);'" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-
 	while(lengthtogo > 0)
 	{
 		double E1 = E0 * (1 + p.dp());
 		//Note that pathlength should be calculated with E0
 
-		double xlen = scattermodel->PathLength(C->GetMaterial(), E0);
+		double xlen = scattermodel->PathLength(C->GetMaterialProperties(), E0);
 
 		double E2 = 0;
 
@@ -111,22 +108,21 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		p.x() += step_size * p.xp();
 		p.y() += step_size * p.yp();
+/*
+        //Jaw Impact
+        if(jaw_impact && z == 0)
+        {
+            scattermodel->JawImpact(p, ColParProTurn, ColName);
+        }
 
-		//Jaw Impact
-		if(jaw_impact && z == 0)
-		{
-			scattermodel->JawImpact(p, ColParProTurn, ColName);
-		}
-
-		//Scatter Plot
-		if(scatter_plot && z == 0)
-		{
-			scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
-		}
-
+        //Scatter Plot
+        if(scatter_plot && z == 0)
+        {
+            scattermodel->ScatterPlot(p, z, ColParProTurn, ColName);
+        }
+ */
 		//Energy Loss
-		scattermodel->EnergyLoss(p, step_size, C->GetMaterial(), E0);
-
+		scattermodel->EnergyLoss(p, step_size, C->GetMaterialProperties(), E0);
 		E2 = E0 * (1 + p.dp());
 
 		if(E2 <= 1.0)
@@ -145,7 +141,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		}
 
 		//MCS
-		scattermodel->Straggle(p, step_size, C->GetMaterial(), E1, E2);
+		scattermodel->Straggle(p, step_size, C->GetMaterialProperties(), E1, E2);
 
 		if((E2 < (E0 / 100.0)))
 		{
@@ -173,10 +169,11 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		}
 
 		//Scattering - use E2
+
 		if(interacted)
-		{
-			if(!scattermodel->ParticleScatter(p, C->GetMaterial(), E2))
-			{
+		{ // cout<<" CHECK7 "<<p<<endl;
+			if(!scattermodel->ParticleScatter(p, C->GetMaterialProperties(), E2))
+			{ // lost
 				p.ct() = z;
 
 				if(CollimationOutputSet)
@@ -188,7 +185,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 					}
 				}
 				return true;
-			}
+			} // else {cout<<" CHECK6  scatter new value "<<p.x()<<" "<<p.y()<<" "<<p.ct()<<" "<<p.dp()<<" "<<p<<endl;}
 		}
 
 		if((p.dp() < -0.95) || (p.dp() < -1))

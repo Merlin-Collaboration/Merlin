@@ -41,7 +41,7 @@ double DispersionCorrectedEmittance(const PSmoments& S)
 void OptimumDispersionMatch(AcceleratorModel* accmdl, BeamData beam0)
 {
 	SMPTracker tracker(accmdl->GetBeamline());
-	tracker.AddProcess(new WakeFieldProcess(1));
+	tracker.AddProcess(new SMPTracking::WakeFieldProcess(1));
 
 	ofstream ofs("dispersion_match.dat");
 //	beam0.Dyp = 0;

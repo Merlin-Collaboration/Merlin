@@ -42,7 +42,9 @@ using namespace std;
 #include "PhysicalConstants.h"
 #include "AcceleratorModelConstructor.h"
 #include "Drift.h"
-#include "CollimateParticleProcess.h"
+#include "CollimateProtonProcess.h"
+#include "Collimator.h"
+#include "CollimatorAperture.h"
 
 #include <iostream>
 #include <iomanip>
@@ -147,12 +149,6 @@ int main(int argc, char* argv[])
 		ylim = 0.00001;
 		yplim = 0.00003;
 		zlim = mybeam.sig_z * 4.0;
-
-		histt1 = new TH1D("t1", "Nuclear elastic t", 100, 0, 0.2);
-		histt2 = new TH1D("t2", "Nucleon elastic t", 100, 0, 0.2);
-		histt3 = new TH1D("t3", "SD Mass squared", 100, 0, 100.0);
-		histt4 = new TH1D("t4", "Diffractive  t", 100, 0, 0.2);
-		histt5 = new TH1D("m1", "Diffractive Mass squared", 100, 0, 50);
 		TH1D *PShist1 = new TH1D("xbefore", "x before", 100, -xlim, xlim);
 		TH1D *PShist2 = new TH1D("xafter", "x after", 100, -xlim, xlim);
 		TH1D *PShist3 = new TH1D("xpbefore", "x prime before", 100, -xplim, xplim);
@@ -176,12 +172,23 @@ int main(int argc, char* argv[])
 		;
 		myaccmodelctor->NewModel();
 		myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
+		Collimator* TestCol = new Collimator("TheCollimator", 0.01);
+		TestCol->SetMaterialProperties(matter->property["Cu"]);
+		CollimatorAperture* app = new CollimatorAperture(2, 2, 0, .01, 0, 0);
+		app->SetExitWidth(0);
+		app->SetExitHeight(0);
+		myaccmodelctor->AppendComponent(TestCol, 0.01);
+		myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
+		TestCol->SetAperture(app);
 		AcceleratorModel* mymodel = myaccmodelctor->GetModel();
 		ParticleTracker mytracker(mymodel->GetBeamline(), myBunch);
 		ParticleTracker* tracker = new ParticleTracker(mymodel->GetBeamline(), myBunch
 			);
 
-		CollimateParticleProcess* myCollimateProcess = new CollimateParticleProcess(0, 7);
+		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(0, 7);
+		cout << " make new scattering model\n";
+		ScatteringModel* myScatter = new ScatteringModel();
+		myCollimateProcess->SetScatteringModel(myScatter);
 		myCollimateProcess->ScatterAtCollimator(true);          // Needs resurrection
 		tracker->AddProcess(myCollimateProcess);
 		ParticleBunch* bunch2;

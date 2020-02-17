@@ -36,8 +36,7 @@ MaterialProperties::MaterialProperties(double p1, double p2, double p3, double p
 
 void MaterialProperties::Update()
 {
-	dEdxGeVpermetre = dEdx * density / 10.0;
-	lambda = A * 1.E-6 / ((sigma_T + sigma_R) * density * 1.E-28 * 6.022E23)
+	lambda = A * 1.E-3 / ((sigma_T + sigma_R) * density * 1.E-28 * 6.022E23)
 	;
 }
 
@@ -190,7 +189,7 @@ Mixture::Mixture(map<string, MaterialProperties*> dict, vector<string> names, ve
 	}
 	X0 = 1 / RX0;
 	density = d;
-	cout << "  Mixture mixture densioty " << d << endl;
+	// cout << "  Mixture mixture densioty " << d << endl;
 	extra = new map<string, double>; // will be deleted by destructor
 	Update();
 }

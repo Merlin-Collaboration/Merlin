@@ -46,7 +46,7 @@ StandardMaterialData::StandardMaterialData()   // constructor
 	string names5[] = {"Be", "C", "O", "Al", "Fe", "Ni", "Cu", "Mo", "W", "Pb"};
 	double MeanExcitationEnergy[] = {63.7, 78.0, 95.0, 166.0, 286.0, 311.0, 322.0, 424.0, 727.0, 823.0 }; //  in eV
 	for(int i = 0; i < int(sizeof(names5) / sizeof(string)); i++)
-		property[names5[i]]->SetExtra("meanExcitationEnergy", MeanExcitationEnergy[i] * eV);
+		property[names5[i]]->SetExtra("MeanExcitationEnergy", MeanExcitationEnergy[i] * eV);
 
 	property["AC150K"] = new MaterialProperties(*property["C"]);
 	property["AC150K"]->dEdx = 0.68;
@@ -104,7 +104,7 @@ void MaterialData::MakeMixture(string name, string s, ...)
 		s = s.substr(i + 1);
 	} while(i != string::npos);
 	double density = va_arg(numbers, double);
-	cout << " density is " << density << endl;
+	// cout << " density is " << density << endl;
 	va_end(numbers);
 	property[name] = new Mixture(property, elements, proportions, density);
 }
@@ -126,4 +126,13 @@ void MaterialData::MakeMixtureByWeight(string name, string s, ...)
 	double density = va_arg(numbers, double);
 	va_end(numbers);
 	property[name] = new Mixture(property, elements, proportions, density);
+}
+
+ostream& operator<<(ostream& s, MaterialData* M)
+{
+	s << "  Name    A    Z    sig T  sig I  sig R   dEdx  density Rad length\n";
+	for(map<string, MaterialProperties*>::iterator it = (M->property).begin(); it != M->property.end(); it++)
+		cout << setw(7) << it->first << " " << *(it->second) << endl;
+
+	return s;
 }

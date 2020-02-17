@@ -27,7 +27,7 @@
 #include "LatticeFunctions.h"
 
 // Include material, collimator and aperture config classes
-#include "MaterialDatabase.h"
+#include "MaterialData.h"
 #include "CollimatorDatabase.h"
 #include "ApertureConfiguration.h"
 
@@ -70,7 +70,7 @@ int main()
 
 	// Define material database
 	cout << "Loading materials database..." << endl;
-	MaterialDatabase* material_db = new MaterialDatabase();
+	MaterialData* material_db = new StandardMaterialData();
 
 	// Import and define collimator information
 	cout << "Loading collimators database..." << endl;

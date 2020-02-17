@@ -196,6 +196,7 @@ void ppElasticScatter::GenerateDsigDt(double energy)
  */
 void ppElasticScatter::IntegrateDsigDt()
 {
+	std::cout << " CHECK1 IntegrateDsigDt\n";
 	unsigned int nSteps = Uniformt->size();
 	std::vector<double> Sig;
 	Sig.reserve(nSteps);

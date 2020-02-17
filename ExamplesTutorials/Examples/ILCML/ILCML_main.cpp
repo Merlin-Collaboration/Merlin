@@ -164,8 +164,8 @@ void PerformTracking(const string& fname, AcceleratorModel::Beamline& linac, SMP
 
 	if(inc_wf)
 	{
-		WakeFieldProcess* wf = new WakeFieldProcess(1);
-		wf->ApplyImpulseAt(WakeFieldProcess::atCentre);
+		SMPTracking::WakeFieldProcess* wf = new SMPTracking::WakeFieldProcess(1);
+		wf->ApplyImpulseAt(SMPTracking::WakeFieldProcess::atCentre);
 		tracker.AddProcess(wf);
 	}
 

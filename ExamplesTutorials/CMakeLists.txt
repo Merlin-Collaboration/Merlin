@@ -51,6 +51,7 @@ add_custom_command(TARGET TutorialDataFiles
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_CURRENT_SOURCE_DIR}/Tutorials/input ${CMAKE_CURRENT_BINARY_DIR}/Tutorials/input)
 
+merlin_example(Examples/Wakefields ex1 ex1.cpp)
 merlin_example(Examples/CollimatorMaterials CollimatorMaterials CollimatorMaterials.cpp)
 merlin_example(Examples/AcceleratorErrors AcceleratorErrors main.cpp)
 merlin_example(Examples/ClosedOrbit ClosedOrbit ClosedOrbit_Main.cpp)

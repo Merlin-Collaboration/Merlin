@@ -40,17 +40,17 @@ private:
 
 /**
  * the resistive wake potentials  (in MKS system)
- */
-class ResistiveWakePotentials: public CollimatorWakePotentials
-{
-public:
-	ResistiveWakePotentials(int m, double r, double s, double l);
-	~ResistiveWakePotentials();
-	virtual double Wlong(double z, int m) const;
-	virtual double Wtrans(double z, int m) const;
+   class ResistiveWakePotentials: public CollimatorWakePotentials
+   {
+   public:
+    ResistiveWakePotentials(int m, double r, double s, double l);
+    ~ResistiveWakePotentials();
+    virtual double Wlong(double z, int m) const;
+    virtual double Wtrans(double z, int m) const;
 
-private:
-	double* coeff;
-	double rad, sigma, length;
-};
+   private:
+    double* coeff;
+    double rad, sigma, length;
+   };
+ */
 #endif

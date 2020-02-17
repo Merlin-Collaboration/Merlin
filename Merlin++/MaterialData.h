@@ -35,4 +35,6 @@ public:
 	void UseSixTrackValues();     // there are some differences, goodness knows why
 };
 
+ostream& operator<<(ostream& s, MaterialData* M);
+
 #endif /* MATERIALDATA */

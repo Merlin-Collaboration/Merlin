@@ -7,6 +7,8 @@
 
 #include "ComponentTracker.h"
 #include "AcceleratorComponent.h"
+#include "MaterialData.h"
+#include "ResistiveWakePotentials.h"
 
 const int AcceleratorComponent::ID = UniqueIndex();
 
@@ -45,4 +47,16 @@ int AcceleratorComponent::UniqueIndex()
 {
 	static int ID_count = 0;
 	return ID_count++;
+}
+void AcceleratorComponent::SetResistiveWakePotentials(int modes, double width, double length)
+{
+
+	cout << " making something\n  ";
+	cout << " MTTER PROPERTIES " << materialProperties << endl;
+	if(materialProperties)
+	{
+		if(materialProperties->HaveExtra("conductivity"))
+			itsWakes = new ResistiveWakePotentials(modes, width, materialProperties->GetExtra("conductivity"), length);
+	}
+	return;
 }

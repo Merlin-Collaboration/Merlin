@@ -17,6 +17,7 @@ const double barn = 1.0e-28;    // m^2
 // length
 const double meter = 1.0;
 const double centimeter = 1.0e-02 * meter;
+const double cc =  centimeter * centimeter * centimeter;
 const double millimeter = 1.0e-03 * meter;
 const double micrometer = 1.0e-06 * meter;
 const double nanometer  = 1.0e-09 * meter;
@@ -66,5 +67,6 @@ const double Gauss = 1.0e-3 * kGauss;
 
 // mass
 const double amu = 931.494028 * MeV; // atomic mass unit in MeV
-
+const double kgram = 1.0;
+const double gram = 0.001 * kgram;
 }

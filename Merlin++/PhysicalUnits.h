@@ -16,9 +16,10 @@ namespace PhysicalUnits
 //Area
 extern const double barn;
 
-// length
+// length and volume
 extern const double meter;
 extern const double centimeter;
+extern const double cc;
 extern const double millimeter;
 extern const double micrometer;
 extern const double nanometer;
@@ -68,6 +69,8 @@ extern const double Gauss;
 
 // mass
 extern const double amu;
+extern const double kgram;
+extern const double gram;
 
 }
 

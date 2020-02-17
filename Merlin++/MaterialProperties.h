@@ -29,8 +29,8 @@ using namespace std;
 class MaterialProperties
 {
 public:
-	double Z, A, density, dEdx, sigma_R, sigma_I, sigma_T, X0;
-	double dEdxGeVpermetre, lambda;
+	double Z, A, density, dEdx, sigma_R, sigma_I, sigma_E, sigma_D, sigma_T, X0;
+	double lambda;
 	map<string, double> *extra;
 
 	virtual double A_R()
@@ -43,7 +43,7 @@ public:
 	}
 	MaterialProperties()
 	{
-		lambda = dEdxGeVpermetre = A = density = dEdx = sigma_R = sigma_I = sigma_T = Z = X0 = 0;
+		lambda = A = density = dEdx = sigma_R = sigma_I = sigma_T = Z = X0 = 0;
 		extra = nullptr;
 	}
 	// keep child class happy

@@ -23,7 +23,7 @@
 #include "CollimateParticleProcess.h"
 #include "CollimateProtonProcess.h"
 #include "ScatteringModelsMerlin.h"
-#include "MaterialDatabase.h"
+#include "MaterialData.h"
 #include "NANCheckProcess.h"
 
 #include "PhysicalUnits.h"
@@ -116,13 +116,16 @@ int main(int argc, char* argv[])
 	 *	ACCELERATOR MODEL LOADING
 	 *********************************************************************/
 
-	MaterialDatabase* mat = new MaterialDatabase();
-	Material* CollimatorMaterial = mat->FindMaterial("Cu");
+	StandardMaterialData* mat = new StandardMaterialData();
+	if(scatter_mode_sixtrack)
+		mat->UseSixTrackValues();
+	cout << mat << endl;
+	MaterialProperties* CollimatorMaterial = mat->property["Cu"];
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
 	double length = 0.5;
 	Collimator* TestCol = new Collimator("TestCollimator", length);
-	TestCol->SetMaterial(CollimatorMaterial);
+	TestCol->SetMaterialProperties(CollimatorMaterial);
 
 	CollimatorAperture* app = new CollimatorAperture(2, 2, 0, length, 0, 0);
 	app->SetExitWidth(app->GetFullEntranceWidth());      //Horizontal
@@ -158,17 +161,20 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	 *	COLLIMATION SETTINGS
 	 *********************************************************************/
-	ScatteringModel* myScatter;
+	ScatteringModel* myScatter = new ScatteringModel();
 
 	CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
 	if(scatter_mode_sixtrack)
 	{
-		myScatter = new ScatteringModelSixTrack;
+// RJB		myScatter = new ScatteringModelSixTrack;
+		myScatter->Processes[1] = new SixTrackRutherford();
+		myScatter->Processes[2] = new SixTrackElasticpn();
+		myScatter->Processes[3] = new SixTrackSingleDiffractive();
 	}
-	else
-	{
-		myScatter = new ScatteringModelMerlin;
-	}
+//	else
+//	{
+//		myScatter = new ScatteringModelMerlin;
+//	}
 	myCollimateProcess->SetScatteringModel(myScatter);
 	stringstream loststr;
 
