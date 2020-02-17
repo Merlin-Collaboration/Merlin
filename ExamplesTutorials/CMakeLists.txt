@@ -52,7 +52,10 @@ add_custom_command(TARGET TutorialDataFiles
                    ${CMAKE_CURRENT_SOURCE_DIR}/Tutorials/input ${CMAKE_CURRENT_BINARY_DIR}/Tutorials/input)
 
 merlin_example(Examples/Wakefields ex1 ex1.cpp)
+if(ENABLE_ROOT)
 merlin_example(Examples/CollimatorMaterials CollimatorMaterials CollimatorMaterials.cpp)
+target_link_libraries(CollimatorMaterials ${ROOT_LIBRARIES})
+endif()
 merlin_example(Examples/AcceleratorErrors AcceleratorErrors main.cpp)
 merlin_example(Examples/ClosedOrbit ClosedOrbit ClosedOrbit_Main.cpp)
 merlin_example(Examples/HaloCollimation HaloCollimation HaloCollimation_main.cpp ConstructModel.cpp HaloTracker.cpp QuadIntegrator.cpp)
