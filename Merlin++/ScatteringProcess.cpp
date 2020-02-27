@@ -109,7 +109,7 @@ bool SixTrackRutherford::Scatter(PSvector& p, double E) const
 	double t = tmin / (1 - RandomNG::uniform(0, 1));
 	ScatterStuff(p, t, E0);
 
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;
@@ -146,10 +146,10 @@ bool Elasticpn::Scatter(PSvector& p, double E) const
 {
 	double t = calculations->SelectT();
 	// double t = cs->GetElasticScatter()->SelectT();
+	// change RJB ScatterStuff(p, t, AtomicMassUnit, E);
+	ScatterStuff(p, t, E);
 
-	ScatterStuff(p, t, AtomicMassUnit, E0);
-
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;
@@ -176,7 +176,7 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E) const
 
 	ScatterStuff(p, t, E0);
 
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;
@@ -197,14 +197,22 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E) const
 //	b_N = b_N_ref * (cs->Get_sig_pN_tot() / cs->Get_sig_pN_tot_ref());
 //	E0 = cs->Get_E0();
 //}
+ElasticpN::ElasticpN(double E, MaterialProperties* mat)
+{
+	cout << " CHECK make new elastic pN" << endl;
+	cout << mat->A << endl;
+	mymat = mat;
+	b_N = 14.1 * pow(mat->A, 0.66); // deMolaize Equation 1.31
+	cout << " CHECK made new elastic pN" << endl;
+}
+
 bool ElasticpN::Scatter(PSvector& p, double E) const
 {
-	double TargetMass = AtomicMassUnit * mat->A; // GetAtomicMass();
-
+	double TargetMass = AtomicMassUnit * mymat->A; // GetAtomicMass();
 	double t = -log(RandomNG::uniform(0, 1)) / b_N;
-	ScatterStuff(p, t, TargetMass, E0);
+	ScatterStuff(p, t, TargetMass, E);
 
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;
@@ -229,9 +237,9 @@ bool SixTrackElasticpN::Scatter(PSvector& p, double E) const
 {
 
 	double t = -log(RandomNG::uniform(0, 1)) / b_N;
-	ScatterStuff(p, t, E0);
+	ScatterStuff(p, t, E);
 
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;
@@ -252,7 +260,7 @@ bool SixTrackElasticpN::Scatter(PSvector& p, double E) const
 //}
 SingleDiffractive::SingleDiffractive(double Energy)
 {
-// Do pomeron stuff for Diffraxctive scattering
+// Do pomeron stuff for Diffractive scattering
 	calculations = new ParticleTracking::ppDiffractiveScatter();
 	calculations->SetTMin(0.0001);
 	calculations->SetTMax(4.0);
@@ -269,13 +277,12 @@ bool SingleDiffractive::Scatter(PSvector& p, double E) const
 	std::pair<double, double> TM = calculations->Select();
 	double t = TM.first;
 	double m_rec = TM.second;
-	double com_sqd = (2 * ProtonMassMeV * MeV * E0) + (2 * ProtonMassMeV * MeV * ProtonMassMeV * MeV);
+	double com_sqd = (2 * ProtonMassMeV * MeV * E) + (2 * ProtonMassMeV * MeV * ProtonMassMeV * MeV);
 	double dp = m_rec * m_rec * E / com_sqd;
-
-	ScatterStuff(dp, p, t, E0);
+	ScatterStuff(dp, p, t, E);
 	p.sd() = 1;
 
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;
@@ -314,10 +321,10 @@ bool SixTrackSingleDiffractive::Scatter(PSvector& p, double E) const
 	double t = -log(RandomNG::uniform(0, 1)) / b;
 	double dp = xm2 * E / com_sqd;
 
-	ScatterStuff(dp, p, t, E0);
+	ScatterStuff(dp, p, t, E);
 	p.sd() = 1;
 
-	double E3 = (1 + p.dp()) * E0;
+	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
 		return false;

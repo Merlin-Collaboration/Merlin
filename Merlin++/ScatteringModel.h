@@ -100,7 +100,7 @@ enum EnergyLossMode
 struct ScatterModelDetails
 {
 	std::vector<double> Xsection = std::vector<double>(5, 0.0);
-	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0};
+	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0, 0};
 
 };
 

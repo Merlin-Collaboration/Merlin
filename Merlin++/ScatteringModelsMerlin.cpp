@@ -43,7 +43,7 @@ ScatteringModelFixed::~ScatteringModelFixed()
 ScatteringModelMerlin::ScatteringModelMerlin(MaterialProperties* mat) :
 	ScatteringModelFixed(mat)
 {
-	AddProcess(new ElasticpN());
+	AddProcess(new ElasticpN(7000));
 	AddProcess(new Elasticpn(7000.0));
 	AddProcess(new SingleDiffractive(7000.0));
 	AddProcess(new Rutherford(mat));
@@ -80,7 +80,7 @@ ScatteringModelSixTrackIoniz::ScatteringModelSixTrackIoniz(MaterialProperties* m
 ScatteringModelSixTrackElastic::ScatteringModelSixTrackElastic(MaterialProperties*  mat) :
 	ScatteringModelFixed(mat)
 {
-	AddProcess(new ElasticpN());
+	AddProcess(new ElasticpN(7000.0));
 	AddProcess(new Elasticpn(7000.0));
 	AddProcess(new SixTrackSingleDiffractive());
 	AddProcess(new SixTrackRutherford());

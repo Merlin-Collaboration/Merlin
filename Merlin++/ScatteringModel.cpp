@@ -45,11 +45,12 @@ void ScatteringModel::Configure(MaterialProperties* m, double Energy)
 	Processes[1] = new Rutherford(m);
 	Processes[2] = new Elasticpn(Energy);
 	Xsection[2] = 1.618 * pow(m->A, 0.333) * Processes[2]->sigma;
-	cout << "CHECK elastic cross section set to " << Xsection[2] << endl;
 	Processes[3] = new SingleDiffractive(Energy);
 	Xsection[3] = 1.618 * pow(m->A, 0.333) * Processes[3]->sigma;
-	cout << "CHECK diffractive cross section set to " << Xsection[3] << endl;
 	Processes[4] = new Inelastic();
+	Processes[5] = new ElasticpN(Energy, m);
+	cout << "CHECK cross sections T R E D I " << Xsection[0] << " " << Xsection[1] << " " << Xsection[2] << " "
+		 << Xsection[3] << " " << Xsection[4] << endl;
 
 }
 
@@ -64,6 +65,7 @@ ScatteringModel::~ScatteringModel()
 double ScatteringModel::PathLength(MaterialProperties* mat, double E0)
 {
 	static double lambda;
+
 // deleted RJB   just use sigma_T
 //    though this  does all sorts of other fancy config stuff which may need replanting
 // 	CrossSections* CurrentCS;
@@ -131,7 +133,7 @@ double ScatteringModel::PathLength(MaterialProperties* mat, double E0)
 	//Calculate mean free path
 //	lambda = CurrentCS->GetTotalMeanFreePath();
 	lambda = mat->lambda;
-	return -(lambda) * log(RandomNG::uniform(0, 1));
+	return -(mat->lambda) * log(RandomNG::uniform(0, 1));
 }
 
 void ScatteringModel::EnergyLoss(PSvector& p, double x, MaterialProperties* mat, double E0)
@@ -163,7 +165,7 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, MaterialProperties* 
 	static double C, C0, C1, I, edensity, xi0, plasmaEnergy;
 	if(mat != oldmat)      // new material so do the sums, otherwise they persist
 	{
-		cout << " New Material for energy loss full calculation\n";
+		cout << " New Material for energy loss full calculation";
 		I = mat->GetExtra("MeanExcitationEnergy") / eV;
 		edensity = (mat->Z) * Avogadro * (mat->density) / (mat->A);
 		xi0 = xi1 *  edensity; //  mat->GetExtra("ElectronDensity");
@@ -205,7 +207,6 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, MaterialProperties* 
 	double E1 = E0 * (1 + p.dp());
 	double gamma = E1 / (ProtonMassMeV * MeV);
 	double beta = sqrt(1 - (1 / (gamma * gamma)));
-
 	double land = RandomNG::landau();
 
 	double tmax = (2 * ElectronMassMeV * beta * beta * gamma * gamma) / (1 + (2 * gamma * (ElectronMassMeV
@@ -248,9 +249,10 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, MaterialProperties* 
 	double F = G - S + 2 * (L1 + L2);
 	double deltaE = xi * (log(2 * ElectronMassMeV * beta * beta * gamma * gamma * xi / pow(I / MeV, 2)) - (beta
 		* beta) - delta + F + 0.20);
-	double dp = ((xi * land) - deltaE) * MeV;
-
+	double dp = ((xi * land) - deltaE); //  RJB  * MeV;
+	// cout<<" Delta E central   xi land dp "<<deltaE<<" "<<xi<<" "<<land<<" "<<dp<<endl;
 	p.dp() = ((E1 - dp) - E0) / E0;
+	//  cout<<" dp p.dp()"<<dp<<" "<<p.dp()<<" x "<<x<< "dE/dx "<<dp/x<<" E1 "<<E1<<" E0  "<<E0<<endl;
 }
 
 //HR 29Aug13
@@ -291,7 +293,7 @@ bool ScatteringModel::ParticleScatter(PSvector& p, MaterialProperties* mat, doub
 			cout << " already known \n";
 			for(int i = 0; i < 5; i++)
 				Xsection[i] = sc->Xsection[i];
-			for(int i = 1; i < 5; i++)
+			for(int i = 1; i < 6; i++)
 				Processes[i] = sc->Processes[i]; // yes really 1
 		}
 		else
@@ -302,7 +304,7 @@ bool ScatteringModel::ParticleScatter(PSvector& p, MaterialProperties* mat, doub
 			sc = new ScatterModelDetails(); // NEED DELETE SOMEWHERE
 			for(int i = 0; i < 5; i++)
 				sc->Xsection[i] = Xsection[i];
-			for(int i = 1; i < 5; i++)
+			for(int i = 1; i < 6; i++)
 				sc->Processes[i] = Processes[i];
 			saveDetails[mat] = sc;
 		}
@@ -316,22 +318,17 @@ bool ScatteringModel::ParticleScatter(PSvector& p, MaterialProperties* mat, doub
 //			 << "one of the inbuilt ScatteringModels such as ScatteringModelMerlin." << endl;
 //		exit(EXIT_FAILURE);
 //	}
-
 	double r = RandomNG::uniform(0, Xsection[0]);
-	cout << " random number " << r << endl;
 
-	for(unsigned int i = 1; i < 4; i++)
+	for(unsigned int i = 1; i < 5; i++)
 	{
 		r -= Xsection[i];
-		cout << " reduced to " << r << endl;
 		if(r < 0)
 		{
-			cout << "for " << p << "  process is " << i << endl;
 			return Processes[i]->Scatter(p, E);
 		}
 	}
-	cout << " inelastic\n";
-	return Processes[4]->Scatter(p, E);
+	return Processes[5]->Scatter(p, E);
 }
 
 void ScatteringModel::SetScatterType(int st)

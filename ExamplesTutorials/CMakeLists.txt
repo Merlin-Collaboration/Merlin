@@ -72,6 +72,7 @@ merlin_example(Examples/Trajectory Trajectory Trajectory_Main.cpp)
 merlin_example(Examples/Wakefields wakefile_ex1 ex1.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex2 ex2.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex3 ex3.cpp TeslaWakePotential.cpp)
+merlin_example(Examples/CollimatorMaterials CollimatorMaterials CollimatorMaterials.cpp)
 
 merlin_tutorial(Tutorials/1-LatticeConfiguration LatticeConfiguration LatticeConfiguration.cpp)
 merlin_tutorial_py(Tutorials/1-LatticeConfiguration LatticeConfiguration.py)

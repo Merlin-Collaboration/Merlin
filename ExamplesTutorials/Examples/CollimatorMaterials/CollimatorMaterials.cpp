@@ -97,14 +97,11 @@ int main(int argc, char* argv[])
 
 		mybeam.alpha_x = -0.0001721885021 * meter;
 		mybeam.alpha_y = -0.0004654580947 * meter;
-		// mybeam.y0 = offset;
 
 		int i;
-		float offset = (2.10 + 1.E-6) * meter;
 		mybeam.yp0 = 0;
 		mybeam.xp0 = 0;
 		mybeam.x0 = 0;
-		mybeam.y0 = offset;
 		MaterialProperties xx(1., 2., 3., 4., 5., 6., 7., 8.);
 		MaterialProperties* yy =
 			new  MaterialProperties(1, 2, 3, 4, 5, 6, 7, 8);
@@ -118,8 +115,8 @@ int main(int argc, char* argv[])
 
 		cout << "Standard  materialdata" << endl;
 		matter->PrintTable();
-		matter->UseSixTrackValues();
-		cout << "SixTrack Modified  materialdata" << endl;
+///		matter->UseSixTrackValues();
+///		cout << "SixTrack Modified  materialdata" << endl;
 		matter->PrintTable();
 		MaterialProperties test1 = *(matter->property[string("Cu")]);
 		cout << " for example copper is " << test1 << endl;
@@ -131,85 +128,122 @@ int main(int argc, char* argv[])
 		(*(matter->property["Cu"])->extra)["slope"] = 4.;
 		cout << " now add property to copper\n  ";
 		matter->PrintTable();
-		matter->MakeMixture("SiC", "Si C", 1, 1, 3.2, 4.3);
-		cout << " done 1" << endl;
-		matter->MakeMixture("test", "Al Be Cu W", 1, 2, 3, 4, 99., 88.);
-		matter->MakeMixtureByWeight("test2", "Al Be Cu W", 1, 2, 3, 4, 99., 88.);
+		matter->MakeMixture("SiC", "Si C", 1., 1., 3.2 * gram / cc);
+		matter->MakeMixtureByWeight("CuDiamond", "Cu C", .63, .37, 3.2 * gram / cc);
+		matter->MakeMixture("test", "Al Be Cu W", 1., 2., 3., 4., 99., 88.);
+		matter->MakeMixtureByWeight("test2", "Al Be Cu W", 1., 2., 3., 4., 99., 88.);
 		matter->PrintTable();
 		Aperture* ap = new CircularAperture(.2);
 		ParticleDistributionGenerator* pg = new NormalParticleDistributionGenerator();
 
-		ParticleBunch* myBunch = new ParticleBunch(npart, NormalParticleDistributionGenerator(), mybeam);
+		double lim1[3] = {0.00001, 0.0001, 0.001};
+		double lim2[3] = {0.00001, 0.0001, 0.001};
+		double lim3[3] = {0.00001, 0.0005, 0.001};
 
-		double xlim, ylim, xplim, yplim, zlim;
-		xlim  = 0.0001;
-		xplim = 0.0001;
-		ylim  = sqrt(mybeam.emit_y * mybeam.beta_y) * 4.0;
-		yplim = sqrt(mybeam.emit_y / mybeam.beta_y) * 4.0;
-		ylim = 0.00001;
-		yplim = 0.00003;
-		zlim = mybeam.sig_z * 4.0;
-		TH1D *PShist1 = new TH1D("xbefore", "x before", 100, -xlim, xlim);
-		TH1D *PShist2 = new TH1D("xafter", "x after", 100, -xlim, xlim);
-		TH1D *PShist3 = new TH1D("xpbefore", "x prime before", 100, -xplim, xplim);
-		TH1D *PShist4 = new TH1D("xpafter", "x prime after", 100, -xplim, xplim);
-		TH1D *PShist5 = new TH1D("dpafter", "delta p after", 100, 0, 0.001);
-		TH1D *PShist6 = new TH1D("yafter", "y after", 100, -xlim, xlim);
-		TH1D *PShist7 = new TH1D("ypafter", "y prime after", 100, -xplim, xplim);
-		//   TH2D *yPShist3 = new TH2D("test1","test2", 100, -zlim,zlim , 100, -yplim, yplim);
-
-		PSvectorArray particlearray1 = myBunch->GetParticles();
-
-		npart = particlearray1.size();
-
-		for(int i = 0; i <= npart; i++)
+		string trymaterial[3] = {"Cu", "C", "CuDiamond"};
+		string types[2] = {"Full", "Half"};
+		double thickness[] = {1., 50., 100.};
+// loop over type
+		for(int itype = 0; itype < 2; itype++)
 		{
-			PShist3->Fill(particlearray1[i].xp());
-			PShist1->Fill(particlearray1[i].x());
+			cout << "Aperture " << types[itype] << endl;
+// loop over thickness
+			for(int ithick = 0; ithick < 3; ithick++)
+			{
+// loop over material
+				for(int imat = 0; imat < 3; imat++)
+				{
+					double offset = (itype == 0) ? 0 : (1.0 + 1.E-6) * meter;
+					mybeam.y0 = offset;
+					ParticleBunch* myBunch = new ParticleBunch(npart, NormalParticleDistributionGenerator(), mybeam);
+					cout << " material " << trymaterial[imat] << endl;
+					string histname = types[itype] + "." + to_string(int(thickness[ithick])) + "." + trymaterial[imat];
+					cout << " hist name " << histname << endl;
+					cout << " y offset " << offset << endl;
+					string tempstring;
+					tempstring = histname + ".xbefore";
+					TH1D *PShist1 = new TH1D(tempstring.c_str(), "x before", 100, -lim1[ithick], lim1[ithick]);
+					tempstring = histname + ".xafter";
+					TH1D *PShist2 = new TH1D(tempstring.c_str(), "x after", 100, -lim1[ithick], lim2[ithick]);
+					tempstring = histname + ".xpbefore";
+					TH1D *PShist3 = new TH1D(tempstring.c_str(), "x prime before", 100, -lim2[ithick], lim2[ithick]);
+					tempstring = histname + ".xpafter";
+					TH1D *PShist4 = new TH1D(tempstring.c_str(), "x prime after", 100, -lim2[ithick], lim2[ithick]);
+					tempstring = histname + ".dpafter";
+					TH1D *PShist5 = new TH1D(tempstring.c_str(), "delta p after", 100, 0, lim3[ithick]);
+					tempstring = histname + ".yafter";
+					TH1D *PShist6 = new TH1D(tempstring.c_str(), "y after", 100, -lim1[ithick], lim1[ithick]);
+					tempstring = histname + ".ypafter";
+					TH1D *PShist7 = new TH1D(tempstring.c_str(), "y prime after", 100, -lim2[ithick], lim2[ithick]);
+
+					PSvectorArray particlearray1 = myBunch->GetParticles();
+
+					// int nafter = particlearray1.size();
+
+					for(int i = 0; i <= npart; i++)
+					{
+						PShist3->Fill(particlearray1[i].xp());
+						PShist1->Fill(particlearray1[i].x());
+					}
+
+					AcceleratorModelConstructor* myaccmodelctor = new AcceleratorModelConstructor()
+					;
+					myaccmodelctor->NewModel();
+					myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
+					Collimator* TestCol = new Collimator("TheCollimator", thickness[ithick] * 0.01);
+					TestCol->SetMaterialProperties(matter->property[trymaterial[imat]]);
+					CollimatorAperture* app;
+					if(itype == 0)
+					{
+						app = new CollimatorAperture(0, 0, 0, .01, 0, 0);
+					}
+					else
+					{
+						app = new CollimatorAperture(2, 2, 0, .01, 0, 0);
+					}
+					//if(itype==0){
+					app->SetExitWidth(0);
+					app->SetExitHeight(0);
+					app->SetEntranceWidth(0);
+					app->SetEntranceHeight(0);
+					//} else {
+					//app->SetExitWidth(2);
+					//app->SetExitHeight(2);
+					// }
+					myaccmodelctor->AppendComponent(TestCol, 0.01);
+					myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
+					TestCol->SetAperture(app);
+					AcceleratorModel* mymodel = myaccmodelctor->GetModel();
+					ParticleTracker mytracker(mymodel->GetBeamline(), myBunch);
+					ParticleTracker* tracker = new ParticleTracker(mymodel->GetBeamline(), myBunch
+						);
+
+					CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(0, 7);
+					cout << " make new scattering model\n";
+					ScatteringModel* myScatter = new ScatteringModel();
+					myCollimateProcess->SetScatteringModel(myScatter);
+					myCollimateProcess->ScatterAtCollimator(true); // Needs resurrection
+					tracker->AddProcess(myCollimateProcess);
+					ParticleBunch* bunch2;
+					cout << " start tracking" << endl;
+					bunch2 = tracker->Track(myBunch);
+					cout << " done tracking" << endl;
+					PSvectorArray myparticles2 = bunch2->GetParticles();
+					int nafter = myparticles2.size();
+					cout << " number surviving " << nafter << endl;
+					for(i = 0; i <= nafter; i++)
+					{
+						if(i < 10)
+							cout << myparticles2[i] << endl;
+						PShist2->Fill(myparticles2[i].x());
+						PShist4->Fill(myparticles2[i].xp());
+						PShist5->Fill(-myparticles2[i].dp());
+						PShist6->Fill(myparticles2[i].y() - offset);
+						PShist7->Fill(myparticles2[i].yp());
+					}
+				}
+			}
 		}
-
-		AcceleratorModelConstructor* myaccmodelctor = new AcceleratorModelConstructor()
-		;
-		myaccmodelctor->NewModel();
-		myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
-		Collimator* TestCol = new Collimator("TheCollimator", 0.01);
-		TestCol->SetMaterialProperties(matter->property["Cu"]);
-		CollimatorAperture* app = new CollimatorAperture(2, 2, 0, .01, 0, 0);
-		app->SetExitWidth(0);
-		app->SetExitHeight(0);
-		myaccmodelctor->AppendComponent(TestCol, 0.01);
-		myaccmodelctor->AppendComponent(new Drift("DRIFT1", 1.0 * meter));
-		TestCol->SetAperture(app);
-		AcceleratorModel* mymodel = myaccmodelctor->GetModel();
-		ParticleTracker mytracker(mymodel->GetBeamline(), myBunch);
-		ParticleTracker* tracker = new ParticleTracker(mymodel->GetBeamline(), myBunch
-			);
-
-		CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(0, 7);
-		cout << " make new scattering model\n";
-		ScatteringModel* myScatter = new ScatteringModel();
-		myCollimateProcess->SetScatteringModel(myScatter);
-		myCollimateProcess->ScatterAtCollimator(true);          // Needs resurrection
-		tracker->AddProcess(myCollimateProcess);
-		ParticleBunch* bunch2;
-		cout << " start tracking" << endl;
-		bunch2 = tracker->Track(myBunch);
-		cout << " done tracking" << endl;
-		cout << " get particles \n";
-		PSvectorArray myparticles2 = bunch2->GetParticles();
-		npart = myparticles2.size();
-		cout << " size " << npart << endl;
-		for(i = 0; i <= npart; i++)
-		{
-			PShist2->Fill(myparticles2[i].x());
-			PShist4->Fill(myparticles2[i].xp());
-			PShist5->Fill(-myparticles2[i].dp());
-			PShist6->Fill(myparticles2[i].y() - offset);
-			PShist7->Fill(myparticles2[i].yp());
-////                        PShist3->Fill((myparticles2[i]).ct(),myparticles2[i].yp());
-
-		}
-		PShist2->Draw();
 		cout << "writing\n";
 		hfile.Write();
 		cout << "written\n";

@@ -36,8 +36,7 @@ MaterialProperties::MaterialProperties(double p1, double p2, double p3, double p
 
 void MaterialProperties::Update()
 {
-	lambda = A * 1.E-3 / ((sigma_T + sigma_R) * density * 1.E-28 * 6.022E23)
-	;
+	lambda = A * 1.E-3 / ((sigma_T + sigma_R) * density * 1.E-28 * 6.022E23);
 }
 
 MaterialProperties* MaterialProperties::EnergyScale(double E)

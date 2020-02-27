@@ -171,7 +171,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		//Scattering - use E2
 
 		if(interacted)
-		{ // cout<<" CHECK7 "<<p<<endl;
+		{  // cout<<" CHECK7 "<<p<<endl;
 			if(!scattermodel->ParticleScatter(p, C->GetMaterialProperties(), E2))
 			{ // lost
 				p.ct() = z;

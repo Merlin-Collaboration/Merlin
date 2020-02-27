@@ -84,9 +84,9 @@ void StandardMaterialData::UseSixTrackValues()
 
 void MaterialData::PrintTable()
 {
-	cout << "  Name    A    Z    sig T  sig I  sig R   dEdx  density Rad length\n";
+	cout << "     Name         A    Z    sig T  sig I  sig R   dEdx  density Rad length\n";
 	for(map<string, MaterialProperties*>::iterator it = property.begin(); it != property.end(); it++)
-		cout << setw(7) << it->first << " " << *(it->second) << endl;
+		cout << setw(15) << it->first << " " << *(it->second) << endl;
 }
 void MaterialData::MakeMixture(string name, string s, ...)
 {
@@ -100,11 +100,13 @@ void MaterialData::MakeMixture(string name, string s, ...)
 		i = s.find(" ");
 		string want = s.substr(0, i);
 		elements.push_back(want);
-		proportions.push_back(va_arg(numbers, double));
+		double proportion = va_arg(numbers, double);
+		// cout<<"CHECK mixture component "<<want<<" proportion "<<proportion<<endl;
+		proportions.push_back(proportion);
 		s = s.substr(i + 1);
 	} while(i != string::npos);
 	double density = va_arg(numbers, double);
-	// cout << " density is " << density << endl;
+	//  cout << " density is " << density << endl;
 	va_end(numbers);
 	property[name] = new Mixture(property, elements, proportions, density);
 }

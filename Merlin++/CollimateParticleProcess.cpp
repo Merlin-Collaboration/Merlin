@@ -209,6 +209,7 @@ void CollimateParticleProcess::DoCollimation()
 	size_t first_loss = 0;
 	if(is_collimator)
 	{
+
 		for(PSvectorArray::iterator p = currentBunch->begin(); p != currentBunch->end(); p++)
 		{
 			if(!ap->CheckWithinApertureBoundaries((*p).x() - bin_size * (*p).xp(), (*p).y() - bin_size * (*p).yp(), s))

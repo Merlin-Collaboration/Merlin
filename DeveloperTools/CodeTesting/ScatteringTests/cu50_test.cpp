@@ -169,7 +169,10 @@ int main(int argc, char* argv[])
 // RJB		myScatter = new ScatteringModelSixTrack;
 		myScatter->Processes[1] = new SixTrackRutherford();
 		myScatter->Processes[2] = new SixTrackElasticpn();
+		myScatter->Xsection[2] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[2]->sigma;
 		myScatter->Processes[3] = new SixTrackSingleDiffractive();
+		myScatter->Xsection[3] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[3]->sigma;
+
 	}
 //	else
 //	{
