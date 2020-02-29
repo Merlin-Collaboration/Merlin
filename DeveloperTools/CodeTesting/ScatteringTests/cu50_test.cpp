@@ -117,11 +117,11 @@ int main(int argc, char* argv[])
 	 *********************************************************************/
 
 	StandardMaterialData* mat = new StandardMaterialData();
-	if(scatter_mode_sixtrack)
-		mat->UseSixTrackValues();
+//	if(scatter_mode_sixtrack)
+//		mat->UseSixTrackValues();
 	cout << mat << endl;
         cout<<" cross section was "<<mat->property["Cu"]->sigma_T<<endl;
-        mat->property["Cu"]->sigma_T=1.0;
+       //  mat->property["Cu"]->sigma_T=1.2794; // FUDGE
 	MaterialProperties* CollimatorMaterial = mat->property["Cu"];
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	 *	COLLIMATION SETTINGS
 	 *********************************************************************/
-	ScatteringModel* myScatter = new ScatteringModel();
+	ScatteringModel* myScatter = new ScatteringModel(scatter_mode_sixtrack);
 
 	CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
 	if(scatter_mode_sixtrack)
@@ -234,7 +234,6 @@ int main(int argc, char* argv[])
 		/*********************************************************************
 		 *	Output Final Bunch
 		 *********************************************************************/
-
 		if(output_final_bunch)
 		{
 			myBunch->Output(bunch_output2);
@@ -245,6 +244,7 @@ int main(int argc, char* argv[])
 			double coords[] = {ip->x(), ip->xp(), ip->y() - y_offset, ip->yp(), -ip->dp()};
 			for(int i = 0; i < 5; i++)
 			{
+                          if(isnan(coords[i])) continue; // RJB 
 				// beware, this can rollover when x is big
 				int bin_x = ((coords[i] - bin_mins[i]) / (bin_maxs[i] - bin_mins[i]) * (nbins)) + 1; // +1 because bin zero for outliers
 				// so handle end bins, by check against x, not bin
@@ -261,6 +261,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
+                cout<<"CHECK3\n";
 	delete myScatter;
 	delete myBunch;
 	delete tracker;

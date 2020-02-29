@@ -28,9 +28,10 @@ using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
 
-ScatteringModel::ScatteringModel() :
+ScatteringModel::ScatteringModel(int model) :
 	energy_loss_mode(FullEnergyLoss)
 {
+        ModelType=model;
 	ScatterPlot_on = 0;
 	JawImpact_on = 0;
 	oldMaterial = 0;      // Constructor does noit know material
@@ -38,20 +39,44 @@ ScatteringModel::ScatteringModel() :
 
 void ScatteringModel::Configure(MaterialProperties* m, double Energy)
 {
-	Xsection[0] = m->sigma_T;
-	Xsection[1] = m->sigma_R;
-	Xsection[3] = m->sigma_D;
-	Xsection[4] = m->sigma_I;
+        double s=2*ProtonMassGeV*Energy+ProtonMassGeV*ProtonMassGeV;
+    switch (ModelType) { // horrible C style - to be changed
+     case 0: // Merlin 
+        cout<<" This is Merlin\n";
 	Processes[1] = new Rutherford(m);
 	Processes[2] = new Elasticpn(Energy);
-	Xsection[2] = 1.618 * pow(m->A, 0.333) * Processes[2]->sigma;
 	Processes[3] = new SingleDiffractive(Energy);
-	Xsection[3] = 1.618 * pow(m->A, 0.333) * Processes[3]->sigma;
 	Processes[4] = new Inelastic();
 	Processes[5] = new ElasticpN(Energy, m);
+	Xsection[0] = m->sigma_T;
+	Xsection[1] = m->sigma_R;
+	Xsection[2] = 1.618 * pow(m->A, 0.333) * Processes[2]->sigma;
+	Xsection[3] = 1.618 * pow(m->A, 0.333) * Processes[3]->sigma;
+	Xsection[4] = m->sigma_I;
 	cout << "CHECK cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
 		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
+        break;
 
+    case 1: // Sixtrack
+        cout<<" This is SixTrack\n";
+	Processes[1] = new SixTrackRutherford();
+	Processes[2] = new SixTrackElasticpn();
+	Processes[3] = new SixTrackSingleDiffractive();
+	Processes[4] = new Inelastic();
+	Processes[5] = new SixTrackElasticpN(m);
+	Xsection[0] = m->sigma_T;
+	Xsection[1] = m->sigma_R;
+	Xsection[2] = 1.618 * pow(m->A, 0.333) * 0.007 * pow(Energy/450.0,0.04792);
+	Xsection[3] = 1.618 * pow(m->A, 0.333) * 0.00068*log(0.15*s);
+	Xsection[4] = m->sigma_I;
+	cout << "CHECK cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
+		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
+        break;
+   
+    default:
+       cout<<" Unknown model "<<ModelType<<endl;
+       exit(1);
+       }
 }
 
 ScatteringModel::~ScatteringModel()

@@ -90,6 +90,7 @@ enum EnergyLossMode
 
 };
 
+
 /**
  * Base class for scattering models
  *
@@ -108,12 +109,13 @@ class ScatteringModel
 {
 
 public:
-	MaterialProperties* oldMaterial;     // keep track of changing collimators
+	MaterialProperties* oldMaterial;   // keep track of changing collimators
+        int ModelType; // 0 is 'Merlin', 1 is 'Sixtrack'.  Not elegant !! FIX!!
 	map<MaterialProperties*, ScatterModelDetails*> saveDetails;
 	/**
 	 * Constructor
 	 */
-	ScatteringModel();
+	ScatteringModel(int model=0);
 	virtual ~ScatteringModel();
 	void Configure(MaterialProperties *, double Energy);    // material not known at
 	// construct time and may change

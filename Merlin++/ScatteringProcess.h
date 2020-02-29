@@ -71,6 +71,9 @@ class SixTrackRutherford: public ScatteringProcess
 	double tmin = 0.9982E-3; // DeMolaize thesis page 29   [GeV^2];
 public:
 	bool Scatter(PSvector& p, double E) const;
+	SixTrackRutherford()
+	{
+	}
 };
 
 /**
@@ -103,8 +106,9 @@ public:
 
 class SixTrackElasticpN: public ScatteringProcess
 {
-	double b_N; /// slope
+	MaterialProperties* mymat;
 public:
+	SixTrackElasticpN(MaterialProperties* m = 0);   // =0 must go
 	bool Scatter(PSvector& p, double E) const;
 };
 

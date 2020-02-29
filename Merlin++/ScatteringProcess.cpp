@@ -98,17 +98,15 @@ bool Rutherford::Scatter(PSvector& p, double E) const
 //void SixTrackRutherford::Configure(Material* matin, CrossSections* CSin)
 //{
 //	ScatteringProcess::Configure(matin, CSin);
-//	tmin = 0.9982E-3; // DeMolaize thesis page 29 [GeV^2]
 //	sigma = cs->Get_sig_R();
 //	E0 = cs->Get_E0();
 //}
 
 bool SixTrackRutherford::Scatter(PSvector& p, double E) const
 {
-
 	double t = tmin / (1 - RandomNG::uniform(0, 1));
-	ScatterStuff(p, t, E0);
-
+	ScatterStuff(p, t, E);
+// scatters off proton not nucleus.   Probably wrong, but kept for not for consistency
 	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
 	{
@@ -174,7 +172,7 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E) const
 	double b_pp = 8.5 + 1.086 * log(sqrt(com_sqd)); // slope given on GeV units
 	double t = -log(RandomNG::uniform(0, 1)) / b_pp;
 
-	ScatterStuff(p, t, E0);
+	ScatterStuff(p, t, E);
 
 	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
@@ -198,6 +196,10 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E) const
 //	E0 = cs->Get_E0();
 //}
 ElasticpN::ElasticpN(double E, MaterialProperties* mat)
+{
+	mymat = mat;
+}
+SixTrackElasticpN::SixTrackElasticpN(MaterialProperties* mat)
 {
 	mymat = mat;
 }
@@ -233,6 +235,8 @@ bool ElasticpN::Scatter(PSvector& p, double E) const
 bool SixTrackElasticpN::Scatter(PSvector& p, double E) const
 {
 
+	double TargetMass =  mymat->A_H(); // GetAtomicMass();
+	double b_N = 14.1 * pow(TargetMass, 0.66); // deMolaize Equation 1.31
 	double t = -log(RandomNG::uniform(0, 1)) / b_N;
 	ScatterStuff(p, t, E);
 
@@ -299,7 +303,7 @@ bool SingleDiffractive::Scatter(PSvector& p, double E) const
 //}
 bool SixTrackSingleDiffractive::Scatter(PSvector& p, double E) const
 {
-	double com_sqd = 2 * ProtonMassMeV * MeV * E0;  //ecmsq in SixTrack
+	double com_sqd = 2 * ProtonMassMeV * MeV * E;  //ecmsq in SixTrack
 	double b_pp = 8.5 + 1.086 * log(sqrt(com_sqd)); // slope given on GeV units
 	double xm2 = exp(RandomNG::uniform(0, 1) * log(0.15 * com_sqd));
 	double b = 0.0;
