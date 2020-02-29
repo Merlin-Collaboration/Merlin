@@ -185,7 +185,7 @@ public:
 	 * vector holding all scattering processes
 	 */
 	// adapted RJB	std::vector<Collimation::ScatteringProcess*> Processes;
-	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0};
+	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0 ,0};
 
 	/**
 	 * vector with fractions of the total scattering cross section assigned to each ScatteringProcess

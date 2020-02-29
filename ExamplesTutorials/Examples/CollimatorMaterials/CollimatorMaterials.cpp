@@ -10,7 +10,6 @@ using namespace std;
 
 /*
     Tests materials class
-
       and also use of the CERN ROOT histogram package
 
       In order to do this, you need to set the environment variable
@@ -67,6 +66,18 @@ TH1D *histt5;
 int main(int argc, char* argv[])
 {
 	cout << "Here we go ! \n";
+   const double Z_pp = 35.4548e-3;
+                const double B_pp = 0.30810e-3;
+                const double Y1_pp = 42.5323e-3;
+                const double Y2_pp = 33.3433e-3;
+                const double eta1 = 0.45817;
+                const double eta2 = 0.545;
+                const double s0 = 28.998225 * PhysicalUnits::GeV * PhysicalUnits::GeV;
+                const double s1 = 1 * PhysicalUnits::GeV * PhysicalUnits::GeV;
+                const double s = 7000*7000-2*7000*.938;
+             cout<<" total cross section calcultion "<<
+                Z_pp + B_pp * pow(log(s / s0), 2.0) + Y1_pp * pow(s1 / s, eta1) 
+- Y2_pp * pow(s1 / s, eta2)<<endl;;
 	int seed = 0;
 	try{
 		if(argc >= 2)
@@ -136,13 +147,13 @@ int main(int argc, char* argv[])
 		Aperture* ap = new CircularAperture(.2);
 		ParticleDistributionGenerator* pg = new NormalParticleDistributionGenerator();
 
-		double lim1[3] = {0.00001, 0.0001, 0.001};
-		double lim2[3] = {0.00001, 0.0001, 0.001};
-		double lim3[3] = {0.00001, 0.0005, 0.001};
+		double lim1[3] = {0.00001, 0.0001, 0.0001};
+		double lim2[3] = {0.00001, 0.0001, 0.0001};
+		double lim3[3] = {0.00001, 0.0005, 0.0001};
 
 		string trymaterial[3] = {"Cu", "C", "CuDiamond"};
 		string types[2] = {"Full", "Half"};
-		double thickness[] = {1., 50., 100.};
+		double thickness[] = {1., 10., 30.};
 // loop over type
 		for(int itype = 0; itype < 2; itype++)
 		{
@@ -202,10 +213,10 @@ int main(int argc, char* argv[])
 						app = new CollimatorAperture(2, 2, 0, .01, 0, 0);
 					}
 					//if(itype==0){
-					app->SetExitWidth(0);
-					app->SetExitHeight(0);
-					app->SetEntranceWidth(0);
-					app->SetEntranceHeight(0);
+					//app->SetExitWidth(0);
+					//app->SetExitHeight(0);
+					//app->SetEntranceWidth(0);
+					//app->SetEntranceHeight(0);
 					//} else {
 					//app->SetExitWidth(2);
 					//app->SetExitHeight(2);
@@ -219,7 +230,6 @@ int main(int argc, char* argv[])
 						);
 
 					CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(0, 7);
-					cout << " make new scattering model\n";
 					ScatteringModel* myScatter = new ScatteringModel();
 					myCollimateProcess->SetScatteringModel(myScatter);
 					myCollimateProcess->ScatterAtCollimator(true); // Needs resurrection
@@ -233,8 +243,6 @@ int main(int argc, char* argv[])
 					cout << " number surviving " << nafter << endl;
 					for(i = 0; i <= nafter; i++)
 					{
-						if(i < 10)
-							cout << myparticles2[i] << endl;
 						PShist2->Fill(myparticles2[i].x());
 						PShist4->Fill(myparticles2[i].xp());
 						PShist5->Fill(-myparticles2[i].dp());

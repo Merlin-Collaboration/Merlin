@@ -49,8 +49,8 @@ void ScatteringModel::Configure(MaterialProperties* m, double Energy)
 	Xsection[3] = 1.618 * pow(m->A, 0.333) * Processes[3]->sigma;
 	Processes[4] = new Inelastic();
 	Processes[5] = new ElasticpN(Energy, m);
-	cout << "CHECK cross sections T R E D I " << Xsection[0] << " " << Xsection[1] << " " << Xsection[2] << " "
-		 << Xsection[3] << " " << Xsection[4] << endl;
+	cout << "CHECK cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
+		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
 
 }
 
@@ -166,12 +166,17 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, MaterialProperties* 
 	if(mat != oldmat)      // new material so do the sums, otherwise they persist
 	{
 		cout << " New Material for energy loss full calculation";
-		I = mat->GetExtra("MeanExcitationEnergy") / eV;
+		if(mat->HaveExtra("MeanExcitationEnergy")) {
+                   I = mat->GetExtra("MeanExcitationEnergy") / eV;
+                   } else {
+                  I=10*mat->Z; // I is in eV
+}
+                cout<<" Excitation energy "<<I;
 		edensity = (mat->Z) * Avogadro * (mat->density) / (mat->A);
 		xi0 = xi1 *  edensity; //  mat->GetExtra("ElectronDensity");
 		plasmaEnergy = 28.816 * sqrt((mat->density) * 0.001 * (mat->Z) / (mat->A)); // from 33.1 of the PDG
 		cout << " plasma energy is " << plasmaEnergy << endl;
-		C = 1 + 2 * log(I / plasmaEnergy); //(mat->GetExtra("PlasmaEnergy") / eV));
+		C = 1 + 2 * log(I / plasmaEnergy); 
 		C1 = 0;
 		C0 = 0;
 
@@ -249,10 +254,8 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, MaterialProperties* 
 	double F = G - S + 2 * (L1 + L2);
 	double deltaE = xi * (log(2 * ElectronMassMeV * beta * beta * gamma * gamma * xi / pow(I / MeV, 2)) - (beta
 		* beta) - delta + F + 0.20);
-	double dp = ((xi * land) - deltaE); //  RJB  * MeV;
-	// cout<<" Delta E central   xi land dp "<<deltaE<<" "<<xi<<" "<<land<<" "<<dp<<endl;
+	double dp = ((xi * land) - deltaE); 
 	p.dp() = ((E1 - dp) - E0) / E0;
-	//  cout<<" dp p.dp()"<<dp<<" "<<p.dp()<<" x "<<x<< "dE/dx "<<dp/x<<" E1 "<<E1<<" E0  "<<E0<<endl;
 }
 
 //HR 29Aug13
@@ -264,7 +267,8 @@ void ScatteringModel::Straggle(PSvector& p, double x, MaterialProperties* mat, d
 	if(mat != oldmat)
 	{
 		X = centimeter * mat->X0 / (mat->density / (gram / cc));
-		cout << " New material in Straggle: radiation length " << setw(12) << setprecision(5) << X << " metres" << endl;
+		cout << " New material in Straggle: radiation length "
+                   << setw(12) << setprecision(5) << X << " metres" << endl;
 		oldmat = mat;
 	}
 	double scaledx = x / X;
@@ -286,11 +290,11 @@ bool ScatteringModel::ParticleScatter(PSvector& p, MaterialProperties* mat, doub
 {
 	if(mat != oldMaterial)       // new collimator material
 	{
-		cout << " Collimator Material has changed\n";
+		cout << " Collimator Material has changed";
 		ScatterModelDetails*  sc = saveDetails[mat];
 		if(sc)      // get details
 		{
-			cout << " already known \n";
+			cout << " but is already known \n";
 			for(int i = 0; i < 5; i++)
 				Xsection[i] = sc->Xsection[i];
 			for(int i = 1; i < 6; i++)
@@ -299,7 +303,7 @@ bool ScatteringModel::ParticleScatter(PSvector& p, MaterialProperties* mat, doub
 		else
 		{
 			// generate new details
-			cout << " Make new \n";
+			cout << " is new so need to make it \n";
 			Configure(mat, E);
 			sc = new ScatterModelDetails(); // NEED DELETE SOMEWHERE
 			for(int i = 0; i < 5; i++)

@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	cout << "Seed: " << seed << endl;
+	cout << "Seed set to: " << seed << endl;
 	RandomNG::init(seed);
 	/*********************************************************************
 	 *	GENERAL SETTINGS
@@ -120,6 +120,8 @@ int main(int argc, char* argv[])
 	if(scatter_mode_sixtrack)
 		mat->UseSixTrackValues();
 	cout << mat << endl;
+        cout<<" cross section was "<<mat->property["Cu"]->sigma_T<<endl;
+        mat->property["Cu"]->sigma_T=1.0;
 	MaterialProperties* CollimatorMaterial = mat->property["Cu"];
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
@@ -169,9 +171,9 @@ int main(int argc, char* argv[])
 // RJB		myScatter = new ScatteringModelSixTrack;
 		myScatter->Processes[1] = new SixTrackRutherford();
 		myScatter->Processes[2] = new SixTrackElasticpn();
-		myScatter->Xsection[2] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[2]->sigma;
+///		myScatter->Xsection[2] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[2]->sigma;
 		myScatter->Processes[3] = new SixTrackSingleDiffractive();
-		myScatter->Xsection[3] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[3]->sigma;
+///		myScatter->Xsection[3] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[3]->sigma;
 
 	}
 //	else

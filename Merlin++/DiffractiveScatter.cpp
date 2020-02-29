@@ -160,7 +160,7 @@ ppDiffractiveScatter::~ppDiffractiveScatter()
 void __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveScatter::GenerateDsigDtDxi(const double
 	energy)
 {
-	std::cout << "Call generateDsigDtDxi " << std::endl;
+	std::cout << "Call generateDsigDtDxi " ;
 	const double s = (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * energy) + (2 * pow(
 			PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV, 2));
 	ss = s;

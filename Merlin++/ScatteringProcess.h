@@ -96,7 +96,6 @@ public:
 class ElasticpN: public ScatteringProcess
 {
 	MaterialProperties* mymat;
-	double b_N; /// slope
 public:
 	ElasticpN(double Energy, MaterialProperties* m = 0);   // =0 must go
 	bool Scatter(PSvector& p, double E) const;

@@ -78,7 +78,7 @@ void ScatterStuff(double dp, PSvector& p, double t, double E0)
 
 bool Rutherford::Scatter(PSvector& p, double E) const
 {
-	double TargetMass = AtomicMassUnit * mat->A; //  mat->GetAtomicMass();
+	double TargetMass = AtomicMassUnit * mat->A_R(); //  mat->GetAtomicMass();
 	double t = tmin / (1 - RandomNG::uniform(0, 1));
 	ScatterStuff(p, t, TargetMass, E);
 
@@ -138,7 +138,7 @@ Elasticpn::Elasticpn(double Energy)
 	calculations->SetTMax(1.00);
 	calculations->SetStepSize(1e-4);
 	calculations->GenerateTDistribution(Energy);
-	sigma = calculations->GetElasticCrossSection();
+	sigma = calculations->GetElasticCrossSectionN();
 	cout << " Elastic cross section " << sigma << endl;
 }
 
@@ -199,18 +199,15 @@ bool SixTrackElasticpn::Scatter(PSvector& p, double E) const
 //}
 ElasticpN::ElasticpN(double E, MaterialProperties* mat)
 {
-	cout << " CHECK make new elastic pN" << endl;
-	cout << mat->A << endl;
 	mymat = mat;
-	b_N = 14.1 * pow(mat->A, 0.66); // deMolaize Equation 1.31
-	cout << " CHECK made new elastic pN" << endl;
 }
 
 bool ElasticpN::Scatter(PSvector& p, double E) const
 {
-	double TargetMass = AtomicMassUnit * mymat->A; // GetAtomicMass();
+	double TargetMass =  mymat->A_H(); // GetAtomicMass();
+	double b_N = 14.1 * pow(TargetMass, 0.66); // deMolaize Equation 1.31
 	double t = -log(RandomNG::uniform(0, 1)) / b_N;
-	ScatterStuff(p, t, TargetMass, E);
+	ScatterStuff(p, t, AtomicMassUnit*TargetMass, E);
 
 	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
