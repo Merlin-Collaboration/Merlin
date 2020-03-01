@@ -157,10 +157,15 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		if((colap->CheckWithinApertureBoundaries((p.x()), (p.y()), z)))
 		{
+                    // check it does not come back in
+                        double extrax=p.x()+p.xp()*lengthtogo;
+                        double extray=p.y()+p.yp()*lengthtogo;
+                        if(colap->CheckWithinApertureBoundaries(extrax,extray,z+lengthtogo)){
 			//escaped jaw, so propagate to end of element
-			p.x() += p.xp() * lengthtogo;
-			p.y() += p.yp() * lengthtogo;
+			p.x() =extrax;
+			p.y() =extray;
 			return false;
+                        }
 		}
 
 		if(xlen > lengthtogo)
@@ -171,7 +176,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 		//Scattering - use E2
 
 		if(interacted)
-		{  // cout<<" CHECK7 "<<p<<endl;
+		{  
 			if(!scattermodel->ParticleScatter(p, C->GetMaterialProperties(), E2))
 			{ // lost
 				p.ct() = z;

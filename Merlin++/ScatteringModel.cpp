@@ -42,7 +42,6 @@ void ScatteringModel::Configure(MaterialProperties* m, double Energy)
         double s=2*ProtonMassGeV*Energy+ProtonMassGeV*ProtonMassGeV;
     switch (ModelType) { // horrible C style - to be changed
      case 0: // Merlin 
-        cout<<" This is Merlin\n";
 	Processes[1] = new Rutherford(m);
 	Processes[2] = new Elasticpn(Energy);
 	Processes[3] = new SingleDiffractive(Energy);
@@ -53,12 +52,11 @@ void ScatteringModel::Configure(MaterialProperties* m, double Energy)
 	Xsection[2] = 1.618 * pow(m->A, 0.333) * Processes[2]->sigma;
 	Xsection[3] = 1.618 * pow(m->A, 0.333) * Processes[3]->sigma;
 	Xsection[4] = m->sigma_I;
-	cout << "CHECK cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
+	cout << "'Merlin' Cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
 		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
         break;
 
     case 1: // Sixtrack
-        cout<<" This is SixTrack\n";
 	Processes[1] = new SixTrackRutherford();
 	Processes[2] = new SixTrackElasticpn();
 	Processes[3] = new SixTrackSingleDiffractive();
@@ -69,7 +67,7 @@ void ScatteringModel::Configure(MaterialProperties* m, double Energy)
 	Xsection[2] = 1.618 * pow(m->A, 0.333) * 0.007 * pow(Energy/450.0,0.04792);
 	Xsection[3] = 1.618 * pow(m->A, 0.333) * 0.00068*log(0.15*s);
 	Xsection[4] = m->sigma_I;
-	cout << "CHECK cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
+	cout << "'Sixtrack' cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
 		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
         break;
    
