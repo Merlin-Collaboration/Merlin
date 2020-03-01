@@ -120,8 +120,6 @@ int main(int argc, char* argv[])
 //	if(scatter_mode_sixtrack)
 //		mat->UseSixTrackValues();
 	cout << mat << endl;
-        cout<<" cross section was "<<mat->property["Cu"]->sigma_T<<endl;
-       //  mat->property["Cu"]->sigma_T=1.2794; // FUDGE
 	MaterialProperties* CollimatorMaterial = mat->property["Cu"];
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
@@ -261,7 +259,6 @@ int main(int argc, char* argv[])
 		}
 	}
 
-                cout<<"CHECK3\n";
 	delete myScatter;
 	delete myBunch;
 	delete tracker;
