@@ -51,6 +51,11 @@ add_custom_command(TARGET TutorialDataFiles
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_CURRENT_SOURCE_DIR}/Tutorials/input ${CMAKE_CURRENT_BINARY_DIR}/Tutorials/input)
 
+merlin_example(Examples/Wakefields ex1 ex1.cpp)
+if(ENABLE_ROOT)
+merlin_example(Examples/CollimatorMaterials CollimatorMaterials CollimatorMaterials.cpp)
+target_link_libraries(CollimatorMaterials ${ROOT_LIBRARIES})
+endif()
 merlin_example(Examples/AcceleratorErrors AcceleratorErrors main.cpp)
 merlin_example(Examples/ClosedOrbit ClosedOrbit ClosedOrbit_Main.cpp)
 merlin_example(Examples/HaloCollimation HaloCollimation HaloCollimation_main.cpp ConstructModel.cpp HaloTracker.cpp QuadIntegrator.cpp)
@@ -67,6 +72,7 @@ merlin_example(Examples/Trajectory Trajectory Trajectory_Main.cpp)
 merlin_example(Examples/Wakefields wakefile_ex1 ex1.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex2 ex2.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex3 ex3.cpp TeslaWakePotential.cpp)
+merlin_example(Examples/CollimatorMaterials CollimatorMaterials CollimatorMaterials.cpp)
 
 merlin_tutorial(Tutorials/1-LatticeConfiguration LatticeConfiguration LatticeConfiguration.cpp)
 merlin_tutorial_py(Tutorials/1-LatticeConfiguration LatticeConfiguration.py)

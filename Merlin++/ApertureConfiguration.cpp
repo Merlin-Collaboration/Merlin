@@ -321,7 +321,7 @@ void ApertureConfiguration::OutputConfiguredAperture(AcceleratorModel* Model, os
 				 << comp->GetComponentLatticePosition() << "\t"
 				 << comp->GetGeometry()->GetGeometryLength() << "\t"
 				 << comp->GetIndex() << "\t"
-				 << comp->GetMaterial() << "\t"
+				 << comp->GetMaterialProperties() << "\t"
 				 << endl;
 			++number;
 		}

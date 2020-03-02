@@ -12,7 +12,7 @@
 #include "Drift.h"
 
 class ComponentTracker;
-class Material;
+class MaterialProperties;
 
 /**
  * A collimator represents a scattering element in the beamline. Collimator objects
@@ -27,7 +27,7 @@ public:
 
 	Collimator(const string& id, double len);
 	Collimator(const string& id, double len, double radLength);
-	Collimator(const string& id, double len, Material* pp, double P0);
+	Collimator(const string& id, double len, MaterialProperties* pp, double P0);
 
 	/**
 	 * Returns the length of the collimator in units of its radiation length

@@ -14,8 +14,7 @@
 #include "ScatteringModel.h"
 #include "DiffractiveScatter.h"
 #include "ElasticScatter.h"
-#include "Material.h"
-#include "CrossSections.h"
+#include "MaterialData.h"
 
 #include "utils.h"
 #include "PhysicalUnits.h"
@@ -29,93 +28,138 @@ using namespace PhysicalUnits;
 using namespace PhysicalConstants;
 using namespace Collimation;
 
-ScatteringModel::ScatteringModel() :
+ScatteringModel::ScatteringModel(int model) :
 	energy_loss_mode(FullEnergyLoss)
 {
+        ModelType=model;
 	ScatterPlot_on = 0;
 	JawImpact_on = 0;
+	oldMaterial = 0;      // Constructor does noit know material
+}
+
+void ScatteringModel::Configure(MaterialProperties* m, double Energy)
+{
+        double s=2*ProtonMassGeV*Energy+ProtonMassGeV*ProtonMassGeV;
+    switch (ModelType) { // horrible C style - to be changed
+     case 0: // Merlin 
+	Processes[1] = new Rutherford(m);
+	Processes[2] = new Elasticpn(Energy);
+	Processes[3] = new SingleDiffractive(Energy);
+	Processes[4] = new Inelastic();
+	Processes[5] = new ElasticpN(Energy, m);
+	Xsection[0] = m->sigma_T;
+	Xsection[1] = m->sigma_R;
+	Xsection[2] = 1.618 * pow(m->A, 0.333) * Processes[2]->sigma;
+	Xsection[3] = 1.618 * pow(m->A, 0.333) * Processes[3]->sigma;
+	Xsection[4] = m->sigma_I;
+	cout << "'Merlin' Cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
+		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
+        break;
+
+    case 1: // Sixtrack
+	Processes[1] = new SixTrackRutherford();
+	Processes[2] = new SixTrackElasticpn();
+	Processes[3] = new SixTrackSingleDiffractive();
+	Processes[4] = new Inelastic();
+	Processes[5] = new SixTrackElasticpN(m);
+	Xsection[0] = m->sigma_T;
+	Xsection[1] = m->sigma_R;
+	Xsection[2] = 1.618 * pow(m->A, 0.333) * 0.007 * pow(Energy/450.0,0.04792);
+	Xsection[3] = 1.618 * pow(m->A, 0.333) * 0.00068*log(0.15*s);
+	Xsection[4] = m->sigma_I;
+	cout << "'Sixtrack' cross sections Total " << Xsection[0] << " Rutherford " << Xsection[1] << " Elastic  " << Xsection[2] << " Diffractive "
+		 << Xsection[3] << " Inelastic  " << Xsection[4] << endl;
+        break;
+   
+    default:
+       cout<<" Unknown model "<<ModelType<<endl;
+       exit(1);
+       }
 }
 
 ScatteringModel::~ScatteringModel()
 {
-	for(auto it : stored_cross_sections)
-	{
-		delete it.second;
-	}
+//	for(auto it : stored_cross_sections)
+//	{
+//		delete it.second;
+//	}
 }
 
-double ScatteringModel::PathLength(Material* mat, double E0)
+double ScatteringModel::PathLength(MaterialProperties* mat, double E0)
 {
 	static double lambda;
-	CrossSections* CurrentCS;
 
-	CS_iterator = stored_cross_sections.find(mat->GetSymbol());
-
-	// If find gets to the end of the stored_cross_sections map, there is no value stored
-	if(CS_iterator == stored_cross_sections.end())
-	{
-		//No previously calculated CrossSections, start from scratch
-		CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
-
-		stored_cross_sections.insert(std::map<string, Collimation::CrossSections*>::value_type(mat->GetSymbol(),
-			CurrentCS));
-
-		//Set iterator to correct position
-		CS_iterator = stored_cross_sections.find(mat->GetSymbol());
-
-		//Find fractions of cross sections
-		double sigma = 0;
-		int i = 0;
-		std::vector<ScatteringProcess*>::iterator p;
-
-		std::cout << "ScatteringModel::PathLength: MATERIAL = " << mat->GetSymbol() << std::endl;
-		for(p = Processes.begin(); p != Processes.end(); p++)
-		{
-			(*p)->Configure(mat, CurrentCS);
-			fraction[i] = (*p)->sigma;
-			std::cout << (*p)->GetProcessType() << "\t\t sigma = " << (*p)->sigma << " barns" << std::endl;
-			sigma += fraction[i];
-			++i;
-		}
-
-		for(unsigned int j = 0; j < fraction.size(); j++)
-		{
-			std::cout << " Process " << j << " total sigma " << setw(10) << setprecision(4) << sigma << "barns";
-			fraction[j] /= sigma;
-			std::cout << " fraction " << setw(10) << setprecision(4) << fraction[j] << std::endl;
-		}
-	}
-	else
-	{
-		//Should return a pointer to the CrossSections we require
-		CurrentCS = CS_iterator->second;
-
-		//Make sure that the CrossSections are for the same case (scattering etc)
-		if(CurrentCS == CS_iterator->second)
-		{
-
-		}
-		else
-		{
-			std::cout << std::endl
-					  << "\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections"
-					  << std::endl;
-			CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
-			stored_cross_sections.insert(std::map<string, Collimation::CrossSections*>::value_type(mat->GetSymbol(),
-				CurrentCS));
-
-			//Set iterator to correct position
-			CS_iterator = stored_cross_sections.find(mat->GetSymbol());
-		}
-
-	}
-
+// deleted RJB   just use sigma_T
+//    though this  does all sorts of other fancy config stuff which may need replanting
+// 	CrossSections* CurrentCS;
+//	CS_iterator = stored_cross_sections.find(mat->GetSymbol());
+//
+//	// If find gets to the end of the stored_cross_sections map, there is no value stored
+//	if(CS_iterator == stored_cross_sections.end())
+//	{
+//		//No previously calculated CrossSections, start from scratch
+//		CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
+//
+//		stored_cross_sections.insert(std::map<string, Collimation::CrossSections*>::value_type(mat->GetSymbol(),
+//			CurrentCS));
+//
+//		//Set iterator to correct position
+//		CS_iterator = stored_cross_sections.find(mat->GetSymbol());
+//
+//		//Find fractions of cross sections
+//		double sigma = 0;
+//		int i = 0;
+//		std::vector<ScatteringProcess*>::iterator p;
+//
+//		std::cout << "ScatteringModel::PathLength: MATERIAL = " << mat->GetSymbol() << std::endl;
+//		for(p = Processes.begin(); p != Processes.end(); p++)
+//		{
+//			(*p)->Configure(mat, CurrentCS);
+//			fraction[i] = (*p)->sigma;
+//			std::cout << (*p)->GetProcessType() << "\t\t sigma = " << (*p)->sigma << " barns" << std::endl;
+//			sigma += fraction[i];
+//			++i;
+//		}
+//
+//		for(unsigned int j = 0; j < fraction.size(); j++)
+//		{
+//			std::cout << " Process " << j << " total sigma " << setw(10) << setprecision(4) << sigma << "barns";
+//			fraction[j] /= sigma;
+//			std::cout << " fraction " << setw(10) << setprecision(4) << fraction[j] << std::endl;
+//		}
+//	}
+//	else
+//	{
+//		//Should return a pointer to the CrossSections we require
+//		CurrentCS = CS_iterator->second;
+//
+//		//Make sure that the CrossSections are for the same case (scattering etc)
+//		if(CurrentCS == CS_iterator->second)
+//		{
+//
+//		}
+//		else
+//		{
+//			std::cout << std::endl
+//					  << "\tWarning: ScatteringModel::PathLength: CurrentCS != StoredCS, recalculating CrossSections"
+//					  << std::endl;
+//			CurrentCS = new CrossSections(mat, E0, ScatteringPhysicsModel);
+//			stored_cross_sections.insert(std::map<string, Collimation::CrossSections*>::value_type(mat->GetSymbol(),
+//				CurrentCS));
+//
+//			//Set iterator to correct position
+//			CS_iterator = stored_cross_sections.find(mat->GetSymbol());
+//		}
+//
+//	}
+//
 	//Calculate mean free path
-	lambda = CurrentCS->GetTotalMeanFreePath();
-	return -(lambda) * log(RandomNG::uniform(0, 1));
+//	lambda = CurrentCS->GetTotalMeanFreePath();
+	lambda = mat->lambda;
+	return -(mat->lambda) * log(RandomNG::uniform(0, 1));
 }
 
-void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0)
+void ScatteringModel::EnergyLoss(PSvector& p, double x, MaterialProperties* mat, double E0)
 {
 	switch(energy_loss_mode)
 	{
@@ -129,60 +173,74 @@ void ScatteringModel::EnergyLoss(PSvector& p, double x, Material* mat, double E0
 }
 
 //Simple energy loss
-void ScatteringModel::EnergyLossSimple(PSvector& p, double x, Material* mat, double E0)
+void ScatteringModel::EnergyLossSimple(PSvector& p, double x, MaterialProperties* mat, double E0)
 {
-	double dp = x * (mat->GetSixtrackdEdx());
+	double dp = x * (mat->GetExtra("SixtrackdEdx"));
 	double E1 = E0 * (1 + p.dp());
 	p.dp() = ((E1 - dp) - E0) / E0;
 }
 
 //Advanced energy loss
-void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, double E0)
+void ScatteringModel::EnergyLossFull(PSvector& p, double x, MaterialProperties* mat, double E0)
 {
+	static MaterialProperties* oldmat = 0;
+	static const double xi1 = 2.0 * pi * pow(ElectronRadius, 2) * ElectronMass * pow(SpeedOfLight, 2);
+	static double C, C0, C1, I, edensity, xi0, plasmaEnergy;
+	if(mat != oldmat)      // new material so do the sums, otherwise they persist
+	{
+		cout << " New Material for energy loss full calculation";
+		if(mat->HaveExtra("MeanExcitationEnergy")) {
+                   I = mat->GetExtra("MeanExcitationEnergy") / eV;
+                   } else {
+                  I=10*mat->Z; // I is in eV
+}
+                cout<<" Excitation energy "<<I;
+		edensity = (mat->Z) * Avogadro * (mat->density) / (mat->A);
+		xi0 = xi1 *  edensity; //  mat->GetExtra("ElectronDensity");
+		plasmaEnergy = 28.816 * sqrt((mat->density) * 0.001 * (mat->Z) / (mat->A)); // from 33.1 of the PDG
+		cout << " plasma energy is " << plasmaEnergy << endl;
+		C = 1 + 2 * log(I / plasmaEnergy); 
+		C1 = 0;
+		C0 = 0;
+
+		if((I / eV) < 100)
+		{
+			if(C <= 3.681)
+			{
+				C0 = 0.2;
+				C1 = 2.0;
+			}
+			else
+			{
+				C0 = 0.326 * C - 1.0;
+				C1 = 2.0;
+			}
+		}
+		else //I >= 100eV
+		{
+			if(C <= 5.215)
+			{
+				C0 = 0.2;
+				C1 = 3.0;
+			}
+			else
+			{
+				C0 = 0.326 * C - 1.5;
+				C1 = 3.0;
+			}
+		}
+		oldmat = mat;
+	}       // end of material setup stuff
+
 	double E1 = E0 * (1 + p.dp());
 	double gamma = E1 / (ProtonMassMeV * MeV);
 	double beta = sqrt(1 - (1 / (gamma * gamma)));
-	double I = mat->GetMeanExcitationEnergy() / eV;
-
 	double land = RandomNG::landau();
 
 	double tmax = (2 * ElectronMassMeV * beta * beta * gamma * gamma) / (1 + (2 * gamma * (ElectronMassMeV
 		/ ProtonMassMeV)) + pow((ElectronMassMeV / ProtonMassMeV), 2)) * MeV;
 
-	static const double xi1 = 2.0 * pi * pow(ElectronRadius, 2) * ElectronMass * pow(SpeedOfLight, 2);
-	double xi0 = xi1 * mat->GetElectronDensity();
 	double xi = (xi0 * x / (beta * beta)) / ElectronCharge * (eV / MeV);
-
-	double C = 1 + 2 * log(I / (mat->GetPlasmaEnergy() / eV));
-	double C1 = 0;
-	double C0 = 0;
-
-	if((I / eV) < 100)
-	{
-		if(C <= 3.681)
-		{
-			C0 = 0.2;
-			C1 = 2.0;
-		}
-		else
-		{
-			C0 = 0.326 * C - 1.0;
-			C1 = 2.0;
-		}
-	}
-	else    //I >= 100eV
-	{
-		if(C <= 5.215)
-		{
-			C0 = 0.2;
-			C1 = 3.0;
-		}
-		else
-		{
-			C0 = 0.326 * C - 1.5;
-			C1 = 3.0;
-		}
-	}
 	double delta = 0;
 
 	//Density correction
@@ -219,20 +277,26 @@ void ScatteringModel::EnergyLossFull(PSvector& p, double x, Material* mat, doubl
 	double F = G - S + 2 * (L1 + L2);
 	double deltaE = xi * (log(2 * ElectronMassMeV * beta * beta * gamma * gamma * xi / pow(I / MeV, 2)) - (beta
 		* beta) - delta + F + 0.20);
-
-	double dp = ((xi * land) - deltaE) * MeV;
-
+	double dp = ((xi * land) - deltaE); 
 	p.dp() = ((E1 - dp) - E0) / E0;
 }
 
 //HR 29Aug13
-void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, double E2)
+void ScatteringModel::Straggle(PSvector& p, double x, MaterialProperties* mat, double E1, double E2)
 {
+	static MaterialProperties* oldmat = 0;
+	static double X;     // radiation length in metres
 	static const double root12 = sqrt(12.0);
-	double scaledx = x / mat->GetRadiationLengthInM();
+	if(mat != oldmat)
+	{
+		X = centimeter * mat->X0 / (mat->density / (gram / cc));
+		cout << " New material in Straggle: radiation length "
+                   << setw(12) << setprecision(5) << X << " metres" << endl;
+		oldmat = mat;
+	}
+	double scaledx = x / X;
 	double Eav = (E1 + E2) / 2.0;
 	double theta0 = 13.6 * MeV * sqrt(scaledx) * (1.0 + 0.038 * log(scaledx)) / Eav;
-
 	double theta_plane_x = RandomNG::normal(0, 1) * theta0;
 	double theta_plane_y = RandomNG::normal(0, 1) * theta0;
 
@@ -245,30 +309,53 @@ void ScatteringModel::Straggle(PSvector& p, double x, Material* mat, double E1, 
 	p.yp() += theta_plane_y;
 }
 
-bool ScatteringModel::ParticleScatter(PSvector& p, Material* mat, double E)
+bool ScatteringModel::ParticleScatter(PSvector& p, MaterialProperties* mat, double E)
 {
-	if(fraction.size() == 0)
+	if(mat != oldMaterial)       // new collimator material
 	{
-		cerr << "ScatteringModel has no ScatteringProcesses. Use AddProcess() or "
-			 << "one of the inbuilt ScatteringModels such as ScatteringModelMerlin." << endl;
-		exit(EXIT_FAILURE);
+		cout << " Collimator Material has changed";
+		ScatterModelDetails*  sc = saveDetails[mat];
+		if(sc)      // get details
+		{
+			cout << " but is already known \n";
+			for(int i = 0; i < 5; i++)
+				Xsection[i] = sc->Xsection[i];
+			for(int i = 1; i < 6; i++)
+				Processes[i] = sc->Processes[i]; // yes really 1
+		}
+		else
+		{
+			// generate new details
+			cout << " is new so need to make it \n";
+			Configure(mat, E);
+			sc = new ScatterModelDetails(); // NEED DELETE SOMEWHERE
+			for(int i = 0; i < 5; i++)
+				sc->Xsection[i] = Xsection[i];
+			for(int i = 1; i < 6; i++)
+				sc->Processes[i] = Processes[i];
+			saveDetails[mat] = sc;
+		}
+
+		oldMaterial = mat;
 	}
+//
+//	if(fraction.size() == 0)
+//	{
+//		cerr << "ScatteringModel has no ScatteringProcesses. Use AddProcess() or "
+//			 << "one of the inbuilt ScatteringModels such as ScatteringModelMerlin." << endl;
+//		exit(EXIT_FAILURE);
+//	}
+	double r = RandomNG::uniform(0, Xsection[0]);
 
-	double r = RandomNG::uniform(0, 1);
-
-	for(unsigned int i = 0; i < fraction.size(); i++)
+	for(unsigned int i = 1; i < 5; i++)
 	{
-		r -= fraction[i];
+		r -= Xsection[i];
 		if(r < 0)
 		{
 			return Processes[i]->Scatter(p, E);
 		}
 	}
-
-	cerr << " should never get this message : \n\tScatteringModel::ParticleScatter : scattering past r < 0, r = "
-		 << r << endl;
-
-	exit(EXIT_FAILURE);
+	return Processes[5]->Scatter(p, E);
 }
 
 void ScatteringModel::SetScatterType(int st)

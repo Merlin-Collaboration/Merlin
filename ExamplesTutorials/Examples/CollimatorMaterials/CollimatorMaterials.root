@@ -1,0 +1,32 @@
+cout<<" Hello World\n";
+TCanvas* c =new TCanvas("can1","Results",500,500);
+c->Divide(2,2);
+TFile f1("job1.root");
+f1.ls();
+TH1D* h1=0;
+TH1D* h2=0;
+c->cd(1);
+f1.GetObject("xbefore",h2);
+h2->Draw();
+f1.GetObject("xafter",h1);
+c->cd(2);
+h1->Draw();
+c->cd(3);
+f1.GetObject("xpbefore",h1);
+h1->Draw();
+f1.GetObject("xpafter",h1);
+c->cd(4);
+h1->Draw();
+gSystem->Sleep(10000);
+c->cd(1);
+f1.GetObject("yafter",h2);
+h2->Draw();
+f1.GetObject("ypafter",h1);
+c->cd(2);
+h1->Draw();
+c->cd(3);
+f1.GetObject("dpafter",h1);
+h1->Draw();
+gSystem->Sleep(10000);
+
+

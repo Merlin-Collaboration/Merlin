@@ -10,6 +10,10 @@
 
 #include "ScatteringModel.h"
 
+// probably not needed, but MaterialProperties added
+
+#include "MaterialProperties.h"
+
 namespace Collimation
 {
 /**
@@ -21,7 +25,7 @@ namespace Collimation
 class ScatteringModelFixed: public ScatteringModel
 {
 public:
-	ScatteringModelFixed();
+	ScatteringModelFixed(MaterialProperties* mat);
 	virtual ~ScatteringModelFixed();
 
 	/**
@@ -45,7 +49,7 @@ protected:
 class ScatteringModelMerlin: public ScatteringModelFixed
 {
 public:
-	ScatteringModelMerlin();
+	ScatteringModelMerlin(MaterialProperties* mat);
 };
 
 /**
@@ -56,7 +60,7 @@ public:
 class ScatteringModelSixTrack: public ScatteringModelFixed
 {
 public:
-	ScatteringModelSixTrack();
+	ScatteringModelSixTrack(MaterialProperties* mat);
 };
 
 /**
@@ -65,7 +69,7 @@ public:
 class ScatteringModelSixTrackIoniz: public ScatteringModelFixed
 {
 public:
-	ScatteringModelSixTrackIoniz();
+	ScatteringModelSixTrackIoniz(MaterialProperties* mat);
 };
 
 /**
@@ -74,7 +78,7 @@ public:
 class ScatteringModelSixTrackElastic: public ScatteringModelFixed
 {
 public:
-	ScatteringModelSixTrackElastic();
+	ScatteringModelSixTrackElastic(MaterialProperties* mat);
 };
 
 /**
@@ -83,7 +87,7 @@ public:
 class ScatteringModelSixTrackSD: public ScatteringModelFixed
 {
 public:
-	ScatteringModelSixTrackSD();
+	ScatteringModelSixTrackSD(MaterialProperties* mat);
 };
 
 }

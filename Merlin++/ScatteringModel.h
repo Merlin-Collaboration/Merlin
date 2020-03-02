@@ -13,12 +13,8 @@
 #include <map>
 
 #include "merlin_config.h"
-
 #include "PSvector.h"
-
-#include "Material.h"
 #include "ScatteringProcess.h"
-
 #include "utils.h"
 
 namespace Collimation
@@ -94,22 +90,35 @@ enum EnergyLossMode
 
 };
 
+
 /**
  * Base class for scattering models
  *
  * The user can customise a ScatteringModel using AddProcess(), or can
  * use the predefined models such as ScatteringModelMerlin.
  */
+
+struct ScatterModelDetails
+{
+	std::vector<double> Xsection = std::vector<double>(5, 0.0);
+	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0, 0};
+
+};
+
 class ScatteringModel
 {
 
 public:
-
+	MaterialProperties* oldMaterial;   // keep track of changing collimators
+        int ModelType; // 0 is 'Merlin', 1 is 'Sixtrack'.  Not elegant !! FIX!!
+	map<MaterialProperties*, ScatterModelDetails*> saveDetails;
 	/**
 	 * Constructor
 	 */
-	ScatteringModel();
+	ScatteringModel(int model=0);
 	virtual ~ScatteringModel();
+	void Configure(MaterialProperties *, double Energy);    // material not known at
+	// construct time and may change
 
 	/**
 	 * Collimation Functions
@@ -120,22 +129,22 @@ public:
 	/**
 	 * Calculate the particle path length in given material using scattering processes
 	 */
-	double PathLength(Material* mat, double E0);
+	double PathLength(MaterialProperties* mat, double E0);
 
 	/**
 	 * Dispatches to EnergyLossSimple or EnergyLossFull
 	 */
-	void EnergyLoss(PSvector& p, double x, Material* mat, double E0);
+	void EnergyLoss(PSvector& p, double x, MaterialProperties* mat, double E0);
 
 	/**
 	 * Multiple Coulomb scattering
 	 */
-	void Straggle(PSvector& p, double x, Material* mat, double E1, double E2);
+	void Straggle(PSvector& p, double x, MaterialProperties* mat, double E1, double E2);
 
 	/**
 	 * Function performs scattering and returns true if inelastic scatter
 	 */
-	bool ParticleScatter(PSvector& p, Material* mat, double E);
+	bool ParticleScatter(PSvector& p, MaterialProperties* mat, double E);
 
 // Other Functions
 
@@ -173,22 +182,20 @@ public:
 		return ScatteringPhysicsModel;
 	}
 
-protected:
+public:
 	/**
 	 * vector holding all scattering processes
 	 */
-	std::vector<Collimation::ScatteringProcess*> Processes;
+	// adapted RJB	std::vector<Collimation::ScatteringProcess*> Processes;
+	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0 ,0};
 
 	/**
 	 * vector with fractions of the total scattering cross section assigned to each ScatteringProcess
 	 */
 	std::vector<double> fraction;
+// RJB   To supersede fraction
+	std::vector<double> Xsection = std::vector<double>(5, 0.0);
 
-	/**
-	 * Store calculated CrossSections data to save time
-	 */
-	std::map<std::string, Collimation::CrossSections*> stored_cross_sections;
-	std::map<std::string, Collimation::CrossSections*>::iterator CS_iterator;
 	EnergyLossMode energy_loss_mode;
 
 private:
@@ -196,13 +203,13 @@ private:
 	/**
 	 * Energy loss via ionisation
 	 */
-	void EnergyLossSimple(PSvector& p, double x, Material* mat, double E0);
+	void EnergyLossSimple(PSvector& p, double x, MaterialProperties* mat, double E0);
 
 	/**
 	 * Advanced energy loss via ionisation
 	 */
 
-	void EnergyLossFull(PSvector& p, double x, Material* mat, double E0);
+	void EnergyLossFull(PSvector& p, double x, MaterialProperties* mat, double E0);
 	//0 = SixTrack, 1 = ST+Ad Ion, 2 = ST + Ad El, 3 = ST + Ad SD, 4 = MERLIN
 	int ScatteringPhysicsModel; // Still required for CrossSections
 };

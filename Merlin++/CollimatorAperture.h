@@ -9,8 +9,8 @@
 #define _CollimatorAperture_h_
 
 #include "Aperture.h"
-#include "MaterialDatabase.h"
-#include "Material.h"
+//#include "MaterialDatabase.h"
+//#include "Material.h"
 #include <iostream>
 
 /**

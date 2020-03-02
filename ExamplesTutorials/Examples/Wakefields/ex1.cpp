@@ -12,6 +12,7 @@
 #include "Collimator.h"
 #include "Aperture.h"
 
+#include "MaterialData.h"
 #include "BeamData.h"
 #include "ParticleBunch.h"
 #include "ParticleDistributionGenerator.h"
@@ -20,6 +21,7 @@
 #include "CollimatorWakeProcess.h"
 #include "CollimateParticleProcess.h"
 #include "CollimatorWakePotentials.h"
+#include "ResistiveWakePotentials.h"
 
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
@@ -108,7 +110,8 @@ int main()
 	double apertureheight = 1.9 * millimeter;
 	RectangularAperture* aperture = new RectangularAperture(aperturewidth, apertureheight);
 	collimator->SetAperture(aperture);
-
+	StandardMaterialData* matter = new StandardMaterialData;
+	collimator->SetMaterialProperties(matter->property["Cu"]);
 	double driftlength2 = 1.0 * meter;
 	Drift* drift2       = new Drift("aDrift2", driftlength2);
 
@@ -132,16 +135,18 @@ int main()
 // apply the geometric wakefields
 	TaperedCollimatorPotentials* collWake
 		= new TaperedCollimatorPotentials(modes, aperturewidth / 2, apertureheight / 2);
-	collimator->SetWakePotentials(collWake);
+// XXXXX	collimator->SetWakePotentials(collWake);
 
 // //another example: a resistive wakefield
 // double conductivity = 2.38e6;         //titanium
-// double conductivity = 5.98*10000000;  //copper
+	double conductivity = 5.98 * 10000000; //copper
 // double conductivity = 3.08e7;         //berrilium
 // double conductivity = 6.e4;           //carbon
 // double conductivity = 4.5e6;          //for TiN
-// ResistiveWakePotentials* resWake = new ResistiveWakePotentials(modes, aperturewidth/2, conductivity, collimatorlength);
-// collimator->SetWakePotentials(resWake);
+	ResistiveWakePotentials* resWake = new ResistiveWakePotentials(modes, aperturewidth / 2, conductivity,
+		collimatorlength);
+	//  collimator->SetWakePotentials(resWake);
+	collimator->SetResistiveWakePotentials(modes, aperturewidth / 2, collimatorlength);
 
 //-----------------------------------------------------
 //             Create the WakeProcess
@@ -182,7 +187,7 @@ int main()
 	{
 		averageyp += (p->yp() - averageyp) / (++i);
 	}
-
+	cout << " averageyp is " << averageyp << endl;
 	double xmeanf = finalBunch->GetMoments(0).first;
 	double xsigf  = finalBunch->GetMoments(0).second;
 	double ymeanf = finalBunch->GetMoments(2).first;

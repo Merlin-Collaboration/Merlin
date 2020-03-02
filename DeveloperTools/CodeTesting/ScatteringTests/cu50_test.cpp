@@ -23,7 +23,7 @@
 #include "CollimateParticleProcess.h"
 #include "CollimateProtonProcess.h"
 #include "ScatteringModelsMerlin.h"
-#include "MaterialDatabase.h"
+#include "MaterialData.h"
 #include "NANCheckProcess.h"
 
 #include "PhysicalUnits.h"
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	cout << "Seed: " << seed << endl;
+	cout << "Seed set to: " << seed << endl;
 	RandomNG::init(seed);
 	/*********************************************************************
 	 *	GENERAL SETTINGS
@@ -116,13 +116,16 @@ int main(int argc, char* argv[])
 	 *	ACCELERATOR MODEL LOADING
 	 *********************************************************************/
 
-	MaterialDatabase* mat = new MaterialDatabase();
-	Material* CollimatorMaterial = mat->FindMaterial("Cu");
+	StandardMaterialData* mat = new StandardMaterialData();
+//	if(scatter_mode_sixtrack)
+//		mat->UseSixTrackValues();
+	cout << mat << endl;
+	MaterialProperties* CollimatorMaterial = mat->property["Cu"];
 
 	AcceleratorModelConstructor* construct = new AcceleratorModelConstructor();
 	double length = 0.5;
 	Collimator* TestCol = new Collimator("TestCollimator", length);
-	TestCol->SetMaterial(CollimatorMaterial);
+	TestCol->SetMaterialProperties(CollimatorMaterial);
 
 	CollimatorAperture* app = new CollimatorAperture(2, 2, 0, length, 0, 0);
 	app->SetExitWidth(app->GetFullEntranceWidth());      //Horizontal
@@ -158,17 +161,23 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	 *	COLLIMATION SETTINGS
 	 *********************************************************************/
-	ScatteringModel* myScatter;
+	ScatteringModel* myScatter = new ScatteringModel(scatter_mode_sixtrack);
 
 	CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
 	if(scatter_mode_sixtrack)
 	{
-		myScatter = new ScatteringModelSixTrack;
+// RJB		myScatter = new ScatteringModelSixTrack;
+		myScatter->Processes[1] = new SixTrackRutherford();
+		myScatter->Processes[2] = new SixTrackElasticpn();
+///		myScatter->Xsection[2] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[2]->sigma;
+		myScatter->Processes[3] = new SixTrackSingleDiffractive();
+///		myScatter->Xsection[3] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[3]->sigma;
+
 	}
-	else
-	{
-		myScatter = new ScatteringModelMerlin;
-	}
+//	else
+//	{
+//		myScatter = new ScatteringModelMerlin;
+//	}
 	myCollimateProcess->SetScatteringModel(myScatter);
 	stringstream loststr;
 
@@ -223,7 +232,6 @@ int main(int argc, char* argv[])
 		/*********************************************************************
 		 *	Output Final Bunch
 		 *********************************************************************/
-
 		if(output_final_bunch)
 		{
 			myBunch->Output(bunch_output2);
@@ -234,6 +242,7 @@ int main(int argc, char* argv[])
 			double coords[] = {ip->x(), ip->xp(), ip->y() - y_offset, ip->yp(), -ip->dp()};
 			for(int i = 0; i < 5; i++)
 			{
+                          if(isnan(coords[i])) continue; // RJB 
 				// beware, this can rollover when x is big
 				int bin_x = ((coords[i] - bin_mins[i]) / (bin_maxs[i] - bin_mins[i]) * (nbins)) + 1; // +1 because bin zero for outliers
 				// so handle end bins, by check against x, not bin

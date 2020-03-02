@@ -1,3 +1,5 @@
+#ifndef RESISTIVEWAKEPOTENTIALS
+#define RESISTIVEWAKEPOTENTIALS 1
 /*
  * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
  * Copyright (c) 2001-2018 The Merlin++ developers
@@ -116,15 +118,8 @@ public:
 			coeff[i] = 1 / (pi * pow(rad, 2 * i + 1) * (1 + delta));
 		}
 	}
-
-	double Wlong(double z) const
-	{
-		return 1;
-	}
-	double Wtrans(double z) const
-	{
-		return 1;
-	}
+	virtual double Wtrans(double z) const;
+	virtual double Wlong(double z) const;
 	double Wtrans(double z, int m) const
 	{
 		cout << " call for " << m << endl;
@@ -136,3 +131,4 @@ public:
 	}
 
 };
+#endif

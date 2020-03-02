@@ -134,7 +134,7 @@ void ppElasticScatter::GenerateTDistribution(double energy)
  */
 void ppElasticScatter::GenerateDsigDt(double energy)
 {
-	std::cout << "Call Generate DsigDt " << std::endl;
+	std::cout << "Call Generate DsigDt " ;
 
 	// Values from James Molson's Thesis
 

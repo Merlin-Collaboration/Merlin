@@ -23,7 +23,7 @@ Collimator::Collimator(const string& id, double len, double radLength) :
 	scatter_at_this_collimator = true;
 }
 
-Collimator::Collimator(const string& id, double len, Material* mat, double P0) :
+Collimator::Collimator(const string& id, double len, MaterialProperties* mat, double P0) :
 	Drift(id, len)
 {
 	scatter_at_this_collimator = true;

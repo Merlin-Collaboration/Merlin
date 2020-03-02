@@ -8,13 +8,12 @@
 #include <iostream>
 #include "ScatteringModelsMerlin.h"
 #include "ScatteringProcess.h"
-#include "CrossSections.h"
 
 namespace Collimation
 {
 
-ScatteringModelFixed::ScatteringModelFixed() :
-	is_fixed(false)
+ScatteringModelFixed::ScatteringModelFixed(MaterialProperties* mat) :
+	ScatteringModel(),  is_fixed(false)
 {
 }
 
@@ -41,18 +40,20 @@ ScatteringModelFixed::~ScatteringModelFixed()
 	}
 }
 
-ScatteringModelMerlin::ScatteringModelMerlin()
+ScatteringModelMerlin::ScatteringModelMerlin(MaterialProperties* mat) :
+	ScatteringModelFixed(mat)
 {
-	AddProcess(new ElasticpN());
-	AddProcess(new Elasticpn());
-	AddProcess(new SingleDiffractive());
-	AddProcess(new Rutherford());
+	AddProcess(new ElasticpN(7000));
+	AddProcess(new Elasticpn(7000.0));
+	AddProcess(new SingleDiffractive(7000.0));
+	AddProcess(new Rutherford(mat));
 	AddProcess(new Inelastic());
 	SetScatterType(4); // FIXME, still needed for CrossSections
 	is_fixed = true;
 }
 
-ScatteringModelSixTrack::ScatteringModelSixTrack()
+ScatteringModelSixTrack::ScatteringModelSixTrack(MaterialProperties* mat) :
+	ScatteringModelFixed(mat)
 {
 	AddProcess(new SixTrackElasticpN());
 	AddProcess(new SixTrackElasticpn());
@@ -64,7 +65,8 @@ ScatteringModelSixTrack::ScatteringModelSixTrack()
 	is_fixed = true;
 }
 
-ScatteringModelSixTrackIoniz::ScatteringModelSixTrackIoniz()
+ScatteringModelSixTrackIoniz::ScatteringModelSixTrackIoniz(MaterialProperties* mat) :
+	ScatteringModelFixed(mat)
 {
 	AddProcess(new SixTrackElasticpN());
 	AddProcess(new SixTrackElasticpn());
@@ -75,10 +77,11 @@ ScatteringModelSixTrackIoniz::ScatteringModelSixTrackIoniz()
 	is_fixed = true;
 }
 
-ScatteringModelSixTrackElastic::ScatteringModelSixTrackElastic()
+ScatteringModelSixTrackElastic::ScatteringModelSixTrackElastic(MaterialProperties*  mat) :
+	ScatteringModelFixed(mat)
 {
-	AddProcess(new ElasticpN());
-	AddProcess(new Elasticpn());
+	AddProcess(new ElasticpN(7000.0));
+	AddProcess(new Elasticpn(7000.0));
 	AddProcess(new SixTrackSingleDiffractive());
 	AddProcess(new SixTrackRutherford());
 	AddProcess(new Inelastic());
@@ -87,11 +90,12 @@ ScatteringModelSixTrackElastic::ScatteringModelSixTrackElastic()
 	is_fixed = true;
 }
 
-ScatteringModelSixTrackSD::ScatteringModelSixTrackSD()
+ScatteringModelSixTrackSD::ScatteringModelSixTrackSD(MaterialProperties* mat) :
+	ScatteringModelFixed(mat)
 {
 	AddProcess(new SixTrackElasticpN());
 	AddProcess(new SixTrackElasticpn());
-	AddProcess(new SingleDiffractive());
+	AddProcess(new SingleDiffractive(7000.0));
 	AddProcess(new SixTrackRutherford());
 	AddProcess(new Inelastic());
 	energy_loss_mode = SimpleEnergyLoss;

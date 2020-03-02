@@ -18,8 +18,8 @@ SMPTrackingModel::SMPTrackingModel(size_t nslice, size_t mpps) :
 {
 	dfs_trace(dfs_trace::level_1) << "SMP TRACKING initialised with n_slice = " << ns << ", n_mp = " << nps << endl;
 	tracker = new SMPTracker();
-	wfp = new WakeFieldProcess(1);
-	wfp->ApplyImpulseAt(WakeFieldProcess::atCentre);
+	wfp = new SMPTracking::WakeFieldProcess(1);
+	wfp->ApplyImpulseAt(SMPTracking::WakeFieldProcess::atCentre);
 	tracker->AddProcess(wfp);
 }
 
