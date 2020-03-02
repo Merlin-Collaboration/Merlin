@@ -117,8 +117,7 @@ if(ENABLE_ROOT)
 	#/usr/share/root/cmake/FindROOT.cmake
 	SET(CMAKE_MODULE_PATH /usr/share/root/cmake/ ${CMAKE_MODULE_PATH})
 	find_package(ROOT REQUIRED)
-	include_directories(${ROOT_INCLUDE_DIR})
-        include(${ROOT_USE_FILE})
+	include_directories(${ROOT_INCLUDE_DIRS})
 endif(ENABLE_ROOT)
 
 #Check for and set up OpenMP
