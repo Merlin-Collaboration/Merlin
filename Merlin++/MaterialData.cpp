@@ -6,6 +6,7 @@
 #include <stdarg.h>
 
 using namespace PhysicalUnits;
+using namespace std;
 
 MaterialData::~MaterialData()  // destructor
 {

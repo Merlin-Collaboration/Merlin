@@ -90,7 +90,6 @@ enum EnergyLossMode
 
 };
 
-
 /**
  * Base class for scattering models
  *
@@ -110,12 +109,12 @@ class ScatteringModel
 
 public:
 	MaterialProperties* oldMaterial;   // keep track of changing collimators
-        int ModelType; // 0 is 'Merlin', 1 is 'Sixtrack'.  Not elegant !! FIX!!
-	map<MaterialProperties*, ScatterModelDetails*> saveDetails;
+	int ModelType;     // 0 is 'Merlin', 1 is 'Sixtrack'.  Not elegant !! FIX!!
+	std::map<MaterialProperties*, ScatterModelDetails*> saveDetails;
 	/**
 	 * Constructor
 	 */
-	ScatteringModel(int model=0);
+	ScatteringModel(int model = 0);
 	virtual ~ScatteringModel();
 	void Configure(MaterialProperties *, double Energy);    // material not known at
 	// construct time and may change
@@ -187,7 +186,7 @@ public:
 	 * vector holding all scattering processes
 	 */
 	// adapted RJB	std::vector<Collimation::ScatteringProcess*> Processes;
-	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0 ,0};
+	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0, 0};
 
 	/**
 	 * vector with fractions of the total scattering cross section assigned to each ScatteringProcess

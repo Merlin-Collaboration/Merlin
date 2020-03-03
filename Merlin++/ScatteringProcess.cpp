@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <fstream>
 #include <iomanip>
 
 #include "ScatteringProcess.h"
@@ -130,14 +129,14 @@ bool SixTrackRutherford::Scatter(PSvector& p, double E) const
 Elasticpn::Elasticpn(double Energy)
 {
 // Do pomeron stuff for elastic scattering
-	cout << " creating ppElasticScatter\n";
+	std::cout << " creating ppElasticScatter\n";
 	calculations = new ParticleTracking::ppElasticScatter(); // CHECK NEED DELETE
 	calculations->SetTMin(1e-4); // CHECK want to INCORPORATE ALL These
 	calculations->SetTMax(1.00);
 	calculations->SetStepSize(1e-4);
 	calculations->GenerateTDistribution(Energy);
 	sigma = calculations->GetElasticCrossSectionN();
-	cout << " Elastic cross section " << sigma << endl;
+	std::cout << " Elastic cross section " << sigma << std::endl;
 }
 
 bool Elasticpn::Scatter(PSvector& p, double E) const
@@ -209,7 +208,7 @@ bool ElasticpN::Scatter(PSvector& p, double E) const
 	double TargetMass =  mymat->A_H(); // GetAtomicMass();
 	double b_N = 14.1 * pow(TargetMass, 0.66); // deMolaize Equation 1.31
 	double t = -log(RandomNG::uniform(0, 1)) / b_N;
-	ScatterStuff(p, t, AtomicMassUnit*TargetMass, E);
+	ScatterStuff(p, t, AtomicMassUnit * TargetMass, E);
 
 	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
@@ -271,7 +270,7 @@ SingleDiffractive::SingleDiffractive(double Energy)
 	calculations->SetXiStepSize(1e-6);
 	calculations->GenerateDistribution(Energy);
 	sigma = calculations->GetDiffractiveCrossSection();
-	cout << "CHECK Diffractive cross section " << sigma << endl;
+	std::cout << "CHECK Diffractive cross section " << sigma << std::endl;
 }
 bool SingleDiffractive::Scatter(PSvector& p, double E) const
 {

@@ -24,14 +24,12 @@
 #include <string>
 #include <map>
 
-using namespace std;
-
 class MaterialProperties
 {
 public:
 	double Z, A, density, dEdx, sigma_R, sigma_I, sigma_E, sigma_D, sigma_T, X0;
 	double lambda;
-	map<string, double> *extra;
+	std::map<std::string, double> *extra;
 
 	virtual double A_R()
 	{
@@ -53,24 +51,24 @@ public:
 	virtual ~MaterialProperties();
 	MaterialProperties(const MaterialProperties&); // copy constructor
 	MaterialProperties& operator=(const MaterialProperties&); // copy assignment
-	void SetExtra(string, ...);
-	double GetExtra(string);
-	bool HaveExtra(string);
+	void SetExtra(std::string, ...);
+	double GetExtra(std::string);
+	bool HaveExtra(std::string);
 };
 
 class Mixture: public MaterialProperties
 {
 public:
 	int N;
-	vector<double> V_R;
-	vector<double> V_H;
-	vector<double> V_A;
+	std::vector<double> V_R;
+	std::vector<double> V_H;
+	std::vector<double> V_A;
 	double A_H(); // random nucleus for elastic scattering
 	double A_R(); // random nucleus for Rutherford scattering
-	Mixture(map<string, MaterialProperties*> dict, vector<string> names, vector<double>
+	Mixture(std::map<std::string, MaterialProperties*> dict, std::vector<std::string> names, std::vector<double>
 		proportions, double d);
 };
 
-ostream& operator<<(ostream& o, MaterialProperties& d);
+std::ostream& operator<<(std::ostream& o, MaterialProperties& d);
 
 #endif /* MATERIALPROPERTIES_H_ */
