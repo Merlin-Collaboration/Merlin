@@ -88,8 +88,6 @@ ScatteringModel::~ScatteringModel()
 
 double ScatteringModel::PathLength(MaterialProperties* mat, double E0)
 {
-	static double lambda;
-
 // deleted RJB   just use sigma_T
 //    though this  does all sorts of other fancy config stuff which may need replanting
 // 	CrossSections* CurrentCS;
@@ -154,9 +152,6 @@ double ScatteringModel::PathLength(MaterialProperties* mat, double E0)
 //
 //	}
 //
-	//Calculate mean free path
-//	lambda = CurrentCS->GetTotalMeanFreePath();
-	lambda = mat->lambda;
 	return -(mat->lambda) * log(RandomNG::uniform(0, 1));
 }
 
