@@ -34,7 +34,7 @@ if len(sys.argv) > 2:
 	npart = int(sys.argv[2])
 
 scatter_mode_sixtrack = False
-data_filename = "cu50_test_hist_m_10000000000.dat"
+data_filename = "cu50_test_hist_m2020_10000000000.dat"
 sim_filename = "cu50_test_hist_m_%s.dat"%npart
 if "sixtrack" in sys.argv[3:]:
 	scatter_mode_sixtrack = True
