@@ -73,8 +73,11 @@ if not ref_run:
 
 	if "plot" in sys.argv:
 		from matplotlib import pyplot
+		pyplot.rcParams['figure.autolayout'] = True
 		fig, axes = pyplot.subplots(nrows=5, sharex=True)
+		figd, axesd = pyplot.subplots(nrows=5, sharex=True)
 		fig.set_size_inches(8,11)
+		figd.set_size_inches(8,11)
 
 for run_n in range(1):
 	# multiple runs useful for visualising if differences are statistical or systematic
@@ -156,9 +159,16 @@ for run_n in range(1):
 			axes[n].semilogy(expected["bin"], expected[key], "-k", label="expected")
 			axes[n].semilogy(results_data["bin"], results_data[key], "-b", label="simulated")
 			axes[n].annotate(key, xy=(0.15, 0.85), xycoords="axes fraction", horizontalalignment="center")
-		pyplot.xlabel("Bin number")
-		pyplot.xlim([0,expected["bin"][-1]])
-		pyplot.tight_layout()
+
+			axesd[n].axhline(0, color="grey")
+			diff = (results_data[key] - expected[key]) / expected[key]
+			axesd[n].plot(expected["bin"], diff)
+			axesd[n].annotate(key+" diff", xy=(0.15, 0.85), xycoords="axes fraction", horizontalalignment="center")
+
+		axes[-1].set_xlabel("Bin number")
+		axes[-1].set_xlim([0,expected["bin"][-1]])
+		axesd[-1].set_xlabel("Bin number")
+		axesd[-1].set_xlim([0,expected["bin"][-1]])
 
 if "plot" in sys.argv:
 	pyplot.show()
