@@ -3,8 +3,8 @@ cff-version: 1.0.3 # https://citation-file-format.github.io/
 message: If you use this software, please cite it as below.
 
 title: Merlin++
-version: '5.02'
-date-released: 2019-03-19
+version: '5.03'
+date-released: 2020-03-05
 doi: 10.5281/zenodo.2598428
 
 authors:
