@@ -7,10 +7,31 @@ user programs.
 
 [TOC]
 
-
 ## Version 5.03 {#APIChanges503}
 
 Merlin++ 5.03 switches to the C++14 standard.
+
+## Material changes
+
+This release provides the ability to define materials as mixtures.
+
+The opportunity was taken for a major cleanup of the definitions of materials and their properties, which had evolved in a haphazard way. The classes  Material, MaterialDatabase, CrossSections, MaterialMixture and CompositeMaterial were replaced by MaterialProperties and MaterialData.
+
+From a user point of view the changes to Materials are most visible.
+
+    #include "MaterialDatabase.h"
+    ...
+    MaterialDatabase* mat = new MaterialDatabase();
+    Material* CollimatorMaterial = mat->FindMaterial("Cu");
+
+changes to
+
+    #include "MaterialData.h"
+    ...
+    StandardMaterialData* mat = new StandardMaterialData();
+    MaterialProperties* CollimatorMaterial = mat->property["Cu"];
+
+See the CollimatorMaterials.cpp example file for examples of how to define and use mixtures.
 
 ## DataTable changes
 
