@@ -37,7 +37,6 @@ namespace ParticleTracking
 CollimateProtonProcess::CollimateProtonProcess(int priority, int mode, std::ostream* osp) :
 	CollimateParticleProcess(priority, mode, osp), scattermodel(nullptr)
 {
-	scattermodel = new ScatteringModel();
 }
 
 /**

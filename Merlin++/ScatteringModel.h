@@ -109,14 +109,13 @@ class ScatteringModel
 
 public:
 	MaterialProperties* oldMaterial;   // keep track of changing collimators
-	int ModelType;     // 0 is 'Merlin', 1 is 'Sixtrack'.  Not elegant !! FIX!!
 	std::map<MaterialProperties*, ScatterModelDetails*> saveDetails;
 	/**
 	 * Constructor
 	 */
-	ScatteringModel(int model = 0);
+	ScatteringModel();
 	virtual ~ScatteringModel();
-	void Configure(MaterialProperties *, double Energy);    // material not known at
+	virtual void Configure(MaterialProperties *, double Energy) = 0;    // material not known at
 	// construct time and may change
 
 	/**
@@ -144,21 +143,6 @@ public:
 	 * Function performs scattering and returns true if inelastic scatter
 	 */
 	bool ParticleScatter(PSvector& p, MaterialProperties* mat, double E);
-
-// Other Functions
-
-	/**
-	 * Add ScatteringProcesses to the model
-	 */
-	virtual void AddProcess(Collimation::ScatteringProcess* S)
-	{
-		Processes.push_back(S);
-		fraction.push_back(0);
-	}
-	void ClearProcesses()
-	{
-		Processes.clear();
-	}
 
 	// Scatter plot
 	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, std::string name);

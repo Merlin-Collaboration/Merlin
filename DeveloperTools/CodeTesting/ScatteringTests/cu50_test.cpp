@@ -117,8 +117,8 @@ int main(int argc, char* argv[])
 	 *********************************************************************/
 
 	StandardMaterialData* mat = new StandardMaterialData();
-//	if(scatter_mode_sixtrack)
-//		mat->UseSixTrackValues();
+	if(scatter_mode_sixtrack)
+		mat->UseSixTrackValues();
 	cout << mat << endl;
 	MaterialProperties* CollimatorMaterial = mat->property["Cu"];
 
@@ -161,23 +161,17 @@ int main(int argc, char* argv[])
 	/*********************************************************************
 	 *	COLLIMATION SETTINGS
 	 *********************************************************************/
-	ScatteringModel* myScatter = new ScatteringModel(scatter_mode_sixtrack);
+	ScatteringModel* myScatter;
 
 	CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(2, 4);
 	if(scatter_mode_sixtrack)
 	{
-// RJB		myScatter = new ScatteringModelSixTrack;
-		myScatter->Processes[1] = new SixTrackRutherford();
-		myScatter->Processes[2] = new SixTrackElasticpn();
-///		myScatter->Xsection[2] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[2]->sigma;
-		myScatter->Processes[3] = new SixTrackSingleDiffractive();
-///		myScatter->Xsection[3] = 1.618 * pow(m->A, 0.3333) * myScatter->Processes[3]->sigma;
-
+		myScatter = new ScatteringModelSixTrack;
 	}
-//	else
-//	{
-//		myScatter = new ScatteringModelMerlin;
-//	}
+	else
+	{
+		myScatter = new ScatteringModelMerlin;
+	}
 	myCollimateProcess->SetScatteringModel(myScatter);
 	stringstream loststr;
 
