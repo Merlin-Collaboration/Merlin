@@ -87,13 +87,13 @@ public:
 	 * Returns the phase advance in x and y for element
 	 * @return Phase advance in x and y for the element
 	 */
-	virtual pair<double, double> CalcMu(int element);
+	virtual std::pair<double, double> CalcMu(int element);
 
 	/**
 	 * Returns the phase advance in x and y from element1 to element2
 	 * @return Phase advance in x and y from element1 to element2
 	 */
-	virtual pair<double, double> CalcDeltaMu(int element1, int element2);
+	virtual std::pair<double, double> CalcDeltaMu(int element1, int element2);
 
 	// Returns the voltage V1 (pre IP)
 	virtual double CalcV1(double M12);
@@ -122,7 +122,7 @@ public:
 	virtual void SetFailureOnOff(bool onoff)
 	{
 		failure_on = onoff;
-		cout << "CCFailure::Failure_on = " << failure_on << endl;
+		std::cout << "CCFailure::Failure_on = " << failure_on << std::endl;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public:
 	virtual void SetFailureTurns(int ft)
 	{
 		fail_turns = ft;
-		cout << "CCFailure::SetFailureTurns = " << fail_turns << endl;
+		std::cout << "CCFailure::SetFailureTurns = " << fail_turns << std::endl;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public:
 	virtual void SetNonFailureTurns(int nft)
 	{
 		non_fail_turns = nft;
-		cout << "CCFailure::SetNonFailureTurns = " << non_fail_turns << endl;
+		std::cout << "CCFailure::SetNonFailureTurns = " << non_fail_turns << std::endl;
 	}
 
 	/**
@@ -150,7 +150,7 @@ public:
 	{
 		ATLAS_on = hor;
 		CMS_on = ver;
-		cout << "CCFailure::SetFailurePlanes: ATLAS = " << ATLAS_on << ", CMS = " << CMS_on << endl;
+		std::cout << "CCFailure::SetFailurePlanes: ATLAS = " << ATLAS_on << ", CMS = " << CMS_on << std::endl;
 	}
 
 private:

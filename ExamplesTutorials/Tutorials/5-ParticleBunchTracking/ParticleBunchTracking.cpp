@@ -33,6 +33,7 @@
 
 #define beamenergy 5.0 * GeV
 
+using namespace std;
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
 

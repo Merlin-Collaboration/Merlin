@@ -39,7 +39,7 @@ public:
 
 	};
 
-	WakeFieldProcess(int prio, size_t nb = 100, double ns = 3.0, string aID = "WAKEFIELD");
+	WakeFieldProcess(int prio, size_t nb = 100, double ns = 3.0, std::string aID = "WAKEFIELD");
 
 	~WakeFieldProcess();
 
@@ -56,7 +56,7 @@ public:
 	{
 		inc_tw = flg;
 	}
-	void DumpSliceCentroids(ostream&) const;
+	void DumpSliceCentroids(std::ostream&) const;
 	void SetFilter(int n, int m, int d);
 
 protected:
@@ -96,7 +96,7 @@ private:
 	WakeFieldProcess& operator=(const WakeFieldProcess& rhs);
 };
 
-void savgol(vector<double>& c, int nl, int nr, int ld, int m);
+void savgol(std::vector<double>& c, int nl, int nr, int ld, int m);
 
 } // end namespace ParticleTracking
 

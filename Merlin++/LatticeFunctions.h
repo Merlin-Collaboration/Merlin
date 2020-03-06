@@ -8,6 +8,9 @@
 #ifndef LatticeFunctions_h
 #define LatticeFunctions_h 1
 
+#include <vector>
+#include <iostream>
+
 #include "PSvector.h"
 
 class LatticeFunction
@@ -20,16 +23,16 @@ public:
 	void ClearValues();
 	double GetValue(int n);
 	void Derivative(LatticeFunction* lfnM, LatticeFunction* lfnP, double dp);
-	vector<double>::iterator begin();
-	vector<double>::iterator end();
+	std::vector<double>::iterator begin();
+	std::vector<double>::iterator end();
 	int size();
 
 private:
 	int i, j, k;
-	vector<double> value;
+	std::vector<double> value;
 };
 
-typedef vector<LatticeFunction*> vectorlfn;
+typedef std::vector<LatticeFunction*> vectorlfn;
 
 class LatticeFunctionTable
 {
@@ -44,7 +47,7 @@ public:
 	void Calculate(PSvector* p = nullptr, RealMatrix* M = nullptr);
 	void CalculateEnergyDerivative();
 	double Value(int i, int j, int k, int ncpt);
-	void PrintTable(ostream& os, int n1 = 0, int n2 = -1);
+	void PrintTable(std::ostream& os, int n1 = 0, int n2 = -1);
 	void Size(int& rows, int& cols);
 	int GetSPosIndex(double s);
 	void SetDelta(double new_delta);

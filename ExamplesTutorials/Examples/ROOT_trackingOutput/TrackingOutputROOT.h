@@ -222,7 +222,7 @@ public:
 
 	} OutputBunch;
 
-	void DumpBunch(const Bunch* SB, const string& treename);
+	void DumpBunch(const Bunch* SB, const std::string& treename);
 
 protected:
 
@@ -238,7 +238,7 @@ protected:
 	}
 
 private:
-	void Record(const string&, const Bunch*);
+	void Record(const std::string&, const Bunch*);
 
 	static TFile*  rootfile;     // the one and only ROOT file
 	TTree*             tree;     // and tree
@@ -250,15 +250,15 @@ private:
 	double zComponent;
 
 	// identifiers for bunch output
-	vector<StringPattern> dumpAt;
+	std::vector<StringPattern> dumpAt;
 	// true if in dumpAt
-	bool isDumpAt(const string& id)
+	bool isDumpAt(const std::string& id)
 	{
 		if(!dobunch)
 		{
 			return false;
 		}
-		for(vector<StringPattern>::const_iterator p = dumpAt.begin(); p != dumpAt.end(); p++)
+		for(const auto p = dumpAt.begin(); p != dumpAt.end(); p++)
 		{
 			if(p->Match(id))
 			{
@@ -271,7 +271,7 @@ private:
 	void DumpBunchAt(const Bunch*, const std::string&);
 
 	//map and counters for bunch names
-	map<string, int> bm;
+	std::map<std::string, int> bm;
 
 	bool dobunch;
 

@@ -12,6 +12,7 @@
 #include "PhysicalConstants.h"
 #include "utils.h"
 
+using namespace std;
 using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 

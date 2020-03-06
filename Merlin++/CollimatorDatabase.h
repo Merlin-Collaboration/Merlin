@@ -21,7 +21,6 @@
 
 class MaterialProperties;
 
-using namespace std;
 /**
  * Collimator database, used to load and store collimator info
  */
@@ -33,14 +32,14 @@ public:
 	/**
 	 * Constructor
 	 */
-	CollimatorDatabase(string, MaterialData*, bool use_sigma);
+	CollimatorDatabase(std::string, MaterialData*, bool use_sigma);
 
 	/**
 	 * Collimator setting structure.
 	 */
 	struct CollimatorData
 	{
-		string name;            ///Collimator name
+		std::string name;            ///Collimator name
 		double x_gap;           ///Collimator x-gap
 		double y_gap;           ///Collimator y-gap
 		double tilt;            ///Collimator tilt
@@ -64,13 +63,13 @@ public:
 	struct FlukaData
 	{
 		int id_coll;            ///Collimator ID
-		string name;            ///Collimator name
+		std::string name;            ///Collimator name
 		double position;        ///Length along the lattice, used to calculate the beta functions
 		double angle;           ///Collimator angle = tilt [rad]
 		double beta_x;          ///Calculated x beta function at the collimator entrance [m]
 		double beta_y;          ///Calculated y beta function at the collimator entrance [m]
 		double half_gap;        ///Collimator half gap [m]
-// remolved RJB		string material;        ///Collimator material symbol
+// remolved RJB		std::string material;        ///Collimator material symbol
 		double length;          ///Collimator length [m]
 		double sig_x;           ///Beam sigma_x value [m]
 		double sig_y;           ///Beam sigma_y value [m]
@@ -93,13 +92,13 @@ public:
 	 * What impact factor do we wish our halo to impact the collimator jaw (in m).
 	 * This just enables a sigma value for bunch generation to be calculated
 	 */
-	void SelectImpactFactor(string pcoll, double impact);
+	void SelectImpactFactor(std::string pcoll, double impact);
 
 	/**
 	 * Set the stream for the collimator settings log.
 	 */
 
-	void SetLogFile(ostream& os);
+	void SetLogFile(std::ostream& os);
 
 	/**
 	 * Enable/disable logging
@@ -109,7 +108,7 @@ public:
 	/**
 	 * Set the stream for the collimator errors log.
 	 */
-	void SetErrorLogFile(ostream& os);
+	void SetErrorLogFile(std::ostream& os);
 
 	/**
 	 * Enable/disable logging
@@ -152,7 +151,7 @@ public:
 	/**
 	 * Vector to store FlukaData
 	 */
-	vector<FlukaData*> StoredFlukaData;
+	std::vector<FlukaData*> StoredFlukaData;
 
 	/**
 	 * Function to output FlukaDatabase file
@@ -161,13 +160,13 @@ public:
 
 protected:
 
-	string PrimaryCollimator;           /// name of collimator where first impact will occur
+	std::string PrimaryCollimator;           /// name of collimator where first impact will occur
 	double RequestedImpactFactor;       /// Impact factor in m
 	double ImpactSigma;                 /// Impact factor at collimator in number of sigmas
-	ostream* log;
+	std::ostream* log;
 	bool logFlag;
 
-	ostream* ErrorLog;
+	std::ostream* ErrorLog;
 	bool ErrorLogFlag;
 
 	/**

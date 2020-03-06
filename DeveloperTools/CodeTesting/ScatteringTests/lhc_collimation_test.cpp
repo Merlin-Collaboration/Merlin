@@ -314,10 +314,7 @@ int main(int argc, char* argv[])
 	filename << "lhc_collimation_test_lossmap_" << npart << ".dat";
 
 	LossMapCollimationOutput* myLossOutput = new LossMapCollimationOutput(tencm);
-	StandardMaterialData* myMat = new StandardMaterialData();
-	if(st_scatter)
-		myMat->UseSixTrackValues();
-	ScatteringModel* myScatter = new ScatteringModel();
+	ScatteringModel* myScatter;
 
 	CollimateProtonProcess* myCollimateProcess;
 
@@ -326,14 +323,12 @@ int main(int argc, char* argv[])
 
 	if(st_scatter)
 	{
-		myScatter->Processes[1] = new SixTrackRutherford();
-		myScatter->Processes[2] = new SixTrackElasticpn();
-		myScatter->Processes[3] = new SixTrackSingleDiffractive();
+		myScatter = new ScatteringModelSixTrack;
 	}
-//	else
-//	{
-//		myScatter = new ScatteringModelMerlin;
-//	}
+	else
+	{
+		myScatter = new ScatteringModelMerlin;
+	}
 
 	myCollimateProcess->SetScatteringModel(myScatter);
 

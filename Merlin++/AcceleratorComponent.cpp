@@ -51,8 +51,8 @@ int AcceleratorComponent::UniqueIndex()
 void AcceleratorComponent::SetResistiveWakePotentials(int modes, double width, double length)
 {
 
-	cout << " making something\n  ";
-	cout << " MTTER PROPERTIES " << materialProperties << endl;
+	std::cout << " making something\n  ";
+	std::cout << " MTTER PROPERTIES " << materialProperties << std::endl;
 	if(materialProperties)
 	{
 		if(materialProperties->HaveExtra("conductivity"))

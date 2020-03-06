@@ -14,8 +14,6 @@
 class AcceleratorComponent;
 class Bunch;
 
-using namespace std;
-
 /**
  *	A single process which is applied to a Bunch object
  *	during tracking. A Process can represent any physical
@@ -35,7 +33,7 @@ public:
 	 *	Constructing taking the process ID and its priority
 	 *	(default =0, high).
 	 */
-	explicit BunchProcess(const string& anID, int aPriority = 0);
+	explicit BunchProcess(const std::string& anID, int aPriority = 0);
 
 	virtual ~BunchProcess();
 
@@ -86,7 +84,7 @@ public:
 	 */
 	bool IsActive() const;
 
-	const string& GetID() const;
+	const std::string& GetID() const;
 
 protected:
 
@@ -101,7 +99,7 @@ private:
 	BunchProcess(const BunchProcess& bp);
 	BunchProcess& operator=(const BunchProcess& bp);
 
-	string ID;
+	std::string ID;
 	int priority;
 };
 
@@ -131,7 +129,7 @@ protected:
 	B* currentBunch;
 };
 
-inline BunchProcess::BunchProcess(const string& anID, int aPriority) :
+inline BunchProcess::BunchProcess(const std::string& anID, int aPriority) :
 	active(false), currentComponent(nullptr), ID(anID), priority(aPriority)
 {
 }
@@ -155,7 +153,7 @@ inline bool BunchProcess::IsActive() const
 	return active;
 }
 
-inline const string& BunchProcess::GetID() const
+inline const std::string& BunchProcess::GetID() const
 {
 	return ID;
 }

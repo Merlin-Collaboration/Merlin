@@ -40,7 +40,7 @@ public:
 	} Origin;
 	typedef std::list<LatticeFrame*> FrameList;
 
-	explicit SequenceFrame(const string& id = DEF_SEQUENCE_LABEL, Origin originLoc = originAtCenter);
+	explicit SequenceFrame(const std::string& id = DEF_SEQUENCE_LABEL, Origin originLoc = originAtCenter);
 
 	/**
 	 *	Copy constructor
@@ -92,7 +92,7 @@ public:
 	 *	Return the type string for the element.
 	 *	@return Element type string
 	 */
-	virtual const string& GetType() const;
+	virtual const std::string& GetType() const;
 
 	/**
 	 * constructing beamline index list
@@ -109,7 +109,7 @@ private:
 	/**
 	 *	Copies the subframes from frames.
 	 */
-	void CopySubFrames(const list<LatticeFrame*>& frames);
+	void CopySubFrames(const std::list<LatticeFrame*>& frames);
 
 	/**
 	 *	Returns true if aSubFrame is the first (entrance)

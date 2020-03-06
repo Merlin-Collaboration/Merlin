@@ -10,7 +10,6 @@
 
 #include <iostream>
 #include <fstream>
-using namespace std;
 
 class collimatortable
 {
@@ -64,11 +63,11 @@ public:
 	collimatortable(const char* file, double Gamma = 0, double xi = 0)
 	{
 		double lo1, hi1, lo3, hi3;
-		ifstream f;
+		std::ifstream f;
 		f.open(file);
 		if(!f)
 		{
-			cout << "Cannot open file " << file << endl;
+			std::cout << "Cannot open file " << file << std::endl;
 			exit(1);
 		}
 

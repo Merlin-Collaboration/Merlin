@@ -17,28 +17,6 @@
 namespace Collimation
 {
 /**
- * Base class for fixed scattering models
- *
- * Classes derived from this should set up their scattering processes in
- * their constructor, and then set is_fixed to true.
- */
-class ScatteringModelFixed: public ScatteringModel
-{
-public:
-	ScatteringModelFixed(MaterialProperties* mat);
-	virtual ~ScatteringModelFixed();
-
-	/**
-	 * For fixed scattering models, this cannot be called from outside
-	 * of the constructor.
-	 */
-	void AddProcess(Collimation::ScatteringProcess* S);
-
-protected:
-	bool is_fixed;
-};
-
-/**
  * Merlin physics model
  *
  * ScatteringModel preset with Merlin physics model as described in
@@ -46,10 +24,14 @@ protected:
  * Eur. Phys. J. C (2016) 76: 520.
  * https://dx.doi.org/10.1140/epjc/s10052-016-4363-7
  */
-class ScatteringModelMerlin: public ScatteringModelFixed
+class ScatteringModelMerlin: public ScatteringModel
 {
 public:
-	ScatteringModelMerlin(MaterialProperties* mat);
+	ScatteringModelMerlin() :
+		ScatteringModel()
+	{
+	}
+	void Configure(MaterialProperties *, double Energy) override;
 };
 
 /**
@@ -57,37 +39,53 @@ public:
  *
  * ScatteringModel preset with physics based on SixTrack K2 scattering
  */
-class ScatteringModelSixTrack: public ScatteringModelFixed
+class ScatteringModelSixTrack: public ScatteringModel
 {
 public:
-	ScatteringModelSixTrack(MaterialProperties* mat);
+	ScatteringModelSixTrack() :
+		ScatteringModel()
+	{
+	}
+	void Configure(MaterialProperties *, double Energy) override;
 };
 
 /**
  * Sixtrack style physics model + new  Ionisation
  */
-class ScatteringModelSixTrackIoniz: public ScatteringModelFixed
+class ScatteringModelSixTrackIoniz: public ScatteringModel
 {
 public:
-	ScatteringModelSixTrackIoniz(MaterialProperties* mat);
+	ScatteringModelSixTrackIoniz() :
+		ScatteringModel()
+	{
+	}
+	void Configure(MaterialProperties *, double Energy) override;
 };
 
 /**
  * Sixtrack style physics model + new elastic scattering
  */
-class ScatteringModelSixTrackElastic: public ScatteringModelFixed
+class ScatteringModelSixTrackElastic: public ScatteringModel
 {
 public:
-	ScatteringModelSixTrackElastic(MaterialProperties* mat);
+	ScatteringModelSixTrackElastic() :
+		ScatteringModel()
+	{
+	}
+	void Configure(MaterialProperties *, double Energy) override;
 };
 
 /**
  * Sixtrack style physics model + new single diffractive
  */
-class ScatteringModelSixTrackSD: public ScatteringModelFixed
+class ScatteringModelSixTrackSD: public ScatteringModel
 {
 public:
-	ScatteringModelSixTrackSD(MaterialProperties* mat);
+	ScatteringModelSixTrackSD() :
+		ScatteringModel()
+	{
+	}
+	void Configure(MaterialProperties *, double Energy) override;
 };
 
 }

@@ -13,18 +13,16 @@
 #include <map>
 #include "MaterialProperties.h"
 
-using namespace std;
-
 class MaterialData
 {
 public:
-	map<string, MaterialProperties*> property;
+	std::map<std::string, MaterialProperties*> property;
 	MaterialData()
 	{
 	}                     // constructor
 	~MaterialData();     // destructor
-	void MakeMixture(string name, string s, ...);
-	void MakeMixtureByWeight(string name, string s, ...);
+	void MakeMixture(std::string name, std::string s, ...);
+	void MakeMixtureByWeight(std::string name, std::string s, ...);
 	void PrintTable();
 };
 
@@ -35,6 +33,6 @@ public:
 	void UseSixTrackValues();     // there are some differences, goodness knows why
 };
 
-ostream& operator<<(ostream& s, MaterialData* M);
+std::ostream& operator<<(std::ostream& s, MaterialData* M);
 
 #endif /* MATERIALDATA */

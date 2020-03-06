@@ -7,6 +7,8 @@
 
 #include "SupportStructure.h"
 
+using namespace std;
+
 SupportStructure::SupportStructure(const string& id, Type type) :
 	SequenceFrame(id)
 {

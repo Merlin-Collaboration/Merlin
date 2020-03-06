@@ -16,8 +16,6 @@
 #include <valarray>
 #include <iostream>
 
-using namespace std;
-
 #include "tblas.h"
 #include "utils.h"
 
@@ -1418,7 +1416,7 @@ Vector<T> operator*(const Matrix<T>& M, const Vector<T> V)
 }
 
 template<class T>
-ostream& operator<<(ostream& os, const Matrix<T>& M)
+std::ostream& operator<<(std::ostream& os, const Matrix<T>& M)
 {
 	for(size_t i = 0; i < M.ncols(); i++)
 	{
@@ -1426,7 +1424,7 @@ ostream& operator<<(ostream& os, const Matrix<T>& M)
 		{
 			os << M(i, j) << " ";
 		}
-		os << endl;
+		os << std::endl;
 	}
 	return os;
 }

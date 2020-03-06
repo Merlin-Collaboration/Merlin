@@ -74,7 +74,7 @@ SMPTracking::SMPBunch* ParticleBunchConverter(ParticleTracking::ParticleBunch* P
 	double ddp = (max_dp - min_dp) / n_dp;
 
 	// a histogram to integrate
-	vector<vector<int> > h(n_ct, vector<int>(n_dp, 0));
+	std::vector<std::vector<int> > h(n_ct, std::vector<int>(n_dp, 0));
 	double scale_ct = (n_ct - 1) / (max_ct - min_ct);
 	double scale_dp = (n_dp - 1) / (max_dp - min_dp);
 	for(ParticleBunch::const_iterator ipb = PB->begin(); ipb != PB->end(); ipb++)

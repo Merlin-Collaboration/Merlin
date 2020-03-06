@@ -19,6 +19,8 @@
  * Run a few simple cases of the ATL2D and SimpleATL
  */
 
+using namespace std;
+
 int main()
 {
 	RandomNG::init();

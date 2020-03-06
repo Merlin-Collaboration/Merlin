@@ -34,6 +34,6 @@ BeamData& SigmaMatrixToBeamData(const PSmoments& S0, BeamData& t);
 
 double ProjectedEmittance(const PSmoments& s, PScoord x1, PScoord x2);
 
-pair<double, double> NormalModeEmittance(const PSmoments& S);
+std::pair<double, double> NormalModeEmittance(const PSmoments& S);
 
 #endif

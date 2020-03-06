@@ -8,6 +8,8 @@
 #include "HollowElectronLens.h"
 #include "ComponentTracker.h"
 
+using namespace std;
+
 const int HollowElectronLens::ID = UniqueIndex();
 
 HollowElectronLens::HollowElectronLens(const string& id, double len, int mode, double current, double beta_e, double

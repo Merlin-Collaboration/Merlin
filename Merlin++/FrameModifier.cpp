@@ -29,7 +29,7 @@ ModelElement* FrameModifier::Copy() const
 	return subFrame->Copy();
 }
 
-const string& FrameModifier::GetType() const
+const std::string& FrameModifier::GetType() const
 {
 	return subFrame->GetType();
 }

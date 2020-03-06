@@ -35,6 +35,7 @@
 #include "ClosedOrbit.h"
 
 // Namespaces for convenience
+using namespace std;
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
 

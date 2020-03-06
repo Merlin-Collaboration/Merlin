@@ -14,6 +14,8 @@
 #include "MADInterface.h"
 #include "ApertureConfiguration.h"
 
+using namespace std;
+
 void testCollimatorAperture()
 {
 	double x_size_entrance = 0.1;

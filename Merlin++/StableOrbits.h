@@ -12,14 +12,13 @@
 #include "AcceleratorModel.h"
 #include "ParticleBunch.h"
 
-using namespace std;
 using namespace ParticleTracking;
 
 class StableOrbits
 {
 public:
 	StableOrbits(AcceleratorModel* aModel);
-	void SelectStable(ParticleBunch& aBunch, list<size_t>* index);
+	void SelectStable(ParticleBunch& aBunch, std::list<size_t>* index);
 
 	int SetTurns(int turns);
 	int SetObservationPoint(int n);

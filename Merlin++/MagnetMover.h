@@ -35,7 +35,7 @@ public:
 	 *	Constructor taking the name of the mover, and the Lattice
 	 *	Frame which the mover adjusts.
 	 */
-	explicit MagnetMover(const string& id);
+	explicit MagnetMover(const std::string& id);
 
 	/**
 	 *	Returns the horizontal displacement in meters.
@@ -82,7 +82,7 @@ public:
 	/**
 	 *	Returns MagnetMover
 	 */
-	virtual const string& GetType() const;
+	virtual const std::string& GetType() const;
 
 	/**
 	 *	Virtual constructor
@@ -101,7 +101,7 @@ private:
 	Transform2D t;
 };
 
-inline MagnetMover::MagnetMover(const string& id) :
+inline MagnetMover::MagnetMover(const std::string& id) :
 	SequenceFrame(id)
 {
 }

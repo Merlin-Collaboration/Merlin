@@ -28,6 +28,7 @@
 #include "PhysicalUnits.h"
 #include "PhysicalConstants.h"
 
+using namespace std;
 using namespace Collimation;
 
 namespace ParticleTracking
@@ -36,7 +37,6 @@ namespace ParticleTracking
 CollimateProtonProcess::CollimateProtonProcess(int priority, int mode, std::ostream* osp) :
 	CollimateParticleProcess(priority, mode, osp), scattermodel(nullptr)
 {
-	scattermodel = new ScatteringModel();
 }
 
 /**

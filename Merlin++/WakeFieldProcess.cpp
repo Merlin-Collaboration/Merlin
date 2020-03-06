@@ -6,6 +6,7 @@
  */
 
 #include <time.h>
+#include <typeinfo>
 
 #include <iterator>
 #include <algorithm>
@@ -31,6 +32,8 @@
 #ifdef ENABLE_MPI
 #include <mpi.h>
 #endif
+
+using namespace std;
 
 namespace
 {

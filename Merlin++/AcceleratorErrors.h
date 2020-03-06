@@ -13,8 +13,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 /**
  * A class to apply random normally distributed errors to a beamline.
  * Both shift (transverse and longitudinal) and rotational errors can be generated.
@@ -85,14 +83,14 @@ public:
 	 * @param[in] b The Beamline to apply the shift errors to.
 	 * @param[in] p The string pattern for the names of elements to match for the application of errors.
 	 */
-	void ApplyShifts(AcceleratorModel::Beamline& b, const string& p);
+	void ApplyShifts(AcceleratorModel::Beamline& b, const std::string& p);
 
 	/**
 	 * Apply the set rotational errors to all elements matching a string pattern to a selected (sub) Beamline.
 	 * @param[in] b The Beamline to apply the rotational errors to.
 	 * @param[in] p The string pattern for the names of elements to match for the application of errors.
 	 */
-	void ApplyRotations(AcceleratorModel::Beamline& b, const string& p);
+	void ApplyRotations(AcceleratorModel::Beamline& b, const std::string& p);
 
 	/**
 	 * Sets the log stream to output logging information to.
@@ -108,7 +106,7 @@ private:
 	double vx, vy, vz;
 	double mx, my, mz;
 	bool clear;
-	ostream* log;
+	std::ostream* log;
 
 	//Copy protection
 	AcceleratorErrors(const AcceleratorErrors& rhs);

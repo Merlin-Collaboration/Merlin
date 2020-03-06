@@ -15,6 +15,8 @@
 
 #include "MerlinProfile.h"
 
+using namespace std;
+
 namespace
 {
 using std::setw;

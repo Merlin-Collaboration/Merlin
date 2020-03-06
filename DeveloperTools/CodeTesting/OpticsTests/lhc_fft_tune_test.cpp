@@ -20,6 +20,8 @@
 #include "TransferMatrix.h"
 #include "ClosedOrbit.h"
 
+using namespace std;
+
 /* Read a TFS lattice with the MAD interface.
  *
  * Compare the tune found by the TransferMatrix and by FFT using BetatronTunes.

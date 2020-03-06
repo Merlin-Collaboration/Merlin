@@ -12,6 +12,8 @@
 #include "StringPattern.h"
 #include "ChannelServer.h"
 
+using namespace std;
+
 namespace
 {
 

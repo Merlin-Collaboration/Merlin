@@ -30,7 +30,7 @@ struct JawImpactData
 	double yp;
 	double ct;
 	double dp;
-	string name;
+	std::string name;
 
 };
 
@@ -43,7 +43,7 @@ struct ScatterPlotData
 	double y;
 	double yp;
 	double z;
-	string name;
+	std::string name;
 
 	inline bool operator==(const ScatterPlotData& rhs)
 	{
@@ -90,7 +90,6 @@ enum EnergyLossMode
 
 };
 
-
 /**
  * Base class for scattering models
  *
@@ -110,14 +109,13 @@ class ScatteringModel
 
 public:
 	MaterialProperties* oldMaterial;   // keep track of changing collimators
-        int ModelType; // 0 is 'Merlin', 1 is 'Sixtrack'.  Not elegant !! FIX!!
-	map<MaterialProperties*, ScatterModelDetails*> saveDetails;
+	std::map<MaterialProperties*, ScatterModelDetails*> saveDetails;
 	/**
 	 * Constructor
 	 */
-	ScatteringModel(int model=0);
+	ScatteringModel();
 	virtual ~ScatteringModel();
-	void Configure(MaterialProperties *, double Energy);    // material not known at
+	virtual void Configure(MaterialProperties *, double Energy) = 0;    // material not known at
 	// construct time and may change
 
 	/**
@@ -146,21 +144,6 @@ public:
 	 */
 	bool ParticleScatter(PSvector& p, MaterialProperties* mat, double E);
 
-// Other Functions
-
-	/**
-	 * Add ScatteringProcesses to the model
-	 */
-	virtual void AddProcess(Collimation::ScatteringProcess* S)
-	{
-		Processes.push_back(S);
-		fraction.push_back(0);
-	}
-	void ClearProcesses()
-	{
-		Processes.clear();
-	}
-
 	// Scatter plot
 	void ScatterPlot(ParticleTracking::Particle& p, double z, int turn, std::string name);
 	void SetScatterPlot(std::string name, int single_turn = 0);
@@ -187,7 +170,7 @@ public:
 	 * vector holding all scattering processes
 	 */
 	// adapted RJB	std::vector<Collimation::ScatteringProcess*> Processes;
-	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0 ,0};
+	std::vector<Collimation::ScatteringProcess*> Processes{0, 0, 0, 0, 0, 0};
 
 	/**
 	 * vector with fractions of the total scattering cross section assigned to each ScatteringProcess

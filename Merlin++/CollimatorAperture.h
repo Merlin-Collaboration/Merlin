@@ -130,7 +130,7 @@ public:
 	/**
 	 *  CollimatorAperture override of Aperture member function GetType()
 	 */
-	string GetType();
+	std::string GetType();
 
 	/**
 	 *  CollimatorAperture virtual function CheckWithinApertureBoundaries()

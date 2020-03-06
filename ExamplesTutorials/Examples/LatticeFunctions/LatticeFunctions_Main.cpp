@@ -16,6 +16,7 @@
 
 #define BEAMENERGY 5.0 * GeV
 
+using namespace std;
 typedef vector<MagnetMover*> MagnetMoverList;
 typedef vector<Quadrupole*> QuadList;
 

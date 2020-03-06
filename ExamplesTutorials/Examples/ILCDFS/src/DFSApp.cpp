@@ -12,6 +12,8 @@
 #include "AcceleratorWithErrors.h"
 #include "BeamDynamicsModel.h"
 
+using namespace std;
+
 DFSApp::DFSApp()
 {
 	// should set-up defaults here

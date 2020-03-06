@@ -28,7 +28,7 @@ namespace ParticleTracking
 class ExcessiveParticleLoss: public MerlinException
 {
 public:
-	ExcessiveParticleLoss(const string& c_id, double threshold, size_t nlost, size_t nstart);
+	ExcessiveParticleLoss(const std::string& c_id, double threshold, size_t nlost, size_t nstart);
 	const char* what() const noexcept
 	{
 		return msg.c_str();
@@ -58,7 +58,7 @@ public:
 	/**
 	 * Used to generate unique filenames for particle loss data files.
 	 */
-	typedef map<string, int> IDTBL;
+	typedef std::map<std::string, int> IDTBL;
 
 	/**
 	 * Constructor taking the collimation mode, and the output
@@ -109,7 +109,7 @@ public:
 	 * occurrence count for like-named elements (starting with
 	 * n=1).
 	 */
-	void CreateParticleLossFiles(bool flg, string fprefix = "");
+	void CreateParticleLossFiles(bool flg, std::string fprefix = "");
 
 	/**
 	 * If index is true, then the initial  particles are
@@ -158,7 +158,7 @@ protected:
 	int cmode;
 	std::ostream* os;
 	bool createLossFiles;
-	string file_prefix;
+	std::string file_prefix;
 	double lossThreshold;
 	size_t nstart;
 	std::list<size_t>* pindex;

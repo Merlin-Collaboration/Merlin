@@ -16,7 +16,6 @@ typedef std::complex<double> Complex;
 #include "PhysicalConstants.h"
 
 using namespace PhysicalConstants;
-using namespace std;
 
 // Wxy         - coupler wakefield
 // RF          - RF kick
@@ -108,7 +107,7 @@ public:
 	// old design
 	Vector2D oldCouplerRFKickDown(double x, double y, double phi) const
 	{
-		Complex a = polar(1., phi);
+		Complex a = std::polar(1., phi);
 
 		// kap = Vt/Vz for downstream coupler
 		// typo 0.00037 instead of 0.000037 in paper
@@ -121,7 +120,7 @@ public:
 	}
 	Vector2D oldCouplerRFKickUp(double x, double y, double phi) const
 	{
-		Complex a = polar(1., phi);
+		Complex a = std::polar(1., phi);
 
 		// kap = Vt/Vz for upstream coupler
 		Complex kap_x = Complex(-0.000057 + x * 0.0011 + y * 0.0034, 0.000007 - x * 0.0007 + y * 0.00015);
@@ -140,7 +139,7 @@ public:
 	// we approx by mirroring downstream fields
 	Vector2D newCouplerRFKickDown(double x, double y, double phi) const
 	{
-		Complex a = polar(1., phi);
+		Complex a = std::polar(1., phi);
 
 		// kap = Vt/Vz for downstream coupler
 		Complex kap_x(-0.000025 - x * .004  + y * .0029, 0.000052 - x * 0.002 + y * 0.00037);
@@ -152,7 +151,7 @@ public:
 
 	Vector2D oldCouplerRFKick(double x, double y, double phi) const
 	{
-		Complex a = polar(1., phi);
+		Complex a = std::polar(1., phi);
 		// up+down old
 		Complex kap_x(-0.000082  - x * 0.0029  + y * 0.0063, 0.000058  - x * 0.0027 + y * 0.00051);
 		Complex kap_y(-0.0000092 + x * 0.0063  + y * 0.0028, 0.0000018 + x * 0.0007 + y * 0.0024);
@@ -161,7 +160,7 @@ public:
 	}
 	Vector2D newCouplerRFKick(double x, double y, double phi) const
 	{
-		Complex a = polar(1., phi);
+		Complex a = std::polar(1., phi);
 		// up+down new
 		Complex kap_x(-0.000082  - x * 0.0029  + y * 0.0063, 0.000058  - x * 0.0027  + y * 0.00051);
 		Complex kap_y(-0.000074  + x * 0.00049 - y * 0.0048, -0.0000087 - x * 0.00029 - y * 0.0012);

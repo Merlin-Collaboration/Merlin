@@ -24,6 +24,8 @@
 #include "utils.h"
 #include "PhysicalUnits.h"
 
+using namespace std;
+
 namespace
 {
 

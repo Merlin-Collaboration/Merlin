@@ -25,7 +25,8 @@ namespace ParticleTracking
  * i.e. z<zmin || z>=zmax
  */
 size_t ParticleBinList(ParticleBunch& bunch, double zmin, double zmax, size_t nbins,
-	std::vector<ParticleBunch::iterator>& pbins, vector<double>& hd, vector<double>& hdp, vector<double>* c =
+	std::vector<ParticleBunch::iterator>& pbins, std::vector<double>& hd, std::vector<double>& hdp,
+	std::vector<double>* c =
 	nullptr);
 
 /**

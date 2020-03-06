@@ -14,6 +14,8 @@
 #include "MatrixPrinter.h"
 #endif
 
+using namespace std;
+
 namespace TLAS
 {
 template class Vector<Complex>;

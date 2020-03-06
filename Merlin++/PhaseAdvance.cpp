@@ -47,8 +47,8 @@ double PhaseAdvance::PhaseAdvanceBetween(int n1, int n2, bool horizontal)
 
 	double deltamu;
 
-	pair<double, double> element1 = CalcIntegerPart(n1);
-	pair<double, double> element2 = CalcIntegerPart(n2);
+	std::pair<double, double> element1 = CalcIntegerPart(n1);
+	std::pair<double, double> element2 = CalcIntegerPart(n2);
 
 	if(horizontal)
 	{
@@ -105,7 +105,7 @@ RealMatrix PhaseAdvance::TransferMapBetween(int n1, int n2)
 		std::cout
 			<<
 			"\n\tPhaseAdvance::TransferMapBetween: WARNING: n1>n2, tracker cannot compute \nt Use GetPhaseAdvanceX(n2, n1)"
-			<< endl;
+			<< std::endl;
 	}
 
 	ClosedOrbit co(theModel, p0);
@@ -136,7 +136,7 @@ double PhaseAdvance::GetPhaseAdvanceY(int n2, int n1)
 	return PhaseAdvanceBetween(n1, n2, 0);
 }
 
-pair<double, double> PhaseAdvance::CalcIntegerPart(int n)
+std::pair<double, double> PhaseAdvance::CalcIntegerPart(int n)
 {
 	//Fractional Phase Advance stored in Twiss
 	//MuX = theTwiss->Value(0,0,1,n)
@@ -179,5 +179,5 @@ pair<double, double> PhaseAdvance::CalcIntegerPart(int n)
 	//~ cout << "mux = " << mux << endl;
 	//~ cout << "muy = " << muy << endl;
 
-	return make_pair(mux, muy);
+	return std::make_pair(mux, muy);
 }

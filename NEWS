@@ -1,3 +1,25 @@
+* Changes in release 5.03 (2020-03-02)
+
+  Merlin++ now used C++14. You may need to update your compiler.
+
+  Materials and Scattering
+
+  This release provides the ability to define materials as mixtures.
+
+  The opportunity was taken for a major cleanup of the definitions of materials and their properties, which had evolved in a haphazard way. The classes  Material, MaterialDatabase, CrossSections, MaterialMixture and CompositeMaterial were replaced by MaterialProperties and MaterialData.
+
+  Code which used these classes was updated to use the new forms.  This was mainly in CollimateProtonProcess and the functions it calls such as Straggle, EnergyLoss and DoScatter, which had accumulated a lot of complicated code over the years, including diagnostic features that are no longer necessary in a production system, and features which turn out not to be as useful as at first thought.  Some of these updates included minor changes to the code (such as the use of the particle energy or the bunch energy) so the output is not identical to the previous version. However any such discrepancies are small compared to the overall uncertainties in the physics.
+
+  DataTable was improved with non-const iterators. Range for loops can now be used in more places.
+
+  Some changes to Exceptions. See the APIChanges document for details.
+
+  multitrack: Scripts to compare tracking of single elements between multiple tracking codes.
+
+  Some small fixes to the tracking integrators.
+
+  Cleanup to header and includes. This significantly reduces build time. You may need to check that you have include statements for all classes used in your scripts.
+
 * Changes in release 5.02 (2019-03-19)
 
   Hollow Electron Lens: updates and refactoring.

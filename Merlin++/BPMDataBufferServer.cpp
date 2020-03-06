@@ -9,7 +9,7 @@
 
 BPMDataBuffer* BPMDataBufferServer::GetDataBuffer(BPM* bpm, bool create)
 {
-	map<BPM*, BPMDataBuffer>::iterator b = dataBuffers.find(bpm);
+	std::map<BPM*, BPMDataBuffer>::iterator b = dataBuffers.find(bpm);
 
 	if(b != dataBuffers.end())
 	{

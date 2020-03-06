@@ -47,7 +47,7 @@ public:
 	 *	support structures.
 	 */
 	ATL2D(double anA, const AcceleratorSupportList& supports, const Point2D refPoint = Point2D(0, 0),
-		ifstream* evecTFile = nullptr, ifstream* evalFile = nullptr);
+		std::ifstream* evecTFile = nullptr, std::ifstream* evalFile = nullptr);
 
 	~ATL2D();
 
@@ -97,7 +97,7 @@ public:
 
 	bool SetVibration(const double vrms);
 
-	void RecordEigenSystem(ofstream* evecTFile, ofstream* evalFile);
+	void RecordEigenSystem(std::ofstream* evecTFile, std::ofstream* evalFile);
 
 private:
 

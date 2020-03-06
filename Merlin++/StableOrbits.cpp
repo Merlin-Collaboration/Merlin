@@ -11,6 +11,8 @@
 #include "CollimateParticleProcess.h"
 #include "StableOrbits.h"
 
+using namespace std;
+
 StableOrbits::StableOrbits(AcceleratorModel* aModel) :
 	theModel(aModel), nturns(1), obspnt(0)
 {

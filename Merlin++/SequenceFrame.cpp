@@ -10,6 +10,8 @@
 #include "SequenceFrame.h"
 #include "deleters.h"
 
+using namespace std;
+
 /**
  *	Implementation of an AcceleratorGeometry class used by
  *	SequenceFrame to construct the required geometry object

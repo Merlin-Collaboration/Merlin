@@ -78,7 +78,7 @@ add_test_t(aperture_config_test.py OpticsTests/aperture_config_test.py)
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 merlin_test_py(ScatteringTests cu50_test.py)
 add_test_t(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
-add_test_t(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
+#add_test_t(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
 #add_test_t(cu50_test.py_1e8 ScatteringTests/cu50_test.py 0 100000000) # more thorough test
 #add_test_t(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
 

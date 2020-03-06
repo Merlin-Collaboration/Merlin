@@ -10,7 +10,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 #Set the cmake version required
-cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 # Set the project name and options
 PROJECT(MERLIN)
@@ -79,9 +79,9 @@ if(ENABLE_MPI)
 endif()
 
 #Set Merlin version info
-set(${PROJECT_NAME}_VERSION "5.02")
+set(${PROJECT_NAME}_VERSION "5.03")
 set(${PROJECT_NAME}_VERSION_MAJOR "5")
-set(${PROJECT_NAME}_VERSION_MINOR "02")
+set(${PROJECT_NAME}_VERSION_MINOR "03")
 set(${PROJECT_NAME}_VERSION_PATCH "0")
 
 configure_file(Merlin++/MerlinVersion.cpp.in ${CMAKE_BINARY_DIR}/Merlin++/MerlinVersion.cpp)
