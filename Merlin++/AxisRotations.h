@@ -9,7 +9,7 @@
 #define AxisRotations_h 1
 
 #include "merlin_config.h"
-#include <math.h>
+#include <cmath>
 #include "Space3D.h"
 #include "RotationType.h"
 #include "Rot3Drep.h"

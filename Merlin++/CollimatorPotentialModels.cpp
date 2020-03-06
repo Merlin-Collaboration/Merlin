@@ -5,7 +5,7 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
-#include <math.h>
+#include <cmath>
 
 #include "CollimatorPotentialModels.h"
 
