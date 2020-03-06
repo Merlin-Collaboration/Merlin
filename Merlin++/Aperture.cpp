@@ -9,7 +9,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <math.h>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>

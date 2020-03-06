@@ -236,7 +236,8 @@ int main(int argc, char* argv[])
 			double coords[] = {ip->x(), ip->xp(), ip->y() - y_offset, ip->yp(), -ip->dp()};
 			for(int i = 0; i < 5; i++)
 			{
-                          if(isnan(coords[i])) continue; // RJB 
+				if(std::isnan(coords[i]))
+					continue; // RJB
 				// beware, this can rollover when x is big
 				int bin_x = ((coords[i] - bin_mins[i]) / (bin_maxs[i] - bin_mins[i]) * (nbins)) + 1; // +1 because bin zero for outliers
 				// so handle end bins, by check against x, not bin

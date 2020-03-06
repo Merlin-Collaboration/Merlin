@@ -11,7 +11,6 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <math.h>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "DataTable.h"
