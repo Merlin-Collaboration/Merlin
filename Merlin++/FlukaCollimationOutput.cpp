@@ -60,7 +60,7 @@ void FlukaCollimationOutput::Finalise()
 {
 	for(std::vector<LossData>::const_iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
 	{
-		if(its->lastScatterType == 1 || its->lastScatterType == 4)
+		if(its->lastScatterType == "Rutherford" || its->lastScatterType == "SingleDiffractive")
 		{
 			OutputLosses.push_back(*its);
 		}
