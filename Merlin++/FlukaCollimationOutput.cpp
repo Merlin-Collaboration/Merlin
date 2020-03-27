@@ -60,10 +60,10 @@ void FlukaCollimationOutput::Finalise()
 {
 	for(std::vector<LossData>::const_iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
 	{
-//		if(its->p.type() == 1 || its->p.type() == 4)
-//		{
+		if(its->lastScatterType == 1 || its->lastScatterType == 4)
+		{
 			OutputLosses.push_back(*its);
-//		}
+		}
 	}
 }
 
