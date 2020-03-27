@@ -65,10 +65,8 @@ void ParticleBunchConstructor::ConstructBunchDistribution(int bunchIndex) const
 	p.yp() = beamdat.yp0;
 	p.dp() = 0;
 	p.ct() = beamdat.ct0;
-	p.type() = -1.0;
-	p.location() = -1.0;
 	p.id() = 0;
-	p.sd() = 0.0;
+	p.misc() = 0.0;
 	pbunch.push_back(p);
 
 	size_t i = 1;
@@ -89,10 +87,7 @@ void ParticleBunchConstructor::ConstructBunchDistribution(int bunchIndex) const
 
 		p += pbunch.front(); // add centroid
 
-		p.type() = -1.0;
-		p.location() = -1.0;
 		p.id() = i;
-		p.sd() = 0.0;
 
 		if(itsFilter == nullptr || itsFilter->Apply(p))
 		{

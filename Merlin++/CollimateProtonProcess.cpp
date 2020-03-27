@@ -134,7 +134,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 				for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator !=
 					CollimationOutputVector.end(); ++CollimationOutputIterator)
 				{
-					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
+					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn, scattermodel->Processes[5]->GetScatterTypeString());
 				}
 			}
 			return true;
@@ -186,7 +186,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 					for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator !=
 						CollimationOutputVector.end(); ++CollimationOutputIterator)
 					{
-						(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
+						(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn, scattermodel->Processes[5]->GetScatterTypeString());
 					}
 				}
 				return true;
@@ -202,7 +202,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 				for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator !=
 					CollimationOutputVector.end(); ++CollimationOutputIterator)
 				{
-					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
+					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn, scattermodel->Processes[5]->GetScatterTypeString());
 				}
 			}
 			return true;

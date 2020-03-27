@@ -35,21 +35,34 @@ class Material;
 
 namespace Collimation
 {
+
 class CrossSections;
 
 class ScatteringProcess
 {
 public:
-	double sigma;           /// Integrated cross section for this process
-protected:
-	double E0;              /// Reference energy
-	MaterialProperties* mat;          /// Material of the collimator being hit
-
-public:
 	virtual ~ScatteringProcess()
 	{
 	}
 	virtual bool Scatter(PSvector& p, double E) const = 0;
+	virtual std::string GetScatterTypeString() const = 0;
+	double sigma;           /// Integrated cross section for this process
+protected:
+	double E0;              /// Reference energy
+	MaterialProperties* mat;          /// Material of the collimator being hit
+	int scatterType = none;
+	enum{
+		none,
+		RutherfordScattering,
+		SixTrackRutherfordScattering,
+		ElasticpnScattering,
+		SixTrackElasticpnScattering,
+		ElasticpNScattering,
+		SixTrackElasticpNScattering,
+		SingleDiffractiveScattering,
+		SixTrackSingleDiffractiveScattering,
+		InelasticScattering
+	};
 };
 
 /**
@@ -59,21 +72,18 @@ class Rutherford: public ScatteringProcess
 {
 	double tmin = 0.9982E-3; // DeMolaize thesis page 29   [GeV^2];
 public:
+	Rutherford(MaterialProperties* m);
 	bool Scatter(PSvector& p, double E) const;
-	Rutherford(MaterialProperties* m)
-	{
-		mat = m;
-	}
+	std::string GetScatterTypeString() const;
 };
 
 class SixTrackRutherford: public ScatteringProcess
 {
 	double tmin = 0.9982E-3; // DeMolaize thesis page 29   [GeV^2];
 public:
+	SixTrackRutherford();
 	bool Scatter(PSvector& p, double E) const;
-	SixTrackRutherford()
-	{
-	}
+	std::string GetScatterTypeString() const;
 };
 
 /**
@@ -85,12 +95,15 @@ public:
 	ParticleTracking::ppElasticScatter* calculations;     // point to pomeron etc tables
 	Elasticpn(double Energy);     //ctor added RJB
 	bool Scatter(PSvector& p, double E) const;
+	std::string GetScatterTypeString() const;
 };
 
 class SixTrackElasticpn: public ScatteringProcess
 {
 public:
+	SixTrackElasticpn();
 	bool Scatter(PSvector& p, double E) const;
+	std::string GetScatterTypeString() const;
 };
 
 /**
@@ -102,6 +115,7 @@ class ElasticpN: public ScatteringProcess
 public:
 	ElasticpN(double Energy, MaterialProperties* m = 0);   // =0 must go
 	bool Scatter(PSvector& p, double E) const;
+	std::string GetScatterTypeString() const;
 };
 
 class SixTrackElasticpN: public ScatteringProcess
@@ -110,6 +124,7 @@ class SixTrackElasticpN: public ScatteringProcess
 public:
 	SixTrackElasticpN(MaterialProperties* m = 0);   // =0 must go
 	bool Scatter(PSvector& p, double E) const;
+	std::string GetScatterTypeString() const;
 };
 
 /**
@@ -121,14 +136,15 @@ public:
 	ParticleTracking::ppDiffractiveScatter* calculations;     // point to Regge stuff
 	SingleDiffractive(double Energy);     //ctor added RJB
 	bool Scatter(PSvector& p, double E) const;
-
+	std::string GetScatterTypeString() const;
 };
 
 class SixTrackSingleDiffractive: public ScatteringProcess
 {
 public:
+	SixTrackSingleDiffractive();
 	bool Scatter(PSvector& p, double E) const;
-
+	std::string GetScatterTypeString() const;
 };
 
 /**
@@ -137,7 +153,9 @@ public:
 class Inelastic: public ScatteringProcess
 {
 public:
+	Inelastic();
 	bool Scatter(PSvector& p, double E) const;
+	std::string GetScatterTypeString() const;
 };
 
 } //end namespace Collimation

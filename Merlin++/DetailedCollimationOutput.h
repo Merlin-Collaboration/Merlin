@@ -40,7 +40,7 @@ public:
 	{
 	}
 	virtual void Output(std::ostream* os);
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0, std::string scatterType = "none");
 
 	/**
 	 * Add an element name to record at.

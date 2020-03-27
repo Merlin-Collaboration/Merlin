@@ -14,7 +14,7 @@ DetailedCollimationOutput::DetailedCollimationOutput()
 {
 }
 
-void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
+void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn, std::string scatterType)
 {
 	if(currentComponent != &currcomponent)
 	{
@@ -35,13 +35,14 @@ void DetailedCollimationOutput::Dispose(AcceleratorComponent& currcomponent, dou
 		temp.lost = 1;
 		temp.turn = turn;
 		temp.p = particle;
+		temp.lastScatterType = scatterType;
 		DeadParticles.push_back(temp);
 	}
 }
 
 void DetailedCollimationOutput::Output(std::ostream* os)
 {
-	(*os) << "#name s pos x xp y yp type id location turn" << std::endl;
+	(*os) << "#name s pos x xp y yp type id lastscatter turn" << std::endl;
 	for(auto its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
 	{
 		(*os) << std::setw(16) << std::left << its->ElementName;
@@ -51,9 +52,8 @@ void DetailedCollimationOutput::Output(std::ostream* os)
 		(*os) << std::setw(20) << std::left << its->p.xp();
 		(*os) << std::setw(20) << std::left << its->p.y();
 		(*os) << std::setw(20) << std::left << its->p.yp();
-		(*os) << std::setw(20) << std::left << its->p.type();
+		(*os) << std::setw(20) << std::left << its->lastScatterType;
 		(*os) << std::setw(20) << std::left << its->p.id();
-		(*os) << std::setw(20) << std::left << its->p.location();
 		(*os) << std::setw(20) << std::left << its->turn;
 		(*os) << std::endl;
 	}

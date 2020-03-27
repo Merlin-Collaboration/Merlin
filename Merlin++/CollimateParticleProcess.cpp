@@ -303,7 +303,6 @@ void CollimateParticleProcess::DoCollimation()
 			}
 			else
 			{
-				(*p).location() = currentComponent->GetComponentLatticePosition();
 				//Particle survives collimator
 				NewBunch->AddParticle(*p);
 				// need to increment iterators
@@ -414,8 +413,7 @@ void CollimateParticleProcess::DoCollimation()
 								CollimationOutputIterator != CollimationOutputVector.end();
 								++CollimationOutputIterator)
 							{
-								(*CollimationOutputIterator)->Dispose(*currentComponent, IntegratedLength, (*p),
-									ColParProTurn);
+								(*CollimationOutputIterator)->Dispose(*currentComponent, IntegratedLength, (*p), ColParProTurn);
 							}
 						}
 						p = LostBunch->erase(p);

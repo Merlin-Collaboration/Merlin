@@ -19,7 +19,7 @@ FlukaCollimationOutput::FlukaCollimationOutput(OutputType ot)
 	otype = ot;
 }
 
-void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
+void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn, std::string scatterType)
 {
 	// If current component is a collimator we store the loss, otherwise we do not
 	if(currentComponent != &currcomponent)
@@ -49,6 +49,7 @@ void FlukaCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double
 		temp.angle = tap->GetCollimatorTilt();
 
 		temp.p = particle;
+		temp.lastScatterType = scatterType;
 
 		//pushback vector
 		DeadParticles.push_back(temp);
@@ -59,10 +60,10 @@ void FlukaCollimationOutput::Finalise()
 {
 	for(std::vector<LossData>::const_iterator its = DeadParticles.begin(); its != DeadParticles.end(); ++its)
 	{
-		if(its->p.type() == 1 || its->p.type() == 4)
-		{
+//		if(its->p.type() == 1 || its->p.type() == 4)
+//		{
 			OutputLosses.push_back(*its);
-		}
+//		}
 	}
 }
 
@@ -80,7 +81,7 @@ void FlukaCollimationOutput::Output(std::ostream* os)
 		(*os) << std::setw(20) << std::left << its->p.xp();
 		(*os) << std::setw(20) << std::left << its->p.y();
 		(*os) << std::setw(20) << std::left << its->p.yp();
-		(*os) << std::setw(20) << std::left << its->p.type();
+		(*os) << std::setw(20) << std::left << its->lastScatterType;
 		(*os) << std::setw(20) << std::left << its->p.id();
 		(*os) << std::setw(20) << std::left << its->turn;
 		(*os) << std::endl;

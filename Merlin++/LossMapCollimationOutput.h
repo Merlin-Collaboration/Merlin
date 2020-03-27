@@ -37,7 +37,7 @@ public:
 	/**
 	 * Called from CollimateProtonProcess::DoScatter to add a particle to the CollimationOutput
 	 */
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0);
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0, std::string scatterType = "none");
 
 	/**
 	 * Sets a warm area of the machine.

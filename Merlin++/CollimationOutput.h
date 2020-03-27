@@ -12,10 +12,11 @@
 #include <vector>
 
 #include "AcceleratorComponent.h"
-
 #include "ParticleBunch.h"
-
 #include "PSTypes.h"
+#include "ScatteringProcess.h"
+
+using namespace Collimation;
 
 namespace ParticleTracking
 {
@@ -45,9 +46,10 @@ struct LossData
 	int turn;
 	int coll_id;
 	double angle;
+	std::string lastScatterType;
 
 	LossData() :
-		ElementName(), p(), s(), interval(), position(), length(), lost(), turn(), coll_id(), angle()
+		ElementName(), p(), s(), interval(), position(), length(), lost(), turn(), coll_id(), angle(), lastScatterType()
 	{
 	}
 
@@ -63,6 +65,7 @@ struct LossData
 		turn = 0;
 		coll_id = 0;
 		angle = 0;
+		lastScatterType = "_";
 	}
 
 	bool operator<(LossData other) const
@@ -103,6 +106,7 @@ struct LossData
 			temp.length = length;
 			temp.temperature = temperature;
 			temp.lost = lost + other.lost;
+			temp.lastScatterType = lastScatterType;
 
 			return temp;
 		}
@@ -151,7 +155,7 @@ typedef enum
 /**
  * CollimationOutput handles the output from the collimation process, specifically
  * lost particles. It is called from CollimateProtonProcess::DoScatter and
- * allows the user to create loss map output files, root hist files, or
+ * allows the user hto create loss map output files, root hist files, or
  * a user specified output format.
  */
 class CollimationOutput
@@ -181,7 +185,7 @@ public:
 	/**
 	 * Called from CollimateProtonProcess::DoScatter to add a particle to the CollimationOutput
 	 */
-	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0)
+	virtual void Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn = 0, std::string scatterType = "none")
 	{
 	}
 

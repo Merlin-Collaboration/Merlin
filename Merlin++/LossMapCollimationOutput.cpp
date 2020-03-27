@@ -10,7 +10,7 @@
 namespace ParticleTracking
 {
 
-void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn)
+void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, double pos, Particle& particle, int turn, std::string scatterType)
 {
 	if(currentComponent != &currcomponent)
 	{
@@ -66,6 +66,7 @@ void LossMapCollimationOutput::Dispose(AcceleratorComponent& currcomponent, doub
 	}
 
 	temp.p = particle;
+	temp.lastScatterType = scatterType;
 
 	//pushback vector
 	DeadParticles.push_back(temp);

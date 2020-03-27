@@ -176,10 +176,8 @@ ParticleBunch::ParticleBunch(size_t np, const ParticleDistributionGenerator& gen
 	p.yp() = beam.yp0;
 	p.dp() = 0;
 	p.ct() = beam.ct0;
-	p.type() = -1.0;
-	p.location() = -1.0;
 	p.id() = 0;
-	p.sd() = 0.0;
+	p.misc() = 0.0;
 	pArray.push_back(p);
 
 	size_t i = 1;
@@ -201,10 +199,7 @@ ParticleBunch::ParticleBunch(size_t np, const ParticleDistributionGenerator& gen
 
 		p += pArray.front(); // add centroid
 
-		p.type() = -1.0;
-		p.location() = -1.0;
 		p.id() = i;
-		p.sd() = 0.0;
 
 		if(filter == nullptr || filter->Apply(p))
 		{
