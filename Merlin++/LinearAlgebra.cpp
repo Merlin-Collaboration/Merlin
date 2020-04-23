@@ -189,8 +189,9 @@ bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 
 			double prox = 1.0;
 			int iter = 0;
+			const int maxiter = 50;
 
-			while(prox > 1.0e-16 && iter < 100)
+			while(prox > 1.0e-16 && iter < maxiter)
 			{
 				for(n = 0; n < 6; n++)
 				{
@@ -223,8 +224,10 @@ bool EigenSystem(RealMatrix& t, ComplexVector& eigenvalues, ComplexMatrix& eigen
 				lambda += 1.0 / ydotb;
 				iter++;
 			}
-
-			assert(iter < 100);   // just in case  RJB
+			if(iter == maxiter)
+			{
+				cout << "EigenSystem convergence only reached " << prox << endl;
+			}
 		}          // end of test check
 
 		//Now normalise to Transpose[Conjugate[b]].s.b = I
