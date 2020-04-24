@@ -39,10 +39,7 @@ CollimateProtonProcess::CollimateProtonProcess(int priority, int mode, std::ostr
 {
 }
 
-/**
- * returns true if particle survives, false if it dies
- */
-bool CollimateProtonProcess::DoScatter(Particle& p)
+CollimateParticleProcess::ScatterOutcome CollimateProtonProcess::DoScatter(Particle& p)
 {
 	double P0 = currentBunch->GetReferenceMomentum();
 	double E0 = sqrt(P0 * P0 + pow(PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV, 2));
@@ -137,7 +134,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
 				}
 			}
-			return true;
+			return ScatterOutcome::absorbed;
 		}
 
 		//MCS
@@ -145,7 +142,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		if((E2 < (E0 / 100.0)))
 		{
-			return false;
+			return ScatterOutcome::absorbed;
 		}
 
 		//Check if (returned to aperture) OR (travelled through length)
@@ -157,26 +154,27 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 
 		if((colap->CheckWithinApertureBoundaries((p.x()), (p.y()), z)))
 		{
-                    // check it does not come back in
-                        double extrax=p.x()+p.xp()*lengthtogo;
-                        double extray=p.y()+p.yp()*lengthtogo;
-                        if(colap->CheckWithinApertureBoundaries(extrax,extray,z+lengthtogo)){
-			//escaped jaw, so propagate to end of element
-			p.x() =extrax;
-			p.y() =extray;
-			return false;
-                        }
+			// check it does not come back in
+			double extrax = p.x() + p.xp() * lengthtogo;
+			double extray = p.y() + p.yp() * lengthtogo;
+			if(colap->CheckWithinApertureBoundaries(extrax, extray, z + lengthtogo))
+			{
+				//escaped jaw, so propagate to end of element
+				p.x() = extrax;
+				p.y() = extray;
+				return ScatterOutcome::survived;
+			}
 		}
 
 		if(xlen > lengthtogo)
 		{
-			return false;
+			return ScatterOutcome::survived;
 		}
 
 		//Scattering - use E2
 
 		if(interacted)
-		{  
+		{
 			if(!scattermodel->ParticleScatter(p, C->GetMaterialProperties(), E2))
 			{ // lost
 				p.ct() = z;
@@ -189,7 +187,7 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 						(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
 					}
 				}
-				return true;
+				return ScatterOutcome::absorbed;
 			} // else {cout<<" CHECK6  scatter new value "<<p.x()<<" "<<p.y()<<" "<<p.ct()<<" "<<p.dp()<<" "<<p<<endl;}
 		}
 
@@ -205,15 +203,15 @@ bool CollimateProtonProcess::DoScatter(Particle& p)
 					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
 				}
 			}
-			return true;
+			return ScatterOutcome::absorbed;
 		}
 
 		lengthtogo -= step_size;
 
 	}
 
-	//If we reached here the particle hits the end of the collimator, and thus survives
-	return true;
+	//Only reach here in the lengthtogo == zero case, otherwise caught in loop
+	return ScatterOutcome::survived;
 }
 
 void CollimateProtonProcess::SetScatteringModel(Collimation::ScatteringModel* s)

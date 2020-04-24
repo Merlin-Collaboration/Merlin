@@ -40,7 +40,10 @@ public:
 private:
 	Collimation::ScatteringModel* scattermodel;
 
-	bool DoScatter(Particle&) override;
+	/**
+	 * returns absorbed or survived
+	 */
+	ScatterOutcome DoScatter(Particle&) override;
 
 };
 
