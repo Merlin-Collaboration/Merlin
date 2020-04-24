@@ -40,10 +40,10 @@ class CrossSections;
 class ScatteringProcess
 {
 public:
-	double sigma;           /// Integrated cross section for this process
+	double sigma;           ///< Integrated cross section for this process
 protected:
-	double E0;              /// Reference energy
-	MaterialProperties* mat;          /// Material of the collimator being hit
+	double E0;              ///< Reference energy
+	MaterialProperties* mat;          ///< Material of the collimator being hit
 
 public:
 	virtual ~ScatteringProcess()

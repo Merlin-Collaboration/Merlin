@@ -218,11 +218,11 @@ private:
 	void bin_lost_output(const PSvectorArray& lostb);
 
 	bool scatter;
-	double bin_size;        /// size of bins
-	double step_size;       /// step size to handle when the collimator cannot be split equally into bins
+	double bin_size;        ///< size of bins
+	double step_size;       ///< step size to handle when the collimator cannot be split equally into bins
 	bool Imperfections;
 
-	double Xr; /// radiation length
+	double Xr; ///< radiation length
 
 	/**
 	 * Returns absorbed or survived

@@ -106,7 +106,7 @@ protected:
 	virtual bool IsBoundaryPlane(BoundaryPlane p, const LatticeFrame* aSubFrame) const;
 
 private:
-	size_t blI; /// beamline index
+	size_t blI; ///< beamline index
 
 	//Just need to disable the assignment operator - copy constructor is defined
 	ComponentFrame& operator=(const ComponentFrame& frame);

@@ -18,8 +18,8 @@ class ring_iterator
 {
 private:
 
-	I curr;   /// current iterator position
-	C* cont;  /// pointer to container
+	I curr;   ///< current iterator position
+	C* cont;  ///< pointer to container
 
 public:
 
