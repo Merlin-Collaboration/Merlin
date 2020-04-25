@@ -35,7 +35,7 @@ public:
 	typedef std::vector<SliceMacroParticle> SliceMPArray;
 	typedef SliceMPArray::iterator iterator;
 	typedef SliceMPArray::const_iterator const_iterator;
-	typedef particle_type value_type; /// needed for mapping templates
+	typedef particle_type value_type; ///< needed for mapping templates
 
 	/**
 	 *	Constructor taking the initial reference momentum in

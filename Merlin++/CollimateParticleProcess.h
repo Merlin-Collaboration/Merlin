@@ -60,6 +60,13 @@ public:
 	 */
 	typedef std::map<std::string, int> IDTBL;
 
+	enum class ScatterOutcome
+	{
+		absorbed,
+		survived
+
+	};
+
 	/**
 	 * Constructor taking the collimation mode, and the output
 	 * stream pointer to which to print the results. mode can
@@ -211,14 +218,20 @@ private:
 	void bin_lost_output(const PSvectorArray& lostb);
 
 	bool scatter;
-	double bin_size;        /// size of bins
-	double step_size;       /// step size to handle when the collimator cannot be split equally into bins
+	double bin_size;        ///< size of bins
+	double step_size;       ///< step size to handle when the collimator cannot be split equally into bins
 	bool Imperfections;
 
-	double Xr; /// radiation length
-	virtual bool DoScatter(Particle&)
+	double Xr; ///< radiation length
+
+	/**
+	 * Returns absorbed or survived
+	 *
+	 * Can be overridden with a scattering routine, for example in CollimateProtonProcess
+	 */
+	virtual ScatterOutcome DoScatter(Particle&)
 	{
-		return 0;
+		return ScatterOutcome::absorbed;
 	}
 
 	/**

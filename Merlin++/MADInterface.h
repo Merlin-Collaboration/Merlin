@@ -162,7 +162,7 @@ public:
 	double momentum;
 	bool inc_sr = false;
 	bool flatLattice = false;
-	double z = 0;   ///Distance along the lattice
+	double z = 0;   ///< Distance along the lattice
 	bool single_cell_rf = false;
 
 protected:

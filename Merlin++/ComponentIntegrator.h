@@ -119,8 +119,8 @@ protected:
 
 private:
 
-	double cur_S; /// current integrated length
-	double tot_S; /// total length
+	double cur_S; ///< current integrated length
+	double tot_S; ///< total length
 
 	/**
 	 *  The current component

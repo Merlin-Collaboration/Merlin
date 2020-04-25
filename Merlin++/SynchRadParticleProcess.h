@@ -152,7 +152,7 @@ public:
 
 	static PhotonGenerator pgen;
 
-	static bool sympVars;   /// Flag to indicate whether tracking uses symplectic variables
+	static bool sympVars;   ///< Flag to indicate whether tracking uses symplectic variables
 
 	double PHOTCONST1, PHOTCONST2, ParticleMassMeV;
 

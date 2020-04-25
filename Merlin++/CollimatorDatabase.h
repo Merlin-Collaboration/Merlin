@@ -39,21 +39,21 @@ public:
 	 */
 	struct CollimatorData
 	{
-		std::string name;            ///Collimator name
-		double x_gap;           ///Collimator x-gap
-		double y_gap;           ///Collimator y-gap
-		double tilt;            ///Collimator tilt
-		double x_offset;        ///Collimator x offset
-		double y_offset;        ///Collimator y offset
-		double j1_tilt;         ///Collimator jaw 1 tilt
-		double j2_tilt;         ///Collimator jaw 2 tilt
-		double length;          ///Collimator length (m)
-		MaterialProperties* JawMaterial;  ///Collimator material
-		double sigma_x;         ///Jaw x opening in number of sigmas - note that this is not sigma_x it is the sigma in the collimation plane
-		double sigma_y;         ///Jaw y opening in number of sigmas - note that this is not sigma_y it is the sigma in the plane orthogonal to the collimation plane
-		double beta_x;          ///Calculated x beta function at the collimator entrance
-		double beta_y;          ///Calculated y beta function at the collimator entrance
-		double position;        ///Length along the lattice, used to calculate the beta functions
+		std::string name;            ///< Collimator name
+		double x_gap;           ///< Collimator x-gap
+		double y_gap;           ///< Collimator y-gap
+		double tilt;            ///< Collimator tilt
+		double x_offset;        ///< Collimator x offset
+		double y_offset;        ///< Collimator y offset
+		double j1_tilt;         ///< Collimator jaw 1 tilt
+		double j2_tilt;         ///< Collimator jaw 2 tilt
+		double length;          ///< Collimator length (m)
+		MaterialProperties* JawMaterial;  ///< Collimator material
+		double sigma_x;         ///< Jaw x opening in number of sigmas - note that this is not sigma_x it is the sigma in the collimation plane
+		double sigma_y;         ///< Jaw y opening in number of sigmas - note that this is not sigma_y it is the sigma in the plane orthogonal to the collimation plane
+		double beta_x;          ///< Calculated x beta function at the collimator entrance
+		double beta_y;          ///< Calculated y beta function at the collimator entrance
+		double position;        ///< Length along the lattice, used to calculate the beta functions
 
 	};
 
@@ -62,20 +62,20 @@ public:
 	 */
 	struct FlukaData
 	{
-		int id_coll;            ///Collimator ID
-		std::string name;            ///Collimator name
-		double position;        ///Length along the lattice, used to calculate the beta functions
-		double angle;           ///Collimator angle = tilt [rad]
-		double beta_x;          ///Calculated x beta function at the collimator entrance [m]
-		double beta_y;          ///Calculated y beta function at the collimator entrance [m]
-		double half_gap;        ///Collimator half gap [m]
-// remolved RJB		std::string material;        ///Collimator material symbol
-		double length;          ///Collimator length [m]
-		double sig_x;           ///Beam sigma_x value [m]
-		double sig_y;           ///Beam sigma_y value [m]
-		double j1_tilt;         ///Collimator jaw 1 tilt [rad]
-		double j2_tilt;         ///Collimator jaw 2 tilt [rad]
-		double n_sig;           ///Collimator halfgap in sigma
+		int id_coll;            ///< Collimator ID
+		std::string name;       ///< Collimator name
+		double position;        ///< Length along the lattice, used to calculate the beta functions
+		double angle;           ///< Collimator angle = tilt [rad]
+		double beta_x;          ///< Calculated x beta function at the collimator entrance [m]
+		double beta_y;          ///< Calculated y beta function at the collimator entrance [m]
+		double half_gap;        ///< Collimator half gap [m]
+// remolved RJB		std::string material;        ///< Collimator material symbol
+		double length;          ///< Collimator length [m]
+		double sig_x;           ///< Beam sigma_x value [m]
+		double sig_y;           ///< Beam sigma_y value [m]
+		double j1_tilt;         ///< Collimator jaw 1 tilt [rad]
+		double j2_tilt;         ///< Collimator jaw 2 tilt [rad]
+		double n_sig;           ///< Collimator halfgap in sigma
 
 	};
 
@@ -160,9 +160,9 @@ public:
 
 protected:
 
-	std::string PrimaryCollimator;           /// name of collimator where first impact will occur
-	double RequestedImpactFactor;       /// Impact factor in m
-	double ImpactSigma;                 /// Impact factor at collimator in number of sigmas
+	std::string PrimaryCollimator;      ///< name of collimator where first impact will occur
+	double RequestedImpactFactor;       ///< Impact factor in m
+	double ImpactSigma;                 ///< Impact factor at collimator in number of sigmas
 	std::ostream* log;
 	bool logFlag;
 

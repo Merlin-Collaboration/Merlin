@@ -279,10 +279,8 @@ void CollimateParticleProcess::DoCollimation()
 //		}
 		if(particle_number >= first_loss && !ap->CheckWithinApertureBoundaries((*p).x(), (*p).y(), s))
 		{
-			// If the 'aperture' is a collimator, then the particle is lost
-			// if the DoScatter(*p) returns true (energy cut)
 			// If not a collimator, then do not scatter and directly remove the particle.
-			if(!is_collimator || DoScatter(*p))
+			if(!is_collimator || DoScatter(*p) == ScatterOutcome::absorbed)
 			{
 				if(is_collimator)
 				{

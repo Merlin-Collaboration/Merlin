@@ -71,7 +71,7 @@ private:
 	double bload;
 	bool recalc;
 	bool inc_tw;
-	const double dz; /// slice width for binning
+	const double dz; ///< slice width for binning
 	WakePotentials* currentWake;
 
 };
