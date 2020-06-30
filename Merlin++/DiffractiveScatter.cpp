@@ -157,10 +157,16 @@ ppDiffractiveScatter::~ppDiffractiveScatter()
  * @param energy sqrt s
  */
 
-void __attribute__((optimize("O3,unsafe-math-optimizations"))) ppDiffractiveScatter::GenerateDsigDtDxi(const double
+#if defined(__GNUC__) && !defined(__clang__)
+#define FAST_MATH __attribute__((optimize("O3,unsafe-math-optimizations")))
+#else
+#define FAST_MATH
+#endif
+
+void FAST_MATH ppDiffractiveScatter::GenerateDsigDtDxi(const double
 	energy)
 {
-	std::cout << "Call generateDsigDtDxi " ;
+	std::cout << "Call generateDsigDtDxi ";
 	const double s = (2 * PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV * energy) + (2 * pow(
 			PhysicalConstants::ProtonMassMeV * PhysicalUnits::MeV, 2));
 	ss = s;
@@ -337,8 +343,7 @@ double ppDiffractiveScatter::PomeronScatter2(double tt, double x, double s)
 
 }
 //
-inline double __attribute__((optimize("O3,unsafe-math-optimizations"))) __attribute__ (
-	(hot)) ppDiffractiveScatter::PomeronScatter(const double tt, const double x, const double s) const
+inline double FAST_MATH ppDiffractiveScatter::PomeronScatter(const double tt, const double x, const double s) const
 {
 	const double t = -tt;
 

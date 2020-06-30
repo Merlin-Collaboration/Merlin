@@ -234,7 +234,7 @@ public:
 	friend std::istream& operator>>(std::istream& is, PSvector& v);
 
 private:
-	double __attribute__((aligned(16))) v[PS_LENGTH];
+	alignas(16) double v[PS_LENGTH];
 };
 
 /**
