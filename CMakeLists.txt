@@ -92,14 +92,7 @@ AUX_SOURCE_DIRECTORY(${CMAKE_BINARY_DIR}/Merlin++ sources)
 set(GITREV_FILE ${CMAKE_BINARY_DIR}/Merlin++/git_rev.h)
 add_custom_command(
 	OUTPUT gitrev_file
-	COMMAND ${CMAKE_COMMAND} -E echo_append "const std::string GIT_REV=\"" > ${GITREV_FILE}.tmp
-	COMMAND git describe  --always  --abbrev=40 --dirty=+ >> ${GITREV_FILE}.tmp || true
-	COMMAND ${CMAKE_COMMAND} -E echo "\";" >> ${GITREV_FILE}.tmp
-	COMMAND tr -d "\\n" < ${GITREV_FILE}.tmp > ${GITREV_FILE}.tmp2 # remove newlines
-	COMMAND ${CMAKE_COMMAND} -E echo >> ${GITREV_FILE}.tmp2
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GITREV_FILE}.tmp2 ${GITREV_FILE}
-	COMMAND ${CMAKE_COMMAND} -E remove ${GITREV_FILE}.tmp ${GITREV_FILE}.tmp2
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+	COMMAND ${CMAKE_COMMAND} -DCMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -DMERLIN_SOURCE_DIR=${MERLIN_SOURCE_DIR} -P ${MERLIN_SOURCE_DIR}/Merlin++/MerlinVersion.cmake
 	VERBATIM
 )
 add_custom_target(gitrev ALL DEPENDS gitrev_file)
