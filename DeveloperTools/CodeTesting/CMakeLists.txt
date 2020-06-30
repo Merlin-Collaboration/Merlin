@@ -1,3 +1,5 @@
+find_package(Python3)
+
 # macro to install a test executable (need add_test() to call it)
 macro (merlin_test dir exe_name)
 	set(source_files "")
@@ -7,7 +9,7 @@ macro (merlin_test dir exe_name)
 	add_executable(${exe_name} ${source_files})
 
 	# To keep the directory structure, we must set the output_name, add a rule to make the directory
-	set_target_properties( ${exe_name} PROPERTIES OUTPUT_NAME ${dir}/${exe_name} )
+	set_target_properties( ${exe_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${dir} )
 	set_target_properties( ${exe_name} PROPERTIES COMPILE_FLAGS -g )
 	add_custom_command(TARGET ${exe_name} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${dir})
 	target_link_libraries(${exe_name} merlin++)
@@ -29,7 +31,11 @@ endmacro (merlin_test_py)
 
 # test with an extended timeout
 macro (add_test_t name)
-	add_test(${name} ${ARGN})
+	if(${ARGV1} MATCHES "\.py")
+		add_test(${name} ${Python3_EXECUTABLE} ${ARGN})
+	else()
+		add_test(${name} ${ARGN})
+	endif()
 	set_tests_properties(${name} PROPERTIES TIMEOUT ${TEST_TIMEOUT})
 endmacro (add_test_t)
 
