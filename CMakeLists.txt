@@ -1,5 +1,5 @@
 # force an out of source build to stop clutter
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 	message(STATUS "Merlin++ requires an out-of-source build.")
 	message(STATUS "Please remove these files from ${CMAKE_BINARY_DIR} first:")
 	message(STATUS "CMakeCache.txt")
@@ -10,7 +10,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 #Set the cmake version required
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 # Set the project name and options
 PROJECT(MERLIN)
@@ -31,11 +31,15 @@ OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
 SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++14 -Wall -pedantic")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	# enables optimizations that do not interfere with debugging
 	# introduced in GCC 4.8
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Wno-unused-parameter -Wno-unused-variable")
@@ -44,7 +48,7 @@ else()
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Wno-unused-parameter -Wno-unused-variable")
 	# Hide an unnecessary clang warning
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template")
