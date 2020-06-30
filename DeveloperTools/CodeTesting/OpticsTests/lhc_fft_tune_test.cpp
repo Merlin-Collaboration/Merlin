@@ -5,6 +5,8 @@
  * This file is derived from software bearing the copyright notice in merlin4_copyright.txt
  */
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "../tests.h"
 #include <iostream>
 #include <sstream>

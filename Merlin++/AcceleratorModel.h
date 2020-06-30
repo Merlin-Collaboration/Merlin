@@ -11,6 +11,7 @@
 #include "merlin_config.h"
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "ComponentFrame.h"
 
 #include "AcceleratorComponent.h"

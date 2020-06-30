@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <unistd.h>
 #include <vector>
 
 #include "merlin_config.h"

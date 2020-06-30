@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-
+#include <algorithm>
 #include "Klystron.h"
 #include "RFStructure.h"
 

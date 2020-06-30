@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 
 #include "ComponentTracker.h"
 #include "TWRFfield.h"

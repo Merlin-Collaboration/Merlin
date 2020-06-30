@@ -6,6 +6,7 @@
  */
 
 #include "PSvectorTransform3D.h"
+#include <algorithm>
 
 PSvectorTransform3D::PSvectorTransform3D(const Transform3D& tfrm) :
 	T(tfrm), bNoRot(tfrm.R().isIdentity())

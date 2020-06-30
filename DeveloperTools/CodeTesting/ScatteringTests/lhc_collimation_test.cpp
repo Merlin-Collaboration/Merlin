@@ -9,11 +9,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <unistd.h>
 #include <string>
 #include <map>
 #include <set>
 #include <ctime>
+#include <algorithm>
 
 #include "ParticleDistributionGenerator.h"
 #include "HaloParticleDistributionGenerator.h"
