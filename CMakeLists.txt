@@ -21,8 +21,13 @@ OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" 
 OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(ENABLE_MPI "Use MPI where possible. Default OFF" OFF)
-OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default ON" ON)
-OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default OFF" OFF)
+if(NOT WIN32)
+	OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default ON" ON)
+	OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default OFF" OFF)
+else()
+	OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default OFF" OFF)
+	OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default ON" ON)
+endif()
 OPTION(BUILD_DOCUMENTATION "Build doxygen documentation. Default ON" ON)
 OPTION(ORBIT_DEBUG "Enable closed orbit debugging. Default OFF" OFF)
 OPTION(INSTALL_HEADERS "Install the Merlin++ headers. Default OFF" OFF)
@@ -34,24 +39,19 @@ SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-
-
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	# enables optimizations that do not interfere with debugging
-	# introduced in GCC 4.8
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Wno-unused-parameter -Wno-unused-variable")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-unused-parameter -Wno-unused-variable")
+	# enables optimizations that do not interfere with debugging introduced in GCC 4.8
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
-else()
-	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-endif()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Wno-unused-parameter -Wno-unused-variable")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-unused-parameter -Wno-unused-variable")
 	# Hide an unnecessary clang warning
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template")
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+else()
+	MESSAGE(WARNING "Unknown compiler ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
 #Set the default build type
