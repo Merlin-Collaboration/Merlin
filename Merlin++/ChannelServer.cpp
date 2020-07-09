@@ -6,6 +6,7 @@
  */
 
 #include <cassert>
+#include <algorithm>
 #include "MerlinIO.h"
 #include "Channels.h"
 #include "ModelElement.h"

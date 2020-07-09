@@ -4,6 +4,8 @@
  * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
  */
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "../tests.h"
 #include <iostream>
 

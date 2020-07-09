@@ -9,6 +9,7 @@
 #include "SMPTransform3D.h"
 #include <fstream>
 #include <iterator>
+#include <algorithm>
 
 namespace SMPTracking
 {

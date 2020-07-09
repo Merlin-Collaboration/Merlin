@@ -10,6 +10,7 @@
 #include <map>
 #include <iomanip>
 #include <typeinfo>
+#include <algorithm>
 
 #include "Drift.h"
 #include "SequenceFrame.h"

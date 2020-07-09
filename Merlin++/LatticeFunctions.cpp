@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "ParticleBunch.h"
 #include "ParticleTracker.h"
 #include "RingDeltaTProcess.h"

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
 # Copyright (c) 2001-2018 The Merlin++ developers

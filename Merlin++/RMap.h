@@ -16,6 +16,8 @@
 #ifndef RMap_h
 #define RMap_h 1
 
+#include <algorithm>
+
 #include "merlin_config.h"
 #include "PSTypes.h"
 #include "LinearAlgebra.h"

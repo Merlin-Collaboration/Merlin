@@ -1,5 +1,5 @@
 # force an out of source build to stop clutter
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 	message(STATUS "Merlin++ requires an out-of-source build.")
 	message(STATUS "Please remove these files from ${CMAKE_BINARY_DIR} first:")
 	message(STATUS "CMakeCache.txt")
@@ -10,7 +10,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 #Set the cmake version required
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 # Set the project name and options
 PROJECT(MERLIN)
@@ -21,8 +21,13 @@ OPTION(ENABLE_USER_RUNS "Build any user defined programs in the UserSim folder" 
 OPTION(BUILD_TESTING "Build the library test programs. Default ON" ON)
 OPTION(ENABLE_OPENMP "Use OpenMP where possible. Default OFF" OFF)
 OPTION(ENABLE_MPI "Use MPI where possible. Default OFF" OFF)
-OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default ON" ON)
-OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default OFF" OFF)
+if(NOT WIN32)
+	OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default ON" ON)
+	OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default OFF" OFF)
+else()
+	OPTION(BUILD_DYNAMIC "Build Merlin++ as a dynamic library. Default OFF" OFF)
+	OPTION(BUILD_STATIC "Build Merlin++ as a static library. Default ON" ON)
+endif()
 OPTION(BUILD_DOCUMENTATION "Build doxygen documentation. Default ON" ON)
 OPTION(ORBIT_DEBUG "Enable closed orbit debugging. Default OFF" OFF)
 OPTION(INSTALL_HEADERS "Install the Merlin++ headers. Default OFF" OFF)
@@ -31,21 +36,22 @@ OPTION(ENABLE_ROOT "Build the Root output example. Default OFF" OFF)
 OPTION(COVERAGE "Enable build flags for testing code coverage with gcov (only works with GNU compilers)" OFF)
 SET(TEST_TIMEOUT "7200" CACHE STRING "Time allowed per test (seconds)")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++14 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic")
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	# enables optimizations that do not interfere with debugging
-	# introduced in GCC 4.8
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-unused-parameter -Wno-unused-variable")
+	# enables optimizations that do not interfere with debugging introduced in GCC 4.8
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
-else()
-	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-endif()
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-unused-parameter -Wno-unused-variable")
 	# Hide an unnecessary clang warning
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-undefined-var-template")
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+else()
+	MESSAGE(WARNING "Unknown compiler ${CMAKE_CXX_COMPILER_ID}")
 endif()
 
 #Set the default build type
@@ -90,14 +96,7 @@ AUX_SOURCE_DIRECTORY(${CMAKE_BINARY_DIR}/Merlin++ sources)
 set(GITREV_FILE ${CMAKE_BINARY_DIR}/Merlin++/git_rev.h)
 add_custom_command(
 	OUTPUT gitrev_file
-	COMMAND ${CMAKE_COMMAND} -E echo_append "const std::string GIT_REV=\"" > ${GITREV_FILE}.tmp
-	COMMAND git describe  --always  --abbrev=40 --dirty=+ >> ${GITREV_FILE}.tmp || true
-	COMMAND ${CMAKE_COMMAND} -E echo "\";" >> ${GITREV_FILE}.tmp
-	COMMAND tr -d "\\n" < ${GITREV_FILE}.tmp > ${GITREV_FILE}.tmp2 # remove newlines
-	COMMAND ${CMAKE_COMMAND} -E echo >> ${GITREV_FILE}.tmp2
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GITREV_FILE}.tmp2 ${GITREV_FILE}
-	COMMAND ${CMAKE_COMMAND} -E remove ${GITREV_FILE}.tmp ${GITREV_FILE}.tmp2
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+	COMMAND ${CMAKE_COMMAND} -DCMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -DMERLIN_SOURCE_DIR=${MERLIN_SOURCE_DIR} -P ${MERLIN_SOURCE_DIR}/Merlin++/MerlinVersion.cmake
 	VERBATIM
 )
 add_custom_target(gitrev ALL DEPENDS gitrev_file)

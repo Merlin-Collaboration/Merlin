@@ -6,6 +6,7 @@
  */
 
 #include <limits>
+#include <algorithm>
 #include "PhysicalConstants.h"
 #include "MatrixPrinter.h"
 #include "utils.h"
