@@ -173,7 +173,7 @@ void ProcessStepManager::AddProcess(BunchProcess* aProcess)
 bool ProcessStepManager::RemoveProcess(BunchProcess* aProcess)
 {
 	proc_itor p = find(processTable.begin(), processTable.end(), aProcess);
-	processTable.erase(p);
+	p = processTable.erase(p);
 	return p != processTable.end();
 }
 
