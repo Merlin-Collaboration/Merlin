@@ -12,6 +12,13 @@ import os
 from scipy.stats import chi2
 import sys
 
+if sys.argv.index("--exe"):
+	i = sys.argv.index("--exe")
+	sys.argv.pop(i)
+	exe_name = sys.argv.pop(i)
+else:
+	exe_name = os.path.join(os.path.dirname(__file__), "basic_hollow_electron_lens_test")
+
 if "plot" in sys.argv:
 	from matplotlib import pyplot
 
@@ -30,7 +37,7 @@ try:
 except OSError:
 	pass
 print("Running basic_hollow_electron_lens_test")
-exe_name = os.path.join(os.path.dirname(__file__), "basic_hollow_electron_lens_test")
+
 
 print("running:", [exe_name])
 ret = subprocess.call([exe_name])
@@ -38,8 +45,6 @@ ret = subprocess.call([exe_name])
 if ret != 0:
 	print("Failed to run executable %s, error %s"%(exe_name, ret))
 	exit(ret)
-
-
 
 try:
 	run_data = numpy.loadtxt(sim_filename, skiprows=1, dtype=dt)
