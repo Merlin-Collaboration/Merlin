@@ -172,7 +172,7 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 		CMapit = CollimatorMap.find(CollData[i].name);
 		if(CMapit != CollimatorMap.end())
 		{
-			for(int j = 0; j <= twiss->NumberOfRows(); j++)
+			for(int j = 0; j < twiss->NumberOfRows(); j++)
 			{
 				if((CMapit->second)->GetComponentLatticePosition() == twiss->Value(0, 0, 0, j))
 				{

@@ -52,7 +52,7 @@ void LatticeFunction::ClearValues()
 
 double LatticeFunction::GetValue(int n)
 {
-	return value[n];
+	return value.at(n);
 }
 
 vector<double>::iterator LatticeFunction::begin()
