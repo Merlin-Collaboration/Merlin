@@ -147,7 +147,8 @@ double ATL2D::DoStep(double dt)
 
 	for(size_t n = 0; n < theSupports.size(); n++)
 	{
-		yy(n) = normal_distribution<>{0, sqrt(at * evals[n])} (*rg);
+		if(at * evals[n])
+			yy(n) = normal_distribution<>{0, sqrt(at * evals[n])} (*rg);
 	}
 
 	RealVector dy = evecsT * yy;

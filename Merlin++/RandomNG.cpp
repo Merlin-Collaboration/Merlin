@@ -64,6 +64,8 @@ double RandomNG::normal(double mean, double variance)
 {
 	if(!generator)
 		not_seeded();
+	if(variance == 0)
+		return mean;
 	std::normal_distribution<double> dist{mean, sqrt(variance)};
 	return dist(*generator);
 }
@@ -77,7 +79,8 @@ double RandomNG::normal(double mean, double variance, double cutoff)
 	{
 		return normal(mean, variance);
 	}
-
+	if(variance == 0)
+		return mean;
 	cutoff = fabs(cutoff) * sqrt(variance);
 	std::normal_distribution<double> dist{mean, sqrt(variance)};
 
