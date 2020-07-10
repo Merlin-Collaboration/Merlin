@@ -95,7 +95,7 @@ void MaterialData::MakeMixture(string name, string s, ...)
 	vector<double> proportions;
 	va_list numbers;
 	va_start(numbers, s);
-	unsigned long int i;
+	string::size_type i;
 	do
 	{
 		i = s.find(" ");
@@ -117,7 +117,7 @@ void MaterialData::MakeMixtureByWeight(string name, string s, ...)
 	vector<double> proportions;
 	va_list numbers;
 	va_start(numbers, s);
-	unsigned long int i;
+	string::size_type i;
 	do
 	{
 		i = s.find(" ");
