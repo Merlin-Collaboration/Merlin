@@ -52,6 +52,17 @@ add_custom_command(TARGET TestDataFiles
 add_custom_command(TARGET TestDataFiles
                    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/outputs)
 
+
+string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
+if(NOT CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")
+	set(N_10K 10000)
+	set(N_10M 10000000)
+else()
+	message(STATUS "CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} : reducing test sizes" )
+	set(N_10K 1000)
+	set(N_10M 1000000)
+endif()
+
 merlin_test_py(BasicTests have_python.py)
 add_test_t(have_python BasicTests/have_python.py)
 
@@ -89,14 +100,14 @@ add_test_t(aperture_config_test.py OpticsTests/aperture_config_test.py)
 
 merlin_test(ScatteringTests cu50_test cu50_test.cpp)
 merlin_test_py(ScatteringTests cu50_test.py)
-add_test_t(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 10000000)
+add_test_t(cu50_test.py_1e7 ScatteringTests/cu50_test.py 0 ${N_10M})
 #add_test_t(cu50_test.py_1e7_sixtrack ScatteringTests/cu50_test.py 0 10000000 sixtrack)
 #add_test_t(cu50_test.py_1e8 ScatteringTests/cu50_test.py 0 100000000) # more thorough test
 #add_test_t(cu50_test.py_1e8_sixtrack ScatteringTests/cu50_test.py 0 100000000 sixtrack) # more thorough test
 
 merlin_test(ScatteringTests lhc_collimation_test lhc_collimation_test.cpp)
 merlin_test_py(ScatteringTests lhc_collimation_test.py)
-add_test_t(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 10000)
+add_test_t(lhc_collimation_test.py_1e4 ScatteringTests/lhc_collimation_test.py 0 ${N_10K})
 #add_test_t(lhc_collimation_test.py_1e5 ScatteringTests/lhc_collimation_test.py 0 100000)
 
 merlin_test(HollowElectronLens basic_hollow_electron_lens_test basic_hollow_electron_lens_test.cpp)
