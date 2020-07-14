@@ -14,6 +14,13 @@ import subprocess
 import os, sys
 from scipy.stats import chi2
 
+if sys.argv.index("--exe"):
+	i = sys.argv.index("--exe")
+	sys.argv.pop(i)
+	exe_name = sys.argv.pop(i)
+else:
+	exe_name = os.path.join(os.path.dirname(__file__), "random_test")
+
 do_plot  = False
 if "plot" in sys.argv:
 	do_plot = True
@@ -56,7 +63,6 @@ try:
 except OSError:
 	pass
 print("Running random_test")
-exe_name = os.path.join(os.path.dirname(__file__), "random_test")
 args = [str(seed)]
 
 print("running:", [exe_name]+args)

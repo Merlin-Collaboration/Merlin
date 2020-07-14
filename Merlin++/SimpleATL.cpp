@@ -40,7 +40,7 @@ struct ApplyATL
 	{
 		// Perform the random walk
 		double v = AT * (s->GetArcPosition() - z);
-		y += normal_distribution<>{0, sqrt(v)} (*rng);
+		y += v != 0 ? normal_distribution<>{0, sqrt(v)} (*rng) : 0.0;
 		*yy += y;
 
 		// add random 'noise'

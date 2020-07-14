@@ -24,6 +24,13 @@ import sys
 tol = 1e-2
 pval = 1e-3
 
+if sys.argv.index("--exe"):
+	i = sys.argv.index("--exe")
+	sys.argv.pop(i)
+	exe_name = sys.argv.pop(i)
+else:
+	exe_name = os.path.join(os.path.dirname(__file__), "cu50_test")
+
 seed = 0
 
 if len(sys.argv) > 1:
@@ -88,7 +95,6 @@ for run_n in range(1):
 	except OSError:
 		pass
 	print("Running cu50_test")
-	exe_name = os.path.join(os.path.dirname(__file__), "cu50_test")
 	args = [str(seed), str(npart)]
 	if scatter_mode_sixtrack: args.append("sixtrack")
 	print("running:", [exe_name]+args)

@@ -14,6 +14,13 @@ from math import *
 import numpy
 import itertools
 
+if sys.argv.index("--exe"):
+	i = sys.argv.index("--exe")
+	sys.argv.pop(i)
+	exe_name = sys.argv.pop(i)
+else:
+	exe_name = os.path.join(os.path.dirname(__file__), "aperture_config_test")
+
 def find_data_file(fname):
 	paths = ["DeveloperTools/CodeTesting/data/", "data/", "../data/"]
 
@@ -25,7 +32,6 @@ def find_data_file(fname):
 
 def main():
 	print("Running aperture_config_test")
-	exe_name = os.path.join(os.path.dirname(__file__), "aperture_config_test")
 	args = []
 
 	print("running:", [exe_name])
