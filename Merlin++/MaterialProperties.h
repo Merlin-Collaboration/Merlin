@@ -1,5 +1,7 @@
 /*
- * MaterialProperties.h
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
  *
  *  Created on: 28 Apr 2017
  *      Author: roger
@@ -24,6 +26,18 @@
 #include <string>
 #include <map>
 
+/**
+ * Stores material properties that are used by physics processes.
+ *
+ * The following are stored as member values and must be specified for all materials
+ *
+ * Z, A, density, dEdx, sigma_R, sigma_I, sigma_E, sigma_D, sigma_T, X0
+ *
+ * Additional properties need for specific physics process can be added using
+ * SetExtra(), GetExtra() and HaveExtra().
+ *
+ * For composite materials see Mixture
+ */
 class MaterialProperties
 {
 public:
@@ -56,6 +70,9 @@ public:
 	bool HaveExtra(std::string);
 };
 
+/**
+ * Stores a Mixture of 2 or more MaterialProperties.
+ */
 class Mixture: public MaterialProperties
 {
 public:
@@ -63,8 +80,8 @@ public:
 	std::vector<double> V_R;
 	std::vector<double> V_H;
 	std::vector<double> V_A;
-	double A_H(); // random nucleus for elastic scattering
-	double A_R(); // random nucleus for Rutherford scattering
+	double A_H() override; ///< random nucleus for elastic scattering
+	double A_R() override; ///< random nucleus for Rutherford scattering
 	Mixture(std::map<std::string, MaterialProperties*> dict, std::vector<std::string> names, std::vector<double>
 		proportions, double d);
 };
