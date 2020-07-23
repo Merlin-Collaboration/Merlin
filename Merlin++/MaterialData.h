@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 #include "MaterialProperties.h"
 
 class MaterialData
@@ -21,6 +22,10 @@ public:
 	{
 	}                     // constructor
 	~MaterialData();     // destructor
+
+	void MakeMixture(std::string name, std::string s, const std::vector<double> &proportions, double density);
+	void MakeMixtureByWeight(std::string name, std::string s, const std::vector<double> &proportions, double density);
+
 	void MakeMixture(std::string name, std::string s, ...);
 	void MakeMixtureByWeight(std::string name, std::string s, ...);
 	void PrintTable();
