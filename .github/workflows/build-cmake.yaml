@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-18.04, macOS-latest, windows-latest]
-        #os: [ubuntu-20.04, ubuntu-18.04, macOS-latest]
         python-version: [3.8]
         build-type: [Release, Debug]
       fail-fast: false
@@ -47,7 +46,7 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} -DPython3_ROOT_DIR=${pythonLocation}
         cat CMakeCache.txt
 
     - name: Build
