@@ -1,3 +1,9 @@
+/*
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
+ */
+
 #include "MaterialData.h"
 #include "MaterialProperties.h"
 #include "PhysicalUnits.h"
@@ -111,6 +117,21 @@ void MaterialData::MakeMixture(string name, string s, ...)
 	va_end(numbers);
 	property[name] = new Mixture(property, elements, proportions, density);
 }
+void MaterialData::MakeMixture(string name, string s, const std::vector<double> &proportions, double density)
+{
+	vector<string> elements;
+	string::size_type i;
+	do
+	{
+		i = s.find(" ");
+		string want = s.substr(0, i);
+		elements.push_back(want);
+		s = s.substr(i + 1);
+	} while(i != string::npos);
+
+	property[name] = new Mixture(property, elements, proportions, density);
+}
+
 void MaterialData::MakeMixtureByWeight(string name, string s, ...)
 {
 	vector<string> elements;
@@ -123,11 +144,31 @@ void MaterialData::MakeMixtureByWeight(string name, string s, ...)
 		i = s.find(" ");
 		string want = s.substr(0, i);
 		elements.push_back(want);
-		proportions.push_back(va_arg(numbers, double) / property[want]->A);
+		proportions.push_back(va_arg(numbers, double) / property.at(want)->A);
 		s = s.substr(i + 1);
 	} while(i != string::npos);
 	double density = va_arg(numbers, double);
 	va_end(numbers);
+	property[name] = new Mixture(property, elements, proportions, density);
+}
+
+void MaterialData::MakeMixtureByWeight(string name, string s, const std::vector<double> &wproportions, double density)
+{
+	vector<string> elements;
+	vector<double> proportions;
+
+	size_t c = 0;
+	string::size_type i;
+	do
+	{
+		i = s.find(" ");
+		string want = s.substr(0, i);
+		elements.push_back(want);
+		proportions.push_back(wproportions[c] / property.at(want)->A);
+		s = s.substr(i + 1);
+		c++;
+	} while(i != string::npos);
+
 	property[name] = new Mixture(property, elements, proportions, density);
 }
 

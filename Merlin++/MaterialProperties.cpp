@@ -1,5 +1,7 @@
 /*
- * MaterialProperties.cpp
+ * Merlin++: C++ Class Library for Charged Particle Accelerator Simulations
+ * Copyright (c) 2001-2018 The Merlin++ developers
+ * This file is covered by the terms the GNU GPL version 2, or (at your option) any later version, see the file COPYING
  *
  *  Created on: 16 Aug 2017
  *      Author: roger
@@ -16,6 +18,8 @@
 #include <map>
 #include "RandomNG.h"
 #include "PhysicalUnits.h"
+#include "MerlinException.h"
+
 using namespace std;
 using namespace PhysicalUnits;
 
@@ -158,9 +162,17 @@ double Mixture::A_R()  // random nucleus for Rutherford scattering
 Mixture::Mixture(map<string, MaterialProperties*> dict, vector<string> names, vector<double> proportions, double d)
 {
 	N = proportions.size();
+	if(names.size() != proportions.size())
+	{
+		throw MerlinException("Mixture::Mixture() length of names and proportions do not match");
+	}
 	float suma = 0, sum = 0, sumH = 0, sumR = 0;
 	for(int i = 0; i < N; i++)
 	{
+		if(dict.count(names[i]) == 0)
+		{
+			throw MerlinException("Mixture::Mixture() component not found: " + names[i]);
+		}
 		sum += proportions[i];
 		suma += proportions[i] * dict[names[i]]->A;
 		V_A.push_back(dict[names[i]]->A);
