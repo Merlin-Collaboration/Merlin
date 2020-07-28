@@ -14,7 +14,7 @@ from math import *
 import numpy
 import itertools
 
-if sys.argv.index("--exe"):
+if "--exe" in sys.argv:
 	i = sys.argv.index("--exe")
 	sys.argv.pop(i)
 	exe_name = sys.argv.pop(i)
