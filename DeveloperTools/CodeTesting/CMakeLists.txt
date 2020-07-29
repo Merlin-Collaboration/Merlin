@@ -88,6 +88,9 @@ add_test_t(random_test.py BasicTests/random_test.py)
 merlin_test(BasicTests materials materials.cpp)
 add_test_t(materials BasicTests/materials)
 
+merlin_test(BasicTests acc_comp_test acc_comp_test.cpp)
+add_test_t(acc_comp_test BasicTests/acc_comp_test)
+
 merlin_test(OpticsTests lhc_optics_test lhc_optics_test.cpp)
 add_test_t(lhc_optics_test OpticsTests/lhc_optics_test)
 
