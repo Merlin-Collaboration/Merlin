@@ -315,7 +315,6 @@ void ApertureConfiguration::OutputConfiguredAperture(AcceleratorModel* Model, os
 				 << comp->GetIndex() << "\t"
 				 << comp->GetName() << "\t"
 				 << comp->GetQualifiedName() << "\t"
-				 << comp->GetCollID() << "\t"
 				 << comp->GetEMField() << "\t"
 				 << comp->GetType() << "\t"
 				 << comp->GetComponentLatticePosition() << "\t"

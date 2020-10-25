@@ -7,6 +7,12 @@ user programs.
 
 [TOC]
 
+## Version 5.04 {#APIChanges504}
+
+## FlukaCollimationOutput removed
+
+These were used for specific studies. If needed they can be found in the 5.03 release an integrated into a user application.
+
 ## Version 5.03 {#APIChanges503}
 
 Merlin++ 5.03 switches to the C++14 standard.
