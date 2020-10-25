@@ -9,7 +9,7 @@ user programs.
 
 ## Version 5.04 {#APIChanges504}
 
-## FlukaCollimationOutput removed
+## FlukaCollimationOutput and TrackingOutputAV removed
 
 These were used for specific studies. If needed they can be found in the 5.03 release an integrated into a user application.
 
