@@ -24,7 +24,7 @@ typedef int PScoord;
 #define ps_CT 4
 #define ps_DP 5
 
-#define PS_LENGTH 10
+#define PS_LENGTH 7
 
 class PSvector
 {
@@ -64,21 +64,9 @@ public:
 	{
 		return v[5];
 	}
-	double type() const
-	{
-		return v[6];
-	}
-	double location() const
-	{
-		return v[7];
-	}
 	double id() const
 	{
-		return v[8];
-	}
-	double sd() const
-	{
-		return v[9];
+		return v[6];
 	}
 
 	//	Array access.
@@ -112,21 +100,9 @@ public:
 	{
 		return v[5];
 	}
-	double& type()
-	{
-		return v[6];
-	}
-	double& location()
-	{
-		return v[7];
-	}
 	double& id()
 	{
-		return v[8];
-	}
-	double& sd()
-	{
-		return v[9];
+		return v[6];
 	}
 
 	/**
@@ -234,7 +210,7 @@ public:
 	friend std::istream& operator>>(std::istream& is, PSvector& v);
 
 private:
-	alignas(16) double v[PS_LENGTH];
+	double v[PS_LENGTH];
 };
 
 /**

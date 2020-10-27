@@ -9,6 +9,10 @@ user programs.
 
 ## Version 5.04 {#APIChanges504}
 
+## PSVector/particle changes
+
+The variables type, location and sd have been removed from each particle. These were specific to debugging scattering code and so this removes unnecessary overhead to other simulations.
+
 ## FlukaCollimationOutput and TrackingOutputAV removed
 
 These were used for specific studies. If needed they can be found in the 5.03 release an integrated into a user application.

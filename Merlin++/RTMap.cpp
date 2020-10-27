@@ -51,10 +51,7 @@ PSvector& RTMap::Apply(PSvector& X) const
 		t->Apply(X, Y);
 	}
 
-	Y.location() = X.location();
-	Y.type() = X.type();
 	Y.id() = X.id();
-	Y.sd() = X.sd();
 
 	return X = Y;
 }
