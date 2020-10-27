@@ -301,7 +301,6 @@ void CollimateParticleProcess::DoCollimation()
 			}
 			else
 			{
-				(*p).location() = currentComponent->GetComponentLatticePosition();
 				//Particle survives collimator
 				NewBunch->AddParticle(*p);
 				// need to increment iterators

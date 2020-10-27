@@ -280,7 +280,6 @@ bool SingleDiffractive::Scatter(PSvector& p, double E) const
 	double com_sqd = (2 * ProtonMassMeV * MeV * E) + (2 * ProtonMassMeV * MeV * ProtonMassMeV * MeV);
 	double dp = m_rec * m_rec * E / com_sqd;
 	ScatterStuff(dp, p, t, E);
-	p.sd() = 1;
 
 	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)
@@ -322,7 +321,6 @@ bool SixTrackSingleDiffractive::Scatter(PSvector& p, double E) const
 	double dp = xm2 * E / com_sqd;
 
 	ScatterStuff(dp, p, t, E);
-	p.sd() = 1;
 
 	double E3 = (1 + p.dp()) * E;
 	if(E3 <= 0.1)

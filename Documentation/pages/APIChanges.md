@@ -13,6 +13,11 @@ user programs.
 
 These were used for specific studies. If needed they can be found in the 5.03 release an integrated into a user application.
 
+## DetailedCollimationOutput file changes
+
+The type and location column have been removed from the output.
+
+
 ## Version 5.03 {#APIChanges503}
 
 Merlin++ 5.03 switches to the C++14 standard.
