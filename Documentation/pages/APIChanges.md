@@ -132,6 +132,8 @@ Some additional functions have been added, see documentation for RandomNG.
 
 ### Removal of ParticleBunchConstructor
 
+Deprecated in 5.02, removed in 5.04.
+
 The ParticleBunchConstructor has been removed and its functionality moved into the constructor of the ParticleBunch class. This simplifies creating bunches and makes it easy to add new distribution types.
 
 For example the previous use of ParticleBunchConstructor:
