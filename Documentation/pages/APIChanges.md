@@ -13,6 +13,8 @@ user programs.
 
 The variables type, location and sd have been removed from each particle. These were specific to debugging scattering code and so this removes unnecessary overhead to other simulations.
 
+Each particle has an int64_t id value, which can be used if a process needs to track additional information about specific particles.
+
 ## FlukaCollimationOutput and TrackingOutputAV removed
 
 These were used for specific studies. If needed they can be found in the 5.03 release an integrated into a user application.
