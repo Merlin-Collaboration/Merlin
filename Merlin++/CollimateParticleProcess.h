@@ -154,11 +154,9 @@ public:
 	virtual void SetCollimationOutput(CollimationOutput* odb)
 	{
 		CollimationOutputVector.push_back(odb);
-		CollimationOutputSet = true;
 	}
 
 	std::vector<CollimationOutput*> CollimationOutputVector;
-	std::vector<CollimationOutput*>::iterator CollimationOutputIterator;
 
 protected:
 
@@ -193,12 +191,6 @@ protected:
 	bool at_exit;
 
 	size_t nlost;
-
-	/**
-	 * 0 when no CollimationOutput is set
-	 * @retval 0 No CollimationOutput set
-	 */
-	bool CollimationOutputSet;
 
 	double GetBinSize() const
 	{
