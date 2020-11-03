@@ -24,7 +24,7 @@ import sys
 tol = 1e-2
 pval = 1e-3
 
-if sys.argv.index("--exe"):
+if "--exe" in sys.argv:
 	i = sys.argv.index("--exe")
 	sys.argv.pop(i)
 	exe_name = sys.argv.pop(i)

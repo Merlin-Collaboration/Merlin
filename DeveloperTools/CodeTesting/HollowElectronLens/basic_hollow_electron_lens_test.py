@@ -12,7 +12,7 @@ import os
 from scipy.stats import chi2
 import sys
 
-if sys.argv.index("--exe"):
+if "--exe" in sys.argv:
 	i = sys.argv.index("--exe")
 	sys.argv.pop(i)
 	exe_name = sys.argv.pop(i)
