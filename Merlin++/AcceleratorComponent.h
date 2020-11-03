@@ -143,25 +143,6 @@ public:
 	 */
 	double GetComponentLatticePosition() const;
 
-	/**
-	 * Collimator ID for FLUKA output AV+HR 09.11.15
-	 * N.B. These values can only be set or got in Collimator.
-	 * @param[in] n The value of the Collimator ID to set.
-	 */
-	void SetCollID(int n)
-	{
-		Coll_ID = n;
-	}
-
-	/**
-	 * Get the Collimator ID.
-	 * @return An integer containing the Collimator ID.
-	 */
-	int GetCollID() const
-	{
-		return Coll_ID;
-	}
-
 ///	virtual void SetMaterial(Material* mat)
 ///	{
 ///		material = mat;
@@ -242,13 +223,6 @@ public:
 	 * beamline index associated with this component
 	 */
 	size_t blI;
-
-	/**
-	 * Collimator ID for FLUKA output AV+HR 09.11.15
-	 * N.B. These values can only be set or got in Collimator
-	 */
-	int Coll_ID;
-
 };
 
 inline AcceleratorComponent::AcceleratorComponent(const string& aName) :

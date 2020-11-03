@@ -57,28 +57,6 @@ public:
 
 	};
 
-	/**
-	 * Struct for holding FLUKA data created by A. Valloni + HR
-	 */
-	struct FlukaData
-	{
-		int id_coll;            ///< Collimator ID
-		std::string name;       ///< Collimator name
-		double position;        ///< Length along the lattice, used to calculate the beta functions
-		double angle;           ///< Collimator angle = tilt [rad]
-		double beta_x;          ///< Calculated x beta function at the collimator entrance [m]
-		double beta_y;          ///< Calculated y beta function at the collimator entrance [m]
-		double half_gap;        ///< Collimator half gap [m]
-// remolved RJB		std::string material;        ///< Collimator material symbol
-		double length;          ///< Collimator length [m]
-		double sig_x;           ///< Beam sigma_x value [m]
-		double sig_y;           ///< Beam sigma_y value [m]
-		double j1_tilt;         ///< Collimator jaw 1 tilt [rad]
-		double j2_tilt;         ///< Collimator jaw 2 tilt [rad]
-		double n_sig;           ///< Collimator halfgap in sigma
-
-	};
-
 	CollimatorData* CollData;
 	size_t number_collimators;
 	bool use_sigma;
@@ -147,16 +125,6 @@ public:
 	 * Set jaw position angle sigma.
 	 */
 	void SetJawAngleError(double);
-
-	/**
-	 * Vector to store FlukaData
-	 */
-	std::vector<FlukaData*> StoredFlukaData;
-
-	/**
-	 * Function to output FlukaDatabase file
-	 */
-	void OutputFlukaDatabase(std::ostream* os);
 
 protected:
 

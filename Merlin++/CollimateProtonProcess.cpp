@@ -125,14 +125,11 @@ CollimateParticleProcess::ScatterOutcome CollimateProtonProcess::DoScatter(Parti
 		{
 			p.ct() = z;
 
-			if(CollimationOutputSet)
+			for(auto &OutIt : CollimationOutputVector)
 			{
-				for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator !=
-					CollimationOutputVector.end(); ++CollimationOutputIterator)
-				{
-					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
-				}
+				OutIt->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
 			}
+
 			return ScatterOutcome::absorbed;
 		}
 
@@ -178,14 +175,11 @@ CollimateParticleProcess::ScatterOutcome CollimateProtonProcess::DoScatter(Parti
 			{ // lost
 				p.ct() = z;
 
-				if(CollimationOutputSet)
+				for(auto &OutIt : CollimationOutputVector)
 				{
-					for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator !=
-						CollimationOutputVector.end(); ++CollimationOutputIterator)
-					{
-						(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
-					}
+					OutIt->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
 				}
+
 				return ScatterOutcome::absorbed;
 			} // else {cout<<" CHECK6  scatter new value "<<p.x()<<" "<<p.y()<<" "<<p.ct()<<" "<<p.dp()<<" "<<p<<endl;}
 		}
@@ -194,13 +188,9 @@ CollimateParticleProcess::ScatterOutcome CollimateProtonProcess::DoScatter(Parti
 		{
 			p.ct() = z;
 
-			if(CollimationOutputSet)
+			for(auto &OutIt : CollimationOutputVector)
 			{
-				for(CollimationOutputIterator = CollimationOutputVector.begin(); CollimationOutputIterator !=
-					CollimationOutputVector.end(); ++CollimationOutputIterator)
-				{
-					(*CollimationOutputIterator)->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
-				}
+				OutIt->Dispose(*currentComponent, (z + zstep), p, ColParProTurn);
 			}
 			return ScatterOutcome::absorbed;
 		}

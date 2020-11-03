@@ -17,7 +17,7 @@ ostream& operator<<(ostream& os, const PSvector& v)
 		os << setw(24) << scientific << setprecision(10) << v[i];
 	}
 
-//    copy(v.v,v.v+6,ostream_iterator<double>(os," "));
+	os << v.pid;
 	return os << '\n';
 }
 
@@ -27,5 +27,6 @@ std::istream& operator>>(std::istream& is, PSvector& v)
 	{
 		is >> *q;
 	}
+	is >> v.pid;
 	return is;
 }

@@ -52,8 +52,8 @@ namespace ParticleTracking
 
 CollimateParticleProcess::CollimateParticleProcess(int priority, int mode, std::ostream* osp) :
 	ParticleBunchProcess("PARTICLE COLLIMATION", priority), cmode(mode), os(osp), createLossFiles(false), file_prefix(
-		""), lossThreshold(1), nstart(0), pindex(nullptr), CollimationOutputSet(false), ColParProTurn(0),
-	FirstElementSet(0), scatter(false), bin_size(0.1 * PhysicalUnits::meter), Imperfections(false)
+		""), lossThreshold(1), nstart(0), pindex(nullptr), ColParProTurn(0), FirstElementSet(0), scatter(false),
+	bin_size(0.1 * PhysicalUnits::meter), Imperfections(false)
 {
 }
 
@@ -301,7 +301,6 @@ void CollimateParticleProcess::DoCollimation()
 			}
 			else
 			{
-				(*p).location() = currentComponent->GetComponentLatticePosition();
 				//Particle survives collimator
 				NewBunch->AddParticle(*p);
 				// need to increment iterators
@@ -406,14 +405,11 @@ void CollimateParticleProcess::DoCollimation()
 						lost.push_back(*p);
 
 						//CollimationOutput loss
-						if(CollimationOutputSet && !is_collimator)
+						if(!is_collimator)
 						{
-							for(CollimationOutputIterator = CollimationOutputVector.begin();
-								CollimationOutputIterator != CollimationOutputVector.end();
-								++CollimationOutputIterator)
+							for(auto &OutIt : CollimationOutputVector)
 							{
-								(*CollimationOutputIterator)->Dispose(*currentComponent, IntegratedLength, (*p),
-									ColParProTurn);
+								OutIt->Dispose(*currentComponent, IntegratedLength, (*p), ColParProTurn);
 							}
 						}
 						p = LostBunch->erase(p);

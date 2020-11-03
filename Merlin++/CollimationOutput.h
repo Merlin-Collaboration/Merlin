@@ -43,11 +43,10 @@ struct LossData
 	double lost;
 	LossTypes temperature;
 	int turn;
-	int coll_id;
 	double angle;
 
 	LossData() :
-		ElementName(), p(), s(), interval(), position(), length(), lost(), turn(), coll_id(), angle()
+		ElementName(), p(), s(), interval(), position(), length(), lost(), turn(), angle()
 	{
 	}
 
@@ -61,7 +60,6 @@ struct LossData
 		lost = 0;
 		temperature = Undefined;
 		turn = 0;
-		coll_id = 0;
 		angle = 0;
 	}
 

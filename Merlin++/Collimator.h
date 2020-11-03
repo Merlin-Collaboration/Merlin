@@ -80,23 +80,6 @@ public:
 	 */
 	static const int ID;
 
-	/**
-	 * Set collimator ID for Fluka output
-	 */
-	virtual void SetCollID(int n)
-	{
-		Coll_ID = n;
-	}
-
-	/**
-	 * Get collimator ID for Fluka output
-	 * @return Collimator ID for Fluka output
-	 */
-	virtual int GetCollID()
-	{
-		return Coll_ID;
-	}
-
 private:
 	double Xr;
 	bool scatter_at_this_collimator;

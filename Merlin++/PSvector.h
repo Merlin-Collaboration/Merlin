@@ -13,6 +13,8 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include <cassert>
+#include <cstdint>
 #include "LinearAlgebra.h"
 
 // Phase space coordinate indices
@@ -24,7 +26,7 @@ typedef int PScoord;
 #define ps_CT 4
 #define ps_DP 5
 
-#define PS_LENGTH 10
+#define PS_LENGTH 6
 
 class PSvector
 {
@@ -64,26 +66,15 @@ public:
 	{
 		return v[5];
 	}
-	double type() const
+	int64_t id() const
 	{
-		return v[6];
-	}
-	double location() const
-	{
-		return v[7];
-	}
-	double id() const
-	{
-		return v[8];
-	}
-	double sd() const
-	{
-		return v[9];
+		return pid;
 	}
 
 	//	Array access.
 	double operator [](PScoord coord) const
 	{
+		assert(coord >= 0 && coord < PS_LENGTH);
 		return v[coord];
 	}
 
@@ -112,21 +103,9 @@ public:
 	{
 		return v[5];
 	}
-	double& type()
+	int64_t& id()
 	{
-		return v[6];
-	}
-	double& location()
-	{
-		return v[7];
-	}
-	double& id()
-	{
-		return v[8];
-	}
-	double& sd()
-	{
-		return v[9];
+		return pid;
 	}
 
 	/**
@@ -134,6 +113,7 @@ public:
 	 */
 	double& operator [](PScoord coord)
 	{
+		assert(coord >= 0 && coord < PS_LENGTH);
 		return v[coord];
 	}
 
@@ -234,7 +214,8 @@ public:
 	friend std::istream& operator>>(std::istream& is, PSvector& v);
 
 private:
-	alignas(16) double v[PS_LENGTH];
+	double v[PS_LENGTH];
+	int64_t pid;
 };
 
 /**

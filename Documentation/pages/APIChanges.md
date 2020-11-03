@@ -7,6 +7,23 @@ user programs.
 
 [TOC]
 
+## Version 5.04 {#APIChanges504}
+
+## PSVector/particle changes
+
+The variables type, location and sd have been removed from each particle. These were specific to debugging scattering code and so this removes unnecessary overhead to other simulations.
+
+Each particle has an int64_t id value, which can be used if a process needs to track additional information about specific particles.
+
+## FlukaCollimationOutput and TrackingOutputAV removed
+
+These were used for specific studies. If needed they can be found in the 5.03 release an integrated into a user application.
+
+## DetailedCollimationOutput file changes
+
+The type and location column have been removed from the output.
+
+
 ## Version 5.03 {#APIChanges503}
 
 Merlin++ 5.03 switches to the C++14 standard.
@@ -120,6 +137,8 @@ Remove all classes related to old random number generators: ACG, Binomial, DiscU
 Some additional functions have been added, see documentation for RandomNG.
 
 ### Removal of ParticleBunchConstructor
+
+Deprecated in 5.02, removed in 5.04.
 
 The ParticleBunchConstructor has been removed and its functionality moved into the constructor of the ParticleBunch class. This simplifies creating bunches and makes it easy to add new distribution types.
 

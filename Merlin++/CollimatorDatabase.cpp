@@ -245,26 +245,6 @@ double CollimatorDatabase::ConfigureCollimators(AcceleratorModel* model, double 
 
 						MaterialProperties* collimator_material = CollData[i].JawMaterial;
 
-						(CMapit->second)->SetCollID(i + 1);
-
-						FlukaData* fluka_data = new FlukaData;
-						fluka_data->id_coll     = (CMapit->second)->GetCollID();
-						fluka_data->name        = CollData[i].name;
-						fluka_data->position    = (CMapit->second)->GetComponentLatticePosition();
-						fluka_data->angle       = CollData[i].tilt;
-						fluka_data->beta_x      = beta_x;
-						fluka_data->beta_y      = beta_y;
-						fluka_data->half_gap    = CollData[i].sigma_x * sigma_entrance;
-						// removed RJB fluka_data->material    = collimator_material->GetSymbol();
-						fluka_data->length      = length;
-						fluka_data->sig_x       = sqrt(emittance_x * beta_x);
-						fluka_data->sig_y       = sqrt(emittance_y * beta_y);
-						fluka_data->j1_tilt     = 0.;
-						fluka_data->j2_tilt     = 0.;
-						fluka_data->n_sig       = CollData[i].sigma_x;
-
-						StoredFlukaData.push_back(fluka_data);
-
 						//std::cout << "EnableMatchBeamEnvelope - " << EnableMatchBeamEnvelope << "\t" << JawFlattnessErrors << std::endl;
 						//Create an aperture for the collimator jaws
 						if(EnableMatchBeamEnvelope && !JawFlattnessErrors && !JawAlignmentErrors)
@@ -648,30 +628,4 @@ void CollimatorDatabase::SetJawPositionError(double Error)
 void CollimatorDatabase::SetJawAngleError(double Error)
 {
 	AngleError = Error;
-}
-
-void CollimatorDatabase::OutputFlukaDatabase(std::ostream* os)
-{
-	(*os)
-		<<
-		"# ID\tname\tangle[rad]\tbetax[m]\tbetay[m]\thalfgap[m]\tMaterial\tLength[m]\tsigx[m]\tsigy[m]\ttilt1[rad]\ttilt2[rad]\tnsig"
-		<< endl;
-	for(vector<FlukaData*>::iterator its = StoredFlukaData.begin(); its != StoredFlukaData.end(); ++its)
-	{
-		(*os) << setw(6) << left << (*its)->id_coll;
-		(*os) << setw(20) << left << (*its)->name;
-		//~ (*os) << setw(20) << left << (*its)->position;
-		(*os) << setw(12) << left << (*its)->angle;
-		(*os) << setw(12) << left << (*its)->beta_x;
-		(*os) << setw(12) << left << (*its)->beta_y;
-		(*os) << setw(12) << left << (*its)->half_gap;
-// removed RJB		(*os) << setw(6) << left << (*its)->material;
-		(*os) << setw(12) << left << (*its)->length;
-		(*os) << setw(20) << left << (*its)->sig_x;
-		(*os) << setw(20) << left << (*its)->sig_y;
-		(*os) << setw(12) << left << (*its)->j1_tilt;
-		(*os) << setw(12) << left << (*its)->j2_tilt;
-		(*os) << setw(12) << left << (*its)->n_sig;
-		(*os) << endl;
-	}
 }

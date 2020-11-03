@@ -43,7 +43,7 @@ def main():
 	dt = numpy.dtype({"names":["t","p0","x","xp","y","yp","ct","dp"], "formats":["f8","f8","f8","f8","f8","f8","f8","f8"]})
 	init_bunch = numpy.loadtxt("act_init_bunch.dat", skiprows=1, dtype=dt)
 
-	dt = numpy.dtype({"names":["name","s","pos","x","xp","y","yp","type","id","loc", "turn"], "formats":["U32","f8","f8","f8","f8","f8","f8","i8","i8","f8","i8"]})
+	dt = numpy.dtype({"names":["name","s","pos","x","xp","y","yp","id","turn"], "formats":["U32","f8","f8","f8","f8","f8","i8","i8","i8"]})
 	losses = numpy.loadtxt("act_losses.dat", skiprows=1, dtype=dt)
 	losses = numpy.sort(losses, order="id")
 
