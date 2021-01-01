@@ -366,12 +366,12 @@ public:
 
 	iterator begin()
 	{
-		return &array[0];
+		return std::begin(array);
 	}
 
 	iterator end()
 	{
-		return &array[array.size()];
+		return std::end(array);
 	}
 
 	const_iterator begin() const
@@ -1323,11 +1323,11 @@ public:
 	// stl-like iterator access to raw data
 	iterator begin()
 	{
-		return &(array[0]);
+		return std::begin(array);
 	}
 	iterator end()
 	{
-		return &(array[nc * nr]);
+		return std::end(array);
 	}
 	const_iterator begin() const
 	{

@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, ubuntu-18.04, macOS-latest, windows-latest]
-        python-version: [3.8]
+        python-version: [3.9]
         build-type: [Release, Debug]
       fail-fast: false
 
@@ -65,7 +65,7 @@ jobs:
       shell: bash
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{ matrix.build-type }} --parallel 2 --output-on-failure
+      run: ctest -C ${{ matrix.build-type }} --parallel 2 --output-on-failure --repeat until-pass:3
 
 
 
