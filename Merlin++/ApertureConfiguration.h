@@ -14,6 +14,15 @@
 #include "AcceleratorModel.h"
 #include "DataTable.h"
 
+/**
+ * Add aperture definitions to a lattice from a TFS file. Apertures should specified
+ * as output by MADX.
+ *
+ * S coordinates are used to set apertures rather than element names. Where multiple
+ * apertures are given within a single magnetic element an InterpolatedAperture is
+ * created.
+ */
+
 class ApertureConfiguration
 {
 public:
