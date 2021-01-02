@@ -23,6 +23,9 @@ These were used for specific studies. If needed they can be found in the 5.03 re
 
 The type and location column have been removed from the output.
 
+## Remove ApertureConfiguration::EnableLogging()
+
+If ApertureConfiguration::SetLogFile() has been set then enable logging. Don't require a second call to enable it.
 
 ## Version 5.03 {#APIChanges503}
 

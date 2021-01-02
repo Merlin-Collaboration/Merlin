@@ -54,20 +54,9 @@ public:
 	void SetLogFile(std::ostream& os);
 
 	/**
-	 * Enable/disable logging
-	 * @param [in] flag The requested logging state
-	 */
-	void EnableLogging(bool flag);
-
-	/**
 	 * The output log file
 	 */
-	std::ostream* log;
-
-	/**
-	 * Enable/disable logging
-	 */
-	bool logFlag;
+	std::ostream* log = nullptr;
 
 	/**
 	 * The global list of Aperture entries

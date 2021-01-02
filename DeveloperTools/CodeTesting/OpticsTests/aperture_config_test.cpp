@@ -95,7 +95,6 @@ int main()
 	ApertureConfiguration apc(find_data_file("aperture_config_test.tfs"));
 	ofstream ap_log("act_aperture_conf.log");
 	apc.SetLogFile(ap_log);
-	apc.EnableLogging(1);
 	apc.ConfigureElementApertures(theModel);
 	cout << "aperture load finished" << endl << "start twiss" << endl;
 

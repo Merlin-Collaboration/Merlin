@@ -20,14 +20,11 @@
 
 using namespace std;
 
-ApertureConfiguration::ApertureConfiguration() :
-	log(nullptr), logFlag(false)
+ApertureConfiguration::ApertureConfiguration()
 {
-
 }
 
-ApertureConfiguration::ApertureConfiguration(string InputFileName) :
-	log(nullptr), logFlag(false)
+ApertureConfiguration::ApertureConfiguration(string InputFileName)
 {
 	auto dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
 
@@ -291,7 +288,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 				this_ap++;
 			}
 		}
-		if(logFlag)
+		if(log)
 		{
 			*log << setw(25) << left << comp->GetName();
 			*log << setw(14) << left << comp->GetType();
@@ -336,11 +333,6 @@ void ApertureConfiguration::OutputConfiguredAperture(AcceleratorModel* Model, os
 void ApertureConfiguration::SetLogFile(ostream& os)
 {
 	log = &os;
-}
-
-void ApertureConfiguration::EnableLogging(bool flg)
-{
-	logFlag = flg;
 }
 
 void ApertureConfiguration::DeleteAllApertures(AcceleratorModel* Model)
