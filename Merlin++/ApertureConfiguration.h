@@ -17,12 +17,6 @@
 class ApertureConfiguration
 {
 public:
-
-	/**
-	 * Constructor
-	 */
-	ApertureConfiguration();
-
 	/**
 	 * Constructor with an input file to load
 	 * @param[in] InputFileName The name of the aperture file to load

@@ -20,10 +20,6 @@
 
 using namespace std;
 
-ApertureConfiguration::ApertureConfiguration()
-{
-}
-
 ApertureConfiguration::ApertureConfiguration(string InputFileName)
 {
 	auto dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
