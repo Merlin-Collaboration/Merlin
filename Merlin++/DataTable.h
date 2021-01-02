@@ -284,6 +284,16 @@ public:
 	{
 	}
 
+	DataTable * get_dt() const
+	{
+		return dt;
+	}
+
+	size_t get_pos() const
+	{
+		return pos;
+	}
+
 	double Get_d(const std::string col_name) const
 	{
 		return dt->Get_d(col_name, pos);
@@ -330,6 +340,11 @@ public:
 		dt->SetWithStr(col_name, pos, x);
 	}
 
+	bool operator==(const DataTableRow &other) const
+	{
+		return dt == other.get_dt() && pos == other.get_pos();
+	}
+
 private:
 	DataTable * dt;
 	size_t pos;
@@ -354,6 +369,16 @@ public:
 	{
 	}
 
+	const DataTable * get_dt() const
+	{
+		return dt;
+	}
+
+	size_t get_pos() const
+	{
+		return pos;
+	}
+
 	double Get_d(const std::string col_name) const
 	{
 		return dt->Get_d(col_name, pos);
@@ -369,6 +394,11 @@ public:
 	std::string GetAsStr(const std::string col_name) const
 	{
 		return dt->GetAsStr(col_name, pos);
+	}
+
+	bool operator==(const DataTableRow &other) const
+	{
+		return dt == other.get_dt() && pos == other.get_pos();
 	}
 
 private:
