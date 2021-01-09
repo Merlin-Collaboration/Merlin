@@ -284,6 +284,16 @@ public:
 	{
 	}
 
+	DataTable * get_dt() const
+	{
+		return dt;
+	}
+
+	size_t get_pos() const
+	{
+		return pos;
+	}
+
 	double Get_d(const std::string col_name) const
 	{
 		return dt->Get_d(col_name, pos);
@@ -330,6 +340,11 @@ public:
 		dt->SetWithStr(col_name, pos, x);
 	}
 
+	bool operator==(const DataTableRow &other) const
+	{
+		return dt == other.get_dt() && pos == other.get_pos();
+	}
+
 private:
 	DataTable * dt;
 	size_t pos;
@@ -354,6 +369,16 @@ public:
 	{
 	}
 
+	const DataTable * get_dt() const
+	{
+		return dt;
+	}
+
+	size_t get_pos() const
+	{
+		return pos;
+	}
+
 	double Get_d(const std::string col_name) const
 	{
 		return dt->Get_d(col_name, pos);
@@ -371,6 +396,11 @@ public:
 		return dt->GetAsStr(col_name, pos);
 	}
 
+	bool operator==(const DataTableRow &other) const
+	{
+		return dt == other.get_dt() && pos == other.get_pos();
+	}
+
 private:
 	const DataTable * dt;
 	size_t pos;
@@ -380,7 +410,7 @@ private:
 class DataTableRowIterator
 {
 public:
-	using iterator_category = std::bidirectional_iterator_tag;
+	using iterator_category = std::random_access_iterator_tag;
 	using value_type = DataTableRow;
 	using difference_type = std::ptrdiff_t;
 	using pointer = DataTableRow *;
@@ -390,29 +420,50 @@ public:
 		dtr(_dt, _pos)
 	{
 	}
-	DataTableRow& operator *();
-	DataTableRow* operator ->();
+	DataTableRow& operator *() const;
+	DataTableRow* operator ->() const;
+	DataTableRow operator[](difference_type rhs) const;
 	DataTableRowIterator& operator++();
 	DataTableRowIterator operator++(int);
 	DataTableRowIterator& operator--();
 	DataTableRowIterator operator--(int);
 	bool operator==(const DataTableRowIterator &other) const;
 	bool operator!=(const DataTableRowIterator &other) const;
+	bool operator>(const DataTableRowIterator& rhs) const;
+	bool operator<(const DataTableRowIterator& rhs) const;
+	bool operator>=(const DataTableRowIterator& rhs) const;
+	bool operator<=(const DataTableRowIterator& rhs) const;
+
+	difference_type operator-(const DataTableRowIterator& rhs) const;
+	DataTableRowIterator operator+(difference_type rhs) const;
+	DataTableRowIterator operator-(difference_type rhs) const;
+	friend DataTableRowIterator operator+(difference_type lhs, const DataTableRowIterator& rhs);
+	friend DataTableRowIterator operator-(difference_type lhs, const DataTableRowIterator& rhs);
+	DataTableRowIterator& operator+=(difference_type rhs);
+	DataTableRowIterator& operator-=(difference_type rhs);
 
 	size_t _pos() const
 	{
 		return dtr.pos;
 	}
 
+	DataTable* _dt() const
+	{
+		return dtr.dt;
+	}
+
 private:
-	DataTableRow dtr;
+	// Dereference operator needs to be const, but need to be able to return a reference
+	// to dtr. Need to make mutable to allow this. Hacky because we are emulating a
+	// pointer.
+	mutable DataTableRow dtr;
 };
 
 /// @brief Const row iterator for DataTable.
 class ConstDataTableRowIterator
 {
 public:
-	using iterator_category = std::bidirectional_iterator_tag;
+	using iterator_category = std::random_access_iterator_tag;
 	using value_type = ConstDataTableRow;
 	using difference_type = std::ptrdiff_t;
 	using pointer = ConstDataTableRow *;
@@ -422,18 +473,36 @@ public:
 		dtr(_dt, _pos)
 	{
 	}
-	const ConstDataTableRow& operator *();
-	const ConstDataTableRow* operator ->();
+	const ConstDataTableRow& operator *() const;
+	const ConstDataTableRow* operator ->() const;
+	ConstDataTableRow operator[](difference_type rhs) const;
 	ConstDataTableRowIterator& operator++();
 	ConstDataTableRowIterator operator++(int);
 	ConstDataTableRowIterator& operator--();
 	ConstDataTableRowIterator operator--(int);
 	bool operator==(const ConstDataTableRowIterator &other) const;
 	bool operator!=(const ConstDataTableRowIterator &other) const;
+	bool operator>(const ConstDataTableRowIterator& rhs) const;
+	bool operator<(const ConstDataTableRowIterator& rhs) const;
+	bool operator>=(const ConstDataTableRowIterator& rhs) const;
+	bool operator<=(const ConstDataTableRowIterator& rhs) const;
+
+	difference_type operator-(const ConstDataTableRowIterator& rhs) const;
+	ConstDataTableRowIterator operator+(difference_type rhs) const;
+	ConstDataTableRowIterator operator-(difference_type rhs) const;
+	friend ConstDataTableRowIterator operator+(difference_type lhs, const ConstDataTableRowIterator& rhs);
+	friend ConstDataTableRowIterator operator-(difference_type lhs, const ConstDataTableRowIterator& rhs);
+	ConstDataTableRowIterator& operator+=(difference_type rhs);
+	ConstDataTableRowIterator& operator-=(difference_type rhs);
 
 	size_t _pos() const
 	{
 		return dtr.pos;
+	}
+
+	const DataTable* _dt() const
+	{
+		return dtr.dt;
 	}
 
 private:

@@ -6,6 +6,7 @@
  */
 
 #include "DataTable.h"
+#include <cassert>
 #include <iostream>
 
 void DataTable::AddColumn(std::string col_name, char type)
@@ -392,14 +393,19 @@ ConstDataTableRowIterator DataTable::end() const
 	return ConstDataTableRowIterator(this, length);
 }
 
-DataTableRow& DataTableRowIterator::operator *()
+DataTableRow& DataTableRowIterator::operator *() const
 {
 	return dtr;
 }
 
-DataTableRow* DataTableRowIterator::operator ->()
+DataTableRow* DataTableRowIterator::operator ->() const
 {
 	return &dtr;
+}
+
+DataTableRow DataTableRowIterator::operator[](difference_type rhs) const
+{
+	return DataTableRow(_dt(), _pos() + rhs);
 }
 
 DataTableRowIterator& DataTableRowIterator::operator++()
@@ -438,14 +444,82 @@ bool DataTableRowIterator::operator!=(const DataTableRowIterator &other) const
 	return !(*this == other);
 }
 
-const ConstDataTableRow& ConstDataTableRowIterator::operator *()
+bool DataTableRowIterator::operator>(const DataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() > rhs._pos();
+}
+
+bool DataTableRowIterator::operator<(const DataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() < rhs._pos();
+}
+
+bool DataTableRowIterator::operator>=(const DataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() >= rhs._pos();
+}
+
+bool DataTableRowIterator::operator<=(const DataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() <= rhs._pos();
+}
+
+DataTableRowIterator::difference_type DataTableRowIterator::operator-(const DataTableRowIterator& rhs) const
+{
+	assert(dtr.dt == rhs.dtr.dt);
+	return _pos() - rhs._pos();
+}
+
+DataTableRowIterator DataTableRowIterator::operator+(difference_type rhs) const
+{
+	return DataTableRowIterator(dtr.dt, dtr.pos + rhs);
+}
+
+DataTableRowIterator DataTableRowIterator::operator-(difference_type rhs) const
+{
+	return DataTableRowIterator(dtr.dt, dtr.pos - rhs);
+}
+
+DataTableRowIterator operator+(DataTableRowIterator::difference_type lhs, const DataTableRowIterator& rhs)
+{
+	return DataTableRowIterator(rhs._dt(), rhs._pos() + lhs);
+}
+
+DataTableRowIterator operator-(DataTableRowIterator::difference_type lhs, const DataTableRowIterator& rhs)
+{
+	return DataTableRowIterator(rhs._dt(), rhs._pos() - lhs);
+}
+
+DataTableRowIterator& DataTableRowIterator::operator+=(difference_type rhs)
+{
+	dtr.pos += rhs;
+	return *this;
+}
+
+DataTableRowIterator& DataTableRowIterator::operator-=(difference_type rhs)
+{
+	dtr.pos -= rhs;
+	return *this;
+}
+
+// ConstDataTableRow methods
+const ConstDataTableRow& ConstDataTableRowIterator::operator *() const
 {
 	return dtr;
 }
 
-const ConstDataTableRow* ConstDataTableRowIterator::operator ->()
+const ConstDataTableRow* ConstDataTableRowIterator::operator ->() const
 {
 	return &dtr;
+}
+
+ConstDataTableRow ConstDataTableRowIterator::operator[](difference_type rhs) const
+{
+	return ConstDataTableRow(_dt(), _pos() + rhs);
 }
 
 ConstDataTableRowIterator& ConstDataTableRowIterator::operator++()
@@ -482,4 +556,69 @@ bool ConstDataTableRowIterator::operator==(const ConstDataTableRowIterator &othe
 bool ConstDataTableRowIterator::operator!=(const ConstDataTableRowIterator &other) const
 {
 	return !(*this == other);
+}
+
+bool ConstDataTableRowIterator::operator>(const ConstDataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() > rhs._pos();
+}
+
+bool ConstDataTableRowIterator::operator<(const ConstDataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() < rhs._pos();
+}
+
+bool ConstDataTableRowIterator::operator>=(const ConstDataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() >= rhs._pos();
+}
+
+bool ConstDataTableRowIterator::operator<=(const ConstDataTableRowIterator& rhs) const
+{
+	assert(_dt() == rhs._dt());
+	return _pos() <= rhs._pos();
+}
+
+ConstDataTableRowIterator::difference_type ConstDataTableRowIterator::operator-(const
+	ConstDataTableRowIterator& rhs) const
+{
+	assert(dtr.dt == rhs.dtr.dt);
+	return _pos() - rhs._pos();
+}
+
+ConstDataTableRowIterator ConstDataTableRowIterator::operator+(difference_type rhs) const
+{
+	return ConstDataTableRowIterator(dtr.dt, dtr.pos + rhs);
+}
+
+ConstDataTableRowIterator ConstDataTableRowIterator::operator-(difference_type rhs) const
+{
+	return ConstDataTableRowIterator(dtr.dt, dtr.pos - rhs);
+}
+
+ConstDataTableRowIterator operator+(ConstDataTableRowIterator::difference_type lhs, const
+	ConstDataTableRowIterator& rhs)
+{
+	return ConstDataTableRowIterator(rhs._dt(), rhs._pos() + lhs);
+}
+
+ConstDataTableRowIterator operator-(ConstDataTableRowIterator::difference_type lhs, const
+	ConstDataTableRowIterator& rhs)
+{
+	return ConstDataTableRowIterator(rhs._dt(), rhs._pos() - lhs);
+}
+
+ConstDataTableRowIterator& ConstDataTableRowIterator::operator+=(difference_type rhs)
+{
+	dtr.pos += rhs;
+	return *this;
+}
+
+ConstDataTableRowIterator& ConstDataTableRowIterator::operator-=(difference_type rhs)
+{
+	dtr.pos -= rhs;
+	return *this;
 }

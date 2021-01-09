@@ -14,15 +14,18 @@
 #include "AcceleratorModel.h"
 #include "DataTable.h"
 
+/**
+ * Add aperture definitions to a lattice from a TFS file. Apertures should specified
+ * as output by MADX.
+ *
+ * S coordinates are used to set apertures rather than element names. Where multiple
+ * apertures are given within a single magnetic element an InterpolatedAperture is
+ * created.
+ */
+
 class ApertureConfiguration
 {
 public:
-
-	/**
-	 * Constructor
-	 */
-	ApertureConfiguration();
-
 	/**
 	 * Constructor with an input file to load
 	 * @param[in] InputFileName The name of the aperture file to load
@@ -54,20 +57,9 @@ public:
 	void SetLogFile(std::ostream& os);
 
 	/**
-	 * Enable/disable logging
-	 * @param [in] flag The requested logging state
-	 */
-	void EnableLogging(bool flag);
-
-	/**
 	 * The output log file
 	 */
-	std::ostream* log;
-
-	/**
-	 * Enable/disable logging
-	 */
-	bool logFlag;
+	std::ostream* log = nullptr;
 
 	/**
 	 * The global list of Aperture entries
