@@ -44,6 +44,7 @@ using namespace std;
 #include "CollimateProtonProcess.h"
 #include "Collimator.h"
 #include "CollimatorAperture.h"
+#include "ScatteringModelsMerlin.h"
 
 #include <iostream>
 #include <iomanip>
@@ -230,7 +231,7 @@ int main(int argc, char* argv[])
 						);
 
 					CollimateProtonProcess* myCollimateProcess = new CollimateProtonProcess(0, 7);
-					ScatteringModel* myScatter = new ScatteringModel();
+					ScatteringModel* myScatter = new ScatteringModelMerlin();
 					myCollimateProcess->SetScatteringModel(myScatter);
 					myCollimateProcess->ScatterAtCollimator(true); // Needs resurrection
 					tracker->AddProcess(myCollimateProcess);
