@@ -1,5 +1,3 @@
-* NAME             KEYWORD          S              L              K0L            K1L            K2L            K3L            TILT           TYPE            
-$ %16s             %16s             %e             %e             %e             %e             %e             %e             %e             %16s            
 @ XIY              %e   -32.7535    
 @ XIX              %e   -50.0317    
 @ QY               %e    7.04524    
@@ -11,6 +9,8 @@ $ %16s             %16s             %e             %e             %e            
 @ ORIGIN           %28s "MAD 8.23/accWindows NT 4.0"
 @ DATE             %08s "26/07/00"
 @ TIME             %08s "16.21.55"
+* NAME             KEYWORD          S              L              K0L            K1L            K2L            K3L            TILT           TYPE            
+$ %16s             %16s             %e             %e             %e             %e             %e             %e             %e             %16s            
   "EBDS"           "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "LI2CDSE"        "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "BEGL"           "MARKER"            0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
