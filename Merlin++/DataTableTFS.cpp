@@ -25,7 +25,7 @@ DataTableReaderTFS::DataTableReaderTFS(std::string filename)
 
 static char type_conv(std::string s)
 {
-	if(s == "%le")
+	if(s == "%le" || s == "%e")
 	{
 		return 'd';
 	}
