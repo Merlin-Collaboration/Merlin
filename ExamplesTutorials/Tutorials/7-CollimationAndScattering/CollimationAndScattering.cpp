@@ -186,13 +186,13 @@ int main()
 	tracker->AddProcess(nancheck);
 
 	// Define collimation and scattering settings
-	string filename = "build/tutorial7.out";
+	string filename = "tutorial7.out";
 
 	LossMapCollimationOutput* lossOutput = new LossMapCollimationOutput(tencm);
-// now automatically done RJB 	ScatteringModel* scatterModel = new ScatteringModelMerlin;
+	ScatteringModel* scatterModel = new ScatteringModelMerlin;
 
 	CollimateProtonProcess* collimateProcess = new CollimateProtonProcess(2, 4);
-// RJB	collimateProcess->SetScatteringModel(scatterModel);
+	collimateProcess->SetScatteringModel(scatterModel);
 
 	collimateProcess->ScatterAtCollimator(true);
 	collimateProcess->SetLossThreshold(200.0);
@@ -232,8 +232,7 @@ int main()
 	delete dispersion;
 	delete particleBunch;
 	delete tracker;
-	// delete scatterModel;
-	delete collimateProcess;
+	delete scatterModel;
 	delete col_output;
 
 	cout << "Successful! Tutorial 7 Complete." << endl;

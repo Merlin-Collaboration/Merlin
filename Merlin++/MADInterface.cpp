@@ -392,7 +392,15 @@ vector<AcceleratorComponent*> SBendComponent::GetInstance(DataTableRow& MADinput
 {
 	const string& name = MADinputrow.Get_s("NAME");
 	double length = MADinputrow.Get_d("L");
-	double angle = MADinputrow.Get_d("ANGLE");
+	double angle;
+	if(MADinputrow.get_dt()->HasCol("ANGLE"))
+	{
+		angle = MADinputrow.Get_d("ANGLE");
+	}
+	else
+	{
+		angle = MADinputrow.Get_d("K0L");
+	}
 	double k1l = MADinputrow.Get_d("K1L");
 	double tilt = MADinputrow.Get_d("TILT");
 	double h = angle / length;

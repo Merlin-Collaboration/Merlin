@@ -15,7 +15,7 @@ data_filename = "tutorial7.out"
 dir_path = os.path.dirname(os.path.realpath(__file__))
 print(dir_path)
 
-data_paths = ["../../","../../../","../../../../","../../../../../"]
+data_paths = ["", "../", "../../","../../../","../../../../","../../../../../"]
 all_good = False;
 for data_path in data_paths:
 	try:
@@ -23,7 +23,7 @@ for data_path in data_paths:
 		data = numpy.loadtxt(fname,skiprows=1,usecols=(1,2,3))
 		print("Read test data:", fname)
 	except IOError:
-		continue#
+		continue
 
 	all_good = True;
 
@@ -36,10 +36,11 @@ for data_path in data_paths:
 	pyplot.tight_layout()
 
 	pyplot.show()
-	
+	break
+
 if all_good:
 	print("Plotted lattice functions")
-	os.remove(data_filename)
+	os.remove(fname)
 else:
 	print("Failed to plot lattice functions. Could not read output file.")
 	exit(1)

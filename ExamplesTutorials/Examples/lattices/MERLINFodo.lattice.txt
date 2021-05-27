@@ -1,5 +1,3 @@
-* NAME             KEYWORD          S              L              K0L            E1             E2             K1L            K2L            K3L            TILT           FREQ           LAG            VOLT           TYPE            
-$ %16s             %16s             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %16s            
 @ GAMTR            %e    6.89227    
 @ ALFA             %e   0.210512E-01
 @ XIY              %e   -.810372E-01
@@ -13,6 +11,8 @@ $ %16s             %16s             %e             %e             %e            
 @ ORIGIN           %28s "MAD 8.23dl  Windows NT 4.0"
 @ DATE             %08s "21/10/04"
 @ TIME             %08s "11.27.34"
+* NAME             KEYWORD          S              L              K0L            E1             E2             K1L            K2L            K3L            TILT           FREQ           LAG            VOLT           TYPE            
+$ %16s             %16s             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %e             %16s            
   "RING"           "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "ARCSECT"        "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
   "ARCCELL"        "LINE"              0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000     "~"             
