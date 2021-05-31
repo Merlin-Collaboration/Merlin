@@ -1,6 +1,12 @@
 # Introduction {#mainpage}
 
-This is the introduction.
+Merlin++ is an accelerator simulation program that tracks beams through components of a ring or beamline. Its functionality is similar to MAD but it has many extra features.
+
+Merlin++ is written in C++, and unlike MAD and most other packages, it is actually a library of C++ routines. The user writes their own program and compiles it against the MERLIN class definitions and function libraries.
+
+A detailed overview of Merlin++ is in preparation, a preprint can be found at:
+
+[Merlin++, a flexible and feature-rich accelerator physics and particle tracking library](https://arxiv.org/abs/2011.04335)
 
 ## Installation {#install_sec}
 
