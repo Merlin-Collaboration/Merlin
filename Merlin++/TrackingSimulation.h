@@ -8,6 +8,8 @@
 #ifndef TrackingSimulation_h
 #define TrackingSimulation_h 1
 
+#include <memory>
+
 #include "merlin_config.h"
 
 #include "Bunch.h"
@@ -256,7 +258,7 @@ private:
 
 	AcceleratorModel::RingIterator theRing;
 	AcceleratorModel::Beamline theBeamline;
-	Stepper* cstepper;
+	std::unique_ptr<Stepper> cstepper;
 	SimulationOutput* simOp;
 };
 
