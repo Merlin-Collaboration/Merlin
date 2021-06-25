@@ -119,6 +119,7 @@ public:
 	}
 	virtual double Wtrans(double z) const;
 	virtual double Wlong(double z) const;
+
 	double Wtrans(double z, int m) const
 	{
 		std::cout << " call for " << m << std::endl;
