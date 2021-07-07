@@ -8,6 +8,7 @@
 #ifndef _MultiNormal_h
 #define _MultiNormal_h
 
+#include "MerlinException.h"
 #include "LinearAlgebra.h"
 #include "TCovMtrx.h"
 #include "RandomNG.h"
@@ -122,48 +123,32 @@ MultiNormal<N>::~MultiNormal()
 }
 
 template<int N>
-void MultiNormal<N>::CholeskyDecomp()   // copied from John Ellithorpe based on Numerical Recipeces
+void MultiNormal<N>::CholeskyDecomp()// uses Cholesky-Banachiewicz algorithm from Wikipedia article 
+	//   en.wikipedia.org/wiki/Cholesky_decomposition#The_Cholesky_algorithm
+	//   The original symmetric matrix is given in the upper right part of L
+	//   The desired matrix is put in the lower left part (including the diagonal)
 {
-	double dp[N];
-	long i, j, k;
-	double sum;
-	for(i = 0; i < N; i++)
+	for(int i = 0; i < N; i++)
 	{
-		for(j = i; j < N; j++)
+		for(int j = 0; j <= i; j++)
 		{
-			sum = L(i, j);
-			k = i;
-			while(--k >= 0)
+			double stot=0;
+			for(int k=0;k<j;k++)
 			{
-				sum -= L(i, k) * L(j, k);
+				stot += L(i,k)*L(j,k);
 			}
-			if(i == j)
+			if (i==j) 
 			{
-				if(sum <= 0.0)
-				{
-					std::cout << "MultiNormal::CholeskyDecomp Failed!" << std::endl;
-					// we set L=0 so that we just return the mean values
-					for(int i = 0; i < N; i++)
-						for(int j = 0; j < N; j++)
-						{
-							L(i, j) = 0;
-						}
-					return;
-				}
-				else
-				{
-					dp[i] = sqrt(sum);
-				}
-			}
+				double x=L(i,j)-stot;
+				if(x<0) throw MerlinException("Negative square root in CholeskyDecomp");
+				L(i,j)=sqrt(x);
+
+			} 
 			else
 			{
-				L(j, i) = sum / dp[i];
+				L(i,j)=(L(j,i)-stot)/L(j,j);
 			}
 		}
-	}
-	for(i = 0; i < N; i++)
-	{
-		L(i, i) = dp[i];
 	}
 }
 

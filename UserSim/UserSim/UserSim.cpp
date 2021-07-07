@@ -6,12 +6,13 @@
  */
 
 #include <iostream>
+#include  "MerlinVersion.h"
 
 using namespace std;
 
 int main() {
 	cout << "Welcome to Merlin++!\n" << endl;
-	cout << "Current Merlin++ version: 5.02" << endl;
+	cout << "Current Merlin++ version: "<<merlin_version_info()<<endl;
 	cout << "To confirm a correct installation please run 'make test' and ensure all tests pass." << endl;
 	cout << "For more information on how to get started, please refer to MerlinDocumentation/QuickStartGuide.pdf" << endl;
 

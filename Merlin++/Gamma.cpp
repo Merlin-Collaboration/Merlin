@@ -6,23 +6,23 @@
  */
 
 #include "utils.h"
+#include "NumericalConstants.h"
 
 double LogGamma(double xx)
 {
-	double x, tmp, ser;
-	static double cof[6] = {76.18009173, -86.50532033, 24.01409822,
-							-1.231739516, 0.120858003e-2, -0.536382e-5};
-	int j;
+	//   Use Lanczos approximation
 
-	x = xx - 1.0;
+	// code taken from Wikipedia    en.wikipedia.oirg/wiki/Lanczos_approximation
+	// 
+	const int N=8;
+	static const double p[N]={676.5203681218851,-1259.1392167224028, 771.32342877765313,-176.61502916214059, 12.507343278686905,
+		-0.13857109526572012, 9.9843695780195716E-06, 1.5056327351493116E-7};
+	const double c=log(sqrt(2*pi));
 
-	tmp = x + 5.5;
-	tmp -= (x + 0.5) * log(tmp);
-	ser = 1.0;
-	for(j = 0; j <= 5; j++)
-	{
-		x += 1.0;
-		ser += cof[j] / x;
-	}
-	return -tmp + log(2.50662827465 * ser);
+	double z=xx-1;
+	double sum=0.99999999999980993;
+	for(int i=0; i<N;i++) sum+= p[i]/(z+i+1);
+	double val=c+(z+0.5)*log(z+N-.5)-(z+N-.5) + log(sum) ;
+	 //std::cout<<" new style " <<val<<std::endl;
+	return  val;
 }
