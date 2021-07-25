@@ -232,19 +232,14 @@ void TrackingSimulation::InitStepper(bool genNewBunch)
 
 	stepper.Initialise(*bunch);
 
-	if(cstepper != nullptr)
-	{
-		delete cstepper;
-	}
-
 	if(type == beamline)
 	{
-		cstepper = new BeamlineStepper(theBeamline.begin(), theBeamline.end());
+		cstepper.reset(new BeamlineStepper(theBeamline.begin(), theBeamline.end()));
 	}
 	else
 	//		cstepper = new RingStepper(theRing,theRing);
 	{
-		cstepper = nullptr;
+		cstepper.reset(nullptr);
 	}
 }
 
@@ -258,18 +253,13 @@ void TrackingSimulation::InitStepper(Bunch* aBunch)
 	bunch = aBunch;
 	stepper.Initialise(*bunch);
 
-	if(cstepper != nullptr)
-	{
-		delete cstepper;
-	}
-
 	if(type == beamline)
 	{
-		cstepper = new BeamlineStepper(theBeamline.begin(), theBeamline.end());
+		cstepper.reset(new BeamlineStepper(theBeamline.begin(), theBeamline.end()));
 	}
 	else
 	{
-		cstepper = nullptr;
+		cstepper.reset(nullptr);
 	}
 }
 
