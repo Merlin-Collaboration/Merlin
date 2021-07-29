@@ -25,12 +25,12 @@ macro (merlin_tutorial dir exe_name)
 endmacro (merlin_tutorial)
 
 # macro to install a test python script (need add_test() to call it)
-macro (merlin_examples_py dir script_name)
+macro (merlin_example_py dir script_name)
 	add_custom_target(${script_name} ALL)
 	add_custom_command(TARGET ${script_name}
 	                   DEPENDS ${dir}/Examples/${script_name}
 	                   COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${dir}/${script_name} ${CMAKE_CURRENT_BINARY_DIR}/${dir}/${script_name})
-endmacro (merlin_examples_py)
+endmacro (merlin_example_py)
 
 # macro to install a test python script (need add_test() to call it)
 macro (merlin_tutorial_py dir script_name)
@@ -69,6 +69,8 @@ merlin_example(Examples/SpinTracking SpinTracking SpinTracking_Main.cpp)
 merlin_example(Examples/StrayFieldClosedOrbit StrayFieldClosedOrbit StrayFieldClosedOrbit_Main.cpp ConstantStrayFieldProcess.cpp)
 merlin_example(Examples/Tracking Tracking Tracking_Main.cpp)
 merlin_example(Examples/Trajectory Trajectory Trajectory_Main.cpp)
+merlin_example(Examples/TransferLine transfer_line transfer_line.cpp)
+merlin_example_py(Examples/TransferLine plot.py)
 merlin_example(Examples/Wakefields wakefile_ex1 ex1.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex2 ex2.cpp TeslaWakePotential.cpp)
 merlin_example(Examples/Wakefields wakefile_ex3 ex3.cpp TeslaWakePotential.cpp)
