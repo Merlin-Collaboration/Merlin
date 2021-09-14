@@ -335,6 +335,7 @@ public:
 		array /= s;
 		return *this;
 	}
+       
 
 	// vector operations
 	const Vector<T>& operator+=(const Vector<T>& u)
@@ -426,6 +427,11 @@ Vector<T> operator/(const Vector<T>& u, const Vector<T>& v)
  */
 template<class T>
 T operator*(const Vector<T>& u, const Vector<T>& v)
+{
+	return tblas1::tdot(u, v, T(0));
+}
+template<class T>
+T operator*(const SubVector<T>& u, const SubVector<T>& v) // RJB added
 {
 	return tblas1::tdot(u, v, T(0));
 }
@@ -572,6 +578,37 @@ public:
 	typedef Vector<T> vector_type;
 	typedef Matrix<T> matrix_type;
 
+        T sumsquared() // added RJB
+        {
+               T s=0;
+               for(size_t i=0;i<sl.size();i++) s += pow(array[sl.start()+i*sl.stride()] ,2);  
+               return s;
+        }
+        
+        T sumfabs() // added RJB
+        {
+               T s=0;
+               for(size_t i=0;i<sl.size();i++) s += fabs(array[sl.start()+i*sl.stride()] );  
+               return s;
+        }
+
+        size_t locmaxabs() // added RJB
+        {
+               size_t imax=0;
+
+               double amax = fabs(array[sl.start()]);
+               if(sl.size()>1){
+                     for (size_t i=1; i < sl.size();i++) {
+                            if(fabs(array[sl.start()+i*sl.stride()]) > amax) {
+                            amax = fabs(array[sl.start() + i * sl.stride()]);
+                            imax = i;
+                        }
+                      }
+               }
+
+         return imax;
+         }
+
 	// vector subscripting.
 	// () and [] are supported.
 
@@ -639,13 +676,19 @@ public:
 		array[sl] *= array_type(s, sl.size());
 		return *this;
 	}
+        Vector<T> operator*(const T& s) const // RJB added
+        {
+                Vector<T> v(*this);
+                v *= s;
+                return v;
+        }
+
 	SubVector<T>& operator/=(const T& s)
 	{
 		array[sl] /= array_type(s, sl.size());
 		return *this;
 	}
 
-	// arithmetic assignment operations (vector)
 	SubVector<T>& operator+=(const Vector<T>& v)
 	{
 		equal_length(sl.size(), v.size());
@@ -670,6 +713,11 @@ public:
 		array[sl] /= v.array;
 		return *this;
 	}
+	Vector<T> operator/(const T& s) // added RJB
+        {   
+        Vector<T> rv(*this);
+	return rv /s;
+        }
 
 	/**
 	 * Conversion to a Vector
@@ -719,7 +767,10 @@ private:
 	friend class Matrix<T>;
 	friend class Vector<T>;
 };
-
+        template<class T> Vector<T> operator*(const T& s, const SubVector<T> & V) // RJB added
+        {
+            return(V*s);
+        }
 /**
  * template<class T> SubMatrix
  * A contiguous (2-dimensional) block (sub-matrix)

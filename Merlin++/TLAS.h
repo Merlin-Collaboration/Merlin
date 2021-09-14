@@ -32,11 +32,11 @@ template<class T> T Det(const Matrix<T>&);
 
 // Low level linear algebra routines (global functions).
 
-template<class T> void ludcmp(Matrix<T>&, std::vector<int>&, T&);
-template<class T, class V> V& lubksb(const Matrix<T>& a, const std::vector<int>& indx, V& b);
-template<class T> void svdcmp(Matrix<T>&, Vector<T>&, Matrix<T>&);
+template<class T> void LUfactor(Matrix<T>&, std::vector<int>&, T&);
+template<class T, class V> V& LUsolve(const Matrix<T>& a, const std::vector<int>& indx, V& b);
+template<class T> void SVD(Matrix<T>&, Vector<T>&, Matrix<T>&);
 template<class T, class V>
-Vector<T>& svbksb(const Matrix<T>&, const Vector<T>&, const Matrix<T>&, const V&, Vector<T>&);
+Vector<T>& SVDsolve(const Matrix<T>&, const Vector<T>&, const Matrix<T>&, const V&, Vector<T>&);
 
 // Exceptions used by linear algebra routines.
 

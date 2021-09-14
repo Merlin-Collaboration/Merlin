@@ -462,7 +462,7 @@ void savgol(vector<double>& c, int nl, int nr, int ld, int m)
 
 	vector<int> indx;
 	double d;
-	ludcmp(a, indx, d);
+	LUfactor(a, indx, d);
 
 	Vector<double> b(m + 1);
 	for(int j = 0; j <= m; j++)
@@ -471,7 +471,7 @@ void savgol(vector<double>& c, int nl, int nr, int ld, int m)
 	}
 	b(ld) = 1.0;
 
-	lubksb(a, indx, b);
+	LUsolve(a, indx, b);
 
 	c.clear();
 

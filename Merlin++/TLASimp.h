@@ -36,7 +36,7 @@ public:
 	explicit LUMatrix(const Matrix<T>& M) :
 		lud(M), indexes(), d(1)
 	{
-		ludcmp(lud, indexes, d);
+		LUfactor(lud, indexes, d);
 	}
 
 	/**
@@ -46,11 +46,11 @@ public:
 	 */
 	Vector<T>& operator()(Vector<T>& rhs) const
 	{
-		return lubksb(lud, indexes, rhs);
+		return LUsolve(lud, indexes, rhs);
 	}
 	SubVector<T>& operator()(SubVector<T>& rhs) const
 	{
-		return lubksb(lud, indexes, rhs);
+		return LUsolve(lud, indexes, rhs);
 	}
 
 	/**
@@ -121,21 +121,21 @@ public:
 		Vector<T> x(w.size());
 		Vector<T> y(rhs);
 		y *= wts;
-		return svbksb(u, w, v, y, x);
+		return SVDsolve(u, w, v, y, x);
 	}
 	Vector<T> operator()(const SubVector<T>& rhs) const
 	{
 		Vector<T> x(w.size());
 		Vector<T> y(rhs);
 		y *= wts;
-		return svbksb(u, w, v, y, x);
+		return SVDsolve(u, w, v, y, x);
 	}
 	Vector<T> operator()(const ConstSubVector<T>& rhs) const
 	{
 		Vector<T> x(w.size());
 		Vector<T> y(rhs);
 		y *= wts;
-		return svbksb(u, w, v, y, x);
+		return SVDsolve(u, w, v, y, x);
 	}
 	const std::vector<bool>& wflags() const
 	{
@@ -207,7 +207,7 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 	wflgs = std::vector<bool>(u.ncols(), true);
 
 	v.redim(u.ncols(), u.ncols());
-	svdcmp(u, w, v);
+	SVD(u, w, v);
 
 	T wmin = threshold != T(0) ? threshold * (*std::max_element(w.begin(), w.end())) : threshold;
 	int zerocount = 0;
@@ -224,132 +224,130 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 	}
 }
 
-// Low level routines (modified from Numerical Recipes in C)
+// Low level routines 
 
 template<class T>
-void ludcmp(Matrix<T>& a, std::vector<int>& indexes, T& d)
+void LUfactor(Matrix<T>& M, std::vector<int>& pivot, T& sign)
 {
-	static const T tiny = std::numeric_limits<T>::epsilon();
-	size_t imax, i, j, k;
-	const size_t n = a.ncols();
+	int imax = -1;
 
-	if(n != a.nrows())
+	if(M.ncols()  != M.nrows())
 	{
 		throw DimensionError();
 	}
+	const int n = M.ncols();
 
-	std::vector<T> vv(n);
-	std::vector<int> indx(n);
+	std::vector<T> scale(n);
 
-	d = 1.0;
-	for(i = 0; i < n; i++)
+	sign = 1.0;
+	for(int i = 0; i < n; i++)
 	{
 		double big = 0.0;
-		for(j = 0; j < n; j++)
+		for(int j = 0; j < n; j++)
 		{
-			big = std::max(fabs(a[i][j]), big);
+			big = std::max(fabs(M[i][j]), big);
 		}
 		if(big == 0.0)
 		{
 			throw SingularMatrix();
 		}
-
-		vv[i] = 1.0 / big;
+		scale[i] = 1.0 / big;
 	}
-	for(j = 0; j < n; j++)
+	for(int j = 0; j < n; j++)
 	{
-		for(i = 0; i < j; i++)
+		for(int i = 0; i < j; i++)
 		{
-			double sum = a[i][j];
-			for(k = 0; k < i; k++)
+			for(int k = 0; k < i; k++)
 			{
-				sum -= a[i][k] * a[k][j];
+                                M[i][j]-= M[i][k]*M[k][j]; 
 			}
-			a[i][j] = sum;
 		}
 		double big = 0.0;
-		for(i = j; i < n; i++)
+		for(int i = j; i < n; i++)
 		{
-			double sum = a[i][j];
-			for(k = 0; k < j; k++)
+			for(int k = 0; k < j; k++)
 			{
-				sum -= a[i][k] * a[k][j];
+                                M[i][j]-= M[i][k]*M[k][j]; 
 			}
-			a[i][j] = sum;
-			double dum;
-			if((dum = vv[i] * fabs(sum)) >= big)
+                        double howbig = scale[i] * fabs(M[i][j]);
+			if( howbig >= big)
 			{
-				big = dum;
+				big = howbig;
 				imax = i;
 			}
 		}
 		if(j != imax)
 		{
-			for(k = 0; k < n; k++)
+			for(int k = 0; k < n; k++)
 			{
-				double dum = a[imax][k];
-				a[imax][k] = a[j][k];
-				a[j][k] = dum;
+				double dum = M[imax][k];
+				M[imax][k] = M[j][k];
+				M[j][k] = dum;
 			}
-			d *= -1;
-			vv[imax] = vv[j];
+			sign = - sign; 
+			scale[imax] = scale[j];
 		}
-		indx[j] = imax;
-		if(a[j][j] == 0.0)
+		pivot[j] = imax;
+		if(M[j][j] == 0.0)
 		{
-			a[j][j] = tiny;
+			M[j][j] = std::numeric_limits<T>::epsilon();
 		}
 		if(j < n)
 		{
-			double dum = 1.0 / (a[j][j]);
-			for(i = j + 1; i < n; i++)
+			double dum = 1.0 / (M[j][j]);
+			for(int i = j + 1; i < n; i++)
 			{
-				a[i][j] *= dum;
+				M[i][j] *= dum;
 			}
 		}
 	}
-
-	// copy the indices
-	indexes.swap(indx);
 }
 
-// lu back substitution
+// LU back substitution
 
 template<class T, class V>
-V& lubksb(const Matrix<T>& a, const std::vector<int>& indx, V& b)
+V& LUsolve(const Matrix<T>& M, const std::vector<int>& pivot, V& v)
 {
-	int i, ii = -1, ip, j;
-	const int n = a.ncols();
+/*   
+ *   M  and pivot give the LU decomposed matrix
+ *   v is the RHS in the equation Mx=v   overwritten by the solution
+ *   */
+	int  first = -1; // first non-vanishing element of v
+	const int n = M.ncols();
 	T sum;
-
-	for(i = 0; i < n; i++)
+        std::cout<<" pivot is "; for(int i=0;i<n;i++) std::cout<<pivot[i]<<" ";std::cout<<std::endl;
+// Do forward substitution
+//
+	for(int i = 0; i < n; i++)
 	{
-		ip = indx[i];
-		sum = b[ip];
-		b[ip] = b[i];
-		if(ii != -1)
+		sum = v[pivot[i]];
+		v[pivot[i]] = v[i];
+		if(first != -1)
 		{
-			for(j = ii; j <= i - 1; j++)
+			for(int j = first; j < i ; j++)
 			{
-				sum -= a[i][j] * b[j];
+				sum -= M[i][j] * v[j];
 			}
 		}
 		else if(sum != 0)
 		{
-			ii = i;
+			first = i;
 		}
-		b[i] = sum;
+		v[i] = sum;
 	}
-	for(i = n - 1; i >= 0; i--)
+   
+// Now do back substitution
+//
+	for(int i = n - 1; i >= 0; i--)
 	{
-		sum = b[i];
-		for(j = i + 1; j < n; j++)
+		sum = v[i];
+		for(int j = i + 1; j < n; j++)
 		{
-			sum -= a[i][j] * b[j];
+			sum -= M[i][j] * v[j];
 		}
-		b[i] = sum / a[i][i];
+		v[i] = sum / M[i][i];
 	}
-	return b;
+	return v;
 }
 
 template<class T>
@@ -382,7 +380,263 @@ template<class T> inline T Det(const Matrix<T>& m)
 	return LUMatrix<T>(m).det();
 }
 
-#include "svdcmp.h"
+
+
+template<class T, class V>
+Vector<T>& SVDsolve(const Matrix<T>& u, const Vector<T>& w, const Matrix<T>& v, const V& b, Vector<T>& x)
+{
+     x = v * ((Transpose(u) * b) / w); // brackets ensure operations called in correct order
+    return x;
+}
+
+template<class T>
+inline T PYTHAG(T a, T b)
+{
+	a = fabs(a);
+	b = fabs(b);
+	if(a > b)
+	{
+		T c = b / a;
+		return a * sqrt(1 + c * c);
+	}
+	else if(!fequal(b, 0.0))
+	{
+		T c = a / b;
+		return b * sqrt(1 + c * c);
+	}
+	else
+	{
+		return T(0);
+	}
+}
+
+template<class T> inline T SIGN(T a, T b)
+{
+	return b >= T(0) ? fabs(a) : -fabs(a);
+}
+
+template<class T>
+void SVD(Matrix<T>& M, Vector<T>& V, Matrix<T>& S)
+{
+	assert(M.nrows() <= M.ncols());
+        const int rmax = M.nrows() -1 ;
+        const int cmax = M.ncols() -1 ;
+
+	T f0, f1, f2, f3;
+       // T q1,q2,q3;
+	T F0 = 0.0, F1 = 0.0, F2 = 0.0;
+
+	Vector<T> work(cmax+1);
+
+	for(int i = 0; i <= cmax ; i++)
+	{
+                Range R1(i,rmax);
+		work[i] = F0 * F1;
+		F1 = f1 = F0 = 0.0;
+		if(i <= rmax)
+		{
+			F0 += M(R1,i).sumfabs();
+			if(!fequal(F0, 0.0))
+			{
+                                M(R1,i) /= F0;
+                                f1 += M(R1,i).sumsquared() ;
+				f0 = M[i][i];
+				F1 = -SIGN(sqrt(f1), f0);
+				f3 = f0 * F1 - f1;
+				M[i][i] = f0 - F1;
+				if(i != cmax)
+				{
+					for(int j = i+1; j <= cmax; j++)
+					{
+                            
+						f1 = M(R1,i) * M(R1,j);
+						f0 = f1  / f3;
+                                                M(R1,j) +=  f0*M(R1,i);
+					}
+				}
+                                M(R1,i) *= F0;
+			}
+		}
+		V[i] = F0 * F1;
+		F1 = f1 = F0 = 0.0;
+		if(i <= rmax  && i != cmax )
+		{
+                        Range R2(i+1,cmax);
+                        F0 += M(i,R2).sumfabs();
+			if(!fequal(F0, 0.0))
+			{
+                                M(i,R2) /= F0;
+                                f1 += M(i,R2).sumsquared() ;
+				f0 = M[i][i+1];
+				F1 = -SIGN(sqrt(f1), f0);
+				f3 = f0 * F1 - f1;
+				M[i][i+1] = f0 - F1;
+				work(R2) = 0; // assignment to subvector from subvector is private for some reason 
+                                work(R2) += M(i,R2) ;
+                                work /=f3;
+				if(i != rmax )
+				{
+					for(int j = i+1; j <= rmax; j++)
+					{
+                                                f1= M(j,R2) * M(i,R2);
+				                M(j,R2) +=  f1 * work(R2) ;
+					}
+				}
+				M(i,R2) *= F0;
+			}
+		}
+		F2 = std::max(F2, (fabs(V[i]) + fabs(work[i])));
+	}
+	for(int i = cmax ; i >= 0; i--)
+	{
+		if(i < cmax )
+		{
+                        Range R2(i+1,cmax);
+			if(!fequal(F1, 0.0))
+			{
+				S(R2,i) = (M(i,R2) / M[i][i+1]) /F1;
+				for(int j = i+1; j <= cmax ; j++)
+				{
+					f1 = M(i,R2) * S(R2,j); 
+                                        S(R2,j) += f1 * S(R2,i);
+				}
+			}
+                        S(i,R2)=0;
+                        S(R2,i)=0;
+		}
+		S[i][i] = 1.0;
+		F1 = work[i];
+	}
+	for(int i = cmax ; i >= 0; i--)
+	{
+		Range R3(i+1,rmax); 
+		Range R4(i+1,cmax); 
+		Range R5(i,rmax); 
+		F1 = V[i];
+		if(i < cmax )   M(i,R4)=0;
+		if(!fequal(F1, 0.0))
+		{
+			F1 = 1.0 / F1;
+			if(i != cmax )
+			{
+				for(int j = i+1; j <= cmax ; j++)
+				{
+                                        f1=M(R3,i) * M(R3,j);
+					f0 = (f1 / M[i][i]) * F1;
+                                        M(R5,j) += f0*M(R5,i);
+				}
+			}
+                        M(R5,i) *= F1;
+		}
+		else
+		{
+                        M(R5,i) = 0; 
+		}
+		++M[i][i];
+	}
+	for(int k = cmax ; k >= 0; k--)
+	{
+		for(int ntry = 30; ntry >= 0; ntry--)
+		{
+			if(ntry == 0)
+			{
+				throw ConvergenceFailure();
+			}
+			bool ok=true;
+                        int L,remember;
+			for( L = k; L >= 0; L--)
+			{
+				remember = L - 1;
+				if(fequal(fabs(work[L]) + F2, F2))
+				{
+					ok=false; 
+					break;
+				}
+				if(fequal(fabs(V[L-1]) + F2, F2))
+				{
+					break;
+				}
+			}
+			if(ok) 
+			{
+				f1 = 1.0;
+				f2 = 0.0;
+				for(int i = L; i <= k; i++)
+				{
+					f0 = f1 * work[i];
+					if(!fequal(fabs(f0) + F2, F2))
+					{
+						F1 = V[i];
+						f3 = PYTHAG(f0, F1);
+						V[i] = f3;
+						f3 = 1.0 / f3;
+						f2 = F1 * f3;
+						f1 = (-f0 * f3);
+                                                Vector<T> Y=M.column(remember);
+                                                Vector<T> Z=M.column(i);
+                                                M.column(remember)= Y * f2 + Z * f1;
+                                                M.column(i) = Z * f2 - Y * f1;
+					}
+				}
+			}
+			T q1 = V[k];
+			if(L == k)
+			{
+				if(q1 < 0.0)
+				{
+					V[k] = -q1;
+                                        S(Range(0,cmax),k) *= -1;
+				}
+				break;
+			}
+
+			T q2 = V[L];
+			T q3 = V[k-1];
+			F1 = work[k-1];
+			f3 = work[k];
+			f0 = ((q3 - q1) * (q3 + q1) + (F1 - f3) * (F1 + f3)) / (2.0 * f3 * q3);
+			F1 = PYTHAG(f0, 1.0);
+			f0 = ((q2 - q1) * (q2 + q1) + f3 * ((q3 / (f0 + SIGN(F1, f0))) - f3)) / q2;
+			f2 = f1 = 1.0;
+			for(int j = L; j <= (k-1); j++)
+			{
+				F1 = work[j+1];
+				q3 = V[j+1];
+				f3 = f1 * F1;
+				F1 = f2 * F1;
+				q1 = PYTHAG(f0, f3);
+				work[j] = q1;
+				f2 = f0 / q1;
+				f1 = f3 / q1;
+				f0 = q2 * f2 + F1 * f1;
+				F1 = F1 * f2 - q2 * f1;
+				f3 = q3 * f1;
+				q3 = q3 * f2;
+                                Vector<T> X=S.column(j);
+                                Vector<T> Z1=S.column(j+1);
+                                S.column(j) = X * f2 + f1 * Z1;
+                                S.column(j+1) = Z1 * f2 - X * f1;
+				q1 = PYTHAG(f0, f3);
+				V[j] = q1;
+				if(!fequal(q1, 0.0))
+				{
+					q1 = 1.0 / q1;
+					f2 = f0 * q1;
+					f1 = f3 * q1;
+				}
+				f0 = (f2 * F1) + (f1 * q3);
+				q2 = (f2 * q3) - (f1 * F1);
+                                Vector<T> Y=M.column(j);
+                                Vector<T> Z=M.column(j+1);
+                                M.column(j)= f2 * Y + f1 * Z;
+                                M.column(j+1)= f2 * Z - f1 * Y;
+			}
+			work[L] = 0.0;
+			work[k] = f0;
+			V[k] = q2;
+		}
+	}
+}
 
 } // end namespace TLAS
 
