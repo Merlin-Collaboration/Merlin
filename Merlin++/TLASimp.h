@@ -196,6 +196,7 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 	{
 		u.copy(M);
 	}
+        
 
 	// adjust for weights: multiply each column vector by wts
 	for(Subscript ir = 0; ir < u.ncols(); ir++)
@@ -207,7 +208,7 @@ void SVDMatrix<T>::Init(const Matrix<T>& M, T threshold)
 	wflgs = std::vector<bool>(u.ncols(), true);
 
 	v.redim(u.ncols(), u.ncols());
-	SVD(u, w, v);
+        SVD(u, w, v);
 
 	T wmin = threshold != T(0) ? threshold * (*std::max_element(w.begin(), w.end())) : threshold;
 	int zerocount = 0;
@@ -315,7 +316,6 @@ V& LUsolve(const Matrix<T>& M, const std::vector<int>& pivot, V& v)
 	int  first = -1; // first non-vanishing element of v
 	const int n = M.ncols();
 	T sum;
-        std::cout<<" pivot is "; for(int i=0;i<n;i++) std::cout<<pivot[i]<<" ";std::cout<<std::endl;
 // Do forward substitution
 //
 	for(int i = 0; i < n; i++)
@@ -385,7 +385,9 @@ template<class T> inline T Det(const Matrix<T>& m)
 template<class T, class V>
 Vector<T>& SVDsolve(const Matrix<T>& u, const Vector<T>& w, const Matrix<T>& v, const V& b, Vector<T>& x)
 {
-     x = v * ((Transpose(u) * b) / w); // brackets ensure operations called in correct order
+     Vector<T> work=Transpose(u) * b;
+     for(uint i=0;i<work.size();i++) work[i]= (w[i]==0.0) ? 0 : work[i]/w[i]; // need to catch divide by zero
+     x = v * work;
     return x;
 }
 
@@ -423,7 +425,6 @@ void SVD(Matrix<T>& M, Vector<T>& V, Matrix<T>& S)
         const int cmax = M.ncols() -1 ;
 
 	T f0, f1, f2, f3;
-       // T q1,q2,q3;
 	T F0 = 0.0, F1 = 0.0, F2 = 0.0;
 
 	Vector<T> work(cmax+1);
@@ -473,7 +474,7 @@ void SVD(Matrix<T>& M, Vector<T>& V, Matrix<T>& S)
 				M[i][i+1] = f0 - F1;
 				work(R2) = 0; // assignment to subvector from subvector is private for some reason 
                                 work(R2) += M(i,R2) ;
-                                work /=f3;
+                                work(R2) /=f3;
 				if(i != rmax )
 				{
 					for(int j = i+1; j <= rmax; j++)

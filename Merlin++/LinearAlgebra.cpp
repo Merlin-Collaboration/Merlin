@@ -42,62 +42,71 @@ inline double ABS(const Complex& z)
 	return abs(z);
 }
 
-#define _SWAP(a, b) std::swap((a), (b))
 #define _SIGN(a, b) ((b > 0) ? fabs(a) : -fabs(a))
 
 template<class T> double Inverse(Matrix<T>& a)
 {
-// This uses Gauss-Jordan elimination with partial pivoting 
-//    (said to be almost as effective as full pivoting and much simpler)
-//
-	double minpiv = 1.0e9;
+
 	if(a.nrows() != a.ncols())
 	{
 		throw TLAS::NonSquareMatrix();
 	}
 
 	int n = a.nrows();
+        vector<bool> done(n,false);
+        Matrix<T> b = Matrix<T>(IdentityMatrix(n));
+	int pcol=0, prow=0;  // Does not need initialising, but avoids compiler warnings
+	double minpiv = 1.0e9;
 
-        Matrix<T> b=Matrix<T>(IdentityMatrix(n));;
+	for(int i = 0; i < n; i++)
+	{
+		double largest  = 0.0;
+		for(int j = 0; j < n; j++)
+			if(!done[j]) 
+				for(int k = 0; k < n; k++)
+				{
+				       if(!done[k]) 
+					{
+						if(ABS(a(j, k)) >= largest)
+						{
+							largest  = ABS(a(j, k));
+							prow = j;
+							pcol = k;
+						}
+					}
+				}
+                done[pcol]=true;
 
-       for(int i=0; i<(n-1); i++) { 
-                Range r(i,n-1);
-                int ilarge = (a.row(i)).locmaxabs(); 
-                minpiv=min(minpiv,fabs(a[ilarge][i]));
-                if(ilarge != i){
-                      // swap a row
-                      Vector <T> temp(a.row(ilarge));
-                      a.row(ilarge)=0;
-                      a.row(ilarge)+=a.row(i);  // operator= is private. I expect there is a good reason so this is a workaround
-                      a.row(i)=temp; 
-                      // swap b row
-                      Vector <T> tempb(b.row(ilarge));
-                      b.row(ilarge)=0;
-                      b.row(ilarge)+=b.row(i); 
-                      b.row(i)=tempb; 
-                      }
-                for(int j=i+1;j<n;j++) {
-                     T factor=a[j][i]/a[i][i];
-                        a.row(j)  -= factor*a.row(i);
-                        b.row(j)  -= factor*b.row(i);
-                   }
-    }                   
-                          
-// now the second pass
-        for(int i=n-1;i>=0;i--){
-	   if(a[i][i] == T(0))	throw TLAS::SingularMatrix();
-           b.row(i) /= a[i][i];
-           if(i>0) {for(int j=i-1;j>=0;j--) {
-                        T factor = a[j][i];
-                        a.row(j) -= factor*a.row(i);
-                        b.row(j) -= factor*b.row(i);
-           }}
-}
+		if(prow != pcol)
+			for(int j = 0; j < n; j++)
+			{
+				swap(a(prow, j), a(pcol, j));
+				swap(b(prow, j), b(pcol, j));
+			}
 
-        a = b;
-        return minpiv;
+                minpiv = min(minpiv, ABS(a(pcol,pcol)));
+		if(minpiv == 0.0)
+		{
+			throw TLAS::SingularMatrix();
+		}
 
-}
+		T pivinv = 1.0 / a(pcol, pcol);
+		a(pcol, pcol) = 1.0;
+                a.row(pcol) *= pivinv;
+                b.row(pcol) *= pivinv;
+
+		for(int j = 0; j < n; j++)
+			if(j != pcol)
+			{
+				T dum = a(j, pcol);
+				a(j, pcol) = 0.0;
+                                a.row(j) -= dum*a.row(pcol);
+                                b.row(j) -= dum*b.row(pcol);
+			}
+	}
+        a = b; 
+	return minpiv;
+} // end of Inverse function
 } // end anonymous namespace
 
 namespace TLAS
