@@ -12,6 +12,7 @@
 // perform linear algebra functions based on TMAT::Matrix and TMAT::Vector classes.
 
 #include "TLAS.h"
+#include <cstddef>
 
 namespace TLAS
 {
@@ -386,7 +387,7 @@ template<class T, class V>
 Vector<T>& SVDsolve(const Matrix<T>& u, const Vector<T>& w, const Matrix<T>& v, const V& b, Vector<T>& x)
 {
      Vector<T> work=Transpose(u) * b;
-     for(uint i=0;i<work.size();i++) work[i]= (w[i]==0.0) ? 0 : work[i]/w[i]; // need to catch divide by zero
+     for(size_t i=0;i<work.size();i++) work[i]= (w[i]==0.0) ? 0 : work[i]/w[i]; // need to catch divide by zero
      x = v * work;
     return x;
 }
