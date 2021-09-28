@@ -346,7 +346,6 @@ public:
 		array /= s;
 		return *this;
 	}
-       
 
 	// vector operations
 	const Vector<T>& operator+=(const Vector<T>& u)
@@ -589,36 +588,41 @@ public:
 	typedef Vector<T> vector_type;
 	typedef Matrix<T> matrix_type;
 
-        T sumsquared() // added RJB
-        {
-               T s=0;
-               for(size_t i=0;i<sl.size();i++) s += pow(array[sl.start()+i*sl.stride()] ,2);  
-               return s;
-        }
-        
-        T sumfabs() // added RJB
-        {
-               T s=0;
-               for(size_t i=0;i<sl.size();i++) s += ABS(array[sl.start()+i*sl.stride()] );
-               return s;
-        }
+	T sumsquared()     // added RJB
+	{
+		T s = 0;
+		for(size_t i = 0; i < sl.size(); i++)
+			s += pow(array[sl.start() + i * sl.stride()], 2);
+		return s;
+	}
 
-        size_t locmaxabs() // added RJB
-        {
-               size_t imax=0;
+	T sumfabs()     // added RJB
+	{
+		T s = 0;
+		for(size_t i = 0; i < sl.size(); i++)
+			s += ABS(array[sl.start() + i * sl.stride()]);
+		return s;
+	}
 
-               double amax = ABS(array[sl.start()]);
-               if(sl.size()>1){
-                     for (size_t i=1; i < sl.size();i++) {
-                            if(ABS(array[sl.start()+i*sl.stride()]) > amax) {
-                            amax = ABS(array[sl.start() + i * sl.stride()]);
-                            imax = i;
-                        }
-                      }
-               }
+	size_t locmaxabs()     // added RJB
+	{
+		size_t imax = 0;
 
-         return imax;
-         }
+		double amax = ABS(array[sl.start()]);
+		if(sl.size() > 1)
+		{
+			for(size_t i = 1; i < sl.size(); i++)
+			{
+				if(ABS(array[sl.start() + i * sl.stride()]) > amax)
+				{
+					amax = ABS(array[sl.start() + i * sl.stride()]);
+					imax = i;
+				}
+			}
+		}
+
+		return imax;
+	}
 
 	// vector subscripting.
 	// () and [] are supported.
@@ -687,12 +691,12 @@ public:
 		array[sl] *= array_type(s, sl.size());
 		return *this;
 	}
-        Vector<T> operator*(const T& s) const // RJB added
-        {
-                Vector<T> v(*this);
-                v *= s;
-                return v;
-        }
+	Vector<T> operator*(const T& s) const     // RJB added
+	{
+		Vector<T> v(*this);
+		v *= s;
+		return v;
+	}
 
 	SubVector<T>& operator/=(const T& s)
 	{
@@ -725,10 +729,10 @@ public:
 		return *this;
 	}
 	Vector<T> operator/(const T& s) // added RJB
-        {   
-        Vector<T> rv(*this);
-	return rv /s;
-        }
+	{
+		Vector<T> rv(*this);
+		return rv / s;
+	}
 
 	/**
 	 * Conversion to a Vector
@@ -778,10 +782,10 @@ private:
 	friend class Matrix<T>;
 	friend class Vector<T>;
 };
-        template<class T> Vector<T> operator*(const T& s, const SubVector<T> & V) // RJB added
-        {
-            return(V*s);
-        }
+template<class T> Vector<T> operator*(const T& s, const SubVector<T> & V)         // RJB added
+{
+	return V * s;
+}
 /**
  * template<class T> SubMatrix
  * A contiguous (2-dimensional) block (sub-matrix)

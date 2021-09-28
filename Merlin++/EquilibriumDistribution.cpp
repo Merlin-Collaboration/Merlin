@@ -28,40 +28,40 @@ using namespace ParticleTracking;
 
 /*
  * void IntegrateEigenvector::interpolate(double* x, double* y, int n, double X, double& Y, double& dy)
-{
-	int j = 1;
-	double close, closest, ho, hp, w;
-	double c[MAXPOINTS];
-	double d[MAXPOINTS];
+   {
+    int j = 1;
+    double close, closest, ho, hp, w;
+    double c[MAXPOINTS];
+    double d[MAXPOINTS];
 
-	closest = fabs(X - x[1]);
+    closest = fabs(X - x[1]);
 
-	for(int i = 1; i <= n; i++)
-	{
-		c[i] = d[i] = y[i];
-		if((close = fabs(X - x[i])) < closest)
-		{
-			j = i;
-			closest = close;
-		}
-	}
+    for(int i = 1; i <= n; i++)
+    {
+        c[i] = d[i] = y[i];
+        if((close = fabs(X - x[i])) < closest)
+        {
+            j = i;
+            closest = close;
+        }
+    }
 
-	Y = y[j--];
+    Y = y[j--];
 
-	for(int m = 1; m < n; m++)
-	{
-		for(int i = 1; i <= n; i++)
-		{
-			ho = x[i] - X;
-			hp = x[i + m] - X;
-			w = c[i + 1] - d[i];
-			d[i] = hp * w/(ho - hp);
-			c[i] = ho * w/(ho - hp);
-		}
-		Y += (dy = (2 * j < (n - m) ? c[j + 1] : d[j--]));
-	}
-}
-*/
+    for(int m = 1; m < n; m++)
+    {
+        for(int i = 1; i <= n; i++)
+        {
+            ho = x[i] - X;
+            hp = x[i + m] - X;
+            w = c[i + 1] - d[i];
+            d[i] = hp * w/(ho - hp);
+            c[i] = ho * w/(ho - hp);
+        }
+        Y += (dy = (2 * j < (n - m) ? c[j + 1] : d[j--]));
+    }
+   }
+ */
 
 double IntegrateEigenvector::trapezium(double a, double b, int n)
 {
@@ -71,27 +71,27 @@ double IntegrateEigenvector::trapezium(double a, double b, int n)
 
 	if(n == 1)
 	{
-		return   answer = (b - a) * (function(a) + function(b))/2.0;
+		return answer = (b - a) * (function(a) + function(b)) / 2.0;
 	}
 	else
 	{
-		npts = 1 << (n-2); 
+		npts = 1 << (n - 2);
 		delta = (b - a) / npts;
 		x = a + 0.5 * delta;
-		sum=0;
-		for(int  j = 0; j < npts; j++, x += delta)
+		sum = 0;
+		for(int j = 0; j < npts; j++, x += delta)
 		{
 			sum += function(x);
 		}
-		return answer = (answer + delta * sum ) / 2.0;
+		return answer = (answer + delta * sum) / 2.0;
 	}
 }
 
 double IntegrateEigenvector::romberg(double a, double b)
 {
-	double value,error;
-	double s[MAXPOINTS+1];
-	double h[MAXPOINTS+2];
+	double value, error;
+	double s[MAXPOINTS + 1];
+	double h[MAXPOINTS + 2];
 	int j;
 
 	h[1] = 1.0;
@@ -100,8 +100,8 @@ double IntegrateEigenvector::romberg(double a, double b)
 		s[j] = trapezium(a, b, j);
 		if(j >= K)
 		{
-			Interpolation I(h+j-K,s+j-K,K,K);
-			value=I.itsMethod->ValueAt(0.0,&error);
+			Interpolation I(h + j - K, s + j - K, K, K);
+			value = I.itsMethod->ValueAt(0.0, &error);
 			if(fabs(error) <= EPS * fabs(value))
 			{
 				return value;

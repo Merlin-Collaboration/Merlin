@@ -33,13 +33,13 @@ public:
 
 	int lastseenat;
 
-	ArbSpacedData(const vector<double>& xvals, const vector<double>& yvals,int order);
-	ArbSpacedData(const double* xvals, const double* yvals,int n,int order);
-	virtual double ValueAt(double,double* err=0x0) ;
+	ArbSpacedData(const vector<double>& xvals, const vector<double>& yvals, int order);
+	ArbSpacedData(const double* xvals, const double* yvals, int n, int order);
+	virtual double ValueAt(double, double* err = 0x0);
 
 private:
 	vector<Data> itsData;
-	vector <vector <double> > Q;
+	vector<vector<double> > Q;
 };
 
 // Method used for equally space data
@@ -51,11 +51,11 @@ public:
 	EqualSpacedData(const vector<double> yv, double xm, double delta, int order) :
 		yvals(yv), xmin(xm), xmax(xm + (yv.size() - 1) * delta), dx(delta)
 	{
-	        itsOrder=order;
+		itsOrder = order;
 		assert(dx > 0);
 	}
 
-	double ValueAt(double x,double*err=0x0) ;
+	double ValueAt(double x, double*err = 0x0);
 
 private:
 	vector<double> yvals;
@@ -84,109 +84,122 @@ ArbSpacedData::ArbSpacedData(const vector<double>& xvals, const vector<double>& 
 		itsData.push_back(Data(xvals[i], yvals[i]));
 	}
 	sort(itsData.begin(), itsData.end(), sort_x);
-	
-	itsOrder=order;
-	int n=xvals.size();
-	if(itsOrder > n-1){
-	        itsOrder = n-1; 
-		cout<<" Interpolation with only "<<n<<" points so requested order reduced from "<<order<<" to "<<itsOrder<<endl;
+
+	itsOrder = order;
+	int n = xvals.size();
+	if(itsOrder > n - 1)
+	{
+		itsOrder = n - 1;
+		cout << " Interpolation with only " << n << " points so requested order reduced from " << order << " to " <<
+			itsOrder << endl;
 	}
-        
+
 	//  Neville's method
 	//  First, for  n points define n constants
 	//  then define n-1 linear forms between adjacent pairs
 	//  then use these to give n-2 quadratics that go through triplets
 	//  etcetera
-	
-	vector <vector <double> > P;
+
+	vector<vector<double> > P;
 	P.reserve(n);
-	
-	for(int i=0;i<n;i++) {
-        	vector <double> v; 
+
+	for(int i = 0; i < n; i++)
+	{
+		vector<double> v;
 		v.reserve(n);
 		v.push_back(itsData[i].y);
-	        P.push_back(v);
+		P.push_back(v);
 	}
-	
+
 	// this is the iteration, from old P to new Q
-	for(int k=1;k<=itsOrder;k++){
-	        Q.clear();
-	        Q.reserve(n-k);
-	        for(int i=0;i<n-k;i++) {
-		    Q.push_back({0}); // needs this to get size() right later
-        	    Q[i].clear();
-	       	   Q[i].reserve(k+1); 
-		   for(int j=0;j<k;j++) {
-			   Q[i].push_back((-itsData[i+k].x * P[i][j] + itsData[i].x * P[i+1][j])/(itsData[i].x-itsData[i+k].x));
-		           }
-	            Q[i].push_back(0);
-		    for(int j=1;j<=k;j++) {
-			    Q[i][j] += (P[i][j-1] - P[i+1][j-1])/(itsData[i].x-itsData[i+k].x);
-                    }
+	for(int k = 1; k <= itsOrder; k++)
+	{
+		Q.clear();
+		Q.reserve(n - k);
+		for(int i = 0; i < n - k; i++)
+		{
+			Q.push_back({0}); // needs this to get size() right later
+			Q[i].clear();
+			Q[i].reserve(k + 1);
+			for(int j = 0; j < k; j++)
+			{
+				Q[i].push_back((-itsData[i + k].x * P[i][j] + itsData[i].x * P[i + 1][j]) / (itsData[i].x - itsData[i
+					+ k].x));
+			}
+			Q[i].push_back(0);
+			for(int j = 1; j <= k; j++)
+			{
+				Q[i][j] += (P[i][j - 1] - P[i + 1][j - 1]) / (itsData[i].x - itsData[i + k].x);
+			}
 		}
-	 
-                P.clear(); // replace old P with copy of new Q for use in next iteration
-	        P.reserve(n-k);
-	        for(int i=0;i<n-k;i++) {
-	            P.push_back(Q[i]);
-	        }
+
+		P.clear();         // replace old P with copy of new Q for use in next iteration
+		P.reserve(n - k);
+		for(int i = 0; i < n - k; i++)
+		{
+			P.push_back(Q[i]);
+		}
 	}
-        lastseenat=0;// used for finding segment: assumes repeated nearby calls	
+	lastseenat = 0;  // used for finding segment: assumes repeated nearby calls
 	/*
-	 if(itsOrder<2) return; 
-	// DEBUG HERE
-	cout<<n<<" points\n";
-	cout<<" order "<<itsOrder<<endl;
-	cout<<" Qsize "<<Q.size()<<endl;
-	cout<<" Psize "<<P.size()<<endl;
-	std::ofstream f("jim.txt");
-		double last=xvals[xvals.size()-1];
+	   if(itsOrder<2) return;
+	   // DEBUG HERE
+	   cout<<n<<" points\n";
+	   cout<<" order "<<itsOrder<<endl;
+	   cout<<" Qsize "<<Q.size()<<endl;
+	   cout<<" Psize "<<P.size()<<endl;
+	   std::ofstream f("jim.txt");
+	    double last=xvals[xvals.size()-1];
 
-		double stepp=(last-xvals[0])/100;
-		for(double xx=xvals[0];xx<last;xx+=stepp){
-				f<<xx;
-				for(uint ii=0;ii<Q.size();ii++) f<<" "<<evaluatepoly(xx,Q[ii]);
-				f<<endl;
-				}
+	    double stepp=(last-xvals[0])/100;
+	    for(double xx=xvals[0];xx<last;xx+=stepp){
+	            f<<xx;
+	            for(uint ii=0;ii<Q.size();ii++) f<<" "<<evaluatepoly(xx,Q[ii]);
+	            f<<endl;
+	            }
 
-	f.close();
-	*/
-       }
-ArbSpacedData::ArbSpacedData(const double* xvals, const double* yvals, int n,int order) :itsData()
+	   f.close();
+	 */
+}
+ArbSpacedData::ArbSpacedData(const double* xvals, const double* yvals, int n, int order) :
+	itsData()
 { // version for old style arrays
-  vector<double> X(xvals,xvals+n);
-  vector<double> Y(yvals,yvals+n);
-  ArbSpacedData(X,Y,order);
+	vector<double> X(xvals, xvals + n);
+	vector<double> Y(yvals, yvals + n);
+	ArbSpacedData(X, Y, order);
 }
 
-double ArbSpacedData::ValueAt(double x,double* err) 
+double ArbSpacedData::ValueAt(double x, double* err)
 {
 	if(x < itsData.front().x || x > itsData.back().x)
 	{
 		throw Interpolation::BadRange(x, FloatRange(itsData.front().x, itsData.back().x));
 	}
 
+	int n = itsData.size();
 
-	int n=itsData.size();
-        
-	if(itsOrder>1){
+	if(itsOrder > 1)
+	{
 		// this covers interpolation more complicated than linear
 		// search is inefficient first time but fast for many close calls
 		// n.b.  lastseenat is a data member and therefore preserved between calls
-		while(x>itsData[lastseenat].x) lastseenat += 1;
-		while(x<itsData[lastseenat].x) lastseenat -= 1;
-		int lo=max(0,lastseenat-itsOrder);
-		int Qsize=Q.size();
-		int hi=min(lastseenat,Qsize-1);
-		int iwant=max(0,lastseenat-(itsOrder+1)/2 -1);
-		iwant=min(iwant,Qsize-2);
+		while(x > itsData[lastseenat].x)
+			lastseenat += 1;
+		while(x < itsData[lastseenat].x)
+			lastseenat -= 1;
+		int lo = max(0, lastseenat - itsOrder);
+		int Qsize = Q.size();
+		int hi = min(lastseenat, Qsize - 1);
+		int iwant = max(0, lastseenat - (itsOrder + 1) / 2 - 1);
+		iwant = min(iwant, Qsize - 2);
 		// cout<<" lastseen lo hi iwant "<<lastseenat<<" "<<lo<<" "<<hi<<" "<<iwant<<endl;
 		//for(int i=lo;i<=hi;i++) cout<<i<<" "<<evaluatepoly(x,Q[i])<<endl;
-		double v1=evaluatepoly(x,Q[iwant]);
-		double v2=evaluatepoly(x,Q[iwant+1]);
-                //cout<<" is "<<v1 <<" "<<v2<<endl;
-		if(err) *err=abs(v1-v2);  // give an error estimate iff one is asked for
-		return(v1+v2)/2;
+		double v1 = evaluatepoly(x, Q[iwant]);
+		double v2 = evaluatepoly(x, Q[iwant + 1]);
+		//cout<<" is "<<v1 <<" "<<v2<<endl;
+		if(err)
+			*err = abs(v1 - v2);  // give an error estimate iff one is asked for
+		return (v1 + v2) / 2;
 	}
 	// use linear interpolation to return value
 	// locate segment by binary search
@@ -211,7 +224,7 @@ double ArbSpacedData::ValueAt(double x,double* err)
 // Class EqualSpacedData implementation
 //
 
-double EqualSpacedData::ValueAt(double x,double* err) 
+double EqualSpacedData::ValueAt(double x, double* err)
 {
 	// note that we use extrapolation here if x is out of range
 	size_t n;
@@ -241,16 +254,16 @@ Interpolation::BadRange::BadRange(double x, const FloatRange& r) :
 	msg = buf.str();
 }
 
-Interpolation::Interpolation(const vector<double>& yvals, double xmin, double dx,int order) :
+Interpolation::Interpolation(const vector<double>& yvals, double xmin, double dx, int order) :
 	itsMethod(new EqualSpacedData(yvals, xmin, dx, order))
 {
 }
 
-Interpolation::Interpolation(const double* xv, const double* yv,int n,int order) :
+Interpolation::Interpolation(const double* xv, const double* yv, int n, int order) :
 	itsMethod(new ArbSpacedData(xv, yv, n, order))
 {
 }
-Interpolation::Interpolation(const std::vector<double>& xv, const vector<double>& yv,int order) :
+Interpolation::Interpolation(const std::vector<double>& xv, const vector<double>& yv, int order) :
 	itsMethod(new ArbSpacedData(xv, yv, order))
 {
 }
