@@ -15,6 +15,7 @@
 #include <cmath>
 #include <valarray>
 #include <iostream>
+#include <complex>
 
 #include "tblas.h"
 #include "utils.h"
@@ -38,6 +39,16 @@ class DimensionError
 class RangeError
 {
 };
+
+inline double ABS(double x)
+{
+	return fabs(x);
+}
+
+inline double ABS(const std::complex<double>& z)
+{
+	return abs(z);
+}
 
 /**
  * \class Subscript
@@ -588,7 +599,7 @@ public:
         T sumfabs() // added RJB
         {
                T s=0;
-               for(size_t i=0;i<sl.size();i++) s += fabs(array[sl.start()+i*sl.stride()] );  
+               for(size_t i=0;i<sl.size();i++) s += ABS(array[sl.start()+i*sl.stride()] );
                return s;
         }
 
@@ -596,11 +607,11 @@ public:
         {
                size_t imax=0;
 
-               double amax = fabs(array[sl.start()]);
+               double amax = ABS(array[sl.start()]);
                if(sl.size()>1){
                      for (size_t i=1; i < sl.size();i++) {
-                            if(fabs(array[sl.start()+i*sl.stride()]) > amax) {
-                            amax = fabs(array[sl.start() + i * sl.stride()]);
+                            if(ABS(array[sl.start()+i*sl.stride()]) > amax) {
+                            amax = ABS(array[sl.start() + i * sl.stride()]);
                             imax = i;
                         }
                       }
