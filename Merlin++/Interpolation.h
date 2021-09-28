@@ -12,11 +12,11 @@
 #include "MerlinException.h"
 #include "Range.h"
 #include <vector>
+#include <iostream>
 
 /**
  * class Interpolation
  * An interpolation functor which interpolates values from a data table.
- * Currently only linear interpolation is assumed.
  */
 
 class Interpolation
@@ -48,18 +48,29 @@ public:
 		virtual ~Method()
 		{
 		}
-		virtual double ValueAt(double x) const = 0;
+		virtual double ValueAt(double x, double *err = 0x0) = 0;
+		double evaluatepoly(double x, std::vector<double> &p)
+		{
+			int n = p.size();
+			double s = p[n - 1];
+			if(n > 1)
+				for(int j = 2; j <= n; j++)
+					s = s * x + p[n - j];
+			return s;
+		}
+		int itsOrder;
 	};
 
 	/**
 	 * Interpolation of equally spaced data points
 	 */
-	Interpolation(const std::vector<double>& yvals, double xmin, double dx);
+	Interpolation(const std::vector<double>& yvals, double xmin, double dx, int order = 1);
 
 	/**
 	 * Interpolation of arbitrary spaced data points
 	 */
-	Interpolation(const std::vector<double>& xvals, const std::vector<double>& yvals);
+	Interpolation(const std::vector<double>& xvals, const std::vector<double>& yvals, int order = 1);
+	Interpolation(const double* xvals, const double* yvals, int n, int order = 1);
 
 	~Interpolation();
 
@@ -67,8 +78,6 @@ public:
 	{
 		return itsMethod->ValueAt(x);
 	}
-
-private:
 
 	Method* itsMethod;
 };

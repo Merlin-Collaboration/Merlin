@@ -14,11 +14,11 @@
 #include "PhysicalConstants.h"
 #include "PhysicalUnits.h"
 #include "MatrixPrinter.h"
+#include "Interpolation.h"
 
 // The following constants specify the integration precision
 #define EPS 1.0e-8
-#define JMAX 30
-#define JMAXP (JMAX + 1)
+#define MAXPOINTS 30
 #define K 5
 
 using namespace std;
@@ -26,90 +26,85 @@ using namespace PhysicalConstants;
 using namespace PhysicalUnits;
 using namespace ParticleTracking;
 
-void IntegrateEigenvector::polint(double xa[], double ya[], int n, double x, double& y, double& dy)
+/*
+ * void IntegrateEigenvector::interpolate(double* x, double* y, int n, double X, double& Y, double& dy)
+   {
+    int j = 1;
+    double close, closest, ho, hp, w;
+    double c[MAXPOINTS];
+    double d[MAXPOINTS];
+
+    closest = fabs(X - x[1]);
+
+    for(int i = 1; i <= n; i++)
+    {
+        c[i] = d[i] = y[i];
+        if((close = fabs(X - x[i])) < closest)
+        {
+            j = i;
+            closest = close;
+        }
+    }
+
+    Y = y[j--];
+
+    for(int m = 1; m < n; m++)
+    {
+        for(int i = 1; i <= n; i++)
+        {
+            ho = x[i] - X;
+            hp = x[i + m] - X;
+            w = c[i + 1] - d[i];
+            d[i] = hp * w/(ho - hp);
+            c[i] = ho * w/(ho - hp);
+        }
+        Y += (dy = (2 * j < (n - m) ? c[j + 1] : d[j--]));
+    }
+   }
+ */
+
+double IntegrateEigenvector::trapezium(double a, double b, int n)
 {
-	int i, m;
-	int ns = 1;
-	double den, dif, dift, ho, hp, w;
-	double c[JMAX];
-	double d[JMAX];
-
-	dif = fabs(x - xa[1]);
-
-	for(i = 1; i <= n; i++)
-	{
-		if((dift = fabs(x - xa[i])) < dif)
-		{
-			ns = i;
-			dif = dift;
-		}
-		c[i] = ya[i];
-		d[i] = ya[i];
-	}
-
-	y = ya[ns--];
-
-	for(m = 1; m < n; m++)
-	{
-		for(i = 1; i <= n; i++)
-		{
-			ho = xa[i] - x;
-			hp = xa[i + m] - x;
-			w = c[i + 1] - d[i];
-			den = w / (ho - hp);
-			d[i] = hp * den;
-			c[i] = ho * den;
-		}
-		y += (dy = (2 * ns < (n - m) ? c[ns + 1] : d[ns--]));
-	}
-}
-
-double IntegrateEigenvector::trapzd(double a, double b, int n)
-{
-	double x, tnm, sum, del;
-	static double s;
-	int it, j;
+	double x, sum, delta;
+	static double answer; // should not be modified between successive calls
+	int npts;
 
 	if(n == 1)
 	{
-		s = 0.5 * (b - a) * (func(a) + func(b));
-		return s;
+		return answer = (b - a) * (function(a) + function(b)) / 2.0;
 	}
 	else
 	{
-		for(it = 1, j = 1; j < n - 1; j++)
+		npts = 1 << (n - 2);
+		delta = (b - a) / npts;
+		x = a + 0.5 * delta;
+		sum = 0;
+		for(int j = 0; j < npts; j++, x += delta)
 		{
-			it <<= 1;
+			sum += function(x);
 		}
-		tnm = it;
-		del = (b - a) / tnm;
-		x = a + 0.5 * del;
-		for(sum = 0.0, j = 1; j <= it; j++, x += del)
-		{
-			sum += func(x);
-		}
-		s = 0.5 * (s + (b - a) * sum / tnm);
-		return s;
+		return answer = (answer + delta * sum) / 2.0;
 	}
 }
 
-double IntegrateEigenvector::qromb(double a, double b)
+double IntegrateEigenvector::romberg(double a, double b)
 {
-	double ss, dss;
-	double s[JMAXP];
-	double h[JMAXP + 1];
+	double value, error;
+	double s[MAXPOINTS + 1];
+	double h[MAXPOINTS + 2];
 	int j;
 
 	h[1] = 1.0;
-	for(j = 1; j <= JMAX; j++)
+	for(j = 1; j <= MAXPOINTS; j++)
 	{
-		s[j] = trapzd(a, b, j);
+		s[j] = trapezium(a, b, j);
 		if(j >= K)
 		{
-			polint(&h[j - K], &s[j - K], K, 0.0, ss, dss);
-			if(fabs(dss) <= EPS * fabs(ss))
+			Interpolation I(h + j - K, s + j - K, K, K);
+			value = I.itsMethod->ValueAt(0.0, &error);
+			if(fabs(error) <= EPS * fabs(value))
 			{
-				return ss;
+				return value;
 			}
 		}
 		h[j + 1] = 0.25 * h[j];
@@ -126,14 +121,14 @@ double IntegrateEigenvector::Integral(ComplexVector& Ek, SectorBend* sb, double 
 	SectorBend::PoleFace* pf = (sb->GetPoleFaceInfo()).entrance;
 	tanE1 = pf ? tan(pf->rot) : 0.0;
 
-	return qromb(0, sb->GetLength());
+	return romberg(0, sb->GetLength());
 }
 
 IntegrateWithGradient::IntegrateWithGradient()
 {
 }
 
-double IntegrateWithGradient::func(double s)
+double IntegrateWithGradient::function(double s)
 {
 	Complex sbendTM52 = -(1.0 - cos(k * s)) * h / k / k;
 	Complex sbendTM51 = -sin(k * s) * h / k + h * tanE1 * sbendTM52;
@@ -147,7 +142,7 @@ IntegrateZeroGradient::IntegrateZeroGradient()
 {
 }
 
-double IntegrateZeroGradient::func(double s)
+double IntegrateZeroGradient::function(double s)
 {
 	Complex sbendTM52 = -s * s * h / 2.;
 	Complex sbendTM51 = -s * h + h * tanE1 * sbendTM52;

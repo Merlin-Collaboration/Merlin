@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include "LinearAlgebra.h"
+#include "MerlinException.h"
 #include <algorithm> // for std::swap
 #include <cmath>
 
@@ -41,7 +42,6 @@ inline double ABS(const Complex& z)
 	return abs(z);
 }
 
-#define _SWAP(a, b) std::swap((a), (b))
 #define _SIGN(a, b) ((b > 0) ? fabs(a) : -fabs(a))
 
 template<class T> double Inverse(Matrix<T>& a)
@@ -53,91 +53,60 @@ template<class T> double Inverse(Matrix<T>& a)
 	}
 
 	int n = a.nrows();
-
-	Vector<int> indxc(n);
-	Vector<int> indxr(n);
-	Vector<int> ipiv(n);
-
-	int icol, irow, i, j, k;
+	vector<bool> done(n, false);
+	Matrix<T> b = Matrix<T>(IdentityMatrix(n));
+	int pcol = 0, prow = 0;  // Does not need initialising, but avoids compiler warnings
 	double minpiv = 1.0e9;
-	double big;
-	T dum, pivinv;
 
-	for(j = 0; j < n; j++)
+	for(int i = 0; i < n; i++)
 	{
-		ipiv(j) = 0;
-	}
-
-	for(i = 0; i < n; i++)
-	{
-		big = 0.0;
-		for(j = 0; j < n; j++)
-			if(ipiv(j) != 1)
-				for(k = 0; k < n; k++)
+		double largest  = 0.0;
+		for(int j = 0; j < n; j++)
+			if(!done[j])
+				for(int k = 0; k < n; k++)
 				{
-					if(ipiv(k) == 0)
+					if(!done[k])
 					{
-						if(ABS(a(j, k)) >= big)
+						if(ABS(a(j, k)) >= largest)
 						{
-							big = ABS(a(j, k));
-							irow = j;
-							icol = k;
+							largest  = ABS(a(j, k));
+							prow = j;
+							pcol = k;
 						}
 					}
-					else if(ipiv[k] > 1)
-					{
-						throw TLAS::SingularMatrix();
-					}
 				}
-		++ipiv(icol);
+		done[pcol] = true;
 
-		if(irow != icol)
-			for(int l = 0; l < n; l++)
+		if(prow != pcol)
+			for(int j = 0; j < n; j++)
 			{
-				_SWAP(a(irow, l), a(icol, l));
+				swap(a(prow, j), a(pcol, j));
+				swap(b(prow, j), b(pcol, j));
 			}
 
-		indxr(i) = irow;
-		indxc(i) = icol;
-		if(ABS(a(icol, icol)) < minpiv)
-		{
-			minpiv = ABS(a(icol, icol));
-		}
+		minpiv = min(minpiv, ABS(a(pcol, pcol)));
 		if(minpiv == 0.0)
 		{
-			cout << "Singular" << endl;
 			throw TLAS::SingularMatrix();
 		}
 
-		pivinv = 1.0 / a(icol, icol);
-		a(icol, icol) = 1.0;
-		for(int l = 0; l < n; l++)
-		{
-			a(icol, l) *= pivinv;
-		}
+		T pivinv = 1.0 / a(pcol, pcol);
+		a(pcol, pcol) = 1.0;
+		a.row(pcol) *= pivinv;
+		b.row(pcol) *= pivinv;
 
-		for(int m = 0; m < n; m++)
-			if(m != icol)
+		for(int j = 0; j < n; j++)
+			if(j != pcol)
 			{
-				dum = a(m, icol);
-				a(m, icol) = 0.0;
-				for(int l = 0; l < n; l++)
-				{
-					a(m, l) -= a(icol, l) * dum;
-				}
+				T dum = a(j, pcol);
+				a(j, pcol) = 0.0;
+				a.row(j) -= dum * a.row(pcol);
+				b.row(j) -= dum * b.row(pcol);
 			}
 	}
-
-	for(int l = n - 1; l >= 0; l--)
-	{
-		if(indxr(l) != indxc(l))
-			for(int k = 0; k < n; k++)
-			{
-				_SWAP(a(k, indxr(l)), a(k, indxc(l)));
-			}
-	}
+	a = b;
 	return minpiv;
-}
+} // end of Inverse function
 } // end anonymous namespace
 
 namespace TLAS
@@ -317,6 +286,176 @@ void Symplectify(RealMatrix& a)
 
 void tred2(RealMatrix& a, RealVector& d, RealVector& e)
 {
+//  Adapted from the  EISPACK subroutine given below
+//
+/*
+      subroutine tred2(nm,n,a,d,e,z)
+   c
+      integer i,j,k,l,n,ii,nm,jp1
+      double precision a(nm,n),d(n),e(n),z(nm,n)
+      double precision f,g,h,hh,scale
+   c
+   c     this subroutine is a translation of the algol procedure tred2,
+   c     num. math. 11, 181-195(1968) by martin, reinsch, and wilkinson.
+   c     handbook for auto. comp., vol.ii-linear algebra, 212-226(1971).
+   c
+   c     this subroutine reduces a real symmetric matrix to a
+   c     symmetric tridiagonal matrix using and accumulating
+   c     orthogonal similarity transformations.
+   c
+   c     on input
+   c
+   c        nm must be set to the row dimension of two-dimensional
+   c          array parameters as declared in the calling program
+   c          dimension statement.
+   c
+   c        n is the order of the matrix.
+   c
+   c        a contains the real symmetric input matrix.  only the
+   c          lower triangle of the matrix need be supplied.
+   c
+   c     on output
+   c
+   c        d contains the diagonal elements of the tridiagonal matrix.
+   c
+   c        e contains the subdiagonal elements of the tridiagonal
+   c          matrix in its last n-1 positions.  e(1) is set to zero.
+   c
+   c        z contains the orthogonal transformation matrix
+   c          produced in the reduction.
+   c
+   c        a and z may coincide.  if distinct, a is unaltered.
+   c
+   c     questions and comments should be directed to burton s. garbow,
+   c     mathematics and computer science div, argonne national laboratory
+   c
+   c     this version dated august 1983.
+   c
+   c     ------------------------------------------------------------------
+   c
+      do 100 i = 1, n
+   c
+         do 80 j = i, n
+   80    z(j,i) = a(j,i)
+   c
+         d(i) = a(n,i)
+   100 continue
+   c
+      if (n .eq. 1) go to 510
+   c     .......... for i=n step -1 until 2 do -- ..........
+      do 300 ii = 2, n
+         i = n + 2 - ii
+         l = i - 1
+         h = 0.0d0
+         scale = 0.0d0
+         if (l .lt. 2) go to 130
+   c     .......... scale row (algol tol then not needed) ..........
+         do 120 k = 1, l
+   120    scale = scale + dabs(d(k))
+   c
+         if (scale .ne. 0.0d0) go to 140
+   130    e(i) = d(l)
+   c
+         do 135 j = 1, l
+            d(j) = z(l,j)
+            z(i,j) = 0.0d0
+            z(j,i) = 0.0d0
+   135    continue
+   c
+         go to 290
+   c
+   140    do 150 k = 1, l
+            d(k) = d(k) / scale
+            h = h + d(k) * d(k)
+   150    continue
+   c
+         f = d(l)
+         g = -dsign(dsqrt(h),f)
+         e(i) = scale * g
+         h = h - f * g
+         d(l) = f - g
+   c     .......... form a*u ..........
+         do 170 j = 1, l
+   170    e(j) = 0.0d0
+   c
+         do 240 j = 1, l
+            f = d(j)
+            z(j,i) = f
+            g = e(j) + z(j,j) * f
+            jp1 = j + 1
+            if (l .lt. jp1) go to 220
+   c
+            do 200 k = jp1, l
+               g = g + z(k,j) * d(k)
+               e(k) = e(k) + z(k,j) * f
+   200       continue
+   c
+   220       e(j) = g
+   240    continue
+   c     .......... form p ..........
+         f = 0.0d0
+   c
+         do 245 j = 1, l
+            e(j) = e(j) / h
+            f = f + e(j) * d(j)
+   245    continue
+   c
+         hh = f / (h + h)
+   c     .......... form q ..........
+         do 250 j = 1, l
+   250    e(j) = e(j) - hh * d(j)
+   c     .......... form reduced a ..........
+         do 280 j = 1, l
+            f = d(j)
+            g = e(j)
+   c
+            do 260 k = j, l
+   260       z(k,j) = z(k,j) - f * e(k) - g * d(k)
+   c
+            d(j) = z(l,j)
+            z(i,j) = 0.0d0
+   280    continue
+   c
+   290    d(i) = h
+   300 continue
+   c     .......... accumulation of transformation matrices ..........
+      do 500 i = 2, n
+         l = i - 1
+         z(n,l) = z(l,l)
+         z(l,l) = 1.0d0
+         h = d(i)
+         if (h .eq. 0.0d0) go to 380
+   c
+         do 330 k = 1, l
+   330    d(k) = z(k,i) / h
+   c
+         do 360 j = 1, l
+            g = 0.0d0
+   c
+            do 340 k = 1, l
+   340       g = g + z(k,i) * z(k,j)
+   c
+            do 360 k = 1, l
+               z(k,j) = z(k,j) - g * d(k)
+   360    continue
+   c
+   380    do 400 k = 1, l
+   400    z(k,i) = 0.0d0
+   c
+   500 continue
+   c
+   510 do 520 i = 1, n
+         d(i) = z(n,i)
+         z(n,i) = 0.0d0
+   520 continue
+   c
+      z(n,n) = 1.0d0
+      e(1) = 0.0d0
+      return
+      end
+
+ */
+
 	int n = a.nrows();
 	int i, j, k;
 	d.redim(n);
@@ -325,27 +464,21 @@ void tred2(RealMatrix& a, RealVector& d, RealVector& e)
 	for(i = n - 1; i > 0; i--)
 	{
 		double h = 0;
-		double scale = 0;
 		if(i > 1)
 		{
-			for(k = 0; k < i; k++)
-			{
-				scale += fabs(a(i, k));
-			}
+			double scale = a(i, Range(0, i - 1)).sumfabs();
 			if(scale == 0)
 			{
 				e(i) = a(i, i - 1);
 			}
 			else
 			{
-				for(k = 0; k < i; k++)
-				{
-					a(i, k) /= scale;
-					h += a(i, k) * a(i, k);
-				}
+				Range r = Range(0, i - 1);
+				a(i, r) /= scale;
+				h +=  a(i, r) * a(i, r);
 
 				double f = a(i, i - 1);
-				double g = (f >= 0.0) ? -sqrt(h) : sqrt(h);
+				double g = -copysign(sqrt(h), f);
 				e(i) = scale * g;
 				h -= f * g;
 				a(i, i - 1) = f - g;
@@ -354,19 +487,8 @@ void tred2(RealMatrix& a, RealVector& d, RealVector& e)
 				for(j = 0; j < i; j++)
 				{
 					a(j, i) = a(i, j) / h;
-					g = 0.0;
-
-					for(k = 0; k <= j; k++)
-					{
-						g += a(j, k) * a(i, k);
-					}
-					for(k = j + 1; k < i; k++)
-					{
-						g += a(k, j) * a(i, k);
-					}
-
+					g = a(j, Range(0, j)) * a(i, Range(0, j)) + a(Range(j + 1, i - 1), j) * a(i, Range(j + 1, i - 1));
 					e(j) = g / h;
-
 					f += e(j) * a(i, j);
 				}
 
@@ -400,23 +522,21 @@ void tred2(RealMatrix& a, RealVector& d, RealVector& e)
 		if(d(i))
 			for(j = 0; j < i; j++)
 			{
-				double g = 0.0;
-				for(int k = 0; k < i; k++)
+				if(i > 0)
 				{
-					g += a(i, k) * a(k, j);
-				}
-				for(int k = 0; k < i; k++)
-				{
-					a(k, j) -= g * a(k, i);
+					Range r = Range(0, i - 1);
+					double g = a(i, r) * a(r, j);
+					a(r, j) -= g * a(r, i);
 				}
 			}
 
 		d(i) = a(i, i);
 		a(i, i) = 1.0;
 
-		for(j = 0; j < i; j++)
+		if(i > 0)
 		{
-			a(j, i) = a(i, j) = 0.0;
+			a(i, Range(0, i - 1)) = 0;
+			a(Range(0, i - 1), i) = 0;
 		}
 	}
 }
@@ -435,80 +555,151 @@ double pythag(double a, double b)
 	}
 }
 
-void tqli(RealVector& d, RealVector& e, RealMatrix& z)
+void tqli(RealVector& diag, RealVector& off, RealMatrix& M)
 {
-	int m = 0;
-	int n = d.size();
-	int i, k, l;
+/*
+ * Find the eigenvalues and eigenvectors of a matrix that has been reduced to tridiagonal form
+ * diag is the diagonal (from 0 to n-1), off is the off-diagonal (from 1 to n-1)
+ *
+ *    adapted from the original EISPACK code copied below
+ *
+ *
+      SUBROUTINE TQLI(D,E,N,NP,Z)
+      DIMENSION D(NP),E(NP),Z(NP,NP)
+      IF (N.GT.1) THEN
+        DO 11 I=2,N
+          E(I-1)=E(I)
+   11      CONTINUE
+        E(N)=0.
+        DO 15 L=1,N
+          ITER=0
+   1         DO 12 M=L,N-1
+            DD=ABS(D(M))+ABS(D(M+1))
+            IF (ABS(E(M))+DD.EQ.DD) GO TO 2
+   12        CONTINUE
+          M=N
+   2         IF(M.NE.L)THEN
+            IF(ITER.EQ.30)PAUSE 'too many iterations'
+            ITER=ITER+1
+            G=(D(L+1)-D(L))/(2.*E(L))
+            R=SQRT(G**2+1.)
+            G=D(M)-D(L)+E(L)/(G+SIGN(R,G))
+            S=1.
+            C=1.
+            P=0.
+            DO 14 I=M-1,L,-1
+              F=S*E(I)
+              B=C*E(I)
+              IF(ABS(F).GE.ABS(G))THEN
+                C=G/F
+                R=SQRT(C**2+1.)
+                E(I+1)=F*R
+                S=1./R
+                C=C*S
+              ELSE
+                S=F/G
+                R=SQRT(S**2+1.)
+                E(I+1)=G*R
+                C=1./R
+                S=S*C
+              ENDIF
+              G=D(I+1)-P
+              R=(D(I)-G)*S+2.*C*B
+              P=S*R
+              D(I+1)=G+P
+              G=C*R-B
+              DO 13 K=1,N
+                F=Z(K,I+1)
+                Z(K,I+1)=S*Z(K,I)+C*F
+                Z(K,I)=C*Z(K,I)-S*F
+   13            CONTINUE
+   14          CONTINUE
+            D(L)=D(L)-P
+            E(L)=G
+            E(M)=0.
+            GO TO 1
+          ENDIF
+   15      CONTINUE
+      ENDIF
+      RETURN
+      END
+ */
+	int n = diag.size();
 
-	for(i = 1; i < n; i++)
+	// move off-diagonal elements down 1, for convenience.
+	//
+	for(int i = 1; i < n; i++)
 	{
-		e(i - 1) = e(i);
+		off(i - 1) = off(i);
 	}
-	e(n - 1) = 0.0;
+	off(n - 1) = 0.0;
 
-	for(l = 0; l < n; l++)
+	for(int j = 0; j < n; j++)
 	{
-		int iter = 0;
+		int ntries = 0;
+		int m = 0;
 		do
 		{
-			for(m = l; m < n - 1; m++)
+			for(m = j; m < n - 1; m++)
 			{
-				double dd = fabs(d(m)) + fabs(d(m + 1));
-				if(!e(m))
-				{
+				// testing needs rewriting for double precision
+				//
+				double dd = fabs(diag(m)) + fabs(diag(m + 1));
+				double small = 1.E-12 * dd;
+				if(fabs(off(m)) <= small)
 					break;
-				}
 			}
-
-			if(m != l)
+			if(m != j)
 			{
-				double g = (d(l + 1) - d(l)) / (2.0 * e(l));
+				if(ntries++ > 30)
+					throw MerlinException("Too many iterations in tqli");
+				double g = (diag(j + 1) - diag(j)) / (2.0 * off(j));
 				double r = pythag(g, 1.0);
-				g = d(m) - d(l) + e(l) / (g + _SIGN(r, g));
+				g = diag(m) - diag(j) + off(j) / (g + _SIGN(r, g));
 				double s = 1.0;
 				double c = 1.0;
 				double p = 0.0;
 
-				for(i = m - 1; i >= l; i--)
+				int i;   // needed outside loop due to break
+				for(i = m - 1; i >= j; i--)
 				{
-					double f = s * e(i);
-					double b = c * e(i);
+					double f = s * off(i);
+					double b = c * off(i);
 					r = pythag(f, g);
-					e(i + 1) = r;
+					off(i + 1) = r;
 					if(r == 0.0)
 					{
-						d(i + 1) -= p;
-						e(m) = 0.0;
+						diag(i + 1) -= p;
+						off(m) = 0.0;
 						break;
 					}
 
 					s = f / r;
 					c = g / r;
-					g = d(i + 1) - p;
-					r = (d(i) - g) * s + 2.0 * c * b;
+					g = diag(i + 1) - p;
+					r = (diag(i) - g) * s + 2.0 * c * b;
 					p = s * r;
-					d(i + 1) = g + p;
+					diag(i + 1) = g + p;
 					g = c * r - b;
 
-					for(k = 0; k < n; k++)
+					for(int k = 0; k < n; k++)
 					{
-						f = z(k, i + 1);
-						z(k, i + 1) = s * z(k, i) + c * f;
-						z(k, i) = c * z(k, i) - s * f;
+						f = M(k, i + 1);
+						M(k, i + 1) = s * M(k, i) + c * f;
+						M(k, i) = c * M(k, i) - s * f;
 					}
 				}
 
-				if(r == 0.0 && i >= l)
+				if(r == 0.0 && i >= j)
 				{
 					continue;
 				}
 
-				d(l) -= p;
-				e(l) = g;
-				e(m) = 0.0;
+				diag(j) -= p;
+				off(j) = g;
+				off(m) = 0.0;
 			}
-		} while((m != l) && (iter++ < 30));
+		} while(m != j);
 	}
 }
 
