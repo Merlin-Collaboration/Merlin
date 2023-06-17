@@ -22,7 +22,16 @@ using namespace std;
 
 ApertureConfiguration::ApertureConfiguration(string InputFileName)
 {
-	auto dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
+	unique_ptr<DataTable> dt;
+	try
+	{
+		dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
+	}
+	catch(BadFormatException& e)
+	{
+		std::cerr << "ApertureConfiguration: Error reading " << InputFileName << std::endl;
+		throw;
+	}
 
 	ApertureDataTable.AddColumn("S", 'd');
 	ApertureDataTable.AddColumn("APER_1", 'd');
