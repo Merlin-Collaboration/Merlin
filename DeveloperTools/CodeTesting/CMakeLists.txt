@@ -1,3 +1,4 @@
+set(Python3_FIND_STRATEGY "LOCATION")
 find_package(Python3)
 
 # macro to install a test executable (need add_test() to call it)
