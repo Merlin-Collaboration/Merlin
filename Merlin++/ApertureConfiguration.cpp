@@ -46,10 +46,10 @@ ApertureConfiguration::ApertureConfiguration(string InputFileName)
 		if(itr.Get_d("APER_1") != 0 || itr.Get_d("APER_2") != 0 || itr.Get_d("APER_3") != 0 || itr.Get_d(
 				"APER_4") != 0)
 		{
-			ApertureDataTable.ApertureFromRow(itr, row);
+			ApertureDataTable.ApertureFromRow(itr);
 			ApertureDataTable.Set("S", row, (itr.Get_d("S") - itr.Get_d("L")));
 			++row;
-			ApertureDataTable.ApertureFromRow(itr, row);
+			ApertureDataTable.ApertureFromRow(itr);
 			++row;
 		}
 	}
@@ -115,19 +115,19 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 				if(this_ap == ApertureDataTable.begin())
 				{
 					//get initial point, interpolate from last point
-					ThisElementAperture.ApertureFromRow(*last_ap, row);
+					ThisElementAperture.ApertureFromRow(*last_ap);
 					++row;
 				}
 				else
 				{
 					--this_ap;
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 					++this_ap;
 				}
 				while((*this_ap).Get_d("S") <= (Position + ElementLength))
 				{
 					++row;
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 					++this_ap;
 					if(this_ap == ApertureDataTable.end())
 					{
@@ -138,12 +138,12 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 				{
 					++row;
 					this_ap = ApertureDataTable.begin();
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 				}
 				else
 				{
 					++row;
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 					this_ap = ApertureDataTable.end();
 				}
 
@@ -181,7 +181,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 						--negcount;
 						continue;
 					}
-					CleanElementAperture.ApertureFromRow(itr, cleanit);
+					CleanElementAperture.ApertureFromRow(itr);
 					++cleanit;
 				}
 

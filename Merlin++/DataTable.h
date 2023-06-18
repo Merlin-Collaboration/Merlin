@@ -102,7 +102,7 @@ public:
 	void AddRowFromRow(DataTableRow dt);
 
 	//configure aperture info from DataTableRow
-	void ApertureFromRow(DataTableRow dtrow, size_t row);
+	void ApertureFromRow(DataTableRow dtrow);
 
 	// get type in name
 	///Get double value by name and row.
