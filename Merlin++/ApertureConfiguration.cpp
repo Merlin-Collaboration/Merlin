@@ -22,7 +22,16 @@ using namespace std;
 
 ApertureConfiguration::ApertureConfiguration(string InputFileName)
 {
-	auto dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
+	unique_ptr<DataTable> dt;
+	try
+	{
+		dt = make_unique<DataTable>(DataTableReaderTFS(InputFileName).Read());
+	}
+	catch(BadFormatException& e)
+	{
+		std::cerr << "ApertureConfiguration: Error reading " << InputFileName << std::endl;
+		throw;
+	}
 
 	ApertureDataTable.AddColumn("S", 'd');
 	ApertureDataTable.AddColumn("APER_1", 'd');
@@ -31,17 +40,14 @@ ApertureConfiguration::ApertureConfiguration(string InputFileName)
 	ApertureDataTable.AddColumn("APER_4", 'd');
 	ApertureDataTable.AddColumn("APERTYPE", 's');
 	//filter non-aperture entries
-	size_t row = 0;
 	for(auto &itr : *dt)
 	{
 		if(itr.Get_d("APER_1") != 0 || itr.Get_d("APER_2") != 0 || itr.Get_d("APER_3") != 0 || itr.Get_d(
 				"APER_4") != 0)
 		{
-			ApertureDataTable.ApertureFromRow(itr, row);
-			ApertureDataTable.Set("S", row, (itr.Get_d("S") - itr.Get_d("L")));
-			++row;
-			ApertureDataTable.ApertureFromRow(itr, row);
-			++row;
+			ApertureDataTable.ApertureFromRow(itr);
+			ApertureDataTable.Set("S", ApertureDataTable.Length() - 1, (itr.Get_d("S") - itr.Get_d("L")));
+			ApertureDataTable.ApertureFromRow(itr);
 		}
 	}
 }
@@ -91,7 +97,6 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 
 			while(this_ap != ApertureDataTable.end())
 			{
-				size_t row = 0;
 				DataTable ThisElementAperture;
 				DataTable CleanElementAperture;
 				ThisElementAperture.AddColumn("APERTYPE", 's');
@@ -106,19 +111,17 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 				if(this_ap == ApertureDataTable.begin())
 				{
 					//get initial point, interpolate from last point
-					ThisElementAperture.ApertureFromRow(*last_ap, row);
-					++row;
+					ThisElementAperture.ApertureFromRow(*last_ap);
 				}
 				else
 				{
 					--this_ap;
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 					++this_ap;
 				}
 				while((*this_ap).Get_d("S") <= (Position + ElementLength))
 				{
-					++row;
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 					++this_ap;
 					if(this_ap == ApertureDataTable.end())
 					{
@@ -127,21 +130,18 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 				}
 				if(this_ap == ApertureDataTable.end())
 				{
-					++row;
 					this_ap = ApertureDataTable.begin();
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 				}
 				else
 				{
-					++row;
-					ThisElementAperture.ApertureFromRow(*this_ap, row);
+					ThisElementAperture.ApertureFromRow(*this_ap);
 					this_ap = ApertureDataTable.end();
 				}
 
 				//First do a little bit of cleaning
 				//If we have an entry at 0 (or very close to), and also an entry at negative values, we can discard the negative entry
 				size_t thisit = 0;
-				size_t cleanit = 0;
 				bool zeroentry = false;
 				size_t negcount = 0;
 
@@ -172,8 +172,7 @@ void ApertureConfiguration::ConfigureElementApertures(AcceleratorModel* Model)
 						--negcount;
 						continue;
 					}
-					CleanElementAperture.ApertureFromRow(itr, cleanit);
-					++cleanit;
+					CleanElementAperture.ApertureFromRow(itr);
 				}
 
 				if(fequal(CleanElementAperture.Get_d("S", 0) - Position, 0.0, 5e-7))

@@ -69,9 +69,9 @@ void DataTable::AddRowFromRow(DataTableRow dt)
 	//TODO
 }
 
-void DataTable::ApertureFromRow(DataTableRow dtrow, size_t row)
+void DataTable::ApertureFromRow(DataTableRow dtrow)
 {
-	this->AddRow();
+	auto row = this->AddRow();
 	this->Set("APERTYPE", row, dtrow.Get_s("APERTYPE"));
 	this->Set_d("S", row, dtrow.Get_d("S"));
 	this->Set_d("APER_1", row, dtrow.Get_d("APER_1"));
